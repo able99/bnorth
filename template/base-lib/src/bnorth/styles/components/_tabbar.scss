@@ -1,0 +1,147 @@
+// Amaze UI Touch: TabBar
+// =============================================================================
+
+
+// Mixins
+// -----------------------------------------------------------------------------
+
+@mixin tabbar-style(
+  $background: $tabbar-background
+) {
+  background: $background;
+  // border-top: 1px solid darken($background, 5);
+
+  // Retina border top color
+  @include retina-line-color(before, darken($background, 8));
+}
+
+@mixin tabbar-link-color(
+  $color: $tabbar-color,
+  $active-color: $global-primary
+) {
+  &,
+  & a {
+    //able99
+    //color: $color;
+    color: $global-secondary;
+  }
+
+  > .#{map_get($am-states, active)} {
+    // background: smartscale($background, 7%);
+    &,
+    & a {
+      color: $active-color;
+      //able99
+      //color: $active-color;
+      color: $global-success;
+    }
+  }
+}
+
+
+// Output
+// -----------------------------------------------------------------------------
+
+.#{$tabbar-prefix} {
+  display: flex;
+  width: 100%;
+  height: $tabbar-height;
+  padding: 0 $tabbar-padding-horizontal;
+
+  @include tabbar-style();
+  @include tabbar-link-color();
+  @extend %retina-line-top-before;
+}
+
+.#{$tabbar-prefix}-item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  .#{$icon-prefix} {
+    position: relative;
+  }
+
+  .#{$badge-prefix} {
+    position: absolute;
+    left: 100%;
+    top: -2px;
+    margin-left: -10px;
+    padding: 2px 5px;
+    font-size: rem-calc(10);
+    min-width: 0;
+  }
+
+  &.#{map_get($am-states, active)} {
+    cursor: default;
+    pointer-events: none;
+  }
+}
+
+.#{$tabbar-prefix}-label {
+  position: relative;
+  display: block;
+  text-align: center;
+
+  @extend %text-truncate;
+
+  .#{$icon-prefix} ~ & {
+    font-size: rem-calc(10);
+  }
+}
+
+//able99
+.#{$tabbar-prefix}-center-item {
+  position: absolute;
+  left:50%;
+  width:$tabbar-height;
+  height:$tabbar-height;
+  padding: 0;
+    margin: 0;
+  margin-top:-($tabbar-height / 4 );
+  margin-left:-($tabbar-height / 2 );
+  cursor: pointer;
+
+
+  background: none;
+  color: #fff;
+  display: inline-block;
+  border: 0;
+  text-align: center;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -webkit-font-smoothing: antialiased;
+  -webkit-transition: .25s ease-out;
+  transition: .25s ease-out;
+  vertical-align: middle;
+  
+  border-radius: 50%;
+  font-size: 1rem;
+  text-transform: none;
+  z-index:15;
+
+  img{
+    border:0;
+    width:100%;
+    height:100%;
+  }
+}
+
+// Modifiers
+// -----------------------------------------------------------------------------
+$tabbar-styles: $am-colors !default;
+
+@each $color-key, $color in $am-colors {
+  .#{$tabbar-prefix}-#{$color-key} {
+    @include tabbar-style($color);
+  }
+}
+
+// common style
+#{keys-to-selector($tabbar-styles, $tabbar-prefix)} {
+  @include tabbar-link-color(#dedede, $global-white);
+}

@@ -1,0 +1,104 @@
+// Amaze UI Touch: Switch
+//
+// @see http://callmenick.com/post/css-toggle-switch-examples
+// @see https://proto.io/freebies/onoff/
+// =============================================================================
+
+// containner
+// -----------------------------------------------------------------------------
+.#{$checkradio-container-prefix} {
+  cursor: pointer;  
+  backgournd:none;
+  padding:0 10px;
+  font-weight: normal;  
+  line-height: normal;
+  margin-bottom:0;
+  position: relative;
+  display: inline-block;
+}
+
+.#{$checkradio-container-prefix} input {
+  -webkit-appearance: none;
+  display: none;//inline-block;
+  -webkit-user-select: none; 
+  -moz-user-select: none;   
+  -ms-user-select: none;    
+  -o-user-select: none;
+  user-select: none;
+  outline:none;
+}
+
+
+// checkradio
+// -----------------------------------------------------------------------------
+.#{$checkradio-container-prefix} input + .#{$checkradio-prefix}{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.#{$checkradio-container-prefix} input + .#{$checkradio-prefix} .#{$checkradio-input-prefix}{
+  background: $checkradio-input-background;
+  border: 1px solid $gray-dark;
+  color: $checkradio-input-background;
+
+  display: inline-block;
+  border-radius: 1000px;
+  text-align: center;
+
+  font-size: 1rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+}
+.#{$checkradio-container-prefix} input:checked + .#{$checkradio-prefix} .#{$checkradio-input-prefix}{
+  background: $gray-dark;
+}
+.#{$checkradio-container-prefix} input + .#{$checkradio-prefix} .#{$checkradio-label-prefix}{
+  //color: $color;
+}
+.#{$checkradio-container-prefix} input:checked + .#{$checkradio-prefix} .#{$checkradio-label-prefix}{
+  
+}
+
+@each $color-key, $color in $am-colors {
+  .#{$checkradio-container-prefix}-#{$color-key} input + .#{$checkradio-prefix} .#{$checkradio-input-prefix}{
+    border-color: $color;
+  }
+  .#{$checkradio-container-prefix}-#{$color-key} input:checked + .#{$checkradio-prefix} .#{$checkradio-input-prefix}{
+    background: $color;
+  }
+  .#{$checkradio-container-prefix}-#{$color-key} input + .#{$checkradio-prefix} .#{$checkradio-label-prefix}{
+    color: $color;
+  }
+  .#{$checkradio-container-prefix}-#{$color-key} input:checked + .#{$checkradio-prefix} .#{$checkradio-label-prefix}{
+    
+  }
+}
+
+@each $size-key, $size-size in $am-sizes {
+  .#{$checkradio-container-prefix}-#{$size-key} input + .#{$checkradio-prefix} .#{$checkradio-input-prefix}{
+    font-size: $size-size;
+    width: $size-size * 1.5;
+    height: $size-size * 1.5;
+    line-height: $size-size * 1.5;
+  }
+  .#{$checkradio-container-prefix}-#{$size-key} input + .#{$checkradio-prefix} .#{$checkradio-label-prefix}{
+    font-size: $size-size;
+    width: $size-size * 1.5;
+    height: $size-size * 1.5;
+    line-height: $size-size * 1.5;
+  }
+}
+
+.disabled input + .#{$checkradio-prefix} .#{$checkradio-input-prefix}{
+  opacity: $checkradio-opacity-disabled;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.disabled input + .#{$checkradio-prefix} .#{$checkradio-label-prefix}{
+  opacity: $checkradio-opacity-disabled;
+  cursor: not-allowed;
+  pointer-events: none;
+}

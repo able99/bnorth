@@ -1,0 +1,35 @@
+{
+    "sign": false,
+    
+    "android": {
+        "debug": {
+            "keystore": "./zenapp.keystore",
+            "storePassword": "zen123",
+            "alias": "zenkey",
+            "password" : "zen123",
+            "keystoreType": ""
+        },
+        "release": {
+            "keystore": "./zenapp.keystore",
+            "storePassword": "zen123",
+            "alias": "zenkey",
+            "password" : "zen123",
+            "keystoreType": ""
+        }
+    },
+
+    "ios": {
+        "debug": {
+            "codeSignIdentity": "iPhone Developer: Song Zhou (F3RQP5Z5XS)",
+            "provisioningProfile": "b1085e05-7c19-41fc-9205-8f1f27b3e7a8",
+            "developmentTeam": "35RBX462T2",
+            "packageType": "development"
+        },
+        "release": {
+            "codeSignIdentity": "iPhone Distribution: Shenyang Pinshang Technology Co., Ltd. (35RBX462T2)",
+            "provisioningProfile": "413496a8-3a0e-492f-8eff-6f2224974f2c",
+            "developmentTeam": "35RBX462T2",
+            "packageType": "app-store"
+        }
+    }
+}

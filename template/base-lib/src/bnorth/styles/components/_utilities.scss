@@ -1,0 +1,321 @@
+//=======================
+// root
+//=======================
+.#{$namespace}root {
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+//=======================
+// float
+//=======================
+.#{$namespace}cf {
+  @extend %clearfix;
+}
+
+@each $s, $float in (
+  l: left,
+  r: right,
+  n:none) {
+  .#{$namespace}f#{$s} {
+    float: #{$float};
+  }
+}
+
+//=======================
+// margin padding
+//=======================
+@mixin makeSpacings($dimension: null) {
+  @each $space-key, $space-value in $am-spaces {
+    $padding-selector: 'padding';
+    $margin-selector: 'margin';
+    $dash: '';
+
+    @if $dimension {
+      $dash: '-' + $dimension;
+    }
+
+    @if $space-key != 'default' {
+      $dash: $dash + '-' + $space-key;
+    }
+
+    $padding-selector: $padding-selector + $dash;
+    $margin-selector: $margin-selector + $dash;
+
+    // horizontal spacing
+    @if $dimension == h {
+      .#{$namespace}#{$padding-selector} {
+        padding-left: $space-value !important;
+        padding-right: $space-value !important;
+      }
+
+      .#{$namespace}#{$margin-selector} {
+        margin-left: $space-value !important;
+        margin-right: $space-value !important;
+      }
+      // vertical spacing
+    } @else if $dimension == v {
+      .#{$namespace}#{$padding-selector} {
+        padding-top: $space-value !important;
+        padding-bottom: $space-value !important;
+      }
+
+      .#{$namespace}#{$margin-selector} {
+        margin-top: $space-value !important;
+        margin-bottom: $space-value !important;
+      }
+    } @else {
+      $paddingProperty: 'padding';
+      $marginProperty: 'margin';
+
+      @if $dimension {
+        $paddingProperty: $paddingProperty + '-' + $dimension;
+        $marginProperty: $marginProperty + '-' + $dimension;
+      }
+
+      .#{$namespace}#{$padding-selector} {
+        #{$paddingProperty}: $space-value !important;
+      }
+
+      .#{$namespace}#{$margin-selector} {
+        #{$marginProperty}: $space-value !important;
+      }
+    }
+  }
+}
+@each $dimension in $am-dimensions {
+  @include makeSpacings($dimension);
+}
+
+
+//=======================
+// text
+//=======================
+@each $key, $size in $am-sizes {
+  .#{$namespace}typo-size-#{$key} {
+    font-size: $size !important;
+  }
+}
+
+.#{$namespace}text-truncate {
+  @extend %text-truncate;
+}
+
+// Text Alignment
+@each $align in (left, right, center, justify) {
+  .#{$namespace}text-#{$align} {
+    text-align: $align !important;
+  }
+}
+
+// Text colors
+@each $key, $color in $am-colors {
+  //@if $key != dark { //able99
+    .#{$namespace}text-#{$key} {
+      color: $color !important;
+    }
+  //}
+}
+
+//=======================
+// border
+//=======================
+@each $key, $color in $am-colors {
+  @if $key != none {
+    .#{$namespace}border-color-#{$key} {
+      border-color: $color !important;
+    }
+  }
+}
+@each $key, $val in $am-radius {
+  .#{$namespace}border-radius-#{$key} {
+    border-radius: $val !important;
+  }  
+}
+.#{$namespace}border-none {
+  border: none !important;
+}
+@mixin makeBorderNones($dimension: null) {
+  $selector: 'border-none';
+
+  @if $dimension {
+    $selector: $selector + '-' + $dimension;
+  }
+
+  @if $dimension == h {
+    .#{$namespace}#{$selector} {
+      border-left: none !important;
+      border-right: none !important;
+    }
+  } @else if $dimension == v {
+    .#{$namespace}#{$selector} {
+      border-top: none !important;
+      border-bottom: none !important;
+    }
+  } @else {
+    $property: 'border';
+    @if $dimension {
+      $property: 'border-' + $dimension;
+    }
+
+    .#{$namespace}#{$selector} {
+      #{$property}: none !important;
+    }
+  }
+}
+@each $dimension in $am-dimensions {
+  @include makeBorderNones($dimension);
+}
+
+//=======================
+// background
+//=======================
+@each $key, $color in $am-colors {
+  @if $key != none {
+    .#{$namespace}bg-#{$key} {
+      background-color: $color !important;
+    }
+  }
+}
+.#{$namespace}background-none {
+  background: none !important;
+}
+
+
+//=======================
+// visibility
+//=======================
+.#{$namespace}visibility-show {
+  visibility: visible;
+}
+.#{$namespace}visibility-hide {
+  visibility: hidden;
+}
+
+//=======================
+// layout
+//=======================
+//size
+$layout-size-max-length:  200;
+@for $i from 1 through $layout-size-max-length { 
+  @if ($i <= 10) OR ($i % 10 == 0) {
+    .#{$namespace}layout-size-squre-#{$i} { 
+      @include square(#{$i}px);
+    } 
+    .#{$namespace}layout-size-width-auto-#{$i} { 
+      @include size(#{$i}px, auto);
+    } 
+    .#{$namespace}layout-size-height-auto-#{$i} { 
+      @include size(auto, #{$i}px);
+    } 
+    .#{$namespace}layout-size-min-width-#{$i} { 
+      min-width: #{$i}px;
+    }
+    .#{$namespace}layout-size-min-height-#{$i} { 
+      min-height: #{$i}px;
+    }
+  } 
+} 
+
+$layout-size-percent:  100;
+@for $i from 0 through $layout-size-percent { 
+  .#{$namespace}layout-size-width-auto-#{$i}p { 
+    width:#{$i}#{%};
+  } 
+} 
+
+$layout-size-rem:  30;
+@for $i from 1 through $layout-size-rem { 
+  .#{$namespace}layout-size-squre-#{$i}rem { 
+    width:#{($i/10)}rem;
+    height:#{($i/10)}rem;
+  } 
+} 
+
+//----------
+//able99 z index
+.#{$namespace}layout-z-line{
+  z-index: 15;
+}
+
+
+// old 
+.#{$namespace}align-v {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  $align-values: (
+    'top': flex-start,
+    'center': center,
+    'bottom': flex-end,
+  );
+
+  @each $orient in (top, center, bottom) {
+    .#{$namespace}align-#{$orient} {
+      align-self: map-get($align-values, $orient);
+    }
+  }
+}
+
+
+
+//able99
+// layout
+$layout-direction: (h, v, hv,vv) !default;
+$layout-map-direction: (
+  'h': row,
+  'v': column ,
+  'hv': row-reverse,
+  'vv': column-reverse,
+);
+$layout-align: (null,top,center,bottom,side,avg) !default;
+$layout-align-cross: (null,top,center,bottom,side,avg) !default;
+$layout-map-align: (
+  'top': flex-start,
+  'center': center,
+  'bottom': flex-end,
+  'side': space-between,
+  'avg': space-around,
+);
+
+@each $a-direction in $layout-direction {
+  @each $a-align in $layout-align {
+    @each $a-align-cross in $layout-align-cross {
+      .#{$namespace}layout-#{$a-direction}-#{$a-align}-#{$a-align-cross} {
+        display: flex;
+        display: -webkit-flex;
+        flex-direction: map-get($layout-map-direction, $a-direction);
+        -webkit-flex-direction: map-get($layout-map-direction, $a-direction);
+        justify-content: map-get($layout-map-align, $a-align);
+        -webkit-justify-content: map-get($layout-map-align, $a-align);
+        align-items: map-get($layout-map-align, $a-align-cross);
+        -webkit-align-items: map-get($layout-map-align, $a-align-cross);
+      }
+    }
+  }
+}
+
+@each $v-align in $layout-align-cross {
+  .#{$namespace}layout-sub-v-align-#{$v-align} {
+    align-self: map-get($layout-map-align, $v-align);
+    -webkit-align-self: map-get($layout-map-align, $v-align);
+  }
+}
+
+.#{$namespace}layout-sub-full {
+  flex: 1;
+  -webkit-flex: 1;
+}
+.#{$namespace}layout-flex-align-start {
+  align-items: flex-start;
+  -webkit-align-items: flex-start;
+}
+
+.#{$namespace}layout-wrap {
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+}
+
