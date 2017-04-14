@@ -9,8 +9,8 @@
 
 
 # cordova
-platforms
-plugins
+/platforms
+/plugins
 
 
 #mid
