@@ -1,37 +1,21 @@
 // Amaze UI Touch: Tabs
 // =============================================================================
 
-
-// Output
-// -----------------------------------------------------------------------------
-//able99
-.#{$tabs-prefix} {
-  //margin: $global-spacing 0;
-  //background: $tabs-background;
-  @extend %card-nested-component;
-}
-
-.#{$tabs-prefix}-nav {
-  margin-bottom: 0;
-
-  .#{$button-prefix} {
-    @extend %text-truncate;
-  }
-}
-
-.#{$tabs-prefix}-body {
+.#{$pager-prefix} {
   position: relative;
   z-index: 100;
   overflow: hidden;
+  @include square(100%);
 }
 
-.#{$tab-prefix}-panel {
+.#{$pager-prefix}-panel {
   $panel: &;
 
   position: absolute;
   top: 0;
   z-index: 99;
-  width: 100%;
+  //width: 100%;
+  @include square(100%);
   //able99
   //padding: $global-spacing;
   visibility: hidden;
@@ -55,9 +39,7 @@
   }
 }
 
-// Mofidier: inset
-// -----------------------------------------------------------------------------
-.#{$tabs-prefix}-inset {
+.#{$pager-prefix}-inset {
   margin-left: $global-spacing;
   margin-right: $global-spacing;
 }

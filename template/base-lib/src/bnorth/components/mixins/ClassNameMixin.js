@@ -18,6 +18,7 @@ const ClassNameMixin = {
       amSize,
       amStyle,
       hollow,
+      underline,
       radius,
       rounded,
       active,
@@ -48,6 +49,10 @@ const ClassNameMixin = {
 
     if (hollow) {
       classNames[prefix + 'hollow'] = true;
+    }
+
+    if (underline) {
+      classNames[prefix + 'underline'] = true;
     }
 
     classNames[this.prefixClass('radius')] = radius;

@@ -11,8 +11,8 @@ export default connect(
 
   	};
     return Object.assign(
+      {funcs},
     	Actions.actions,
-    	{funcs},
     	{wrapFetch: Actions.wraps.actionsHttpifFetchWrap("http://www.weather.com.cn/data/sk/101010100.html")},
     	{wrapData: Actions.wraps.actionsDataWrap(__filename,{})},
     );

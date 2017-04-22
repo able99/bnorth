@@ -38,15 +38,13 @@ export function actionsDataWrap(uuid=null, initData=null, onChange=null){
     uuid,
     clear: ()=>{
       let reduxer = window.store.getState().ReduxerData;
-      reduxer.datas = null;
-      actionsWrapDataMap[uuid] = null; 
+      delete reduxer.datas[uuid];
+      delete actionsWrapDataMap[uuid]; 
     },
 
     state: ()=>{
       let reduxer = window.store.getState().ReduxerData;
-      return reduxer.uuid===uuid?{
-        ["data-"+uuid]: reduxer.datas[uuid]||{},
-      }:{}; 
+      return {[uuid]:reduxer.datas[uuid]||{}}; 
     },
     data: ()=>{
       let reduxer = window.store.getState().ReduxerData;

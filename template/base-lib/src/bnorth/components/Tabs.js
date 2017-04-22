@@ -5,6 +5,7 @@ import cx from 'classnames';
 import ClassNameMixin from './mixins/ClassNameMixin';
 import Button from './Button';
 import ButtonGroup from './ButtonGroup';
+import Pager from './Pager';
 
 const Tabs = React.createClass({
   mixins: [ClassNameMixin],
@@ -107,9 +108,9 @@ const Tabs = React.createClass({
           active={active}
           disabled={disabled}
           className={active ? 'active' : null}
-          amSize={navSize || 'sm'}
+          amSize={navSize}
           amStyle={navStyle || 'primary'}
-          hollow
+          underline
         >
           {child.props.title}
         </Button>
@@ -140,24 +141,22 @@ const Tabs = React.createClass({
       }
 
       return (
-        <Tabs.Item
+        <Pager.Item
           active={eventKey === activeKey}
           eventKey={eventKey}
           key={'tabPanel' + index}
           {...props}
         >
           {children}
-        </Tabs.Item>
+        </Pager.Item>
       );
     });
 
     return (
-      <div
-        className={this.prefixClass('body')}
-      >
+      <Pager>
         {panels}
-      </div>
-    );
+      </Pager>
+    )
   },
 
   render() {
@@ -185,59 +184,6 @@ const Tabs = React.createClass({
   }
 });
 
-const TabsItem = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
-    classPrefix: PropTypes.string,
-    title: PropTypes.node,
-    eventKey: PropTypes.any,
-    disabled: PropTypes.bool,
-    active: PropTypes.bool,
-    noPadded: PropTypes.bool,
-    navSize: PropTypes.string,
-    navStyle: PropTypes.string,
-  },
-
-  getDefaultProps() {
-    return {
-      classPrefix: 'tab',
-    };
-  },
-
-  render() {
-    let classSet = this.getClassSet(true);
-    let {
-      className,
-      children,
-      noPadded,
-      ...props
-    } = this.props;
-    const elementName = 'panel';
-
-    delete props.classPrefix;
-    delete props.eventKey;
-    delete props.active;
-    delete props.noPadded;
-    delete props.navSize;
-    delete props.navStyle;
-
-    classSet[this.prefixClass(elementName)] = true;
-    classSet[this.prefixClass(`${elementName}-no-padded`)] = noPadded;
-
-    return (
-      <div
-        {...props}
-        className={cx(classSet, className)}
-      >
-        {children}
-      </div>
-    );
-  }
-});
-
-Tabs.Item = TabsItem;
+Tabs.Item = Pager.Item;
 
 export default Tabs;
-
-// TODO: Nav 的可定制性，如允许传入 Router 的 Link 组件

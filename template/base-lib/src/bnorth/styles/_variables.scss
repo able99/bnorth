@@ -27,7 +27,10 @@ $base-line-height: 1.5 !default;
 $font-weight-normal: normal !default;
 $font-weight-bold: 500 !default;
 
+//pc max width
+$base-root-max-width: 640px;
 
+//===============================
 // Size
 $font-size-xxs: 8px !default;
 $font-size-xs: 10px !default;
@@ -47,32 +50,44 @@ $am-sizes: (
 );
 
 
-
+//==============================
 // Application Colors
+
+// white and black and gray
+$global-black:   #000 !default;
+$global-white:   #fff !default;
+$gray-darkeer:   #282828 !default; 
+$gray-darker:    #383838 !default; 
+$gray-dark:      #5f5f60 !default;  
+$gray:           #959595 !default; 
+$gray-light:     #cbcbcb !default;
+$gray-lighter:   #e2e2e2 !default; 
+$gray-lighteer:  #eff0f4 !default; 
+$gray-lighteeer: #f6f6f6 !default; 
+$global-mask:    rgba(0,0,0,0.53);
+$global-none:    transparent;
+
 // color
 $global-success: #17c729 !default;
 $global-warning: #00baff !default;
-$global-alert: #f72a27 !default;
-$global-notice: #faff7e !default;
-$global-primary: #ff8201 !default;
+$global-alert:   #f72a27 !default;
+$global-notice:  #faff7e !default;
+$global-primary:   #000 !default;
 $global-secondary: #fff !default;
-$global-tertiary: #828282 !default;
-// white and black
-$global-black: #000 !default;
-$global-white: #fff !default;
-// gray
-$gray-darker: #383838 !default; 
-$gray-dark: #5f5f60 !default;  
-$gray: #959595 !default; 
-$gray-light: #cbcbcb !default;
-$gray-lighter: #e2e2e2 !default; 
-$gray-lighteer: #eff0f4 !default; 
-$gray-lighteeer: #f6f6f6 !default; 
-// func
-$global-mask: rgba(0,0,0,0.53);
-$global-none: transparent;
-$global-link: #008bec;
+$global-tertiary:  #828282 !default;
 
+$global-border:    $gray-lighter;
+$global-pagebg:    $gray-lighteer;
+$global-titlebg:   $gray-lighteeer;
+$global-link:      #008bec !default;
+$global-disable:   $gray-darker !default;
+$global-highlight: #fff !default;
+$global-select:    #fff !default;
+$global-normal:    $gray-darker !default;
+$global-darker:    $gray-darkeer !default;
+$global-light:     $gray !default;
+
+// color map
 $am-colors: (
   success: $global-success,
   warning: $global-warning,
@@ -83,18 +98,21 @@ $am-colors: (
   secondary: $global-secondary,
   tertiary: $global-tertiary,
   
-  cblack: $global-black,
-  cwhite: $global-white,
-  gray: $gray-darker,
-  light: $gray,
-  
-  mask: $global-mask,
-  none: $global-none,
-
   border: $gray-lighter,
   pagebg: $gray-lighteer,
   titlebg: $gray-lighteeer,
   link: $global-link,
+  disable: $global-disable,
+  highlight: $global-highlight,
+  select: $global-select,
+  normal: $global-normal,
+  darker: $global-darker,
+  light:  $global-light,
+
+  cblack: $global-black,
+  cwhite: $global-white,  
+  mask: $global-mask,
+  none: $global-none,
 );
 
 
@@ -161,8 +179,8 @@ $legacy-flexbox-support: true !default;
 
 // Base
 // -----------------------------------------------------------------------------
-$body-background: $gray-lighteer !default;
-$body-font-color: $gray-darker !default;
+$body-background: $global-pagebg !default;
+$body-font-color: $global-normal !default;
 $body-font-family: $font-family-sans-serif;
 $body-font-weight: $font-weight-normal !default;
 $body-font-style: normal !default;
@@ -172,7 +190,7 @@ $body-font-style: normal !default;
 // -----------------------------------------------------------------------------
 $accordion-prefix: #{$namespace}accordion !default;
 $accordion-background: $global-white !default;
-$accordion-border: 1px solid $gray-lighter !default;
+$accordion-border: 1px solid $global-border !default;
 
 
 // Badge Variables
@@ -366,9 +384,9 @@ $navbar-height-px: 44 !default;
 $navbar-height: rem-calc($navbar-height-px) !default;
 $navbar-center-width: 50% !default;
 $navbar-side-width: (100% - $navbar-center-width) / 2 !default;
-$navbar-background: $gray-lighter !default;
-$navbar-color: $gray-dark !default;
-$navbar-padding: 0 rem-calc(10) !default;
+$navbar-background: $global-primary !default;
+$navbar-color: $global-select !default;
+$navbar-padding: 0 !default;
 $navbar-line-height: rem-calc($navbar-height-px - 1);
 
 
@@ -425,8 +443,9 @@ $tabbar-prefix: #{$namespace}tabbar !default;
 $tabbar-height-px: 49 !default;
 $tabbar-height: rem-calc($tabbar-height-px) !default;
 $tabbar-padding-horizontal: $global-padding !default;
-$tabbar-background: $gray-lighter !default;
-$tabbar-color: $gray-light!default;
+$tabbar-background: $global-primary !default;
+$tabbar-color: $global-normal!default;
+$tabbar-color-select: $global-select!default;
 
 
 // Tabs Variables
@@ -443,6 +462,10 @@ $checkradio-input-prefix: #{$namespace}checkradio-input !default;
 $checkradio-label-prefix: #{$namespace}checkradio-label !default;
 $checkradio-opacity-disabled: 0.5 !default;
 $checkradio-input-background: $global-white;
+
+// pager Variables
+// -----------------------------------------------------------------------------
+$pager-prefix: #{$namespace}pager !default;
 
 
 

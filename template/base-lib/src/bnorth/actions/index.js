@@ -5,7 +5,7 @@ import thunkMiddleware from 'redux-thunk';
 import { actionsNavigate,ReduxerNavigate } from './navigate';
 import { actionsNotice,ReduxerNotice } from './notice';
 import { actionsData, ReduxerData, actionsDataWrap } from './data';
-import { actionsHttpifFetch, actionsHttpifOperation, ReduxerHttpifFetch, actionsHttpifFetchWrap } from '../actions/httpif';
+import { actionsHttpifFetch, actionsHttpifOperate, ReduxerHttpifFetch, actionsHttpifFetchWrap } from '../actions/httpif';
 
 
 //==============================
@@ -28,7 +28,7 @@ window.store = createStoreWithMiddleware(Reduxer);
 export default {
   actions: Object.assign(
     actionsHttpifFetch(),
-    actionsHttpifOperation(),
+    actionsHttpifOperate(),
     actionsNavigate(),
     actionsNotice(),
     actionsData(),

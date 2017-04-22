@@ -39,6 +39,17 @@
       //color: islight($background);
       color: $background-active;
     }
+  } @else if $style == underline { // underline style
+    border: none;
+    color: $gray-darker;
+    background: $global-white;
+
+    // hover/focus style is not needed for touch devices
+    &:active,
+    &.#{map_get($am-states, active)} {
+      border-bottom: 2px solid $background;
+      color: $background;
+    }
   } @else { // with background
     @if $color == auto {
       $color: islight($background);
@@ -149,6 +160,18 @@
   @each $color-key, $color in $am-colors {
     &.#{$button-prefix}-#{$color-key} {
       @include button-style($color, auto, $style: hollow);
+    }
+  }
+}
+
+// Modifiers: underline
+// -----------------------------------------------------------------------------
+.#{$button-prefix}-underline {
+  @include button-style($background: $gray-light, $style: underline);
+
+  @each $color-key, $color in $am-colors {
+    &.#{$button-prefix}-#{$color-key} {
+      @include button-style($color, auto, $style: underline);
     }
   }
 }

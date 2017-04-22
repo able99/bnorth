@@ -3,7 +3,7 @@ import User from './user';
 
 let Netif = {};
 
-Netif.handleStatus = function(status, resource){
+Netif.handleStatus = function(status,resolve,reject){
   switch(status){
     case 401:
       User.toLogin(null, true);
@@ -13,28 +13,57 @@ Netif.handleStatus = function(status, resource){
   }
 }
 
-Netif.fetch = function(resource,cbSuccess,cbError){
-	fetch((resource.indexOf("http")===0?"":Config.ApiUrl)+resource,{
-	  method: "get",
-	  headers: {
-	    "x-token": User.getToken(),
-	  },
-	}).then(function(res) {
-    if (res.ok) {
-      return res.json();
-    } else {
-      if(this.handleStatus(res.status,resource)){
-        return;
+Netif.fetch = function(options={}){
+  options.resource = options.resource || "/";
+
+  return new Promise((resolve,reject)=>{
+  	fetch((options.resource.indexOf("http")===0?"":Config.BaseApiUrl)+options.resource,{
+  	  method: "get",
+  	  headers: {
+  	    "x-token": User.getToken(),
+  	  },
+  	}).then(function(res) {
+      if (res.ok) {
+        return res.json();
+      } else {
+        if(this.handleStatus(res.status,resolve,reject)){
+          return;
+        }
+        return reject({code:res.status, message:res.statusText});
       }
-      Promise.reject({code:res.status, message:res.statusText});
-      //throw {code:res.status, message:res.statusText};
-    }
-  }).then(function(result) {
-    cbSuccess(result);
-  }).catch(function(error){
-    cbError(error);
+    }).then(function(result) {
+      resolve(result);
+    });
+  });
+}
+
+Netif.operate = function(options={}){
+  options.resource = options.resource || "/";
+
+  return new Promise((resolve,reject)=>{
+    fetch((options.resource.indexOf("http")===0?"":Config.BaseApiUrl)+options.resource,{
+      method: options.method||"put",
+      headers: {
+        "x-token": options.token||User.getToken(),
+      },
+    }).then(function(res) {
+      if (res.ok) {
+        return res.json();
+      } else {
+        if(this.handleStatus(res.status,resolve,reject)){
+          return;
+        }
+        return reject({code:res.status, message:res.statusText});
+      }
+    }).then(function(result) {
+      resolve(result);
+    });
   });
 }
 
 import { ExtendNetif } from '../../extend/extend';
 export default Object.assign(Netif,ExtendNetif||{});
+
+
+
+

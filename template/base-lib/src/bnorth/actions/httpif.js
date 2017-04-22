@@ -11,55 +11,49 @@ const HttpifFetchFetching = 'HttpifFetchFetching';
 const HttpifFetchInvalid = 'HttpifFetchInvalid';
 const HttpifFetchFetchSuccess = 'HttpifFetchFetchSuccess';
 const HttpifFetchFetchFail = 'HttpifFetchFetchFail';
-function actionHttpifFetch(uuid,resource,cb=null,data={},header={}){
+function actionHttpifFetch(uuid,options){
   return (dispatch)=>{
     actionsNotice().actionNoticeLoading();
-    dispatch(actionHttpifFetching(uuid,resource));
+    dispatch(actionHttpifFetching(uuid));
 
-    Netif.fetch(resource,data,header,null,(result)=>{
+    Netif.fetch(options)
+    .then((result)=>{
       actionsNotice().actionNoticeLoadingFinish();
-      dispatch(actionHttpifFetchSuccess(uuid,resource,result));
-      if(typeof(cb)==="function"){try{cb(result)}catch(e){actionsNotice().actionNoticeMessage(e)}};
-    },(error)=>{
+      dispatch(actionHttpifFetchSuccess(uuid,result));
+      if(options.success && typeof(options.success)==="function"){options.success(result)};
+    })
+    .catch((error)=>{
       actionsNotice().actionNoticeLoadingFinish();
       actionsNotice().actionNoticeMessage(error);
-      dispatch(actionHttpifFetchFail(uuid,resource,error));
-      if(typeof(cb)==="function"){try{cb({},error)}catch(e){actionsNotice().actionNoticeMessage(e)}};
-    });
+      dispatch(actionHttpifFetchFail(uuid,error));
+      if(options.error && typeof(options.error)==="function"){options.error(error)};
+    });    
   }
 }
-function actionHttpifFetching(uuid,resource,data){
+function actionHttpifFetching(uuid){
   return {
     type: HttpifFetchFetching,
     uuid,
-    resource,
-    data,
   };
 }
-function actionHttpifFetchInvalid(uuid,resource,data){
+function actionHttpifFetchInvalid(uuid){
   return {
     type: HttpifFetchInvalid,
     uuid,
-    resource,
-    data,
   };
 }
-function actionHttpifFetchSuccess(uuid,resource,result,data){
+function actionHttpifFetchSuccess(uuid,result){
   return {
     type: HttpifFetchFetchSuccess,
     uuid,
-    resource,
     result,
-    data,
   };
 }
-function actionHttpifFetchFail(uuid,resource,error,data){
+function actionHttpifFetchFail(uuid,error){
   return {
     type: HttpifFetchFetchFail,
     uuid,
-    resource,
     error,
-    data,
   };
 }
 
@@ -75,32 +69,27 @@ export function actionsHttpifFetch(){
 }
 
 let actionsHttpifFetchWrapMap = {};
-export function actionsHttpifFetchWrap(uuid=null,resource="/",data={},header={}){
+export function actionsHttpifFetchWrap(uuid=null,options={}){
   uuid = uuid?uuid:Util.uuid();
   if(actionsHttpifFetchWrapMap[uuid])return actionsHttpifFetchWrapMap[uuid];
 
   let wrap = {
     uuid,
-    state(defaultValue={}){
+    clear(){
       let reduxer = window.store.getState().ReduxerHttpifFetch;
-      return reduxer.uuid===uuid&&reduxer.resource===resource?{
-        [uuid]: (reduxer.fetchResult[uuid+resource]?reduxer.fetchResult[uuid+resource].result:defaultValue),
-      }:{
-      }; 
+      delete reduxer.fetchResult[uuid];
+      delete actionsHttpifFetchWrapMap[uuid];
     },
-    update(cb,adata=null,aheader=null){
-      data=adata||data;
-      header=aheader||header;
-      actionsHttpifFetch().actionHttpifFetch(uuid, resource, cb, data, header);
+    state(){
+      let reduxer = window.store.getState().ReduxerHttpifFetch;
+      return { [uuid]: reduxer.fetchResult[uuid]||{}, };
     },
     data(defaultValue={}){
       let reduxer = window.store.getState().ReduxerHttpifFetch;
-      return (reduxer && reduxer.fetchResult && reduxer.fetchResult[uuid+resource] && reduxer.fetchResult[uuid+resource].result) || defaultValue;
+      return (reduxer && reduxer.fetchResult && reduxer.fetchResult[uuid] && reduxer.fetchResult[uuid].result) || defaultValue;
     },
-    clear(){
-      let reduxer = window.store.getState().ReduxerHttpifFetch;
-      reduxer.fetchResult[uuid+resource] = null;
-      delete actionsHttpifFetchWrapMap[uuid];
+    update(aoptions={}){
+      actionsHttpifFetch().actionHttpifFetch(uuid, Object.assign({},options.aoptions));
     },
   };
 
@@ -118,9 +107,8 @@ export function ReduxerHttpifFetch(state = StateHttpifFetch, action) {
   case HttpifFetchFetching:
     return Object.assign({}, state, {
       uuid: action.uuid,
-      resource: action.resource,
       fetchResult: Object.assign({}, state.fetchResult, {
-        [action.uuid+action.resource]:Object.assign({}, state.fetchResult[action.uuid+action.resource], {
+        [action.uuid]:Object.assign({}, state.fetchResult[action.uuid], {
           fetching: true,
         }),
       }),
@@ -128,9 +116,8 @@ export function ReduxerHttpifFetch(state = StateHttpifFetch, action) {
   case HttpifFetchInvalid:
     return Object.assign({}, state, {
       uuid: action.uuid,
-      resource: action.resource,
       fetchResult: Object.assign({}, state.fetchResult, {
-        [action.uuid+action.resource]:Object.assign({}, state.fetchResult[action.uuid+action.resource], {
+        [action.uuid]:Object.assign({}, state.fetchResult[action.uuid], {
           invalid: true,
         }),
       }),
@@ -138,9 +125,8 @@ export function ReduxerHttpifFetch(state = StateHttpifFetch, action) {
   case HttpifFetchFetchSuccess:
     return Object.assign({}, state, {
       uuid: action.uuid,
-      resource: action.resource,
       fetchResult: Object.assign({}, state.fetchResult, {
-        [action.uuid+action.resource]:Object.assign({}, state.fetchResult[action.uuid+action.resource], {
+        [action.uuid]:Object.assign({}, state.fetchResult[action.uuid], {
           invalid: false,
           fetching: false,
           result: action.result,
@@ -150,9 +136,8 @@ export function ReduxerHttpifFetch(state = StateHttpifFetch, action) {
   case HttpifFetchFetchFail:
     return Object.assign({}, state, {
       uuid: action.uuid,
-      resource: action.resource,
       fetchResult: Object.assign({}, state.fetchResult, {
-        [action.uuid+action.resource]:Object.assign({}, state.fetchResult[action.uuid+action.resource], {
+        [action.uuid]:Object.assign({}, state.fetchResult[action.uuid], {
           fetching: false,
           error: action.error,
         }),
@@ -168,26 +153,27 @@ export function ReduxerHttpifFetch(state = StateHttpifFetch, action) {
 
 //===================================
 // operaion
-
-function actionOperationSubmit(cb,resource,data={},method="post",header={},block=true,notice=true){
+function actionOperateSubmit(options){
   return (dispatch)=>{
-    if(block)actionsNotice().actionNoticeBlock();
+    actionsNotice().actionNoticeBlock();
     
-    Netif.operation(resource,data,header,method,(result)=>{
-      if(block)actionsNotice().actionNoticeBlockFinish();
-      if(typeof(cb)==="function"){try{cb(result)}catch(e){actionsNotice().actionNoticeMessage(e)}};
-    },(error)=>{
+    Netif.operate(options)
+    .then((result)=>{
+      actionsNotice().actionNoticeBlockFinish();
+      if(options.success && typeof(options.success)==="function"){options.success(result)};
+    })
+    .catch((error)=>{
       actionsNotice().actionNoticeBlockFinish();
       actionsNotice().actionNoticeMessage(error);
-      if(typeof(cb)==="function"){try{cb({},error)}catch(e){actionsNotice().actionNoticeMessage(e)}};
-    });
+      if(options.error && typeof(options.error)==="function"){options.error(error)};
+    });  
   }
 }
 
-let actionsHttpifOperationObj = null;
-export function actionsHttpifOperation(){
-  if(actionsHttpifOperationObj)return actionsHttpifOperationObj;
+let actionsHttpifOperateObj = null;
+export function actionsHttpifOperate(){
+  if(actionsHttpifOperateObj)return actionsHttpifOperateObj;
 
-  actionsHttpifOperationObj = bindActionCreators({actionOperationSubmit},window.store.dispatch);
-  return actionsHttpifOperationObj;
+  actionsHttpifOperateObj = bindActionCreators({actionOperateSubmit},window.store.dispatch);
+  return actionsHttpifOperateObj;
 }

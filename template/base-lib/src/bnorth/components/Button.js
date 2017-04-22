@@ -18,6 +18,7 @@ const Button = React.createClass({
     amStyle: PropTypes.string,
     amSize: PropTypes.string,
     hollow: PropTypes.bool,
+    underline: PropTypes.bool,
     block: PropTypes.bool,
     active: PropTypes.bool,
     disabled: PropTypes.bool,
@@ -35,6 +36,7 @@ const Button = React.createClass({
     delete props.classPrefix;
     delete props.amStyle;
     delete props.amSize;
+    delete props.underline;
     delete props.hollow;
     delete props.block;
     delete props.active;

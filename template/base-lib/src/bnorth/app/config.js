@@ -11,5 +11,6 @@ Config.OnBrowserDebug = true;
 Config.OnBrowser = Boolean(!window.cordova);
 Config.OnApp = Config.OnBrowserDebug||Boolean(window.cordova);
 
+
 import { ExtendConfig } from '../../extend/extend';
 export default Object.assign(Config, ExtendConfig||{});

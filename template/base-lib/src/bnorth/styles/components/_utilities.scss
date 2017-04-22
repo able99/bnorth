@@ -8,6 +8,14 @@
   overflow: hidden;
 }
 
+.#{$namespace}root-pc {
+  display: block;
+  height: 100%;
+  width: 100%;
+  max-width: $base-root-max-width;
+  overflow: hidden;
+}
+
 //=======================
 // float
 //=======================
@@ -92,7 +100,7 @@
 
 //=======================
 // text
-//=======================
+
 @each $key, $size in $am-sizes {
   .#{$namespace}typo-size-#{$key} {
     font-size: $size !important;
@@ -112,16 +120,14 @@
 
 // Text colors
 @each $key, $color in $am-colors {
-  //@if $key != dark { //able99
-    .#{$namespace}text-#{$key} {
-      color: $color !important;
-    }
-  //}
+  .#{$namespace}text-#{$key} {
+    color: $color !important;
+  }
 }
 
 //=======================
 // border
-//=======================
+
 @each $key, $color in $am-colors {
   @if $key != none {
     .#{$namespace}border-color-#{$key} {
@@ -171,7 +177,7 @@
 
 //=======================
 // background
-//=======================
+
 @each $key, $color in $am-colors {
   @if $key != none {
     .#{$namespace}bg-#{$key} {
@@ -186,7 +192,7 @@
 
 //=======================
 // visibility
-//=======================
+
 .#{$namespace}visibility-show {
   visibility: visible;
 }
@@ -195,9 +201,8 @@
 }
 
 //=======================
-// layout
-//=======================
-//size
+// width height
+
 $layout-size-max-length:  200;
 @for $i from 1 through $layout-size-max-length { 
   @if ($i <= 10) OR ($i % 10 == 0) {
@@ -234,14 +239,16 @@ $layout-size-rem:  30;
   } 
 } 
 
-//----------
+//==========================================================
 //able99 z index
+
 .#{$namespace}layout-z-line{
   z-index: 15;
 }
 
-
+//==========================================================
 // old 
+
 .#{$namespace}align-v {
   display: flex;
   align-items: center;
@@ -262,60 +269,101 @@ $layout-size-rem:  30;
 
 
 
-//able99
+//==========================================================
 // layout
-$layout-direction: (h, v, hv,vv) !default;
+
+// layout
 $layout-map-direction: (
-  'h': row,
-  'v': column ,
+  'h':  row,
+  'v':  column ,
   'hv': row-reverse,
   'vv': column-reverse,
 );
-$layout-align: (null,top,center,bottom,side,avg) !default;
-$layout-align-cross: (null,top,center,bottom,side,avg) !default;
+$layout-map-justify: (
+  null:      flex-start,
+  'start':   flex-start,
+  'center':  center,
+  'end':     flex-end,
+  'between': space-between,
+  'around':  space-around,
+);
 $layout-map-align: (
-  'top': flex-start,
-  'center': center,
-  'bottom': flex-end,
-  'side': space-between,
-  'avg': space-around,
+  null:       flex-start,
+  'start':    flex-start,
+  'center':   center,
+  'end':      flex-end,
+  'baseline': baseline,
+  'stretch':  stretch,
 );
 
-@each $a-direction in $layout-direction {
-  @each $a-align in $layout-align {
-    @each $a-align-cross in $layout-align-cross {
-      .#{$namespace}layout-#{$a-direction}-#{$a-align}-#{$a-align-cross} {
-        display: flex;
-        display: -webkit-flex;
-        flex-direction: map-get($layout-map-direction, $a-direction);
-        -webkit-flex-direction: map-get($layout-map-direction, $a-direction);
-        justify-content: map-get($layout-map-align, $a-align);
-        -webkit-justify-content: map-get($layout-map-align, $a-align);
-        align-items: map-get($layout-map-align, $a-align-cross);
-        -webkit-align-items: map-get($layout-map-align, $a-align-cross);
+@each $direction-key, $direction in $layout-map-direction {
+  @each $justify-key, $justify in $layout-map-justify {
+    @each $align-key, $align in $layout-map-align {
+      $selector: #{$namespace}layout;
+      @if $direction-key != null {
+        $selector: $selector + "-" + $direction-key;
+      }
+      @if $justify-key != null {
+        $selector: $selector + "-" + $justify-key;
+      }
+      @if $align-key != null {
+        $selector: $selector + "-" + $align-key;
+      }
+
+      .#{$selector}{
+        display:         flex;
+        flex-direction:  $direction;
+        justify-content: $justify;
+        align-items:     $align;
       }
     }
   }
 }
 
-@each $v-align in $layout-align-cross {
-  .#{$namespace}layout-sub-v-align-#{$v-align} {
-    align-self: map-get($layout-map-align, $v-align);
-    -webkit-align-self: map-get($layout-map-align, $v-align);
+// wrap
+$layout-warp: (warp,nowrap,wrap-reverse) !default;
+@each $wrap in $layout-warp {
+  .#{$namespace}layout-wrap {
+    flex-wrap: $wrap;
   }
 }
 
-.#{$namespace}layout-sub-full {
-  flex: 1;
-  -webkit-flex: 1;
-}
-.#{$namespace}layout-flex-align-start {
-  align-items: flex-start;
-  -webkit-align-items: flex-start;
-}
-
-.#{$namespace}layout-wrap {
-  flex-wrap: wrap;
-  -webkit-flex-wrap: wrap;
+// sub align
+@each $key, $align in $layout-map-align {
+  @if $key != null {
+    .#{$namespace}layout-sub-align-#{$key} {
+      align-self: $align;
+    }
+  }
 }
 
+// sub order
+$layout-sub-order-length:  5;
+@for $i from 0 through $layout-sub-order-length { 
+  .#{$namespace}layout-sub-order { 
+    order: $i;
+  } 
+} 
+
+// sub flex
+$layout-sub-flex-length: (none, auto, 0, 1, 2, 3, 4, 5) !default;
+@each $val in $layout-sub-flex-length { 
+  .#{$namespace}layout-sub-flex-grow-#{$val} { 
+    flex-grow: $val
+  } 
+  .#{$namespace}layout-sub-flex-shrink-#{$val} { 
+    flex-shrink: $val;
+  } 
+} 
+.#{$namespace}layout-sub-flex-grow { 
+  flex: 1 0 auto;
+} 
+.#{$namespace}layout-sub-flex-shrink { 
+  flex: 0 1 auto;
+} 
+.#{$namespace}layout-sub-flex-auto { 
+  flex: auto;
+} 
+.#{$namespace}layout-sub-flex-none { 
+  flex: none;
+} 

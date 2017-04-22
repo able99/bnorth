@@ -8,6 +8,16 @@ import { View, Notification,Loader,Modal,ProgressBar } from '../components/';
 import Actions from '../actions/';
 import { ExtendAppLifeCircle } from '../../extend/extend';
 
+//==============
+// app data
+let AppData = {};
+AppData.setProps = function(key,val){
+  this.key = val;
+}
+AppData.getProps = function(key){
+  return this[key];
+}
+
 
 //==============
 // page mixin
@@ -55,6 +65,9 @@ export const AppMixinPage = {
       child: this.props.child,
     }
   },
+  getApp: function() {
+    return AppData;
+  },
 };
 
 //==============
@@ -64,6 +77,7 @@ export const AppMixinAppPage = {
     let pages = [];
     let ite = this.props.children;
     let level = 0;
+    let sub = false;
 
     while(ite && ite.props){
       let component = ite;
@@ -73,22 +87,40 @@ export const AppMixinAppPage = {
         child: false,
       };
 
-      pages.push({component,props});
-      ite = ite.props.children||(ite.props.multipage_main&&ite.props.multipage_main.props.children);
+      if(!sub)pages.push({component,props});sub=false;
+
+      sub = ite.props.route.subs;
+      ite = ite.props.children;
     } 
 
     pages.slice(-1).map((v)=>{return v.props.focus = true});
     return pages.map((v,i)=>{
       return React.cloneElement(v.component,v.props);
     });
-  }
+  },
+
+  getApp: function() {
+    return AppData;
+  },
 };
 
 //==============
 // container mixin
 export const AppMixinContainerPage = {
   getSelectPath: function(){
-    return (this.props.multipage_main&&this.props.multipage_main.props.route.path)||"";   
+    let path = null;
+    for(let route of this.props.routes){
+      if(path||route===this.props.route){
+        if(path){
+          path = route.path;
+          break;
+        }
+        if(route.subs){
+          path = route.path;
+        }
+      }
+    }
+    return path;
   },
   getPageView: function(name=null, props={}){
     let element = name?this.props.route.pageViews&&this.props.route.pageViews[name]:this.props.route.pageViews;
@@ -98,21 +130,33 @@ export const AppMixinContainerPage = {
     },props)):null;
   },
   renderPages: function(names=null,focusAll){
-    return Array.isArray(names)
-    ?names.map((v)=>{
-      return(
-        React.cloneElement(this.props['multipage_'+v], {
-          key: "multipage_"+v,
-          focus: Boolean(focusAll || this.getSelectPath() === v),
-          child: true,
-        })  
+    return (this.props.route.childRoutes||[])
+    .filter((v)=>{
+      return (
+        (names&&Array.isArray(names))
+        ?names.filter((vv)=>{
+          return vv === v.path;
+        }).length>0
+        :true
       );
     })
-    : React.cloneElement(this.props['multipage_'+this.getSelectPath()], {
-      key: "multipage_"+this.getSelectPath(),
-      focus: true,
-      child: true,
-    }) 
+    .map((v)=>{
+      return (
+        React.createElement(v.component,Object.assign({},{
+          route: v,
+          router: this.props.router,
+          location: this.props.location,
+          routes: this.props.routes,
+          params: this.props.params,
+          component: v.component,
+          components: v.components,
+          key: "multipage_"+v.path,
+          focus: Boolean(focusAll || this.getSelectPath() === v),
+          child: true,
+          name: v.path,
+        }))
+      );
+    });
   },
 };
 
@@ -181,20 +225,17 @@ const App = React.createClass({
   //================
   // render
   render() {
-    let {
-      blocking,
-      loading,
-      noticeMsg,
-      dialogs,
-    } = this.props;
-
-    return (
+    return !this.props.wrapData.data().ready?(
+      <View>
+        123
+      </View>
+    ):(
       <View>
 
         {this.renderPages()}
         
 
-        {dialogs.map((v,i)=>{
+        {this.props.notice.dialogs.map((v,i)=>{
           let {
             onDismiss,
             ...props,
@@ -208,36 +249,48 @@ const App = React.createClass({
         })}
 
 
-        {blocking?(<View className="bg-mask layout-v-center-center text-primary layout-z-line"><Loader  /></View>):null}
+        {this.props.notice.blocking?(<View className="bg-mask layout-v-center-center text-primary layout-z-line"><Loader  /></View>):null}
 
 
-        <ProgressBar percent={0} spinner={false} intervalTime={200} autoIncrement={loading} />
+        <ProgressBar percent={0} spinner={false} intervalTime={200} autoIncrement={this.props.notice.loading} />
 
 
         <Notification
           amStyle="alert"
-          visible={Boolean(noticeMsg)}
+          visible={Boolean(this.props.notice.noticeMsg)}
           static
           closeBtn={false}
           animated>
-          {noticeMsg}
+          {this.props.notice.noticeMsg}
         </Notification>
       </View>
     );
   }
 });
 
+let wrapData = Actions.wraps.actionsDataWrap("app",{
+  ready: false,
+});
+
 const AppConnect = connect(
   (state)=>{
-    return state.ReduxerNotice;
+    let a = Actions.wraps.actionsDataWrap("app").state();
+    console.log("data state:",a);
+    let states =  Object.assign(
+      a,
+      {notice: state.ReduxerNotice},
+    );
+    console.log("states:",states);
+    return states;
   },
   (dispatch,ownProps)=>{
     let funcs = {
 
     };
     return Object.assign(
-      Actions.actions,
       {funcs},
+      Actions.actions,
+      {wrapData},
     );
   },
 )(App);

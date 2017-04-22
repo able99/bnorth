@@ -72,7 +72,8 @@ import Field from './Field';
 import OffCanvas from './OffCanvas';
 import OffCanvasTrigger from './OffCanvasTrigger';
 import CheckRadio from './CheckRadio';
+import Pager from './Pager';
 
 import ProgressBar from './ProgressBar';
 
-export { Loader,Accordion,Container,Col,Group,Button,ButtonGroup,Badge,NavBar,View,Grid,Icon,TabBar,List,Field,Tabs,Notification,OffCanvas,OffCanvasTrigger,Card,Modal,CheckRadio,ProgressBar };
+export { Loader,Accordion,Container,Col,Group,Button,ButtonGroup,Badge,NavBar,View,Grid,Icon,TabBar,List,Field,Tabs,Notification,OffCanvas,OffCanvasTrigger,Card,Modal,CheckRadio,ProgressBar,Pager };

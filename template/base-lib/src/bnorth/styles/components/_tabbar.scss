@@ -12,18 +12,16 @@
   // border-top: 1px solid darken($background, 5);
 
   // Retina border top color
-  @include retina-line-color(before, darken($background, 8));
+  @include retina-line-color(before, $global-border);
 }
 
 @mixin tabbar-link-color(
   $color: $tabbar-color,
-  $active-color: $global-primary
+  $active-color: $tabbar-color-select
 ) {
   &,
   & a {
-    //able99
-    //color: $color;
-    color: $global-secondary;
+    color: $color;
   }
 
   > .#{map_get($am-states, active)} {
@@ -31,9 +29,6 @@
     &,
     & a {
       color: $active-color;
-      //able99
-      //color: $active-color;
-      color: $global-success;
     }
   }
 }
@@ -89,7 +84,7 @@
   @extend %text-truncate;
 
   .#{$icon-prefix} ~ & {
-    font-size: rem-calc(10);
+    //font-size: rem-calc(10);
   }
 }
 
@@ -142,6 +137,7 @@ $tabbar-styles: $am-colors !default;
 }
 
 // common style
-#{keys-to-selector($tabbar-styles, $tabbar-prefix)} {
-  @include tabbar-link-color(#dedede, $global-white);
-}
+//#{keys-to-selector($tabbar-styles, $tabbar-prefix)} {
+//  @include tabbar-link-color($global-normal, $color);
+//}
+

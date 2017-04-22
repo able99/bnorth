@@ -12,15 +12,11 @@
 ) {
   background: $background;
   color: $color;
-  @include retina-line-color(after, darken($background, 5));
-  // border-bottom: 1px solid darken($background, 5);
-
-
+  @include retina-line-color(after, $global-border);
+  
   @if $item-style {
     .#{$navbar-prefix}-nav-item {
-      //able99
-      //color: darken(islight($background), 5%);
-      color: $global-secondary;
+      color: $navbar-color;
     }
   }
 }
@@ -32,10 +28,10 @@
   justify-content: flex-start;
   overflow: visible;
   height: $navbar-height;
-  //padding: $navbar-padding;
+  padding: $navbar-padding;
   line-height: $navbar-line-height;
 
-  @include navbar-colors($navbar-background, $navbar-color, false);
+  @include navbar-colors();
   @extend %retina-line-bottom-after;
 }
 
