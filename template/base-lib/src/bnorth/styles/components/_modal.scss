@@ -282,6 +282,26 @@
   overflow: auto;
 }
 
+// Modal custom
+// -----------------------------------------------------------------------------
+//.#{$modal-popup-prefix} {
+.modal-custom{
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  width: auto;
+  height: auto;
+  z-index: $z-index-modal;
+  //background: #fff;
+  overflow: hidden;
+  //border-radius: $global-radius;
+
+  //@extend %modal-translate;
+}
+
+
 
 // Modal backdrop
 // -----------------------------------------------------------------------------

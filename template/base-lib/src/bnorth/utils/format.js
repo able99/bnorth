@@ -3,30 +3,44 @@ import React from 'react';
 
 const Format = {};
 
+Format.checkObj = function(obj, checker=Format.checkEmpty, ...args){
+  for(let key in obj){
+    if(!checker(obj[key],...args)) return false;
+  }
+  return true;
+}
+
+Format.checkEmpty = function(val){
+  return Boolean(val);
+}
+Format.checkString = function(val,max=Number.MAX_VALUE,min=1){
+  return typeof(val)==='string' && val.length>=min && val.length<max;
+}
+
 Format.money = function(val,defaultValue="0.00"){
   return !isNaN(val)?Number(val).toFixed(2):defaultValue;
 }
-Format.checkMoney = function(val){
-  val = String(val);
-  while(val&&(isNaN(val)||val.split(".")[0].length>7)){
-  	val = val.slice(0,-1);
-  }
+// Format.checkMoney = function(val){
+//   val = String(val);
+//   while(val&&(isNaN(val)||val.split(".")[0].length>7)){
+//   	val = val.slice(0,-1);
+//   }
   
-  let vals = val.split(".");
-  if(vals.length>=2&&vals[1].length>2){
-  	vals[1] = vals[1].slice(0,2);
-  	val = vals.join(".");
-  }
+//   let vals = val.split(".");
+//   if(vals.length>=2&&vals[1].length>2){
+//   	vals[1] = vals[1].slice(0,2);
+//   	val = vals.join(".");
+//   }
 
-  return val;
-}
+//   return val;
+// }
 
-Format.checkString = function(val,max=32,min=0){
-  val = String(val);
-  val = val.length>max?val.slice(0,max):val;
+// Format.checkString = function(val,max=32,min=0){
+//   val = String(val);
+//   val = val.length>max?val.slice(0,max):val;
 
-  return val;
-}
+//   return val;
+// }
 
 moment.locale('zh_CN');
 Format.time = function(val, format="YYYY-MM-DD HH:mm:ss"){

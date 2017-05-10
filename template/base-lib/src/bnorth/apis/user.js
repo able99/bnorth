@@ -1,13 +1,6 @@
 import hash from "crypto";
 
-import { actionsHttpifFetchWrap, actionsHttpifOperation } from '../actions/httpif';
-import { actionsNavi } from '../actions/navigate';
-import { actionsNotice } from '../actions/notice';
-import Storage from './storage';
-import Webview from '../utils/webview';
-import PathName from '../app/pathname';
-import Config from '../app/config';
-
+import { Config, Apis, Actions, RouterStatus } from '../';
 
 //===========
 let User = {};
@@ -16,7 +9,8 @@ let User = {};
 // user wrap
 User.fetchWrap = null;
 User.wrapUpdate =function(){
-  if(this.fetchWrap) this.fetchWrap = actionsHttpifFetchWrap(__filename, Config.ApiAuthUrl);
+  let url = Config.BaseUrl+Config.ApiUrl+Config.AuthUrl;
+  if(this.fetchWrap) this.fetchWrap = Actions.actionsHttpifFetchWrap("user", url);
   this.fetchWrap.update();
 }
 User.wrapState = function(){
@@ -33,13 +27,13 @@ User.wrapClear = function(){
 // user storage
 const StorageUserKey = "BNorthStorageUserKey";
 User.storageLoad = function(){
-  return Storage.getItem(StorageUserKey);
+  return Apis.Storage.getItem(StorageUserKey);
 }
 User.storageSave = function(user){
-  return Storage.saveItem(StorageUserKey,user);
+  return Apis.Storage.saveItem(StorageUserKey,user);
 }
 User.storageClear =function(){
-  return Storage.removeItem(StorageUserKey);
+  return Apis.Storage.removeItem(StorageUserKey);
 }
 
 //===========
@@ -49,7 +43,7 @@ User.getToken = function(){
   return user?user.token:"";
 }
 User.load = function(){
-  return this.wrapData();
+  return this.storageLoad();
 }
 User.save = function(user){
   return this.storageSave(user);
@@ -84,34 +78,51 @@ User.preLogin = function(param){
   param.password = md5.digest("hex");
   return param;
 }
-User.afterLogin = function(result,error){
+User.afterLogin = function(result){
   this.save(result);
-  actionsNavi().actionNaviGoto(PathName.Home);
+  if(RouterStatus&&RouterStatus.location.state){
+    Apis.Navigate.replace(RouterStatus.location.state);
+  }else if(RouterStatus&&RouterStatus.location.param&&RouterStatus.location.param.link){
+    Apis.Navigate.replace(RouterStatus.location.param.link);
+  }else{
+    Apis.Navigate.back();
+  }
+  
   return result;
 }
-let gLoginedCallback = null;
-User.login = function(param){
-  param = this.preLogin(param);
-  actionsHttpifOperation().actionOperationSubmit((result,error)=>{
-    result = this.afterLogin(result,error);
-    onUserUpdate(result);
-    if(gLoginedCallback)gLoginedCallback();
-    gLoginedCallback = null;
-  },Config.ApiAuthUrl,param,"POST");
+User.login = function(aparam){
+  let url =Config.BaseUrl+Config.ApiUrl+Config.AuthUrl;
+  let param = this.preLogin(Object.assign({},aparam));
+  Actions.actionOperateSubmit({
+    resource: url,
+    method: "POST",
+    data:param,
+    success:(result)=>{
+      if(param.success&&param.success(result)){
+        return;
+      }
+      result = this.afterLogin(result);
+      onUserUpdate(result);
+    },
+    error:param.error,
+  });
 }
 User.logout = function(){
-  this.clear();
-  onUserUpdate(null);
-  actionsNavi().actionNaviGoto(PathName.Login);
+  let url = Config.BaseUrl+Config.ApiUrl+Config.AuthUrl;
   
-  actionsHttpifOperation().actionOperationSubmit((result,error)=>{
-  },Config.ApiAuthUrl,{},"DELETE");
+  Actions.actionOperateSubmit({
+    resource: url,
+    method: "DELETE",
+    data:{},
+  });
+
+  User.clear();
+  onUserUpdate(null);
+  Apis.Navigate.push(Config.PathHome);
 }
 User.update = function(){
   this.wrapUpdate();
 }
-
-
 
 
 //===========
@@ -120,30 +131,34 @@ User.isLogin = function(){
   let user = this.load();
   return Boolean(user&&user.token);
 }
-User.checkLogin = function(target=null,force=false,cb=null){
+User.getId = function(){
+  let user = this.load();
+  return user&&user._id;
+}
+User.isAdmin = function(){
+  let user = this.load();
+  return user && user._role_id;
+}
+User.checkLogin = function(force=false){
   let ret = this.isLogin();
-  if(!ret)this.toLogin(target, force, cb);
+  if(!ret)this.toLogin(force);
   return ret;
 }
-User.toLogin = function(target=null,force=false,cb=null){
-  target = target?target:Webview.getHref();
+User.toLogin = function(force=false){
   if(force){
-    gLoginedCallback = cb;
-    actionsNavi().actionNaviGoto(PathName.Login,target);
+    Apis.Navigate.push(Config.PathLogin);
   }else{
-    actionsNotice().actionNoticeDialogShow({
+    Actions.actionNoticeDialogShow({
       closeBtn: false,
       content: "请登录后操作",
       role: "confirm",
       onAction: (confirm)=>{
         if(confirm){
-          actionsNavi().actionNaviGoto(PathName.Login,target);
-          gLoginedCallback = cb;
+          Apis.Navigate.push(Config.PathLogin);
         }
       },
     });
   }
 }
 
-import { ExtendUser } from '../../extend/extend';
-export default Object.assign(User,ExtendUser||{});
+export default User;

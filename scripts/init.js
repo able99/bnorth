@@ -58,6 +58,7 @@ if(isDoProject){
     "test": "bnorth test --env=jsdom",
     "eject": "bnorth eject",
     
+    "plugin": "bnorth plugin",
     "appprepare": "bnorth appprepare",
     "appbuild": "bnorth appbuild",
     "allbuild": "bnorth build && bnorth appbuild",
@@ -118,7 +119,7 @@ if(isDoAndroid||isDoIos){
 // success
 if(isDoEndInfo) {
   console.log(`
-welcome to bnorth
+  welcome to bnorth
   ${chalk.cyan('npm init')}
   Init project, with args start(info) project src lib android ios end(info).
   ${chalk.cyan('npm start')}
@@ -133,5 +134,10 @@ welcome to bnorth
   Build and app build.
   ${chalk.cyan('npm run publish')}
   App release and copy to release directory.
-  `   );
+  ${chalk.cyan('npm run plugin [plugin name]')}
+  Create cordova plugin
+
+  ${chalk.cyan('npm run init [project|src|lib|android|ios]')}
+  BNorth init srcipt,
+  `);
 }

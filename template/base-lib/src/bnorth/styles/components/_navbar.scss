@@ -153,6 +153,6 @@
 // -----------------------------------------------------------------------------
 @each $color-key, $color in $am-colors {
   .#{$navbar-prefix}-#{$color-key} {
-    @include navbar-colors($color, islight($color));
+    @include navbar-colors($color);
   }
 }

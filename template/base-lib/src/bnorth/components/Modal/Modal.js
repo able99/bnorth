@@ -27,7 +27,7 @@ const Modal = createClass({
   propTypes: {
     classPrefix: PropTypes.string,
     role: PropTypes.oneOf(['alert', 'confirm', 'prompt', 'loading',
-      'actions', 'popup']),
+      'actions', 'popup', 'custom']),
     title: PropTypes.node,
     confirmText: PropTypes.string,
     cancelText: PropTypes.string,
@@ -85,6 +85,10 @@ const Modal = createClass({
 
   isActions() {
     return this.props.role === 'actions';
+  },
+
+  isCustom() {
+    return this.props.role === 'custom';
   },
 
   // Get input data for prompt modal
@@ -242,6 +246,26 @@ const Modal = createClass({
     );
   },
 
+  renderCustom(classSet) {
+    classSet[this.props.classPrefix] = false;
+
+    let {
+      className,
+      title,
+      children,
+      ...props
+    } = this.props;
+
+    return (
+        React.cloneElement(children,{
+          ...this.removeUnknownProp(props),
+          className: cx(classSet, className),
+          key: "modalCustom",
+          ref: "modal",
+        })
+    );
+  },
+
   renderHeader() {
     let {
       title,
@@ -390,6 +414,7 @@ const Modal = createClass({
 
     let classSet = this.getClassSet();
     let {
+      noMask,
       role,
       className,
       title,
@@ -408,6 +433,8 @@ const Modal = createClass({
       modal = this.renderTransition(this.renderActions(classSet));
     } else if (this.isPopup()) {
       modal = this.renderTransition(this.renderPopup(classSet));
+    } else if (this.isCustom()) {
+      modal = this.renderCustom(classSet);
     } else {
       let style = {
         width: modalWidth,
@@ -443,7 +470,7 @@ const Modal = createClass({
       );
     }
 
-    return this.renderBackdrop(modal);
+    return noMask?modal:this.renderBackdrop(modal);
   }
 });
 

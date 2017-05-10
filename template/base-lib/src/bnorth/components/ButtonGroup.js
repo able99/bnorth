@@ -47,6 +47,7 @@ const ButtonGroup = React.createClass({
         className={cx(className, classSet)}
       >
         {React.Children.map(this.props.children, (child, i) => {
+          if(!child)return;
           return cloneElement(child, Object.assign({
             amStyle,
             amSize,

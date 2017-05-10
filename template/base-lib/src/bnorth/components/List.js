@@ -152,7 +152,6 @@ const ListItem = React.createClass({
       <div
         key={'item-' + type}
         className={this.prefixClass(type.toLowerCase())}
-        style={type==="media"?{alignSelf: 'flex-start'}:null}
       >
         {this.props[type]}
       </div>

@@ -1,69 +1,71 @@
-import Config from '../app/config';
-import User from './user';
+import { Config, Apis } from '../';
 
-let Netif = {};
+export default {
+  handleStatus(status,resolve,reject){
+    switch(status){
+      case 401:
+        Apis.User.toLogin(null, true);
+        return new Promise(()=>{});
+      default:
+        return false;
+    }
+  },
 
-Netif.handleStatus = function(status,resolve,reject){
-  switch(status){
-    case 401:
-      User.toLogin(null, true);
-      return true;
-    default:
-      return false;
-  }
-}
+  fetch(options={}){
+    options.resource = options.resource || "/";
 
-Netif.fetch = function(options={}){
-  options.resource = options.resource || "/";
+    return new Promise((resolve,reject)=>{
+      let url = options.resource.indexOf("http")===0?"":(Config.BaseUrl+Config.ApiUrl);
+      url += options.resource;
+    	fetch(url,{
+    	  method: "get",
+    	  headers: {
+    	    "authorization": Apis.User.getToken(),
+    	  },
+    	}).then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          let handle = this.handleStatus(res.status,resolve,reject);
+          if(handle)return handle;
 
-  return new Promise((resolve,reject)=>{
-  	fetch((options.resource.indexOf("http")===0?"":Config.BaseApiUrl)+options.resource,{
-  	  method: "get",
-  	  headers: {
-  	    "x-token": User.getToken(),
-  	  },
-  	}).then(function(res) {
-      if (res.ok) {
-        return res.json();
-      } else {
-        if(this.handleStatus(res.status,resolve,reject)){
-          return;
+          return reject({code:res.status, message:res.statusText});
         }
-        return reject({code:res.status, message:res.statusText});
-      }
-    }).then(function(result) {
-      resolve(result);
+      }).then(function(result) {
+        resolve(result);
+      });
     });
-  });
-}
+  },
 
-Netif.operate = function(options={}){
-  options.resource = options.resource || "/";
+  operate(options={}){
+    options.resource = options.resource || "/";
 
-  return new Promise((resolve,reject)=>{
-    fetch((options.resource.indexOf("http")===0?"":Config.BaseApiUrl)+options.resource,{
-      method: options.method||"put",
-      headers: {
-        "x-token": options.token||User.getToken(),
-      },
-    }).then(function(res) {
-      if (res.ok) {
-        return res.json();
-      } else {
-        if(this.handleStatus(res.status,resolve,reject)){
-          return;
+    return new Promise((resolve,reject)=>{
+      let url = options.resource.indexOf("http")===0?"":(Config.BaseUrl+Config.ApiUrl);
+      url += options.resource;
+      fetch(url,{
+        method: options.method||"POST",
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": options.token||Apis.User.getToken(),
+        },
+        body: JSON.stringify(options.data), 
+      }).then((res)=>{
+        if (res.ok) {
+          return res.json();
+        } else {
+          let handle = this.handleStatus(res.status,resolve,reject);
+          if(handle)return handle;
+
+          return reject({code:res.status, message:res.statusText});
         }
-        return reject({code:res.status, message:res.statusText});
-      }
-    }).then(function(result) {
-      resolve(result);
+      }).then((result)=>{
+        resolve(result);
+      });
     });
-  });
+  },
+
 }
-
-import { ExtendNetif } from '../../extend/extend';
-export default Object.assign(Netif,ExtendNetif||{});
-
 
 
 

@@ -1,5 +1,7 @@
 import { bindActionCreators } from 'redux';
 
+import { ActionStore } from '../';
+
 //==================
 // message
 export const APP_NOTICE = 'APP_NOTICE';
@@ -135,7 +137,7 @@ export function actionsNotice(){
     //dialog
     actionNoticeDialogShow,
     actionNoticeDialogClose,
-  },window.store.dispatch);
+  },ActionStore.dispatch);
   return actionsNoticeObj;
 }
 

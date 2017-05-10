@@ -45,6 +45,15 @@ Usefull script
 ```
 	App release and copy to release directory.
 
+```sh
+	npm run init [project|src|lib|android|ios]
+```
+	BNorth init srcipt,
+
+```sh
+	npm run plugin [plugin name]
+```
+	Create cordova plugin
 
 Usage
 ======

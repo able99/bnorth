@@ -22,6 +22,7 @@ case 'start':
 case 'test':
 case 'eject':
 
+case 'plugin':
 case 'appprepare':
 case 'appbuild':
 case 'publish':

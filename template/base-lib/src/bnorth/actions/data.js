@@ -1,6 +1,6 @@
 import { bindActionCreators } from 'redux';
-import Util from '../utils/util';
 
+import { Utils,ActionStore } from '../';
 
 const DataInit = 'DataInit';
 const DataUpdate = 'DataUpdate';
@@ -25,29 +25,23 @@ let actionsDataObj = null;
 export function actionsData(){
   if(actionsDataObj)return actionsDataObj;
 
-  actionsDataObj = bindActionCreators({actionDataInit,actionDataUpdate},window.store.dispatch);
+  actionsDataObj = bindActionCreators({actionDataInit,actionDataUpdate},ActionStore.dispatch);
   return actionsDataObj;
 }
 
 let actionsWrapDataMap = {};
-export function actionsDataWrap(uuid=null, initData=null, onChange=null){
-  uuid = uuid?uuid:Util.uuid();
+export function actionsDataWrap(uuid=null, options={}){
+  uuid = uuid?uuid:Utils.Util.uuid();
   if(actionsWrapDataMap[uuid])return actionsWrapDataMap[uuid];
-
+  
   let wrap = {
-    uuid,
     clear: ()=>{
-      let reduxer = window.store.getState().ReduxerData;
+      let reduxer = ActionStore.getState().ReduxerData;
       delete reduxer.datas[uuid];
       delete actionsWrapDataMap[uuid]; 
     },
-
-    state: ()=>{
-      let reduxer = window.store.getState().ReduxerData;
-      return {[uuid]:reduxer.datas[uuid]||{}}; 
-    },
     data: ()=>{
-      let reduxer = window.store.getState().ReduxerData;
+      let reduxer = ActionStore.getState().ReduxerData;
       return (reduxer && reduxer.datas && reduxer.datas[uuid]) || {};
     },
 
@@ -55,18 +49,21 @@ export function actionsDataWrap(uuid=null, initData=null, onChange=null){
       actionsData().actionDataInit(uuid, data);
     },
     update: (data)=>{
-      if(onChange){
-        data = onChange(data);
+      if(this.onChange){
+        data = this.onChange(data);
       }
       actionsData().actionDataUpdate(uuid, data);
     },
-    setOnChange: (cb)=>{
-      onChange=cb;
-    },
   }
 
+  wrap.uuid = uuid;
+  wrap = Object.assign(wrap,wrap,options);
+  wrap.initData = wrap.initData || {};
+  //actionsData().actionDataInit(uuid, wrap.initData);
+  wrap.clearOnStop = wrap.clearOnStop===undefined?true:wrap.clearOnStop;
+  ActionStore.getState().ReduxerData.datas[uuid] = wrap.initData;
+
   actionsWrapDataMap[uuid] = wrap;
-  if(typeof(initData)==="object" && !Array.isArray(initData)) actionsData().actionDataInit(uuid, initData);
   return wrap;
 }
 
@@ -89,7 +86,7 @@ export function ReduxerData(state = StateData, action) {
     return Object.assign({}, state, {
       uuid: action.uuid,
       datas: Object.assign({}, state.datas, {
-        [action.uuid]:Object.assign({}, state.datas[action.uuid], action.data),
+        [action.uuid]:Array.isArray(action.data)?action.data:Object.assign({}, state.datas[action.uuid], action.data),
       }),
     });
 
