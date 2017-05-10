@@ -4,6 +4,8 @@
 
 @interface ACPSTemplate : CDVPlugin
 
+@property (nonatomic, copy) NSString *callbackId;
+
 - (void)init:(CDVInvokedUrlCommand*)command;
 - (void)funcA:(CDVInvokedUrlCommand*)command;
 

@@ -2,8 +2,6 @@
 
 @implementation ACPSTemplate : CDVPlugin
 
-@synthesize callbackId;
-
 - (void)pluginInitialize{
 
 }

@@ -24,6 +24,8 @@
         <param name="android-package" value="com.able99.cps.ACPSTemplate"/>
       </feature>
     </config-file>
+
+    <source-file src="src/android/com/able99/cps/ACPSTemplate.java" target-dir="src/com/able99/cps/"/>
   </platform>
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
