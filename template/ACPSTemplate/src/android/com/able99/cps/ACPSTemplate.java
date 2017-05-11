@@ -17,11 +17,11 @@ public class ACPSTemplate extends CordovaPlugin {
     @Override
     public boolean execute(final String action, final JSONArray data, final CallbackContext callbackContext) {
         Log.v(LOG_TAG, "execute: action=" + action);
-        _CallbackContext = callbackContext;
 
         if ("init".equals(action)) {
             cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
+                    _CallbackContext = callbackContext;
                     PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
                     pluginResult.setKeepCallback(true);
                     _CallbackContext.sendPluginResult(pluginResult);
@@ -29,7 +29,7 @@ public class ACPSTemplate extends CordovaPlugin {
             });
         }else if ("funcA".equals(action)) {
             PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, "hello world!");
-            _CallbackContext.sendPluginResult(pluginResult);
+            callbackContext.sendPluginResult(pluginResult);
         } else {
             Log.e(LOG_TAG, "Invalid action : " + action);
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));

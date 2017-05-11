@@ -11,7 +11,7 @@ var ACPSTemplate = function(options) {
 
     var success = function(result) {
         if (result && typeof result.type !== 'undefined') {
-            that.emit(result.type, result);
+            that.emit(result.type, result.data);
         } else if (result) {
             that.emit('success', result);
         }
