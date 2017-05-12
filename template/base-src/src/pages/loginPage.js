@@ -8,7 +8,13 @@ export default React.createClass({
   render() {
     return (
       <View {...this.getPageProps()}>
-        <NavBar amStyle="primary" title='登录' />
+        <NavBar 
+          amStyle="primary" title='登录' 
+          leftNav={[{
+            icon: 'left-nav',
+            component: "a",
+            onClick:()=>{this.props.Apis.Navigate.back()},
+          }]} />
         <Container scrollable>
           <List>
             <List.Item 
