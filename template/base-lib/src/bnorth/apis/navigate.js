@@ -1,4 +1,4 @@
-import { Apis, RouterStatus } from '../';
+import { Config, Apis, RouterStatus } from '../';
 
 function navi(gotoOrReplace,...args){
   let {location,router,} = RouterStatus;
@@ -8,6 +8,7 @@ function navi(gotoOrReplace,...args){
   let state = {};
   let extern = false;
   let absolute = false;
+  let uper = 0;
   for(let arg of args){
     if(Array.isArray(arg)){
       state = Object.assign(state,...arg);
@@ -15,9 +16,13 @@ function navi(gotoOrReplace,...args){
       extern = extern || arg.extern;
       extern = extern || (arg.path && arg.path.indexOf("http")===0);
       absolute = absolute || (arg.path && arg.path.indexOf("/")===0);
+
+      if(arg.path===".."){uper++;continue}
       if(arg.path) paths.push(arg.path);
     }else{
       arg = arg.toString()||"";
+      if(arg===".."){uper++;continue}
+
       let aextern = (paths.length===0&&arg.indexOf("http")===0);
       let aabsolute = (paths.length===0&&arg.indexOf("/")===0);
       extern = extern || aextern;
@@ -28,10 +33,10 @@ function navi(gotoOrReplace,...args){
 
   let pathname = "";
   if(!absolute){
-    if(gotoOrReplace){
+    if(uper<=0){
       pathname = location.pathname + "/";
     }else{
-      pathname = router.routes.slice(1,-1).map((v)=>{return (v.path||"")}).join("/") + "/";
+      pathname = router.routes.slice(1,-uper).map((v)=>{return (v.path||"")}).join("/") + "/";
       for (let key in router.params) {
         let re = new RegExp(":"+key,"g"); 
         pathname = pathname.replace(re,router.params[key]);
@@ -67,6 +72,13 @@ export default {
   },
   replace(...args){
     navi(false,...args);
+  },
+  exit(){
+    if(Config.OnBrowser && Config.OnBrowserDebug){
+      window.close();
+    }else{
+      navigator.app.exitApp();
+    }
   },
 }
 

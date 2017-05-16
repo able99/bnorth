@@ -52,6 +52,7 @@ import ProgressBar from './components/ProgressBar';
 //==============================
 let Config = {};
 
+Config.NetCache = false;
 Config.BaseUrl = window.location.protocol + "//" + window.location.hostname + ((window.location.port === 80 || window.location.port === 443 || window.location.port === "")? "" : ":" + window.location.port) + "/";
 Config.ApiUrl = "rapi/";
 Config.AuthUrl = "auth/";
@@ -152,7 +153,6 @@ const MixinPage = {
     }
 
     this.componentDidResume();
-    //if(this.onBackKey) gOnBackKey = this.onBackKey.bind(this); //????
   },
 
   componentDidUpdate: function(prevProps) {
@@ -176,8 +176,19 @@ const MixinPage = {
   },
 
   componentDidResume: function() {
+    ComponentDidBackKey = this.componentDidBackKey;//this.componentDidBackKey.bind(this);
+
     if(this.props.onResume){
       this.props.onResume(this);
+    }
+  },
+
+  componentDidBackKey: function() {
+    if(this.props.onBackKey){
+      this.props.onBackKey();
+      return true;
+    }else{
+      return false;
     }
   },
 
@@ -320,6 +331,7 @@ const AppLifeCycle = {
 
 //================
 // app page
+let ComponentDidBackKey = null;
 const AppPage = React.createClass({
   mixins: [MixinApp],
   //================
@@ -327,31 +339,30 @@ const AppPage = React.createClass({
   appEventBind(){
     document.addEventListener("deviceready", ()=>{
       document.addEventListener("backbutton", ()=>{
-        this.appHandleEventBackKey();
+        if(!this.componentDidBackKey()){
+          Apis.Navigate.back();
+        }
       }, false);
 
       document.addEventListener("pause", ()=>{
-        this.appDidBackground();
+        this.componentDidPause();
       }, false);
 
       document.addEventListener("resume", ()=>{
-        this.appDidForceground();
+        this.componentDidResume();
       }, false);
     }, false);
-    // if(Config.OnBrowser && Config.OnBrowserDebug){
-    //   document.addEventListener("keydown", (keyevent)=>{
-    //     if(keyevent.code==="Backspace"){
-    //       this.appHandleEventBackKey();
-    //     }
-    //   }, false);
-    // }
+    if(Config.OnBrowser && Config.OnBrowserDebug){
+      document.addEventListener("keydown", (keyevent)=>{
+        if(keyevent.keyCode===192){
+          if(!this.componentDidBackKey()){
+            Apis.Navigate.back();
+          }
+        }
+      }, false);
+    }
   },
-  // appHandleEventBackKey(){
-  //   if(!gOnBackKey || !gOnBackKey() || !ExtendAppLifeCircle || !ExtendAppLifeCircle.onBackKey()){
-  //     Actions.actionNaviBack();
-  //   }
-  // },
-
+  
   //--------------------
   // app life 
   componentWillMount(){
@@ -376,6 +387,15 @@ const AppPage = React.createClass({
   },
   componentDidPause(){
     if(AppLifeCycle.onPause && AppLifeCycle.onPause.apply(this)) return;
+  },
+  componentDidBackKey(){
+    if(AppLifeCycle.onBackKey && AppLifeCycle.onBackKey.apply(this)) return;
+
+    if(ComponentDidBackKey && ComponentDidBackKey()){
+      return true;
+    }else{
+      return false;
+    }
   },
 
   //-------------------
@@ -513,6 +533,8 @@ function createDefaultConnect(creator){
           }
         },
       }
+      if(objs.onBackKey)ret.onBackKey=objs.onBackKey;
+
       ret.Wraps={};
       for(let obj of objs.Wraps||[]){
         ret.Wraps[obj.uuid] = obj;

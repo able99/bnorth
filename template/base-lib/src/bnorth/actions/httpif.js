@@ -14,16 +14,21 @@ function actionHttpifFetch(uuid,options){
     dispatch(actionHttpifFetching(uuid));
 
     Apis.Netif.fetch(options)
-    .then((result)=>{
-      Actions.actionNoticeLoadingFinish();
-      dispatch(actionHttpifFetchSuccess(uuid,result,options.append));
-      if(options.success && typeof(options.success)==="function"){options.success(result)};
-    })
+    .then(
+      (result)=>{
+        Actions.actionNoticeLoadingFinish();
+        dispatch(actionHttpifFetchSuccess(uuid,result,options.append));
+        if(options.success && typeof(options.success)==="function"){options.success(result)};
+      },
+      (error)=>{
+        Actions.actionNoticeLoadingFinish();
+        if(error)Actions.actionNoticeMessage(error);
+        dispatch(actionHttpifFetchFail(uuid,error));
+        if(error && options.error && typeof(options.error)==="function"){options.error(error)};
+      }
+    )
     .catch((error)=>{
-      Actions.actionNoticeLoadingFinish();
-      Actions.actionNoticeMessage(error);
-      dispatch(actionHttpifFetchFail(uuid,error));
-      if(options.error && typeof(options.error)==="function"){options.error(error)};
+      if(error)Actions.actionNoticeMessage(error);
     });    
   }
 }
@@ -159,14 +164,19 @@ function actionOperateSubmit(options){
     Actions.actionNoticeBlock();
     
     Apis.Netif.operate(options)
-    .then((result)=>{
-      Actions.actionNoticeBlockFinish();
-      if(options.success && typeof(options.success)==="function"){options.success(result)};
-    })
+    .then(
+      (result)=>{
+        Actions.actionNoticeBlockFinish();
+        if(options.success && typeof(options.success)==="function"){options.success(result)};
+      },
+      (error)=>{
+        Actions.actionNoticeBlockFinish();
+        if(error)Actions.actionNoticeMessage(error);
+        if(error && options.error && typeof(options.error)==="function"){options.error(error)};
+      }
+    )
     .catch((error)=>{
-      Actions.actionNoticeBlockFinish();
       Actions.actionNoticeMessage(error);
-      if(options.error && typeof(options.error)==="function"){options.error(error)};
     });  
   }
 }

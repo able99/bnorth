@@ -15,11 +15,12 @@ const Pager = React.createClass({
     let {
       className,
       children,
+      style,
     } = this.props;
 
     return (
       <div className={cx(this.getClassSet(),className)} >
-        {children}
+        {!style?children.filter((v)=>{return v.props.active}):children}
       </div>
     );
   },

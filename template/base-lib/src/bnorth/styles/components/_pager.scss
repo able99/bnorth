@@ -3,9 +3,10 @@
 
 .#{$pager-prefix} {
   position: relative;
-  z-index: 100;
+  //z-index: 100;
   overflow: hidden;
-  @include square(100%);
+  width: 100%;
+  //@include square(100%);
 }
 
 .#{$pager-prefix}-panel {
@@ -23,7 +24,7 @@
   transform: translateX(-100%);
 
   &.#{map_get($am-states, active)} {
-    position: relative;
+    position: absolute;
     z-index: 100;
     visibility: visible;
     transform: translateX(0);

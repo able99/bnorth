@@ -3,7 +3,9 @@ import React from 'react';
 
 const Format = {};
 
-Format.checkObj = function(obj, checker=Format.checkEmpty, ...args){
+Format.checkObj = function(obj, checker=Format.checkVal, ...args){
+  if(!Object.keys(obj).length) return false;
+
   for(let key in obj){
     if(!checker(obj[key],...args)) return false;
   }
@@ -11,6 +13,9 @@ Format.checkObj = function(obj, checker=Format.checkEmpty, ...args){
 }
 
 Format.checkEmpty = function(val){
+  return val !== null && val !== undefined && val !== "";
+}
+Format.checkVal = function(val){
   return Boolean(val);
 }
 Format.checkString = function(val,max=Number.MAX_VALUE,min=1){

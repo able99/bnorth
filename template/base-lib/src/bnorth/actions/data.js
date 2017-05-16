@@ -49,8 +49,8 @@ export function actionsDataWrap(uuid=null, options={}){
       actionsData().actionDataInit(uuid, data);
     },
     update: (data)=>{
-      if(this.onChange){
-        data = this.onChange(data);
+      if(options.onChange){
+        data = options.onChange(data);
       }
       actionsData().actionDataUpdate(uuid, data);
     },
@@ -83,10 +83,17 @@ export function ReduxerData(state = StateData, action) {
     });
 
   case DataUpdate:
+    let data = null;
+    if(Array.isArray(action.data)){
+      data = Array.from(state.datas[action.uuid]);
+      data = data.concat(action.data);
+    }else{
+      data = Object.assign({}, state.datas[action.uuid], action.data);
+    }
     return Object.assign({}, state, {
       uuid: action.uuid,
       datas: Object.assign({}, state.datas, {
-        [action.uuid]:Array.isArray(action.data)?action.data:Object.assign({}, state.datas[action.uuid], action.data),
+        [action.uuid]:data,
       }),
     });
 

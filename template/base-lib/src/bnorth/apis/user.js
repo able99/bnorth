@@ -81,7 +81,7 @@ User.preLogin = function(param){
 User.afterLogin = function(result){
   this.save(result);
   if(RouterStatus&&RouterStatus.location.state){
-    Apis.Navigate.replace(RouterStatus.location.state);
+    Apis.Navigate.replace(RouterStatus.location.state.pathname);
   }else if(RouterStatus&&RouterStatus.location.param&&RouterStatus.location.param.link){
     Apis.Navigate.replace(RouterStatus.location.param.link);
   }else{
@@ -107,7 +107,7 @@ User.login = function(aparam){
     error:param.error,
   });
 }
-User.logout = function(){
+User.logoutNetif = function(){
   let url = Config.BaseUrl+Config.ApiUrl+Config.AuthUrl;
   
   Actions.actionOperateSubmit({
@@ -115,6 +115,9 @@ User.logout = function(){
     method: "DELETE",
     data:{},
   });
+}
+User.logout = function(){
+  User.logoutNetif();
 
   User.clear();
   onUserUpdate(null);

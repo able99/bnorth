@@ -80,7 +80,7 @@ $global-border:    $gray-lighter;
 $global-pagebg:    $gray-lighteer;
 $global-titlebg:   $gray-lighteeer;
 $global-link:      #008bec !default;
-$global-disable:   $gray-darker !default;
+$global-disable:   $gray-lighter !default;
 $global-highlight: #fff !default;
 $global-select:    #fff !default;
 $global-normal:    $gray-darker !default;
@@ -263,7 +263,7 @@ $text-field-selectors: 'input[type="text"],
                         input[type="search"],
                         input[type="color"],
                         textarea';
-$text-field-color: $gray-darker !default;
+$text-field-color: $global-normal !default;
 $text-field-color-hover: $text-field-color !default;
 $text-field-color-focus: $text-field-color !default;
 $text-field-background: #fff !default;
@@ -278,7 +278,7 @@ $text-field-cursor-disabled: not-allowed !default;
 // Labels
 $form-label-fontsize: 1rem !default;
 $form-label-margin: 0.5rem !default;
-$form-label-color: $gray-darker !default;
+$form-label-color: $global-normal !default;
 
 // Select
 $select-color: $gray-darker !default;
@@ -444,7 +444,7 @@ $tabbar-height-px: 49 !default;
 $tabbar-height: rem-calc($tabbar-height-px) !default;
 $tabbar-padding-horizontal: $global-padding !default;
 $tabbar-background: $global-primary !default;
-$tabbar-color: $global-normal!default;
+$tabbar-color: $global-disable!default;
 $tabbar-color-select: $global-select!default;
 
 
