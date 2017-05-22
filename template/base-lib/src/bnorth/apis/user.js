@@ -85,7 +85,7 @@ User.afterLogin = function(result){
   }else if(RouterStatus&&RouterStatus.location.param&&RouterStatus.location.param.link){
     Apis.Navigate.replace(RouterStatus.location.param.link);
   }else{
-    Apis.Navigate.back();
+    Apis.Navigate.goHome(true);
   }
   
   return result;

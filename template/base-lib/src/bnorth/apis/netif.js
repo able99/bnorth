@@ -23,17 +23,16 @@ export default {
   //==================
   // error handle
   //==================
-  handleStatus(status,resolve,reject){
+  handleStatus(status){
     switch(status){
       case 401:
         Apis.User.toLogin(null, true);
-        reject(null);
         return true;
       default:
         return false;
     }
   },
-  handleResult(result,resolve,reject){
+  handleResult(result,isFetch){
     return false;
   },
 
@@ -84,13 +83,12 @@ export default {
   //==================
   fetch(options={}){
     options.resource = options.resource || "/";
-    return new Promise((resolve,reject)=>{
-      if(Config.NetCache){
-        let cache = this.getCache(this.getCacheFetchKey(options));
-        if(cache){ resolve(cache); return; }
-      }
-      
-      fetch(
+
+    if(Config.NetCache){
+      let cache = this.getCache(this.getCacheFetchKey(options));
+      if(cache){ return Promise.resolve(cache); }
+    }else{
+      return fetch(
         this.paramFetchUrl(options),
         {
           method: this.paramFetchMethod(options),
@@ -106,61 +104,57 @@ export default {
         if (res.ok) {
           return res.json();
         } else {
-          let handle = this.handleStatus(res.status,resolve,reject);
-          if(handle)return handle;
+          let handle = this.handleStatus(res.status);
+          if(handle) return Promise.reject(null);
 
-          return reject({code:res.status, message:res.statusText});
+          return Promise.reject({code:res.status, message:res.statusText||Config.StrNetCommonError});
         }
       })
       .then(
         (result)=>{
-          let handle = this.handleResult(result,resolve,reject);
-          if(handle)return handle;
+          let handle = this.handleResult(result,true);
+          if(handle) return Promise.reject(null);
 
-          resolve(result);
           if(Config.NetCache){this.saveCache(this.getCacheFetchKey(options),result)}
+          return result;
         },
-        (error)=>{
-          reject(error);
-        }
       );
-    });
+    }
   },
 
   operate(options={}){
     options.resource = options.resource || "/";
-    return new Promise((resolve,reject)=>{
-      fetch(
-        this.paramOperateUrl(options),
-        {
-          method: this.paramOperateMethod(options),
-          headers: {
-            ...this.paramAuthorization(options),
-            ...this.paramOperateHeader(options),
-            ...this.paramOperateContentType(options),
-          },
-          body: this.paramOperateBody(options), 
-        }
-      )
-      .then((res)=>{
-        if (res.ok) {
-          return res.json();
-        } else {
-          let handle = this.handleStatus(res.status,resolve,reject);
-          if(handle)return handle;
+    
+    return fetch(
+      this.paramOperateUrl(options),
+      {
+        method: this.paramOperateMethod(options),
+        headers: {
+          ...this.paramAuthorization(options),
+          ...this.paramOperateHeader(options),
+          ...this.paramOperateContentType(options),
+        },
+        body: this.paramOperateBody(options), 
+      }
+    )
+    .then((res)=>{
+      if (res.ok) {
+        return res.json();
+      } else {
+        let handle = this.handleStatus(res.status);
+        if(handle) return Promise.reject(null);
 
-          return reject({code:res.status, message:res.statusText});
-        }
-      })
-      .then(
-        (result)=>{
-          resolve(result);
-        },
-        (error)=>{
-          reject(error);
-        },
-      );
-    });
+        return Promise.reject({code:res.status, message:res.statusText||Config.StrNetCommonError});
+      }
+    })
+    .then(
+      (result)=>{
+        let handle = this.handleResult(result,false);
+        if(handle) return Promise.reject(null);
+
+        return result;
+      },
+    );
   },
 
 }

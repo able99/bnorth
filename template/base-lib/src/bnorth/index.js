@@ -66,6 +66,8 @@ Config.OnApp = Config.OnBrowserDebug||Boolean(window.cordova);
 Config.PathHome = "/";
 Config.PathLogin = "/login";
 
+Config.StrNetCommonError = "网络连接错误";
+
 //==============================
 // utils
 //==============================
@@ -133,7 +135,7 @@ AppData.getProps = function(key){
 //==============
 // app mixin
 //==============
-
+let ComponentDidBackKey = null;
 //==============
 // page mixin
 const MixinPage = {
@@ -331,7 +333,6 @@ const AppLifeCycle = {
 
 //================
 // app page
-let ComponentDidBackKey = null;
 const AppPage = React.createClass({
   mixins: [MixinApp],
   //================
@@ -401,6 +402,7 @@ const AppPage = React.createClass({
   //-------------------
   // render
   render() {
+    //console.log("app",this.props.ReduxerNotice);
     return !this.props.wrap_app.ready
     ?(
       <View focus>
@@ -427,7 +429,7 @@ const AppPage = React.createClass({
           );
         })}
 
-        {this.props.ReduxerNotice.blocking?(<View className="bg-mask layout-v-center-center text-primary layout-z-line"><Loader  /></View>):null}
+        {this.props.ReduxerNotice.blocking?(<View focus className="bg-mask layout-v-center-center text-primary layout-z-line"><Loader  /></View>):null}
 
         <ProgressBar percent={0} spinner={false} intervalTime={200} autoIncrement={this.props.ReduxerNotice.loading} />
 
@@ -499,7 +501,8 @@ function createDefaultConnect(creator){
         ret[obj] = state[obj];
       }
       for(let obj of objs.Wraps||[]){
-        ret["wrap_"+obj.uuid] = obj.data(obj.initData);
+        if(obj.data) ret["wrap_"+obj.uuid] = obj.data(obj.initData);
+        if(obj.state) ret["wrap_state_"+obj.uuid] = obj.state(obj.initData);
       }
 
       return ret;

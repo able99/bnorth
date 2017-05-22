@@ -62,7 +62,7 @@ function navi(gotoOrReplace,...args){
   }
 }
 
-export default {
+let Navigate = {
   push(...args){
     navi(true,...args);
   },
@@ -80,6 +80,16 @@ export default {
       navigator.app.exitApp();
     }
   },
+  goHome(replace){
+    let func = replace?Navigate.replace:Navigate.push;
+    func(Config.PathHome);
+  },
+  goLogin(replace){
+    let func = replace?Navigate.replace:Navigate.push;
+    func(Config.PathLogin);
+  },
 }
+
+export default Navigate;
 
 

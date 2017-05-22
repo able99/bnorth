@@ -142,7 +142,7 @@ const AccordionItem = React.createClass({
   },
 
   getCollapsibleDOMNode() {
-    if (!this.mounted() || !this.refs || !this.refs.panel) {
+    if (!this.mounted || !this.refs || !this.refs.panel) {
       return null;
     }
 

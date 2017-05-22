@@ -10,21 +10,21 @@ const HttpifFetchFetchSuccess = 'HttpifFetchFetchSuccess';
 const HttpifFetchFetchFail = 'HttpifFetchFetchFail';
 function actionHttpifFetch(uuid,options){
   return (dispatch)=>{
-    Actions.actionNoticeLoading();
+    options.blocking?Actions.actionNoticeBlock():Actions.actionNoticeLoading();
     dispatch(actionHttpifFetching(uuid));
 
     Apis.Netif.fetch(options)
     .then(
       (result)=>{
-        Actions.actionNoticeLoadingFinish();
+        options.blocking?Actions.actionNoticeBlockFinish():Actions.actionNoticeLoadingFinish();
         dispatch(actionHttpifFetchSuccess(uuid,result,options.append));
         if(options.success && typeof(options.success)==="function"){options.success(result)};
       },
       (error)=>{
-        Actions.actionNoticeLoadingFinish();
-        if(error)Actions.actionNoticeMessage(error);
+        options.blocking?Actions.actionNoticeBlockFinish():Actions.actionNoticeLoadingFinish();
         dispatch(actionHttpifFetchFail(uuid,error));
-        if(error && options.error && typeof(options.error)==="function"){options.error(error)};
+        if(error && options.error && typeof(options.error)==="function"){error = options.error(error)};
+        if(error)Actions.actionNoticeMessage(error);
       }
     )
     .catch((error)=>{
@@ -95,6 +95,23 @@ export function actionsHttpifFetchWrap(uuid=null,options={}){
   wrap = Object.assign(wrap,wrap,options);
   wrap.initData = wrap.initData||{};
   wrap.clearOnStop = wrap.clearOnStop===undefined?true:wrap.clearOnStop;
+
+  if(options.traceState){
+    wrap.state=function(){
+      let reduxer = ActionStore.getState().ReduxerHttpifFetch;
+      return reduxer && reduxer.fetchResult && reduxer.fetchResult[uuid] || {};
+    };
+    wrap.ready=function(){
+      let reduxer = ActionStore.getState().ReduxerHttpifFetch;
+      let state = reduxer && reduxer.fetchResult && reduxer.fetchResult[uuid] || {};
+      return state.fetching === false && !state.invalid;
+    };
+    wrap.error=function(){
+      let reduxer = ActionStore.getState().ReduxerHttpifFetch;
+      let state = reduxer && reduxer.fetchResult && reduxer.fetchResult[uuid] || {};
+      return state.error;
+    };
+  }
   
   actionsHttpifFetchWrapMap[uuid] = wrap;
   return wrap;
@@ -171,8 +188,8 @@ function actionOperateSubmit(options){
       },
       (error)=>{
         Actions.actionNoticeBlockFinish();
+        if(error && options.error && typeof(options.error)==="function"){error = options.error(error)};
         if(error)Actions.actionNoticeMessage(error);
-        if(error && options.error && typeof(options.error)==="function"){options.error(error)};
       }
     )
     .catch((error)=>{

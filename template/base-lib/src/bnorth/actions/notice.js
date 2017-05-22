@@ -8,6 +8,7 @@ export const APP_NOTICE = 'APP_NOTICE';
 let gActionAppNoticeTimerId = null;
 let gActionAppNoticeTimerCount = 0;
 export function actionNoticeMessage(notice="") {
+  notice = notice.message && (typeof notice.message === 'object')?notice.message:notice;
   notice = notice.reason ||  notice.message || notice.error || notice;
   return (dispatch)=>{
     if(gActionAppNoticeTimerId){
