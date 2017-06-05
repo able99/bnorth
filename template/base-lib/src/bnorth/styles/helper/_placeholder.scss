@@ -62,3 +62,17 @@
 %text-truncate {
   @include text-overflow();
 }
+
+%text-truncate2 {
+  @include line-clamp();
+}
+
+%text-truncate3 {
+  @include line-clamp(3);
+}
+
+%text-truncate4 {
+  @include line-clamp(4);
+}
+
+

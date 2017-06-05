@@ -41,7 +41,7 @@
   cursor: pointer;
 
   &:active {
-    background: $gray-lighter;
+    background: $global-gray-lighter;
   }
 
   .#{$accordion-prefix}-item.#{map_get($am-states, disabled)} & {
@@ -52,7 +52,7 @@
   .#{$accordion-prefix}-icon {
     @include fixes-flexbox-for-android;
     font-size: rem-calc(20);
-    color: rgba($gray-light, .45);
+    color: rgba($global-gray-light, .45);
     transform: rotate(0deg);
     transition: transform .3s;
   }
@@ -68,7 +68,7 @@
 .#{$accordion-prefix}-content {
   padding: 0 $global-spacing rem-calc(10);
   font-size: rem-calc(15);
-  color: $gray;
+  color: $global-gray;
 }
 
 // modifier: inset

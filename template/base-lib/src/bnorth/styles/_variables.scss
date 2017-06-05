@@ -14,7 +14,6 @@ $rem-base: 16px;
 
 // The default font-size is set to 100% of the browser style sheet (usually 16px)
 // for compatibility with browser-based text zoom or user-set defaults.
-
 // Since the typical default browser font-size is 16px, that makes the calculation for grid size.
 // If you want your base font-size to be different and not have it affect the grid breakpoints,
 // set $rem-base to $base-font-size and make sure $base-font-size is a px value.
@@ -23,12 +22,39 @@ $base-font-size: 14px !default;
 // $base-line-height is 24px while $base-font-size is 16px
 $base-line-height: 1.5 !default;
 
-// Define default font weights
-$font-weight-normal: normal !default;
-$font-weight-bold: 500 !default;
-
 //pc max width
-$base-root-max-width: 640px;
+$base-body-max-width: 640px !default;  //none !default; 
+
+//===============================
+// font 
+
+// weight
+$font-weight-normal: normal !default;
+$font-weight-bold: 400 !default;
+$font-weight-bolder: 600 !default;
+$am-text-weights: (
+    normal: $font-weight-normal,
+    bold: $font-weight-bold,
+    bolder: $font-weight-bolder,
+) !default; 
+
+//style
+$am-text-styles: (
+  normal,
+  italic,
+  oblique,
+  inherit
+) !default; 
+
+//decoration
+$am-text-decorations: (
+  none,
+  underline,
+  overline,
+  line-through,
+  blink,
+  inherit
+) !default; 
 
 //===============================
 // Size
@@ -39,7 +65,6 @@ $font-size-default: 14px !default;
 $font-size-lg: 16px !default;
 $font-size-xl: 18px !default;
 $font-size-xxl: 24px !default;
-
 $am-sizes: (
     xxs: $font-size-xxs,
     xs: $font-size-xs,
@@ -47,126 +72,245 @@ $am-sizes: (
     lg: $font-size-lg,
     xl: $font-size-xl,
     xxl: $font-size-xxl
-);
-
+) !default;
 
 //==============================
 // Application Colors
 
-// white and black and gray
-$global-black:   #000 !default;
-$global-white:   #fff !default;
-$gray-darkeer:   #282828 !default; 
-$gray-darker:    #383838 !default; 
-$gray-dark:      #5f5f60 !default;  
-$gray:           #959595 !default; 
-$gray-light:     #cbcbcb !default;
-$gray-lighter:   #e2e2e2 !default; 
-$gray-lighteer:  #eff0f4 !default; 
-$gray-lighteeer: #f6f6f6 !default; 
-$global-mask:    rgba(0,0,0,0.53);
-$global-none:    transparent;
+// gray
+$global-black:          #000    !default;
+$global-gray-darkeeer:  #181818 !default; 
+$global-gray-darkeer:   #282828 !default; 
+$global-gray-darker:    #383838 !default; 
+$global-gray-dark:      #5f5f60 !default;  
+$global-gray:           #959595 !default; 
+$global-gray-light:     #cbcbcb !default;
+$global-gray-lighter:   #e2e2e2 !default; 
+$global-gray-lighteer:  #eff0f4 !default; 
+$global-gray-lighteeer: #f6f6f6 !default; 
+$global-white:          #fff    !default;
+$global-transparent:    transparent      !default; 
+$global-mask:           rgba(0,0,0,0.53) !default; 
 
 // color
-$global-success: #17c729 !default;
-$global-warning: #00baff !default;
-$global-alert:   #f72a27 !default;
-$global-notice:  #faff7e !default;
-$global-primary:   #000 !default;
-$global-secondary: #fff !default;
-$global-tertiary:  #828282 !default;
-
-$global-border:    $gray-lighter;
-$global-pagebg:    $gray-lighteer;
-$global-titlebg:   $gray-lighteeer;
+$global-success:   #17c729 !default;
+$global-warning:   #00baff !default;
+$global-alert:     #f72a27 !default;
+$global-notice:    #faff7e !default;
 $global-link:      #008bec !default;
-$global-disable:   $gray-lighter !default;
-$global-highlight: #fff !default;
-$global-select:    #fff !default;
-$global-normal:    $gray-darker !default;
-$global-darker:    $gray-darkeer !default;
-$global-light:     $gray !default;
+$global-primary:   blue    !default;
+$global-secondary: #000    !default;
+$global-tertiary:  #cbcbcb !default;
+
+// tool
+$global-border:            $global-gray-lighter   !default; 
+$global-bg-page:           $global-gray-lighteer  !default; 
+$global-bg-navigator:      $global-gray-lighteeer !default; 
+$global-bg-component:      $global-gray-lighteeer !default; 
+$global-lightbg-disable:   $global-gray           !default;
+$global-lightbg-highlight: $global-white          !default;
+$global-lightbg-active:    $global-white          !default;
+$global-lightbg-normal:    $global-gray-darker    !default;
+$global-lightbg-darker:    $global-gray-darkeer   !default;
+$global-lightbg-light:     $global-gray           !default;
+$global-darkbg-disable:    $global-gray-lighter   !default;
+$global-darkbg-highlight:  $global-white          !default;
+$global-darkbg-active:     $global-white          !default;
+$global-darkbg-normal:     $global-gray-lighteeer !default; 
+$global-darkbg-darker:     $global-gray-lighteer  !default; 
+$global-darkbg-light:      $global-white          !default;
+$color-light-threshold:    60%                    !default;
 
 // color map
-$am-colors: (
-  success: $global-success,
-  warning: $global-warning,
-  alert: $global-alert,
-  notice: $global-notice,
+$am-preset-colors: (
+  // gray
+  black:       $global-black,
+  white:       $global-white,
+  transparent: $global-transparent,
+  mask:        $global-mask,
 
-  primary: $global-primary,
+  // color
+  success:   $global-success,
+  warning:   $global-warning,
+  alert:     $global-alert,
+  notice:    $global-notice,
+  link:      $global-link,
+  primary:   $global-primary,
   secondary: $global-secondary,
-  tertiary: $global-tertiary,
-  
-  border: $gray-lighter,
-  pagebg: $gray-lighteer,
-  titlebg: $gray-lighteeer,
-  link: $global-link,
-  disable: $global-disable,
-  highlight: $global-highlight,
-  select: $global-select,
-  normal: $global-normal,
-  darker: $global-darker,
-  light:  $global-light,
+  tertiary:  $global-tertiary,
 
-  cblack: $global-black,
-  cwhite: $global-white,  
-  mask: $global-mask,
-  none: $global-none,
-);
+  // tool
+  normal: $global-lightbg-normal,
+  light:  $global-lightbg-light
+) !default;
+$am-user-colors: (
+) !default;
+$am-colors: map_merge($am-preset-colors, $am-user-colors) !default;
 
+//===============================
+// layout
 
+//size 
+$layout-size-max-length:  200 !default;
+$layout-size-percent:  100 !default;
+$layout-size-rem:  30 !default;
+
+//flex
+$layout-map-direction: (
+  'h':  row,
+  'v':  column ,
+  'hv': row-reverse,
+  'vv': column-reverse,
+) !default;
+
+$layout-map-justify: (
+  null:      flex-start,
+  'start':   flex-start,
+  'center':  center,
+  'end':     flex-end,
+  'between': space-between,
+  'around':  space-around,
+) !default;
+
+$layout-map-align: (
+  null:       flex-start,
+  'start':    flex-start,
+  'center':   center,
+  'end':      flex-end,
+  'baseline': baseline,
+  'stretch':  stretch,
+) !default;
+
+$layout-warp: (warp,nowrap,wrap-reverse) !default;
+$layout-sub-order-length:  5 !default; 
+$layout-sub-flex-length: (none, auto, 0, 1, 2, 3, 4, 5) !default;
+
+//===============================
+// dimensions
+$am-dimensions: (null, h, v, top, right, bottom, left) !default;
+$am-corners: (null, top, right, bottom, left, top-left, top-right, bottom-left, bottom-right) !default;
+
+//===============================
 // Statue
 $am-states: (
-    active: #{$namespace}active,
-    disabled: #{$namespace}disabled
-);
+  active: #{$namespace}active,
+  disabled: #{$namespace}disabled
+) !default;
 
-// Diffirent border-radius styles
+//===============================
+// border
+
+// border width
+$global-border-none: none !default;
+$global-border-normal: 1px !default;
+$global-border-1: 1px !default;
+$global-border-2: 2px !default;
+$global-border-3: 3px !default;
+$global-border-4: 4px !default;
+$global-border-5: 5px !default;
+$am-border-widths: (
+  default: 1px,
+  1: 1px,
+  2: 2px,
+  3: 3px,
+  4: 4px,
+  5: 5px
+) !default;
+
+//border style
+$am-border-styles: (
+  default: solid,
+  none: none,
+  dotted: dotted,
+  dashed: dashed,
+  solid: solid,
+  inherit: inherit
+) !default; 
+
+// radius styles
+$global-radius-xs: 1px !default;
 $global-radius-sm: 2px !default;
 $global-radius: 5px !default;
-$global-radius-lg: 10px !default;
+$global-radius-lg: 8px !default;
+$global-radius-xl: 10px !default;
 $global-rounded: 1000px !default;
-
 $am-radius: (
-  radius-sm: $global-radius-sm,
+  none: initial,
+  xs: $global-radius-xs,
+  sm: $global-radius-sm,
+  default: $global-radius,
   radius: $global-radius,
-  radius-lg: $global-radius-lg,
+  lg: $global-radius-lg,
+  xl: $global-radius-xl,
   rounded: $global-rounded
-);
+) !default; 
 
-// Default spacing
+//===============================
+// spacing
 $global-padding: 1rem !default;
 $global-margin: 1rem !default;
-$global-spacing: rem-calc(8) !default;
-$global-spacing-lg: rem-calc(15) !default;
 
+$global-spacing-xxs: rem-calc(2) !default;
+$global-spacing-xs: rem-calc(4) !default;
+$global-spacing-sm: rem-calc(6) !default;
+$global-spacing: rem-calc(8) !default;
+$global-spacing-lg: rem-calc(10) !default;
+$global-spacing-xl: rem-calc(15) !default;
+$global-spacing-xxl: rem-calc(20) !default;
+$global-spacing-xxxl: rem-calc(30) !default;
+$global-spacing-xxxxl: rem-calc(40) !default;
 $am-spaces: (
   0: 0,
-  xs: rem-calc(5),
-  sm: rem-calc(10),
+  xxs: $global-spacing-xxs,
+  xs: $global-spacing-xs,
+  sm: $global-spacing-sm,
   default: $global-spacing,
-  lg: rem-calc(20),
-  xl: rem-calc(32),
+  lg: $global-spacing-lg,
+  xl:$global-spacing-xl,
+  xxl:$global-spacing-xxl,
+  xxxl:$global-spacing-xxxl,
+  xxxxl:$global-spacing-xxxxl,
 ) !default;
-$am-dimensions: (null, h, v, top, right, bottom, left) !default;
+
 
 // Font-families
-$font-family-sans-serif: /* 1 */ -apple-system, BlinkMacSystemFont,
+$font-family-sans-serif: 
+  /* 1 */ -apple-system, BlinkMacSystemFont,
   /* 2 */ "PingFang SC", "Hiragino Sans GB", "Segoe UI", "Microsoft YaHei", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "wenquanyi micro hei",
   /* 3 */ "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 $font-family-serif: Georgia, "Times New Roman", Times, SimSun, serif !default; // FangSong, STFangSong
 $font-family-monospace: Monaco, Menlo, Consolas, "Courier New", monospace !default;
 
 // Z-index
-$z-index-view-top: 20 !default;
-$z-index-view-bottom: $z-index-view-top - 10 !default;
-$z-index-base: 1000 !default;
-$z-index-modal: $z-index-base + 10 !default;
-$z-index-notification: $z-index-base + 100 !default;
-$z-index-offcanvas: $z-index-base + 20 !default;
-$z-index-popover: $z-index-base + 30 !default;
+$z-index-component-low: 3 !default;
+$z-index-component: 5 !default;
+$z-index-component-high: 7 !default;
 
+$z-index-view-low: 53 !default;
+$z-index-view: 55 !default;
+$z-index-view-high: 57 !default;
+$z-index-view-top: 56 !default;
+$z-index-view-bottom: 54 !default;
+
+$z-index-overlay-low: 103 !default;
+$z-index-overlay: 105 !default;
+$z-index-overlay-high: 107 !default;
+
+$am-z-index: (
+  none: initial,
+
+  component-low: $z-index-component-low,
+  component: $z-index-component,
+  component-high: $z-index-component-high,
+
+  view-low: $z-index-view-low,
+  view: $z-index-view,
+  view-high: $z-index-view-high,
+
+  overlay-low: $z-index-overlay-low,
+  overlay: $z-index-overlay,
+  overlay-high: $z-index-overlay-high,
+) !default;
 
 // -----------------------------------------------------------------------------
 // Components Variables
@@ -179,8 +323,8 @@ $legacy-flexbox-support: true !default;
 
 // Base
 // -----------------------------------------------------------------------------
-$body-background: $global-pagebg !default;
-$body-font-color: $global-normal !default;
+$body-background: $global-bg-page !default;
+$body-font-color: $global-lightbg-normal !default;
 $body-font-family: $font-family-sans-serif;
 $body-font-weight: $font-weight-normal !default;
 $body-font-style: normal !default;
@@ -199,7 +343,7 @@ $badge-prefix: #{$namespace}badge !default;
 $badge-fontsize: .8rem !default;
 $badge-padding: ($global-padding / 3) ($global-padding / 2) !default;
 $badge-radius: 0 !default;
-$badge-background: $gray-lighter !default;
+$badge-background: $global-gray-lighter !default;
 $badge-color: islight($badge-background) !default;
 
 
@@ -208,10 +352,12 @@ $badge-color: islight($badge-background) !default;
 $button-prefix: #{$namespace}btn !default;
 $button-group-prefix: #{$namespace}btn-group !default;
 $button-padding: 0.75em 1em !default; // 10px 15px
-$button-margin: 0 $global-padding $global-padding 0 !default;
+$button-margin: 0 !default;
 $button-style: solid !default;
-$button-background: $gray-lighter !default;
-$button-background-active: scale-color($button-background, $lightness: -15%) !default;
+$button-background: $global-bg-component !default;
+$button-background-active: auto !default;
+$button-background-hollow: $global-white !default;
+$button-background-underline: $global-white !default;
 $button-color: auto !default;
 $button-radius: 0 !default;
 $button-font-size: $font-size-default !default;
@@ -221,7 +367,7 @@ $button-tag-selector: false !default;
 
 // Button Group Variables
 // -----------------------------------------------------------------------------
-
+$button-group-background: $global-white !default;
 
 // Card Variables
 // -----------------------------------------------------------------------------
@@ -263,25 +409,27 @@ $text-field-selectors: 'input[type="text"],
                         input[type="search"],
                         input[type="color"],
                         textarea';
-$text-field-color: $global-normal !default;
+$text-field-color: $global-lightbg-normal !default;
 $text-field-color-hover: $text-field-color !default;
 $text-field-color-focus: $text-field-color !default;
-$text-field-background: #fff !default;
+$text-field-color-disable: $global-lightbg-disable !default;
+$text-field-background: $global-white !default;
 $text-field-background-hover: $text-field-background !default;
 $text-field-background-focus: $text-field-background !default;
-$text-field-background-disabled: smartscale($text-field-background) !default;
-$text-field-border: #ccc !default;
-$text-field-border-hover: #bbb !default;
-$text-field-border-focus: #999 !default;
+$text-field-background-disabled: $text-field-background !default;
+$text-field-border: $global-border !default;
+$text-field-border-hover: $text-field-border !default;
+$text-field-border-focus: $text-field-border !default;
+$text-field-border-disable: $text-field-border !default;
 $text-field-cursor-disabled: not-allowed !default;
 
 // Labels
 $form-label-fontsize: 1rem !default;
 $form-label-margin: 0.5rem !default;
-$form-label-color: $global-normal !default;
+$form-label-color: $global-lightbg-normal !default;
 
 // Select
-$select-color: $gray-darker !default;
+$select-color: $global-gray-darker !default;
 $select-background: #fafafa !default;
 $select-background-hover: smartscale($select-background, 4%) !default;
 $select-arrow: true !default;
@@ -320,21 +468,60 @@ $group-header-font-size: $font-size-sm !default;
 // -----------------------------------------------------------------------------
 // font list: (font-family, font-weight, font-style, src)
 $icon-prefix: #{$namespace}icon !default;
+$icon-font-path: './fonts/' !default;
 $icon-fonts: (
-  icomoon: (
+  Ratchicons: (
     weight: normal,
     style: normal,
-    // font path
     src: unquote(
-        'url("../fonts/icomoon.woff") format("woff"),
-        url("../fonts/icomoon.ttf") format("truetype"),
-        url("../fonts/icomoon.svg#svgFontName") format("svg");'
+        'url("#{$icon-font-path}ratchicons.woff2") format("woff2"),
+        url("#{$icon-font-path}ratchicons.woff") format("woff"),
+        url("#{$icon-font-path}ratchicons.ttf") format("truetype");'
     )
   ),
 ) !default;
 $icon-font-size: 24px !default;
 $icons: (
-  left-nav: \e314,
+  back: \e80a,
+  bars: \e80e,
+  caret: \e80f,
+  check: \e810,
+  close: \e811,
+  code: \e812,
+  compose: \e813,
+  download: \e815,
+  edit: \e829,
+  forward: \e82a,
+  gear: \e821,
+  home: \e82b,
+  info: \e82c,
+  list: \e823,
+  more-vertical: \e82e,
+  more: \e82f,
+  pages: \e824,
+  pause: \e830,
+  person: \e832,
+  play: \e816,
+  plus: \e817,
+  refresh: \e825,
+  search: \e819,
+  share: \e81a,
+  sound: \e827,
+  sound2: \e828,
+  sound3: \e80b,
+  sound4: \e80c,
+  star-filled: \e81b,
+  star: \e81c,
+  stop: \e81d,
+  trash: \e81e,
+  up-nav: \e81f,
+  up: \e80d,
+  right-nav: \e818,
+  right: \e826,
+  down-nav: \e814,
+  down: \e820,
+  left-nav: \e82d,
+  left: \e822,
 ) !default;
 
 
@@ -344,32 +531,42 @@ $list-prefix: #{$namespace}list !default;
 $item-prefix: #{$namespace}item !default;
 $list-margin: $global-spacing 0 !default;
 $list-background: $global-white !default;
-$list-border-color: $gray-lighter !default;
+$list-border-color: $global-gray-lighter !default;
 
 
 // Loader Variables
 // -----------------------------------------------------------------------------
 $loader-prefix: #{$namespace}loader !default;
 $loader-width: 32px !default;
-$loader-color: $gray-light !default;
+$loader-color: $global-gray-light !default;
 
 
 // Modal Variables
 // -----------------------------------------------------------------------------
 $modal-prefix: #{$namespace}modal !default;
-$modal-width: 90% !default;
+$modal-width: 80% !default;
 $modal-background: #{$global-white} !default;
 $modal-btn-color: $global-primary !default;
 $modal-btn-bg: $modal-background !default;
 $modal-btn-active-bg: #d4d4d4 !default;
 $modal-duration: .3s !default;
-$modal-border-color: $gray-lighter !default;
+$modal-border-color: $global-gray-lighter !default;
 
 $modal-actions-btn-bg: rgba(243, 243, 243, 0.95) !default;
 $modal-actions-active-btn-bg: #dcdcdc !default;
 
 $modal-popup-prefix: #{$namespace}popup !default;
-$modal-popup-title-height: 44 !default;
+$modal-popup-body-padding: $global-spacing !default;
+$modal-popup-background: $global-white !default;
+$modal-popup-radius: $global-radius !default;
+$modal-popup-left: 10px !default;
+$modal-popup-top: 10px !default;
+$modal-popup-bottom: 10px !default;
+$modal-popup-right: 10px !default;
+$modal-popup-width: auto !default;
+$modal-popup-height: auto !default;
+
+$modal-radius: $global-radius !default;
 
 
 // Navbar Variables
@@ -384,8 +581,8 @@ $navbar-height-px: 44 !default;
 $navbar-height: rem-calc($navbar-height-px) !default;
 $navbar-center-width: 50% !default;
 $navbar-side-width: (100% - $navbar-center-width) / 2 !default;
-$navbar-background: $global-primary !default;
-$navbar-color: $global-select !default;
+$navbar-background: $global-bg-component !default;
+$navbar-color: auto !default;
 $navbar-padding: 0 !default;
 $navbar-line-height: rem-calc($navbar-height-px - 1);
 
@@ -394,7 +591,7 @@ $navbar-line-height: rem-calc($navbar-height-px - 1);
 // -----------------------------------------------------------------------------
 $notification-prefix: #{$namespace}notification !default;
 $notification-padding: rem-calc(10) $global-padding !default;
-$notification-background: $gray-darker !default;
+$notification-background: $global-gray-darker !default;
 $notification-color: $global-white!default;
 
 
@@ -413,39 +610,39 @@ $popover-prefix: #{$namespace}popover !default;
 $popover-width: rem-calc(240);
 $popover-background: $global-white !default;
 $popover-border: #ddd !default;
-$popover-color: $gray-dark !default;
+$popover-color: $global-gray-dark !default;
 $popover-duration: .3s !default;
 $popover-angle-size: 8px !default;
 
 
-// Slider Variables
+// Carousel Variables
 // -----------------------------------------------------------------------------
-$slider-prefix: #{$namespace}slider !default;
-$slider-duration: .5s;
-$slider-text-shadow: 0 1px 2px rgba(0, 0, 0, .6) !default;
-$slider-indicator-active-bg: $global-white !default;
-$slider-indicator-border-color: $global-white !default;
-$slider-caption-color: $global-white !default;
+$carousel-prefix: #{$namespace}carousel !default;
+$carousel-duration: .5s;
+$carousel-text-shadow: 0 1px 2px rgba(0, 0, 0, .6) !default;
+$carousel-indicator-active-bg: $global-white !default;
+$carousel-indicator-border-color: $global-white !default;
+$carousel-caption-color: $global-white !default;
 
 
 // Switch Variables
 // -----------------------------------------------------------------------------
 $switch-prefix: #{$namespace}switch !default;
-$switch-background: #aaa !default;
+$switch-background: $global-border !default;
 $switch-background-active: $global-primary !default;
 $switch-inner-background: $global-white !default;
-$switch-radius: 9999px !default;
+$switch-radius: $global-rounded !default;
 
 
 // TabBar Variables
 // -----------------------------------------------------------------------------
 $tabbar-prefix: #{$namespace}tabbar !default;
 $tabbar-height-px: 49 !default;
-$tabbar-height: rem-calc($tabbar-height-px) !default;
-$tabbar-padding-horizontal: $global-padding !default;
-$tabbar-background: $global-primary !default;
-$tabbar-color: $global-disable!default;
-$tabbar-color-select: $global-select!default;
+$tabbar-height: rem-calc($tabbar-height-px)  !default;
+$tabbar-padding-horizontal: 0                !default;
+$tabbar-background: $global-bg-component     !default;
+$tabbar-color: auto                          !default;
+$tabbar-color-select: primary                !default;
 
 
 // Tabs Variables
@@ -456,16 +653,25 @@ $tabs-background: $global-white !default;
 
 // checkradio Variables
 // -----------------------------------------------------------------------------
-$checkradio-container-prefix: #{$namespace}checkradio-container !default;
-$checkradio-prefix: #{$namespace}checkradio !default;
-$checkradio-input-prefix: #{$namespace}checkradio-input !default;
-$checkradio-label-prefix: #{$namespace}checkradio-label !default;
+$checkradio-prefix: #{$namespace}check-radio !default;
 $checkradio-opacity-disabled: 0.5 !default;
+$checkradio-color: $global-border;
+$checkradio-color-inavtive: $global-border;
+$checkradio-background: none;
 $checkradio-input-background: $global-white;
+$checkradio-style: null;
+
 
 // pager Variables
 // -----------------------------------------------------------------------------
 $pager-prefix: #{$namespace}pager !default;
+$pager-mode-single: #{$pager-prefix}-single !default;
+$pager-mode-single-new: single-new !default;
+
+// panel Variables
+// -----------------------------------------------------------------------------
+$panel-prefix: #{$namespace}panel !default;
+$panel-background: none;
 
 
 
@@ -474,7 +680,7 @@ $pager-prefix: #{$namespace}pager !default;
 
 // Headers
 $header-font-weight: $font-weight-bold;
-$header-font-color: $gray-darker !default;
+$header-font-color: $global-gray-darker !default;
 $header-line-height: 1.2 !default;
 $header-top-margin: 1.5em !default;
 $header-bottom-margin: $global-margin !default;
@@ -504,7 +710,7 @@ $blockquote-font-family: $font-family-serif;
 $blockquote-padding: rem-calc(10 10 10 15) !default;
 $blockquote-border: 3px solid #ddd !default;
 $blockquote-cite-font-size: rem-calc(13) !default;
-$blockquote-cite-font-color: $gray !default;
+$blockquote-cite-font-color: $global-gray !default;
 $blockquote-cite-link-color: $blockquote-cite-font-color !default;
 
 // <hr>

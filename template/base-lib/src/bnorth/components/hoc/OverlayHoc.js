@@ -1,31 +1,28 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 import {
   findDOMNode,
   unmountComponentAtNode,
   unstable_renderSubtreeIntoContainer as renderSubtreeIntoContainer,
 } from 'react-dom';
 
-/**
- * Overlay Mixin
- *
- * @desc `overlay` is something like Popover, OffCavans, etc.
- */
-
-export default {
-  propTypes: {
-    container: React.PropTypes.node
-  },
+export default (Wrapper) => class BackdropHoc extends Wrapper {
+  static propTypes = Object.assign({}, Wrapper.propTypes, {
+    container: PropTypes.node
+  })
 
   componentDidMount() {
     this.mounted = true;
     this._renderOverlay();
-  },
+
+    return super.componentDidMount && super.componentDidMount();
+  }
 
   componentDidUpdate() {
     this._renderOverlay();
-  },
 
-  // Remove Overlay related DOM node
+    return super.componentDidUpdate && super.componentDidUpdate();
+  }
+
   componentWillUnmount() {
     this.mounted = false;
     this._unmountOverlay();
@@ -34,14 +31,16 @@ export default {
       this.getContainerDOMNode().removeChild(this._node);
       this._node = null;
     }
-  },
 
-  // Create Overlay wrapper
+    return super.componentWillUnmount && super.componentWillUnmount();
+  }
+
+    // Create Overlay wrapper
   _createPortal() {
     this._node = document.createElement('div');
     this._node.className = '__overlay-portal';
     this.getContainerDOMNode().appendChild(this._node);
-  },
+  }
 
   // Render Overlay to wrapper
   _renderOverlay() {
@@ -61,16 +60,16 @@ export default {
       // Unmount if the component is null for transitions to null
       this._unmountOverlay();
     }
-  },
+  }
 
   // Remove a mounted Overlay from wrapper
   _unmountOverlay() {
     unmountComponentAtNode(this._node);
     this._overlayInstance = null;
-  },
+  }
 
   getOverlayDOMNode() {
-    if (!this.mounted()) {
+    if (!this.mounted) {
       throw new Error(
         `getOverlayDOMNode(): A component must be mounted to
         have a DOM node.`);
@@ -82,9 +81,9 @@ export default {
     }
 
     return null;
-  },
+  }
 
   getContainerDOMNode() {
     return findDOMNode(this.props.container) || document.body;
-  },
-};
+  }
+}

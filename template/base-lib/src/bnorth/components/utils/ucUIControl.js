@@ -1,6 +1,6 @@
 // UC browser UI controller
 
-const controller = global.navigator && global.navigator.control || {};
+const controller = (global.navigator && global.navigator.control) || {};
 
 /**
  * ucUIControl

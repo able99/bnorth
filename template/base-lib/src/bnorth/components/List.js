@@ -1,36 +1,34 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 import Icon from './Icon';
 
 
-const List = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class List extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
     inset: PropTypes.bool,
-  },
+    separatorInset: PropTypes.bool,
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'list',
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'list',
+  }
 
   render() {
     let classSet = this.getClassSet();
     const {
       className,
-      inset,
+      separatorInset,
       ...props
     } = this.props;
 
     delete props.classPrefix;
+    delete props.separatorInset;
+    delete props.inset;
 
-    classSet[this.prefixClass('inset')] = inset;
+    classSet[this.prefixClass('separator-inset')] = separatorInset;
 
     // TODO: 使用 ul 可能不是太好的选择，在一些需要定义 component 的场合缺乏灵活性
     return (
@@ -41,14 +39,12 @@ const List = React.createClass({
       </ul>
     );
   }
-});
+}
 
-const ListItem = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class ListItem extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
-    role: PropTypes.oneOf(['header', 'item']),
+    part: PropTypes.oneOf(['header', 'item']),
     title: PropTypes.node,
     subTitle: PropTypes.node,
     href: PropTypes.string,
@@ -59,14 +55,12 @@ const ListItem = React.createClass({
     after: PropTypes.node,
     desc: PropTypes.node,
     nested: PropTypes.oneOf(['input', 'radio', 'checkbox']), // nested field
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'item',
-      role: 'item'
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'item',
+    part: 'item'
+  }
 
   renderTitleRow() {
     let {
@@ -103,7 +97,7 @@ const ListItem = React.createClass({
         {titleChildren}
       </div>
     ) : titleChildren;
-  },
+  }
 
   renderMain() {
     let {
@@ -127,7 +121,7 @@ const ListItem = React.createClass({
         {children}
       </div>
     ) : titleRow;
-  },
+  }
 
   wrapLink(children) {
     let {
@@ -145,7 +139,7 @@ const ListItem = React.createClass({
       >
         {children}
       </a>);
-  },
+  }
 
   renderAddon(type) {
     return this.props[type] ? (
@@ -156,7 +150,7 @@ const ListItem = React.createClass({
         {this.props[type]}
       </div>
     ) : null;
-  },
+  }
 
   renderArray(){
     let {
@@ -165,28 +159,27 @@ const ListItem = React.createClass({
       flag,
     } = this.props;
 
-    let unreadStyle = {
-      position: 'absolute',
-      marginTop: '-250%',
-      width: '100%',
-      textAlign: 'center',
-    };
-
-    return href || linkComponent ?(
-        <Icon
-          style={{position: 'relative'}}
-          className={this.prefixClass('icon')}
-          name="right-nav"
-          key="itemChevron">
-          {flag?(<div style={unreadStyle} className="text-alert typo-size-xxl">&bull;</div>):null}
-        </Icon>
-    ):null;
-  },
+    return (
+      <span key="item-array">
+        {href || linkComponent ?(
+          <Icon
+            style={{position: 'relative'}}
+            className={this.prefixClass('icon')}
+            name="right-nav"
+            key="itemChevron">
+          </Icon>
+        ):null}
+        {flag?(
+          <div className={this.prefixClass('flag')}>&bull;</div>)
+        :null}
+      </span>
+    );
+  }
 
   render() {
     let {
       className,
-      role,
+      part,
       subTitle,
       href,
       //media,
@@ -212,7 +205,7 @@ const ListItem = React.createClass({
     let classSet = this.getClassSet();
 
     classSet[this.prefixClass(nested)] = nested;
-    classSet[this.prefixClass('header')] = role === 'header';
+    classSet[this.prefixClass('header')] = part === 'header';
     classSet[this.prefixClass('linked')] = href || linkComponent || linked;
     subTitle && (classSet[this.prefixClass('content')] = true);
 
@@ -221,22 +214,12 @@ const ListItem = React.createClass({
         {...props}
         className={cx(classSet, className)}
       >
-        {role === 'header' ? children :
+        {part === 'header' ? children :
           (href || linkComponent) ? this.wrapLink(itemChildren) : itemChildren}
       </li>
     );
   }
-});
+}
 
-List.Item = ListItem;
-
-export default List;
-
-/**
- * TODO:
- * - 可选择列表（嵌套 radio/checkbox）图文混排的列表，
- *   考虑的创建可选择列表时根据 nested 属性自动生产 input，而不用再去嵌套 Field，
- *   以便图文混排选择实现。
- * - UE：用户如何知道这个列表是可以选择的（增加相应的提示文字？）
- * - 易用性：链接如何以更好的方式传入类似 react-router Link 这样的组件？
- */
+List.Item = ClassNameHoc(ListItem);
+export default ClassNameHoc(List);

@@ -1,30 +1,23 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
 import Icon from './Icon';
 import Badge from './Badge';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-
-// TODO: 默认的选中处理
-let TabBar = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class TabBar extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string,
     component: PropTypes.node,
     amStyle: PropTypes.string,
     onAction: PropTypes.func,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'tabbar',
-      component: 'nav',
-      onAction: () => {}
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'tabbar',
+    component: 'nav',
+    onAction: () => {}
+  }
 
   render() {
     let classSet = this.getClassSet();
@@ -70,16 +63,10 @@ let TabBar = React.createClass({
       </Component>
     );
   }
-});
+}
 
-// TODO:
-//   Icon 应该支持用户自定义：
-//   React-native 采用 require('path/to/icon') 的形式，
-//   这里可能需要再添加一个属性
-const TabBarItem = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class TabBarItem extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string,
     component: PropTypes.any,
     icon: PropTypes.string, // icon name
@@ -94,15 +81,13 @@ const TabBarItem = React.createClass({
     selected: PropTypes.bool, // alias of `active`
     selectedIcon: PropTypes.node, // not supported now
     onAction: PropTypes.func,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'tabbar',
-      component: 'span',
-      onAction: () => {},
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'tabbar',
+    component: 'span',
+    onAction: () => {},
+  }
 
   renderBadge() {
     let {
@@ -118,7 +103,7 @@ const TabBarItem = React.createClass({
         {badge}
       </Badge>
     ) : null;
-  },
+  }
 
   renderIcon() {
     let {
@@ -129,7 +114,7 @@ const TabBarItem = React.createClass({
       <Icon name={icon} key="tabbarIcon">
             {this.renderBadge()}
       </Icon>) : null
-  },
+  }
 
   renderTitle() {
     let labelClassName = this.prefixClass('label');
@@ -145,7 +130,7 @@ const TabBarItem = React.createClass({
          {title}
        </span>
     ) : null;
-  },
+  }
 
   render() {
     let classSet = this.getClassSet(true);
@@ -177,75 +162,8 @@ const TabBarItem = React.createClass({
       </Component>
     );
   }
-});
+}
 
-TabBar.Item = TabBarItem;
+TabBar.Item = ClassNameHoc(TabBarItem);
 
-
-//able99
-const TabBarCenterItem = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
-    classPrefix: PropTypes.string,
-    component: PropTypes.any,
-    icon: PropTypes.string, // icon name
-    title: PropTypes.string,
-    href: PropTypes.string,
-    eventKey: PropTypes.any,
-    badge: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number,
-    ]),
-    badgeStyle: PropTypes.string,
-    selected: PropTypes.bool, // alias of `active`
-    selectedIcon: PropTypes.node, // not supported now
-    onAction: PropTypes.func,
-  },
-
-  getDefaultProps() {
-    return {
-      classPrefix: 'tabbar',
-      component: 'button',
-      onAction: () => {},
-    };
-  },
-
-  renderIcon() {
-    let {
-      image,
-      //imageActive
-    } = this.props;
-
-    return image ? (
-      <img alt="" key="tabbarCenterImage" src={image} />) : 
-      null
-  },
-
-  render() {
-    let classSet = this.getClassSet(true);
-    let {
-      component,
-      className,
-      ...props
-    } = this.props;
-
-    delete props.classPrefix;
-    delete props.badge;
-    delete props.badgeStyle;
-    delete props.eventKey;
-    delete props.onAction;
-    delete props.image;
-    delete props.imageActive;
-    let Component = component;
-    return (
-      <Component {...props} className={cx(classSet, className, this.prefixClass('center-item'))} >
-        {[this.renderIcon()]}
-      </Component>
-    );
-  }
-});
-
-TabBar.CenterItem = TabBarCenterItem;
-
-export default TabBar;
+export default ClassNameHoc(TabBar);

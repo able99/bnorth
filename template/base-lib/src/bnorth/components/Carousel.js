@@ -2,21 +2,17 @@
  * @see https://github.com/react-bootstrap/react-bootstrap/blob/master/src/Carousel.js
  */
 
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
 import TransitionEvents from './utils/TransitionEvents';
 import Icon from './Icon';
 import Touchable from './Touchable';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-
-const Slider = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Carousel extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string,
 
     controls: PropTypes.bool,   // prev/next icon
@@ -37,31 +33,30 @@ const Slider = React.createClass({
     direction: PropTypes.oneOf(['prev', 'next']),
     prevIcon: PropTypes.node,
     nextIcon: PropTypes.node,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'slider',
-      controls: true,
-      pager: true,
-      slide: true,
-      interval: 5000,
-      autoPlay: true,
-      loop: true,
-      pauseOnHover: true,
-      prevIcon: <Icon name="left-nav" />,
-      nextIcon: <Icon name="right-nav" />,
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'carousel',
+    controls: true,
+    pager: true,
+    slide: true,
+    interval: 5000,
+    autoPlay: true,
+    loop: true,
+    pauseOnHover: true,
+    prevIcon: <Icon name="left-nav" />,
+    nextIcon: <Icon name="right-nav" />,
+  }
 
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       activeIndex: this.props.defaultActiveIndex == null ?
         0 : this.props.defaultActiveIndex,
       previousActiveIndex: null,
       direction: null
     };
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     let activeIndex = this.getActiveIndex();
@@ -75,15 +70,15 @@ const Slider = React.createClass({
           this.getDirection(activeIndex, nextProps.activeIndex)
       });
     }
-  },
+  }
 
   componentDidMount() {
     this.props.autoPlay && this.waitForNext();
-  },
+  }
 
   componentWillUnmount() {
     clearTimeout(this.timeout);
-  },
+  }
 
   getDirection(prevIndex, index) {
     if (prevIndex === index) {
@@ -91,7 +86,7 @@ const Slider = React.createClass({
     }
 
     return prevIndex > index ? 'prev' : 'next';
-  },
+  }
 
   next(e) {
     e && e.preventDefault();
@@ -107,7 +102,7 @@ const Slider = React.createClass({
     }
 
     this.handleSelect(index, 'next');
-  },
+  }
 
   prev(e) {
     e && e.preventDefault();
@@ -122,51 +117,51 @@ const Slider = React.createClass({
     }
 
     this.handleSelect(index, 'prev');
-  },
+  }
 
   pause() {
     this.isPaused = true;
     clearTimeout(this.timeout);
-  },
+  }
 
   play() {
     this.isPaused = false;
     this.waitForNext();
-  },
+  }
 
   waitForNext() {
     if (!this.isPaused && this.props.slide && this.props.interval &&
       this.props.activeIndex == null) {
-      this.timeout = setTimeout(this.next, this.props.interval);
+      this.timeout = setTimeout(this.next.bind(this), this.props.interval);
     }
-  },
+  }
 
   handleMouseOver() {
     if (this.props.pauseOnHover) {
       this.pause();
     }
-  },
+  }
 
   handleMouseOut() {
     if (this.isPaused) {
       this.play();
     }
-  },
+  }
 
   handleSwipeLeft(e) {
     // console.log('swipe left');
     this.next();
-  },
+  }
 
   handleSwipeRight(e) {
     // console.log('swipe right....');
     this.prev();
-  },
+  }
 
   getActiveIndex() {
     return this.props.activeIndex != null ?
       this.props.activeIndex : this.state.activeIndex;
-  },
+  }
 
   handleItemAnimateOutEnd() {
     this.setState({
@@ -179,7 +174,7 @@ const Slider = React.createClass({
         this.props.onSlideEnd();
       }
     });
-  },
+  }
 
   handleSelect(index, direction, e) {
     e && e.preventDefault();
@@ -207,28 +202,28 @@ const Slider = React.createClass({
         direction: direction
       });
     }
-  },
+  }
 
   renderControls() {
     return this.props.controls ? (
       <div className={this.prefixClass('control')}>
         <Touchable
           className={this.prefixClass('control-prev')}
-          onTap={this.prev}
+          onTap={this.prev.bind(this)}
           stopPropagation
         >
           {this.props.prevIcon}
         </Touchable>
         <Touchable
           className={this.prefixClass('control-next')}
-          onTap={this.next}
+          onTap={this.next.bind(this)}
           stopPropagation
         >
           {this.props.nextIcon}
         </Touchable>
       </div>
     ) : null;
-  },
+  }
 
   renderPager() {
     if (this.props.pager) {
@@ -250,7 +245,7 @@ const Slider = React.createClass({
             key={i}
             onTap={this.handleSelect.bind(this, i, null)}
           >
-            {thumb ? <img src={thumb} /> : null}
+            {thumb ? <img src={thumb} alt="" /> : null}
           </Touchable>
         );
       });
@@ -267,7 +262,7 @@ const Slider = React.createClass({
     }
 
     return null;
-  },
+  }
 
   renderItem(child, index) {
     let activeIndex = this.getActiveIndex();
@@ -283,11 +278,11 @@ const Slider = React.createClass({
       animateIn: isActive && this.state.previousActiveIndex != null &&
       this.props.slide,
       direction: this.state.direction,
-      onAnimateOutEnd: isPreviousActive ? this.handleItemAnimateOutEnd : null
+      onAnimateOutEnd: isPreviousActive ? this.handleItemAnimateOutEnd.bind(this) : null
     };
 
     return React.cloneElement(child, props);
-  },
+  }
 
   render() {
     let classSet = this.getClassSet();
@@ -313,25 +308,25 @@ const Slider = React.createClass({
         {...props}
         component="div"
         className={cx(classSet, className)}
-        onMouseOver={this.handleMouseOver}
-        onMouseOut={this.handleMouseOut}
-        onSwipeLeft={this.handleSwipeLeft}
-        onSwipeRight={this.handleSwipeRight}
+        onMouseOver={this.handleMouseOver.bind(this)}
+        onMouseOut={this.handleMouseOut.bind(this)}
+        onSwipeLeft={this.handleSwipeLeft.bind(this)}
+        onSwipeRight={this.handleSwipeRight.bind(this)}
         preventDefault={false}
         stopPropagation={true}
       >
         <ul className={this.prefixClass('slides')}>
-          {React.Children.map(children, this.renderItem)}
+          {React.Children.map(children, this.renderItem.bind(this))}
         </ul>
         {this.renderControls()}
         {this.renderPager()}
       </Touchable>
     );
   }
-});
+}
 
-const SliderItem = React.createClass({
-  propTypes: {
+class CarouselItem extends React.Component {
+  static propTypes = {
     direction: PropTypes.oneOf(['prev', 'next']),
     onAnimateOutEnd: PropTypes.func,
     active: PropTypes.bool,
@@ -340,19 +335,26 @@ const SliderItem = React.createClass({
     caption: PropTypes.node,
     index: PropTypes.number,
     thumbnail: PropTypes.string,
-  },
+  }
 
-  getInitialState() {
-    return {
+  static defaultProps = {
+    animation: true
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
       direction: null
     };
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      animation: true
-    };
-  },
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.active !== nextProps.active) {
@@ -360,26 +362,26 @@ const SliderItem = React.createClass({
         direction: null
       });
     }
-  },
+  }
 
   componentDidUpdate(prevProps) {
     if (!this.props.active && prevProps.active) {
-      TransitionEvents.on(ReactDOM.findDOMNode(this), this.handleAnimateOutEnd);
+      TransitionEvents.on(ReactDOM.findDOMNode(this), this.handleAnimateOutEnd.bind(this));
     }
 
     if (this.props.active !== prevProps.active) {
-      setTimeout(this.startAnimation, 20);
+      setTimeout(this.startAnimation.bind(this), 20);
     }
-  },
+  }
 
   handleAnimateOutEnd() {
-    if (this.props.onAnimateOutEnd && this.isMounted()) {
+    if (this.props.onAnimateOutEnd && this.mounted) {
       this.props.onAnimateOutEnd(this.props.index);
     }
-  },
+  }
 
   startAnimation() {
-    if (!this.isMounted()) {
+    if (!this.mounted) {
       return;
     }
 
@@ -387,7 +389,7 @@ const SliderItem = React.createClass({
       direction: this.props.direction === 'prev' ?
         'right' : 'left'
     });
-  },
+  }
 
   render() {
     let {
@@ -415,8 +417,8 @@ const SliderItem = React.createClass({
       </li>
     );
   }
-});
+}
 
-Slider.Item = SliderItem;
+Carousel.Item = CarouselItem;
 
-export default Slider;
+export default ClassNameHoc(Carousel);

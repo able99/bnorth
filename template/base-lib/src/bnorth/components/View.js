@@ -1,40 +1,35 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-const View = React.createClass({
-  mixins: [ClassNameMixin],
 
-  propTypes: {
+class View extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
     component: PropTypes.node.isRequired,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'view',
-      component: 'div',
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'view',
+    component: 'div',
+  }
 
   render() {
     const {
       component,
       className,
-      child,
-      focus,
+      isBlur,
+      children,
       ...props,
     } = this.props;
-
     delete props.classPrefix;
 
     return React.createElement(component, {
       ...props,
-      className: cx(className, this.getClassSet(), {[this.prefixClass("child")]:child}, {[this.prefixClass("blur")]:!focus}),
-    });
-  },
-});
+      className: cx(className, this.getClassSet(), {[this.prefixClass("blur")]:isBlur}),
+    },children);
+  }
+}
 
-export default View;
+export default ClassNameHoc(View);

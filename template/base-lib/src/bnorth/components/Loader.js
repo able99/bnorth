@@ -1,25 +1,20 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-const Loader = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Loader extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string,
     component: PropTypes.node,
     amStyle: PropTypes.string,
     rounded: PropTypes.bool,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'loader',
-      component: 'div',
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'loader',
+    component: 'div',
+  }
 
   render() {
     let classSet = this.getClassSet();
@@ -44,6 +39,6 @@ const Loader = React.createClass({
       </Component>
     )
   }
-});
+}
 
-export default Loader;
+export default ClassNameHoc(Loader);

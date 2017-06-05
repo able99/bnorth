@@ -67,12 +67,20 @@
 /// @param {percentage} $threshold - Threshold of lightness to check against.
 ///
 /// @return The $yes color or $no color.
-@function islight($color, $yes: #333, $no: #fff, $threshold: 60%) {
+@function islight($color, $yes: $global-lightbg-normal, $no: $global-darkbg-normal, $threshold: $color-light-threshold) {
   @if (lightness($color) > $threshold) {
     @return $yes;
   }
   @else {
     @return $no;
+  }
+}
+@function highlight($color) {
+  @if (lightness($color) > 60) {
+    @return scale-color($color, $lightness: -50%);
+  }
+  @else {
+    @return scale-color($color, $lightness: 50%);;
   }
 }
 

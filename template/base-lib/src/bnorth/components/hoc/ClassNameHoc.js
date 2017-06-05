@@ -1,31 +1,27 @@
-import {
-  NAMESPACE,
-  CLASSNAMES,
-} from '../config';
+import { NAMESPACE, CLASSNAMES, } from '../config';
 
 const namespace = (NAMESPACE ? NAMESPACE + '-' : '');
 
-const ClassNameMixin = {
-  setClassNS(classPrefix) {
+export default (Wrapper) => {
+  Wrapper.prototype.setClassNS = function(classPrefix) {
     const prefix = classPrefix || this.props.classPrefix || '';
 
     return namespace + prefix;
-  },
+  }
 
-  getClassSet(ignorePrefix) {
+  Wrapper.prototype.getClassSet = function(ignorePrefix) {
     let classNames = {};
     const {
       amSize,
       amStyle,
       hollow,
-      underline,
       radius,
       rounded,
       active,
       selected,
       disabled,
       inset,
-      } = this.props;
+    } = this.props;
 
     // uses `.am-` as prefix if `classPrefix` is not defined
     let prefix = namespace;
@@ -51,10 +47,6 @@ const ClassNameMixin = {
       classNames[prefix + 'hollow'] = true;
     }
 
-    if (underline) {
-      classNames[prefix + 'underline'] = true;
-    }
-
     classNames[this.prefixClass('radius')] = radius;
     classNames[this.prefixClass('rounded')] = rounded;
 
@@ -70,11 +62,11 @@ const ClassNameMixin = {
     // classNames[constants.CLASSES.round] = this.props.round;
 
     return classNames;
-  },
+  }
 
-  prefixClass(subClass) {
+  Wrapper.prototype.prefixClass = function(subClass) {
     return this.setClassNS() + '-' + subClass;
   }
-};
-
-export default ClassNameMixin;
+  
+  return Wrapper;
+}

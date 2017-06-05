@@ -8,8 +8,7 @@
 // -----------------------------------------------------------------------------
 
 .#{$modal-prefix} {
-  position: fixed;
-  z-index: $z-index-modal;
+  position: absolute;
   left: 50%;
   top: 50%;
   width: $modal-width;
@@ -29,7 +28,7 @@
   perspective: 1000px;
   animation: amt-modal-in $modal-duration ease-out;
   -webkit-animation: amt-modal-in $modal-duration ease-out;
-  border-radius: $global-radius;
+  border-radius: $modal-radius;
 
   .#{$modal-prefix}-out & {
     animation-name: amt-modal-out;
@@ -59,6 +58,7 @@
 
 // modal header
 .#{$modal-prefix}-header {
+  width: 100%;
   padding: rem-calc(10);
   border-bottom: 1px solid $modal-border-color;
   text-align: left;
@@ -66,21 +66,15 @@
 
 .#{$modal-prefix}-title {
   margin: 0;
-  //font-weight: $font-weight-bold;
-  //font-size: rem-calc(16);
+  color: inherit;
 }
 
 // close icon
 %modal-icon {
-  position: absolute;
-  right: rem-calc(5);
-  top: rem-calc(5);
-  color: $gray;
   cursor: pointer;
 
   &:active {
-    color: $gray;
-    background: $gray-lighter;
+    background: $global-gray-lighter;
   }
 }
 
@@ -88,21 +82,19 @@
   @extend %modal-icon;
 }
 
-// modal fullcontent
-// -----------------------------------------------------------------------------
-.#{$modal-prefix}-fullcontent {
+// no-padded
+.#{$modal-prefix}-no-padded {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
 
 // modal body
-// -----------------------------------------------------------------------------
 .#{$modal-prefix}-body {
   padding: $global-spacing;
   text-align: left;
 
   .#{$modal-prefix}-header + & {
-    padding-top: 0;
+    //padding-top: 0;
   }
 
   + .#{$modal-prefix}-body {
@@ -124,7 +116,6 @@
 }
 
 // modal footer
-// -----------------------------------------------------------------------------
 .#{$modal-prefix}-footer {
   display: flex;
   display: -webkit-flex;
@@ -179,10 +170,9 @@
 }
 
 .#{$modal-prefix}-actions {
-  position: fixed;
+  position: absolute;
   left: 0;
   bottom: 0;
-  z-index: $z-index-modal;
   width: 100%;
   text-align: center;
 
@@ -206,7 +196,7 @@
 }
 
 .#{$modal-prefix}-actions-header {
-  color: $gray-light;
+  color: $global-gray-light;
   font-size: rem-calc(14);
 }
 
@@ -221,65 +211,28 @@
 // Modal Popup
 // -----------------------------------------------------------------------------
 .#{$modal-popup-prefix} {
-  position: fixed;
-  left: 10px;
-  top: 10px;
-  bottom: 10px;
-  right: 10px;
-  width: auto;
-  height: auto;
-  z-index: $z-index-modal;
-  background: #fff;
+  position: absolute;
+  left: $modal-popup-left;
+  top: $modal-popup-top;
+  bottom: $modal-popup-bottom;
+  right: $modal-popup-right;
+  width: $modal-popup-width;
+  height: $modal-popup-height;
+  background: $modal-popup-background;
   overflow: hidden;
-  border-radius: $global-radius;
+  border-radius: $modal-popup-radius;
 
   //@extend %modal-translate;
 }
 
-.#{$modal-prefix}-popup-appear-active {
-  color: red!important;
-  border: 1px solid red;
-}
-
 .#{$modal-popup-prefix}-inner {
-  padding-top: rem-calc($modal-popup-title-height);
-  padding-bottom: $global-radius;
-  height: 100%;
-  @include scrollable();
-}
-
-.#{$modal-popup-prefix}-header {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  padding: rem-calc(10) 0;
-  //height: rem-calc($modal-popup-title-height);
-  border-bottom: 1px solid $modal-border-color;
-  background-color: #fff;
-}
-
-.#{$modal-popup-prefix}-icon {
-  @extend %modal-icon;
-  top: 50%;
-  transform: translateY(-50%);
-  -webkit-transform: translateY(-50%);
-}
-
-.#{$modal-popup-prefix}-title {
-  margin: 0 rem-calc(30) 0 $global-spacing;
-  //font-size: rem-calc(16);
-  //font-weight: bold;
-  //line-height: rem-calc(43);
-  //text-align: center;
-  //color: $gray-dark;
+  @include square(100%);
 }
 
 .#{$modal-popup-prefix}-body {
-  padding: $global-spacing;
-  //background: #f8f8f8;
-  color: $gray;
-  height: 100%;
-  overflow: auto;
+  padding: $modal-popup-body-padding;
+  @include square(100%);
+  @include scrollable();
 }
 
 // Modal custom
@@ -287,16 +240,11 @@
 //.#{$modal-popup-prefix} {
 .modal-custom{
   position: fixed;
-  left: 0px;
-  top: 0px;
-  bottom: 0px;
-  right: 0px;
-  width: auto;
-  height: auto;
-  z-index: $z-index-modal;
-  //background: #fff;
+  max-width: $base-body-max-width;
+  margin-left: auto;
+  margin-right: auto;
   overflow: hidden;
-  //border-radius: $global-radius;
+  //border-radius: $modal-radius;
 
   //@extend %modal-translate;
 }
@@ -313,9 +261,14 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: $z-index-modal - 1;
-  background: #{$global-mask};
+  z-index: $z-index-overlay;
   opacity: 1;
+  
+
+  max-width: $base-body-max-width;
+  margin-left: auto;
+  margin-right: auto;
+
   animation-duration: $modal-duration;
   -webkit-animation-duration: $modal-duration;
   animation-timing-function: ease-out;
@@ -329,4 +282,13 @@
     animation-name: amt-fade-out;
     -webkit-animation-name: amt-fade-out;
   }
+}
+
+.#{$modal-prefix}-backdrop-mask {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #{$global-mask}; 
 }

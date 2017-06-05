@@ -39,7 +39,7 @@
 
 .#{$card-prefix}-header {
   @extend %card-section;
-  border-bottom: 1px solid $gray-lighter;
+  border-bottom: 1px solid $global-gray-lighter;
 }
 
 // header with cover
@@ -72,7 +72,7 @@
   @extend %card-section;
   border-top: 1px solid #eee;
   font-size: $font-size-sm;
-  color: $gray-light;
+  color: $global-gray-light;
 }
 
 // TODO: mofidiers

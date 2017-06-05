@@ -1,25 +1,4 @@
 //=======================
-// root
-//=======================
-.#{$namespace}root {
-  display: block;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-
-.#{$namespace}root-pc {
-  position: relative;
-  display: block;
-  height: 100%;
-  width: 100%;
-  max-width: $base-root-max-width;
-  margin-left: auto;
-  margin-right: auto;
-  overflow: hidden;
-}
-
-//=======================
 // float
 //=======================
 .#{$namespace}cf {
@@ -100,60 +79,145 @@
   @include makeSpacings($dimension);
 }
 
-
-//=======================
-// text
-
-@each $key, $size in $am-sizes {
-  .#{$namespace}typo-size-#{$key} {
-    font-size: $size !important;
-  }
-}
-
-.#{$namespace}text-truncate {
-  @extend %text-truncate;
-}
-
-// Text Alignment
-@each $align in (left, right, center, justify) {
-  .#{$namespace}text-#{$align} {
-    text-align: $align !important;
-  }
-}
-
-// Text colors
-@each $key, $color in $am-colors {
-  .#{$namespace}text-#{$key} {
-    color: $color !important;
-  }
-}
-
 //=======================
 // border
+//=======================
+@mixin makeBorderDimension($dimension: null) {
+  //width
+  @each $key, $val in $am-border-widths {
+    $selector: 'border-width';
+    @if $dimension {
+      $selector: $selector + "-" + $dimension;
+    }
+    @if $key != 'default' {
+      $selector: $selector + '-' + $key;
+    }
 
-@each $key, $color in $am-colors {
-  @if $key != none {
-    .#{$namespace}border-color-#{$key} {
-      border-color: $color !important;
+    @if $dimension == null {
+      .#{$namespace}#{$selector} {
+        border-width: $val !important;
+      }
+    } @else if $dimension == h {
+      .#{$namespace}#{$selector} {
+        border-left-width: $val !important;
+        border-right-width: $val !important;
+      }
+    } @else if $dimension == v {
+      .#{$namespace}#{$selector} {
+        border-top-width: $val !important;
+        border-bottom-width: $val !important;
+      }
+    } @else {
+      .#{$namespace}#{$selector} {
+        border-#{$dimension}-width: $val !important;
+      }
     }
   }
-}
-@each $key, $val in $am-radius {
-  .#{$namespace}border-radius-#{$key} {
-    border-radius: $val !important;
-  }  
-}
-.#{$namespace}border-none {
-  border: none !important;
-}
-@mixin makeBorderNones($dimension: null) {
-  $selector: 'border-none';
 
-  @if $dimension {
-    $selector: $selector + '-' + $dimension;
+  //style
+  @each $key, $val in $am-border-styles {
+    $selector: 'border-style';
+    @if $dimension {
+      $selector: $selector + "-" + $dimension;
+    }
+    @if $key != 'default' {
+      $selector: $selector + '-' + $key;
+    }
+
+    @if $dimension == null {
+      .#{$namespace}#{$selector} {
+        border-style: $val !important;
+      }
+    } @else if $dimension == h {
+      .#{$namespace}#{$selector} {
+        border-left-style: $val !important;
+        border-right-style: $val !important;
+      }
+    } @else if $dimension == v {
+      .#{$namespace}#{$selector} {
+        border-top-style: $val !important;
+        border-bottom-style: $val !important;
+      }
+    } @else {
+      .#{$namespace}#{$selector} {
+        border-#{$dimension}-style: $val !important;
+      }
+    }
   }
 
-  @if $dimension == h {
+  //color
+  @each $key, $val in $am-colors {
+    $selector: 'border-color';
+    @if $dimension {
+      $selector: $selector + "-" + $dimension;
+    }
+    @if $key != 'default' {
+      $selector: $selector + '-' + $key;
+    }
+
+    @if $dimension == null {
+      .#{$namespace}#{$selector} {
+        border-color: $val !important;
+      }
+    } @else if $dimension == h {
+      .#{$namespace}#{$selector} {
+        border-left-color: $val !important;
+        border-right-color: $val !important;
+      }
+    } @else if $dimension == v {
+      .#{$namespace}#{$selector} {
+        border-top-color: $val !important;
+        border-bottom-color: $val !important;
+      }
+    } @else {
+      .#{$namespace}#{$selector} {
+        border-#{$dimension}-color: $val !important;
+      }
+    }
+  }
+
+  //default border
+  @each $key, $val in $am-colors {
+    $selector: 'border';
+    @if $dimension {
+      $selector: $selector + "-" + $dimension;
+    }
+    @if $key != 'default' {
+      $selector: $selector + '-' + $key;
+    }
+
+    @if $dimension == null {
+      .#{$namespace}#{$selector} {
+        border: 1px solid $val;
+      }
+    } @else if $dimension == h {
+      .#{$namespace}#{$selector} {
+        border-left: 1px solid $val;
+        border-right: 1px solid $val;
+      }
+    } @else if $dimension == v {
+      .#{$namespace}#{$selector} {
+        border-top: 1px solid $val;
+        border-bottom: 1px solid $val;
+      }
+    } @else {
+      .#{$namespace}#{$selector} {
+        border-#{$dimension}: 1px solid $val;
+      }
+    }
+  }
+
+  //none
+  $selector: 'border-none';
+  @if $dimension {
+    $selector: $selector + "-" + $dimension;
+  }
+  
+  @if $dimension == null {
+    .#{$namespace}#{$selector} {
+      border: none !important;
+    }
+  } @else if $dimension == h {
     .#{$namespace}#{$selector} {
       border-left: none !important;
       border-right: none !important;
@@ -164,18 +228,115 @@
       border-bottom: none !important;
     }
   } @else {
-    $property: 'border';
-    @if $dimension {
-      $property: 'border-' + $dimension;
-    }
-
     .#{$namespace}#{$selector} {
-      #{$property}: none !important;
+      border-#{$dimension}: none !important;
     }
   }
 }
 @each $dimension in $am-dimensions {
-  @include makeBorderNones($dimension);
+  @include makeBorderDimension($dimension);
+}
+
+@mixin makeBorderCorner($corner: null) {
+  @each $key, $val in $am-radius {
+    $selector: 'border-radius';
+    @if $corner {
+      $selector: $selector + "-" + $corner;
+    }
+    @if $key != 'default' {
+      $selector: $selector + '-' + $key;
+    }
+
+    @if $corner == null {
+      .#{$namespace}#{$selector} {
+        border-radius: $val !important;
+      }
+    } @else if $corner == left {
+      .#{$namespace}#{$selector} {
+        border-top-left-radius: $val !important;
+        border-bottom-left-radius: $val !important;
+      }
+    } @else if $corner == right {
+      .#{$namespace}#{$selector} {
+        border-top-right-radius: $val !important;
+        border-bottom-right-radius: $val !important;
+      }
+    } @else if $corner == top {
+      .#{$namespace}#{$selector} {
+        border-top-left-radius: $val !important;
+        border-top-right-radius: $val !important;
+      }
+    } @else if $corner == bottom {
+      .#{$namespace}#{$selector} {
+        border-bottom-left-radius: $val !important;
+        border-bottom-right-radius: $val !important;
+      }
+    } @else {
+      .#{$namespace}#{$selector} {
+        border-#{$corner}-radius: $val !important;
+      }
+    }
+  }
+}
+@each $corner in $am-corners {
+  @include makeBorderCorner($corner);
+}
+
+//=======================
+// text
+
+// Text sizes
+@each $key, $size in $am-sizes {
+  .#{$namespace}text-size-#{$key} {
+    font-size: $size !important;
+  }
+}
+
+// Text weights
+@each $key, $weight in $am-text-weights {
+  .#{$namespace}text-weight-#{$key} {
+    font-weight: $weight !important;
+  }
+}
+// Text style
+@each $key in $am-text-styles {
+  .#{$namespace}text-style-#{$key} {
+    font-style: $key !important;
+  }
+}
+// Text decorations
+@each $key in $am-text-decorations {
+  .#{$namespace}text-decoration-#{$key} {
+    text-decoration: $key !important;
+  }
+}
+
+// Text truncate
+.#{$namespace}text-truncate {
+  @extend %text-truncate;
+}
+.#{$namespace}text-truncate2 {
+  @extend %text-truncate2;
+}
+.#{$namespace}text-truncate3 {
+  @extend %text-truncate3;
+}
+.#{$namespace}text-truncate4 {
+  @extend %text-truncate4;
+}
+
+// Text Alignment
+@each $align in (left, right, center, justify) {
+  .#{$namespace}text-align-#{$align} {
+    text-align: $align !important;
+  }
+}
+
+// Text colors
+@each $key, $color in $am-colors {
+  .#{$namespace}text-color-#{$key} {
+    color: $color !important;
+  }
 }
 
 //=======================
@@ -183,7 +344,7 @@
 
 @each $key, $color in $am-colors {
   @if $key != none {
-    .#{$namespace}bg-#{$key} {
+    .#{$namespace}bg-color-#{$key} {
       background-color: $color !important;
     }
   }
@@ -204,12 +365,10 @@
 }
 
 //=======================
-// width height
-
-$layout-size-max-length:  200;
+// layout size
 @for $i from 1 through $layout-size-max-length { 
   @if ($i <= 10) OR ($i % 10 == 0) {
-    .#{$namespace}layout-size-squre-#{$i} { 
+    .#{$namespace}layout-size-square-#{$i} { 
       @include square(#{$i}px);
     } 
     .#{$namespace}layout-size-width-auto-#{$i} { 
@@ -227,26 +386,41 @@ $layout-size-max-length:  200;
   } 
 } 
 
-$layout-size-percent:  100;
 @for $i from 0 through $layout-size-percent { 
-  .#{$namespace}layout-size-width-auto-#{$i}p { 
-    width:#{$i}#{%};
-  } 
+  @if ($i % 2 == 0) {
+    .#{$namespace}layout-size-width-auto-#{$i}p { 
+      width:#{$i}#{%};
+    } 
+    .#{$namespace}layout-size-height-auto-#{$i}p { 
+      height:#{$i}#{%};
+    } 
+  }
 } 
 
-$layout-size-rem:  30;
 @for $i from 1 through $layout-size-rem { 
-  .#{$namespace}layout-size-squre-#{$i}rem { 
+  .#{$namespace}layout-size-square-#{$i}rem { 
     width:#{($i/10)}rem;
     height:#{($i/10)}rem;
   } 
+  .#{$namespace}layout-size-width-auto-#{$i} { 
+    @include size(#{($i/10)}rem, auto);
+  } 
+  .#{$namespace}layout-size-height-auto-#{$i} { 
+    @include size(auto, #{($i/10)}rem);
+  } 
 } 
 
-//==========================================================
-//able99 z index
+.#{$namespace}layout-size-full { 
+  @include square(100%);
+  display: inline-block;
+}
 
-.#{$namespace}layout-z-line{
-  z-index: 15;
+//==========================================================
+//z index
+@each $key, $val in $am-z-index {
+  .#{$namespace}layout-zindex-#{$key} {
+    z-index: $val !important;
+  }
 }
 
 //==========================================================
@@ -273,32 +447,9 @@ $layout-size-rem:  30;
 
 
 //==========================================================
-// layout
+// layout flex
 
 // layout
-$layout-map-direction: (
-  'h':  row,
-  'v':  column ,
-  'hv': row-reverse,
-  'vv': column-reverse,
-);
-$layout-map-justify: (
-  null:      flex-start,
-  'start':   flex-start,
-  'center':  center,
-  'end':     flex-end,
-  'between': space-between,
-  'around':  space-around,
-);
-$layout-map-align: (
-  null:       flex-start,
-  'start':    flex-start,
-  'center':   center,
-  'end':      flex-end,
-  'baseline': baseline,
-  'stretch':  stretch,
-);
-
 @each $direction-key, $direction in $layout-map-direction {
   @each $justify-key, $justify in $layout-map-justify {
     @each $align-key, $align in $layout-map-align {
@@ -324,7 +475,6 @@ $layout-map-align: (
 }
 
 // wrap
-$layout-warp: (warp,nowrap,wrap-reverse) !default;
 @each $wrap in $layout-warp {
   .#{$namespace}layout-wrap {
     flex-wrap: $wrap;
@@ -341,7 +491,6 @@ $layout-warp: (warp,nowrap,wrap-reverse) !default;
 }
 
 // sub order
-$layout-sub-order-length:  5;
 @for $i from 0 through $layout-sub-order-length { 
   .#{$namespace}layout-sub-order { 
     order: $i;
@@ -349,7 +498,6 @@ $layout-sub-order-length:  5;
 } 
 
 // sub flex
-$layout-sub-flex-length: (none, auto, 0, 1, 2, 3, 4, 5) !default;
 @each $val in $layout-sub-flex-length { 
   .#{$namespace}layout-sub-flex-grow-#{$val} { 
     flex-grow: $val

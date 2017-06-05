@@ -23,7 +23,7 @@ function actionHttpifFetch(uuid,options){
       (error)=>{
         options.blocking?Actions.actionNoticeBlockFinish():Actions.actionNoticeLoadingFinish();
         dispatch(actionHttpifFetchFail(uuid,error));
-        if(error && options.error && typeof(options.error)==="function"){error = options.error(error)};
+        if(error && options.error && typeof(options.error)==="function"){error = options.error(error)||error};
         if(error)Actions.actionNoticeMessage(error);
       }
     )
@@ -99,16 +99,16 @@ export function actionsHttpifFetchWrap(uuid=null,options={}){
   if(options.traceState){
     wrap.state=function(){
       let reduxer = ActionStore.getState().ReduxerHttpifFetch;
-      return reduxer && reduxer.fetchResult && reduxer.fetchResult[uuid] || {};
+      return (reduxer && reduxer.fetchResult && reduxer.fetchResult[uuid]) || {};
     };
     wrap.ready=function(){
       let reduxer = ActionStore.getState().ReduxerHttpifFetch;
-      let state = reduxer && reduxer.fetchResult && reduxer.fetchResult[uuid] || {};
+      let state = (reduxer && reduxer.fetchResult && reduxer.fetchResult[uuid]) || {};
       return state.fetching === false && !state.invalid;
     };
     wrap.error=function(){
       let reduxer = ActionStore.getState().ReduxerHttpifFetch;
-      let state = reduxer && reduxer.fetchResult && reduxer.fetchResult[uuid] || {};
+      let state = (reduxer && reduxer.fetchResult && reduxer.fetchResult[uuid]) || {};
       return state.error;
     };
   }
@@ -188,7 +188,7 @@ function actionOperateSubmit(options){
       },
       (error)=>{
         Actions.actionNoticeBlockFinish();
-        if(error && options.error && typeof(options.error)==="function"){error = options.error(error)};
+        if(error && options.error && typeof(options.error)==="function"){error = options.error(error)||error};
         if(error)Actions.actionNoticeMessage(error);
       }
     )

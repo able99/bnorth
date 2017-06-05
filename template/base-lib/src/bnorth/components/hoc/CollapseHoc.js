@@ -2,26 +2,24 @@
  * modified version of:
  * https://github.com/react-bootstrap/react-bootstrap/blob/master/src/CollapsibleMixin.js
  */
-
-import React from 'react';
+import PropTypes from 'prop-types';
 import TransitionEvents from '../utils/TransitionEvents';
 
-var CollapseMixin = {
-  propTypes: {
-    defaultExpanded: React.PropTypes.bool,
-    expanded: React.PropTypes.bool
-  },
+export default (Wrapper) => class CollapseHoc extends Wrapper {
+  static propTypes = Object.assign({}, Wrapper.propTypes, {
+    defaultExpanded: PropTypes.bool,
+    expanded: PropTypes.bool,
+  })
 
-  getInitialState() {
-    var defaultExpanded = this.props.defaultExpanded != null ?
-      this.props.defaultExpanded :
-      this.props.expanded != null ? this.props.expanded : false;
-
-    return {
-      expanded: defaultExpanded,
-      collapsing: false
-    };
-  },
+  constructor(props) {
+    super(props);
+    this.state = Object.assign({}, super.state, {
+      expanded: this.props.defaultExpanded != null ?
+        this.props.defaultExpanded :
+        this.props.expanded != null ? this.props.expanded : false,
+      collapsing: false,
+    });
+  }
 
   componentWillUpdate(nextProps, nextState) {
     var willExpanded = nextProps.expanded != null ? nextProps.expanded :
@@ -48,7 +46,9 @@ var CollapseMixin = {
     node.style[dimension] = value + 'px';
 
     this._afterWillUpdate();
-  },
+
+    return super.componentWillUpdate && super.componentWillUpdate();
+  }
 
   componentDidUpdate(prevProps, prevState) {
     // check if expanded is being toggled; if so, set collapsing
@@ -56,11 +56,13 @@ var CollapseMixin = {
 
     // check if collapsing was turned on; if so, start animation
     this._checkStartAnimation();
-  },
+
+    return super.componentDidUpdate && super.componentDidUpdate();
+  }
 
   // helps enable test stubs
   _afterWillUpdate() {
-  },
+  }
 
   _checkStartAnimation() {
     if (!this.state.collapsing) {
@@ -80,7 +82,7 @@ var CollapseMixin = {
       result = '0px';
     }
     node.style[dimension] = result;
-  },
+  }
 
   _checkToggleCollapsing(prevProps, prevState) {
     var wasExpanded = prevProps.expanded != null ? prevProps.expanded :
@@ -94,7 +96,7 @@ var CollapseMixin = {
         this._handleExpand();
       }
     }
-  },
+  }
 
   _handleExpand() {
     var node = this.getCollapsibleDOMNode();
@@ -115,7 +117,7 @@ var CollapseMixin = {
     this.setState({
       collapsing: true
     });
-  },
+  }
 
   _handleCollapse() {
     var node = this.getCollapsibleDOMNode();
@@ -132,26 +134,26 @@ var CollapseMixin = {
     this.setState({
       collapsing: true
     });
-  },
+  }
 
   // helps enable test stubs
   _addEndEventListener(node, complete) {
     TransitionEvents.on(node, complete);
-  },
+  }
 
   // helps enable test stubs
   _removeEndEventListener(node, complete) {
     TransitionEvents.off(node, complete);
-  },
+  }
 
   dimension() {
     return (typeof this.getCollapsibleDimension === 'function') ?
       this.getCollapsibleDimension() : 'height';
-  },
+  }
 
   isExpanded() {
     return this.props.expanded != null ? this.props.expanded : this.state.expanded;
-  },
+  }
 
   getCollapsibleClassSet(className) {
     var classSet = {};
@@ -171,6 +173,4 @@ var CollapseMixin = {
 
     return classSet;
   }
-};
-
-export default CollapseMixin;
+}

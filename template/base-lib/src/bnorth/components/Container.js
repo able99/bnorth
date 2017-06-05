@@ -1,13 +1,12 @@
 // @see https://github.com/JedWatson/react-container
 // @license MIT Copyright (c) 2015 Jed Watson
 
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { ReactDom } from 'react-dom' //able99
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
 
 function hasChildrenWithVerticalFill(children) {
@@ -64,10 +63,8 @@ function initScrollable(defaultPos) {
 
 const TRANSITION_TIMEOUT = 500;
 
-let Container = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Container extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string,
     component: PropTypes.node,
     align: PropTypes.oneOf(['end', 'center', 'start']),
@@ -83,26 +80,24 @@ let Container = React.createClass({
       PropTypes.object
     ]),
     transition: PropTypes.string,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'container',
-      component: 'div',
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'container',
+    component: 'div',
+  }
 
   componentDidMount() {
     if (this.props.scrollable && this.props.scrollable.mount) {
       this.props.scrollable.mount(this);
     }
-  },
+  }
 
   componentWillUnmount() {
     if (this.props.scrollable && this.props.scrollable.unmount) {
       this.props.scrollable.unmount(this);
     }
-  },
+  }
 
   render() {
     let {
@@ -186,8 +181,8 @@ let Container = React.createClass({
       </Component>
     );
   }
-});
+}
 
 Container.initScrollable = initScrollable;
 
-export default Container;
+export default ClassNameHoc(Container);

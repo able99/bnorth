@@ -1,6 +1,6 @@
 import hash from "crypto";
 
-import { Config, Apis, Actions, RouterStatus } from '../';
+import { Config, Apis, Actions, AppData } from '../';
 
 //===========
 let User = {};
@@ -80,11 +80,11 @@ User.preLogin = function(param){
 }
 User.afterLogin = function(result){
   this.save(result);
-  if(RouterStatus&&RouterStatus.location.state){
-    Apis.Navigate.replace(RouterStatus.location.state.pathname);
-  }else if(RouterStatus&&RouterStatus.location.param&&RouterStatus.location.param.link){
-    Apis.Navigate.replace(RouterStatus.location.param.link);
-  }else{
+  if(AppData.loginBackLoction && AppData.loginBackLoction.isReplace) {
+    Apis.Navigate.replace(AppData.loginBackLoction);
+  }else if(AppData.loginBackLoction) {
+    Apis.Navigate.back();
+  }else {
     Apis.Navigate.goHome(true);
   }
   
@@ -149,7 +149,7 @@ User.checkLogin = function(force=false){
 }
 User.toLogin = function(force=false){
   if(force){
-    Apis.Navigate.push(Config.PathLogin);
+    Apis.Navigate.goLogin();
   }else{
     Actions.actionNoticeDialogShow({
       closeBtn: false,
@@ -157,7 +157,7 @@ User.toLogin = function(force=false){
       role: "confirm",
       onAction: (confirm)=>{
         if(confirm){
-          Apis.Navigate.push(Config.PathLogin);
+          Apis.Navigate.goLogin();
         }
       },
     });

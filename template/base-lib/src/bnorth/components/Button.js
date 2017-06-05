@@ -1,49 +1,43 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import {component} from './InternalPropTypes';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-//import '../scss/components/_button.scss';
-
-const Button = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Button extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
-    component: component,
+    component: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]),
     href: PropTypes.string,
     target: PropTypes.string,
     amStyle: PropTypes.string,
     amSize: PropTypes.string,
     hollow: PropTypes.bool,
+    link: PropTypes.bool,
     underline: PropTypes.bool,
     block: PropTypes.bool,
     active: PropTypes.bool,
     disabled: PropTypes.bool,
     radius: PropTypes.bool,
     rounded: PropTypes.bool,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'btn',
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'btn',
+  }
 
   removeUnknownProp(props) {
     delete props.classPrefix;
     delete props.amStyle;
     delete props.amSize;
     delete props.underline;
+    delete props.link;
     delete props.hollow;
     delete props.block;
     delete props.active;
     delete props.rounded;
 
     return props;
-  },
+  }
 
   renderAnchor(classes) {
     let {
@@ -59,14 +53,14 @@ const Button = React.createClass({
     return (
       <Component
         {...this.removeUnknownProp(props)}
-        href={href}
-        className={classes}
+        
+        className={cx(classes)}
         role="button"
       >
         {children}
       </Component>
     );
-  },
+  }
 
   renderButton(classes) {
     let {
@@ -84,7 +78,7 @@ const Button = React.createClass({
         {children}
       </Component>
     );
-  },
+  }
 
   render() {
     let classSet = this.getClassSet();
@@ -93,14 +87,18 @@ const Button = React.createClass({
       target,
       block,
       className,
+      underline,
+      link,
     } = this.props;
     let renderType = href || target ? 'renderAnchor' : 'renderButton';
 
-    // block button
     classSet[this.prefixClass('block')] = block;
+    classSet[this.prefixClass('underline')] = underline;
+    classSet['background-none'] = link;
+    classSet['border-none'] = link;
 
     return this[renderType](cx(classSet, className));
   }
-});
+}
 
-export default Button;
+export default ClassNameHoc(Button);

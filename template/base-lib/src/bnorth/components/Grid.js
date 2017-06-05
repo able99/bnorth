@@ -1,13 +1,10 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-const Grid = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Grid extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
     component: PropTypes.node.isRequired,
     collapse: PropTypes.bool,
@@ -15,16 +12,14 @@ const Grid = React.createClass({
     align: PropTypes.oneOf(['right', 'center', 'between', 'around']),
     wrap: PropTypes.oneOf(['wrap', 'wrap-reverse']),
     bordered: PropTypes.bool,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'g',
-      component: 'div',
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'g',
+    component: 'div',
+  }
 
-  render: function() {
+  render() {
     let classSet = this.getClassSet();
     let {
       component: Component,
@@ -65,6 +60,6 @@ const Grid = React.createClass({
       </Component>
     );
   }
-});
+}
 
-export default Grid;
+export default ClassNameHoc(Grid);

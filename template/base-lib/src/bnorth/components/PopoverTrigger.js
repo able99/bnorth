@@ -1,48 +1,47 @@
-import React, {
-  cloneElement,
-  PropTypes,
-} from 'react';
+import React, {cloneElement} from 'react';
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 import TransitionEvents from './utils/TransitionEvents';
-import OverlayMixin from './mixins/OverlayMixin';
 import dom from './utils/domUtils';
 import createChainedFunction from './utils/createChainedFunction';
+import OverlayHoc from './hoc/OverlayHoc';
 
-const PopoverTrigger = React.createClass({
-  mixins: [OverlayMixin],
-
-  propTypes: {
+class PopoverTrigger extends React.Component {
+  static propTypes = {
     defaultPopoverActive: PropTypes.bool,
     popover: PropTypes.node.isRequired,
     onOpen: PropTypes.func,
     onClosed: PropTypes.func,
-  },
+    placement: PropTypes.oneOf(['top', 'bottom', 'left', 'right', 'dropdown']),
+  }
 
-  getDefaultProps() {
-    return {
-      onOpen: () => {
-      },
-      onClosed: () => {
-      },
-    };
-  },
+  static defaultProps = {
+    onOpen: () => {},
+    onClosed: () => {},
+  }
 
-  getInitialState() {
-    return {
-      popoverActive: this.props.defaultPopoverActive == null ?
-        false : this.props.defaultPopoverActive,
+  constructor(props) {
+    super(props);
+    this.state = {
+      popoverActive: props.defaultPopoverActive == null ? false : props.defaultPopoverActive,
       isClosing: false,
       popoverLeft: null,
       popoverTop: null,
       placement: null,
     };
-  },
+  }
 
   componentDidMount() {
+    this.mounted = true;
+
     if (this.props.defaultPopoverActive) {
       this.updatePopoverPosition();
     }
-  },
+  }
+
+  componentWillUnmount() {
+      this.mounted = false;
+  }
 
   open() {
     if (this.state.popoverActive) {
@@ -56,7 +55,7 @@ const PopoverTrigger = React.createClass({
       this.updatePopoverPosition();
       this.props.onOpen();
     });
-  },
+  }
 
   close() {
     if (!this.state.popoverActive) {
@@ -66,7 +65,7 @@ const PopoverTrigger = React.createClass({
     this.setState({
       isClosing: true,
     });
-  },
+  }
 
   handleClosed() {
     this.setState({
@@ -75,14 +74,14 @@ const PopoverTrigger = React.createClass({
     });
 
     this.props.onClosed();
-  },
+  }
 
   toggle() {
     this.state.popoverActive ? this.close() : this.open();
-  },
+  }
 
   updatePopoverPosition() {
-    if (!this.isMounted()) {
+    if (!this.mounted) {
       return;
     }
 
@@ -96,7 +95,7 @@ const PopoverTrigger = React.createClass({
       anglePosition: position.anglePosition,
       placement: position.placement,
     });
-  },
+  }
 
   calcPopoverPosition() {
     let targetOffset = this.getTriggerOffset();
@@ -108,6 +107,18 @@ const PopoverTrigger = React.createClass({
 
     let popoverHeight = popoverNode.offsetHeight;
     let popoverWidth = popoverNode.offsetWidth;
+
+    if(this.props.placement === 'dropdown'){
+      return {
+        top: targetOffset.top + popoverHeight,
+        left: 0,
+        placement: 'dropdown',
+        angleLeft: null,
+        angleTop: null,
+        anglePosition: null,
+      };
+    }
+
     let {
       height: targetHeight,
       width: targetWidth,
@@ -143,7 +154,7 @@ const PopoverTrigger = React.createClass({
         popoverTop = windowHeight - popoverHeight - 5;
       }
 
-      diff = diff - popoverTop;
+      diff -= popoverTop;
     }
 
     // Popover Horizontal Position
@@ -159,7 +170,7 @@ const PopoverTrigger = React.createClass({
         popoverLeft = windowWidth - popoverWidth - 5;
       }
 
-      diff = diff - popoverLeft;
+      diff -= popoverLeft;
       angleLeft = (popoverWidth / 2 - popoverAngleSize + diff);
       angleLeft = Math.max(Math.min(angleLeft,
         popoverWidth - popoverAngleSize * 2 - 6), 6);
@@ -191,7 +202,7 @@ const PopoverTrigger = React.createClass({
       angleTop: angleTop,
       anglePosition,
     };
-  },
+  };
 
   getTriggerOffset() {
     let node = ReactDOM.findDOMNode(this);
@@ -203,7 +214,7 @@ const PopoverTrigger = React.createClass({
       height: node.offsetHeight,
       width: node.offsetWidth
     });
-  },
+  }
 
   // used by Mixin
   renderOverlay() {
@@ -246,9 +257,9 @@ const PopoverTrigger = React.createClass({
       anglePosition,
       placement,
       isClosing,
-      onDismiss: this.close,
+      onDismiss: this.close.bind(this),
     });
-  },
+  }
 
   render() {
     let child = React.Children.only(this.props.children);
@@ -257,10 +268,10 @@ const PopoverTrigger = React.createClass({
         this.props.onClick),
     };
 
-    props.onClick = createChainedFunction(this.toggle, props.onClick);
+    props.onClick = createChainedFunction(this.toggle.bind(this), props.onClick);
 
     return cloneElement(child, props);
   }
-});
+}
 
-export default PopoverTrigger;
+export default OverlayHoc(PopoverTrigger);

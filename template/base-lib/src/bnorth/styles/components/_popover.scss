@@ -8,7 +8,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: $z-index-popover;
+  z-index: $z-index-overlay;
   width: $popover-width;
   margin: 0;
   background: $popover-background;
@@ -33,10 +33,17 @@
 
 .#{$popover-prefix}-inner {
   position: relative;
-  z-index: 110;
   background: $popover-background;
   padding: 8px;
 }
+
+.#{$popover-prefix}-dropdown{
+  width: 100%;
+}
+.#{$popover-prefix}-dropdown .#{$popover-prefix}-inner {
+  padding: 0px;
+}
+
 
 .#{$popover-prefix}-angle {
   border-width: $popover-angle-size;
@@ -44,7 +51,6 @@
   &,
   &:after {
     position: absolute;
-    z-index: 120;
     display: block;
     width: 0;
     height: 0;

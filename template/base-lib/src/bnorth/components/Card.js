@@ -1,33 +1,27 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-const Card = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Card extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
     title: PropTypes.string,
     header: PropTypes.node,
     footer: PropTypes.node,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'card',
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'card',
+  }
 
   renderItem(element, role) {
     if (!element) {
       return null;
     }
 
-    return (element.type && element.type === Card.Child) ?
-      element : <Card.Child role={role}>{element}</Card.Child>;
-  },
+    return (element.type && element.type === Card.Child) ? element : <Card.Child role={role}>{element}</Card.Child>;
+  }
 
   renderTitle(title) {
     return (
@@ -35,7 +29,7 @@ const Card = React.createClass({
         {title}
       </h2>
     );
-  },
+  }
 
   render() {
     let classSet = this.getClassSet();
@@ -66,23 +60,19 @@ const Card = React.createClass({
       </div>
     );
   }
-});
+}
 
-const CardChild = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class CardChild extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
     role: PropTypes.oneOf(['header', 'footer']),
     cover: PropTypes.string,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'card',
-      role: 'header'
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'card',
+    role: 'header'
+  }
 
   render() {
     let {
@@ -109,15 +99,15 @@ const CardChild = React.createClass({
       <div
         {...props}
         className={cx(className, classSet)}
-        role={`card-${role}`}
+        /*role={`card-${role}`}*/
         style={style}
       >
         {this.props.children}
       </div>
     );
   }
-});
+}
 
-Card.Child = CardChild;
+Card.Child = ClassNameHoc(CardChild);
 
-export default Card;
+export default ClassNameHoc(Card);

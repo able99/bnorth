@@ -1,10 +1,10 @@
-// Amaze UI Touch: Slider
+// Amaze UI Touch: Carousel
 // =============================================================================
 
 
 // Output
 // -----------------------------------------------------------------------------
-.#{$slider-prefix} {
+.#{$carousel-prefix} {
   position: relative;
 
   ul,
@@ -14,7 +14,7 @@
   }
 }
 
-.#{$slider-prefix}-slides {
+.#{$carousel-prefix}-slides {
   position: relative;
   width: 100%;
   overflow: hidden;
@@ -23,7 +23,7 @@
   > li {
     position: relative;
     display: none;
-    transition: transform $slider-duration ease-in-out;
+    transition: transform $carousel-duration ease-in-out;
     backface-visibility: hidden;
     perspective: 1000px;
 
@@ -71,15 +71,14 @@
   }
 }
 
-// Slider prev/next controls
+// carousel prev/next controls
 // -----------------------------------------------------------------------------
-.#{$slider-prefix}-control {
+.#{$carousel-prefix}-control {
 }
 
-%slider-control-item {
+%carousel-control-item {
   position: absolute;
   top: 50%;
-  z-index: 5;
   transform: translate3d(0, -50%, 0);
   border-radius: 50%;
   color: rgba($global-white, .7);
@@ -87,25 +86,24 @@
   cursor: pointer;
 }
 
-.#{$slider-prefix}-control-prev {
+.#{$carousel-prefix}-control-prev {
   left: 10px;
 
-  @extend %slider-control-item;
+  @extend %carousel-control-item;
 }
 
-.#{$slider-prefix}-control-next {
+.#{$carousel-prefix}-control-next {
   right: 10px;
 
-  @extend %slider-control-item;
+  @extend %carousel-control-item;
 }
 
-// Slider indicators
+// carousel indicators
 // -----------------------------------------------------------------------------
-.#{$slider-prefix}-indicators {
+.#{$carousel-prefix}-indicators {
   position: absolute;
   bottom: $global-spacing;
   left: 50%;
-  z-index: 15;
   display: flex;
   justify-content: center;
   margin: 0;
@@ -116,7 +114,7 @@
     @include square(8px);
     overflow: hidden;
     text-indent: -999px;
-    border: 1px solid $slider-indicator-border-color;
+    border: 1px solid $carousel-indicator-border-color;
     border-radius: 10px;
     cursor: pointer;
 
@@ -126,13 +124,13 @@
   }
 
   .active {
-    background: $slider-indicator-active-bg;
+    background: $carousel-indicator-active-bg;
   }
 }
 
-// Slider thumbnails
+// carousel thumbnails
 // -----------------------------------------------------------------------------
-.#{$slider-prefix}-thumbs {
+.#{$carousel-prefix}-thumbs {
   display: flex;
   margin: 5px 0 0;
 
@@ -140,7 +138,7 @@
     flex: 1;
     opacity: 0.75;
     cursor: pointer;
-    transition: opacity $slider-duration;
+    transition: opacity $carousel-duration;
 
     + li {
       margin-left: 2px;
@@ -154,14 +152,13 @@
 
 // Caption
 // -----------------------------------------------------------------------------
-.#{$slider-prefix}-caption {
+.#{$carousel-prefix}-caption {
   position: absolute;
   bottom: 20px;
-  z-index: 10;
   width: 100%;
   padding-top: $global-spacing;
   padding-bottom: $global-spacing;
-  color: $slider-caption-color;
+  color: $carousel-caption-color;
   text-align: center;
-  text-shadow: $slider-text-shadow;
+  text-shadow: $carousel-text-shadow;
 }

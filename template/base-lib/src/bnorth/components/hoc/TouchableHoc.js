@@ -1,9 +1,7 @@
-import React, {
-  PropTypes,
-} from 'react';
+import PropTypes from 'prop-types';
 
-let TouchableMixin = {
-  propTypes: {
+export default (Wrapper) => class TouchableHoc extends Wrapper {
+  static propTypes = Object.assign({}, Wrapper.propTypes, {
     moveThreshold: PropTypes.number,
     tapDelay: PropTypes.number,
     pressDelay: PropTypes.number,
@@ -19,30 +17,33 @@ let TouchableMixin = {
     onSingleTap: PropTypes.func,
     onDoubleTap: PropTypes.func,
     onPress: PropTypes.func,
-  },
+  })
 
-  getDefaultProps() {
-    return {
-      moveThreshold: 30,
-      tapDelay: 250,
-      pressDelay: 750,
-      preventDefault: true,
-    };
-  },
+  static defaultProps = Object.assign({}, Wrapper.defaultProps, {
+    moveThreshold: 30,
+    tapDelay: 250,
+    pressDelay: 750,
+    preventDefault: true,
+  });
 
-  getInitialState() {
-    return {
-      startTouch: null,
-      endTouch: null,
-      touch: {},
-      deltaX: 0,
-      deltaY: 0,
-    };
-  },
+  static defaultState = {
+    startTouch: null,
+    endTouch: null,
+    touch: {},
+    deltaX: 0,
+    deltaY: 0,
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = Object.assign({}, super.state, TouchableHoc.defaultState);
+  }
 
   componentWillUnmount() {
     this._cancelAll();
-  },
+
+    return super.componentWillUnmount && super.componentWillUnmount();
+  }
 
   handleTouchStart(e) {
     // console.log('handle touchstart');
@@ -85,7 +86,7 @@ let TouchableMixin = {
       startTouch,
       touch,
     });
-  },
+  }
 
   handleTouchMove(e) {
     // console.log('touch move');
@@ -113,7 +114,7 @@ let TouchableMixin = {
       touch,
       endTouch,
     });
-  },
+  }
 
   handleTouchEnd(e) {
     // console.log('touch end..');
@@ -148,7 +149,6 @@ let TouchableMixin = {
 
       this._swipeTimeout = setTimeout(() => {
         this._handleEvent(event);
-
         event.type += this._getSwipeDirection();
         this._handleEvent(event);
         this._resetTouch();
@@ -188,16 +188,16 @@ let TouchableMixin = {
         this._resetTouch();
       }
     }
-  },
+  }
 
   handleTouchCancel() {
     this._cancelAll();
-  },
+  }
 
   processEvent(e) {
     this.props.preventDefault && e.preventDefault();
     this.props.stopPropagation && e.stopPropagation();
-  },
+  }
 
   _handlePress() {
     this._pressTimeout = null;
@@ -205,7 +205,7 @@ let TouchableMixin = {
       this.props.onPress && this.props.onPress();
       this._resetTouch();
     }
-  },
+  }
 
   _cancelPress() {
     if (this._pressTimeout) {
@@ -213,7 +213,7 @@ let TouchableMixin = {
     }
 
     this._pressTimeout = null;
-  },
+  }
 
   _cancelAll() {
     if (this._touchTimeout) {
@@ -235,7 +235,7 @@ let TouchableMixin = {
     this._touchTimeout = this._tapTimeout = this._swipeTimeout =
       this._pressTimeout = null;
     this._resetTouch();
-  },
+  }
 
   _getSwipeDirection() {
     let {
@@ -250,29 +250,32 @@ let TouchableMixin = {
     return Math.abs(x1 - x2) >= Math.abs(y1 - y2) ?
       (x1 - x2 > 0 ? 'Left' : 'Right') :
       (y1 - y2 > 0 ? 'Up' : 'Down');
-  },
+  }
 
   _resetTouch() {
-    this.setState(this.getInitialState());
-  },
+    this.setState(TouchableHoc.defaultState);
+  }
 
   _getEventMethodName(type) {
     return 'on' + type.charAt(0).toUpperCase() + type.slice(1);
-  },
+  }
 
   _handleEvent(event) {
     let method = this._getEventMethodName(event.type);
-    this.props[method] && this.props[method](event);
-  },
+    this.props[method] && this.props[method].apply(this,[event]);
+  }
 
   getTouchHandlers() {
     return {
-      onTouchStart: this.handleTouchStart,
-      onTouchEnd: this.handleTouchEnd,
-      onTouchCancel: this.handleTouchCancel,
-      onTouchMove: this.handleTouchMove,
-    }
-  },
-};
+      onTouchStart: this.handleTouchStart.bind(this),
+      onTouchEnd: this.handleTouchEnd.bind(this),
+      onTouchCancel: this.handleTouchCancel.bind(this),
+      onTouchMove: this.handleTouchMove.bind(this),
 
-export default TouchableMixin;
+      onMouseDown: this.handleTouchStart.bind(this),
+      onMouseUp: this.handleTouchEnd.bind(this),
+      //onTouchCancel: this.handleTouchCancel.bind(this),
+      onMouseMove: this.handleTouchMove.bind(this),
+    }
+  }
+}

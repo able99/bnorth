@@ -10,6 +10,7 @@
 @import './components/_grid.scss';
 @import './components/_container.scss';
 @import './components/_form.scss';
+@import "./components/_form-range";
 @import './components/_grid.scss';
 @import './components/_group.scss';
 @import './components/_icon.scss';
@@ -19,13 +20,15 @@
 @import './components/_notification.scss';
 @import './components/_offcanvas.scss';
 @import './components/_popover.scss';
-@import './components/_slider.scss';
+@import './components/_carousel.scss';
 @import './components/_switch.scss';
 @import './components/_tabbar.scss';
 @import './components/_tabs.scss';
 @import './components/_view.scss';
 @import './components/_modal.scss';
-@import './components/_checkRadio.scss';
 @import './components/typography.scss';
 @import './components/_progressbar.scss';
 @import './components/_pager.scss';
+@import './components/_popover.scss';
+@import './components/_check-radio.scss';
+@import './components/_panel.scss';

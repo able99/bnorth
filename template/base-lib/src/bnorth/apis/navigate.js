@@ -1,4 +1,4 @@
-import { Config, Apis, RouterStatus } from '../';
+import { Config, Apis, RouterStatus, AppData } from '../';
 
 function navi(gotoOrReplace,...args){
   let {location,router,} = RouterStatus;
@@ -85,6 +85,7 @@ let Navigate = {
     func(Config.PathHome);
   },
   goLogin(replace){
+    AppData.loginBackLoction = AppData.routerStatus.location;
     let func = replace?Navigate.replace:Navigate.push;
     func(Config.PathLogin);
   },

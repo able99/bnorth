@@ -2,32 +2,26 @@
  * @see https://github.com/yuanyan/boronmodal
  */
 
-import React, {
-  PropTypes,
-  createClass,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import cx from 'classnames';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
-import ClassNameMixin from '../mixins/ClassNameMixin';
-import TransitionEvents from '../utils/TransitionEvents';
-import Button from '../Button';
-import Icon from '../Icon';
-import Loader from '../Loader';
+import ClassNameHoc from './hoc/ClassNameHoc';
+import BackdropHoc from './hoc/BackdropHoc';
+import TransitionEvents from './utils/TransitionEvents';
+import Button from './Button';
+import Icon from './Icon';
+import Loader from './Loader';
 
 // MUST be equal to $modal-duration in _modal.scss
 const TRANSITION_TIMEOUT = 300;
 
-function noop() {
-}
-
-const Modal = createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Modal extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string,
-    role: PropTypes.oneOf(['alert', 'confirm', 'prompt', 'loading',
-      'actions', 'popup', 'custom']),
+    backdropClassName: PropTypes.string,
+    role: PropTypes.oneOf(['alert', 'confirm', 'prompt', 'loading', 'actions', 'popup', 'custom']),
     title: PropTypes.node,
     confirmText: PropTypes.string,
     cancelText: PropTypes.string,
@@ -37,33 +31,32 @@ const Modal = createClass({
     onOpen: PropTypes.func,
     onClosed: PropTypes.func,
     onDismiss: PropTypes.func,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'modal',
-      confirmText: '确定',
-      cancelText: '取消',
-      closeBtn: true,
-      onAction: noop,
-      onOpen: noop,
-      onClosed: noop,
-      onDismiss: noop,
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'modal',
+    confirmText: '确定',
+    cancelText: '取消',
+    closeBtn: false,
+    onAction: ()=>{},
+    onOpen: ()=>{},
+    onClosed: ()=>{},
+    onDismiss: ()=>{},
+  }
 
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       closed: true,
       isClosing: false,
     };
-  },
+  }
 
   componentDidMount() {
     if (this.props.isOpen) {
       this.open();
     }
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     let isOpen = this.props.isOpen;
@@ -73,29 +66,28 @@ const Modal = createClass({
     } else if (isOpen && !nextProps.isOpen) {
       this.close();
     }
-  },
+  }
 
   isClosed() {
     return this.state.closed;
-  },
+  }
 
   isPopup() {
     return this.props.role === 'popup';
-  },
+  }
 
   isActions() {
     return this.props.role === 'actions';
-  },
+  }
 
   isCustom() {
     return this.props.role === 'custom';
-  },
+  }
 
   // Get input data for prompt modal
   getFieldData() {
     let data = [];
-    let inputs = ReactDOM.findDOMNode(this)
-      .querySelectorAll('input[type=text]');
+    let inputs = ReactDOM.findDOMNode(this).querySelectorAll('input[type=text]');
 
     if (inputs) {
       for (let i = 0; i < inputs.length; i++) {
@@ -104,7 +96,7 @@ const Modal = createClass({
     }
 
     return (data.length === 0) ? null : ((data.length === 1) ? data[0] : data);
-  },
+  }
 
   // data === null: prompt -> canceled
   // data === true: confirm -> confirmed
@@ -125,7 +117,7 @@ const Modal = createClass({
     }
 
     willClose && this.requestClose(e);
-  },
+  }
 
   handleBackdropClick(e) {
     if (e.target !== e.currentTarget || this.props.closeViaBackdrop) {
@@ -133,7 +125,7 @@ const Modal = createClass({
     }
 
     this.requestClose(e);
-  },
+  }
 
   open() {
     if (this.isClosed()) {
@@ -144,7 +136,7 @@ const Modal = createClass({
 
       this.props.onOpen();
     }
-  },
+  }
 
   // Only for instance self calling
   close() {
@@ -155,12 +147,12 @@ const Modal = createClass({
     this.setState({
       isClosing: true
     });
-  },
+  }
 
   // for user actions
   requestClose(e) {
     this.props.onDismiss(e);
-  },
+  }
 
   handleClosed() {
     this.setState({
@@ -168,7 +160,7 @@ const Modal = createClass({
       isClosing: false,
     });
     this.props.onClosed();
-  },
+  }
 
   removeUnknownProp(props) {
     delete props.isOpen;
@@ -181,9 +173,11 @@ const Modal = createClass({
     delete props.cancelText;
     delete props.closeBtn;
     delete props.closeViaBackdrop;
+    delete props.noMask;
+    delete props.backdropClassName;
 
     return props;
-  },
+  }
 
   renderActions(classSet) {
     classSet[this.props.classPrefix] = false;
@@ -197,16 +191,16 @@ const Modal = createClass({
         {this.props.children}
         <div className={this.prefixClass('actions-group')}>
           <Button
-            onClick={this.requestClose}
+            onClick={this.requestClose.bind(this)}
             block
-            amStyle={this.props.btnStyle || 'secondary'}
+            amStyle={this.props.btnStyle}
           >
             {this.props.cancelText}
           </Button>
         </div>
       </div>
     );
-  },
+  }
 
   renderPopup(classSet) {
     classSet[this.props.classPrefix] = false;
@@ -225,26 +219,15 @@ const Modal = createClass({
         key="modalPopup"
         ref="modal"
       >
-        <div className={this.setClassNS('popup-inner')}>
-          <div className={this.setClassNS('popup-header')}>
-            {title ? (
-              <h3 className={this.setClassNS('popup-title')}>
-                {title}
-              </h3>
-            ) : null}
-            <Icon
-              name="close"
-              className={this.setClassNS('popup-icon')}
-              onClick={this.requestClose}
-            />
-          </div>
+        <div className={cx(this.setClassNS('popup-inner'),"layout-v")}>
+          {this.renderHeader()}
           <div className={this.setClassNS('popup-body')}>
             {children}
           </div>
         </div>
       </div>
     );
-  },
+  }
 
   renderCustom(classSet) {
     classSet[this.props.classPrefix] = false;
@@ -264,35 +247,30 @@ const Modal = createClass({
           ref: "modal",
         })
     );
-  },
+  }
 
   renderHeader() {
     let {
       title,
       closeBtn,
-      role
     } = this.props;
-    let closeIcon = closeBtn && !role ? (
-      <Icon
-        name="close"
-        className={this.prefixClass('icon')}
-        onClick={this.requestClose} />
+
+    return (title || closeBtn) ? (
+      <div className={cx(this.prefixClass('header'),closeBtn?"layout-h-between-center":"layout-h-center-center")} key="modalHeader" >
+        <h3
+          className={cx(this.prefixClass('title'),closeBtn?"text-left":"text-center")} >
+          {title}
+        </h3>
+        {closeBtn?
+        <Icon
+          name="close"
+          className={this.prefixClass('icon')}
+          onClick={this.requestClose.bind(this)} />
+        :null}
+      </div>
     ) : null;
+  }
 
-    return (title || closeIcon) ? (
-      <div
-        className={this.prefixClass('header')}
-        key="modalHeader" >
-        {title ? (
-          <h3
-            className={cx(this.prefixClass('title'),closeIcon?"text-left":"text-center")} >
-            {title}
-          </h3>) : null}
-        {closeIcon}
-      </div>) : null;
-  },
-
-  // Render alert/confirm/prompt buttons
   renderFooter() {
     let buttons;
     let btnClass = this.prefixClass('btn');
@@ -322,7 +300,7 @@ const Modal = createClass({
               key={'modalBtn' + i}
               onClick={this.handleAction.bind(this, i === 0 ? cancel : true)}
               className={cx(btnClass,i===0?"border-color-light":"")}
-              amStyle={i===0?"gray":"primary"}
+              amStyle={i===0?"normal":"primary"}
               hollow={i===0}
               radius
               >
@@ -340,7 +318,7 @@ const Modal = createClass({
         {buttons}
       </div>
     ) : null;
-  },
+  }
 
   // Using transition appear to fix animation issue on iOS Safari
   // @see https://github.com/amazeui/amazeui-touch/issues/11
@@ -356,33 +334,7 @@ const Modal = createClass({
         {children}
       </CSSTransitionGroup>
     );
-  },
-
-  renderBackdrop(children) {
-    const onClick = this.handleBackdropClick || null;
-    const preventDefault = (e) => {
-      // prevent window scroll when touch backdrop
-      e.preventDefault();
-    };
-
-    let classSet = {};
-
-    classSet[this.prefixClass('backdrop')] = true;
-    classSet[this.setClassNS('active')] = true;
-    classSet[this.prefixClass('backdrop-out')] = this.state.isClosing;
-
-    return (
-      <span>
-        {children}
-        <div
-          className={cx(classSet)}
-          ref="backdrop"
-          onClick={onClick}
-          onTouchMove={preventDefault}
-        ></div>
-      </span>
-    );
-  },
+  }
 
   render() {
     let {
@@ -417,11 +369,12 @@ const Modal = createClass({
       noMask,
       role,
       className,
+      backdropClassName,
       title,
       children,
       modalWidth,
       modalHeight,
-      fullcontent,
+      noPadded,
       ...props
     } = this.props;
     let modal;
@@ -457,11 +410,11 @@ const Modal = createClass({
             >
               {this.renderHeader()}
               <div
-                className={cx(this.prefixClass('body'),fullcontent?this.prefixClass('fullcontent'):"")}
+                className={cx(this.prefixClass('body'),{[this.prefixClass('no-padded')]:noPadded})}
                 ref="modalBody" >
-                {role === 'loading' ?
-                  (children ? children : <Loader />) :
-                  children}
+                {role === 'loading' 
+                ?(children ? children : <Loader />)
+                :children}
               </div>
               {this.renderFooter()}
             </div>
@@ -470,8 +423,8 @@ const Modal = createClass({
       );
     }
 
-    return noMask?modal:this.renderBackdrop(modal);
+    return this.renderBackdrop(modal,noMask,backdropClassName);
   }
-});
+}
 
-export default Modal;
+export default BackdropHoc(ClassNameHoc(Modal));

@@ -1,27 +1,21 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import {component as componentPropType} from './InternalPropTypes';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-const Col = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Col extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
-    component: componentPropType.isRequired,
+    component: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]).isRequired,
     cols: PropTypes.number,
     offset: PropTypes.number,
     shrink: PropTypes.bool,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'col',
-      component: 'div'
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'col',
+    component: 'div'
+  }
 
   render() {
     let {
@@ -55,6 +49,6 @@ const Col = React.createClass({
       </Component>
     );
   }
-});
+}
 
-export default Col;
+export default ClassNameHoc(Col);

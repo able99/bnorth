@@ -1,15 +1,13 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 import Button from './Button';
 import Icon from './Icon';
 
-const Field = React.createClass({
-  mixins: [ClassNameMixin],
 
-  propTypes: {
+class Field extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
     type: PropTypes.string,
     label: PropTypes.node,
@@ -18,18 +16,16 @@ const Field = React.createClass({
     labelBefore: PropTypes.node,
     labelAfter: PropTypes.node,
     containerClassName: PropTypes.string,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'field',
-      type: 'text'
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'field',
+    type: 'text'
+  }
 
   getFieldDOMNode() {
     return this.refs.field;
-  },
+  }
 
   getValue() {
     if (this.props.type === 'select' && this.props.multiple) {
@@ -37,11 +33,11 @@ const Field = React.createClass({
     } else {
       return this.getFieldDOMNode().value;
     }
-  },
+  }
 
   getChecked() {
     return this.getFieldDOMNode().checked;
-  },
+  }
 
   getSelectedOptions() {
     let values = [];
@@ -57,15 +53,15 @@ const Field = React.createClass({
     });
 
     return values;
-  },
+  }
 
   isCheckboxOrRadio() {
     return this.props.type === 'radio' || this.props.type === 'checkbox';
-  },
+  }
 
   isFile() {
     return this.props.type === 'file';
-  },
+  }
 
   // convert `value`/`defaultValue` to `checked`/`defaultChecked` when `type` is `radio`/checkbox``
   convertValueToChecked() {
@@ -87,7 +83,7 @@ const Field = React.createClass({
     }
 
     return checkedProps;
-  },
+  }
 
   renderField() {
     let field = null;
@@ -151,7 +147,7 @@ const Field = React.createClass({
     }
 
     return field;
-  },
+  }
 
   renderContainer(children) {
     const {
@@ -175,7 +171,7 @@ const Field = React.createClass({
         ) : null}
       </label>
     ) : children;
-  },
+  }
 
   renderFieldGroup(children) {
     let groupPrefix = this.setClassNS('field-group');
@@ -209,7 +205,7 @@ const Field = React.createClass({
         {btnAfter}
       </div>
     ) : children;
-  },
+  }
 
   render() {
     let field = this.renderField();
@@ -220,6 +216,6 @@ const Field = React.createClass({
 
     return this.renderFieldGroup(field);
   }
-});
+}
 
-export default Field;
+export default ClassNameHoc(Field);

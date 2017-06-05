@@ -1,19 +1,11 @@
-import React, {
-  PropTypes,
-} from 'react';
-import /*ReactDOM,*/ {
-  unmountComponentAtNode,
-  unstable_renderSubtreeIntoContainer as renderSubtreeIntoContainer
-} from 'react-dom';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { unmountComponentAtNode, unstable_renderSubtreeIntoContainer as renderSubtreeIntoContainer } from 'react-dom';
 import CSSTransitionGroup from 'react-addons-css-transition-group';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
-// import {
-//   canUseDOM,
-// } from './utils/exenv';
 import bodyElement from './utils/bodyElement';
 import Icon from './Icon';
-
+import ClassNameHoc from './hoc/ClassNameHoc';
 
 // @see https://facebook.github.io/react/blog/2015/09/10/react-v0.14-rc1.html
 // To improve reliability, CSSTransitionGroup will no longer listen to
@@ -23,10 +15,8 @@ import Icon from './Icon';
 // be not smooth. It maybe a bug of React.
 const TRANSITION_TIMEOUT = 250;
 
-const Notification = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Notification extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
     title: PropTypes.string,
     amStyle: PropTypes.string,
@@ -34,26 +24,22 @@ const Notification = React.createClass({
     animated: PropTypes.bool,
     visible: PropTypes.bool,
     onDismiss: PropTypes.func,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'notification',
-      closeBtn: true,
-      onDismiss: () => {
-      },
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'notification',
+    closeBtn: true,
+    onDismiss: () => {},
+  }
 
   renderCloseBtn() {
     return this.props.closeBtn ? (
       <Icon
         className={this.prefixClass('icon')}
         name="close"
-        onClick={this.props.onDismiss}
-      />
+        onClick={this.props.onDismiss.bind(this)} />
     ) : null;
-  },
+  }
 
   render() {
     let classSet = this.getClassSet();
@@ -102,18 +88,18 @@ const Notification = React.createClass({
       </CSSTransitionGroup>
     ) : notificationBar;
   }
-});
+}
 
-const NotificationPortal = React.createClass({
-  propTypes: {
+Notification = ClassNameHoc(Notification);
+
+class NotificationPortal extends React.Component {
+  static propTypes = {
     visible: PropTypes.bool.isRequired,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      visible: false,
-    };
-  },
+  static defaultProps = {
+    visible: false,
+  }
 
   componentDidMount() {
     if (!this.isStatic()) {
@@ -122,24 +108,24 @@ const NotificationPortal = React.createClass({
       bodyElement.appendChild(this.node);
       this.renderNotification(this.props);
     }
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     if (!this.isStatic()) {
       this.renderNotification(nextProps);
     }
-  },
+  }
 
   componentWillUnmount() {
     if (!this.isStatic()) {
       unmountComponentAtNode(this.node);
       bodyElement.removeChild(this.node);
     }
-  },
+  }
 
   isStatic() {
     return this.props.static;
-  },
+  }
 
   renderNotification(props) {
     this.portal = renderSubtreeIntoContainer(
@@ -147,11 +133,11 @@ const NotificationPortal = React.createClass({
       <Notification {...props} />,
       this.node
     );
-  },
+  }
 
   render() {
     return this.isStatic() ? <Notification {...this.props} /> : null;
   }
-});
+}
 
 export default NotificationPortal;

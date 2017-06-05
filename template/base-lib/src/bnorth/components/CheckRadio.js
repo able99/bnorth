@@ -1,89 +1,72 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
+import Icon from './Icon';
 
-const CheckRadioExterior = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class CheckRadio extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
-  },
+    name: PropTypes.string,
+    type: PropTypes.string,
+    amStyle: PropTypes.string,
+    disabled: PropTypes.bool,
+    value: PropTypes.bool,
+    onValueChange: PropTypes.func,
+    label: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]),
+    contentOn: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]),
+    contentOff: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]),
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'checkradio',
-    };
-  },
-
-  removeUnknownProp(props) {
-    delete props.classPrefix;
-    return props;
-  },
+  static defaultProps = {
+    classPrefix: 'check-radio',
+  }
 
   render() {
-    let {
-      //checkbox,
-      exteriorClassName,
-      exteriorInputClassName,
-      exteriorLabelClassName,
-    } = this.props;
-
-    return (
-      <span className={cx(this.getClassSet(),exteriorClassName)}>
-        <span className={cx(this.prefixClass('input'),exteriorInputClassName)} dangerouslySetInnerHTML={{__html: '&#10003'}}></span>
-        <span className={cx(this.prefixClass('label'),exteriorLabelClassName)}>{this.props.children}</span>
-      </span>
-    )
-  },
-});
-
-const CheckRadio = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
-    classPrefix: PropTypes.string.isRequired,
-  },
-
-  getDefaultProps() {
-    return {
-      classPrefix: 'checkradio-container',
-    };
-  },
-
-  render() {
+    let classSet = this.getClassSet();
     const {
       name,
-      defaultChecked,
-      disabled,
+      type,
+      className,
       label,
-      onChange,
       value,
-      checkbox,
-
-      exterior,
-      exteriorClassName,
-      exteriorInputClassName,
-      exteriorLabelClassName,
-      //...props
+      defaultValue,
+      disabled,
+      children,
+      contentOn,
+      contentOff,
+      ...props
     } = this.props;
 
+    delete props.classPrefix;
+    delete props.amStyle;
+    delete props.amSize;
+    delete props.underline;
+    delete props.hollow;
+    delete props.block;
+    delete props.active;
+    delete props.rounded;
+
     return (
-      <label className={cx(this.getClassSet())} >
+      <label {...props} className={cx(classSet, className)} >
         <input
           name={name}
-          type={checkbox?"checkbox":"radio"}
+          type={type}
           value={value}
-          defaultChecked={defaultChecked}
-          onChange={onChange}
+          defaultValue={defaultValue}
           disabled={disabled} />
-        {exterior
-        ?<exterior exteriorClassName={exteriorClassName} exteriorInputClassName={exteriorInputClassName} exteriorLabelClassName={exteriorLabelClassName} checkbox>{label}</exterior>
-        :<CheckRadioExterior exteriorClassName={exteriorClassName} exteriorInputClassName={exteriorInputClassName} exteriorLabelClassName={exteriorLabelClassName} checkbox>{label}</CheckRadioExterior>}
+        {label?label:children}
+        <span className={this.prefixClass('content')}>
+          <span className={this.prefixClass('on')}>
+            {contentOn?contentOn:<Icon name="check" className={this.prefixClass('default')} />}
+          </span>
+          <span className={this.prefixClass('off')}>
+            {contentOff?contentOff:<Icon name="check" className={this.prefixClass('default')} />}
+          </span>
+        </span>
       </label>
     );
   }
-});
+}
 
-export default CheckRadio;
+export default ClassNameHoc(CheckRadio);

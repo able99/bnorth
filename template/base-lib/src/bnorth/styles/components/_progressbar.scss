@@ -15,14 +15,13 @@
   visibility: visible;
   opacity: 1;
   transition: all 400ms;
-  z-index: 9999;
+
   &.react-progress-bar-on-top {
     height: 100%;
   }
   &.react-progress-bar-hide {
     opacity: 0;
     visibility: hidden;
-    z-index: -10;
   }
 }
 

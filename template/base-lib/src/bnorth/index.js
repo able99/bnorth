@@ -3,7 +3,7 @@ import { createStore,applyMiddleware } from 'redux'
 import thunkMiddleware from 'redux-thunk';
 import React from 'react';
 import { connect,Provider } from 'react-redux'
-import { Router,Route,hashHistory,RouterContext} from 'react-router';
+import { Router,Route,hashHistory,RouterContext } from 'react-router';
 
 // action-----------
 import { actionsNotice,ReduxerNotice } from './actions/notice';
@@ -14,6 +14,7 @@ import { actionsHttpifFetch, actionsHttpifOperate, ReduxerHttpifFetch, actionsHt
 import Format from './utils/format';
 import Util from './utils/util';
 import Webview from './utils/webview';
+import Style from './utils/style';
 
 // api----------------
 import User from './apis/user';
@@ -34,18 +35,23 @@ import Card from './components/Card';
 import Icon from './components/Icon';
 import List from './components/List';
 import Loader from './components/Loader';
-import Modal from './components/Modal/Modal';
+import Modal from './components/Modal';
 import NavBar from './components/NavBar';
 import Notification from './components/Notification';
 import TabBar from './components/TabBar';
 import Tabs from './components/Tabs';
 import View from './components/View';
 import Field from './components/Field';
-import OffCanvas from './components/OffCanvas';
-import OffCanvasTrigger from './components/OffCanvasTrigger';
-import CheckRadio from './components/CheckRadio';
+// import OffCanvas from './components/OffCanvas';
+// import OffCanvasTrigger from './components/OffCanvasTrigger';
 import Pager from './components/Pager';
 import ProgressBar from './components/ProgressBar';
+import Popover from './components/Popover';
+import PopoverTrigger from './components/PopoverTrigger';
+import Carousel from './components/Carousel';
+import Switch from './components/Switch';
+import CheckRadio from './components/CheckRadio';
+import Panel from './components/Panel';
 
 //==============================
 // config
@@ -75,6 +81,7 @@ let Utils = {
   Format,
   Util,
   Webview,
+  Style,
 }
 
 //==============================
@@ -119,84 +126,113 @@ function createAppStore(areduxers=null){
   };
 }
 
-
-
 //==============
-// app data
-let AppData = {};
-AppData.setProps = function(key,val){
-  this.key = val;
-}
-AppData.getProps = function(key){
-  return this[key];
+// Page
+//==============
+const AppData = {
+  didBackKey: null,
+  routerStatus: null,
+  loginBackLoction: null,
 }
 
 
 //==============
-// app mixin
+// Page
 //==============
-let ComponentDidBackKey = null;
-//==============
-// page mixin
-const MixinPage = {
-  //--------------------
-  // life cycle
-  componentWillMount: function() {
+const PageHoc = (Wrapper) => class PageHoc extends Wrapper {
+  constructor(props) {
+    super(props);
+    this._focus = false;
+  }
+
+  componentWillMount() {
     Actions.actionNoticeDialogClose();
 
-    if(this.props.onWillStart){
-      this.props.onWillStart(this);
+    if(this.props.onWillStart) this.props.onWillStart(this);
+    return super.componentWillMount && super.componentWillMount();
+  }
+
+  componentDidMount() {
+    if(this.props.onStart) this.props.onStart(this);
+    if(this.isFocus())this.componentDidResume();
+    return super.componentDidMount && super.componentDidMount();
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.checkFocusChange()){
+      this.isFocus()?this.componentDidResume():this.componentDidPause();
     }
-  },
 
-  componentDidMount: function() {
-    if(this.props.onStart){
-      this.props.onStart(this);
-    }
+    return super.componentDidUpdate && super.componentDidUpdate();
+  }
 
-    this.componentDidResume();
-  },
-
-  componentDidUpdate: function(prevProps) {
-    if(prevProps.focus !== this.props.focus){
-      this.props.focus?this.componentDidResume():this.componentDidPause();
-    }
-  },
-
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     this.componentDidPause();
 
-    if(this.props.onStop){
-      this.props.onStop(this);
-    }
-  },
+    if(this.props.onStop) this.props.onStop(this);
+    return super.componentWillMount && super.componentWillMount();
+  }
 
-  componentDidPause: function() {
-    if(this.props.onPause){
-      this.props.onPause(this);
-    }
-  },
+  componentDidPause() {
+    if(this.props.onPause) this.props.onPause(this);
+    return super.componentDidPause && super.componentDidPause();
+  }
 
-  componentDidResume: function() {
-    ComponentDidBackKey = this.componentDidBackKey;//this.componentDidBackKey.bind(this);
+  componentDidResume() {
+    AppData.didBackKey = this.componentDidBackKey;
 
-    if(this.props.onResume){
-      this.props.onResume(this);
-    }
-  },
+    if(this.props.onResume) this.props.onResume(this);
+    return super.componentDidResume && super.componentDidResume();
+  }
 
-  componentDidBackKey: function() {
-    if(this.props.onBackKey){
-      this.props.onBackKey();
-      return true;
+  componentDidBackKey() {
+    if(this.props.onBackKey) this.props.onBackKey();
+    return super.componentDidBackKey && super.componentDidBackKey();
+  }
+
+  render(){
+    let ret = super.render();
+    ret = React.cloneElement(
+      ret,
+      Object.assign(
+        {
+          title: Wrapper.name,
+          isBlur: !this.isFocus(),
+        }, 
+        ret.props
+      )
+    );
+    
+    if(this.isContainer() && this.props.route.container.indexOf(this.getPageChildPath())>=0){
+      return (<div>{ret}{this.props[this.getPageChildPath()] && this.props[this.getPageChildPath()].props.children}</div>);
     }else{
-      return false;
+      return (<div>{ret}{this.isSubPage()?null:this.props.children}</div>);
     }
-  },
+  }
 
-  //--------------------
-  // page util
-  getComponentPath: function() {
+  checkFocusChange() {
+    let oldFocus = this._focus;
+    this._focus = this.isFocus();
+    return this._focus !== oldFocus;
+  }
+
+  isFocus() {
+    if(this.isContainer() && this.props.route.container.indexOf(this.getPageChildPath())>=0){
+      return !Boolean(this.props[this.getPageChildPath()] && this.props[this.getPageChildPath()].props.children);
+    }else{
+      return !Boolean(this.props.children);
+    }
+  }
+
+  isContainer() {
+    return Boolean(this.props.route.container);
+  }
+
+  isSubPage() {
+    return Boolean(this.props.route.components);
+  }
+
+  getPageFullPath() {
     let routes = [];
     for(let route of this.props.routes){
       if(!route.path) continue;
@@ -209,115 +245,21 @@ const MixinPage = {
       pathname = pathname.replace(re,this.props.router.params[key]);
     }
     return pathname;
-  },
+  }
 
-  getPageProps: function() {
-    return {
-      focus: this.props.focus,
-      child: this.props.child,
-    }
-  },
-  getApp: function() {
-    return AppData;
-  },
-};
-
-//==============
-// app mixin
-export const MixinApp = {
-  //--------------------
-  // multi child page
-  renderPages: function(){
-    let pages = [];
-    let ite = this.props.children;
-    let level = 0;
-    let sub = false;
-
-    while(ite && ite.props){
-      let component = ite;
-      let props = {
-        key: `page-app-${++level}`,
-        focus: false,
-        child: false,
-      };
-
-      if(!sub)pages.push({component,props});sub=false;
-
-      sub = ite.props.route.subs;
-      ite = ite.props.children;
-    } 
-
-    pages.slice(-1).map((v)=>{return v.props.focus = true});
-    return pages.map((v,i)=>{
-      return React.cloneElement(v.component,v.props);
-    });
-  },
-
-  //--------------------
-  // page util
-  getApp: function() {
-    return AppData;
-  },
-};
-
-//==============
-// container mixin
-const MixinContainerPage = {
-  //--------------------
-  // multi child page
-  getSelectPath: function(){
-    let path = null;
-    for(let route of this.props.routes){
-      if(path||route===this.props.route){
-        if(path){
-          path = route.path;
-          break;
-        }
-        if(route.subs){
-          path = route.path;
-        }
+  getPageChildPath() {
+    let ret = null;
+    for(let i=0; i<this.props.routes.length; i++){
+      let route = this.props.routes[i];
+      if(!route.path) continue;
+      if(route===this.props.route) {
+        ret = this.props.routes[i+1];
+        break;
       }
     }
-    return path;
-  },
-  getPageView: function(name=null, props={}){
-    let element = name?this.props.route.pageViews&&this.props.route.pageViews[name]:this.props.route.pageViews;
-    return element?React.createElement(element,Object.assign({},this.props,{
-      focus: true,
-      child: true,
-    },props)):null;
-  },
-  renderPages: function(names=null,focusAll){
-    return (this.props.route.childRoutes||[])
-    .filter((v)=>{
-      return (
-        (names&&Array.isArray(names))
-        ?names.filter((vv)=>{
-          return vv === v.path;
-        }).length>0
-        :true
-      );
-    })
-    .map((v)=>{
-      return (
-        React.createElement(v.component,Object.assign({},{
-          route: v,
-          router: this.props.router,
-          location: this.props.location,
-          routes: this.props.routes,
-          params: this.props.params,
-          component: v.component,
-          components: v.components,
-          key: "multipage_"+v.path,
-          focus: Boolean(focusAll || this.getSelectPath() === v),
-          child: true,
-          name: v.path,
-        }))
-      );
-    });
-  },
-};
-
+    return ret?ret.path:null;
+  }
+}
 
 
 //==============================
@@ -333,8 +275,7 @@ const AppLifeCycle = {
 
 //================
 // app page
-const AppPage = React.createClass({
-  mixins: [MixinApp],
+class AppPage extends React.Component{
   //================
   // app event
   appEventBind(){
@@ -362,7 +303,7 @@ const AppPage = React.createClass({
         }
       }, false);
     }
-  },
+  }
   
   //--------------------
   // app life 
@@ -370,52 +311,52 @@ const AppPage = React.createClass({
     this.appEventBind();
 
     if(AppLifeCycle.onWillStart && AppLifeCycle.onWillStart.apply(this)) return;
-  },
+  }
 
   componentDidMount(){
     this.appEventBind();
 
     if(AppLifeCycle.onStart && AppLifeCycle.onStart.apply(this)) return;
     //this.props.actionUserUpdate(); //todo
-  },
+  }
 
   componentWillUnmount(){
     if(AppLifeCycle.onStop && AppLifeCycle.onStop.apply(this)) return;
-  },
+  }
 
   componentDidResume(){
     if(AppLifeCycle.onResume && AppLifeCycle.onResume.apply(this)) return;
-  },
+  }
   componentDidPause(){
     if(AppLifeCycle.onPause && AppLifeCycle.onPause.apply(this)) return;
-  },
+  }
   componentDidBackKey(){
     if(AppLifeCycle.onBackKey && AppLifeCycle.onBackKey.apply(this)) return;
 
-    if(ComponentDidBackKey && ComponentDidBackKey()){
+    if(AppData.didBackKey && AppData.didBackKey()){
       return true;
     }else{
       return false;
     }
-  },
+  }
 
   //-------------------
   // render
   render() {
-    //console.log("app",this.props.ReduxerNotice);
     return !this.props.wrap_app.ready
     ?(
-      <View focus>
+      <View>
         logding
       </View>
     )
     :(
-      <View focus>
-        {this.renderPages()}
+      <View>
+        {this.props.children}
         
         {this.props.ReduxerNotice.dialogs.map((v,i)=>{
           let {
             onDismiss,
+            content,
             ...props,
           } = v;
           return (
@@ -424,12 +365,12 @@ const AppPage = React.createClass({
               {...props} 
               isOpen
               onDismiss={()=>{this.props.Actions.actionNoticeDialogClose(v);if(onDismiss)onDismiss()}}>
-              {v.content}
+              {content}
             </Modal>
           );
         })}
 
-        {this.props.ReduxerNotice.blocking?(<View focus className="bg-mask layout-v-center-center text-primary layout-z-line"><Loader  /></View>):null}
+        {this.props.ReduxerNotice.blocking?(<View className="bg-color-mask layout-v-center-center layout-zindex-overlay"><Loader  /></View>):null}
 
         <ProgressBar percent={0} spinner={false} intervalTime={200} autoIncrement={this.props.ReduxerNotice.loading} />
 
@@ -444,11 +385,9 @@ const AppPage = React.createClass({
       </View>
     );
   }
-});
+}
 
-//================
-// app
-const AppConnect = createDefaultConnect(
+const AppState = stateHoc(
   function(){
     let Wraps = [
       ActionWraps.actionsDataWrap('app',{
@@ -469,16 +408,14 @@ const AppConnect = createDefaultConnect(
 //==============================
 const HookRouteCheckLogin = function(nextState, replace){
   if(!User.isLogin()){
-    replace({
-      pathname: typeof(Config.PathLogin)==='string'?Config.PathLogin:Config.PathLogin.path,
-      state: nextState.location,
-    });
+    AppData.loginBackLoction = nextState.location;
+    AppData.loginBackLoction.isReplace = true;
+
+    replace(typeof(Config.PathLogin)==='string'?Config.PathLogin:Config.PathLogin.path);
   }
 }
 
-
-
-function createDefaultConnect(creator){
+function stateHoc(creator){
   if(!creator) return connect(
     null,
     (dispatch,ownProps)=>{
@@ -495,8 +432,9 @@ function createDefaultConnect(creator){
 
   return connect(
     (state,ownProps)=>{
+      let objs = creator.objs?creator.objs:(creator(ownProps)||{});creator.objs = objs;
+
       let ret = {};
-      let objs = creator(ownProps)||{};
       for(let obj of objs.Reduxers||[]){
         ret[obj] = state[obj];
       }
@@ -508,7 +446,7 @@ function createDefaultConnect(creator){
       return ret;
     },
     (dispatch,ownProps)=>{
-      let objs = creator(ownProps)||{};
+      let objs = creator.objs?creator.objs:(creator(ownProps)||{});creator.objs = objs;
 
       let ret = {
         onWillStart(){
@@ -530,6 +468,7 @@ function createDefaultConnect(creator){
           if(objs.onPause)objs.onPause();
         },
         onStop(){
+          creator.objs = null;
           if(objs.onStop)objs.onStop();
           for(let wrap of objs.Wraps||[]){
             if(wrap.clearOnStop)wrap.clear();
@@ -556,7 +495,6 @@ function createDefaultConnect(creator){
   );
 }
 
-let RouterStatus = null;
 function createAppRouter(route,reduxers){
   createAppStore(reduxers);
   return (
@@ -564,21 +502,20 @@ function createAppRouter(route,reduxers){
       <Router 
         history={hashHistory} 
         render={(props)=>{
-          RouterStatus = props;
+          AppData.routerStatus = props;
           return <RouterContext {...props} />
         }}
         // onError={(a)=>{
         //   console.log(a)
         // }}
       >
-        <Route path="/" component={AppConnect(AppPage)}>
+        <Route path="/" component={AppState(AppPage)}>
           {route}
         </Route>  
       </Router>
     </Provider>
   )
 }
-
 
 //==============================
 // export
@@ -587,21 +524,17 @@ export {
   AppLifeCycle,
   
   Config,
-
   Apis,
   Utils,
-
   Actions,
   ActionWraps,
   ActionStore,
 
-  MixinPage,
-  MixinContainerPage,
+  AppData,
 
-  RouterStatus,
-
+  PageHoc,
+  stateHoc,
   createAppRouter,
-  createDefaultConnect,
   HookRouteCheckLogin,
 
   Loader,
@@ -621,14 +554,16 @@ export {
   Field,
   Tabs,
   Notification,
-  OffCanvas,
-  OffCanvasTrigger,
+  // OffCanvas,
+  // OffCanvasTrigger,
   Card,
   Modal,
-  CheckRadio,
   ProgressBar,
   Pager,
-
+  PopoverTrigger,
+  Popover,
+  Carousel,
+  Switch,
+  CheckRadio,
+  Panel,
 }
-
-

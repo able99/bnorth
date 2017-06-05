@@ -1,28 +1,22 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import {component} from './InternalPropTypes';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-const Badge = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Badge extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
-    component: component,
+    component: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]),
     href: PropTypes.string,
     amStyle: PropTypes.string,
     // radius: PropTypes.bool,
     rounded: PropTypes.bool,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'badge',
-      component: 'span'
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'badge',
+    component: 'span'
+  }
 
   render() {
     let classSet = this.getClassSet();
@@ -48,6 +42,6 @@ const Badge = React.createClass({
       </Component>
     );
   }
-});
+}
 
-export default Badge;
+export default ClassNameHoc(Badge);

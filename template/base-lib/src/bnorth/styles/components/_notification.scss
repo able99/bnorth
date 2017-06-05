@@ -22,7 +22,7 @@
 .#{$notification-prefix} {
   top: 0;
   left: 0;
-  z-index: $z-index-notification;
+  z-index: $z-index-overlay;
   display: flex;
   width: 100%;
   padding: $notification-padding;

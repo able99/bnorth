@@ -1,29 +1,22 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-
-//able no margin
-let Group = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Group extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
     component: PropTypes.node.isRequired,
     header: PropTypes.node,
     footer: PropTypes.node,
     noPadded: PropTypes.bool,
     noMargined: PropTypes.bool,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'group',
-      component: 'div'
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'group',
+    component: 'div'
+  }
 
   renderAddon(role) {
     role = role || 'header';
@@ -31,7 +24,7 @@ let Group = React.createClass({
       React.createElement(role, {
         className: this.prefixClass(role)
       }, this.props[role]) : null;
-  },
+  }
 
   render() {
     let {
@@ -67,6 +60,6 @@ let Group = React.createClass({
       </Component>
     );
   }
-});
+}
 
-export default Group;
+export default ClassNameHoc(Group);

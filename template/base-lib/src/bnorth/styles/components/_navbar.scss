@@ -10,13 +10,22 @@
   $color: $navbar-color,
   $item-style: true
 ) {
-  background: $background;
+  @if $color == auto {
+    $color: islight($background);
+  } @else if $color == primary {
+    $color: $global-primary;
+  } @else {
+    $color: $color;
+  }
+
   color: $color;
-  @include retina-line-color(after, $global-border);
+  background: $background;
+
+  //@include retina-line-color(after, $global-border);
   
   @if $item-style {
     .#{$navbar-prefix}-nav-item {
-      color: $navbar-color;
+      color: $color;
     }
   }
 }
@@ -45,8 +54,6 @@
 // the title of the bar
 .#{$navbar-class-title} {
   margin: 0;
-  font-size: 100%;
-  font-weight: bold;
   color: inherit;
 }
 

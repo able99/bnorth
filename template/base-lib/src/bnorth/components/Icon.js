@@ -1,29 +1,23 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import {component} from './InternalPropTypes';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-const Icon = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Icon extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
-    component: component,
+    component: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]),
     name: PropTypes.string.isRequired,
     href: PropTypes.string,
     // amStyle: PropTypes.string,
     // button: PropTypes.bool,
     // size: PropTypes.string,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'icon',
-      component: 'span'
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'icon',
+    component: 'span'
+  }
 
   render() {
     let classSet = this.getClassSet();
@@ -50,6 +44,6 @@ const Icon = React.createClass({
       </Component>
     );
   }
-});
+}
 
-export default Icon;
+export default ClassNameHoc(Icon);

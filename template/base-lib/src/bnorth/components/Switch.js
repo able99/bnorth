@@ -1,32 +1,26 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-
-const Switch = React.createClass({
-  mixins: [ClassNameMixin],
-
-  propTypes: {
+class Switch extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string.isRequired,
     name: PropTypes.string,
     amStyle: PropTypes.string,
     disabled: PropTypes.bool,
     value: PropTypes.bool,
     onValueChange: PropTypes.func,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'switch',
-      onValueChange: () => {},
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'switch',
+    onValueChange: () => {},
+  }
 
   getValue() {
     return this.refs.field.checked;
-  },
+  }
 
   render() {
     let classSet = this.getClassSet();
@@ -52,12 +46,11 @@ const Switch = React.createClass({
           type="checkbox"
           ref="field"
           defaultChecked={value}
-          disabled={disabled}
-        />
+          disabled={disabled} />
         <span className={this.prefixClass('label')} />
       </label>
     );
   }
-});
+}
 
-export default Switch;
+export default ClassNameHoc(Switch);

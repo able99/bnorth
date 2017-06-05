@@ -1,14 +1,12 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
 import Icon from './Icon';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-const NavBar = React.createClass({
-  mixins: [ClassNameMixin],
 
-  propTypes: {
+class NavBar extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string,
     amStyle: PropTypes.oneOf([
       'primary',
@@ -23,15 +21,12 @@ const NavBar = React.createClass({
     rightNav: PropTypes.array,
     titleOnLeft: PropTypes.bool,
     onAction: PropTypes.func,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'navbar',
-      onAction: () => {
-      },
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'navbar',
+    onAction: () => {},
+  }
 
   renderTitle() {
     let {
@@ -41,13 +36,13 @@ const NavBar = React.createClass({
     let titlePosition = this.prefixClass(titleOnLeft ? 'left' : 'center');
 
     return title ? (
-      <h2
+      <h3
         className={cx(this.prefixClass('title'), titlePosition)}
       >
         {title}
-      </h2>
+      </h3>
     ) : this.props.children;
-  },
+  }
 
   renderNav(position) {
     let nav = this.props[position + 'Nav'];
@@ -58,10 +53,10 @@ const NavBar = React.createClass({
         className={cx(this.prefixClass('nav'),
         this.prefixClass(position))}
       >
-        {nav.map(this.renderNavItem)}
+        {nav.map(this.renderNavItem.bind(this))}
       </div>
     ) : null;
-  },
+  }
 
   renderNavItem(item, index) {
     let {
@@ -154,7 +149,7 @@ const NavBar = React.createClass({
         {renderChildren()}
       </Component>
     );
-  },
+  }
 
   render() {
     let classSet = this.getClassSet();
@@ -182,6 +177,6 @@ const NavBar = React.createClass({
       </header>
     );
   }
-});
+}
 
-export default NavBar;
+export default ClassNameHoc(NavBar);

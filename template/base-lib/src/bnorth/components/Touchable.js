@@ -9,26 +9,21 @@
  * @see https://github.com/madrobby/zepto/blob/master/src/touch.js
  */
 
-import React, {
-  PropTypes,
-} from 'react';
-import TouchableMixin from './mixins/TouchableMixin';
+import React from 'react';
+import PropTypes from 'prop-types';
 import createChainedFunction from './utils/createChainedFunction';
 import supportTouch from './utils/isTouchSupported';
 import './utils/ucUIControl';
+import TouchableHoc from './hoc/TouchableHoc';
 
-const Touchable = React.createClass({
-  mixins: [TouchableMixin],
-
-  propTypes: {
+class Touchable extends React.Component {
+  static propTypes = {
     component: PropTypes.any,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      component: 'span',
-    };
-  },
+  static defaultProps = {
+    component: 'span',
+  }
 
   render() {
     const {
@@ -66,11 +61,7 @@ const Touchable = React.createClass({
         {this.props.children}
       </Component>
     );
-  },
-});
+  }
+}
 
-export default Touchable;
-export {TouchableMixin as Mixin};
-
-// TODO: Mixin 里似乎没必要使用 state 记录事件相关信息
-// TODO: 添加 touch active className
+export default TouchableHoc(Touchable);

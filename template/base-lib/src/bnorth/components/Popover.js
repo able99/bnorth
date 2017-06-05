@@ -1,41 +1,34 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
-import BackdropMixin from './mixins/BackdropMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
+import BackdropHoc from './hoc/BackdropHoc';
 
-const Popover = React.createClass({
-  mixins: [ClassNameMixin, BackdropMixin],
-
-  propTypes: {
+class Popover extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string,
-    placement: PropTypes.oneOf(['top', 'bottom', 'horizontal']),
+    placement: PropTypes.oneOf(['top', 'bottom', 'left', 'right', 'dropdown']),
     positionLeft: PropTypes.number,
     positionTop: PropTypes.number,
     angleLeft: PropTypes.number,
     angleTop: PropTypes.number,
     anglePosition: PropTypes.string,
     onDismiss: PropTypes.func,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'popover',
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'popover',
+  };
 
   handleBackdropClick(e) {
-    if (e && e.target === this.refs.backdrop) {
-      let {
-        onDismiss,
-      } = this.props;
+    let {
+      onDismiss,
+    } = this.props;
 
-      onDismiss && onDismiss();
-    }
-  },
+    onDismiss && onDismiss();
+  }
 
-  render() {
+  render() {console.log(this.props);
     let classSet = this.getClassSet();
     let {
       className,
@@ -57,7 +50,10 @@ const Popover = React.createClass({
       left: angleLeft,
       top: angleTop,
     };
-
+    let maskStyle = placement==='dropdown'?{
+      left: 0,
+      top: positionTop,
+    }:null;
     delete props.classPrefix;
     delete props.onDismiss;
 
@@ -70,21 +66,23 @@ const Popover = React.createClass({
         style={style}
         ref="overlay"
         className={cx(classSet, className)}
+        onClick={(e)=>{e.stopPropagation()}}
       >
         <div className={this.prefixClass('inner')}>
           {children}
         </div>
+        {anglePosition?
         <div
           style={angleStyle}
           className={cx(this.prefixClass('angle'),
           anglePosition ? this.prefixClass('angle-' + anglePosition) : null
-          )}
-        />
+          )} />
+        :null}
       </div>
     );
 
-    return this.renderBackdrop(popover);
+    return this.renderBackdrop(popover,false,null,maskStyle);
   }
-});
+}
 
-export default Popover;
+export default BackdropHoc(ClassNameHoc(Popover));

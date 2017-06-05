@@ -8,7 +8,7 @@
   position: fixed;
   top: 0;
   bottom: 0;
-  z-index: $z-index-offcanvas;
+  z-index: $z-index-overlay;
   width: $offcanvas-width;
   height: 100%;
   @include scrollable();

@@ -10,6 +10,7 @@
   display: inline-flex;
   overflow: hidden;
   font-size: $button-font-size;
+  background: $button-group-background;
 
   > .#{$button-prefix} {
     flex: 0 0 auto;
@@ -20,7 +21,7 @@
     &:focus,
     &:active,
     &.#{map-get($am-states, active)} {
-      z-index: 2;
+      z-index: $z-index-component;
     }
   }
 }
@@ -83,4 +84,11 @@
     @include fixes-flexbox-for-android;
     flex: 1;
   }
+}
+
+.#{$button-group-prefix}-split {
+  width: 1px;
+  margin: 8px 0px;
+  display: inline-block;
+  background: $global-border;
 }

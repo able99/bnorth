@@ -1,35 +1,32 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 import Button from './Button';
 import ButtonGroup from './ButtonGroup';
 import Pager from './Pager';
 
-const Tabs = React.createClass({
-  mixins: [ClassNameMixin],
 
-  propTypes: {
+class Tabs extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string,
     activeKey: PropTypes.any,
     defaultActiveKey: PropTypes.any,
     onAction: PropTypes.func,
     inset: PropTypes.bool,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'tabs',
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'tabs',
+  }
 
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       activeKey: this.getDefaultActiveKey(),
       previousActiveKey: null
     };
-  },
+  }
 
   componentWillReceiveProps(nextProps) {
     let nextActiveKey = nextProps.activeKey;
@@ -41,7 +38,7 @@ const Tabs = React.createClass({
         previousActiveKey: this.props.activeKey
       });
     }
-  },
+  }
 
   getDefaultActiveKey(children) {
     let defaultActiveKey = this.props.defaultActiveKey;
@@ -57,12 +54,12 @@ const Tabs = React.createClass({
     });
 
     return defaultActiveKey != null ? defaultActiveKey : 0;
-  },
+  }
 
   getActiveKey() {
     return this.props.activeKey != null ?
       this.props.activeKey : this.state.activeKey;
-  },
+  }
 
   handleClick(key, disabled, e) {
     e.preventDefault();
@@ -83,7 +80,7 @@ const Tabs = React.createClass({
         previousActiveKey: activeKey
       });
     }
-  },
+  }
 
   renderNav() {
     let activeKey = this.getActiveKey();
@@ -121,11 +118,12 @@ const Tabs = React.createClass({
       <ButtonGroup
         className={this.prefixClass('nav')}
         justify
+        split
       >
         {navs}
       </ButtonGroup>
     )
-  },
+  }
 
   renderTabPanels() {
     let activeKey = this.getActiveKey();
@@ -153,11 +151,11 @@ const Tabs = React.createClass({
     });
 
     return (
-      <Pager>
+      <Pager className="layout-sub-flex-grow">
         {panels}
       </Pager>
     )
-  },
+  }
 
   render() {
     let classSet = this.getClassSet();
@@ -175,15 +173,15 @@ const Tabs = React.createClass({
     return (
       <div
         {...props}
-        className={cx(classSet, className)}
+        className={cx("layout-v",classSet, className)}
       >
         {this.renderNav()}
         {this.renderTabPanels()}
       </div>
     );
   }
-});
+}
 
 Tabs.Item = Pager.Item;
 
-export default Tabs;
+export default ClassNameHoc(Tabs);

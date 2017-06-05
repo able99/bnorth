@@ -1,39 +1,55 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-const Pager = React.createClass({
-  mixins: [ClassNameMixin],
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'pager',
-    };
-  },
+class Pager extends React.Component {
+  static propTypes = {
+    classPrefix: PropTypes.string,
+    mode: PropTypes.oneOf(['single', 'singleNew']),
+  }
+
+  static defaultProps = {
+    classPrefix: 'pager',
+    mode: 'single',
+  }
 
   render() {
     let {
       className,
       children,
-      style,
+      mode,
     } = this.props;
 
-    return (
-      <div className={cx(this.getClassSet(),className)} >
-        {!style?children.filter((v)=>{return v.props.active}):children}
-      </div>
-    );
-  },
-});
+    switch(mode){
+      case 'single':
+      case 'singleNew':
+      default:
+        return (
+          <div className={cx(this.getClassSet(),this.prefixClass(mode),className)} >
+            {children.filter((v)=>{return v.props.active})}
+          </div>
+        );
+    }
+  }
+}
 
-const PagerItem = React.createClass({
-  mixins: [ClassNameMixin],
+class PagerItem extends React.Component {
+  static propTypes = {
+    classPrefix: PropTypes.string,
+    title: PropTypes.node,
+    eventKey: PropTypes.any,
+    disabled: PropTypes.bool,
+    active: PropTypes.bool,
+    noPadded: PropTypes.bool,
+    navSize: PropTypes.string,
+    navStyle: PropTypes.string,
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'pager',
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'pager',
+  }
 
   render() {
     let classSet = this.getClassSet(true);
@@ -43,18 +59,16 @@ const PagerItem = React.createClass({
       noPadded,
       ...props
     } = this.props;
-    const elementName = 'panel';
-
     delete props.classPrefix;  
     delete props.eventKey;
     delete props.active;
     delete props.noPadded;
 
-    classSet[this.prefixClass(elementName)] = true;
-    classSet[this.prefixClass(`${elementName}-no-padded`)] = noPadded;
+    classSet[this.prefixClass('panel')] = true;
+    classSet[this.prefixClass('panel-no-padded')] = noPadded;
 
     return (
-      <div key="pager"
+      <div
         {...props}
         className={cx(classSet, className)}
       >
@@ -62,8 +76,8 @@ const PagerItem = React.createClass({
       </div>
     );
   }
-});
+}
 
-Pager.Item = PagerItem;
+Pager.Item = ClassNameHoc(PagerItem);
 
-export default Pager;
+export default ClassNameHoc(Pager);

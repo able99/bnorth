@@ -19,15 +19,9 @@
   box-sizing: border-box;
   width: 100%;
   // height: $height;
-
-  //able99
   padding: $form-padding;
   margin-bottom: $global-padding;
   border: 1px solid $text-field-border;
-  padding: 0;
-  margin-bottom: 0;
-  border: none;
-
   border-radius: 0;
   outline: 0;
   background: $text-field-background;
@@ -89,7 +83,7 @@ textarea {
 
     &,
     &:hover {
-      background-color: $text-field-background-disabled;
+      color: $global-lightbg-disable;
     }
   }
 }
@@ -109,7 +103,8 @@ textarea {
     }
 
     &:focus {
-      z-index: 2;
+      // no change on border
+      z-index: $z-index-component;
     }
 
     &:first-child {

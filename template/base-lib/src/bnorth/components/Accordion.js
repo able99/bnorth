@@ -1,38 +1,35 @@
-import React, {
-  PropTypes,
-} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
-import ClassNameMixin from './mixins/ClassNameMixin';
-import CollapseMixin from './mixins/CollapseMixin';
 import Icon from './Icon';
+import CollapseHoc from './hoc/CollapseHoc';
+import ClassNameHoc from './hoc/ClassNameHoc';
 
-const Accordion = React.createClass({
-  mixins: [ClassNameMixin],
 
-  propTypes: {
+class Accordion extends React.Component {
+  static propTypes = {
     classPrefix: PropTypes.string,
     activeKey: PropTypes.any,
     defaultActiveKey: PropTypes.any,
     inset: PropTypes.bool,
     onAction: PropTypes.func,
-  },
+  }
 
-  getDefaultProps() {
-    return {
-      classPrefix: 'accordion',
-    };
-  },
+  static defaultProps = {
+    classPrefix: 'accordion',
+  }
 
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       activeKey: this.props.defaultActiveKey || null
     };
-  },
+  }
 
-  shouldComponentUpdate: function() {
+  shouldComponentUpdate() {
     // Defer any updates to this component during the `onAction` handler.
     return !this._isChanging;
-  },
+  }
 
   handleSelect(e, key) {
     e.preventDefault();
@@ -50,7 +47,7 @@ const Accordion = React.createClass({
     this.setState({
       activeKey: key
     });
-  },
+  }
 
   renderItems() {
     let activeKey = this.props.activeKey != null ?
@@ -62,7 +59,7 @@ const Accordion = React.createClass({
       } = child.props;
       let props = {
         key: index,
-        onAction: this.handleSelect,
+        onAction: this.handleSelect.bind(this),
       };
 
       if (eventKey === undefined) {
@@ -73,7 +70,7 @@ const Accordion = React.createClass({
 
       return React.cloneElement(child, props);
     });
-  },
+  }
 
   render() {
     let {
@@ -99,25 +96,23 @@ const Accordion = React.createClass({
       </section>
     );
   }
-});
+}
 
-const AccordionItem = React.createClass({
-  mixins: [ClassNameMixin, CollapseMixin],
+class AccordionItem extends React.Component {
+  static propTypes = {
+    title: PropTypes.node,
+    eventKey: PropTypes.any,
+  }
 
   componentDidMount() {
     this.mounted = true;
-  },
+  }
 
   componentWillUnmount() {
       this.mounted = false;
-  },
+  }
 
-  propTypes: {
-    title: React.PropTypes.node,
-    eventKey: React.PropTypes.any,
-  },
-
-  handleClick: function(e) {
+  handleClick(e) {
     // @see https://facebook.github.io/react/docs/events.html#event-pooling
     e.persist();
     e.selected = true;
@@ -131,15 +126,15 @@ const AccordionItem = React.createClass({
     if (e.selected) {
       this.handleToggle();
     }
-  },
+  }
 
   handleToggle() {
     this.setState({expanded: !this.state.expanded});
-  },
+  }
 
   getCollapsibleDimensionValue() {
     return this.refs.panel.scrollHeight;
-  },
+  }
 
   getCollapsibleDOMNode() {
     if (!this.mounted || !this.refs || !this.refs.panel) {
@@ -147,7 +142,7 @@ const AccordionItem = React.createClass({
     }
 
     return this.refs.panel;
-  },
+  }
 
   render() {
     return (
@@ -156,7 +151,7 @@ const AccordionItem = React.createClass({
         this.isExpanded() ? this.setClassNS('active') : null)}
       >
         <dt
-          onClick={this.handleClick}
+          onClick={this.handleClick.bind(this)}
           className={this.setClassNS('accordion-title')}
         >
           {this.props.title}
@@ -179,8 +174,7 @@ const AccordionItem = React.createClass({
       </dl>
     );
   }
-});
+}
 
-Accordion.Item = AccordionItem;
-
-export default Accordion;
+Accordion.Item = CollapseHoc(ClassNameHoc(AccordionItem));
+export default ClassNameHoc(Accordion);
