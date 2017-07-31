@@ -10,6 +10,7 @@
 ) {
   color: $color;
   background: $background;
+  margin-bottom: 0;
 
   .#{$checkradio-prefix}-on {
     color: $color;
@@ -22,7 +23,7 @@
   }
 
   .#{$checkradio-prefix}-off {
-    color: $input-background;
+    color: transparent;
     background: $input-background;
   }
   .#{$checkradio-prefix}-off .#{$checkradio-prefix}-default{

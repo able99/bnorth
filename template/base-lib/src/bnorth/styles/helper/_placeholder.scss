@@ -60,6 +60,10 @@
 // Text helpers
 // -----------------------------------------------------------------------------
 %text-truncate {
+  @include line-clamp(1);
+}
+
+%text-truncate-old {
   @include text-overflow();
 }
 

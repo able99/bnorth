@@ -10,10 +10,15 @@
   background: $panel-background;
 }
 
-.#{$panel-prefix}-naomal {
+.#{$panel-prefix}-custom {
+  
 }
 
 .#{$panel-prefix}-line {
+}
+
+.#{$panel-prefix}-linked{
+  cursor: pointer;
 }
 
 .#{$panel-prefix}-line-content {

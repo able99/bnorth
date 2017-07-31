@@ -9,7 +9,7 @@
   top: 0;
   left: 0;
   z-index: $z-index-overlay;
-  width: $popover-width;
+  //width: $popover-width;
   margin: 0;
   background: $popover-background;
   color:$popover-color;
@@ -34,14 +34,7 @@
 .#{$popover-prefix}-inner {
   position: relative;
   background: $popover-background;
-  padding: 8px;
-}
-
-.#{$popover-prefix}-dropdown{
-  width: 100%;
-}
-.#{$popover-prefix}-dropdown .#{$popover-prefix}-inner {
-  padding: 0px;
+  //padding: 8px;
 }
 
 

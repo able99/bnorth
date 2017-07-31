@@ -12,7 +12,7 @@ class Button extends React.Component {
     amStyle: PropTypes.string,
     amSize: PropTypes.string,
     hollow: PropTypes.bool,
-    link: PropTypes.bool,
+    plain: PropTypes.bool,
     underline: PropTypes.bool,
     block: PropTypes.bool,
     active: PropTypes.bool,
@@ -30,7 +30,7 @@ class Button extends React.Component {
     delete props.amStyle;
     delete props.amSize;
     delete props.underline;
-    delete props.link;
+    delete props.plain;
     delete props.hollow;
     delete props.block;
     delete props.active;
@@ -88,14 +88,13 @@ class Button extends React.Component {
       block,
       className,
       underline,
-      link,
+      plain,
     } = this.props;
     let renderType = href || target ? 'renderAnchor' : 'renderButton';
 
     classSet[this.prefixClass('block')] = block;
     classSet[this.prefixClass('underline')] = underline;
-    classSet['background-none'] = link;
-    classSet['border-none'] = link;
+    classSet[this.prefixClass('plain')] = plain;
 
     return this[renderType](cx(classSet, className));
   }

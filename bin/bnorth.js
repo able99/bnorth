@@ -22,6 +22,9 @@ case 'start':
 case 'test':
 case 'eject':
 
+case 'page':
+case 'component':
+
 case 'plugin':
 case 'appprepare':
 case 'appbuild':

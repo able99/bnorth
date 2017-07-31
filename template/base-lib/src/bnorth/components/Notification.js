@@ -6,6 +6,7 @@ import cx from 'classnames';
 import bodyElement from './utils/bodyElement';
 import Icon from './Icon';
 import ClassNameHoc from './hoc/ClassNameHoc';
+import ComponentConfig from './config.js';
 
 // @see https://facebook.github.io/react/blog/2015/09/10/react-v0.14-rc1.html
 // To improve reliability, CSSTransitionGroup will no longer listen to
@@ -36,7 +37,7 @@ class Notification extends React.Component {
     return this.props.closeBtn ? (
       <Icon
         className={this.prefixClass('icon')}
-        name="close"
+        name={ComponentConfig.icons.close}
         onClick={this.props.onDismiss.bind(this)} />
     ) : null;
   }

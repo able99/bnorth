@@ -1,4 +1,4 @@
-import Url from 'url';
+import Url from 'url-parse';
 
 class Webview {
   constructor() {
@@ -31,41 +31,42 @@ class Webview {
     return window.location.href;
   };
 
-  parseUrl(url=""){
+  parseUrl(url){
     url = url || this.url();
-
-    let indexQuery = url.indexOf("?");
-    let indexHash = url.indexOf("#");
-    if(indexQuery>indexHash){
-      let base  = url.substr(indexHash);
-      let query = url.substr(indexQuery);
-      let hash  = url.substring(indexHash,indexQuery);
-      url = base+query+hash;
-    }
-    
-    let ret = Url.parse(url)||{};
-    if(!ret.query)ret.query={};
-    return ret;
+    return Url(url,true);
   };
 
-  formatUrl(url, query){
-    if(!url)return "";
-    return typeof(url)==='object'?Url.formatUrl():url;
+  formatUrl(url, query=null){
+    if(!url)return "/";
+    if(!query && typeof(url)==='string') return url;
+
+    url = typeof(url)==='object'?url:Url(url,true);
+    query = query||{};
+
+    for (let key in query) {
+      url.query[key] = query[key];
+    }
+    
+    return url.toString();
   };
 
   //navi
-  go(url){
-    window.location.href = this.formatUrl(url);
-  };
-  replace(url){
-    url = this.formatUrl(url);
-
-    if(window.history.replaceState){
-      window.history.replaceState(null, window.document.title, url);
-      window.location.reload();
-    }else{
-      window.location.href = url;
+  push(url,params){
+    if(typeof(url)==='object'){
+      params = Object.assign({},url.state||{},url.query||{});
+      url = url.pathname||'/';
     }
+
+    window.location.href = this.formatUrl(url,params);
+  };
+  replace(url,params){
+    if(typeof(url)==='object'){
+      params = Object.assign({},url.state||{},url.query||{});
+      url = url.pathname||'/';
+    }
+    
+    url = this.formatUrl(url,params);
+    window.location.replace(url);
   };
   back(step=1){
     window.history.go(-step);

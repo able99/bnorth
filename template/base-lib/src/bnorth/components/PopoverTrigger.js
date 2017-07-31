@@ -6,13 +6,14 @@ import dom from './utils/domUtils';
 import createChainedFunction from './utils/createChainedFunction';
 import OverlayHoc from './hoc/OverlayHoc';
 
+let popoverInstance = null;
 class PopoverTrigger extends React.Component {
   static propTypes = {
     defaultPopoverActive: PropTypes.bool,
     popover: PropTypes.node.isRequired,
     onOpen: PropTypes.func,
     onClosed: PropTypes.func,
-    placement: PropTypes.oneOf(['top', 'bottom', 'left', 'right', 'dropdown']),
+    placement: PropTypes.oneOf(['auto','top', 'bottom', 'left', 'right', 'down-width', 'down-full', 'left-panel', 'left-height', 'right-panel', 'right-height']),
   }
 
   static defaultProps = {
@@ -28,6 +29,7 @@ class PopoverTrigger extends React.Component {
       popoverLeft: null,
       popoverTop: null,
       placement: null,
+      trigger: null,
     };
   }
 
@@ -44,6 +46,7 @@ class PopoverTrigger extends React.Component {
   }
 
   open() {
+    popoverInstance = this;
     if (this.state.popoverActive) {
       return;
     }
@@ -84,124 +87,205 @@ class PopoverTrigger extends React.Component {
     if (!this.mounted) {
       return;
     }
-
     let position = this.calcPopoverPosition() || {};
-
-    this.setState({
-      popoverLeft: position.left,
-      popoverTop: position.top,
-      angleLeft: position.angleLeft,
-      angleTop: position.angleTop,
-      anglePosition: position.anglePosition,
-      placement: position.placement,
-    });
+    this.setState(position);
   }
 
   calcPopoverPosition() {
-    let targetOffset = this.getTriggerOffset();
     let popoverNode = this.getOverlayDOMNode();
-
-    if (!popoverNode) {
-      return;
-    }
-
+    if (!popoverNode) return;
+    let targetOffset = this.getTriggerOffset();
+    let {
+      placement,
+    } = this.props;
     let popoverHeight = popoverNode.offsetHeight;
     let popoverWidth = popoverNode.offsetWidth;
 
-    if(this.props.placement === 'dropdown'){
+    if(placement === 'down-full'){
       return {
-        top: targetOffset.top + popoverHeight,
-        left: 0,
-        placement: 'dropdown',
-        angleLeft: null,
-        angleTop: null,
-        anglePosition: null,
+        placement: placement,
+        popoverStyle:{
+          top: targetOffset.top + targetOffset.height,
+          left: 0,
+          width: '100%',
+        },
+        innerStyle:{
+
+        },
+        popoverAngle:null,
+        trigger:targetOffset,
       };
-    }
+    }else if(placement === 'down-width'){
+      return {
+        placement: placement,
+        popoverStyle:{
+          top: targetOffset.top + targetOffset.height,
+          left: targetOffset.left,
+          width: targetOffset.width,
+        },
+        innerStyle:{
 
-    let {
-      height: targetHeight,
-      width: targetWidth,
-    } = targetOffset;
-    let windowHeight = window.innerHeight;
-    let windowWidth = window.innerWidth;
-    let anglePosition, angleLeft, angleTop;
-    let popoverAngleSize = 8;
-    let popoverTop = 0;
-    let popoverLeft = 0;
-    let diff = 0;
-    let popoverPosition = 'top';
-    let popoverTotalHeight = popoverHeight + popoverAngleSize;
+        },
+        popoverAngle:null,
+        trigger:targetOffset,
+      };
+    }else if(placement === 'left-panel'){
+      return {
+        placement: placement,
+        popoverStyle:{
+          top: targetOffset.top,
+          left: targetOffset.left-popoverNode.offsetWidth,
+        },
+        innerStyle:{
 
-    // Popover Horizontal position
-    // Popover 高度小于 trigger 顶部偏移
-    if ((popoverTotalHeight) < targetOffset.top) {
-      // On top: trigger 顶部偏移 - Popover 高度
-      popoverTop = targetOffset.top - popoverHeight - popoverAngleSize;
-    } else if ((popoverTotalHeight) < windowHeight - targetOffset.top - targetHeight) {
-      // On bottom: Popover 高度小于 trigger 下方空白位置
-      popoverPosition = 'bottom';
-      popoverTop = targetOffset.top + targetHeight + popoverAngleSize;
-    } else {
-      // On middle: Popover 位于 trigger 的水平位置
-      popoverPosition = 'horizontal';
-      popoverTop = targetHeight / 2 + targetOffset.top - popoverHeight / 2;
-      diff = popoverTop;
+        },
+        popoverAngle:{
+          style:{
+            left: targetOffset.left-8,
+            top: targetOffset.top + (targetOffset.height)/2-8,
+          },
+          position: 'right',
+        },
+        trigger:targetOffset,
+      };
+    }else if(placement === 'left-height'){
+      return {
+        placement: placement,
+        popoverStyle:{
+          top: targetOffset.top,
+          left: targetOffset.left-popoverNode.offsetWidth,
+        },
+        innerStyle:{
+          height: targetOffset.height,
+        },
+        popoverAngle:{
+          style:{
+            left: targetOffset.left-8,
+            top: targetOffset.top + (targetOffset.height)/2-8,
+          },
+          position: 'right',
+        },
+        trigger:targetOffset,
+      };
+    }else if(placement === 'right-panel'){
+      return {
+        placement: placement,
+        popoverStyle:{
+          top: targetOffset.top,
+          left: targetOffset.left+targetOffset.width,
+        },
+        innerStyle:{
 
-      if (popoverTop <= 0) {
-        popoverTop = 5;
-      } else if (popoverTop + popoverHeight >= windowHeight) {
-        popoverTop = windowHeight - popoverHeight - 5;
+        },
+        popoverAngle:null,
+        trigger:targetOffset,
+      };
+    }else if(placement === 'right-height'){
+      return {
+        placement: placement,
+        popoverStyle:{
+          top: targetOffset.top,
+          left: targetOffset.left+targetOffset.width,
+        },
+        innerStyle:{
+          height: targetOffset.height,
+        },
+        popoverAngle:null,
+        trigger:targetOffset,
+      };
+    }else{
+      let {
+        height: targetHeight,
+        width: targetWidth,
+      } = targetOffset;
+      let windowHeight = window.innerHeight;
+      let windowWidth = window.innerWidth;
+      let anglePosition, angleLeft, angleTop;
+      let popoverAngleSize = 8;
+      let popoverTop = 0;
+      let popoverLeft = 0;
+      let diff = 0;
+      let popoverPosition = 'top';
+      let popoverTotalHeight = popoverHeight + popoverAngleSize;
+
+      // Popover Horizontal position
+      // Popover 高度小于 trigger 顶部偏移
+      if ((popoverTotalHeight) < targetOffset.top) {
+        // On top: trigger 顶部偏移 - Popover 高度
+        popoverTop = targetOffset.top - popoverHeight - popoverAngleSize;
+      } else if ((popoverTotalHeight) < windowHeight - targetOffset.top - targetHeight) {
+        // On bottom: Popover 高度小于 trigger 下方空白位置
+        popoverPosition = 'bottom';
+        popoverTop = targetOffset.top + targetHeight + popoverAngleSize;
+      } else {
+        // On middle: Popover 位于 trigger 的水平位置
+        popoverPosition = 'horizontal';
+        popoverTop = targetHeight / 2 + targetOffset.top - popoverHeight / 2;
+        diff = popoverTop;
+
+        if (popoverTop <= 0) {
+          popoverTop = 5;
+        } else if (popoverTop + popoverHeight >= windowHeight) {
+          popoverTop = windowHeight - popoverHeight - 5;
+        }
+
+        diff -= popoverTop;
       }
 
-      diff -= popoverTop;
-    }
+      // Popover Horizontal Position
+      if (popoverPosition === 'top' || popoverPosition === 'bottom') {
+        popoverLeft = targetWidth / 2 + targetOffset.left - popoverWidth / 2;
+        diff = popoverLeft;
 
-    // Popover Horizontal Position
-    if (popoverPosition === 'top' || popoverPosition === 'bottom') {
-      popoverLeft = targetWidth / 2 + targetOffset.left - popoverWidth / 2;
-      diff = popoverLeft;
-
-      if (popoverLeft < 5) {
-        popoverLeft = 5;
-      }
-
-      if (popoverLeft + popoverWidth > windowWidth) {
-        popoverLeft = windowWidth - popoverWidth - 5;
-      }
-
-      diff -= popoverLeft;
-      angleLeft = (popoverWidth / 2 - popoverAngleSize + diff);
-      angleLeft = Math.max(Math.min(angleLeft,
-        popoverWidth - popoverAngleSize * 2 - 6), 6);
-      anglePosition = (popoverPosition === 'top') ? 'bottom' : 'top';
-    } else if (popoverPosition === 'horizontal') {
-      popoverLeft = targetOffset.left - popoverWidth - popoverAngleSize;
-      anglePosition = 'right';
-
-      if (popoverLeft < 5 || (popoverLeft + popoverWidth > windowWidth)) {
         if (popoverLeft < 5) {
-          popoverLeft = targetOffset.left + targetWidth + popoverAngleSize;
+          popoverLeft = 5;
         }
 
         if (popoverLeft + popoverWidth > windowWidth) {
           popoverLeft = windowWidth - popoverWidth - 5;
         }
 
-        anglePosition = 'left';
-      }
-      angleTop = (popoverHeight / 2 - popoverAngleSize + diff);
-      angleTop = Math.max(Math.min(angleTop, popoverHeight - popoverAngleSize * 2 - 6), 6);
-    }
+        diff -= popoverLeft;
+        angleLeft = (popoverWidth / 2 - popoverAngleSize + diff);
+        angleLeft = Math.max(Math.min(angleLeft,
+          popoverWidth - popoverAngleSize * 2 - 6), 6);
+        anglePosition = (popoverPosition === 'top') ? 'bottom' : 'top';
+      } else if (popoverPosition === 'horizontal') {
+        popoverLeft = targetOffset.left - popoverWidth - popoverAngleSize;
+        anglePosition = 'right';
 
-    return {
-      top: popoverTop,
-      left: popoverLeft,
-      placement: popoverPosition,
-      angleLeft: angleLeft,
-      angleTop: angleTop,
-      anglePosition,
-    };
+        if (popoverLeft < 5 || (popoverLeft + popoverWidth > windowWidth)) {
+          if (popoverLeft < 5) {
+            popoverLeft = targetOffset.left + targetWidth + popoverAngleSize;
+          }
+
+          if (popoverLeft + popoverWidth > windowWidth) {
+            popoverLeft = windowWidth - popoverWidth - 5;
+          }
+
+          anglePosition = 'left';
+        }
+        angleTop = (popoverHeight / 2 - popoverAngleSize + diff);
+        angleTop = Math.max(Math.min(angleTop, popoverHeight - popoverAngleSize * 2 - 6), 6);
+      }
+
+      return {
+        placement: 'auto',
+        popoverStyle:{
+          top: popoverTop,
+          left: popoverLeft,
+        },
+        innerStyle:{
+
+        },
+        popoverAngle: {
+          angleLeft: angleLeft,
+          angleTop: angleTop,
+          anglePosition,
+        },
+        trigger:targetOffset,
+      };
+    }
   };
 
   getTriggerOffset() {
@@ -225,13 +309,17 @@ class PopoverTrigger extends React.Component {
     let popover = this.props.popover;
     let {
       isClosing,
-      popoverLeft: positionLeft,
-      popoverTop: positionTop,
-      anglePosition,
-      angleLeft,
-      angleTop,
       placement,
+      popoverClassName,
+      popoverStyle,
+      popoverAngle,
+      innerStyle,
+      trigger,
     } = this.state;
+    let {
+      fullScreen,
+      noMask,
+    } = this.props;
 
     if (isClosing) {
       let node = this.getOverlayDOMNode();
@@ -250,28 +338,37 @@ class PopoverTrigger extends React.Component {
     }
 
     return cloneElement(popover, {
-      positionLeft,
-      positionTop,
-      angleLeft,
-      angleTop,
-      anglePosition,
       placement,
+      popoverClassName,
+      popoverStyle,
+      popoverAngle,
+      innerStyle,
       isClosing,
+      fullScreen,
+      noMask,
+      trigger:trigger||{},
       onDismiss: this.close.bind(this),
     });
   }
 
   render() {
     let child = React.Children.only(this.props.children);
+    let {
+      overOrClick,
+
+    } = this.props;
     let props = {
-      onClick: createChainedFunction(child.props.onClick,
-        this.props.onClick),
+      onClick: createChainedFunction(child.props.onClick,this.props.onClick),
+
     };
 
-    props.onClick = createChainedFunction(this.toggle.bind(this), props.onClick);
-
+    props[overOrClick?'onMouseOver':'onClick'] = createChainedFunction(this.toggle.bind(this), props.onClick);
+    
     return cloneElement(child, props);
   }
 }
 
+PopoverTrigger.close = function(){
+  if(popoverInstance) popoverInstance.close();
+}
 export default OverlayHoc(PopoverTrigger);

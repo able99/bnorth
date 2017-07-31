@@ -9,7 +9,7 @@ class Badge extends React.Component {
     component: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]),
     href: PropTypes.string,
     amStyle: PropTypes.string,
-    // radius: PropTypes.bool,
+    radius: PropTypes.bool,
     rounded: PropTypes.bool,
   }
 
@@ -29,6 +29,7 @@ class Badge extends React.Component {
 
     delete props.classPrefix;
     delete props.amStyle;
+    delete props.amSize;
     delete props.rounded;
 
     Component = href ? 'a' : Component;

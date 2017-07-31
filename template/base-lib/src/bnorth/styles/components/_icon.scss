@@ -36,8 +36,14 @@
 
   position: relative;
   .#{$button-prefix} & {
-    font-size: inherit;
+   font-size: inherit;
   }
+}
+
+.#{$icon-prefix}-img {
+  width: auto;
+  height: 1em;
+  min-width: 1em;
 }
 
 // @see https://github.com/sass/sass/issues/659#issuecomment-119285467
@@ -49,8 +55,42 @@
   }
 }
 
-@each $radius-key, $radius in $am-radius {
-  .#{$icon-prefix}-#{$radius-key} {
-    border-radius: $radius;
+
+// modifiers: colors
+// -----------------------------------------------------------------------------
+@each $color-key, $color in $am-colors {
+  .#{$icon-prefix}-#{$color-key} {
+    background: $color;
+    color: $icon-color;
+  }
+}
+
+// Modifiers: sizes
+// -----------------------------------------------------------------------------
+@each $size-key, $size-size in $am-sizes {
+  .#{$icon-prefix}-#{$size-key} {
+    font-size: $size-size !important;
+  }
+}
+
+// modifiers: radius
+// -----------------------------------------------------------------------------
+.#{$icon-prefix}-radius {
+  border-radius: $global-radius;
+}
+
+.#{$icon-prefix}-rounded {
+  border-radius: $global-rounded;
+}
+
+// Modifiers: hollow
+// -----------------------------------------------------------------------------
+.#{$icon-prefix}-hollow {
+  background: transparent;
+  @each $color-key, $color in $am-colors {
+    &.#{$icon-prefix}-#{$color-key} {
+      color: $color;
+      border: 1px solid $color;
+    }
   }
 }

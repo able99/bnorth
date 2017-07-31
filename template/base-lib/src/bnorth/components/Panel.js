@@ -8,7 +8,7 @@ class Panel extends React.Component {
   static propTypes = {
     classPrefix: PropTypes.string.isRequired,
     component: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]),
-    mode: PropTypes.oneOfType(["ratio","line"]),
+    mode: PropTypes.oneOf(["ratio","line"]),
     param: PropTypes.number,
     expand: PropTypes.bool,
     expandText: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]),
@@ -42,37 +42,59 @@ class Panel extends React.Component {
     this.setState({isFolded:!isFolded});
   }
 
+  removeUnknownProps(props) {
+    delete props.classPrefix;
+    delete props.expand;
+    delete props.expandText;
+    delete props.folder;
+    delete props.folderText;
+    delete props.param;
+    return props;
+  }
+
   renderWithLine() {
     let classSet = this.getClassSet();
 
     let {
       className,
       children,
+      containerStyle,
+      containerClassName,
       param,
       expand,
       expandText,
       folder,
       folderText,
       block,
+      linked,
       component: Component,
+      ...props,
     } = this.props;
 
     let {
       isFolded,
     } = this.state;
 
-    classSet[this.prefixClass('block')] = block;
-
     let line = Math.min(Math.ceil(param),3);
 
     return (
-      <Component className={cx(classSet,this.prefixClass('line'),className)}>
-        <div className={cx(this.prefixClass('line-content'),isFolded?("text-truncate"+line):null)}>
+      <Component 
+        className={cx(classSet,this.prefixClass('line'),containerClassName,{[this.prefixClass('linked')]:linked||this.props.onClick})} 
+        style={containerStyle}
+      >
+        <div 
+          className={cx(
+            this.prefixClass('line-content'),
+            isFolded?("text-truncate"+line):null,
+            className
+          )}
+          {...this.removeUnknownProps(props)}
+        >
           {children}
         </div>
         {(expand&&isFolded)||(!isFolded&&folder)?
           <div className={this.prefixClass('line-expand')}>
-            <Button link onClick={this.handleOnFolderSwitch.bind(this)}>{isFolded?expandText:folderText}</Button>
+            <Button plain onClick={this.handleOnFolderSwitch.bind(this)}>{isFolded?expandText:folderText}</Button>
           </div>
         :null}
       </Component>
@@ -85,40 +107,55 @@ class Panel extends React.Component {
     let {
       className,
       children,
+      containerStyle,
+      containerClassName,
       param,
       block,
+      linked,
       component: Component,
+      ...props,
     } = this.props;
 
-    classSet[this.prefixClass('block')] = block;
-
-    let style = {
+    let styleInner = {
       paddingBottom: (param*100)+'%',
     };
 
     return (
-      <Component className={cx(classSet,this.prefixClass('ratio'),className)}>
-        <div className={this.prefixClass('ratio-inner')} style={style} >
-          <div className={this.prefixClass('ratio-content')}>{children}</div>
+      <Component 
+        className={cx(classSet,this.prefixClass('ratio'),containerClassName,{[this.prefixClass('linked')]:linked||this.props.onClick})} 
+        style={containerStyle}
+      >
+        <div 
+          className={cx(this.prefixClass('ratio-inner'))} 
+          style={styleInner} 
+        >
+          <div 
+            className={cx(this.prefixClass('ratio-content'),className)}
+            {...this.removeUnknownProps(props)}
+          >
+            {children}
+          </div>
         </div>
       </Component>
     )
   }
 
-  renderWithNormal() {
+  renderWithCustom() {
     let classSet = this.getClassSet();
 
     let {
       className,
       children,
       block,
+      linked,
       component: Component,
+      ...props,
     } = this.props;
 
     classSet[this.prefixClass('block')] = block;
 
     return (
-      <Component className={cx(classSet,this.prefixClass('normal'),className)}>
+      <Component className={cx(classSet,this.prefixClass('custom'),className,{[this.prefixClass('linked')]:linked||this.props.onClick})} {...this.removeUnknownProps(props)}>
         {children}
       </Component>
     )
@@ -135,7 +172,7 @@ class Panel extends React.Component {
       case 'ratio':
         return this.renderWithRatio();
       default:
-        return this.renderWithNormal();
+        return this.renderWithCustom();
     }
   }
 }

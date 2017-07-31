@@ -177,7 +177,7 @@
   }
 
   //default border
-  @each $key, $val in $am-colors {
+  @each $key, $val in map_merge((default:$global-border),$am-colors) {
     $selector: 'border';
     @if $dimension {
       $selector: $selector + "-" + $dimension;
@@ -188,21 +188,21 @@
 
     @if $dimension == null {
       .#{$namespace}#{$selector} {
-        border: 1px solid $val;
+        border: 1px solid $val  !important;;
       }
     } @else if $dimension == h {
       .#{$namespace}#{$selector} {
-        border-left: 1px solid $val;
-        border-right: 1px solid $val;
+        border-left: 1px solid $val !important;;
+        border-right: 1px solid $val !important;;
       }
     } @else if $dimension == v {
       .#{$namespace}#{$selector} {
-        border-top: 1px solid $val;
-        border-bottom: 1px solid $val;
+        border-top: 1px solid $val !important;;
+        border-bottom: 1px solid $val !important;;
       }
     } @else {
       .#{$namespace}#{$selector} {
-        border-#{$dimension}: 1px solid $val;
+        border-#{$dimension}: 1px solid $val !important;;
       }
     }
   }
@@ -250,30 +250,36 @@
     @if $corner == null {
       .#{$namespace}#{$selector} {
         border-radius: $val !important;
+        overflow: auto;
       }
     } @else if $corner == left {
       .#{$namespace}#{$selector} {
         border-top-left-radius: $val !important;
         border-bottom-left-radius: $val !important;
+        overflow: auto;
       }
     } @else if $corner == right {
       .#{$namespace}#{$selector} {
         border-top-right-radius: $val !important;
         border-bottom-right-radius: $val !important;
+        overflow: auto;
       }
     } @else if $corner == top {
       .#{$namespace}#{$selector} {
         border-top-left-radius: $val !important;
         border-top-right-radius: $val !important;
+        overflow: auto;
       }
     } @else if $corner == bottom {
       .#{$namespace}#{$selector} {
         border-bottom-left-radius: $val !important;
         border-bottom-right-radius: $val !important;
+        overflow: auto;
       }
     } @else {
       .#{$namespace}#{$selector} {
         border-#{$corner}-radius: $val !important;
+        overflow: auto;
       }
     }
   }
@@ -314,15 +320,22 @@
 // Text truncate
 .#{$namespace}text-truncate {
   @extend %text-truncate;
+  width: 100%;
+}
+.#{$namespace}text-truncate-old {
+  @extend %text-truncate-old;
 }
 .#{$namespace}text-truncate2 {
   @extend %text-truncate2;
+  width: 100%;
 }
 .#{$namespace}text-truncate3 {
   @extend %text-truncate3;
+  width: 100%;
 }
 .#{$namespace}text-truncate4 {
   @extend %text-truncate4;
+  width: 100%;
 }
 
 // Text Alignment
@@ -367,52 +380,62 @@
 //=======================
 // layout size
 @for $i from 1 through $layout-size-max-length { 
-  @if ($i <= 10) OR ($i % 10 == 0) {
+  @if ($i <= 10) OR ($i % 5 == 0) {
     .#{$namespace}layout-size-square-#{$i} { 
       @include square(#{$i}px);
     } 
     .#{$namespace}layout-size-width-auto-#{$i} { 
-      @include size(#{$i}px, auto);
+      width: #{$i}px !important;
     } 
     .#{$namespace}layout-size-height-auto-#{$i} { 
-      @include size(auto, #{$i}px);
+      height: #{$i}px !important;
     } 
     .#{$namespace}layout-size-min-width-#{$i} { 
-      min-width: #{$i}px;
+      min-width: #{$i}px !important;
     }
     .#{$namespace}layout-size-min-height-#{$i} { 
-      min-height: #{$i}px;
+      min-height: #{$i}px !important;
     }
   } 
 } 
 
 @for $i from 0 through $layout-size-percent { 
-  @if ($i % 2 == 0) {
-    .#{$namespace}layout-size-width-auto-#{$i}p { 
-      width:#{$i}#{%};
-    } 
-    .#{$namespace}layout-size-height-auto-#{$i}p { 
-      height:#{$i}#{%};
-    } 
+  .#{$namespace}layout-size-width-auto-#{$i}p { 
+    width:#{$i}#{%} !important;
+  } 
+  .#{$namespace}layout-size-height-auto-#{$i}p { 
+    height:#{$i}#{%} !important;
+  } 
+  .#{$namespace}layout-size-min-width-#{$i}p { 
+    min-width: #{$i}#{%} !important;
+  }
+  .#{$namespace}layout-size-min-height-#{$i}p { 
+    min-height: #{$i}#{%} !important;
   }
 } 
 
 @for $i from 1 through $layout-size-rem { 
   .#{$namespace}layout-size-square-#{$i}rem { 
-    width:#{($i/10)}rem;
-    height:#{($i/10)}rem;
+    width:#{($i/10)}rem !important;
+    height:#{($i/10)}rem !important;
   } 
-  .#{$namespace}layout-size-width-auto-#{$i} { 
+  .#{$namespace}layout-size-width-auto-#{$i}rem { 
     @include size(#{($i/10)}rem, auto);
   } 
-  .#{$namespace}layout-size-height-auto-#{$i} { 
+  .#{$namespace}layout-size-height-auto-#{$i}rem { 
     @include size(auto, #{($i/10)}rem);
   } 
 } 
 
-.#{$namespace}layout-size-full { 
+.#{$namespace}layout-full { 
   @include square(100%);
   display: inline-block;
+}
+.#{$namespace}layout-full-h { 
+  width: 100%;
+}
+.#{$namespace}layout-full-v { 
+  height: 100%;
 }
 
 //==========================================================
@@ -444,7 +467,21 @@
   }
 }
 
+//==========================================================
+// layout position
+@each $key, $val in $layout-map-position {
+  .#{$namespace}layout-position-#{$key} {
+    position: $val;
+  }
+}
 
+//==========================================================
+// layout display
+@each $key, $val in $layout-map-display {
+  .#{$namespace}layout-dispay-#{$key} {
+    display: $val;
+  }
+}
 
 //==========================================================
 // layout flex
@@ -465,19 +502,49 @@
       }
 
       .#{$selector}{
-        display:         flex;
-        flex-direction:  $direction;
-        justify-content: $justify;
-        align-items:     $align;
+        display:         flex !important;
+        flex-direction:  $direction !important;
+        justify-content: $justify !important;
+        align-items:     $align !important;
       }
     }
   }
 }
 
-// wrap
-@each $wrap in $layout-warp {
-  .#{$namespace}layout-wrap {
-    flex-wrap: $wrap;
+//layout flex fact
+.#{$namespace}layout-flex{
+  display: flex !important;
+}
+
+.#{$namespace}layout-flex-inline{
+  display: inline-flex !important;
+}
+
+@each $direction-key, $direction in $layout-map-direction {
+  .#{$namespace}layout-flex-direction-#{$direction-key}{
+    flex-direction:  $direction !important;
+  }
+}
+
+@each $justify-key, $justify in $layout-map-justify {
+  @if $justify-key != null {
+    .#{$namespace}layout-flex-justify-#{$justify-key}{
+      justify-content: $justify !important;
+    }
+  }
+}
+
+@each $align-key, $align in $layout-map-align {
+  @if $align-key != null {
+    .#{$namespace}layout-flex-align-#{$align-key}{
+      align-items: $align !important;
+    }
+  }
+}
+
+@each $wrap in $layout-wrap {
+  .#{$namespace}layout-flex-wrap-#{$wrap} {
+    flex-wrap: $wrap !important;
   }
 }
 
@@ -485,7 +552,7 @@
 @each $key, $align in $layout-map-align {
   @if $key != null {
     .#{$namespace}layout-sub-align-#{$key} {
-      align-self: $align;
+      align-self: $align !important;
     }
   }
 }
@@ -507,10 +574,10 @@
   } 
 } 
 .#{$namespace}layout-sub-flex-grow { 
-  flex: 1 0 auto;
+  flex-grow: 1;
 } 
 .#{$namespace}layout-sub-flex-shrink { 
-  flex: 0 1 auto;
+  flex-shrink: 1;
 } 
 .#{$namespace}layout-sub-flex-auto { 
   flex: auto;
@@ -518,3 +585,21 @@
 .#{$namespace}layout-sub-flex-none { 
   flex: none;
 } 
+
+
+
+.flex-overflow {
+  position:relative;
+  width: 100%;
+}
+.flex-overflow:before {
+  content: ' ';
+  display: inline-block;
+  width: 100%;
+  height: 1px;
+}
+.flex-overflow .text-truncate-old{
+  position: absolute;
+  width: 100%;
+  left: 0;
+}

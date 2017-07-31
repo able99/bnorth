@@ -29,14 +29,14 @@ $base-body-max-width: 640px !default;  //none !default;
 // font 
 
 // weight
+$font-weight-light: 100 !default;
 $font-weight-normal: normal !default;
-$font-weight-bold: 400 !default;
-$font-weight-bolder: 600 !default;
+$font-weight-bold: 600 !default;
 $am-text-weights: (
+    light:$font-weight-light,
     normal: $font-weight-normal,
     bold: $font-weight-bold,
-    bolder: $font-weight-bolder,
-) !default; 
+) !default;
 
 //style
 $am-text-styles: (
@@ -65,13 +65,18 @@ $font-size-default: 14px !default;
 $font-size-lg: 16px !default;
 $font-size-xl: 18px !default;
 $font-size-xxl: 24px !default;
+$font-size-xxxl: 28px !default;
+$font-size-xxxxl: 32px !default;
 $am-sizes: (
-    xxs: $font-size-xxs,
-    xs: $font-size-xs,
-    sm: $font-size-sm,
-    lg: $font-size-lg,
-    xl: $font-size-xl,
-    xxl: $font-size-xxl
+    xxs:     $font-size-xxs,
+    xs:      $font-size-xs,
+    sm:      $font-size-sm,
+    default: $font-size-default,
+    lg:      $font-size-lg,
+    xl:      $font-size-xl,
+    xxl:     $font-size-xxl,
+    xxxl:    $font-size-xxxl,
+    xxxxl:   $font-size-xxxxl,
 ) !default;
 
 //==============================
@@ -90,7 +95,9 @@ $global-gray-lighteer:  #eff0f4 !default;
 $global-gray-lighteeer: #f6f6f6 !default; 
 $global-white:          #fff    !default;
 $global-transparent:    transparent      !default; 
+$global-translucent:    rgba(255,255,255,0.53) !default;
 $global-mask:           rgba(0,0,0,0.53) !default; 
+$global-overlay:        rgba(0,0,0,0.3) !default; 
 
 // color
 $global-success:   #17c729 !default;
@@ -124,10 +131,12 @@ $color-light-threshold:    60%                    !default;
 // color map
 $am-preset-colors: (
   // gray
-  black:       $global-black,
-  white:       $global-white,
+  pblack:      $global-black,
+  pwhite:      $global-white,
   transparent: $global-transparent,
+  translucent: $global-translucent,
   mask:        $global-mask,
+  overlay:        $global-overlay,
 
   // color
   success:   $global-success,
@@ -141,14 +150,31 @@ $am-preset-colors: (
 
   // tool
   normal: $global-lightbg-normal,
-  light:  $global-lightbg-light
+  light:  $global-lightbg-light,
+  component: $global-bg-component,
 ) !default;
 $am-user-colors: (
 ) !default;
 $am-colors: map_merge($am-preset-colors, $am-user-colors) !default;
 
 //===============================
-// layout
+// layout position
+$layout-map-position : (
+  'absolute':  absolute,
+  'relative':  relative ,
+  'fixed': fixed,
+) !default;
+
+//==========================================================
+// layout display
+$layout-map-display : (
+  'inline':  inline,
+  'inline-block':  inline-block ,
+  'flex':  flex,
+  'inline-flex':  inline-flex,
+  'none':  none ,
+  'block': block,
+) !default;
 
 //size 
 $layout-size-max-length:  200 !default;
@@ -181,7 +207,7 @@ $layout-map-align: (
   'stretch':  stretch,
 ) !default;
 
-$layout-warp: (warp,nowrap,wrap-reverse) !default;
+$layout-wrap: (wrap,nowrap,wrap-reverse) !default;
 $layout-sub-order-length:  5 !default; 
 $layout-sub-flex-length: (none, auto, 0, 1, 2, 3, 4, 5) !default;
 
@@ -214,7 +240,9 @@ $am-border-widths: (
   2: 2px,
   3: 3px,
   4: 4px,
-  5: 5px
+  5: 5px,
+  8: 8px,
+  10: 10px,
 ) !default;
 
 //border style
@@ -344,7 +372,7 @@ $badge-fontsize: .8rem !default;
 $badge-padding: ($global-padding / 3) ($global-padding / 2) !default;
 $badge-radius: 0 !default;
 $badge-background: $global-gray-lighter !default;
-$badge-color: islight($badge-background) !default;
+$badge-color: $global-white !default;
 
 
 // Button Variables
@@ -468,7 +496,8 @@ $group-header-font-size: $font-size-sm !default;
 // -----------------------------------------------------------------------------
 // font list: (font-family, font-weight, font-style, src)
 $icon-prefix: #{$namespace}icon !default;
-$icon-font-path: './fonts/' !default;
+$icon-color: $global-white !default;
+$icon-font-path: '../bnorth/styles/fonts/' !default;
 $icon-fonts: (
   Ratchicons: (
     weight: normal,
@@ -480,7 +509,7 @@ $icon-fonts: (
     )
   ),
 ) !default;
-$icon-font-size: 24px !default;
+$icon-font-size: inherit !default;
 $icons: (
   back: \e80a,
   bars: \e80e,
@@ -579,7 +608,7 @@ $navbar-class-title: #{$navbar-prefix}-title !default;
 
 $navbar-height-px: 44 !default;
 $navbar-height: rem-calc($navbar-height-px) !default;
-$navbar-center-width: 50% !default;
+$navbar-center-width: 70% !default;
 $navbar-side-width: (100% - $navbar-center-width) / 2 !default;
 $navbar-background: $global-bg-component !default;
 $navbar-color: auto !default;
@@ -637,9 +666,10 @@ $switch-radius: $global-rounded !default;
 // TabBar Variables
 // -----------------------------------------------------------------------------
 $tabbar-prefix: #{$namespace}tabbar !default;
-$tabbar-height-px: 49 !default;
+$tabbar-height-px: 52 !default;
 $tabbar-height: rem-calc($tabbar-height-px)  !default;
-$tabbar-padding-horizontal: 0                !default;
+$tabbar-padding-h: 0                         !default;
+$tabbar-padding-v: 2px                         !default;
 $tabbar-background: $global-bg-component     !default;
 $tabbar-color: auto                          !default;
 $tabbar-color-select: primary                !default;
@@ -658,7 +688,7 @@ $checkradio-opacity-disabled: 0.5 !default;
 $checkradio-color: $global-border;
 $checkradio-color-inavtive: $global-border;
 $checkradio-background: none;
-$checkradio-input-background: $global-white;
+$checkradio-input-background: none;
 $checkradio-style: null;
 
 
@@ -671,7 +701,13 @@ $pager-mode-single-new: single-new !default;
 // panel Variables
 // -----------------------------------------------------------------------------
 $panel-prefix: #{$namespace}panel !default;
-$panel-background: none;
+$panel-background: $global-white !default;
+
+// fab Variables
+// -----------------------------------------------------------------------------
+$fab-prefix: #{$namespace}fab !default;
+$fab-padding: $global-spacing !default;
+
 
 
 

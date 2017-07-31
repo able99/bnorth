@@ -10,6 +10,7 @@ import TransitionEvents from './utils/TransitionEvents';
 import Icon from './Icon';
 import Touchable from './Touchable';
 import ClassNameHoc from './hoc/ClassNameHoc';
+import ComponentConfig from './config.js';
 
 class Carousel extends React.Component {
   static propTypes = {
@@ -44,8 +45,8 @@ class Carousel extends React.Component {
     autoPlay: true,
     loop: true,
     pauseOnHover: true,
-    prevIcon: <Icon name="left-nav" />,
-    nextIcon: <Icon name="right-nav" />,
+    prevIcon: null,
+    nextIcon: null,
   }
 
   constructor(props) {
@@ -130,7 +131,7 @@ class Carousel extends React.Component {
   }
 
   waitForNext() {
-    if (!this.isPaused && this.props.slide && this.props.interval &&
+    if (this.props.autoPlay&& !this.isPaused && this.props.slide && this.props.interval &&
       this.props.activeIndex == null) {
       this.timeout = setTimeout(this.next.bind(this), this.props.interval);
     }
@@ -157,6 +158,15 @@ class Carousel extends React.Component {
     // console.log('swipe right....');
     this.prev();
   }
+
+  handleTap(e) {
+    let index = this.state.activeIndex;
+    if (this.props.onTap) {
+      this.props.onTap(index);
+    }else if(this.props.children&&this.props.children[index]&&this.props.children[index].props.onTap){
+      this.props.children[index].props.onTap(index);
+    }
+  } 
 
   getActiveIndex() {
     return this.props.activeIndex != null ?
@@ -186,6 +196,8 @@ class Carousel extends React.Component {
 
     if (this.props.onAction) {
       this.props.onAction(index, direction);
+    }else if(this.props.children&&this.props.children[index]&&this.props.children[index].props.onAction){
+      this.props.children[index].props.onAction(index, direction);
     }
 
     if (this.props.activeIndex == null && index !== previousActiveIndex) {
@@ -208,18 +220,18 @@ class Carousel extends React.Component {
     return this.props.controls ? (
       <div className={this.prefixClass('control')}>
         <Touchable
-          className={this.prefixClass('control-prev')}
+          className={cx(this.prefixClass('control-prev'),{'bg-color-overlay':this.props.controlsBg})}
           onTap={this.prev.bind(this)}
           stopPropagation
         >
-          {this.props.prevIcon}
+          {this.props.prevIcon||<Icon name={ComponentConfig.icons.leftNav} />}
         </Touchable>
         <Touchable
-          className={this.prefixClass('control-next')}
+          className={cx(this.prefixClass('control-next'),{'bg-color-overlay':this.props.controlsBg})}
           onTap={this.next.bind(this)}
           stopPropagation
         >
-          {this.props.nextIcon}
+          {this.props.nextIcon||<Icon name={ComponentConfig.icons.rightNav} />}
         </Touchable>
       </div>
     ) : null;
@@ -254,7 +266,7 @@ class Carousel extends React.Component {
 
       return (
         <ol
-          className={cx(this.prefixClass('pager'), pagerClassName)}
+          className={cx(this.prefixClass('pager'), pagerClassName, {'bg-color-overlay':this.props.pagerBg}, {'padding-sm':this.props.pagerBg},{'border-radius-rounded':this.props.pagerBg})}
         >
           {children}
         </ol>
@@ -301,6 +313,8 @@ class Carousel extends React.Component {
     delete props.pauseOnHover;
     delete props.prevIcon;
     delete props.nextIcon;
+    delete props.controlsBg;
+    delete props.pagerBg;
 
     // TODO: 优化 swipe，左右方向阻止默认事件，垂直方向不阻止
     return (
@@ -312,14 +326,15 @@ class Carousel extends React.Component {
         onMouseOut={this.handleMouseOut.bind(this)}
         onSwipeLeft={this.handleSwipeLeft.bind(this)}
         onSwipeRight={this.handleSwipeRight.bind(this)}
+        onTap={this.handleTap.bind(this)}
         preventDefault={false}
         stopPropagation={true}
       >
         <ul className={this.prefixClass('slides')}>
           {React.Children.map(children, this.renderItem.bind(this))}
         </ul>
-        {this.renderControls()}
-        {this.renderPager()}
+        {(Array.isArray(children)?children.length:children)?this.renderControls():null}
+        {(Array.isArray(children)?children.length:children)?this.renderPager():null}
       </Touchable>
     );
   }

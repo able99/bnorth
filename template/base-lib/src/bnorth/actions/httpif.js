@@ -1,5 +1,4 @@
 import { bindActionCreators } from 'redux';
-
 import { Apis,Actions,Utils,ActionStore } from '../';
 
 //===================================
@@ -17,17 +16,19 @@ function actionHttpifFetch(uuid,options){
     .then(
       (result)=>{
         options.blocking?Actions.actionNoticeBlockFinish():Actions.actionNoticeLoadingFinish();
-        dispatch(actionHttpifFetchSuccess(uuid,result,options.append));
+        dispatch(actionHttpifFetchSuccess(uuid,result,options.append,options.appendField));
         if(options.success && typeof(options.success)==="function"){options.success(result)};
       },
       (error)=>{
+        Apis.Log.err(error);
         options.blocking?Actions.actionNoticeBlockFinish():Actions.actionNoticeLoadingFinish();
         dispatch(actionHttpifFetchFail(uuid,error));
         if(error && options.error && typeof(options.error)==="function"){error = options.error(error)||error};
-        if(error)Actions.actionNoticeMessage(error);
+        if(error)Actions.actionNoticeMessage(error,'alert');
       }
     )
     .catch((error)=>{
+      Apis.Log.err(error);
       if(error)Actions.actionNoticeMessage(error);
     });    
   }
@@ -44,12 +45,13 @@ function actionHttpifFetchInvalid(uuid){
     uuid,
   };
 }
-function actionHttpifFetchSuccess(uuid,result,append){
+function actionHttpifFetchSuccess(uuid,result,append,appendField){
   return {
     type: HttpifFetchFetchSuccess,
     uuid,
     result,
     append,
+    appendField,
   };
 }
 function actionHttpifFetchFail(uuid,error){
@@ -72,27 +74,38 @@ export function actionsHttpifFetch(){
 }
 
 let actionsHttpifFetchWrapMap = {};
-export function actionsHttpifFetchWrap(uuid=null,options={}){
+export function actionsHttpifFetchWrap(options={},uuid=null){
+  uuid = (typeof(options)==='string')?options:uuid;
   uuid = uuid?uuid:Utils.Util.uuid();
-  if(actionsHttpifFetchWrapMap[uuid])return actionsHttpifFetchWrapMap[uuid];
+  options = (typeof(options)==='string')?{}:options;
+  if(actionsHttpifFetchWrapMap[uuid]) return actionsHttpifFetchWrapMap[uuid];
 
   let wrap = {
-    clear(){
+    clear(clearWrap=true){
       let reduxer = ActionStore.getState().ReduxerHttpifFetch;
       delete reduxer.fetchResult[uuid];
-      delete actionsHttpifFetchWrapMap[uuid];
+      if(clearWrap)delete actionsHttpifFetchWrapMap[uuid];
     },
     data(defaultValue={}){
       let reduxer = ActionStore.getState().ReduxerHttpifFetch;
       return (reduxer && reduxer.fetchResult && reduxer.fetchResult[uuid] && reduxer.fetchResult[uuid].result) || defaultValue;
     },
-    update(options={}){
-      actionsHttpifFetch().actionHttpifFetch(uuid, Object.assign({},this.options,options));
+    update(options={},append=null){
+      let wrap = actionsHttpifFetchWrapMap[uuid];
+      actionsHttpifFetch().actionHttpifFetch(
+        uuid, 
+        Object.assign(
+          {},
+          typeof(wrap.options)==='function'?wrap.options():(wrap.options||{}),
+          typeof(options)==='function'?options():options,
+          {append: (append===true||append===false)?append:options.append,}
+        )
+      );
     },
   };
 
+  wrap = Object.assign(wrap, options);
   wrap.uuid = uuid;
-  wrap = Object.assign(wrap,wrap,options);
   wrap.initData = wrap.initData||{};
   wrap.clearOnStop = wrap.clearOnStop===undefined?true:wrap.clearOnStop;
 
@@ -143,9 +156,20 @@ export function ReduxerHttpifFetch(state = StateHttpifFetch, action) {
       }),
     });
   case HttpifFetchFetchSuccess:
-    let data = action.append
-    ?((state.fetchResult[action.uuid]&&state.fetchResult[action.uuid].result)||[]).concat(action.result)
-    :action.result;
+    let data = state.fetchResult[action.uuid]&&state.fetchResult[action.uuid].result;
+    if(action.append && data){
+      if(Array.isArray(data)){
+        data = Array.concat(data,action.result);
+      }else{
+        for(let field of action.appendField){
+          action.result[field] = Array.concat(data[field]||[],action.result[field]||[]);
+        }
+        data = Object.assign({},data,action.result);
+      }
+    }else{
+      data = action.result;
+    }
+
     return Object.assign({}, state, {
       uuid: action.uuid,
       fetchResult: Object.assign({}, state.fetchResult, {
@@ -178,18 +202,18 @@ export function ReduxerHttpifFetch(state = StateHttpifFetch, action) {
 // operaion
 function actionOperateSubmit(options){
   return (dispatch)=>{
-    Actions.actionNoticeBlock();
+    if(options.blocking!==false)Actions.actionNoticeBlock();
     
     Apis.Netif.operate(options)
     .then(
       (result)=>{
-        Actions.actionNoticeBlockFinish();
+        if(options.blocking!==false)Actions.actionNoticeBlockFinish();
         if(options.success && typeof(options.success)==="function"){options.success(result)};
       },
       (error)=>{
-        Actions.actionNoticeBlockFinish();
+        if(options.blocking!==false)Actions.actionNoticeBlockFinish();
         if(error && options.error && typeof(options.error)==="function"){error = options.error(error)||error};
-        if(error)Actions.actionNoticeMessage(error);
+        if(error)Actions.actionNoticeMessage(error,'alert');
       }
     )
     .catch((error)=>{

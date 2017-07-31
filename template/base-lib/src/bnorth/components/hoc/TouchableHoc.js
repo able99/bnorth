@@ -49,14 +49,14 @@ export default (Wrapper) => class TouchableHoc extends Wrapper {
     // console.log('handle touchstart');
     this.processEvent(e);
 
-    if (!e.touches) {
-      return;
-    }
+    // if (!e.touches) {
+    //   return;
+    // }
 
     let touch = this.state.touch;
-    let startTouch = e.touches[0];
+    let startTouch = e.touches?e.touches[0]:e;
 
-    if (e.touches.length === 1 && touch.x2) {
+    if (/*e.touches.length === 1 && */touch.x2) {
       // Clear out touch movement data if we have it sticking around
       // This can occur if touchcancel doesn't fire due to preventDefault, etc.
       touch.x2 = undefined;
@@ -85,6 +85,8 @@ export default (Wrapper) => class TouchableHoc extends Wrapper {
     this.setState({
       startTouch,
       touch,
+      deltaX: 0,
+      deltaY: 0,
     });
   }
 
@@ -92,7 +94,7 @@ export default (Wrapper) => class TouchableHoc extends Wrapper {
     // console.log('touch move');
     this.processEvent(e);
 
-    let endTouch = e.touches[0];
+    let endTouch = e.touches?e.touches[0]:e;
     let {
       touch,
       deltaX,

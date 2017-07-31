@@ -1,3 +1,4 @@
+import Url from 'url-parse';
 import { Config, Apis } from '../';
 
 export default {
@@ -21,6 +22,16 @@ export default {
   },
 
   //==================
+  // format
+  //==================
+  formatFetchResult(result){
+    return result;
+  },
+  formatOperateResult(result){
+    return result;
+  },
+
+  //==================
   // error handle
   //==================
   handleStatus(status,isFetch,options){
@@ -40,16 +51,27 @@ export default {
   // param
   //==================
   paramAuthorization(options){
+    if(options.noAuth)return {};
     return { 
       "authorization": Apis.User.getToken()||'',
     };
   },
   paramFetchUrl(options){
-    let url = options.resource.indexOf("http")===0?"":(Config.BaseUrl+Config.ApiUrl);
-    return url += options.resource;
+    let url = ((options.resource.indexOf("http")===0||options.resource.indexOf("//")===0)?"":(Config.Url.base+Config.Url.api))+options.resource;
+    let uo = Url(url,true);
+    if(this.paramFetchMethod().toLowerCase()==='get'){
+      Object.assign(uo.query, options.data||{}, options.query||{});
+    }else{
+      Object.assign(uo.query, options.query||{});
+    }
+    
+    return uo.toString();
   },
   paramOperateUrl(options){
-    return this.paramFetchUrl(options);
+    let url = ((options.resource.indexOf("http")===0||options.resource.indexOf("//")===0)?"":(Config.Url.base+Config.Url.api))+options.resource;
+    let uo = Url(url,true);
+    Object.assign(uo.query, options.query||{});
+    return uo.toString();
   },
   paramFetchMethod(options){
     return "get";
@@ -84,6 +106,7 @@ export default {
   fetch(options={}){
     options.resource = options.resource || "/";
 
+    let fetchScope = {};
     return fetch(
       this.paramFetchUrl(options),
       {
@@ -98,25 +121,42 @@ export default {
     )
     .then(
       (res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          let handle = this.handleStatus(res.status,true,options);
+        fetchScope.res = res;
+        return res.json();
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    )
+    .then(
+      (result) => {
+        if(fetchScope.res.ok) {
+          let handle = this.handleResult(result,true,options,result);
           if(handle) return Promise.reject(handle===true?null:handle);
 
-          return Promise.reject({code:res.status, message:res.statusText||Config.StrNetCommonError});
+          return result;
+        }else{
+          let handle = this.handleStatus(fetchScope.res.status,true,options,result);
+          if(handle) return Promise.reject(handle===true?null:handle);
+
+          return Promise.reject(Object.assign({code:fetchScope.res.status, message:fetchScope.res.statusText||Config.Str.netCommonError},result));
         }
       },
-    )
-    .then(
-      (result)=>{
-        let handle = this.handleResult(result,true,options);
+      (error) => {
+        if(!fetchScope.res) {
+          error.message = Config.Str.netCommonError;
+          return Promise.reject(error);
+        }
+
+        let handle = this.handleStatus(fetchScope.res.status,true,options,null);
         if(handle) return Promise.reject(handle===true?null:handle);
-        return result;
-      },
+
+        return Promise.reject({code:fetchScope.res.status, message:fetchScope.res.statusText||Config.Str.netCommonError});
+      }
     )
     .then(
       (result)=>{
+        result = this.formatFetchResult(result);
         if(Config.NetCache){this.saveCache(this.getCacheFetchKey(options),result)}
         return result;
       },
@@ -134,6 +174,7 @@ export default {
   operate(options={}){
     options.resource = options.resource || "/";
     
+    let fetchScope = {};
     return fetch(
       this.paramOperateUrl(options),
       {
@@ -141,28 +182,53 @@ export default {
         headers: {
           ...this.paramAuthorization(options),
           ...this.paramOperateHeader(options),
-          ...this.paramOperateContentType(options),
+          ...(options.data && options.data instanceof FormData)?{}:this.paramOperateContentType(options),
         },
-        body: this.paramOperateBody(options), 
+        body: (options.data && options.data instanceof FormData)?options.data:this.paramOperateBody(options), 
       }
     )
-    .then((res)=>{
-      if (res.ok) {
-        return res.json();
-      } else {
-        let handle = this.handleStatus(res.status,false,options);
-        if(handle) return Promise.reject(handle===true?null:handle);
-
-        return Promise.reject({code:res.status, message:res.statusText||Config.StrNetCommonError});
-      }
-    })
     .then(
-      (result)=>{
-        let handle = this.handleResult(result,false,options);
+      (res) => {
+        fetchScope.res = res;
+        return res.json();
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    )
+    .then(
+      (result) => {
+        if(fetchScope.res.ok) {
+          let handle = this.handleResult(result,false,options,result);
+          if(handle) return Promise.reject(handle===true?null:handle);
+
+          return result;
+        }else{
+          let handle = this.handleStatus(fetchScope.res.status,false,options,result);
+          if(handle) return Promise.reject(handle===true?null:handle);
+
+          return Promise.reject(Object.assign({code:fetchScope.res.status, message:fetchScope.res.statusText||Config.Str.netCommonError},result));
+        }
+      },
+      (error) => {
+        if(!fetchScope.res) {
+          error.message = Config.Str.netCommonError;
+          return Promise.reject(error);
+        }
+        
+        let handle = this.handleStatus(fetchScope.res.status,false,options,null);
         if(handle) return Promise.reject(handle===true?null:handle);
 
-        return result;
+        return Promise.reject({code:fetchScope.res.status, message:fetchScope.res.statusText||Config.Str.netCommonError});
+      }
+    )
+    .then(
+      (result) => {
+        return this.formatFetchResult(result);
       },
+      (error) => {
+        return Promise.reject(error);
+      }
     );
   },
 

@@ -6,7 +6,7 @@ Style.shadow = function(color='#888888', h=0, v='1px', blur='3px', spread=0, ins
   }
 }
 
-Style.backgroundImage = function(image, repeat='no-repeat', w='cover'/*contain*/, h='', x, y, attachment, origin, clip) {
+Style.backgroundImage = function(image, repeat='no-repeat', w='100%', h='auto', x='center', y='center', color="none", attachment, origin, clip) {
   let ret = {};
 
   if(image){
@@ -27,6 +27,10 @@ Style.backgroundImage = function(image, repeat='no-repeat', w='cover'/*contain*/
 
   if(w||h){
   	ret["backgroundSize"] = `${w} ${h}`;
+  }
+
+  if(color){
+    ret["backgroundColor"] = color;
   }
 
   if(origin){

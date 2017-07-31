@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import ClassNameHoc from './hoc/ClassNameHoc';
 import Icon from './Icon';
+import ComponentConfig from './config.js';
 
 
 class List extends React.Component {
@@ -85,7 +86,7 @@ class ListItem extends React.Component {
       false && (href || linkComponent) ? (
         <Icon
           className={this.prefixClass('icon')}
-          name="right-nav"
+          name={ComponentConfig.icons.rightNav}
           key="itemChevron" />
       ) : null,
     ];
@@ -160,19 +161,17 @@ class ListItem extends React.Component {
     } = this.props;
 
     return (
-      <span key="item-array">
-        {href || linkComponent ?(
-          <Icon
-            style={{position: 'relative'}}
-            className={this.prefixClass('icon')}
-            name="right-nav"
-            key="itemChevron">
-          </Icon>
-        ):null}
-        {flag?(
+      href || linkComponent ?(
+        <Icon
+          style={{position: 'relative'}}
+          className={this.prefixClass('icon')}
+          name={ComponentConfig.icons.rightNav}
+          key="itemChevron">
+          {flag?(
           <div className={this.prefixClass('flag')}>&bull;</div>)
-        :null}
-      </span>
+          :null}
+        </Icon>
+      ):null
     );
   }
 
@@ -182,11 +181,12 @@ class ListItem extends React.Component {
       part,
       subTitle,
       href,
-      //media,
       children,
       linkComponent,
       linked,
       nested,
+      noPadding,
+      alignTop,
       ...props
     } = this.props;
 
@@ -196,6 +196,7 @@ class ListItem extends React.Component {
     delete props.linkProps;
     delete props.desc;
     delete props.flag;
+    delete props.media;
 
     let itemChildren = [
       this.renderAddon('media'),
@@ -205,6 +206,8 @@ class ListItem extends React.Component {
     let classSet = this.getClassSet();
 
     classSet[this.prefixClass(nested)] = nested;
+    classSet[this.prefixClass('noPadding')] = noPadding;
+    classSet[this.prefixClass('align-top')] = alignTop;
     classSet[this.prefixClass('header')] = part === 'header';
     classSet[this.prefixClass('linked')] = href || linkComponent || linked;
     subTitle && (classSet[this.prefixClass('content')] = true);

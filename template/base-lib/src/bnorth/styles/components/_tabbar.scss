@@ -54,7 +54,7 @@
   display: flex;
   width: 100%;
   height: $tabbar-height;
-  padding: 0 $tabbar-padding-horizontal;
+  padding: $tabbar-padding-v $tabbar-padding-h;
 
   @include tabbar-style();
   @extend %retina-line-top-before;
@@ -64,7 +64,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   cursor: pointer;
 
@@ -92,6 +92,7 @@
   position: relative;
   display: block;
   text-align: center;
+  font-size: $font-size-sm;
 
   @extend %text-truncate;
 

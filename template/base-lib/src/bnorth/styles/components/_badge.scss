@@ -53,20 +53,24 @@
 // -----------------------------------------------------------------------------
 @each $color-key, $color in $am-colors {
   .#{$badge-prefix}-#{$color-key} {
-    @include badge-style($color, auto);
+    @include badge-style($color, $badge-color);
+  }
+}
+
+// Modifiers: sizes
+// -----------------------------------------------------------------------------
+@each $size-key, $size-size in $am-sizes {
+  .#{$badge-prefix}-#{$size-key} {
+    @include badge-layout($size-size);
   }
 }
 
 // modifiers: radius
 // -----------------------------------------------------------------------------
-@each $radius-key, $radius in $am-radius {
-  .#{$badge-prefix}-#{$radius-key} {
-    border-radius: $radius;
-  }
+.#{$badge-prefix}-radius {
+  border-radius: $global-radius;
 }
 
-.doc-content {
-  .badge {
-    margin: 5px;
-  }
+.#{$badge-prefix}-rounded {
+  border-radius: $global-rounded;
 }

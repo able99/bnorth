@@ -59,6 +59,21 @@
       width: 100%;
       height: 2px;
     }
+  } @else if $style == plain { // plain style
+    border: none;
+    background: none;
+    @if($background==$button-background){
+      color: $global-lightbg-normal;
+    }@else{
+      color: $background;
+    }
+    
+    &:active,
+    &.#{map_get($am-states, active)} {
+      border: none;
+      background: none;
+      color: highlight($background);
+    }
   } @else { // with background
     @if $color == auto {
       $color: islight($background);
@@ -138,12 +153,6 @@
   }
 }
 
-// Mofifiers: block
-// -----------------------------------------------------------------------------
-.#{$button-prefix}-block {
-  @include button-block();
-}
-
 // Modifiers: colors
 // -----------------------------------------------------------------------------
 @each $color-key, $color in $am-colors {
@@ -158,6 +167,22 @@
   .#{$button-prefix}-#{$size-key} {
     @include button-size($size-size);
   }
+}
+
+// M odifiers: radius
+// -----------------------------------------------------------------------------
+.#{$button-prefix}-radius {
+  border-radius: $global-radius;
+}
+
+.#{$button-prefix}-rounded {
+  border-radius: $global-rounded;
+}
+
+// Mofifiers: block
+// -----------------------------------------------------------------------------
+.#{$button-prefix}-block {
+  @include button-block();
 }
 
 // Modifiers: hollow
@@ -186,11 +211,17 @@
   }
 }
 
-// M odifiers: radius
+// Modifiers: plain
 // -----------------------------------------------------------------------------
-@each $radius-key, $radius in $am-radius {
-  .#{$button-prefix}-#{$radius-key} {
-    border-radius: $radius;
+.#{$button-prefix}-plain {
+  @include button-style($style: plain);
+
+  @each $color-key, $color in $am-colors {
+    &.#{$button-prefix}-#{$color-key} {
+      @include button-style($color, auto, $style: plain);
+    }
   }
 }
+
+
 

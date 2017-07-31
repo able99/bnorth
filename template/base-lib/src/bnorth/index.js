@@ -21,6 +21,7 @@ import User from './apis/user';
 import Netif from './apis/netif'; 
 import Navigate from './apis/navigate'; 
 import Storage from './apis/storage'; 
+import Log from './apis/log'; 
 
 // components----------
 import Accordion from './components/Accordion';
@@ -52,27 +53,42 @@ import Carousel from './components/Carousel';
 import Switch from './components/Switch';
 import CheckRadio from './components/CheckRadio';
 import Panel from './components/Panel';
+import EmbedHtml from './components/EmbedHtml';
+import Fab from './components/Fab';
+import ComponentConfig from './components/config';
+import CSSCore from './components/utils/CSSCore';
 
 //==============================
 // config
 //==============================
 let Config = {};
 
-Config.NetCache = false;
-Config.BaseUrl = window.location.protocol + "//" + window.location.hostname + ((window.location.port === 80 || window.location.port === 443 || window.location.port === "")? "" : ":" + window.location.port) + "/";
-Config.ApiUrl = "rapi/";
-Config.AuthUrl = "auth/";
+Config.Url = {};
+Config.Url.base = window.location.protocol + "//" + window.location.hostname + ((window.location.port === 80 || window.location.port === 443 || window.location.port === "")? "" : ":" + window.location.port) + "/";
+Config.Url.api = "rapi/";
+Config.Url.auth = "auth/";
 
+Config.Path = {};
+Config.Path.Home = "/";
+Config.Path.Login = "/login";
+Config.Path.Resister = "/resister";
+Config.Path.ForgetPassword = "/forget-password";
+Config.Path.ChangePassword = "/change-password";
+
+Config.NetCache = false;
 Config.Version = "0.1.0";
 Config.Debug = false;
 Config.OnBrowserDebug = true;
 Config.OnBrowser = Boolean(!window.cordova);
 Config.OnApp = Config.OnBrowserDebug||Boolean(window.cordova);
 
-Config.PathHome = "/";
-Config.PathLogin = "/login";
+Config.Str = {};
+Config.Str.netCommonError = "网络连接错误";
 
-Config.StrNetCommonError = "网络连接错误";
+Config.Images = {};
+
+Config.Keys = {};
+Config.Keys.user = 'BNorthStorageUserKey';
 
 //==============================
 // utils
@@ -82,6 +98,7 @@ let Utils = {
   Util,
   Webview,
   Style,
+  CSSCore,
 }
 
 //==============================
@@ -92,6 +109,7 @@ let Apis = {
   Netif,
   Navigate,
   Storage,
+  Log,
 }
 
 //==============================
@@ -127,7 +145,7 @@ function createAppStore(areduxers=null){
 }
 
 //==============
-// Page
+// app data
 //==============
 const AppData = {
   didBackKey: null,
@@ -136,9 +154,11 @@ const AppData = {
 }
 
 
-//==============
-// Page
-//==============
+//=====================
+// page container hoc
+//=====================
+//=====================
+// hoc page
 const PageHoc = (Wrapper) => class PageHoc extends Wrapper {
   constructor(props) {
     super(props);
@@ -191,12 +211,19 @@ const PageHoc = (Wrapper) => class PageHoc extends Wrapper {
   }
 
   render(){
-    let ret = super.render();
+    let ret;
+    try{
+      ret = super.render();
+    }catch(e){
+      Apis.Log.err('page render error:',e);
+      return <div>page render error!</div>
+    }
+
     ret = React.cloneElement(
       ret,
       Object.assign(
         {
-          title: Wrapper.name,
+          'data-title': Wrapper.name, //for debug
           isBlur: !this.isFocus(),
         }, 
         ret.props
@@ -259,18 +286,127 @@ const PageHoc = (Wrapper) => class PageHoc extends Wrapper {
     }
     return ret?ret.path:null;
   }
+
+  getPageParentPath() {
+    let ret = null;
+    for(let i=0; i<this.props.routes.length; i++){
+      let route = this.props.routes[i];
+      if(!route.path) continue;
+      if(route===this.props.route) break;
+      ret = route.path;
+    }
+    return ret
+  }
 }
+
+//=====================
+// hoc container
+class StateHocBasetateHocContainer {
+  constructor(ownProps) {
+    this.ownProps = ownProps;
+    this.Config = Config;
+    this.Utils = Utils;
+    this.Apis = Apis;
+    this.Actions = Actions;
+    this.ActionWraps = ActionWraps;
+
+    this.Wraps = {};
+    this.Reduxers = [];
+  }
+}
+
+function stateHoc(creator){ return connect(
+  (state,ownProps)=>{
+    creator = creator||StateHocBasetateHocContainer;
+    let key = '';for(let route of ownProps.routes){if(route.path){key+='/'+route.path}if(route===ownProps.route){break;}};
+    
+    if(!creator[key]){
+      let extend = new creator(ownProps);
+      if(!extend) return {};
+      if(!extend.Wraps.data)extend.Wraps.data = ActionWraps.actionsDataWrap({});
+      creator[key] = extend;
+    }
+
+    let extend = creator[key];
+    if(!extend) return {};
+    extend.ownProps = ownProps;
+    
+    let ret = {};
+    (extend.Reduxers||[]).forEach((v)=>{
+      ret[v] = state[v];
+    });
+    Object.entries(extend.Wraps).forEach(([key,v])=>{
+      if(v.data) ret["wrap_"+key] = v.data(v.initData);
+      if(v.state) ret["wrap_state_"+key] = v.state(v.initData);
+    });
+    return ret;
+  },
+  (dispatch,ownProps)=>{
+    creator = creator||StateHocBasetateHocContainer;
+    let key = '';for(let route of ownProps.routes){if(route.path){key+='/'+route.path}if(route===ownProps.route){break;}};
+
+    let extend = creator[key];
+    if(!extend) return {};
+
+    return {
+      Config: extend.Config,
+      Utils: extend.Utils,
+      Apis: extend.Apis,
+      Wraps: extend.Wraps,
+      ex: extend,
+
+      onWillStart() {
+        if(extend.onWillStart)extend.onWillStart();
+      },
+      onStart() {
+        if(extend.onStart)extend.onStart();
+        Object.values(extend.Wraps).forEach((v)=>{
+          if(v.updateOnStart)v.update();
+        });
+      },
+      onPause() {
+        if(extend.onPause)extend.onPause();
+      },
+      onResume() {
+        if(extend.onResume)extend.onResume();
+        Object.values(extend.Wraps).forEach((v)=>{
+          if(v.updateOnResume)v.update();
+        });
+      },
+      onStop() {
+        if(extend.onStop)extend.onStop();
+        Object.values(extend.Wraps).forEach((v)=>{
+          if(v.clearOnStop)v.clear();
+        });
+        creator[key] = null;
+      },
+      onBackKey() {
+        if(extend.onBackKey)extend.onBackKey();
+      },
+    }
+  }
+);}
 
 
 //==============================
 // app component
 //==============================
 const AppLifeCycle = {
+  // onInit(){},
   // onWillStart(){},
   // onStart(){},
   // onStop(){},
   // onResume(){},
   // onPause(){},
+  doInit(){
+    NavBar.navItemBack={
+      icon: ComponentConfig.icons.left,
+      component: "a",
+      onClick:()=>{Apis.Navigate.back()},
+    }
+
+    if(AppLifeCycle.onInit)AppLifeCycle.onInit();
+  }
 };
 
 //================
@@ -309,7 +445,7 @@ class AppPage extends React.Component{
   // app life 
   componentWillMount(){
     this.appEventBind();
-
+    AppLifeCycle.doInit && AppLifeCycle.doInit();
     if(AppLifeCycle.onWillStart && AppLifeCycle.onWillStart.apply(this)) return;
   }
 
@@ -343,7 +479,7 @@ class AppPage extends React.Component{
   //-------------------
   // render
   render() {
-    return !this.props.wrap_app.ready
+    return !this.props.wrap_data.ready
     ?(
       <View>
         logding
@@ -364,7 +500,7 @@ class AppPage extends React.Component{
               key={"dialog"+i}
               {...props} 
               isOpen
-              onDismiss={()=>{this.props.Actions.actionNoticeDialogClose(v);if(onDismiss)onDismiss()}}>
+              onDismiss={()=>{Actions.actionNoticeDialogClose(v);if(onDismiss)onDismiss()}}>
               {content}
             </Modal>
           );
@@ -375,10 +511,11 @@ class AppPage extends React.Component{
         <ProgressBar percent={0} spinner={false} intervalTime={200} autoIncrement={this.props.ReduxerNotice.loading} />
 
         <Notification
-          amStyle="alert"
+          amStyle={this.props.ReduxerNotice.noticeStyle||"error"}
           visible={Boolean(this.props.ReduxerNotice.noticeMsg)}
           static
-          closeBtn={false}
+          closeBtn={true}
+          onDismiss={()=>{Actions.actionNoticeMessage()}}
           animated>
           {this.props.ReduxerNotice.noticeMsg}
         </Notification>
@@ -387,112 +524,119 @@ class AppPage extends React.Component{
   }
 }
 
-const AppState = stateHoc(
-  function(){
-    let Wraps = [
-      ActionWraps.actionsDataWrap('app',{
-        initData: {ready: !(AppLifeCycle.onWillStart||AppLifeCycle.onStart)},
-      }),
-    ];
+class AppContainer extends StateHocBasetateHocContainer{
+  constructor(ownProps) {
+    super(ownProps);
+    this.Wraps.data = this.ActionWraps.actionsDataWrap({
+      initData: {ready: !(AppLifeCycle.onWillStart||AppLifeCycle.onStart)},
+    });
 
-    return{
-      Actions,
-      Wraps,
-      Reduxers: ['ReduxerNotice'],
-    }
+    this.Reduxers.push('ReduxerNotice');
   }
-);
+}
+const AppState = stateHoc(AppContainer);
 
 //==============================
 // route util
 //==============================
 const HookRouteCheckLogin = function(nextState, replace){
   if(!User.isLogin()){
-    AppData.loginBackLoction = nextState.location;
-    AppData.loginBackLoction.isReplace = true;
+    // AppData.loginBackLoction = nextState.location;
+    // AppData.loginBackLoction.isReplace = true;
 
     replace(typeof(Config.PathLogin)==='string'?Config.PathLogin:Config.PathLogin.path);
   }
 }
 
-function stateHoc(creator){
-  if(!creator) return connect(
-    null,
-    (dispatch,ownProps)=>{
-      let ret = {};
+function createRouteProps(
+  path, 
+  options={key:undefined,checkLogin:false,prefix:'',component:undefined,components:undefined,getComponent:undefined,demand:undefined,container:undefined,page:undefined,restartOnQueryChange:undefined},
+) {
+  if(!path)return options;let paths = path.split('/');
+  options=options||{};
+  let params = paths.filter((v)=>{return v.indexOf(':')===0}).map((v)=>{return v.slice(1)});
+  let {
+    checkLogin,
+    prefix,
+    component,
+    components,
+    getComponent,
+    demand,
+    container,
+    page,
+    subs,
+    forLogin,
+    forHome,
+    forResister,
+    forForgetPassword,
+    forChangePassword,
+    key,
+    restartOnQueryChange,
+    restartOnParamChange,
+    ...props,
+  } = options;
+  key = key||paths[0]||paths[1];
+  prefix=prefix||'';
+  restartOnParamChange = restartOnParamChange===undefined||restartOnParamChange===null?true:restartOnParamChange;
 
-      ret.Config = Config;
-      ret.Utils = Utils;
-      ret.Apis = Apis;
-      ret.Actions = Actions;
-      
-      return ret;
-    },
-  );
+  if(subs){
+    props.container = Object.keys(subs);
+  }
 
-  return connect(
-    (state,ownProps)=>{
-      let objs = creator.objs?creator.objs:(creator(ownProps)||{});creator.objs = objs;
+  if(component){
+    props.component = component;
+  }else if(components){
+    props.components = components;
+  }else if(getComponent){
+    props.getComponent = getComponent;
+  }else if(demand){
+    props.getComponent = function(nextState, cb) {
+      demand((dcontainer,dpage)=>{
+        const KeysComponent = dpage?dcontainer(PageHoc(dpage)):dcontainer;
+        const Component = function (props) {
+          return (<KeysComponent {...props} key={'page'+JSON.stringify(props.params)+JSON.stringify(props.location.query)} />);
+        }
+        cb(null, Component);
+      },key,nextState);
+    } 
+  }else{
+    if(typeof(container)==='string'){
+      container = require("../pages/"+prefix+"_"+container);
+    }else if(container===undefined){
+      container = require("../pages/"+prefix+"_"+key.replace(/-/g,'_')).default;
+    }else if(container===true){
+      container = stateHoc();
+    }
 
-      let ret = {};
-      for(let obj of objs.Reduxers||[]){
-        ret[obj] = state[obj];
+    if(typeof(page)==='string'){
+      page = require("../pages/"+prefix+page).default;
+    }else if(page===undefined){
+      page = require("../pages/"+prefix+key.replace(/-/g,'_')).default;
+    }
+
+    if(container&&page){
+      const KeysComponent = container(PageHoc(page));
+      props.component = function (props) {
+        let KeysComponentkey = '/'+key;
+        if(restartOnParamChange)KeysComponentkey += Object.keys(props.params).filter((v)=>{return params.indexOf(v)>=0}).map((v)=>{return props.params[v]}).join(':')
+        if(restartOnQueryChange)KeysComponentkey += JSON.stringify(props.location.query);
+        return (<KeysComponent {...props} key={KeysComponentkey} />);
       }
-      for(let obj of objs.Wraps||[]){
-        if(obj.data) ret["wrap_"+obj.uuid] = obj.data(obj.initData);
-        if(obj.state) ret["wrap_state_"+obj.uuid] = obj.state(obj.initData);
-      }
+    }
+  }
 
-      return ret;
-    },
-    (dispatch,ownProps)=>{
-      let objs = creator.objs?creator.objs:(creator(ownProps)||{});creator.objs = objs;
+  Config.Path[key.replace(/-/g,'_')] = {path:key, params:params};
+  if(forLogin)Config.Path.Login = key;
+  if(forHome)Config.Path.Home = key;
+  if(forResister)Config.Path.Login = key;
+  if(forForgetPassword)Config.Path.Resister = key;
+  if(forChangePassword)Config.Path.ChangePassword = key;
 
-      let ret = {
-        onWillStart(){
-          if(objs.onWillStart)objs.onWillStart();
-        },
-        onStart(){
-          if(objs.onStart)objs.onStart();
-          for(let wrap of objs.Wraps||[]){
-            if(wrap.updateOnStart)wrap.update();
-          }
-        },
-        onResume(){
-          if(objs.onResume)objs.onResume();
-          for(let wrap of objs.Wraps||[]){
-            if(wrap.updateOnResume)wrap.update();
-          }
-        },
-        onPause(){
-          if(objs.onPause)objs.onPause();
-        },
-        onStop(){
-          creator.objs = null;
-          if(objs.onStop)objs.onStop();
-          for(let wrap of objs.Wraps||[]){
-            if(wrap.clearOnStop)wrap.clear();
-          }
-        },
-      }
-      if(objs.onBackKey)ret.onBackKey=objs.onBackKey;
-
-      ret.Wraps={};
-      for(let obj of objs.Wraps||[]){
-        ret.Wraps[obj.uuid] = obj;
-      }
-      ret.Config = Config;
-      ret.Utils = Utils;
-      ret.Apis = Apis;
-      ret.Actions = Actions;
-
-      ret.Vars = objs.Vars||{};
-      ret.Checks = objs.Checks||{};
-      ret.Methods = objs.Methods||{};
-      
-      return ret;
-    },
-  );
+  return Object.assign({
+    key,
+    path,
+    onEnter: checkLogin?HookRouteCheckLogin:null,
+  },props);
 }
 
 function createAppRouter(route,reduxers){
@@ -502,20 +646,43 @@ function createAppRouter(route,reduxers){
       <Router 
         history={hashHistory} 
         render={(props)=>{
-          AppData.routerStatus = props;
+          if(props.location.pathname==='/login'){
+
+            if(AppData.loginBackLoction&&AppData.routerStatus.location.pathname!==props.location.pathname)AppData.loginBackLoction.isReplace = props.location.action==='REPLACE';
+          }else{
+            AppData.loginBackLoction = props.location;
+          }
+          AppData.routerStatus=props;
           return <RouterContext {...props} />
         }}
-        // onError={(a)=>{
-        //   console.log(a)
-        // }}
+        onError={(a)=>{
+          console.log(a)
+        }}
       >
         <Route path="/" component={AppState(AppPage)}>
           {route}
         </Route>  
+        <Route path="*" onEnter= { (nextState, replace)=>{replace('/')} } />
       </Router>
     </Provider>
   )
 }
+
+function jsLoader(filename){
+  return new Promise((resolve,reject)=>{
+    if(!filename){
+      reject("js filename error");
+    }
+    filename += "?version="+Math.ceil((new Date()).getTime()/(1000*3600));
+
+    var fileref=document.createElement('script')
+    fileref.setAttribute("type","text/javascript")
+    fileref.setAttribute("src", filename)
+    fileref.onload = ()=>{resolve()};
+    fileref.onerror = (error)=>{reject(error)};
+    document.getElementsByTagName("head")[0].appendChild(fileref);  
+  });
+} 
 
 //==============================
 // export
@@ -534,8 +701,11 @@ export {
 
   PageHoc,
   stateHoc,
+  StateHocBasetateHocContainer,
   createAppRouter,
+  createRouteProps,
   HookRouteCheckLogin,
+  jsLoader,
 
   Loader,
   Accordion,
@@ -566,4 +736,7 @@ export {
   Switch,
   CheckRadio,
   Panel,
+  EmbedHtml,
+  Fab,
+  ComponentConfig,
 }

@@ -52,6 +52,10 @@ class ButtonGroup extends React.Component {
 
     delete props.classPrefix;
     delete props.split;
+    delete props.amStyle;
+    delete props.amSize;
+    delete props.inset;
+    delete props.block;
 
     classSet[this.prefixClass('stacked')] = stacked;
     classSet[this.prefixClass('justify')] = justify;

@@ -1,11 +1,10 @@
-import { NAMESPACE, CLASSNAMES, } from '../config';
+import ComponentConfig from '../config';
 
-const namespace = (NAMESPACE ? NAMESPACE + '-' : '');
+const namespace = (ComponentConfig.namespace ? ComponentConfig.namespace + '-' : '');
 
 export default (Wrapper) => {
   Wrapper.prototype.setClassNS = function(classPrefix) {
     const prefix = classPrefix || this.props.classPrefix || '';
-
     return namespace + prefix;
   }
 
@@ -21,17 +20,13 @@ export default (Wrapper) => {
       selected,
       disabled,
       inset,
+      block,
     } = this.props;
 
-    // uses `.am-` as prefix if `classPrefix` is not defined
     let prefix = namespace;
-
     if (this.props.classPrefix) {
       const classPrefix = this.setClassNS();
-
       prefix = classPrefix + '-';
-
-      // don't return prefix if ignore flag set
       !ignorePrefix && (classNames[classPrefix] = true);
     }
 
@@ -43,23 +38,13 @@ export default (Wrapper) => {
       classNames[prefix + amStyle] = true;
     }
 
-    if (hollow) {
-      classNames[prefix + 'hollow'] = true;
-    }
-
     classNames[this.prefixClass('radius')] = radius;
     classNames[this.prefixClass('rounded')] = rounded;
-
     classNames[this.prefixClass('inset')] = inset;
-
-    // state className
-    // `selected` is an alias of active
-    classNames[CLASSNAMES['active']] = active || selected;
-    classNames[CLASSNAMES['disabled']] = disabled;
-
-    // shape
-    // classNames[constants.CLASSES.radius] = this.props.radius;
-    // classNames[constants.CLASSES.round] = this.props.round;
+    classNames[this.prefixClass('block')] = block;
+    classNames[this.prefixClass('hollow')] = hollow;
+    classNames[ComponentConfig.classnames['active']] = active || selected;
+    classNames[ComponentConfig.classnames['disabled']] = disabled;
 
     return classNames;
   }

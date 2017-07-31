@@ -4,6 +4,7 @@ import cx from 'classnames';
 import Icon from './Icon';
 import CollapseHoc from './hoc/CollapseHoc';
 import ClassNameHoc from './hoc/ClassNameHoc';
+import ComponentConfig from './config.js';
 
 
 class Accordion extends React.Component {
@@ -157,7 +158,7 @@ class AccordionItem extends React.Component {
           {this.props.title}
           <Icon
             className={this.setClassNS('accordion-icon')}
-            name="right-nav"
+            name={ComponentConfig.icons.rightNav}
           />
         </dt>
         <dd

@@ -13,7 +13,7 @@
 }
 
 .#{$pager-prefix}-panel {
-  position: relative;
+  position: absolute;
   @include square(100%);
   
   padding: $global-spacing;

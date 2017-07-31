@@ -63,6 +63,7 @@ class PagerItem extends React.Component {
     delete props.eventKey;
     delete props.active;
     delete props.noPadded;
+    delete props.navSize;
 
     classSet[this.prefixClass('panel')] = true;
     classSet[this.prefixClass('panel-no-padded')] = noPadded;

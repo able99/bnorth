@@ -1,39 +1,50 @@
 import hash from "crypto";
 
-import { Config, Apis, Actions, AppData } from '../';
+import { Config, Apis, Actions, ActionWraps, AppData, Utils } from '../';
 
 //===========
 let User = {};
 
 //===========
 // user wrap
-User.fetchWrap = null;
+User.wrapSuccess = function(result){
+  let user = User.storageLoad();
+  User.storageSave(Object(user||{},result||{}));
+}
+User.wrapGet =function(){
+  let url = Config.Url.base+Config.Url.api+Config.Url.auth;
+  return ActionWraps.actionsHttpifFetchWrap({
+    options:{
+      resource: url,
+    },
+    success:(result)=>{
+      User.wrapSuccess(result);
+    },
+  },"user");
+}
 User.wrapUpdate =function(){
-  let url = Config.BaseUrl+Config.ApiUrl+Config.AuthUrl;
-  if(this.fetchWrap) this.fetchWrap = Actions.actionsHttpifFetchWrap("user", url);
-  this.fetchWrap.update();
+  User.wrapGet().update();
 }
 User.wrapState = function(){
-  return this.fetchWrap?this.fetchWrap.state():{};
+  return User.wrapGet().state();
 }
 User.wrapData = function(){
-  return this.fetchWrap?this.fetchWrap.data():{};
+  return User.wrapGet().data();
 }
 User.wrapClear = function(){
-  return this.fetchWrap?this.fetchWrap.clear():null;
+  return User.wrapGet().clear();
 }
 
 //===========
 // user storage
-const StorageUserKey = "BNorthStorageUserKey";
 User.storageLoad = function(){
-  return Apis.Storage.getItem(StorageUserKey);
+  return Apis.Storage.getItem(Config.Keys.user);
 }
 User.storageSave = function(user){
-  return Apis.Storage.saveItem(StorageUserKey,user);
+  return Apis.Storage.saveItem(Config.Keys.user,user);
 }
 User.storageClear =function(){
-  return Apis.Storage.removeItem(StorageUserKey);
+  return Apis.Storage.removeItem(Config.Keys.user);
 }
 
 //===========
@@ -72,43 +83,71 @@ User.removeListener = function(listener){
 
 //===========
 // user op
-User.preLogin = function(param){
-  let md5 = hash.createHash("md5");
-  md5.update(param.password);
-  param.password = md5.digest("hex");
-  return param;
+User.getUrl = function(aparam,type) {
+  if(type==='verify')
+    return Config.Url.base+Config.Url.api+Config.Url.authVerify;
+  else
+    return Config.Url.base+Config.Url.api+Config.Url.auth;
 }
-User.afterLogin = function(result){
+User.preLogin = function(param,type){
+  if(type==='verify'){
+    return param;
+  }else{
+    let md5 = hash.createHash("md5");
+    md5.update(param.password);
+    param.password = md5.digest("hex");
+    return param;
+  }
+}
+User.afterLoginOp = function(result,type){
   this.save(result);
-  if(AppData.loginBackLoction && AppData.loginBackLoction.isReplace) {
-    Apis.Navigate.replace(AppData.loginBackLoction);
-  }else if(AppData.loginBackLoction) {
+  return result;
+}
+User.afterLoginBack = function(result,type){
+  User.loginBack(User.getLoginBackLocation());
+}
+User.loginBack = function(loginBackLoction){
+  let {location} = AppData.routerStatus;
+  if(location.query.link){
+    Utils.Webview.replace(location.query.link);
+    return;
+  }
+
+  if(loginBackLoction && loginBackLoction.isReplace) {
+    AppData.routerStatus.router.replace(loginBackLoction);
+  }else if(loginBackLoction) {
     Apis.Navigate.back();
   }else {
     Apis.Navigate.goHome(true);
   }
-  
-  return result;
 }
-User.login = function(aparam){
-  let url =Config.BaseUrl+Config.ApiUrl+Config.AuthUrl;
-  let param = this.preLogin(Object.assign({},aparam));
+User.getLoginBackLocation = function(){
+  return AppData.loginBackLoction;
+}
+User.setLoginBackLocation = function(location){
+  AppData.loginBackLoction = location;
+}
+User.login = function(aparam,type) {
+  let url = User.getUrl(aparam,type);
+  let param = this.preLogin(Object.assign({},aparam),type);
   Actions.actionOperateSubmit({
     resource: url,
     method: "POST",
     data:param,
+    noAuth: true,
     success:(result)=>{
       if(param.success&&param.success(result)){
         return;
       }
-      result = this.afterLogin(result);
+      result = this.afterLoginOp(result,type);
+      this.afterLoginBack(result,type);
       onUserUpdate(result);
     },
     error:param.error,
   });
 }
 User.logoutNetif = function(){
-  let url = Config.BaseUrl+Config.ApiUrl+Config.AuthUrl;
+  let url = Config.Url.base+Config.Url.api+Config.Url.auth;
   
   Actions.actionOperateSubmit({
     resource: url,
@@ -121,7 +160,7 @@ User.logout = function(){
 
   User.clear();
   onUserUpdate(null);
-  Apis.Navigate.push(Config.PathHome);
+  Apis.Navigate.goHome();
 }
 User.update = function(){
   this.wrapUpdate();
@@ -149,7 +188,7 @@ User.checkLogin = function(force=false){
 }
 User.toLogin = function(force=false){
   if(force){
-    Apis.Navigate.goLogin();
+    Apis.Navigate.goLogin(true);
   }else{
     Actions.actionNoticeDialogShow({
       closeBtn: false,
@@ -157,7 +196,7 @@ User.toLogin = function(force=false){
       role: "confirm",
       onAction: (confirm)=>{
         if(confirm){
-          Apis.Navigate.goLogin();
+          Apis.Navigate.goLogin(true);
         }
       },
     });

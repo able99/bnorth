@@ -92,3 +92,9 @@
   display: inline-block;
   background: $global-border;
 }
+
+.#{$button-group-prefix}-inset {
+  padding: 0;
+  margin: 0;
+  border: none;
+}

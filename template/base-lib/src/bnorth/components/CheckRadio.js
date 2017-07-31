@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import ClassNameHoc from './hoc/ClassNameHoc';
 import Icon from './Icon';
+import ComponentConfig from './config.js';
 
 class CheckRadio extends React.Component {
   static propTypes = {
@@ -12,7 +13,7 @@ class CheckRadio extends React.Component {
     amStyle: PropTypes.string,
     disabled: PropTypes.bool,
     value: PropTypes.bool,
-    onValueChange: PropTypes.func,
+    onChange: PropTypes.func,
     label: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]),
     contentOn: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]),
     contentOff: PropTypes.oneOfType([PropTypes.string,PropTypes.func,PropTypes.element]),
@@ -20,6 +21,7 @@ class CheckRadio extends React.Component {
 
   static defaultProps = {
     classPrefix: 'check-radio',
+    type: 'radio',
   }
 
   render() {
@@ -35,6 +37,7 @@ class CheckRadio extends React.Component {
       children,
       contentOn,
       contentOff,
+      onChange,
       ...props
     } = this.props;
 
@@ -48,20 +51,21 @@ class CheckRadio extends React.Component {
     delete props.rounded;
 
     return (
-      <label {...props} className={cx(classSet, className)} >
+      <label {...props} className={cx(classSet, className)} onClick={this.props.onClick||((e)=>{e.stopPropagation()})}>
         <input
           name={name}
           type={type}
-          value={value}
-          defaultValue={defaultValue}
+          onChange={onChange}
+          checked={value}
+          defaultChecked={defaultValue}
           disabled={disabled} />
         {label?label:children}
         <span className={this.prefixClass('content')}>
           <span className={this.prefixClass('on')}>
-            {contentOn?contentOn:<Icon name="check" className={this.prefixClass('default')} />}
+            {contentOn?React.cloneElement(contentOn,{onClick:(e)=>e.target.parentElement.click()}):<Icon name={ComponentConfig.icons.check} className={this.prefixClass('default')} />}
           </span>
           <span className={this.prefixClass('off')}>
-            {contentOff?contentOff:<Icon name="check" className={this.prefixClass('default')} />}
+            {contentOff?React.cloneElement(contentOff,{onClick:(e)=>e.target.parentElement.click()}):<Icon name={ComponentConfig.icons.check} className={this.prefixClass('default')} />}
           </span>
         </span>
       </label>

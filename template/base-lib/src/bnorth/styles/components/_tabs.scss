@@ -14,7 +14,7 @@
   margin-bottom: 0;
 
   .#{$button-prefix} {
-    @extend %text-truncate;
+    @extend %text-truncate-old;
   }
 }
 

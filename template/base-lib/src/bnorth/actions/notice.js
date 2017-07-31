@@ -7,7 +7,7 @@ import { ActionStore } from '../';
 export const APP_NOTICE = 'APP_NOTICE';
 let gActionAppNoticeTimerId = null;
 let gActionAppNoticeTimerCount = 0;
-export function actionNoticeMessage(notice="") {
+export function actionNoticeMessage(notice="", style="normal") {
   notice = notice.message && (typeof notice.message === 'object')?notice.message:notice;
   notice = notice.reason ||  notice.message || notice.error || notice;
   return (dispatch)=>{
@@ -24,13 +24,14 @@ export function actionNoticeMessage(notice="") {
         gActionAppNoticeTimerCount -= 1;
       },1000);
     }
-    dispatch(actionAppNoticeDo(notice));
+    dispatch(actionAppNoticeDo(notice,style));
   };
 }
-export function actionAppNoticeDo(notice) {
+export function actionAppNoticeDo(notice,style) {
   return {
     type: APP_NOTICE,
     notice,
+    style,
   };
 }
 
@@ -168,7 +169,7 @@ export function ReduxerNotice(state = StateApp, action) {
   switch (action.type) {
   //msg
   case APP_NOTICE:
-    return Object.assign({}, state, {noticeMsg:action.notice});
+    return Object.assign({}, state, {noticeMsg:action.notice,noticeStyle:action.style});
   //loading
   case APP_LOADING:
     return Object.assign({}, state, {loading:true});

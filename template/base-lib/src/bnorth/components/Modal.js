@@ -13,6 +13,7 @@ import TransitionEvents from './utils/TransitionEvents';
 import Button from './Button';
 import Icon from './Icon';
 import Loader from './Loader';
+import ComponentConfig from './config.js';
 
 // MUST be equal to $modal-duration in _modal.scss
 const TRANSITION_TIMEOUT = 300;
@@ -21,7 +22,7 @@ class Modal extends React.Component {
   static propTypes = {
     classPrefix: PropTypes.string,
     backdropClassName: PropTypes.string,
-    role: PropTypes.oneOf(['alert', 'confirm', 'prompt', 'loading', 'actions', 'popup', 'custom']),
+    role: PropTypes.oneOf(['alert', 'confirm', 'prompt', 'loading', 'actions', 'popup', 'dialog']),
     title: PropTypes.node,
     confirmText: PropTypes.string,
     cancelText: PropTypes.string,
@@ -81,7 +82,7 @@ class Modal extends React.Component {
   }
 
   isCustom() {
-    return this.props.role === 'custom';
+    return this.props.role === 'dialog';
   }
 
   // Get input data for prompt modal
@@ -240,12 +241,15 @@ class Modal extends React.Component {
     } = this.props;
 
     return (
-        React.cloneElement(children,{
+      React.cloneElement(
+        children,
+        Object.assign({},children.props,{
           ...this.removeUnknownProp(props),
-          className: cx(classSet, className),
+          className: cx(classSet, className, children.props&&children.props.className),
           key: "modalCustom",
           ref: "modal",
         })
+      )
     );
   }
 
@@ -263,7 +267,7 @@ class Modal extends React.Component {
         </h3>
         {closeBtn?
         <Icon
-          name="close"
+          name={ComponentConfig.icons.close}
           className={this.prefixClass('icon')}
           onClick={this.requestClose.bind(this)} />
         :null}

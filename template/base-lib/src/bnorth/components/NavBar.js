@@ -3,19 +3,12 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import Icon from './Icon';
 import ClassNameHoc from './hoc/ClassNameHoc';
-
+import ComponentConfig from './config';
 
 class NavBar extends React.Component {
   static propTypes = {
     classPrefix: PropTypes.string,
-    amStyle: PropTypes.oneOf([
-      'primary',
-      'secondary',
-      'success',
-      'warning',
-      'alert',
-      'dark',
-    ]),
+    amStyle: PropTypes.string,
     title: PropTypes.node,
     leftNav: PropTypes.array,
     rightNav: PropTypes.array,
@@ -64,6 +57,7 @@ class NavBar extends React.Component {
       title,
       customIcon,
       icon,
+      src,
       isClone,
       // href,
       badge,
@@ -106,20 +100,13 @@ class NavBar extends React.Component {
       color:'red',
     };
 
-    let navIcon = customIcon ? (
-      <img
-        src={customIcon}
+    let navIcon = icon||src ? (
+      <Icon
         className={cx(iconClassName)}
-        alt={title || null}
-        key={navIconKey} />
-    ) : icon ? (
-     
-        <Icon
-          className={cx(iconClassName)}
-          name={icon}
-          key={navIconKey} >{badge?(<span className="typo-size-xxl" style={badgeSytle}>&bull;</span>):null}</Icon>
-        
-     
+        name={icon}
+        src={src}
+        amSize="xl"
+        key={navIconKey} >{badge?(<span className="typo-size-xxl" style={badgeSytle}>&bull;</span>):null}</Icon>
     ) : null;
 
     // adjust title and icon order for Android UC
@@ -166,7 +153,7 @@ class NavBar extends React.Component {
     delete props.onAction;
     delete props.titleOnLeft;
 
-    return (
+    return ComponentConfig.hideNavBar?null:(
       <header
         {...props}
         className={cx(classSet, className)}

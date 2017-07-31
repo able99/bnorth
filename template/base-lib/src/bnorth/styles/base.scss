@@ -73,7 +73,7 @@ body {
 
 //max width
 
-body {
+.restrictWidth body {
   @if ($base-body-max-width != none){
     max-width: $base-body-max-width;
     margin-left: auto;

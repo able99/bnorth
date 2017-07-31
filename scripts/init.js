@@ -46,9 +46,57 @@ if(isDoProject){
   // package
   appPackage.homepage = "./";
   appPackage.dependencies = {
-
+    "react": "^15.4.1",
+    "react-addons-css-transition-group": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "react-progress-bar-plus": "^1.2.0",
+    "react-redux": "^4.4.6",
+    "react-redux-meteor": "^4.5.1",
+    "react-router": "^3.0.0",
+    "redux": "^3.6.0",
+    "redux-logger": "^2.7.4",
+    "redux-thunk": "^2.1.0",
+    "moment": "^2.18.1",
+    "whatwg-fetch": "2.0.2",
   };
   appPackage.devDependencies = {
+    "autoprefixer": "6.7.2",
+    "babel-core": "6.22.1",
+    "babel-eslint": "7.1.1",
+    "babel-jest": "18.0.0",
+    "babel-loader": "6.2.10",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-react-app": "^2.2.0",
+    "babel-runtime": "^6.20.0",
+    "case-sensitive-paths-webpack-plugin": "1.1.4",
+    "connect-history-api-fallback": "1.3.0",
+    "css-loader": "0.26.1",
+    "detect-port": "1.1.0",
+    "dotenv": "2.0.0",
+    "eslint": "3.16.1",
+    "eslint-config-react-app": "^0.6.2",
+    "eslint-loader": "1.6.0",
+    "eslint-plugin-flowtype": "2.21.0",
+    "eslint-plugin-import": "2.0.1",
+    "eslint-plugin-jsx-a11y": "4.0.0",
+    "eslint-plugin-react": "6.4.1",
+    "extract-text-webpack-plugin": "1.0.1",
+    "file-loader": "0.10.0",
+    "html-webpack-plugin": "2.24.0",
+    "http-proxy-middleware": "0.17.3",
+    "jest": "18.1.0",
+    "json-loader": "0.5.4",
+    "node-sass": "^4.3.0",
+    "object-assign": "4.1.1",
+    "postcss-loader": "1.2.2",
+    "promise": "7.1.1",
+    "react-dev-utils": "^0.5.2",
+    "sass-loader": "^4.1.1",
+    "style-loader": "0.13.1",
+    "url-loader": "0.5.7",
+    "webpack": "1.14.0",
+    "webpack-dev-server": "1.16.2",
+    "webpack-manifest-plugin": "1.1.0",
   };
   appPackage.scripts = {
     "init": "bnorth init",
@@ -57,6 +105,9 @@ if(isDoProject){
     "build": "bnorth build",
     "test": "bnorth test --env=jsdom",
     "eject": "bnorth eject",
+
+    "page": "bnorth page",
+    "component": "bnorth component",
     
     "plugin": "bnorth plugin",
     "appprepare": "bnorth appprepare",
@@ -69,6 +120,13 @@ if(isDoProject){
     path.join(appPath, 'package.json'),
     JSON.stringify(appPackage, null, 2)
   );
+
+  console.log(`npm run...`);
+  var proc = spawn.sync('npm', ['i'], {stdio: 'inherit'});
+  if (proc.status !== 0) {
+    console.error('error!');
+    return;
+  }
 }
 
 //===============================

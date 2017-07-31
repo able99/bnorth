@@ -7,7 +7,7 @@ import BackdropHoc from './hoc/BackdropHoc';
 class Popover extends React.Component {
   static propTypes = {
     classPrefix: PropTypes.string,
-    placement: PropTypes.oneOf(['top', 'bottom', 'left', 'right', 'dropdown']),
+    placement: PropTypes.oneOf(['auto','top', 'bottom', 'left', 'right', 'down-width', 'down-full', 'left-panel', 'left-height', 'right-panel', 'right-height']),
     positionLeft: PropTypes.number,
     positionTop: PropTypes.number,
     angleLeft: PropTypes.number,
@@ -28,60 +28,72 @@ class Popover extends React.Component {
     onDismiss && onDismiss();
   }
 
-  render() {console.log(this.props);
+  handleBackdropMouseOver(e) {
+    let {
+      onDismiss,
+    } = this.props;
+
+    onDismiss && onDismiss();
+  }
+
+  render() {
     let classSet = this.getClassSet();
     let {
       className,
       children,
-      positionLeft,
-      positionTop,
-      angleLeft,
-      angleTop,
-      anglePosition,
       isClosing,
       placement,
+      popoverStyle,
+      popoverClassName,
+      popoverAngle,
+      innerStyle,
+      fullScreen,
+      noMask,
+      trigger,
       ...props
     } = this.props;
-    let style = {
-      left: positionLeft,
-      top: positionTop,
-    };
-    let angleStyle = {
-      left: angleLeft,
-      top: angleTop,
-    };
-    let maskStyle = placement==='dropdown'?{
-      left: 0,
-      top: positionTop,
-    }:null;
+
     delete props.classPrefix;
     delete props.onDismiss;
 
     classSet[this.prefixClass('out')] = isClosing;
     classSet[this.prefixClass(placement)] = placement;
 
-    let popover = (
+    let popover = [
       <div
-        {...props}
-        style={style}
-        ref="overlay"
-        className={cx(classSet, className)}
+        key="triggerBlock"
+        style={{
+          position:'absolute',
+          top: trigger.top,
+          left: trigger.left,
+          width: trigger.width,
+          height: trigger.height,
+        }}
         onClick={(e)=>{e.stopPropagation()}}
+        onMouseOver={(e)=>{e.stopPropagation()}} >
+      </div>,
+      <div
+        key="popover"
+        {...props}
+        style={popoverStyle}
+        ref="overlay"
+        className={cx(classSet, className, popoverClassName)}
+        onClick={(e)=>{e.stopPropagation()}}
+        onMouseOver={(e)=>{e.stopPropagation()}}
       >
-        <div className={this.prefixClass('inner')}>
+        <div className={this.prefixClass('inner')} style={innerStyle}>
           {children}
         </div>
-        {anglePosition?
-        <div
-          style={angleStyle}
-          className={cx(this.prefixClass('angle'),
-          anglePosition ? this.prefixClass('angle-' + anglePosition) : null
-          )} />
-        :null}
-      </div>
-    );
+      </div>,
+      popoverAngle?
+      <div
+        key="angle"
+        style={popoverAngle.style}
+        className={cx(this.prefixClass('angle'),this.prefixClass('angle-' + popoverAngle.position))} />
+      :null
+    ];
 
-    return this.renderBackdrop(popover,false,null,maskStyle);
+    return this.renderBackdrop(popover,noMask,null,null,fullScreen);
   }
 }
 

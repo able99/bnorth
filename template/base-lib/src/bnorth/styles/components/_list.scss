@@ -13,11 +13,8 @@
 
 %list-item-layout {
   display: flex;
-  display: -webkit-flex;
   justify-content: space-between;
-  -webkit-justify-content: space-between;
   align-items: center;
-  -webkit-align-items: center;
 }
 
 // Output
@@ -28,8 +25,7 @@
   padding: 0;
   list-style: none;
   background: $list-background;
-  border: 1px solid $list-border-color;
-
+  
   // nested list
   @extend %card-nested-component;
 }
@@ -52,6 +48,16 @@
   }
 }
 
+//item : noPadding
+.#{$item-prefix}-noPadding {
+  padding: 0;
+}
+
+//item : 
+.#{$item-prefix}-align-top {
+  align-items: start;
+}
+
 // item: header
 .#{$item-prefix}-header {
   min-height: 0;
@@ -64,11 +70,11 @@
 
 // item: linked
 .#{$item-prefix}-linked {
-  padding: 0;
+  cursor: pointer;
   > a {
     @extend %list-item-layout;
     width: 100%;
-    padding: rem-calc(10) $global-spacing * .5 rem-calc(10) $global-spacing;
+    //padding: rem-calc(10) $global-spacing * .5 rem-calc(10) $global-spacing;
     color: $global-gray-darker;
 
     &:active {
@@ -101,6 +107,7 @@
   margin: 0;
   //font-size: rem-calc(17);
   font-weight: 400;
+  position: relative;
 }
 
 // link chevron

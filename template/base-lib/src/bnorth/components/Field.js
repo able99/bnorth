@@ -4,6 +4,7 @@ import cx from 'classnames';
 import ClassNameHoc from './hoc/ClassNameHoc';
 import Button from './Button';
 import Icon from './Icon';
+import ComponentConfig from './config.js';
 
 
 class Field extends React.Component {
@@ -99,7 +100,7 @@ class Field extends React.Component {
       ...this.props,
       ...commonProps,
     };
-
+    assignedProps.value=assignedProps.value||'';
     delete assignedProps.classPrefix;
     delete assignedProps.containerClassName;
     delete assignedProps.label;
@@ -107,6 +108,7 @@ class Field extends React.Component {
     delete assignedProps.btnAfter;
     delete assignedProps.labelBefore;
     delete assignedProps.labelAfter;
+    delete assignedProps.labelWidth;
 
     switch (this.props.type) {
       case 'select':
@@ -154,20 +156,21 @@ class Field extends React.Component {
       id,
       label,
       containerClassName,
+      labelWidth
     } = this.props;
     return label ? (
       <label
         htmlFor={id}
         className={cx(this.prefixClass('container'), containerClassName)}
         key="label" >
-        <span className={this.prefixClass('label')}>
+        <span className={cx(this.prefixClass('label'),{'margin-right':labelWidth==='auto'})} style={{width:labelWidth}}>
           {label}
         </span>
         {children}
         {this.isCheckboxOrRadio() ? (
           <Icon
             className={this.prefixClass('icon')}
-            name="check" />
+            name={ComponentConfig.icons.check} />
         ) : null}
       </label>
     ) : children;

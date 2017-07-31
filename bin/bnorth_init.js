@@ -22,6 +22,6 @@ var result = spawn.sync(
 );
 
 if (result.status !== 0) {
-    console.error('`' + command + ' ' + args.join(' ') + '` failed');
+    console.error('`'  + ' ' + args.join(' ') + '` failed');
     return;
 }

@@ -70,6 +70,8 @@ class TabBarItem extends React.Component {
     classPrefix: PropTypes.string,
     component: PropTypes.any,
     icon: PropTypes.string, // icon name
+    src: PropTypes.string, // icon name
+    srcSelected: PropTypes.string, // icon name
     title: PropTypes.string,
     href: PropTypes.string,
     eventKey: PropTypes.any,
@@ -108,10 +110,13 @@ class TabBarItem extends React.Component {
   renderIcon() {
     let {
       icon,
+      src,
+      srcSelected,
+      selected,
     } = this.props;
 
-    return icon ? (
-      <Icon name={icon} key="tabbarIcon">
+    return icon||src ? (
+      <Icon name={icon} amSize="xl" src={selected&&srcSelected?srcSelected:src} key="tabbarIcon">
             {this.renderBadge()}
       </Icon>) : null
   }
@@ -145,6 +150,7 @@ class TabBarItem extends React.Component {
     delete props.badgeStyle;
     delete props.eventKey;
     delete props.onAction;
+    delete props.srcSelected;
 
     Component = this.props.href ? 'a' : Component;
 

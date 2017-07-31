@@ -39,4 +39,7 @@ Util.uuid = function(){
 	return uuid(8, 16);
 }
 
+const Base64 = require('js-base64').Base64;
+Util.Base64 = Base64;
+
 export default Util;
