@@ -1,7 +1,16 @@
 {
   "name": "bnorth",
   "version": "0.1.0",
-  "description": "fast h5 and app developer tools base on react,react-router,redux,cordova with ui kit",
+  "description": "Fast H5 and hybrid application development framework based on react, react-redux, react-router, cordova",
+  "keywords": ["react", "cordova", "react-router", "react-redux", "hybrid application", "h5"],
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/able99/bnorth"
+  },
+  "homepage": "https://github.com/able99/bnorth",
+  "author": "able99 <8846755@qq.com>",
+  "license": "MIT",
 
   "bin": {
     "bnorth": "./bin/bnorth.js",
@@ -10,25 +19,10 @@
   "engines": {
     "node": ">=4"
   },
-  "files": [
-    "babelrc",
-    "eslintrc",
-    "bin",
-    "config",
-    "scripts",
-    "template",
-    "utils"
-  ],
-  
-  "license": "MIT",
-  "maintainers": [{"name": "able99","email": "8846755@qq.com"}],
-
   "dependencies": {
     "cross-spawn": "4.0.2",
     "chalk": "1.1.3",
     "fs-extra": "0.30.0",
     "nunjucks": "^3.0.1"
-  },
-  "devDependencies": {},
-  "optionalDependencies": {}
+  }
 }
