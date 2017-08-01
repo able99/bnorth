@@ -25,7 +25,7 @@ class Marker  extends React.Component {
   }
 }
 
-class BaiduMap extends React.Component {
+class BCBaiduMap extends React.Component {
   static propTypes = {
     
   }
@@ -141,6 +141,6 @@ class BaiduMap extends React.Component {
   }
 }
 
-BaiduMap.Marker = Marker;
+BCBaiduMap.Marker = Marker;
 
-export default BaiduMap;
+export default BCBaiduMap;

@@ -7,13 +7,13 @@ var isAndroid = Boolean(argPlatform==="all"||argPlatform==="android");
 var isIos = Boolean(argPlatform==="all"||argPlatform==="ios");
 
 var args = [
-  'start',
+  'welcome',
   "project",
   "src",
   "lib",
   isAndroid?"android":"",
   isIos?"ios":"",
-  'end',
+  'help',
 ];
 var result = spawn.sync(
   'node',

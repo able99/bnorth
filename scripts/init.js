@@ -14,19 +14,19 @@ var path = require('path');
 var spawn = require('cross-spawn');
 var chalk = require('chalk');
 
-var isDoStartInfo = process.argv.indexOf("start") >= 0;
+var isDoWelcome = process.argv.indexOf("welcome") >= 0;
 var isDoProject = process.argv.indexOf("project") >= 0;
 var isDoSrc = process.argv.indexOf("src") >= 0;
 var isDoLib = process.argv.indexOf("lib") >= 0;
 var isDoAndroid = process.argv.indexOf("android") >= 0;
 var isDoIos = process.argv.indexOf("ios") >= 0;
-var isDoEndInfo = process.argv.indexOf("end") >= 0;
+var isDoHelp = process.argv.indexOf("help") >= 0;
 
 var appPath = process.cwd();
 var appPackage = require(path.join(appPath,'package.json'));
 var appName = appPackage.name;
 
-if(isDoStartInfo){
+if(isDoWelcome){
   console.log(`init bnorth app name=${appName} apppath=${appPath}`);
 }
 
@@ -175,27 +175,42 @@ if(isDoAndroid||isDoIos){
 
 //===============================
 // success
-if(isDoEndInfo) {
-  console.log(`
-  welcome to bnorth
-  ${chalk.cyan('npm init')}
-  Init project, with args start(info) project src lib android ios end(info).
-  ${chalk.cyan('npm start')}
-  Starts the development server.
-  ${chalk.cyan('npm run build')}
-  Bundles the app into static files for production.
-  ${chalk.cyan('npm run appprepare')}
-  Prepare app file,suce as android project,icons ,ets...
-  ${chalk.cyan('npm run appbuild')}
-  App build.
-  ${chalk.cyan('npm run allbuild')}
-  Build and app build.
-  ${chalk.cyan('npm run publish')}
-  App release and copy to release directory.
-  ${chalk.cyan('npm run plugin [plugin name]')}
-  Create cordova plugin
+let doc = 
+`
+npm run init [project] [src] [lib] [android] [ios]
+重新初始化工程指定部分
+project: 拷贝功能的配置文件，包括gitignore,签名配置文件等
+src: 初始化为示例工程代码
+lib: 更新bnorth库文件
+android: 初始化android工程的配置，初始化后工程将支持生成android安装包
+ios: 初始化ios工程的配置，初始化后工程将支持生成ios安装包
 
-  ${chalk.cyan('npm run init [project|src|lib|android|ios]')}
-  BNorth init srcipt,
-  `);
+npm start
+启动调试服务器，并自动在浏览器中打开，可查看和调试工程代码
+
+npm run page name [des]
+模板建立名称为name参数的页面源码到工程src/pages[/des]中
+
+npm run component name
+将bnorth库中提供的额外功能组件添加到工程中使用，如百度地图等
+
+npm run build
+优化并打包高效且混淆后的h5发布文件
+
+npm run appprepare
+
+npm run appbuild
+
+npm run allbuild
+
+npm run publish
+
+npm run plugin [plugin name]
+模板建立cordova插件，为混合应用提供扩展功能
+`
+if(isDoHelp) {
+  console.log(`------------welcome to bnoth------------`);
+  console.log(doc);
+  console.log(`more info see ${chalk.cyan('https://github.com/able99/bnorth/blob/master/README.md')}`);
+  console.log(`----------------------------------------`);
 }

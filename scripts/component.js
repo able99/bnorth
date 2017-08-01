@@ -22,5 +22,12 @@ if(!name){
 //=====================================================
 // do
 console.log(`copy component:${name}`);
-fs.copySync(path.join(__dirname, '..', 'template', "components", name), path.join(appPath,'src','pages','components'));
-console.log(`done`);
+
+try{
+	fs.copySync(path.join(__dirname, '..', 'template', "components", `BC${name}.js`), path.join(appPath,'src','pages','components',`BC${name}.js`));
+}catch(e){
+	console.error(`error:`+e.message);
+	return;
+}
+console.log(`done and code is:(pls justify relative path by your self)`);
+console.log(`import BC${name} from './components/BC${name}'`);

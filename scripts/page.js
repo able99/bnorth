@@ -9,28 +9,42 @@
 
 'use strict';
 
-var fs = require('fs-extra');
-var path = require('path');
+let fs = require('fs-extra');
+let path = require('path');
+let nunjucks = require('nunjucks')
 
-var appPath = process.cwd();
-
+let appPath = process.cwd();
 let name = process.argv[2];
-let type = process.argv[3] || 'normal';
+let des = process.argv[3] || '';
 
 if(!name){
   console.log(`no component name`);
+  return;
 }
-console.log(`component: name=${name} type=${type}`);
+console.log(`component: name=${name} des=${des}`);
 
 //=====================================================
 // do
-console.log(`copy component:${name}`);
-switch(type){
-  case 'normal':
-    fs.copySync(path.join(__dirname, '..', 'template', "pages", type, 'page.js'), path.join(appPath,'src','pages',`${name}.js`));
-    fs.copySync(path.join(__dirname, '..', 'template', "pages", type, '_page.js'), path.join(appPath,'src','pages',`_${name}.js`));
-    console.log(`route:`);
-    console.log(`<Route {...createRouteProps('${name}',{prefix:''})} />`);
-  default:
-    console.log(`no template`);
-}
+let tpl;
+let data;
+let levels = des.split('/')
+.filter((v)=>{
+	return v;
+})
+.map((v)=>{
+	return '..';
+})
+.join('/');
+levels = `../${levels}${levels?'/':''}`;
+
+tpl = fs.readFileSync(path.join(__dirname, '..', 'template', "pages", 'normal', 'page.tpl')).toString();
+data = nunjucks.renderString(tpl, { name: name, levels: levels });
+fs.writeFileSync(path.join(appPath,'src','pages',des,`${name}.js`), data);
+
+tpl = fs.readFileSync(path.join(__dirname, '..', 'template', "pages", 'normal', '_page.tpl')).toString();
+data = nunjucks.renderString(tpl, { name: name, levels: levels });
+fs.writeFileSync(path.join(appPath,'src','pages',des,`_${name}.js`), data);
+
+console.log(`done and the route is:`);
+let options = des?`, {prefix:'${des}/'}`:'';
+console.log(`<Route {...createRouteProps('${name}'${options})}></Route>`);

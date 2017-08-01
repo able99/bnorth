@@ -1,6 +1,6 @@
-import { stateHoc,StateHocBasetateHocContainer } from '../../../bnorth';
+import { stateHoc,StateHocBasetateHocContainer } from '{{ levels }}bnorth';
 
-export default stateHoc(class PageContainer extends StateHocBasetateHocContainer{
+export default stateHoc(class {{ name }}Container extends StateHocBasetateHocContainer{
   constructor(ownProps) {
     super(ownProps);
 
@@ -9,17 +9,17 @@ export default stateHoc(class PageContainer extends StateHocBasetateHocContainer
       }
     });
 
-    this.Wraps.page = this.ActionWraps.actionsHttpifFetchWrap({
+    this.Wraps.{{ name }} = this.ActionWraps.actionsHttpifFetchWrap({
       updateOnStart: true,
       options:{
-        resource: '',
+        resource: '{{ name }}',
       }
     });
   }
 
   submit() {
     this.Actions.actionOperateSubmit({
-      resource: '',
+      resource: '{{ name }}',
       data:{
         ...this.Wraps.data.data(),
       },
