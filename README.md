@@ -15,7 +15,7 @@
 ```sh
 1. npm init [-f]
 2. npm install --save https://github.com/able99/bnorth
-3. node node_modules/.bin/bnorth_init [all|android|ios]
+3. node node_modules/bnorth/bin/bnorth_init [all|android|ios]
 ```
 
 1. 使用npm命令初始化工程信息,包括工程名称，作者等信息
