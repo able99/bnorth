@@ -1,7 +1,7 @@
-import { combineReducers } from 'redux'
-import { createStore,applyMiddleware } from 'redux'
-import thunkMiddleware from 'redux-thunk';
 import React from 'react';
+import { render } from 'react-dom'
+import { combineReducers,createStore,applyMiddleware } from 'redux'
+import thunkMiddleware from 'redux-thunk';
 import { connect,Provider } from 'react-redux'
 import { Router,Route,hashHistory,RouterContext } from 'react-router';
 
@@ -671,6 +671,10 @@ function createAppRouter(route,reduxers){
   )
 }
 
+
+//==============================
+// main entry
+//==============================
 function jsLoader(filename){
   return new Promise((resolve,reject)=>{
     if(!filename){
@@ -686,6 +690,62 @@ function jsLoader(filename){
     document.getElementsByTagName("head")[0].appendChild(fileref);  
   });
 } 
+
+let MainEntry = {
+  preload() {
+    let Config = {
+    };
+    return Promise.resolve(Config);
+  },
+
+  config(result) {    
+    return Promise.resolve(Config);
+  },
+
+  style() {
+    require('../styles/style');
+    return Promise.resolve();
+  },
+
+  route() {
+    let router = require('../routes/route').default;
+    return Promise.resolve(router);
+  },
+
+  render(router) {
+    Apis.Log.log('==========start============');
+    Apis.Log.log(Config);
+    Apis.Log.log(router);
+    Apis.Log.log('===========================');
+    let rootElement = document.getElementById('root');
+    render(createAppRouter(router),rootElement);
+  },
+
+  error(error) {
+    let rootElement = document.getElementById('root');
+    rootElement.innerText = error;
+  },
+
+  start() {
+    MainEntry.preload()
+    .then((result)=>{
+      return MainEntry.config(result);
+    })
+    .then((result)=>{
+      return MainEntry.style(result);
+    })
+    .then((result)=>{
+      return MainEntry.route(result);
+    })
+    .then((result)=>{
+      return MainEntry.render(result);
+    })
+    .catch((error)=>{
+      MainEntry.error(error);
+    })
+  },
+}
+
 
 //==============================
 // export
@@ -708,7 +768,9 @@ export {
   createAppRouter,
   createRouteProps,
   HookRouteCheckLogin,
+
   jsLoader,
+  MainEntry,
 
   Loader,
   Accordion,

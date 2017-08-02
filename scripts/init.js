@@ -24,80 +24,28 @@ var isDoHelp = process.argv.indexOf("help") >= 0;
 
 var appPath = process.cwd();
 var appPackage = require(path.join(appPath,'package.json'));
+var bnorthPackage = require(path.join(__dirname, '..', 'package.json'));
 var appName = appPackage.name;
 
 if(isDoWelcome){
+  console.log(`------------welcome to bnoth----------------`);
   console.log(`init bnorth app name=${appName} apppath=${appPath}`);
+  console.log(`--------------------------------------------`);
 }
 
 //=====================================================
 // project
 if(isDoProject){
-  console.log(`create project file...`);
+  console.log(`generating project file...`);
+  console.log(`--------------------------------------------`);
 
-  // dir
-  fs.copySync(path.join(__dirname, '..', 'template', "base-project"), appPath);
-
-  fs.copySync(path.join(appPath, 'gitignore'), path.join(appPath, '.gitignore'));
-  fs.remove(path.join(appPath, 'gitignore'), function (err) {});
-
+  // project file
+  fs.copySync(path.join(__dirname, '..', 'gitignore'), path.join(appPath, '.gitignore'));
   fs.copySync(path.join(__dirname, '..', 'README.md'), path.join(appPath, 'README.md'));
 
-  // package
-  appPackage.homepage = "./";
-  appPackage.dependencies = {
-    "react": "^15.4.1",
-    "react-addons-css-transition-group": "^15.4.1",
-    "react-dom": "^15.4.1",
-    "react-progress-bar-plus": "^1.2.0",
-    "react-redux": "^4.4.6",
-    "react-redux-meteor": "^4.5.1",
-    "react-router": "^3.0.0",
-    "redux": "^3.6.0",
-    "redux-logger": "^2.7.4",
-    "redux-thunk": "^2.1.0",
-    "moment": "^2.18.1",
-    "whatwg-fetch": "2.0.2",
-  };
-  appPackage.devDependencies = {
-    "autoprefixer": "6.7.2",
-    "babel-core": "6.22.1",
-    "babel-eslint": "7.1.1",
-    "babel-jest": "18.0.0",
-    "babel-loader": "6.2.10",
-    "babel-polyfill": "^6.23.0",
-    "babel-preset-react-app": "^2.2.0",
-    "babel-runtime": "^6.20.0",
-    "case-sensitive-paths-webpack-plugin": "1.1.4",
-    "connect-history-api-fallback": "1.3.0",
-    "css-loader": "0.26.1",
-    "detect-port": "1.1.0",
-    "dotenv": "2.0.0",
-    "eslint": "3.16.1",
-    "eslint-config-react-app": "^0.6.2",
-    "eslint-loader": "1.6.0",
-    "eslint-plugin-flowtype": "2.21.0",
-    "eslint-plugin-import": "2.0.1",
-    "eslint-plugin-jsx-a11y": "4.0.0",
-    "eslint-plugin-react": "6.4.1",
-    "extract-text-webpack-plugin": "1.0.1",
-    "file-loader": "0.10.0",
-    "html-webpack-plugin": "2.24.0",
-    "http-proxy-middleware": "0.17.3",
-    "jest": "18.1.0",
-    "json-loader": "0.5.4",
-    "node-sass": "^4.3.0",
-    "object-assign": "4.1.1",
-    "postcss-loader": "1.2.2",
-    "promise": "7.1.1",
-    "react-dev-utils": "^0.5.2",
-    "sass-loader": "^4.1.1",
-    "style-loader": "0.13.1",
-    "url-loader": "0.5.7",
-    "webpack": "1.14.0",
-    "webpack-dev-server": "1.16.2",
-    "webpack-manifest-plugin": "1.1.0",
-  };
+  // package file
+  appPackage.homepage = "./";console.log(111,appPackage.dependencies);
+  appPackage.dependencies = Object.assign(appPackage.dependencies||{}, bnorthPackage.devDependencies);
   appPackage.scripts = {
     "init": "bnorth init",
 
@@ -121,7 +69,9 @@ if(isDoProject){
     JSON.stringify(appPackage, null, 2)
   );
 
+  // npm install
   console.log(`npm run...`);
+  console.log(`--------------------------------------------`);
   var proc = spawn.sync('npm', ['i'], {stdio: 'inherit'});
   if (proc.status !== 0) {
     console.error('error!');
@@ -132,21 +82,33 @@ if(isDoProject){
 //===============================
 // src
 if(isDoSrc){
-  console.log(`create src file...`);
-  fs.copySync(path.join(__dirname, '..', 'template', "base-src"), appPath);
+  console.log(`generating src file...`);
+  console.log(`--------------------------------------------`);
+  fs.copySync(path.join(__dirname, '..', 'public/'), path.join(appPath, 'public/'));
+  fs.copySync(path.join(__dirname, '..', 'src/styles/'), path.join(appPath, 'src/styles/'));
+  fs.copySync(path.join(__dirname, '..', 'src/routes/'), path.join(appPath, 'src/routes/'));
+  fs.copySync(path.join(__dirname, '..', 'src/res/'), path.join(appPath, 'src/res/'));
+  fs.copySync(path.join(__dirname, '..', 'src/pages/'), path.join(appPath, 'src/pages/'));
+  fs.copySync(path.join(__dirname, '..', 'src/index.js'), path.join(appPath, 'src/index.js'));
 }
 
 //===============================
 // lib
 if(isDoLib){
-  console.log(`create lib file...`);
-  fs.copySync(path.join(__dirname, '..', 'template', "base-lib"), appPath);
+  console.log(`generating lib file...`);
+  console.log(`--------------------------------------------`);
+  fs.copySync(path.join(__dirname, '..', 'src', "bnorth/"), path.join(appPath, 'src', 'bnorth/'));
 }
 
 //===============================
 // app
 if(isDoAndroid||isDoIos){
   console.log(`create app file...`);
+
+  if(!fs.existsSync(path.jpin(appPath, 'sign/'))){
+    fs.copySync(path.join(__dirname, '..', 'sign/'), path.join(appPath, 'sign/'));
+  }
+
   var appCordovaXml = path.join(__dirname, '..', 'template', "config.xml");
   fs.copySync(path.join(__dirname, '..', 'template', "base-cordova"), appPath);
     var data = fs.readFileSync(appCordovaXml).toString();
@@ -209,7 +171,7 @@ npm run plugin [plugin name]
 模板建立cordova插件，为混合应用提供扩展功能
 `
 if(isDoHelp) {
-  console.log(`------------welcome to bnoth------------`);
+  console.log(`------------------ bnoth----------------`);
   console.log(doc);
   console.log(`more info see ${chalk.cyan('https://github.com/able99/bnorth/blob/master/README.md')}`);
   console.log(`----------------------------------------`);

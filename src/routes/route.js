@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route,IndexRedirect} from 'react-router';
-import { createRouteProps } from './bnorth';
+import { createRouteProps } from '../bnorth';
 
 
 const subs = {

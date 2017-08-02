@@ -18,13 +18,13 @@ let name = process.argv[2];
 let des = process.argv[3] || '';
 
 if(!name){
-  console.log(`no component name`);
+  console.error(`generating page: error=no page name`);
   return;
 }
-console.log(`component: name=${name} des=${des}`);
+console.log(`-------generating page: name=${name} des=${des}-------`);
+console.log(`------------------------------------------------------`);
 
-//=====================================================
-// do
+
 let tpl;
 let data;
 let levels = des.split('/')
@@ -37,14 +37,16 @@ let levels = des.split('/')
 .join('/');
 levels = `../${levels}${levels?'/':''}`;
 
-tpl = fs.readFileSync(path.join(__dirname, '..', 'template', "pages", 'normal', 'page.tpl')).toString();
+tpl = fs.readFileSync(path.join(__dirname, '..', 'template', "pages", 'page.tpl')).toString();
 data = nunjucks.renderString(tpl, { name: name, levels: levels });
 fs.writeFileSync(path.join(appPath,'src','pages',des,`${name}.js`), data);
 
-tpl = fs.readFileSync(path.join(__dirname, '..', 'template', "pages", 'normal', '_page.tpl')).toString();
+tpl = fs.readFileSync(path.join(__dirname, '..', 'template', "pages", '_page.tpl')).toString();
 data = nunjucks.renderString(tpl, { name: name, levels: levels });
 fs.writeFileSync(path.join(appPath,'src','pages',des,`_${name}.js`), data);
 
+console.log(`-------done and the route is-------`);
 console.log(`done and the route is:`);
 let options = des?`, {prefix:'${des}/'}`:'';
 console.log(`<Route {...createRouteProps('${name}'${options})}></Route>`);
+console.log(`-----------------------------------`);

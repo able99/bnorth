@@ -1,5 +1,5 @@
 import { render } from 'react-dom'
-import { AppLifeCycle, Config, Utils, ComponentConfig,Apis, createAppRouter } from './bnorth';
+import { AppLifeCycle, Config, Utils, ComponentConfig,Apis, createAppRouter } from './/bnorth';
 
 //========================
 // hook
@@ -9,7 +9,6 @@ import { AppLifeCycle, Config, Utils, ComponentConfig,Apis, createAppRouter } fr
 //==============================
 // App Life Cycle
 //==============================
-
 
 
 //========================
@@ -23,9 +22,27 @@ function mainPre() {
 
 function mainConfig(result) {
   // config
-  Config.Url.base = 'http://xxx/';
-  Config.Url.api = 'xxx';
-  
+  Config.Url.base = 'http://app.ys.yinqisen.cn/';
+  Config.Url.api = '';
+  Config.Url.auth = 'public/user/login';
+
+  Config.Images.default = require("./res/default.png");
+  Config.Keys.finderHistory = "FosunFinnerHistory";
+
+  ComponentConfig.hideNavBar = Utils.Webview.parseUrl().query.app === '1';
+
+  String.prototype.rot13 = function(){ //v1.0
+    return this.replace(/[a-zA-Z]/g, function(c){
+      return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+    });
+  };
+  let token = (Utils.Webview.parseUrl().query.t||'').rot13();
+  if(token){
+    let user = Apis.User.load() || {};
+    user.token = token;
+    Apis.User.save({data:user});
+  }
+
   return Promise.resolve(Config);
 }
 
