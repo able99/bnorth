@@ -482,7 +482,10 @@ class AppPage extends React.Component{
     return !this.props.wrap_data.ready
     ?(
       <View>
-        logding
+        <div className="spinner">
+          <div className="dot1"></div>
+          <div className="dot2"></div>
+        </div>
       </View>
     )
     :(
