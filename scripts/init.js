@@ -44,7 +44,7 @@ if(isDoProject){
   fs.copySync(path.join(__dirname, '..', 'README.md'), path.join(appPath, 'README.md'));
 
   // package file
-  appPackage.homepage = "./";console.log(111,appPackage.dependencies);
+  appPackage.homepage = "./";
   appPackage.dependencies = Object.assign(appPackage.dependencies||{}, bnorthPackage.devDependencies);
   appPackage.scripts = {
     "init": "bnorth init",

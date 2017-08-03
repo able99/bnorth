@@ -5,11 +5,12 @@ export default class MainPage extends React.Component{
   render() {
     return (
       <View>
+        <NavBar 
+          amStyle="primary" 
+          title='Home' />
+
         <Container scrollable>
-          <NavBar 
-            amStyle="primary" 
-            title='' />
-          
+
         </Container>
       </View>
     );

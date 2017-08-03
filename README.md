@@ -111,49 +111,51 @@ npm run plugin [plugin name]
 
 6.1 页面组件
 ------
-+ View
++ View: 页面的根组件
 
- View组件是页面的根组件, 该组件处理页面控制器传入的属性, 实现页面不在前台时自动隐藏等处理
+ 该组件处理页面控制器传入的属性, 实现页面不在前台时自动隐藏等处理
 
-+ Pager
++ Pager: 页面内多子页面的容器
+
+  如tabs,tabbar等,Pager作为他们管理多个子页面的容器. Pager支持多种子页面的嵌入方式和切换动画.
 
 6.2 布局组件
 ------
-+ Container
-+ Panel
-+ Grid Col
++ Container: 基本容器,实现flex和滚动的支持
++ Panel: 定制功能容器,实现宽高比等
++ Grid Col: 网格布局容器
 
 6.3 大块功能组件
 ------
-+ Card
-+ Group
-+ List
-+ Accordion
-+ NavBar
-+ TabBar
-+ Tabs
-+ Carousel
++ Card: 卡片组件
++ Group: 分组组件
++ List: 列表
++ Accordion: 手风琴
++ NavBar: 标题栏
++ TabBar: tab
++ Tabs: 选项卡
++ Carousel: 幻灯片
 
 6.4 细小功能组件
 ------
-+ Badge
-+ Button ButtonGroup
-+ CheckRadio
-+ Field
-+ Switch
-+ Icon
++ Badge: 小徽章
++ Button ButtonGroup: 按钮与按钮组
++ CheckRadio: check与radio
++ Field: input
++ Switch: 开关
++ Icon: 图标
 
 6.5 弹出与浮动组件
 ------
-+ Modal
-+ Popover PopoverTrigger
-+ Fab
++ Modal: 弹出框
++ Popover PopoverTrigger: 交互弹出框
++ Fab: 悬浮按钮
 
 6.6 通知
 ------
-+ Loader
-+ Notification
-+ ProgressBar
++ Loader: 加载动画
++ Notification: 通知条
++ ProgressBar: 进度条
 
 
 7.页面容器与API
@@ -333,72 +335,132 @@ utile也是注入到UI中的普通方法,只是与框架的耦合度较低
 
 8.1样式类
 ------
-bnorth框架提供大量样式类，并建议ui开发中，主要采用样式类形式定义ui样式（<Component className="margin-h" />），并辅助以css in js(<Component style="{{marginLeft:45}}" />)的方式扩展定制性较高的ui样式。但不限于规定该写法。
+bnorth框架提供大量样式类,并建议ui开发中,主要采用样式类形式定义ui样式(<Component className="margin-h" />),并辅助以css in js(<Component style="{{marginLeft:45}}" />)的方式扩展定制性较高的ui样式,比如绝对定位等,但不限于规定该写法.
 
-因包含大量使用实用样式，限于篇幅，具体查阅代码src/bnorth/style/_utilities.scss。
+### margin与padding: 内外边距 ###
+margin|padding [-h|v|top|right|bottom|left] [-0|-size]
 
-###float###
-* .cf: 清除浮动
-* .fl: 向左浮动
-* .fr: 向右浮动
-* .fn: 不浮动
+***注: 样式类中-size取至主题配置文件***
 
-###margin padding###
-margin|padding [-h|v|top|right|bottom|left] [-0|-size] </br>
-示例：
 ```css
-margin: 外边距为 0.9375rem
-margin-v: 垂直（上下）外边距为 0.9375rem
-margin-v-xs: 垂直外边距为 0.3125rem
-padding-left-0: 左内边距为 0
+margin: 外边距为默认大小
+margin-v: 垂直（上下）外边距为默认大小
+margin-v-xs: 垂直外边距设置为较小
+padding-left-0: 左内边距设置为0
 ```
 
+### border: 边框 ###
+
+### Text sizes: 文本大小 ###
+text-size[-size]
+
+***注: 样式类中-size取至主题配置文件***
+
+### Text weights: 文本粗度 ###
+text-weight[-weight]
+
+***注: 样式类中-weight取至主题配置文件***
+
+### Text style: 文本样式 ###
+text-style[-style] 设置斜体等
+
+***注: 样式类中-style取至主题配置文件***
+
+### Text decorations: 文本装饰 ###
+text-decoration[-decoration] 设置下划线,删除线等
+
+***注: 样式类中-decoration取至主题配置文件***
+
+### Text truncate: 文本截取 ###
+
+* text-truncate 设置为单行,超过显示省略号
+* text-truncate2 设置为2行,超过显示省略号
+* text-truncate3 设置为3行,超过显示省略号
+* text-truncate4 设置为4行,超过显示省略号
+* text-truncate-old 设置下划线,删除线等
+
+***注: 采用限制行数,超过行数显示省略号的方式,IE不兼容多行省略. 兼容问题采用text-truncate-old类解决. ***
+
+### Text Alignmen: 文本对齐###
+
+* text-align-left: 左对齐
+* text-align-right: 右对齐
+* text-align-center: 居中
+* text-align-justify: 两端对齐
+
+### Text colors: 文本颜色 ###
+text-color[-color]
+
+***注: 样式类中-color取至主题配置文件***
+
+### background: 背景设置 ###
+background-none: 无背景
+bg-color[-color]: 设置背景颜色
+
+***注: 样式类中-color取至主题配置文件***
+
+### float ###
+* cf: 清除浮动
+* fl: 向左浮动
+* fr: 向右浮动
+* fn: 不浮动
+
+### visibility: 显示与隐藏 ###
+### layout size: 尺寸设置 ###
+### zindex: z轴设置 ###
+### layout position: 布局方式设置 ###
+### layout display: 显示模式设置 ###
+### layout flex: flex布局 ###
 
 
 8.2样式主题
 ------
-bnorth提供了一套默认的完整的css样式主题，并允许工程，在style目录下的style.scss文件中覆盖默认的css样式主题变量，具体参见src/bnorth/style/_variables。
-如颜色值
-```css
-// color
-$global-success:   #17c729 !default;
-$global-warning:   #00baff !default;
-$global-alert:     #f72a27 !default;
-$global-notice:    #faff7e !default;
-$global-link:      #008bec !default;
-$global-primary:   blue    !default;
-$global-secondary: #000    !default;
-$global-tertiary:  #cbcbcb !default;
-```
+bnorth提供了一套默认的完整的css样式主题，并允许工程，在styles目录下覆盖默认的css样式主题变量,包括:
 
-如字体大小
-```css
-// Size
-$font-size-xxs: 8px !default;
-$font-size-xs: 10px !default;
-$font-size-sm: 12px !default;
-$font-size-default: 14px !default;
-$font-size-lg: 16px !default;
-$font-size-xl: 18px !default;
-$font-size-xxl: 24px !default;
-$font-size-xxxl: 28px !default;
-$font-size-xxxxl: 32px !default;
-```
+### 页面基础样式 ###
 
-如checkradio组件
-```css
-// checkradio Variables
-$checkradio-prefix: #{$namespace}check-radio !default;
-$checkradio-opacity-disabled: 0.5 !default;
-$checkradio-color: $global-border;
-$checkradio-color-inavtive: $global-border;
-$checkradio-background: none;
-$checkradio-input-background: none;
-$checkradio-style: null;
-```
+* $namespace:  类前缀,兼容处理
+* $base-font-size: 页面默认字体
+* $base-line-height: 页面默认行间距
+* $base-body-max-width: 页面默认最大宽度,防止手机页面在pc上显示过大,设置为none时取消限制
+
+### 文本边距等大小的map ###
+$am-sizes
+
+### 颜色的map ###
+$am-colors
+
+### position的map ###
+$layout-map-position
+
+### display的map ###
+$layout-map-display
+
+### 文本相关 ###
+$am-text-weights
+$am-text-styles
+$am-text-decorations
+
+### 尺寸的相关设置 ### 
+$layout-size-max-length:  css类支持的最大宽度和高度的像素值,比如设置为200,则layout-size-width-auto-200,最大支持200
+$layout-size-percent:  最大百分比
+$layout-size-rem:  最大rem
+
+### flex布局相关设置 ###
+
+### border相关设置 ###
+
+* $am-border-widths: border宽度的map
+* $am-border-styles: border样式的map
+* $am-radius: border圆角的map
+
+### 组件样式 ###
+各个UI组件的相关的设置
+
 
 8.3多主题
 ------
+参见 10.2 定制MainEntry.style与多主题的实现
 
 
 8.4.图标与字体库
@@ -413,17 +475,83 @@ $checkradio-style: null;
 + Player
 + EmberHTML
 
-10.工程启动代码与功能深度定制
+10.工程启动与多入口多主题的实现
 ======
-在src/index文件中，main函数通过promise依次完成以下加载多个依赖部分。如要加载js文件可通过jsLoader函数加载。如加载失败可调用函数mainError显示错误。
+10.1 工程启动
+------
+框架提供了负责引导工程启动的MainEntry类,在入口index.js中通过调用MainEntry的start函数来启动. main函数使用promise顺序完成以下的多个加载工程. 其中为加载外部js文件,提供了基于promise的加载函数jsLoader和显示加载错误的MainEntry.error方法.
 
-1. mainPre： 在此函数中可通过jsLoader函数加载远程js配置文件或其他相关文件
-2. mainConfig: 配置全局使用的config对象
-3. mainStyle: 加载css，已保证render前，css已经完成加载
-4. mainRouter: 加载router文件，实现地址栏与页面的映射
-5. mainRender: render到html中的root节点
+1. MainEntry.preload: 在此函数中可通过jsLoader函数加载远程js配置文件或其他相关文件
+2. MainEntry.config: 配置全局使用的config对象
+3. MainEntry.style: 加载css，已保证render前，css已经完成加载
 
- 完成启动初始化
+  ```js
+  style() {
+      require('../styles/style');
+      return Promise.resolve();
+  }
+  ```
+
+4. MainEntry.route: 加载route文件，实现地址栏与页面的映射
+
+  ```js
+  route() {
+    require('../routes/route');
+    return Promise.resolve();
+  }
+  ```
+
+5. MainEntry.render: render到html中的root节点
+
+  ```js
+  render(router) {
+    let rootElement = document.getElementById('root');
+    render(createAppRouter(router),rootElement);
+  },
+  ```
+
+以上启动流程的函数都可以在index.js中,在调用start函数前重写,达到定制启动流程的目的
+
+10.2 定制MainEntry.style与多主题的实现
+------
+在style函数中,可以通过环境判断加载不同的主题的css文件,实现多主题的需求. 主题文件较大建议采用webpack的按需加载方式加载style文件.
+
+```css
+style() {
+  return new Promise((resolve,reject)=>{
+    switch(Config.theme){
+      case 'blue':
+        require.ensure([], function(require){ 
+          require('./style/style_blue');
+          resolve();
+        },'style');
+        break;
+    }
+  }
+}
+```
+
+10.3 定制MainEntry.route与多入口的实现
+------
+在route函数中,可以通过环境判断加载不同的route文件,实现不同的入口同时存在. 因为不同入口相互没有交集,可以采用webpack的按需加载方式加载route文件.
+
+```js
+route() {
+  return new Promise((resolve,reject)=>{
+    if(Utils.Webview.isMobile){
+      require.ensure([], function(require){
+        let router = require('./router_mobile').default;
+        resolve(router);
+      },"route");
+    else if(Utils.Webview.isMobile){
+      require.ensure([], function(require){
+        let router = require('./router_pc').default;
+        resolve(router);
+      },"route");
+    }
+  }
+}
+```
 
 11.参考与鸣谢
 ======

@@ -5,7 +5,7 @@ export default stateHoc(class MainContainer extends StateHocBasetateHocContainer
     super(ownProps);
     
     this.Wraps.home = this.ActionWraps.actionsHttpifFetchWrap({
-      updateOnStart: true,
+      updateOnStart: false,
       options:{
         resource: 'home',
       }
