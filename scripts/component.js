@@ -1,10 +1,8 @@
 /**
- * Copyright (c) 2017-present, able99
+ * Copyright (c) 2017, able99
  * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under MIT.
  */
 
 'use strict';
@@ -15,15 +13,16 @@ var path = require('path');
 var appPath = process.cwd();
 let name = process.argv[2];
 
-console.log(`-------generating component: name=${name}-------`);
-console.log(`------------------------------------------------`);
+console.log(`-------generating component-----------------`);
+console.log(`name=${name}`);
+console.log(`--------------------------------------------`);
 
 let componentPath = path.join(__dirname, '..', 'template', "components", `BC${name}.js`);
 
 if(!fs.existsSync(componentPath)){
-	console.error(`generating component: error=no component name`);
+	console.error(`!generating component: error=no component name`);
 	let components = fs.readdirSync(path.join(__dirname, '..', 'template', "components"));
-	console.log(`list components:`);
+	console.log(`|list components:`);
 	console.log(
 		components
 		.map(function(v){
@@ -39,10 +38,10 @@ if(!fs.existsSync(componentPath)){
 try{
 	fs.copySync(componentPath, path.join(appPath,'src','pages','components',`BC${name}.js`));
 }catch(e){
-	console.error(`generating component: error=${+e.message}`);
+	console.error(`!generating component: error=${+e.message}`);
 	return;
 }
 
-console.log(`-------done and code is:(pls justify relative path by your self)-------`);
+console.log(`*******done and code is:(pls justify relative path by your self)*******`);
 console.log(`import BC${name} from './components/BC${name}'`);
-console.log(`------------------------------------------------`);
+console.log(`-----------------------------------------------------------------------`);

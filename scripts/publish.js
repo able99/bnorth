@@ -2,9 +2,7 @@
  * Copyright (c) 2017, able99
  * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under MIT.
  */
 
 'use strict';
@@ -15,7 +13,16 @@ var path = require('path');
 var appPath = process.cwd();
 var appConfigPath = path.join(appPath,"config.xml");
 
-var isH5 = process.argv.filter(function(v){return v==="h5"}).length>0;
+var hasH5 = process.argv.indexOf('h5')>=0;
+var hasIos = process.argv.indexOf('ios')>=0;
+var hasAndroid = process.argv.indexOf('android')>=0;
+if(!hasH5&&!hasIos&&!hasAndroid){
+	hasH5 = true;
+	hasIos = true;
+	hasAndroid = true;
+}
+
+var isH5 = true;
 var isApp = fs.existsSync(appConfigPath);
 var isAndroid = false;
 var isIos = false;
@@ -26,11 +33,89 @@ if(isApp){
 	var isIos = /<engine.*name="ios".*\/>/.test(data);
 }
 
-console.log(`publishing h5=${isH5} android=${isAndroid} ios=${isIos}`);
 
-if(isH5)fs.copySync(path.join(appPath,'www'),path.join(appPath,"release/h5"));
+console.log(`------------publishing----------------------`);
+console.log(`name=${name} h5=${isH5} android=${isAndroid} ios=${isIos}`);
+console.log(`publish h5=${hasH5} publish ios=${hasIos} publish android=${hasAndroid}`);
+console.log(`--------------------------------------------`);
 
-if(isAndroid)fs.copySync(path.join(appPath,'platforms/android/build/outputs/apk/android-release.apk'),path.join(appPath,`release/${name}.apk`));
+console.log(`* build`);
+if(isH5){
+	console.log(`** h5 build`);
+	var proc = spawn.sync('npm', ['run','build'], {stdio: 'inherit'});
+	if (proc.status !== 0) {
+	    console.error('!error');
+	    process.exit(proc.status);
+	}
+}
 
-if(isIos)fs.copySync(path.join(appPath,'platforms/ios/build/device/HaveFunner.ipa'),path.join(appPath,`release/${name}.ipa`));
+if(isIos && hasIos){
+	console.log(`** app build`);
+	var proc = spawn.sync('npm', ['run', 'app', 'build', 'ios', '--release', '--device'], {stdio: 'inherit'});
+	if (proc.status !== 0) {
+	    console.error('!error');
+	    process.exit(proc.status);
+	}
+}
+
+if(isAndroid && hasAndroid){
+	console.log(`** app build`);
+	var proc = spawn.sync('npm', ['run', 'app', 'build', 'android', '--release', '--device'], {stdio: 'inherit'});
+	if (proc.status !== 0) {
+	    console.error('!error');
+	    process.exit(proc.status);
+	}
+}
+
+console.log(`* publish`);
+if(isH5&&hasH5){
+	let script = path.join(appPath, 'publish', 'h5.js');
+	if(fs.existsSync(script)){
+		let proc = spawn.sync(
+		  'node',
+		  [script, name],
+		  {stdio: 'inherit'}
+		);
+		if (proc.status !== 0) {
+		    console.error('!error');
+		    process.exit(proc.status);
+		}
+	}else{
+		console.error('!no script');
+	}
+}
+if(isIos&&hasIos){
+	let script = path.join(appPath, 'publish', 'ios.js');
+	if(fs.existsSync(script)){
+		let proc = spawn.sync(
+		  'node',
+		  [script, name],
+		  {stdio: 'inherit'}
+		);
+		if (proc.status !== 0) {
+		    console.error('!error');
+		    process.exit(proc.status);
+		}
+	}else{
+		console.error('!no script');
+	}
+}
+if(isAndroid&&hasAndroid){
+	let script = path.join(appPath, 'publish', 'android.js');
+	if(fs.existsSync(script)){
+		let proc = spawn.sync(
+		  'node',
+		  [script, name],
+		  {stdio: 'inherit'}
+		);
+		if (proc.status !== 0) {
+		    console.error('!error');
+		    process.exit(proc.status);
+		}
+	}else{
+		console.error('!no script');
+	}
+}
+
+console.log(`--------------------------------------------`);
 

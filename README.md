@@ -9,17 +9,25 @@
 
 2.安装及初始化工程
 ======
-***依赖NODEJS>4.0, 请先安装[NODEJS](https://nodejs.org/en/)***
 
-安装命令:
+***请安装好相关项目,被确保环境变量已经配置***
+
+- 依赖NODEJS>4.0, 请先安装[NODEJS](https://nodejs.org/en/)
+- APP编译依赖Cordova, 请先安装cordova通过命令npm install -g cordova 具体参见[Cordova](http://cordova.apache.org/)
+- Android APP编译依赖[Android SDK](http://developer.android.com)
+- IOS APP编译需要运行在MAXOS系统,并安装好XCode与XCode Command Tool
+
+---------------
+
+
 ```sh
-1. npm init [-f]
-2. npm install --save https://github.com/able99/bnorth
-3. node node_modules/bnorth/bin/bnorth_init [all|android|ios]
+  1. npm init [-f]
+  2. npm install --save bnorth
+  3. node node_modules/bnorth/bin/bnorth_init [all|android|ios]
 ```
 
 1. 使用npm命令初始化工程信息,包括工程名称，作者等信息
-2. 将bnorth添加到工程依赖库
+2. 安装bnorth库
 3. 调用bnorth的初始化脚本，将构建bnorth工程，包括引入bnorth库，初始化工程代码等。android和ios参数为建立android或ios混合应用，all为全部2个平台，没有参数表示仅建立H5工程
 
   安装后使用命令 * npm start * 在浏览器中模拟运行
@@ -59,26 +67,23 @@ npm run build
 优化并打包高效且混淆后的h5发布文件
 
 ```sh
-npm run appprepare
+npm run app
 ```
-
-```sh
-npm run appbuild
-```
-
-```sh
-npm run allbuild
-```
-
-```sh
-npm run publish
-```
+执行cordova命令,并自动处理配置好的签名参数. 默认执行cordova build
 
 ```sh
 npm run plugin [plugin name]
 ```
 模板建立cordova插件，为混合应用提供扩展功能
 
+```sh
+npm run publish [h5] [android] [ios]
+```
+编译并发布到项目的release目录,没有参数将全部发布
+
+- 可修改publish/h5文件,修改默认h5发布脚本
+- 可修改publish/ios文件,修改默认ios发布脚本
+- 可修改publish/android文件,修改默认android发布脚本
 
 5.路由与页面
 ======

@@ -1,10 +1,8 @@
 /**
- * Copyright (c) 2017-present, able99
+ * Copyright (c) 2017, able99
  * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under MIT.
  */
 
 'use strict';
@@ -13,6 +11,7 @@ var fs = require('fs-extra');
 var path = require('path');
 var spawn = require('cross-spawn');
 var chalk = require('chalk');
+let nunjucks = require('nunjucks');
 
 var isDoWelcome = process.argv.indexOf("welcome") >= 0;
 var isDoProject = process.argv.indexOf("project") >= 0;
@@ -36,12 +35,12 @@ if(isDoWelcome){
 //=====================================================
 // project
 if(isDoProject){
-  console.log(`generating project file...`);
-  console.log(`--------------------------------------------`);
+  console.log(`* generating project file...`);
 
   // project file
   fs.copySync(path.join(__dirname, '..', 'gitignore'), path.join(appPath, '.gitignore'));
   fs.copySync(path.join(__dirname, '..', 'README.md'), path.join(appPath, 'README.md'));
+  fs.copySync(path.join(__dirname, '..', 'template', 'publish/'), path.join(appPath, 'publish/'));
 
   // package file
   appPackage.homepage = "./";
@@ -57,12 +56,10 @@ if(isDoProject){
     "page": "bnorth page",
     "component": "bnorth component",
     
+    "app": "bnorth app",
     "plugin": "bnorth plugin",
-    "appprepare": "bnorth appprepare",
-    "appbuild": "bnorth appbuild",
-    "allbuild": "bnorth build && bnorth appbuild",
-
-    "publish": "bnorth build && bnorth appbuild build --release --device && bnorth publish"
+    
+    "publish": "bnorth publish"
   };
   fs.writeFileSync(
     path.join(appPath, 'package.json'),
@@ -70,8 +67,7 @@ if(isDoProject){
   );
 
   // npm install
-  console.log(`npm run...`);
-  console.log(`--------------------------------------------`);
+  console.log(`* npm run...`);
   var proc = spawn.sync('npm', ['i'], {stdio: 'inherit'});
   if (proc.status !== 0) {
     console.error('error!');
@@ -82,8 +78,7 @@ if(isDoProject){
 //===============================
 // src
 if(isDoSrc){
-  console.log(`generating src file...`);
-  console.log(`--------------------------------------------`);
+  console.log(`* generating src file...`);
   fs.copySync(path.join(__dirname, '..', 'public/'), path.join(appPath, 'public/'));
   fs.copySync(path.join(__dirname, '..', 'src/styles/'), path.join(appPath, 'src/styles/'));
   fs.copySync(path.join(__dirname, '..', 'src/routes/'), path.join(appPath, 'src/routes/'));
@@ -95,36 +90,47 @@ if(isDoSrc){
 //===============================
 // lib
 if(isDoLib){
-  console.log(`generating lib file...`);
-  console.log(`--------------------------------------------`);
+  console.log(`* generating lib file...`);
   fs.copySync(path.join(__dirname, '..', 'src', "bnorth/"), path.join(appPath, 'src', 'bnorth/'));
 }
 
 //===============================
 // app
 if(isDoAndroid||isDoIos){
-  console.log(`create app file...`);
+  console.log(`* generating app file...`);
 
-  if(!fs.existsSync(path.jpin(appPath, 'sign/'))){
+  if(!fs.existsSync(path.join(appPath, 'sign/'))){
     fs.copySync(path.join(__dirname, '..', 'sign/'), path.join(appPath, 'sign/'));
   }
 
-  var appCordovaXml = path.join(__dirname, '..', 'template', "config.xml");
-  fs.copySync(path.join(__dirname, '..', 'template', "base-cordova"), appPath);
-    var data = fs.readFileSync(appCordovaXml).toString();
-    //name
-    data = data.replace("<name>bnorth</name>",`<name>${appName}</name>`);
-    data = data.replace('id="com.able99.bnorth"',`id="com.able99.${appName}"`);
-    //android engine
-    if(!isDoAndroid)data = data.replace(/<engine.*name="android".*\/>/,"");
-    if(!isDoIos)data = data.replace(/<engine.*name="ios".*\/>/,"");
-    fs.writeFileSync(path.join(appPath, 'config.xml'), data);
+  if(!fs.existsSync(path.join(appPath, 'www/'))){
+    fs.mkdirSync(path.join(appPath, 'www/'));
+  }
 
-  console.log(`app prepare...`);
+  if(!fs.existsSync(path.join(appPath, 'res/'))){
+    fs.copySync(path.join(__dirname, '..', 'template', 'cordova-res'), path.join(appPath, 'res/'));
+  }
+
+  if(!fs.existsSync(path.join(appPath, 'config.xml'))){
+    let tpl = fs.readFileSync(path.join(__dirname, '..', 'template', "cordova-project", 'config.xml')).toString();
+    let data = nunjucks.renderString(tpl, { 
+      name: appName||'bnorth',
+      version: appPackage.version||'1.0.0',
+      code: (new Date).getTime() / 1000 / 60,
+      email: appPackage.email||'',
+      author: appPackage.author||'',
+      ios: isDoIos,
+      android: isDoAndroid,
+    });
+    fs.writeFileSync(path.join(appPath, 'config.xml'), data);
+  }
+
+  console.log(`* trigger app prepare...`);
   var command = 'npm';
   var args = [
     'run',
-    'appprepare',
+    'app',
+    'prepare',
   ];
   if(isDoAndroid&&!isDoIos)args.push("android");
   if(!isDoAndroid&&isDoIos)args.push("ios");
@@ -140,38 +146,52 @@ if(isDoAndroid||isDoIos){
 let doc = 
 `
 npm run init [project] [src] [lib] [android] [ios]
+
 重新初始化工程指定部分
-project: 拷贝功能的配置文件，包括gitignore,签名配置文件等
+project: 初始化工程的配置文件，包括readme,gitignore,签名配置文件等
 src: 初始化为示例工程代码
 lib: 更新bnorth库文件
 android: 初始化android工程的配置，初始化后工程将支持生成android安装包
 ios: 初始化ios工程的配置，初始化后工程将支持生成ios安装包
 
+
 npm start
+
 启动调试服务器，并自动在浏览器中打开，可查看和调试工程代码
 
+
 npm run page name [des]
+
 模板建立名称为name参数的页面源码到工程src/pages[/des]中
 
+
 npm run component name
+
 将bnorth库中提供的额外功能组件添加到工程中使用，如百度地图等
 
+
 npm run build
+
 优化并打包高效且混淆后的h5发布文件
 
-npm run appprepare
 
-npm run appbuild
+npm run app
 
-npm run allbuild
+执行cordova命令,并自动处理配置好的签名参数. 默认执行cordova build
 
-npm run publish
 
 npm run plugin [plugin name]
+
 模板建立cordova插件，为混合应用提供扩展功能
+
+
+npm run publish [h5] [android] [ios]
+
+编译并发布到项目的release目录,没有参数将全部发布
 `
+
 if(isDoHelp) {
-  console.log(`------------------ bnoth----------------`);
+  console.log(`*******bnoth****************************`);
   console.log(doc);
   console.log(`more info see ${chalk.cyan('https://github.com/able99/bnorth/blob/master/README.md')}`);
   console.log(`----------------------------------------`);
