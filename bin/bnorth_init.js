@@ -1,3 +1,11 @@
+#!/usr/bin/env node
+/**
+ * Copyright (c) 2017, able99
+ * All rights reserved.
+ *
+ * This source code is licensed under MIT.
+ */
+ 
 'use strict';
 
 var spawn = require('cross-spawn');

@@ -44,7 +44,7 @@ if(isDoProject){
 
   // package file
   appPackage.homepage = "./";
-  appPackage.dependencies = Object.assign(appPackage.dependencies||{}, bnorthPackage.devDependencies);
+  appPackage.dependencies = Object.assign(appPackage.dependencies||{}, bnorthPackage.devDependencies, {bnorth: '*'});
   appPackage.scripts = {
     "init": "bnorth init",
 

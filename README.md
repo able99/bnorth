@@ -16,6 +16,7 @@
 - APP编译依赖Cordova, 请先安装cordova通过命令npm install -g cordova 具体参见[Cordova](http://cordova.apache.org/)
 - Android APP编译依赖[Android SDK](http://developer.android.com)
 - IOS APP编译需要运行在MAXOS系统,并安装好XCode与XCode Command Tool
+- 框架中使用images库处理APP图标对不同尺寸的要求,该库是跨平台的图形处理库,对高版本的node支持可能会有问题,如果安装失败,请更换node版本为LTS版本
 
 ---------------
 

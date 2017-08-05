@@ -10,7 +10,11 @@
 var fs = require('fs-extra');
 var spawn = require('cross-spawn');
 var path = require('path');
-var sharp = require('sharp');
+try{
+	var images = require("images");
+}catch(e){
+	console.error('icon process tool loading fail, pls reinstall images(npm install images) and make suer your node version is supported by images, or manual processing of icons ');
+}
 
 var args = process.argv.slice(2);
 var appPath = process.cwd();
@@ -58,15 +62,18 @@ console.log(`--------------------------------------------`);
 
 function prepareMakeRes(){
 	if(!fs.existsSync(`${resPath}${iconTemplate}`)){
-		return Promise.resolve();
+		
 	}else{
 		console.log('* make res...');
-		return Promise
-		.all(icons.map((v)=>{
-			return sharp(path.join(appPath,`${resPath}${iconTemplate}`))
-			.resize(v.size)
-			.toFile(path.join(appPath,`${resPath}icon${v.name}.png`));
-		}))
+		if(images){
+			icons.forEach((v)=>{
+				images(path.join(appPath,`${resPath}${iconTemplate}`)) 
+			    .size(v.size)
+			    .save(path.join(appPath,`${resPath}icon${v.name}.png`));
+			})
+		}else{
+			console.error('!no images lib for icon processing');
+		}
 	}
 }
 
@@ -94,46 +101,34 @@ function prepareDoCordovaPrepare(){
 }
 
 function runPrepare() {
-	return prepareMakeRes()
-	.then(()=>{
-		return prepareDoCordovaPrepare();
-	})
+	prepareMakeRes();
+	prepareDoCordovaPrepare();
 }
 
 function runOther(){
-	return new Promise((resolve,reject)=>{
-		console.log('* cordova');
-		console.log("| sign:",sign||'no sign config');
-		console.log("| h5:",Boolean(h5));
+	console.log('* cordova');
+	console.log("| sign:",sign||'no sign config');
+	console.log("| h5:",Boolean(h5));
 
-		if(h5){
-			console.log(`** h5 build`);
-			var proc = spawn.sync('npm', ['run','build'], {stdio: 'inherit'});
-			if (proc.status !== 0) {
-			    console.error('error!');
-			    process.exit(proc.status);
-			}
-		}
-
-		if(args.length<=0)args.push("build");
-		if(sign&&(args.indexOf('build')>=0||args.indexOf('run')>=0)){args.push("--buildConfig");args.push(signPath)};
-		var proc = spawn.sync('cordova', args, {stdio: 'inherit'});
+	if(h5){
+		console.log(`** h5 build`);
+		var proc = spawn.sync('npm', ['run','build'], {stdio: 'inherit'});
 		if (proc.status !== 0) {
 		    console.error('error!');
 		    process.exit(proc.status);
 		}
+	}
 
-		resolve();
-	})
+	if(args.length<=0)args.push("build");
+	if(sign&&(args.indexOf('build')>=0||args.indexOf('run')>=0)){args.push("--buildConfig");args.push(signPath)};
+	var proc = spawn.sync('cordova', args, {stdio: 'inherit'});
+	if (proc.status !== 0) {
+	    console.error('!error');
+	    process.exit(proc.status);
+	}
 }
 
-(args.indexOf('prepare')>=0?runPrepare:runOther)()
-.then(()=>{
-	console.log(`--------------------------------------------`);
-})
-.catch((error)=>{
-	console.error('app error:',error);
-})
-
+(args.indexOf('prepare')>=0?runPrepare:runOther)();
+console.log(`--------------------------------------------`);
 
 
