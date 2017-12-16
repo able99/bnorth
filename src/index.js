@@ -1,24 +1,14 @@
-import { Config, MainEntry } from './bnorth';
+export * from './base/router';
 
-//========================
-// hook
-//========================
+export { default } from './base/app';
 
-
-//==============================
-// App Life Cycle
-//==============================
-
-
-
-//========================
-// main
-//========================
-MainEntry.config = function(result) {
-  Config.Url.base = 'http://your-website/';
-  Config.Url.api = 'api/';
-  
-  return Promise.resolve(Config);
-}
-MainEntry.start();
+export { default as pluginBrowser } from './plugins/browser';
+export { default as pluginData } from './plugins/data';
+export { default as pluginFormat } from './plugins/format';
+export { default as pluginNavigator } from './plugins/navigator';
+export { default as pluginNetwork } from './plugins/network';
+export { default as pluginRequest } from './plugins/request';
+export { default as pluginStorage } from './plugins/storage';
+export { default as pluginUser } from './plugins/user';
+export { default as pluginUtils } from './plugins/utils';
 

@@ -1,29 +1,23 @@
 #!/usr/bin/env node
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) 2017, able99
  * All rights reserved.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under MIT.
  */
 
 'use strict';
-
 let spawn = require('cross-spawn');
 let script = process.argv[2];
 let args = process.argv.slice(3);
 let fs = require('fs-extra');
-let chalk = require('chalk');
 
 
 let scriptPath = `../scripts/${script}` 
 if(!fs.existsSync(require.resolve(scriptPath))){
   console.log(`Unknown command '${script}'`);
-  console.log(`Update or see ${chalk.cyan('https://github.com/able99/bnorth/blob/master/README.md')}`);
   return;
 }
-
 
 let result = spawn.sync(
   'node',

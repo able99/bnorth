@@ -1,168 +1,197 @@
-// @remove-on-eject-begin
-/**
- * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
-// @remove-on-eject-end
-'use strict';
+const chalk = require('chalk');
+const fs = require('fs-extra');
+const stripAnsi = require('strip-ansi');
+const path = require('path');
+const filesize = require('filesize');
+const gzipSize = require('gzip-size').sync;
+const webpack = require('webpack');
+const getPaths = require('../config/paths');
+const getConfig = require('../config/config');
 
-// Do this as the first thing so that any code reading it knows the right env.
-process.env.NODE_ENV = 'production';
 
-// Load environment variables from .env file. Suppress warnings using silent
-// if this file is missing. dotenv will never modify any environment variables
-// that have already been set.
-// https://github.com/motdotla/dotenv
-require('dotenv').config({silent: true});
+// env
+//-----------------------------------
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 
-var chalk = require('chalk');
-var fs = require('fs-extra');
-var path = require('path');
-var url = require('url');
-var webpack = require('webpack');
-var config = require('../config/webpack.config.prod');
-var paths = require('../config/paths');
-var checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
-var FileSizeReporter = require('react-dev-utils/FileSizeReporter');
-var measureFileSizesBeforeBuild = FileSizeReporter.measureFileSizesBeforeBuild;
-var printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
+const argv = require('yargs')
+  .usage('Usage: roadhog build [options]')
+  .option('debug', {
+    type: 'boolean',
+    describe: 'Build without compress',
+    default: false,
+  })
+  .option('watch', {
+    type: 'boolean',
+    alias: 'w',
+    describe: 'Watch file changes and rebuild',
+    default: false,
+  })
+  .option('analyze', {
+    type: 'boolean',
+    describe: 'Visualize and analyze your Webpack bundle.',
+    default: false,
+  })
+  .help('h')
+  .argv;
 
-var useYarn = fs.existsSync(paths.yarnLockFile);
 
-// Warn and crash if required files are missing
-if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
-  process.exit(1);
-}
-
-// First, read the current file sizes in build directory.
-// This lets us display how much they changed later.
-measureFileSizesBeforeBuild(paths.appBuild).then(previousFileSizes => {
-  // Remove all content but keep the directory so that
-  // if you're in it, you don't end up in Trash
-  fs.emptyDirSync(paths.appBuild);
-
-  // Start the webpack build
-  build(previousFileSizes);
-
-  // Merge with the public folder
-  copyPublicFolder();
-});
-
-// Print out errors
+// utils 
+//-----------------------------------
 function printErrors(summary, errors) {
   console.log(chalk.red(summary));
   console.log();
-  errors.forEach(err => {
+  errors.forEach((err) => {
     console.log(err.message || err);
     console.log();
   });
 }
 
-// Create the production build and print the deployment instructions.
-function build(previousFileSizes) {
-  console.log('Creating an optimized production build...');
-  webpack(config).run((err, stats) => {
-    if (err) {
-      printErrors('Failed to compile.', [err]);
+function runArray(stats, fn) {
+  if (stats && Array.isArray(stats)) {
+    return stats.map(fn);
+  } else {
+    return fn(stats);
+  }
+}
+
+function removeFileNameHash(fileName, appBuild) {
+  return fileName
+    .replace(appBuild, '')
+    .replace(/\/?(.*)(\.\w+)(\.js|\.css)/, (match, p1, p2, p3) => p1 + p3);
+}
+
+function getDifferenceLabel(currentSize, previousSize) {
+  const FIFTY_KILOBYTES = 1024 * 50;
+  const difference = currentSize - previousSize;
+  const fileSize = !Number.isNaN(difference) ? filesize(difference) : 0;
+  if (difference >= FIFTY_KILOBYTES) {
+    return chalk.red(`+${fileSize}`);
+  } else if (difference < FIFTY_KILOBYTES && difference > 0) {
+    return chalk.yellow(`+${fileSize}`);
+  } else if (difference < 0) {
+    return chalk.green(fileSize);
+  } else {
+    return '';
+  }
+}
+
+
+// build size 
+//-----------------------------------
+let buildSizeMap = null;
+function buildSizeCalcSaveBefore(appBuild) {
+  if(!fs.existsSync(appBuild)) return;
+  buildSizeMap = (fs.readdirSync(appBuild) || [])
+  .filter(fileName => /\.(js|css)$/.test(fileName))
+  .reduce((memo, fileName) => {
+    const contents = fs.readFileSync(path.join(appBuild,fileName));
+    const key = removeFileNameHash(fileName, appBuild);
+    memo[key] = gzipSize(contents);
+    return memo;
+  }, {});
+
+  fs.emptyDirSync(appBuild);
+}
+function buildSizeCalcPrint(appBuild, stats) {
+  const assets = stats.toJson().assets
+  .filter(asset => /\.(js|css)$/.test(asset.name))
+  .map((asset) => {
+    const fileContents = fs.readFileSync(`${appBuild}/${asset.name}`);
+    const size = gzipSize(fileContents);
+    const previousSize = buildSizeMap&&buildSizeMap[removeFileNameHash(asset.name)];
+    const difference = getDifferenceLabel(size, previousSize);
+    return {
+      folder: path.join(appBuild, path.dirname(asset.name)),
+      name: path.basename(asset.name),
+      size,
+      sizeLabel: filesize(size) + (difference ? ` (${difference})` : ''),
+    };
+  });
+
+  assets.sort((a, b) => b.size - a.size);
+  
+  const longestSizeLabelLength = Math.max.apply(
+    null,
+    assets.map(a => stripAnsi(a.sizeLabel).length)
+  );
+
+  assets.forEach((asset) => {
+    let sizeLabel = asset.sizeLabel;
+    const sizeLength = stripAnsi(sizeLabel).length;
+    if (sizeLength < longestSizeLabelLength) {
+      const rightPadding = ' '.repeat(longestSizeLabelLength - sizeLength);
+      sizeLabel += rightPadding;
+    }
+    console.log(`  ${sizeLabel}  ${chalk.dim(asset.folder + path.sep)}${chalk.cyan(asset.name)}`);
+  });
+}
+
+
+// handle 
+//-----------------------------------
+function webpackHandleer(err, stats) {
+  if (err) {
+    printErrors('Failed to compile.', [err]);
+    if (!argv.watch) {
       process.exit(1);
     }
+    return;
+  }
 
-    if (stats.compilation.errors.length) {
-      printErrors('Failed to compile.', stats.compilation.errors);
-      process.exit(1);
+  runArray(stats.stats || stats, (item) => {
+    if (item.compilation.errors.length) {
+      printErrors('Failed to compile.', item.compilation.errors);
+      if (!argv.watch) {
+        process.exit(1);
+      }
     }
+  });
 
-    if (process.env.CI && stats.compilation.warnings.length) {
-     printErrors('Failed to compile. When process.env.CI = true, warnings are treated as failures. Most CI servers set this automatically.', stats.compilation.warnings);
-     process.exit(1);
-   }
 
+  if (stats.stats) {
     console.log(chalk.green('Compiled successfully.'));
+  } else {
+    console.log(chalk.green(`Compiled successfully in ${(stats.toJson().time / 1000).toFixed(1)}s.`));
     console.log();
 
     console.log('File sizes after gzip:');
     console.log();
-    printFileSizesAfterBuild(stats, previousFileSizes);
+    buildSizeCalcPrint(stats);
     console.log();
+  }
 
-    var appPackage  = require(paths.appPackageJson);
-    var publicUrl = paths.publicUrl;
-    var publicPath = config.output.publicPath;
-    var publicPathname = url.parse(publicPath).pathname;
-    if (publicUrl && publicUrl.indexOf('.github.io/') !== -1) {
-      // "homepage": "http://user.github.io/project"
-      console.log('The project was built assuming it is hosted at ' + chalk.green(publicPathname) + '.');
-      console.log('You can control this with the ' + chalk.green('homepage') + ' field in your '  + chalk.cyan('package.json') + '.');
-      console.log();
-      console.log('The ' + chalk.cyan('build') + ' folder is ready to be deployed.');
-      console.log('To publish it at ' + chalk.green(publicUrl) + ', run:');
-      // If script deploy has been added to package.json, skip the instructions
-      if (typeof appPackage.scripts.deploy === 'undefined') {
-        console.log();
-        if (useYarn) {
-          console.log('  ' + chalk.cyan('yarn') +  ' add --dev gh-pages');
-        } else {
-          console.log('  ' + chalk.cyan('npm') +  ' install --save-dev gh-pages');
-        }
-        console.log();
-        console.log('Add the following script in your ' + chalk.cyan('package.json') + '.');
-        console.log();
-        console.log('    ' + chalk.dim('// ...'));
-        console.log('    ' + chalk.yellow('"scripts"') + ': {');
-        console.log('      ' + chalk.dim('// ...'));
-        console.log('      ' + chalk.yellow('"predeploy"') + ': ' + chalk.yellow('"npm run build",'));
-        console.log('      ' + chalk.yellow('"deploy"') + ': ' + chalk.yellow('"gh-pages -d build"'));
-        console.log('    }');
-        console.log();
-        console.log('Then run:');
-      }
-      console.log();
-      console.log('  ' + chalk.cyan(useYarn ? 'yarn' : 'npm') +  ' run deploy');
-      console.log();
-    } else if (publicPath !== '/') {
-      // "homepage": "http://mywebsite.com/project"
-      console.log('The project was built assuming it is hosted at ' + chalk.green(publicPath) + '.');
-      console.log('You can control this with the ' + chalk.green('homepage') + ' field in your '  + chalk.cyan('package.json') + '.');
-      console.log();
-      console.log('The ' + chalk.cyan('build') + ' folder is ready to be deployed.');
-      console.log();
-    } else {
-      if (publicUrl) {
-        // "homepage": "http://mywebsite.com"
-        console.log('The project was built assuming it is hosted at ' + chalk.green(publicUrl) +  '.');
-        console.log('You can control this with the ' + chalk.green('homepage') + ' field in your '  + chalk.cyan('package.json') + '.');
-        console.log();
-      } else {
-        // no homepage
-        console.log('The project was built assuming it is hosted at the server root.');
-        console.log('To override this, specify the ' + chalk.green('homepage') + ' in your '  + chalk.cyan('package.json') + '.');
-        console.log('For example, add this to build it for GitHub Pages:')
-        console.log();
-        console.log('  ' + chalk.green('"homepage"') + chalk.cyan(': ') + chalk.green('"http://myname.github.io/myapp"') + chalk.cyan(','));
-        console.log();
-      }
-      var build = path.relative(process.cwd(), paths.appBuild);
-      console.log('The ' + chalk.cyan(build) + ' folder is ready to be deployed.');
-      console.log('You may serve it with a static server:');
-      console.log();
-      if (useYarn) {
-        console.log(`  ${chalk.cyan('yarn')} global add serve`);
-      } else {
-        console.log(`  ${chalk.cyan('npm')} install -g serve`);
-      }
-      console.log(`  ${chalk.cyan('serve')} -s build`);
-      console.log();
-    }
-  });
+  if (argv.analyze) {
+    console.log(`Analyze result is generated at ${chalk.cyan('dist/stats.html')}.`);
+    console.log();
+  }
 }
 
-function copyPublicFolder() {
-  fs.copySync(paths.appPublic, paths.appBuild, {
-    dereference: true,
-    filter: file => file !== paths.appHtml
-  });
+
+// run 
+//-----------------------------------
+function build() {
+  const cwd = process.cwd();
+  const paths = getPaths(cwd);
+  let config = getConfig(cwd, paths, 'prod');
+  let webpackConfig = require('../config/webpack.config.prod')(cwd, paths, config, argv);
+
+  buildSizeCalcPrint = buildSizeCalcPrint.bind(null, config.outputPath);
+  buildSizeCalcSaveBefore(config.outputPath);
+
+  if (argv.debug) {
+    console.log('Creating an development build without compress...');
+  } else {
+    console.log('Creating an optimized production build...');
+  }
+
+  const compiler = webpack(webpackConfig);
+  if (argv.watch) {
+    compiler.watch(200, webpackHandleer);
+  } else {
+    compiler.run(webpackHandleer);
+  }
+}
+
+if (require.main === module) {
+  build();
 }

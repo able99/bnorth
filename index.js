@@ -1,1 +1,0 @@
-console.log('bnorth is a project generator, not js lib');
