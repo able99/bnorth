@@ -5,7 +5,7 @@ let defaultConfig = {
   devtool: false,
   outputPath: './dist',
   outputFilename: '[name].[hash:8].js',
-  outputPublicPath: '/',
+  outputPublicPath: './',
   outputChunkFilename: '[name].[chunkhash:8].async.js',
   resolveExtensions: ['.js', '.json', '.jsx'],
   resolveExtensionsExtra: [],

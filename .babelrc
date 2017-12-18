@@ -4,6 +4,7 @@
     ["transform-runtime", {
       "polyfill": false,
       "regenerator": true
-    }]
+    }],
+    "babel-plugin-add-module-exports"
   ]
 }

@@ -7,8 +7,8 @@ export default (
     <Route 
       key='/'
       title='首页'
-      component={require('./pages/home').default}
-      container={require('./pages/_home').default} >
+      component={require('./pages/home')}
+      container={require('./pages/_home')} >
     </Route>
   </Route>
 )

@@ -47,7 +47,7 @@ function config(app) {
 // routes
 // ==========================
 function routes(app) {
-  return import(/* webpackChunkName: "routes" */ './routes').then(v=>{app.routes = v.default});
+  return import(/* webpackChunkName: "routes" */ './routes').then(v=>{app.routes = v});
 }
 
 // app

@@ -33,6 +33,10 @@ if(appPackage.bnorth === true) {
   console.log('is bnorth project, exit');
   process.exit(0);
 }
+if(appPackage.bnorth === false) {
+  console.log('not bnorth project, skip');
+  process.exit(0);
+}
 
 if(isDoWelcome){
   console.log(`------------welcome to bnoth----------------`);
