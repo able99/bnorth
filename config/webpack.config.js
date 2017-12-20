@@ -97,7 +97,7 @@ function getPlugins(cwd, paths, config) {
     ret.push(new CopyWebpackPlugin([
       {
         from: paths.appPublic,
-        to: appBuild,
+        to: config.outputPath,
       },
     ]));
   }

@@ -109,19 +109,6 @@ function setupCompiler(host, port, protocol, config, webpackConfig, cwd, paths, 
   });
 }
 
-function addMiddleware(devServer) {
-  const proxy = require(paths.appPackageJson).proxy;  
-  devServer.use(historyApiFallback({
-    disableDotRule: true,
-    htmlAcceptHeaders: proxy ?
-      ['text/html'] :
-      ['text/html', '*/*'],
-  }));
-  // TODO: proxy index.html, ...
-  devServer.use(devServer.middleware);
-}
-
-
 function runDevServer(host, port, protocol, config, webpackConfig, cwd, paths, argv) {
   const devServer = new WebpackDevServer(compiler, {
     disableHostCheck: true,
