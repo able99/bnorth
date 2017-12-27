@@ -121,6 +121,11 @@ class Navigator{
   // interface
   // ----------------------------
   recallBefore(location,router) {
+    if(this.app.config.login.loginToHomeOrAuto) {
+      this.goHome();
+      return true;
+    }
+    
     let link = this.app.browser&&this.app.browser.parseUrl().query.link;
     if(link){
       this.app.browser&&this.app.browser.replace(decodeURIComponent(link));

@@ -78,11 +78,12 @@ let requestSubmit = (options)=>(app)=>{
       app.error(error);
       if(options.blocking!==false)app.actions.noticeBlocking(false);
       if(typeof(options.error)==="function"){error = options.error(error)||error};
-      if(error)app.actions.noticeMessage(error, {cTheme: 'alert'});
+      if(error&&options.notice!==false)app.actions.noticeMessage(error, {cTheme: 'alert'});
     }
   ).catch((error)=>{
     app.error(error);
-    app.actions.noticeMessage(error, {cTheme: 'alert'});
+    if(options.blocking!==false)app.actions.noticeBlocking(false);
+    if(options.notice!==false)app.actions.noticeMessage(error, {cTheme: 'alert'});
   });  
 }
 

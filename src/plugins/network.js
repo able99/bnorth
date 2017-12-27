@@ -231,7 +231,7 @@ class Network {
     )
     .then(
       (result) => {
-        if(fetchScope.res.ok) {
+        if(fetchScope.res && (fetchScope.res.ok||(fetchScope.res.status>=200&&fetchScope.res.status<300))) {
           let handle = this.handleResult(result,false,options,fetchScope.res);
           if(handle) return Promise.reject(handle===true?null:handle);
 

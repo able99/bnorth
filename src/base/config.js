@@ -38,6 +38,7 @@ config.login.urls = {
   verifyCode: 'auth/',
   logout: 'auth/',
 }
+config.login.loginToHomeOrAuto = false;
 config.login.logoutMethod = 'POST';
 config.login.logoutData = {};
 config.login.logoutToLoginOrHome = false;

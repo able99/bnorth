@@ -99,6 +99,9 @@ class Browser {
   back(step=1){
     window.history.go(-step);
   };
+  reload(delay) {
+    window.location.reload();
+  }
 
   //jsload
   //------------------------------
