@@ -1,6 +1,25 @@
 import Url from 'url-parse';
 
 
+let fetchTimeout = function(input, opts){
+  return new Promise(function(resolve, reject){
+    var timeoutId = setTimeout(function(){
+      reject(new Error("fetch timeout"))
+    }, opts.timeout||90000);
+    fetch(input, opts).then(
+      res=>{
+        clearTimeout(timeoutId);
+        resolve(res)
+      },
+      err=>{
+        clearTimeout(timeoutId);
+        reject(err)
+      }
+    )
+  })
+}
+
+
 class Network {
   constructor(app) {
     this.app = app;
@@ -148,7 +167,7 @@ class Network {
       fetchOption.body = this.paramFetchBody(options);
     }
 
-    return fetch(fetchUrl,fetchOption)
+    return fetchTimeout(fetchUrl,fetchOption)
     .then(
       (res) => {
         fetchScope.res = res;
@@ -219,7 +238,7 @@ class Network {
       fetchOption.body = (body instanceof FormData)?body:this.paramOperateBody(options);
     }
 
-    return fetch(fetchUrl,fetchOption)
+    return fetchTimeout(fetchUrl,fetchOption)
     .then(
       (res) => {
         fetchScope.res = res;

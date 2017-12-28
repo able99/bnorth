@@ -37,7 +37,7 @@ export default (app, Wrapper) => class extends Wrapper {
     this.componentDidPause();
 
     if(this.props.onStop) this.props.onStop(this);
-    let ret = super.componentWillMount && super.componentWillMount();
+    let ret = super.componentWillUnmount && super.componentWillUnmount();
 
     app.pages.splice(app.pages.indexOf(this));
     return ret;
