@@ -14,6 +14,7 @@ function getContainerKey(app, props) {
   }
   return key;
 }
+
 function getContainer(app, props, acontainer, cb) {
   if(!acontainer) return;
   let key = getContainerKey(app, props); 
@@ -42,6 +43,16 @@ function getContainer(app, props, acontainer, cb) {
   return container;
 }
 
+function statesHandler(states, event) {
+  Object.entries(states||{})
+  .forEach(([key,val])=>{
+    if(!key||key[0]==='_') return;
+    let func = val&&val[event];
+    if(func)func.apply(val);
+  })
+}
+
+
 export default function(app, acontainer) {
   if(Array.isArray(acontainer)) return connect(...acontainer);
 
@@ -67,7 +78,7 @@ export default function(app, acontainer) {
   let mapDispatch = (dispatch, props)=>{
     let container = getContainer(app, props, acontainer);
     if(!container) return {app};
-    
+
     return {
       app,
       container,
@@ -78,18 +89,19 @@ export default function(app, acontainer) {
       },
       onStart(page) {
         if(container.handlers.onStart)container.handlers.onStart(app,page,container);
-        Object.values(container.states||{}).forEach((v)=>{v.onStart()});
+        statesHandler(container.states, 'onStart');
       },
       onPause(page) {
         if(container.handlers.onPause)container.handlers.onPause(app,page,container);
+        statesHandler(container.states, 'onPause');
       },
       onResume(page) {
         if(container.handlers.onResume)container.handlers.onResume(app,page,container);
-        Object.values(container.states||{}).forEach((v)=>{v.onResume()});
+        statesHandler(container.states, 'onResume');
       },
       onStop(page) {
         if(container.handlers.onStop)container.handlers.onStop(app,page,container);
-        Object.values(container.states||{}).forEach((v)=>{v.onStop()});
+        statesHandler(container.states, 'onStop');
       }
     }
   }
