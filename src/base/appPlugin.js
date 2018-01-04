@@ -277,4 +277,8 @@ export let appPluginAfter = {
       console.log(...args);
     }
   },
+
+  onNavigated(app, location) {
+    app.pages.forEach(v=>v.props.container.handlers.onRoute&&v.props.container.handlers.onRoute(location))
+  },
 }
