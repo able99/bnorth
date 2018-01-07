@@ -1,7 +1,21 @@
+/**
+ * bnorth solution
+ * @copyright (c) 2016 able99
+ * @author able99 (8846755@qq.com)
+ * @license MIT
+ */
+
+ 
 import React from 'react';
 import { setBrowserTitle } from '../utils/browser';
 
 
+/**
+ * bnorth 中页面组件的基类，bnorth会自动将react 组件通过高级函数pageHoc 进行超类扩展
+ * 页面组件负责纯组件的渲染，使用container 注入的props 即可，一般无需使用state
+ * 页面组件中的props包括react router注入的路由属性，包括router，route，lcation，params等，参见[react-router 3](https://github.com/ReactTraining/react-router/tree/v3/docs)
+ * @class Page
+ */
 export default (app, Wrapper) => class extends Wrapper {
   constructor(props) {
     super(props);
@@ -85,6 +99,10 @@ export default (app, Wrapper) => class extends Wrapper {
     }
   }
 
+  /*!
+   * 返回是否是App 根组件
+   * @method 
+   */
   isAppPage() {
     return this.props.routes[0]===this.props.route;
   }
@@ -95,6 +113,10 @@ export default (app, Wrapper) => class extends Wrapper {
     return this._focus !== oldFocus;
   }
 
+  /**
+   * 返回是否页面在顶层
+   * @method
+   */
   isFocus() {
     if(this.getSubs().hasOwnProperty(this.getPageChildPath())){
       return !Boolean(this.props[this.getPageChildPath()] && this.props[this.getPageChildPath()].props.children);
@@ -103,12 +125,19 @@ export default (app, Wrapper) => class extends Wrapper {
     }
   }
 
+  /**
+   * 返回是否是容器组件
+   * @method
+   */
   isContainer() {
     return (this.props.route.childRoutes||[]).find((v)=>{
       return v.components;
     });
   }
 
+  /**
+   * 容器组件返回其子组件列表
+   */
   getSubs() {
     return (this.props.route.childRoutes||[])
     .filter((v)=>{
@@ -119,10 +148,18 @@ export default (app, Wrapper) => class extends Wrapper {
     });
   }
 
+  /**
+   * 是否是子组件
+   * @method
+   */
   isSubPage() {
     return Boolean(this.props.route.components);
   }
 
+  /**
+   * 返回当前页面的全路径
+   * @method
+   */
   getPageFullPath() {
     let routes = [];
     for(let route of this.props.routes){
@@ -138,6 +175,10 @@ export default (app, Wrapper) => class extends Wrapper {
     return pathname;
   }
 
+  /**
+   * 容器组件返回当前显示中的子组件路径
+   * @method
+   */
   getPageChildPath() {
     let ret = null;
     for(let i=0; i<this.props.routes.length; i++){
@@ -151,6 +192,10 @@ export default (app, Wrapper) => class extends Wrapper {
     return ret?ret.path:null;
   }
 
+  /**
+   * 子组件返回其容器组件的路径
+   * @method
+   */
   getPageParentPath() {
     let ret = null;
     for(let i=0; i<this.props.routes.length; i++){

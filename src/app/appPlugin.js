@@ -1,3 +1,11 @@
+/**
+ * bnorth solution
+ * @copyright (c) 2016 able99
+ * @author able99 (8846755@qq.com)
+ * @license MIT
+ */
+
+ 
 import React,{cloneElement}  from 'react';
 import { render } from 'react-dom';
 import { bindActionCreators,combineReducers,createStore,applyMiddleware } from 'redux'
@@ -8,9 +16,19 @@ import pageHoc from './pageHoc';
 import { AppComponentPage, appComponentContainer } from './appComponent';
 
 
+/**
+ * 应用的基本插件，该插件是第一个添加到应用的插件，实现了应用运行的基本功能
+ * @class pluginApp
+ */
+
 // app action
 //-----------------------------------------
 const ActionAppReady = 'ActionAppReady';
+/**
+ * 改变app ready 状态，app ready后，会关闭waiting 动画，显示渲染的内容
+ * @method appReady
+ * @param {boolean} ready 
+ */
 function appReady(ready) {
   return {
     type: ActionAppReady,
@@ -19,6 +37,14 @@ function appReady(ready) {
 }
 
 const ActionAppLayerAdd = 'ActionAppLayerAdd';
+const ActionAppLayerRemove = 'ActionAppLayerRemove';
+const ActionAppLayerUpdate = 'ActionAppLayerUpdate';
+/**
+ * 在应用之上添加悬浮层
+ * @method
+ * @param {element}  
+ * @param {function} 
+ */
 function appLayerAdd(layer, cb) {
   cb&&cb(layer);
   return {
@@ -26,14 +52,24 @@ function appLayerAdd(layer, cb) {
     layer,
   };
 }
-const ActionAppLayerRemove = 'ActionAppLayerRemove';
+/**
+ * 删除指定悬浮层
+ * @method
+ * @param {element} layer 
+ */
 function appLayerRemove(layer) {
   return {
     type: ActionAppLayerRemove,
     layer,
   };
 }
-const ActionAppLayerUpdate = 'ActionAppLayerUpdate';
+/**
+ * 更新悬浮层的属性
+ * @method
+ * @param {element} layer 
+ * @param {object} props 
+ * @param {function} cb 
+ */
 function appLayerUpdate(layer, props, cb) {
   let newer = cloneElement(layer, {...layer.props,...props});
   cb&&cb(newer);
@@ -44,12 +80,27 @@ function appLayerUpdate(layer, props, cb) {
   };
 }
 
+/**
+ * 显示通知内容
+ * @method
+ * @param {...args} args 
+ */
 let noticeMessage = (...args)=>(app)=>{
   app.trigger('onNoticeMessage', ...args);
 }
+/**
+ * 显示页面加载进度
+ * @method
+ * @param {...args} args 
+ */
 let noticeLoading = (...args)=>(app)=>{
   app.trigger('onNoticeLoading', ...args);
 }
+/**
+ * 显示阻塞操作的加载页面
+ * @method
+ * @param {*} args 
+ */
 let noticeBlocking = (...args)=>(app)=>{
   app.trigger('onNoticeBlocking', ...args);
 }
@@ -90,6 +141,12 @@ export function reducerApp(
 
 // funtions
 //-----------------------------------------
+/**
+ * 组合页面组件与页面容器，返回raect router使用的组件
+ * @param {App} app - App实例
+ * @param {page} page - 页面组件
+ * @param {container} container - 页面容器
+ */
 function createRouteComponent (app, page, container) {
   if(!page) return null;
   page = pageHoc(app, page);
@@ -98,6 +155,9 @@ function createRouteComponent (app, page, container) {
   return container?container(page):page;
 }
 
+/*!
+ * @function
+ */
 function routeProps(route, config, app) {
   if(!route||!route.props) return route;
   if(route.props.onInit) route.props.onInit(app);
@@ -164,6 +224,10 @@ function routeProps(route, config, app) {
 
 // app plugin
 //-----------------------------------------
+/*!
+ * 最先加载的插件
+ * @class
+ */
 export let appPluginBefore = {
   init(app) {
     app.bindActionCreators = function(actions) {
@@ -197,6 +261,10 @@ export let appPluginBefore = {
   }
 }
 
+/*!
+ * 最加载的插件
+ * @class
+ */
 export let appPluginAfter = {
   onCreateStoreBefore(app) {
     Object.assign(app.actions,{
@@ -282,3 +350,4 @@ export let appPluginAfter = {
     app.pages.forEach(v=>v.props.container.handlers.onRoute&&v.props.container.handlers.onRoute(location))
   },
 }
+

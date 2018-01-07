@@ -1,6 +1,6 @@
-export * from './base/router';
+export * from './app/router';
 
-export { default } from './base/app';
+export { default } from './app/app';
 
 export { default as pluginBrowser } from './plugins/browser';
 export { default as pluginData } from './plugins/data';

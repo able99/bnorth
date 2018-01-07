@@ -1,7 +1,34 @@
+/**
+ * bnorth solution
+ * @copyright (c) 2016 able99
+ * @author able99 (8846755@qq.com)
+ * @license MIT
+ */
+
+
 import Url from 'url-parse';
 import { getBrowserTitle, setBrowserTitle } from '../utils/browser';
 
 
+/**
+ * 提供操作浏览器的功能插件
+ * @class
+ * @example
+ * ```js
+ * |使用
+ * app.browser.xxx
+ * |hook
+ * // 在原函数上增加某些处理
+ * app.browser.xxx = function(...args){
+ *   ... // 增加某些处理
+ *   return app.Browser.prototype.xxx.apply(this, args);
+ * }
+ * // 直接修改原函数
+ * app.Browser.prototype.xxx = function(...args) {
+ *   ... // 修改原函数
+ * }
+ * ```
+ */
 class Browser {
   constructor(app) {
     this.app = app;
@@ -10,10 +37,22 @@ class Browser {
 
   //ua
   //------------------------------
+  /**
+   * @property {string} ua 浏览器的user agent
+   */
   get ua() {
     return window.navigator.userAgent;
   }
 
+  /**
+   * 在初始化时，计算浏览器类型的函数，包括
+   * isMobile, isiOS, isAndroid, isWeChat, isAliPay
+   * 可以hook该函数，增加更多的浏览器类型
+   * ```js
+   * this.isWeChat  = /(?:micromessenger)/.test(ua);
+   * ```
+   * @method
+   */
   uaInit() {
     let ua = this.ua.toLowerCase();
     this.isMobile  = /(?:micromessenger|mobile|iphone|ipod|android|coolpad|mmp|smartphone|midp|wap|xoom|symbian|j2me|blackberry|windows phone|win ce)/.test(ua);
@@ -25,6 +64,9 @@ class Browser {
 
   //title
   //------------------------------
+  /**
+   * @property {string} title 设置和读取浏览器标题栏的文字
+   */
   get title(){
     return getBrowserTitle();
   };
@@ -35,6 +77,9 @@ class Browser {
 
   //ico
   //------------------------------
+  /**
+   * @property {string} title 设置和读取浏览器标题栏的图标
+   */
   set icon(url) {
     var ico = document.createElement('link');
     ico.setAttribute("rel", "shortcut icon")
@@ -44,15 +89,30 @@ class Browser {
 
   //url
   //------------------------------
+  /**
+   * 返回当前页面的url地址
+   * @method
+   */
   url(){
     return window.location.href;
   };
-
+  /**
+   * 返回解析后的url的类，[具体参见](https://github.com/unshiftio/url-parse)
+   * @method
+   * @param {string} url - url地址
+   * @return {Url} - url解析类
+   */
   parseUrl(url){
     url = url || this.url();
     return Url(url,true);
   };
-
+  /**
+   * 将url类格式化成字符串
+   * @method
+   * @param {Url} url 
+   * @param {object} [query=null] - 添加到url中的查询字符串 
+   * @returns {string} - url字符串 
+   */
   formatUrl(url, query=null){
     if(!url)return "/";
     if(!query && typeof(url)==='string') return url;
@@ -69,16 +129,29 @@ class Browser {
 
   //parser
   //------------------------------
+  /**
+   * @method
+   * @param {...args} args 
+   */
   queryParse(...args) {
     return Url.qs.parse(...args);
   }
-
+  /**
+   * @method
+   * @param {...args} args 
+   */
   queryStringify(...args) {
     return Url.qs.stringify(...args);
   }
 
   //navi
   //------------------------------
+  /**
+   * 浏览器跳转到指定地址，可返回当前地址
+   * @method
+   * @param {string|Url} url - 地址字符串或者url 解析类
+   * @param {object} [params=null] - 查询字符串
+   */
   push(url,params){
     if(typeof(url)==='object'){
       params = Object.assign({},url.state||{},url.query||{});
@@ -87,6 +160,12 @@ class Browser {
 
     window.location.href = this.formatUrl(url,params);
   };
+  /**
+   * 浏览器替换当前地址到指定地址，无法再返回当前地址
+   * @method
+   * @param {string|Url} url - 地址字符串或者url 解析类
+   * @param {object} [params=null] - 查询字符串
+   */
   replace(url,params){
     if(typeof(url)==='object'){
       params = Object.assign({},url.state||{},url.query||{});
@@ -96,15 +175,31 @@ class Browser {
     url = this.formatUrl(url,params);
     window.location.replace(url);
   };
+  /**
+   * 返回指定到之前数量的之前地址
+   * @method
+   * @param {number} step=1 - 返回级数
+   */
   back(step=1){
     window.history.go(-step);
   };
+  /**
+   * 重新加载当前页面
+   * @param {number} delay - 延时的毫秒数
+   */
   reload(delay) {
     window.location.reload();
   }
 
   //jsload
   //------------------------------
+  /**
+   * 异步加载js，返回promise
+   * @method
+   * @param {string} filename - js的文件地址
+   * @param {boolean} nocache - 通过添加version，防止缓存
+   * @return {Promise} - 异步加载结果
+   */
   loadjs(filename, nocache){
     return new Promise((resolve,reject)=>{
       if(!filename){

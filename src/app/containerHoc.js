@@ -1,3 +1,11 @@
+/**
+ * bnorth solution
+ * @copyright (c) 2016 able99
+ * @author able99 (8846755@qq.com)
+ * @license MIT
+ */
+
+ 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
@@ -108,3 +116,52 @@ export default function(app, acontainer) {
 
   return connect(mapState, mapDispatch);
 }
+
+/**
+ * container函数是页面组件的逻辑控制函数，为页面组件提供数据和actions 供页面组件调用
+ * bnorth 会自动通过高阶函数containerHoc 进行连接
+ * @function
+ * @param {App} app - App 的实例
+ * @param {object} props - 组件的属性
+ * @param {object} container - container模板，在此函数中，扩展该属性
+ * @example
+ * ```js
+ * export default function(app, props, container) {
+ *   container.states.data = app.actionStates.data({});
+ * }
+ * ```
+ */
+
+/**
+ * container 类，容器组件的类，用以实现逻辑
+ * 通过在container 函数中，扩展container类实例的方式实现
+ * @class container
+ * @example
+ * ```js
+ * export default function(app, props, container) {
+ *   container.states.data = app.actionStates.data({});
+ *   container.actions.test = ()=>()=>{};
+ *   container.handler.onStart = ()=>{};
+ * }
+ * ```
+ */
+
+/**
+ * 
+ * @property {state[]} states
+ */
+
+/**
+ * 
+ * @property {string[]} reduxers
+ */
+
+/**
+ * 
+ * @property {action[]} actions
+ */
+
+/**
+ * 
+ * @property {function[]} handler
+ */
