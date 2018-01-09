@@ -6,13 +6,13 @@ bnorth 是基于react 生态的一站式快速开发框架。提供页面路由�
 ## Why bnorth
 
 1. react 是一个生态，存在大量优秀的库能协同开发出优秀的项目，同时也带来了学习上的成本。为此bnorth 以最佳实践为目的，提供一站式的快速开发方案。
-2. react社区 有很多优秀的框架，如dvajs 等，但是着眼点都是在框架层面。而bnorth 是完整的解决方案：
-  * 提供了mvc框架结构
-  * 提供了丰富的脚手架功能
-  * 提供了丰富的能力扩展，包括用户信息与鉴权，网络请求数据与管理，页面数据管理，数据格式化与校验，浏览器操作与导航，数据储存，数据处理等
-  * bnorth-components 提供了丰富的UI 组件
-  * rich.css 通过富class 方式提供丰富的css 样式类，无需或极少编写css 即可开发样式复杂的页面，并通过样式大量复用整体缩小css 代码尺寸
-3. bnorth 通过脚手架与cordova，electronjs等结合，实现跨不同手机与桌面平台的混合开发。
+1. react社区 有很多优秀的框架，如dvajs 等，但是着眼点都是在框架层面。而bnorth 是完整的解决方案：
+    * 提供了mvc框架结构
+    * 提供了丰富的脚手架功能
+    * 提供了丰富的能力扩展，包括用户信息与鉴权，网络请求数据与管理，页面数据管理，数据格式化与校验，浏览器操作与导航，数据储存，数据处理等
+    * bnorth-components 提供了丰富的UI 组件
+    * rich.css 通过富class 方式提供丰富的css 样式类，无需或极少编写css 即可开发样式复杂的页面，并通过样式大量复用整体缩小css 代码尺寸
+1. bnorth 通过脚手架与cordova，electronjs等结合，实现跨不同手机与桌面平台的混合开发。
 
 
 ## Getting Started
@@ -101,7 +101,7 @@ bnorth 编译与调试基于优秀的webpack 方案，提供了强大的便捷�
 1. 调试服务器的网络代理配置
 1. 调试服务器的mock 数据配置
 
-**[具体参见链接](https://able99.github.io/bnorth)**
+**[具体参见链接](./ProjectConfig.md)**
 
 
 ### MVC 框架
@@ -114,10 +114,10 @@ bnorth 编译与调试基于优秀的webpack 方案，提供了强大的便捷�
 1. 各个页面由页面page 组件和页面container 组件组合而成。页面page 组件是纯react 组件，负责页面描画。页面container 组件是个函数，对container 模板进行定制，用以实现页面的逻辑。container 与 react-router 为页面page 组件的高阶组件，为其提供数据和方法。因此页面page 组件可通过props 获取数据并显示，实现无状态化的纯组件。container 通过 [redux](https://github.com/reactjs/redux) 为其提供数据的流动和方法。
 1. redux 是统一的数据管理仓库，通过 [react-redux](https://github.com/reactjs/react-redux) 将页面与仓库进行连接，以获取相关数据。并提供actions 以操作数据的流动。数据流动时，在container 配置的与流动数据相关的页面将会更新显示。
 1. container 模板的配置包括：
-  * **states** 将app 中的各类数据流管理器添加进来，比如页面数据管理，比如网络数据请求等
-  * **reduxers** 声明需要 redux 数据仓库中的指定数据
-  * **actions** 为页面page 组件提供方法
-  * **handlers** 提供页面生命周期事件和各种应用事件的处理函数
+    * **states** 将app 中的各类数据流管理器添加进来，比如页面数据管理，比如网络数据请求等
+    * **reduxers** 声明需要 redux 数据仓库中的指定数据
+    * **actions** 为页面page 组件提供方法
+    * **handlers** 提供页面生命周期事件和各种应用事件的处理函数
 1. app 可添加插件，为其提供属性和方法，提供丰富的state 和 actions 。丰富的功能适应不同需求的应用开发。
 
 
@@ -153,7 +153,7 @@ let plugin = {
 bnorth 的默认行为可满足一般性的应用开发，同时为特殊需求的应用提供定制化的能力，包括修改运行期配置和hook 的方式。
 
 1. app.config 是基于bnorth 的应用的配置类，通过配置可改变bnorth 方案的默认行为，具体可参见 **[config](https://able99.github.io/bnorth/#/?name=%2Fapp%2Fconfig)** 
-2. bnorth 及其插件都是将功能挂在到App 的实例对象上。在任何时刻可以通过直接修改app 上的方法与属性的方式进行定制化。一般是在app 启动的hook阶段，在其回调函数中进行定制化修改。比如：
+1. bnorth 及其插件都是将功能挂在到App 的实例对象上。在任何时刻可以通过直接修改app 上的方法与属性的方式进行定制化。一般是在app 启动的hook阶段，在其回调函数中进行定制化修改。比如：
 
 ```js
 let app = App.instance({
