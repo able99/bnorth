@@ -1,6 +1,23 @@
+/**
+ * bnorth solution
+ * @copyright (c) 2016 able99
+ * @author able99 (8846755@qq.com)
+ * @license MIT
+ */
+
+
 import md5 from '../utils/md5';
 
 
+/**
+ * 为app 提供用户信息与鉴权的能力扩展
+ * @class
+ * @example
+ * **使用**
+ * app.user.xxx
+ * **hook**
+ * 参见Browser hook说明
+ */
 class User {
   constructor(app){
     this.app = app;

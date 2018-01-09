@@ -1,6 +1,24 @@
+/**
+ * bnorth solution
+ * @copyright (c) 2016 able99
+ * @author able99 (8846755@qq.com)
+ * @license MIT
+ */
+
+
 import { timeInit, time, timeFrom } from '../utils/time';
 import { check, checkObject, checkObjectItem } from '../utils/validator';
 
+
+/**
+ * 为app 提供格式化输出与数据校验的功能扩展
+ * @class
+ * @example
+ * **使用**
+ * app.format.xxx
+ * **hook**
+ * 参见Browser hook说明
+ */
 class Format {
   constructor(app){
     this.app = app;

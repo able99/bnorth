@@ -1,3 +1,21 @@
+/**
+ * bnorth solution
+ * @copyright (c) 2016 able99
+ * @author able99 (8846755@qq.com)
+ * @license MIT
+ */
+
+
+/**
+ * 为app 提供存储的能力扩展
+ * @class
+ * @example
+ * **使用**
+ * app.storage.xxx // 操作localStorage
+ * app.sessionStorage.xxx // 操作sessionStorage
+ * **hook**
+ * 参见Browser hook说明
+ */
 class Storage {
   constructor(app, isSession){
     this.storage = isSession?window.sessionStorage:window.localStorage;

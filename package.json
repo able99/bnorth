@@ -1,6 +1,6 @@
 {
   "name": "bnorth",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "a react based JS framework that covers the functions of scaffolding, routing, data flow and so on. It uses a plug-in mechanism, powerful and easy to extend",
   "main": "lib/index.js",
   "bin": {
@@ -22,10 +22,13 @@
     "scripts/",
     "bin/",
     "config/",
-    "templates/"
+    "templates/",
+    "docs",
+    "res"
   ],
   "keywords": [],
-  "author": "8846755@qq.com",
+  "author": "able99(8846755@qq.com)",
+  "repository": "https://github.com/able99/bnorth",
   "license": "MIT",
   "dependencies": {
     "assert": "^1.4.1",

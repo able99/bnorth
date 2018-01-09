@@ -12,7 +12,12 @@
  */
 
 /**
+ * react组件，继承于[react-router 3](https://github.com/ReactTraining/react-router/tree/v3/docs)，并扩展了若干属性
  * @class Route
+ * @example
+ * ```js
+ * <Route key="order" />
+ * ```
  */
 
 /**

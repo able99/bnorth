@@ -1,5 +1,23 @@
+/**
+ * bnorth solution
+ * @copyright (c) 2016 able99
+ * @author able99 (8846755@qq.com)
+ * @license MIT
+ */
+
+
 import Url from 'url-parse';
 
+
+/**
+ * 为app 提供导航的能力扩展，导航一般区别与browser 插件中的插件，导航指app 应用内的导航
+ * @class
+ * @example
+ * **使用**
+ * app.navigator.xxx
+ * **hook**
+ * 参见Browser hook说明
+ */
 class Navigator{
   constructor(app){
     this.app = app;

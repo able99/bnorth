@@ -1,3 +1,11 @@
+/**
+ * bnorth solution
+ * @copyright (c) 2016 able99
+ * @author able99 (8846755@qq.com)
+ * @license MIT
+ */
+
+
 import Url from 'url-parse';
 
 
@@ -20,6 +28,15 @@ let fetchTimeout = function(input, opts){
 }
 
 
+/**
+ * 为app 提供网络访问的能力扩展
+ * @class
+ * @example
+ * **使用**
+ * app.network.xxx
+ * **hook**
+ * 参见Browser hook说明
+ */
 class Network {
   constructor(app) {
     this.app = app;

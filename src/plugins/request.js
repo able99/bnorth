@@ -1,3 +1,11 @@
+/**
+ * bnorth solution
+ * @copyright (c) 2016 able99
+ * @author able99 (8846755@qq.com)
+ * @license MIT
+ */
+
+
 import getUuid from '../utils/uuid';
 import getOptions from '../utils/getOptions';
 
@@ -90,6 +98,21 @@ let requestSubmit = (options)=>(app)=>{
 
 // action state class
 //==================
+/**
+ * 为app 扩展state 类型，提供网络请求与网络请求数据的管理
+ * @class
+ * @example
+ * **使用**
+ * // container
+ * container.states.data = app.actionStates.data({});
+ * container.states.xxx = app.actionStates.request({
+ *   resource: 'xxx',
+ * });
+ * // page - 使用数据
+ * this.props.state_xxx
+ * **hook**
+ * 参见Browser hook说明
+ */
 class ActionStateRequest {
   static maps = {};
 

@@ -30,20 +30,10 @@ export default class App {
   // constructor
   //--------------------
   /**
-   * 获取单例
-   * @method
-   * @static
-   * @param {object} options 应用的参数，参见构造函数
-   */
-  static instance(...args) {
-    if(_instance) return _instance;
-    return new App(...args);
-  }
-
-  /**
-   * 构造函数
+   * App 为单例模式，不要直接构造，使用instance 函数构造与获取
    * @constructor
-   * @param {object} options 
+   * @param {object} options - 参数
+   * @example
    * ```js
    * options = {
    *   config       // 配置参数，参见config 模块
@@ -54,6 +44,8 @@ export default class App {
    *   middlewares  // redux 中间件数组，默认为空
    *   status       // redux store 中的起始数据，默认为空
    * }
+   * 
+   * let app = App.instance(options);
    * ```
    */
   constructor(options) {
@@ -77,6 +69,14 @@ export default class App {
     _instance = this;
     window.app = _instance;
     return _instance;
+  }
+  /*!
+   * 单例模式
+   * @param {*} args 
+   */
+  static instance(...args) {
+    if(_instance) return _instance;
+    return new App(...args);
   }
 
   // dom
@@ -117,7 +117,7 @@ export default class App {
   /**
    * 移除指定插件
    * @method
-   * @param {!name} plugin 
+   * @param {!string} name - 要移除插件的名称 
    */
   unuse(name) {
     this._plugins
@@ -130,7 +130,7 @@ export default class App {
    * 触发app 指定事件
    * @method
    * @param {!string} event 事件名称
-   * @param {...args} [args] 事件参数
+   * @param {...*} [args] 事件参数
    */
   trigger(event, ...args) {
     let ret;
@@ -169,7 +169,7 @@ export default class App {
   /**
    * 打印日志-普通级别
    * @method
-   * @param {...args} args 
+   * @param {...*} args 
    */
   log(...args) {
     this.trigger('onLog',null,false,...args);
@@ -177,7 +177,7 @@ export default class App {
   /**
    * 打印日志-调试级别
    * @method
-   * @param {...args} args 
+   * @param {...*} args 
    */
   debug(...args) {
     if(!this.config.debug) return;
@@ -186,7 +186,7 @@ export default class App {
   /**
    * 打印日志-冗余级别
    * @method
-   * @param {...args} args 
+   * @param {...*} args 
    */
   verbose(...args) {
     if(!this.config.verbose) return;
@@ -195,7 +195,7 @@ export default class App {
   /**
    * 打印日志-错误级别
    * @method
-   * @param {...args} args 
+   * @param {...*} args 
    */
   error(...args) {
     this.trigger('onLog','error',true,...args);
@@ -203,7 +203,7 @@ export default class App {
   /**
    * 将错误通过页面渲染方式显示，整个应用将停止，仅显示错误
    * @method
-   * @param {...args} args 
+   * @param {...*} args 
    */
   errorRender(...args) {
     if(this.stateError)return;
@@ -213,7 +213,7 @@ export default class App {
   /**
    * 将错误通过notice方式显示
    * @method
-   * @param {...args} args 
+   * @param {...*} args 
    */
   errorNotice(...args) {
     this.trigger('onNoticeMessage',...args);
@@ -301,13 +301,44 @@ export default class App {
  */
 
 /**
+ * 页面组件render错误时触发
  * @callback onErrorPageRender
+ * @param {Error} error - error
+ * @return {boolean} - 返回true，将不会触发插件列表中位于其后的插件回调
  */
 
 /**
- * onNavigated
-onErrorNavigator
-onLog
-onRenderMessage
-onNoticeMessage
+ * 导航到新的页面时触发
+ * @callback onNavigated
+ * @param {object} props - 页面路由信息，参见[react-router3 router-render函数]()
+ * @return {boolean} - 返回true，将不会触发插件列表中位于其后的插件回调
+ */
+
+/**
+ * 导航出错时触发，比如无法匹配的导航路径等问题
+ * @callback onErrorNavigator
+ * @param {object} nextState - 页面路由信息，参见[react-router3 route-onEnter函数]()
+ * @param {function} replace - 调用后可重定向路径的函数，参见[react-router3 route-onEnter函数]()
+ * @return {boolean} - 返回true，将不会触发插件列表中位于其后的插件回调
+ */
+
+/**
+ * 需要打印日志时触发
+ * @callback onLog
+ * @param {...*} args - 需要打印的参数列表
+ * @return {boolean} - 返回true，将不会触发插件列表中位于其后的插件回调
+ */
+
+/**
+ * 当页面上需要render信息，并终止应用时触发
+ * @callback onRenderMessage
+ * @param {...*} args - 需要打印的参数列表
+ * @return {boolean} - 返回true，将不会触发插件列表中位于其后的插件回调
+ */
+
+/**
+ * 当需要已notice方式显示信息时触发
+ * @callback onNoticeMessage
+ * @param {...*} args - 需要打印的参数列表
+ * @return {boolean} - 返回true，将不会触发插件列表中位于其后的插件回调
  */

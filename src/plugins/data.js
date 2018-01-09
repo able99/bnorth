@@ -1,3 +1,11 @@
+/**
+ * bnorth solution
+ * @copyright (c) 2016 able99
+ * @author able99 (8846755@qq.com)
+ * @license MIT
+ */
+
+
 import jspath from '../utils/jspath'
 import getUuid from '../utils/uuid';
 import getOptions from '../utils/getOptions';
@@ -31,6 +39,20 @@ let _dataClear = (uuid)=>(app)=>{
 
 // action state class
 //==================
+/**
+ * 为app 扩展state 类型，提供页面数据的管理
+ * @class
+ * @example
+ * **使用**
+ * // container
+ * container.states.data = app.actionStates.data({});
+ * // page - 使用数据
+ * this.props.state_data
+ * // page - 修改数据
+ * this.props.states.data.setValue('x',xxx);
+ * **hook**
+ * 参见Browser hook说明
+ */
 class ActionStateData{
   static maps = {};
 

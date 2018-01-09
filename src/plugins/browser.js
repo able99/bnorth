@@ -14,15 +14,19 @@ import { getBrowserTitle, setBrowserTitle } from '../utils/browser';
  * 提供操作浏览器的功能插件
  * @class
  * @example
+ * **使用**
  * ```js
- * |使用
  * app.browser.xxx
- * |hook
+ * ```
+ * 
+ * **hook**
+ * ```js
  * // 在原函数上增加某些处理
  * app.browser.xxx = function(...args){
  *   ... // 增加某些处理
  *   return app.Browser.prototype.xxx.apply(this, args);
  * }
+ * 
  * // 直接修改原函数
  * app.Browser.prototype.xxx = function(...args) {
  *   ... // 修改原函数
@@ -78,7 +82,7 @@ class Browser {
   //ico
   //------------------------------
   /**
-   * @property {string} title 设置和读取浏览器标题栏的图标
+   * @property {string} icon 设置和读取浏览器标题栏的图标
    */
   set icon(url) {
     var ico = document.createElement('link');
@@ -131,14 +135,14 @@ class Browser {
   //------------------------------
   /**
    * @method
-   * @param {...args} args 
+   * @param {...*} args 
    */
   queryParse(...args) {
     return Url.qs.parse(...args);
   }
   /**
    * @method
-   * @param {...args} args 
+   * @param {...*} args 
    */
   queryStringify(...args) {
     return Url.qs.stringify(...args);

@@ -42,8 +42,12 @@ const ActionAppLayerUpdate = 'ActionAppLayerUpdate';
 /**
  * 在应用之上添加悬浮层
  * @method
- * @param {element}  
- * @param {function} 
+ * @param {element} layer - 添加到悬浮层的元素
+ * @param {function} [cb] - 添加成功后的回调函数，参数为实例化后的layer
+ * @example 
+ * ```js
+ * app.actions.appLayerAdd(element)
+ * ```
  */
 function appLayerAdd(layer, cb) {
   cb&&cb(layer);
@@ -53,9 +57,13 @@ function appLayerAdd(layer, cb) {
   };
 }
 /**
- * 删除指定悬浮层
+ * 删除悬浮层列表中的的指定layer
  * @method
- * @param {element} layer 
+ * @param {element} layer - 要删除的层
+ * @example
+ * ```js
+ * app.actions.appLayerRemove(layer);
+ * ```
  */
 function appLayerRemove(layer) {
   return {
@@ -66,9 +74,13 @@ function appLayerRemove(layer) {
 /**
  * 更新悬浮层的属性
  * @method
- * @param {element} layer 
- * @param {object} props 
- * @param {function} cb 
+ * @param {element} layer  - 要更新的悬浮层
+ * @param {object} props - 新的悬浮层组件的属性键值对
+ * @param {function} [cb] - 回调函数将返回新的组件实例
+ * @example
+ * ```js
+ * app.actions.appLayerUpdate(layer,{cTheme: 'error'});
+ * ```
  */
 function appLayerUpdate(layer, props, cb) {
   let newer = cloneElement(layer, {...layer.props,...props});
@@ -83,7 +95,12 @@ function appLayerUpdate(layer, props, cb) {
 /**
  * 显示通知内容
  * @method
- * @param {...args} args 
+ * @param {component|element|string} message - 消息框内容
+ * @param {object} options - timeout(消息停留时间，default `3s`) 与 Notification 属性,具体参见 [Notification 组件](../components/Notification.md)
+ * @example
+ * ```js
+ * app.actions.noticeMessage(message);
+ * ```
  */
 let noticeMessage = (...args)=>(app)=>{
   app.trigger('onNoticeMessage', ...args);
@@ -91,15 +108,17 @@ let noticeMessage = (...args)=>(app)=>{
 /**
  * 显示页面加载进度
  * @method
- * @param {...args} args 
+ * @param {boolean} show - 是否显示，default `true`，调用几次显示，也需要调用几次隐藏
+ * @param {object} options - ProgressBar 属性,具体参见 [ProgressBar 组件](../components/ProgressBar.md)
  */
 let noticeLoading = (...args)=>(app)=>{
   app.trigger('onNoticeLoading', ...args);
 }
 /**
  * 显示阻塞操作的加载页面
- * @method
- * @param {*} args 
+ * @method 
+ * @param {boolean} show 是否显示，default `true`，调用几次显示，也需要调用几次隐藏
+ * @param {object} options Loader 属性,具体参见 [Loader 组件](../components/Loader.md)
  */
 let noticeBlocking = (...args)=>(app)=>{
   app.trigger('onNoticeBlocking', ...args);
@@ -143,9 +162,11 @@ export function reducerApp(
 //-----------------------------------------
 /**
  * 组合页面组件与页面容器，返回raect router使用的组件
+ * @function
  * @param {App} app - App实例
  * @param {page} page - 页面组件
  * @param {container} container - 页面容器
+ * @return {element} - 返回经过页面组件与页面容器高阶化后的组件，可供router 加载
  */
 function createRouteComponent (app, page, container) {
   if(!page) return null;

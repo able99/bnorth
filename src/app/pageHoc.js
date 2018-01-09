@@ -116,6 +116,7 @@ export default (app, Wrapper) => class extends Wrapper {
   /**
    * 返回是否页面在顶层
    * @method
+   * @return {boolean} 
    */
   isFocus() {
     if(this.getSubs().hasOwnProperty(this.getPageChildPath())){
@@ -128,6 +129,7 @@ export default (app, Wrapper) => class extends Wrapper {
   /**
    * 返回是否是容器组件
    * @method
+   * @return {boolean}
    */
   isContainer() {
     return (this.props.route.childRoutes||[]).find((v)=>{
@@ -137,6 +139,8 @@ export default (app, Wrapper) => class extends Wrapper {
 
   /**
    * 容器组件返回其子组件列表
+   * @method
+   * @return {array} - 子组件的名称数组
    */
   getSubs() {
     return (this.props.route.childRoutes||[])
@@ -151,6 +155,7 @@ export default (app, Wrapper) => class extends Wrapper {
   /**
    * 是否是子组件
    * @method
+   * @return {boolean}
    */
   isSubPage() {
     return Boolean(this.props.route.components);
@@ -159,6 +164,7 @@ export default (app, Wrapper) => class extends Wrapper {
   /**
    * 返回当前页面的全路径
    * @method
+   * @return {string}
    */
   getPageFullPath() {
     let routes = [];
@@ -178,6 +184,7 @@ export default (app, Wrapper) => class extends Wrapper {
   /**
    * 容器组件返回当前显示中的子组件路径
    * @method
+   * @return {string}
    */
   getPageChildPath() {
     let ret = null;
@@ -195,6 +202,7 @@ export default (app, Wrapper) => class extends Wrapper {
   /**
    * 子组件返回其容器组件的路径
    * @method
+   * @return {string}
    */
   getPageParentPath() {
     let ret = null;
