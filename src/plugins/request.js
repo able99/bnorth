@@ -159,6 +159,7 @@ class ActionStateRequest {
 
   clear(){
     this.app.actions._requestFetchClear(this.uuid);
+    delete ActionStateRequest.maps[this.uuid];
   }
 
   // state

@@ -96,7 +96,7 @@ function appLayerUpdate(layer, props, cb) {
  * 显示通知内容
  * @method
  * @param {component|element|string} message - 消息框内容
- * @param {object} options - timeout(消息停留时间，default `3s`) 与 Notification 属性,具体参见 [Notification 组件](../components/Notification.md)
+ * @param {object} options - 参数对象，具体由实现onNoticeMessage 事件的插件所决定
  * @example
  * ```js
  * app.actions.noticeMessage(message);
@@ -109,7 +109,7 @@ let noticeMessage = (...args)=>(app)=>{
  * 显示页面加载进度
  * @method
  * @param {boolean} show - 是否显示，default `true`，调用几次显示，也需要调用几次隐藏
- * @param {object} options - ProgressBar 属性,具体参见 [ProgressBar 组件](../components/ProgressBar.md)
+ * @param {object} options - 参数对象，具体由实现onNoticeLoading 事件的插件所决定
  */
 let noticeLoading = (...args)=>(app)=>{
   app.trigger('onNoticeLoading', ...args);

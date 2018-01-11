@@ -108,6 +108,7 @@ export default function(app, acontainer) {
         statesHandler(container.states, 'onResume');
       },
       onStop(page) {
+        delete acontainer[getContainerKey(app, props)];
         if(container.handlers.onStop)container.handlers.onStop(app,page,container);
         statesHandler(container.states, 'onStop');
       }

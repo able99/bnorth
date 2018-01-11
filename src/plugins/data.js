@@ -124,6 +124,7 @@ class ActionStateData{
 
   clear(onlyData){
     this.app.actions._dataClear(this.uuid);
+    delete ActionStateData.maps[this.uuid];
   }
 
   // validate
