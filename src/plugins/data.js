@@ -217,7 +217,7 @@ export function reducerData(
         data = Object.assign({}, state.datas[action.uuid]||action.initData, action.data);
       }
     }else{
-      data = Array.from(action.data);
+      data = action.data;
     }
     return Object.assign({}, state, {
       uuid: action.uuid,
