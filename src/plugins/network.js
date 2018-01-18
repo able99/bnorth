@@ -31,11 +31,9 @@ let fetchTimeout = function(input, opts){
 /**
  * 为app 提供网络访问的能力扩展
  * @class
- * @example
- * **使用**
- * app.network.xxx
- * **hook**
- * 参见Browser hook说明
+ * **插件** 该类为插件类扩展了App 的能力
+ * app.Network: 该类的原型
+ * app.network: 该类的实例
  */
 class Network {
   constructor(app) {
@@ -167,6 +165,17 @@ class Network {
   //==================
   // main if
   //==================
+  /**
+   * 获取网络数据
+   * @method
+   * @param {object} options - 参数对象，具体包括：<br />
+   * **resource**
+   * **data**
+   * **query**
+   * **params**
+   * **methods**
+   * @return {Promise} - 
+   */
   fetch(options={}){
     options.resource = options.resource||"";
     let fetchScope = {};
@@ -237,6 +246,17 @@ class Network {
     );
   }
 
+  /**
+   * 提交网络数据
+   * @method
+   * @param {object} options - 参数对象，具体包括：<br />
+   * **resource**
+   * **data**
+   * **query**
+   * **params**
+   * **methods**
+   * @return {Promise} - 
+   */
   operate(options={}){
     options.resource = options.resource||"";
     let fetchScope = {};

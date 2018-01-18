@@ -100,6 +100,8 @@ let requestSubmit = (options)=>(app)=>{
 //==================
 /**
  * 为app 扩展state 类型，提供网络请求与网络请求数据的管理
+ * **插件** 该类为插件类扩展了App 的能力
+ * app.actionStates.request: states 的工厂函数
  * @class
  * @example
  * **使用**
@@ -110,8 +112,6 @@ let requestSubmit = (options)=>(app)=>{
  * });
  * // page - 使用数据
  * this.props.state_xxx
- * **hook**
- * 参见Browser hook说明
  */
 class ActionStateRequest {
   static maps = {};

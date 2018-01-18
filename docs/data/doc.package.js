@@ -1,6 +1,6 @@
 {
   "name": "bnorth",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "a react based JS framework that covers the functions of scaffolding, routing, data flow and so on. It uses a plug-in mechanism, powerful and easy to extend",
   "main": "lib/index.js",
   "bin": {

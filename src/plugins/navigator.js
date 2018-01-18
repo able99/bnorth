@@ -12,11 +12,9 @@ import Url from 'url-parse';
 /**
  * 为app 提供导航的能力扩展，导航一般区别与browser 插件中的插件，导航指app 应用内的导航
  * @class
- * @example
- * **使用**
- * app.navigator.xxx
- * **hook**
- * 参见Browser hook说明
+ * **插件** 该类为插件类扩展了App 的能力
+ * app.Navigator: 该类的原型
+ * app.navigator: 该类的实例
  */
 class Navigator{
   constructor(app){
@@ -155,6 +153,11 @@ class Navigator{
       return true;
     }
   }
+
+  /**
+   * 返回之前的页面，与back 不同，会考虑错误跳转，link 参数因素
+   * @method
+   */
   recall(){
     if(!this.routerStatus)return;
     let {location,router} = this.routerStatus;
@@ -170,18 +173,47 @@ class Navigator{
     }
   }
 
+  /** 
+   * 跳转到指定路由
+   * @method
+   * @param {...string} [paths] - 路由列表，取值包括：<br />
+   * **'/'**
+   * **'..'**
+   * **path(string)**
+   * **path(object)**
+   * **[query,pass query,state,pass state]**
+   */
   push(...args){
     this._navi('push',...args);
   }
-  back(step=1){
-    this._navi('back',-step);
-  }
+  /** 
+   * 替换到到指定路由
+   * @method
+   * @param {...string} [paths] - 
+   */
   replace(...args){
     this._navi('replace',...args);
   }
+  /** 
+   * 返回之前页面
+   * @method
+   * @param {number} [step=1] - 返回的页面数
+   */
+  back(step=1){
+    this._navi('back',-step);
+  }
+  /** 
+   * 获取路由的url 字符串
+   * @method
+   * @param {...string} [paths] - 
+   */
   getUrl(...args){
     return this._navi('getUrl',...args);
   }
+  /**
+   * 关闭 app
+   * @method
+   */
   exit(){
     window.close();
   }

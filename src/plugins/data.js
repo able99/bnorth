@@ -40,7 +40,9 @@ let _dataClear = (uuid)=>(app)=>{
 // action state class
 //==================
 /**
- * 为app 扩展state 类型，提供页面数据的管理
+ * 为app 扩展state 类型，提供页面数据的管理与校验
+ * **插件** 该类为插件类扩展了App 的能力
+ * app.actionStates.data: states 的工厂函数
  * @class
  * @example
  * **使用**
@@ -50,12 +52,32 @@ let _dataClear = (uuid)=>(app)=>{
  * this.props.state_data
  * // page - 修改数据
  * this.props.states.data.setValue('x',xxx);
- * **hook**
- * 参见Browser hook说明
  */
 class ActionStateData{
   static maps = {};
 
+  /**
+   * 构造数据管理state
+   * `工厂函数` 该构造函数为工厂模式
+   * 使用工厂函数构造state
+   * ```js
+   * container.states.data = app.actionStates.data({});
+   * ```
+   * @constructor
+   * @param {object} [options] - 参数对象<br />
+   * **defaultData**
+   * **initData**
+   * **rules**
+   * **checkErrorMessage**
+   * **checkOnInputKeys** 
+   * **noticeChangeError**
+   * **updateOnStart** 
+   * **updateOnResume** 
+   * **clearOnStop**
+   * **onWillChange**
+   * **onDidChange**
+   * @param {string} uuid 
+   */
   constructor(app, uuid, options){
     this.app = app;
     this.uuid = uuid;
@@ -68,6 +90,10 @@ class ActionStateData{
 
   // interface
   // -------------------------
+  /**
+   * @property [*] data 管理的数据
+   * @readonly
+   */
   get data() {
     let state = this.app.getState('data',{});
     return (state.datas && state.datas[this.uuid]) || this.options.initData;
@@ -80,6 +106,12 @@ class ActionStateData{
     return null;
   }
 
+  /**
+   * 初始化所管理的数据
+   * @method 
+   * @param {*} [data] - 如果设置该参数，则初始化为该数据，否则初始化为起始数据 
+   * @param {boolean} [merge=false] - 是否合并之前数据，默认不合并
+   */
   init(data, merge=false) {
     try{
       let originData = this.data;
@@ -94,6 +126,13 @@ class ActionStateData{
     }
   }
 
+  /**
+   * 修改管理的数据
+   * @method
+   * @param {*} data - 数据
+   * @param {string[]} [key] - 需要校验的字段名 
+   * @param {boolean} [merge=true] 是否合并之前的数据
+   */
   update(data, key=null, merge=true) {
     try{
       let originData = this.data;
@@ -110,10 +149,21 @@ class ActionStateData{
     }
   }
 
+  /**
+   * 使用jspath 格式获取数据中的内容
+   * @method
+   * @param {string} key - 键名或jspath 字符串
+   */
   getValue(key) {
     return jspath.getValue(this.data, key);
   }
 
+  /**
+   * 使用jspath 格式设置数据中的内容
+   * @method
+   * @param {string} key - 键名或jspath 字符串
+   * @param {*} value - 数据
+   */
   setValue(key, value) {
     if(!key) return false;
     let originData = this.data;
@@ -122,6 +172,11 @@ class ActionStateData{
     return this.update(changeData, key);
   }
 
+  /**
+   * 清除数据和当前对象
+   * @method
+   * @param {boolean} onlyData - 仅仅清除数据
+   */
   clear(onlyData){
     this.app.actions._dataClear(this.uuid);
     delete ActionStateData.maps[this.uuid];
@@ -129,6 +184,13 @@ class ActionStateData{
 
   // validate
   // ----------------------
+
+  /**
+   * 根据设置的规则进行校验
+   * @method
+   * @param {string|string[]} [keys] - 要检查的字段名列表，默认检查全部字段
+   * @returns {boolean} - true: 校验出问题
+   */
   validate(keys){
     if(!this.options.rules) return false;
 
@@ -160,29 +222,61 @@ class ActionStateData{
 
   // event
   //----------------------------------
+  /*!
+   * 页面启动时触发
+   * @callback
+   */
   onStart() { //bnorth use
     if(!this.options.updateOnStart) return;
     this.update();
   }
 
+  /*!
+   * 页面获取焦点时触发
+   * @callback
+   */
   onResume() { //bnorth use
     if(!this.options.updateOnResume) return;
     this.update();
   }
 
+  /*!
+   * 页面终止时触发
+   * @callback
+   */
   onStop() { //bnorth use
     if(this.options.clearOnStop===false) return;
     this.clear();
   }
 
+  /*!
+   * 数据将要改变时触发
+   * @callback
+   * @param {*} originData 
+   * @param {*} changeData 
+   * @param {*} key 
+   */
   onWillChange(originData, changeData, key) { 
     return this.options.onWillChange&&this.options.onWillChange(originData, changeData, key);
   }
 
+  /*!
+   * 数据修改后触发
+   * @callback
+   * @param {*} originData 
+   * @param {*} changeData 
+   * @param {*} key 
+   */
   onDidChange(originData, changeData, key) { 
     return this.options.onDidChange&&this.options.onDidChange(originData, changeData, key);
   }
 
+  /*!
+   * 数据校验错误时触发
+   * @callback
+   * @param {*} message 
+   * @param {*} field 
+   */
   onChangeError(message, field){
     if(this.options.noticeChangeError)this.app.errorNotice(message);
   }

@@ -1,6 +1,7 @@
 # bnorth
 
-bnorth 是基于react 生态的一站式快速开发框架。提供页面路由，redux数据流等基本功能，和通过可扩展的插件机制提供的支撑整个应用运行的功能。内置的脚手架能提高开发效率和通过 [cordova](http://cordova.apache.org/)，[electron](https://github.com/electron/electron) 等实现跨平台混合开发。
+bnorth 是基于react 生态的一站式快速开发框架。提供页面路由，redux数据流等基本功能，和通过可扩展的插件机制提供的支撑整个应用运行的功能。内置的脚手架能提高开发效率和通过 [cordova](http://cordova.apache.org/)，[electron](https://github.com/electron/electron) 等实现跨平台混合开发。
+
 
 
 ## Why bnorth
@@ -179,7 +180,7 @@ let app = App.instance({
 
 bnorth 是完整h5 web 应用以及 混合app 开发方案
 
-* bnorth 提供mvc 框架，脚手架以及其他功能
+* bnorth 提供mvc 框架，脚手架以及其他功能
 * [bnorth-components](https://github.com/able99/bnorth-components) 提供UI 组件
 * [rich.css](https://github.com/able99/rich.css) 提供 css 样式类
 * [doxer](https://github.com/able99/doxer) 提供自动化文档生成与显示

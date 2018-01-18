@@ -18,6 +18,8 @@ import { AppComponentPage, appComponentContainer } from './appComponent';
 
 /**
  * 应用的基本插件，该插件是第一个添加到应用的插件，实现了应用运行的基本功能
+ * **插件** 该类为插件类扩展了App 的能力
+ * app.actions.xxx: 若干方法
  * @class pluginApp
  */
 
@@ -28,6 +30,10 @@ const ActionAppReady = 'ActionAppReady';
  * 改变app ready 状态，app ready后，会关闭waiting 动画，显示渲染的内容
  * @method appReady
  * @param {boolean} ready 
+ * @example
+ * ```js
+ * app.actions.appReady(true)
+ * ```
  */
 function appReady(ready) {
   return {
@@ -95,7 +101,7 @@ function appLayerUpdate(layer, props, cb) {
 /**
  * 显示通知内容
  * @method
- * @param {component|element|string} message - 消息框内容
+ * @param {element|string} message - 消息框内容
  * @param {object} options - 参数对象，具体由实现onNoticeMessage 事件的插件所决定
  * @example
  * ```js
@@ -110,6 +116,9 @@ let noticeMessage = (...args)=>(app)=>{
  * @method
  * @param {boolean} show - 是否显示，default `true`，调用几次显示，也需要调用几次隐藏
  * @param {object} options - 参数对象，具体由实现onNoticeLoading 事件的插件所决定
+ * @example
+ * ```js
+ * app.actions.noticeLoading(true);
  */
 let noticeLoading = (...args)=>(app)=>{
   app.trigger('onNoticeLoading', ...args);
@@ -119,6 +128,9 @@ let noticeLoading = (...args)=>(app)=>{
  * @method 
  * @param {boolean} show 是否显示，default `true`，调用几次显示，也需要调用几次隐藏
  * @param {object} options Loader 属性,具体参见 [Loader 组件](../components/Loader.md)
+ * * @example
+ * ```js
+ * app.actions.noticeBlocking(true);
  */
 let noticeBlocking = (...args)=>(app)=>{
   app.trigger('onNoticeBlocking', ...args);
@@ -166,7 +178,11 @@ export function reducerApp(
  * @param {App} app - App实例
  * @param {page} page - 页面组件
  * @param {container} container - 页面容器
- * @return {element} - 返回经过页面组件与页面容器高阶化后的组件，可供router 加载
+ * @return {element} - 返回经过页面组件与页面容器高阶化后的组件
+ * @example
+ * ```js
+ * createRouteComponent(app, page, container);
+ * ```
  */
 function createRouteComponent (app, page, container) {
   if(!page) return null;

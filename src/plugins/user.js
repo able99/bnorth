@@ -12,11 +12,9 @@ import md5 from '../utils/md5';
 /**
  * 为app 提供用户信息与鉴权的能力扩展
  * @class
- * @example
- * **使用**
- * app.user.xxx
- * **hook**
- * 参见Browser hook说明
+ * **插件** 该类为插件类扩展了App 的能力
+ * app.User: 该类的原型
+ * app.user: 该类的实例
  */
 class User {
   constructor(app){
