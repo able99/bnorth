@@ -140,6 +140,13 @@ export default class App {
         if(ret){ return ret; }
       }catch(e){ this.error(e); }
     }
+
+    for(let v of this.pages||[]) {
+      try{
+        ret = v.props.container.handlers[event] && v.props.container.handlers[event](...args);
+        if(ret){ return ret; }
+      }catch(e){ this.error(e); } 
+    }
     return ret;
   }
 
