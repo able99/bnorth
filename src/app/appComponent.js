@@ -9,23 +9,33 @@
 import React from 'react';
 
 
+/*!
+ * app 的根页面Page
+ * 保留了，页面在bnroth 层处理页面的能力，目前实现了对html 中waitting 的管理
+ */
 export class AppComponentPage extends React.Component{
-  componentWillUpdate(nextProps, nextState) {
-    //if(!this.props.state_app.ready && nextProps.state_app.ready){
+  componentDidMount() {
+    if(this.props.state__page.ready!==false){
       this.app.removeWaiting();
-    //}
+    }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    if(this.props.state__page.ready===false && nextProps.state__page.ready){
+      this.app.removeWaiting();
+    }
   }
 
   render() {
-    return this.props.state_app.ready? (
-      <div>
-        {this.props.children}
-        {this.props.state_app.layers}
-      </div>
-    ):null;
+    return <div />;
   }
 }
 
+
+/*!
+ * app 的根页面Container
+ * 保留了，页面在bnroth 层处理页面的能力，目前实现了页面生命周期映射到 app event 中
+ */
 export let appComponentContainer = function(app, props, container) {
   container.reducers.app = true;
 

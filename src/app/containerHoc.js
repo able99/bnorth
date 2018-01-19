@@ -9,7 +9,12 @@
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-
+/*!
+ * get container unique key, diff key diff params or querys
+ * @function
+ * @param {App} app - instance of App class
+ * @param {object} props - props for component
+ */
 function getContainerKey(app, props) {
   let key = 'ck';
   for(let route of props.routes){
@@ -23,6 +28,14 @@ function getContainerKey(app, props) {
   return key;
 }
 
+/*!
+ * creator or getter (if exist) of the container
+ * @function
+ * @param {App} app - instance of App class
+ * @param {object} props - props for component
+ * @param {function} container - the container function
+ * @callback cb
+ */
 function getContainer(app, props, acontainer, cb) {
   if(!acontainer) return;
   let key = getContainerKey(app, props); 
@@ -30,7 +43,12 @@ function getContainer(app, props, acontainer, cb) {
 
   if(!container){
     container = {
-      states:app.actionStates.data?{data: app.actionStates.data()}:{},
+      states:{
+        data: app.actionStates.data&&app.actionStates.data({}),
+        _page: app.actionStates.data({initData:{
+          layers: [],
+        }}), 
+      },
       reducers: {},
       actions:{},
       handlers: {},
@@ -51,16 +69,28 @@ function getContainer(app, props, acontainer, cb) {
   return container;
 }
 
+/*!
+ * utiles for states event handle
+ * @function
+ * @param {array} states - state list
+ * @param {string} event - event
+ */
 function statesHandler(states, event) {
   Object.entries(states||{})
   .forEach(([key,val])=>{
-    if(!key||key[0]==='_') return;
+    if(!key||(key[0]==='_'&&key[0]!=='_page')) return;
     let func = val&&val[event];
     if(func)func.apply(val);
   })
 }
 
 
+/*!
+ * create container use container function
+ * @function
+ * @param {App} app - instance of App class
+ * @param {function} container - container function
+ */
 export default function(app, acontainer) {
   if(Array.isArray(acontainer)) return connect(...acontainer);
 
@@ -118,24 +148,10 @@ export default function(app, acontainer) {
   return connect(mapState, mapDispatch);
 }
 
-/**
- * container函数是页面组件的逻辑控制函数，为页面组件提供数据和actions 供页面组件调用
- * bnorth 会自动通过高阶函数containerHoc 进行连接
- * @function
- * @param {App} app - App 的实例
- * @param {object} props - 组件的属性
- * @param {object} container - container模板，在此函数中，扩展该属性
- * @example
- * ```js
- * export default function(app, props, container) {
- *   container.states.data = app.actionStates.data({});
- * }
- * ```
- */
 
 /**
- * container 类，容器组件的类，用以实现逻辑
- * 通过在container 函数中，扩展container类实例的方式实现
+ * bnorth 中页面container 组件，页面的容器类，负责页面的逻辑部分
+ * 实现container 函数后，由containerHoc 进行转换
  * @class container
  * @example
  * ```js
@@ -148,21 +164,82 @@ export default function(app, acontainer) {
  */
 
 /**
- * 
+ * state 列表
  * @property {state[]} states
  */
 
 /**
- * 
+ * 数据仓库中数据映射列表，
+ * 指定仓库中的reduxer名字的数据，会被映射到 页面Page props 中
  * @property {string[]} reduxers
  */
 
 /**
- * 
+ * action 函数列表
  * @property {action[]} actions
  */
 
 /**
+ * 事件处理函数列表
+ * @property {function[]} handlers
+ */
+
+
+/**
+ * container函数是页面组件的逻辑控制函数，为页面组件提供数据和actions 供页面组件调用
+ * bnorth 会通过containerHoc 进行转换
+ * **states**：
+ * state 是bnroth 的概念，是数据的管理器，每个管理器有自己的名字。bnorth 提供了一些数据管理器，并将管理器的创建函数放在app.actionStates 中，比如页面数据管理器 data 等。
+ * state 的建立，用数据管理器创建函数建立好，并添加到states中
+ * ```js
+ * container.states.data = app.actionStates.data({});
+ * ```
+ * state 的数据访问
+ * ```js
+ * this.props.state_data
+ * ```
+ * state 管理器的访问
+ * ```js
+ * this.props.states.data      // 在页面Page 中
+ * container.props.states.data // 在页面container function 中
+ * ```
+ * 编写新的数据管理器
+ * 1. 建立class
+ * 1. 实现state 函数，该函数返回的数据将会被映射到props.state_{name}
+ * 1. 实现states 函数，该返回对象，对象中的每个键值对的值将被逐一映射到 props.state_{name}_{key}
+ * 1. 根据需要实现页面生命周期函数的回调函数
  * 
- * @property {function[]} handler
+ * **reduxers**：
+ * reduxer 映射列表，reduxer是redux 的概念，redux 通过多个reduxer 将仓库分为不同部分，每个reduxer 有自己的名字。映射列表中的字符串即为redxuer 的名字列表。
+ * 设置后，数据仓库中对应的数据，将被映射到页面page 的props 中。
+ * **actions**：
+ * 供页面调用的action 函数添加到模板的actions 中，action 是redux 的概念，符合 redux-trunk 标准。
+ * 定义
+ * ```js
+ * container.actions.test = (args)=>()=>{
+ *   ...
+ * };
+ * ```
+ * 页面Page 中使用
+ * ```js
+ * this.props.container.actions.test(args)
+ * ```
+ * **handlers**：
+ * 与事件同名的处理函数添加到container 模板的handlers 中，事件触发时，该函数将会被调用。
+ * 事件包括，app 触发的事件与组件的生命周期事件，包括：
+ * onWillStart(page) - 页面将要启动时触发，参数page 为页面Page 实例
+ * onStart(page) - 页面启动时触发，参数page 为页面Page 实例
+ * onPause(page) - 页面失去焦点启动时触发，参数page 为页面Page 实例
+ * onResume(page) - 页面获取焦点时触发，参数page 为页面Page 实例
+ * onStop(page) - 页面关闭时触发，参数page 为页面Page 实例
+ * @function contianerFunction
+ * @param {App} app - App 的实例
+ * @param {object} props - 页面的属性
+ * @param {object} container - container模板，在此函数中，扩展该属性
+ * @example
+ * ```js
+ * export default function(app, props, container) {
+ *   container.states.data = app.actionStates.data({});
+ * }
+ * ```
  */

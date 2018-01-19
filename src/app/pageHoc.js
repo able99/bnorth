@@ -7,13 +7,20 @@
 
  
 import React from 'react';
+import uuid from '../utils/uuid';
 import { setBrowserTitle } from '../utils/browser';
 
 
 /**
- * bnorth 中页面组件的基类，bnorth会自动将react 组件通过高级函数pageHoc 进行超类扩展
- * 页面组件负责纯组件的渲染，使用container 注入的props 即可，一般无需使用state
- * 页面组件中的props包括react router注入的路由属性，包括router，route，lcation，params等，参见[react-router 3](https://github.com/ReactTraining/react-router/tree/v3/docs)
+ * bnorth 中页面Page 组件的基类，bnorth 会自动将react 组件通过高级函数pageHoc 进行超类扩展，负责纯组件的渲染，使用container 注入的props，一般无需使用state
+ * **props 注入** 页面Page 的props 除react 属性外注入包括：
+ * 1. **this.app**： App 类的实例
+ * 1. **this.props.container**： 与page 对应的container 的实例，可操作对应的actions，states
+ * 1. **this.props.state_xxx**： bnorth state 注入的数据
+ * 1. **this.props.params|location|route|routes|router**： react router注入的属性，具体参见[react-router 3](https://github.com/ReactTraining/react-router/tree/v3/docs)
+ * **render**
+ * 1. page render 时，将子组件修改为与自己同级，保证互相不影响，因此页面page 的元素应该是绝对定位到左上角的，可使用bnorth-components 的View 组件
+ * 1. render 错误时会触发onErrorPageRender 事件
  * @class Page
  */
 export default (app, Wrapper) => class extends Wrapper {
@@ -77,14 +84,15 @@ export default (app, Wrapper) => class extends Wrapper {
     let name = Wrapper.displayName||Wrapper.name;
     app.verbose(`page render(${name}):`,this);
 
+    if(this.props.state__page.ready===false){
+      return null;
+    }
+
     let ret;
     try{
       ret = super.render();
     }catch(e){
       return app.trigger('onErrorPageRender', e);
-    }
-    if(this.isAppPage()){
-      return ret;
     }
 
     ret = React.cloneElement( ret, Object.assign( {
@@ -93,9 +101,23 @@ export default (app, Wrapper) => class extends Wrapper {
     }, ret.props));
     
     if(this.getSubs().indexOf(this.getPageChildPath())>=0){
-      return (<div>{ret}{this.props[this.getPageChildPath()] && this.props[this.getPageChildPath()].props.children}</div>);
+      return (
+        <div>
+          {ret}
+          {!this.isAppPage()?this.props.state__page.layers.map(v=>v.element):null}
+          {this.props[this.getPageChildPath()] && this.props[this.getPageChildPath()].props.children}
+          {this.isAppPage()?this.props.state__page.layers.map(v=>v.element):null}
+        </div>
+      );
     }else{
-      return (<div>{ret}{this.isSubPage()?null:this.props.children}</div>);
+      return (
+        <div>
+          {ret}
+          {!this.isAppPage()?this.props.state__page.layers.map(v=>v.element):null}
+          {this.isSubPage()?null:this.props.children}
+          {this.isAppPage()?this.props.state__page.layers.map(v=>v.element):null}
+        </div>
+      );
     }
   }
 
@@ -213,5 +235,28 @@ export default (app, Wrapper) => class extends Wrapper {
       ret = route.path;
     }
     return ret
+  }
+
+  addLayer(element) {
+    let uuidstr = uuid(8,16);
+    this.props.container.states._page.update({
+      layers: [...this.props.state__page.layers, {uuid: uuidstr, element}]
+    });
+
+    return uuidstr;
+  }
+
+  updateLayer(element, uuid) {
+    this.props.container.states._page.update({
+      layers: this.props.state__page.layers.map(v=>(
+        v.uuid!==uuid?v:{element, uuid}
+      )),
+    });
+  }
+
+  removeLayer(uuid) {
+    this.props.container.states._page.update({
+      layers: this.props.state__page.layers.filter(v=>v.uuid!==uuid)
+    });
   }
 }

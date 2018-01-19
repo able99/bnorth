@@ -14,17 +14,14 @@ let _instance = null;
 
 
 /**
- * 应用程序的主入口类
- * 使用单例模式，保证只有一个应用实例，建立后通过start 函数启动应用
- * @class App
+ * 应用程序的主类
+ * 使用单例模式，保证只有一个应用实例，建立后通过start 函数即可启动应用
+ * @class
  * @example
  * ```js
  * let app = App.instance({});
  * app.start();
  * ```
- */
-/**
- * @property {object} config app 配置类，参见[config](/#/?name=%2Fbase%2Fconfig)
  */
 export default class App {
   // constructor
@@ -51,15 +48,37 @@ export default class App {
   constructor(options) {
     if(!_instance) {
       this.options = options||{};
-      this.config = Object.assign(config,this.options.config||null);
-      this._startEvents = options.startEvents || ['onConfigBefore', 'onConfig', 'onImportStyles', 'onImportStylesAfter', 'onCreateStoreBefore', 'onCreateStore', 'onCreateStoreAfter', 'onImportRoutes', 'onImportRoutesAfter' ,'onHook', 'onRender'];
 
-      this.stateError = false;
+      this._startEvents = options.startEvents || ['onConfigBefore', 'onConfig', 'onImportStyles', 'onImportStylesAfter', 'onCreateStoreBefore', 'onCreateStore', 'onCreateStoreAfter', 'onImportRoutes', 'onImportRoutesAfter' ,'onHook', 'onRender'];
+      this._stateError = false;
+
+      /**
+       * @property {object} config app 配置类，参见[config](/#/?name=%2Fbase%2Fconfig)
+       */
+      this.config = Object.assign(config,this.options.config||null);
+      /**
+       * @property {object[]} pages - app 中正在运行的插件列表
+       */
       this._plugins = [];
+      /**
+       * @property {object} pages - 路由表
+       */
       this.routes = null;
+      /**
+       * @property {object[]} pages - app 的action 函数列表
+       */
       this.actions = {};
+      /**
+       * @property {object[]} pages - app 的数据管理器列表
+       */
       this.actionStates = {};
+      /**
+       * @property {object[]} pages - app 中正在运行的reduxer 列表
+       */
       this.reducers = {};
+      /**
+       * @property {object[]} pages - app 中正在运行的页面的列表
+       */
       this.pages = [];
 
       this.use(appPluginBefore);
@@ -101,6 +120,31 @@ export default class App {
    */
   removeWaiting() {
     this.domWaiting && this.domWaiting.remove();
+  }
+
+  // pages
+  // -------------------
+  /**
+   * 获取app 中的页面
+   * @method
+   * @param {string|number} name - 
+   * **默认**：获取最后的页面，即当前焦点页面
+   * **空字符串，'/'，0**：获取app 根页面
+   * **number**：按页面序号获取
+   * **string**：按页面displayName获取
+   */
+  getPage(name) {
+    if(name===undefined){
+      return this.pages[this.pages.length-1];
+    } else if(name===''||name==='/'||name===0) {
+      return this.pages[0];
+    } else if(typeof(name)==='number'){
+      return this.pages[name];
+    } else if(typeof(name)==='string'){
+      return this.pages.find(v=>v.props.displayName===name);
+    } else {
+      return name;
+    }
   }
 
   // plugins 
@@ -213,9 +257,9 @@ export default class App {
    * @param {...*} args 
    */
   errorRender(...args) {
-    if(this.stateError)return;
+    if(this._stateError)return;
     this.trigger('onRenderMessage',...args);
-    this.stateError=true;
+    this._stateError=true;
   }
   /**
    * 将错误通过notice方式显示

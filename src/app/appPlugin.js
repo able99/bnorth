@@ -35,67 +35,8 @@ const ActionAppReady = 'ActionAppReady';
  * app.actions.appReady(true)
  * ```
  */
-function appReady(ready) {
-  return {
-    type: ActionAppReady,
-    ready,
-  };
-}
-
-const ActionAppLayerAdd = 'ActionAppLayerAdd';
-const ActionAppLayerRemove = 'ActionAppLayerRemove';
-const ActionAppLayerUpdate = 'ActionAppLayerUpdate';
-/**
- * 在应用之上添加悬浮层
- * @method
- * @param {element} layer - 添加到悬浮层的元素
- * @param {function} [cb] - 添加成功后的回调函数，参数为实例化后的layer
- * @example 
- * ```js
- * app.actions.appLayerAdd(element)
- * ```
- */
-function appLayerAdd(layer, cb) {
-  cb&&cb(layer);
-  return {
-    type: ActionAppLayerAdd,
-    layer,
-  };
-}
-/**
- * 删除悬浮层列表中的的指定layer
- * @method
- * @param {element} layer - 要删除的层
- * @example
- * ```js
- * app.actions.appLayerRemove(layer);
- * ```
- */
-function appLayerRemove(layer) {
-  return {
-    type: ActionAppLayerRemove,
-    layer,
-  };
-}
-/**
- * 更新悬浮层的属性
- * @method
- * @param {element} layer  - 要更新的悬浮层
- * @param {object} props - 新的悬浮层组件的属性键值对
- * @param {function} [cb] - 回调函数将返回新的组件实例
- * @example
- * ```js
- * app.actions.appLayerUpdate(layer,{cTheme: 'error'});
- * ```
- */
-function appLayerUpdate(layer, props, cb) {
-  let newer = cloneElement(layer, {...layer.props,...props});
-  cb&&cb(newer);
-  return {
-    type: ActionAppLayerUpdate,
-    layer,
-    newer,
-  };
+let appReady = (ready)=>(app)=>{
+  app.getPage(0).props.states._page.setValue('ready',ready);
 }
 
 /**
@@ -136,38 +77,6 @@ let noticeBlocking = (...args)=>(app)=>{
   app.trigger('onNoticeBlocking', ...args);
 }
 
-export function reducerApp(
-  state = {
-    ready: true,
-    layers: [],
-  }, 
-  action
-) {
-  switch (action.type) {
-    // ready
-    case ActionAppReady:
-      return Object.assign({}, state, {ready: action.ready});
-
-    // layers
-    case ActionAppLayerAdd: {
-      return Object.assign({}, state, {layers: [...state.layers, action.layer]});
-    }
-    case ActionAppLayerRemove: {
-      return Object.assign({}, state, {layers: state.layers.filter((v)=>{
-        return v!==action.layer;
-      })});
-    }
-    case ActionAppLayerUpdate: {
-      return Object.assign({}, state, {layers: state.layers.map((v)=>{
-        return v!==action.layer?v:action.newer;
-      })});
-    }
-
-    //default
-    default:
-      return state;
-  }
-}
 
 
 // funtions
@@ -306,15 +215,10 @@ export let appPluginAfter = {
   onCreateStoreBefore(app) {
     Object.assign(app.actions,{
       appReady,
-      appLayerAdd,
-      appLayerRemove,
-      appLayerUpdate,
       noticeMessage,
       noticeLoading,
       noticeBlocking,
     });
-
-    app.reducers.app = reducerApp;
   },
 
   onCreateStore(app) {
