@@ -62,6 +62,8 @@ class Utils {
 
 
 export default {
+  name: 'utils',
+
   init(app) {
     app.Utils = Utils;
     app.utils = new Utils(app);

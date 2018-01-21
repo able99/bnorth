@@ -289,6 +289,9 @@ export function reducerRequestFetch( state = {
 // export
 //==================
 export default {
+  name: 'request',
+  dependence: 'network',
+
   init(app) {
     app.actionStates.request = function(options={},uuid=null){
       if(typeof(options)==='string') uuid=options;

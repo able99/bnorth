@@ -14,18 +14,6 @@ import React from 'react';
  * 保留了，页面在bnroth 层处理页面的能力，目前实现了对html 中waitting 的管理
  */
 export class AppComponentPage extends React.Component{
-  componentDidMount() {
-    if(this.props.state__page.ready!==false){
-      this.app.removeWaiting();
-    }
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    if(this.props.state__page.ready===false && nextProps.state__page.ready){
-      this.app.removeWaiting();
-    }
-  }
-
   render() {
     return <div />;
   }

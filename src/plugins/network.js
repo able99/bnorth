@@ -325,6 +325,8 @@ class Network {
 
 
 export default {
+  name: 'network',
+
   init(app) {
     app.Network = Network;
     app.network = new Network(app);

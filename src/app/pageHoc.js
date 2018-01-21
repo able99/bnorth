@@ -83,9 +83,9 @@ export default (app, Wrapper) => class extends Wrapper {
   render(){
     let name = Wrapper.displayName||Wrapper.name;
     app.verbose(`page render(${name}):`,this);
-
+    
     if(this.props.state__page.ready===false){
-      return null;
+      return <app.WaittingComponent />;
     }
 
     let ret;
@@ -94,31 +94,20 @@ export default (app, Wrapper) => class extends Wrapper {
     }catch(e){
       return app.trigger('onErrorPageRender', e);
     }
-
     ret = React.cloneElement( ret, Object.assign( {
       'data-bnorth-page': name, 
       'data-blur': !this.isFocus(),
     }, ret.props));
     
-    if(this.getSubs().indexOf(this.getPageChildPath())>=0){
-      return (
-        <div>
-          {ret}
-          {!this.isAppPage()?this.props.state__page.layers.map(v=>v.element):null}
-          {this.props[this.getPageChildPath()] && this.props[this.getPageChildPath()].props.children}
-          {this.isAppPage()?this.props.state__page.layers.map(v=>v.element):null}
-        </div>
-      );
-    }else{
-      return (
-        <div>
-          {ret}
-          {!this.isAppPage()?this.props.state__page.layers.map(v=>v.element):null}
-          {this.isSubPage()?null:this.props.children}
-          {this.isAppPage()?this.props.state__page.layers.map(v=>v.element):null}
-        </div>
-      );
-    }
+    return (
+      <div style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, width: '100%', height: '100%'}}>
+        {ret}
+        {!this.isAppPage()?this.props.state__page.layers.map(v=>v.element):null}
+        {this.getSubs().indexOf(this.getPageChildPath())>=0 && this.props[this.getPageChildPath()] && this.props[this.getPageChildPath()].props.children}
+        {this.getSubs().indexOf(this.getPageChildPath())<0 && !this.isSubPage() && this.props.children}
+        {this.isAppPage()?this.props.state__page.layers.map(v=>v.element):null}
+      </div>
+    )
   }
 
   /*!

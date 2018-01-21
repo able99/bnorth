@@ -326,10 +326,11 @@ export function reducerData(
 }
 
 
-//==================
 // export
 //==================
 export default {
+  name: 'data',
+
   init(app) {
     app.actionStates.data = function(options,uuid) {
       if(typeof(options)==='string') uuid=options;

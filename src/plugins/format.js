@@ -148,6 +148,8 @@ class Format {
 
 
 export default {
+  name: 'format',
+  
   init(app) {
     app.Format = Format;
     app.format = new Format(app);

@@ -206,6 +206,8 @@ class Browser {
 }
 
 export default {
+  name: 'browser',
+
   init(app) {
     app.Browser = Browser;
     app.browser = new Browser(app);

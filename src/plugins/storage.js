@@ -98,6 +98,8 @@ class Storage {
 
 
 export default {
+  name: 'storage',
+
   init(app) {
     app.Storage = Storage;
     app.storage = new Storage(app);

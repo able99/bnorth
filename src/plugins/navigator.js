@@ -234,6 +234,8 @@ class Navigator{
 
 
 export default {
+  name: 'navigator',
+
   init(app) {
     app.Navigator = Navigator;
     app.navigator = new Navigator(app);

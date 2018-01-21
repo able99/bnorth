@@ -238,6 +238,8 @@ class User {
 
 
 export default {
+  name: 'user',
+
   init(app) {
     app.User = User;
     app.user = new User(app);
