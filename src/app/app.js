@@ -65,9 +65,9 @@ function routeProps(route, config, app) {
       if(purpose)config.paths[purpose[0].toUpperCase()+purpose.slice(1)] = pathItem;
 
       // check login
-      if(checkLogin){
+      if(true||checkLogin){
         let originOnEnter = onEnter;
-        onEnter = function(nextState, replace) {
+        onEnter = function(nextState, replace) {debugger;console.log(nextState);
           if(originOnEnter&&originOnEnter(nextState, replace)) return;
 
           if(app.user&&app.navigator&&!app.user.isLogin()){

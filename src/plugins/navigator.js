@@ -11,10 +11,10 @@ import Url from 'url-parse';
 
 /**
  * 为app 提供导航的能力扩展，导航一般区别与browser 插件中的插件，导航指app 应用内的导航
- * @class
  * **插件** 该类为插件类扩展了App 的能力
  * app.Navigator: 该类的原型
  * app.navigator: 该类的实例
+ * @class
  */
 class Navigator{
   constructor(app){
@@ -23,19 +23,9 @@ class Navigator{
     this.routerStatus = null;
   }
 
-  _navi(type,...args){
-    if(!this.routerStatus) return;
-    let {location,router,} = this.routerStatus;
-
-    if(type==='back'){
-      router.go(...args);
-      return;
-    }
-
-    if(!args.length){
-      type==='replace'?router.replace("/"):router.push("/");
-      return;
-    }
+  _getUrl(...args){
+    if(!this.routerStatus||!args.length) return '/';
+    let { location,router } = this.routerStatus;
 
     let paths = [];
     let extern = false;
@@ -48,32 +38,24 @@ class Navigator{
     };
 
     for(let arg of args){
-      if(Array.isArray(arg)){
-        [
-          newloc.query,
-          passQuery,
-          newloc.state,
-          passState,
-        ] = arg;
-      }
-    }
-
-    for(let arg of args){
       if(!arg){
         this.app.error('invalided navigator params');
-        return;
       }else if(Array.isArray(arg)){
-        
-      }else if(typeof(arg)==="object"){
-        extern = extern || arg.extern || (arg.path && arg.path.indexOf("http")===0);
-        absolute = absolute || arg.absolute || (arg.path && arg.path.indexOf("/")===0);
+        [ newloc.query, passQuery, newloc.state, passState, ] = arg;
+      }else{
+        arg = typeof(arg)==="object"?arg:{path: arg};
+        if(!app.path) {this.app.error('invalided navigator params'); continue;}
 
+        let aextern = arg.path.indexOf("http")===0;
+        let aabsolute = arg.path.indexOf("/")===0;
+        extern = extern || arg.extern || aextern;
+        absolute = absolute || arg.absolute || aabsolute;
         if(arg.path==="/"){continue}
         if(arg.path==="."){continue}
         if(arg.path===".."){uper++;continue}
       
         if(arg.path) {
-          let apath = [arg.path];
+          let apath = [aextern||aabsolute?arg.path:encodeURIComponent(arg.path)];
           if(newloc.query&&Array.isArray(arg.params)&&arg.params.length){
             arg.params.forEach((v)=>{
               if(newloc.query[v]) apath.push(newloc.query[v]);
@@ -82,20 +64,6 @@ class Navigator{
           }
           paths.push(apath.join('/'));
         }
-      }else{
-        arg = arg||"";
-        if(!arg){continue}
-
-        let aextern = (paths.length===0&&arg.indexOf("http")===0);
-        let aabsolute = (paths.length===0&&arg.indexOf("/")===0);
-        extern = extern || aextern;
-        absolute = absolute || aabsolute;
-
-        if(arg==="/"){continue}
-        if(arg==="."){continue}
-        if(arg===".."){uper++;continue}
-
-        if(arg) paths.push(aextern||aabsolute?arg:encodeURIComponent(arg));
       }
     }
 
@@ -117,26 +85,14 @@ class Navigator{
     if(!Object.keys(newloc.query).length)delete newloc.query;
     if(!Object.keys(newloc.state).length)delete newloc.state;
 
-    if(type==='getUrl'){
-      if(extern){
-
-      }else{
-        let ret = new Url(window.location.href);
-        ret.set('hash', router.createHref(newloc));
-        return ret.toString();
-      }
-      return '';
-    }
-    if(extern&&this.app.browser){
-      type==='replace'?this.app.browser.replace(newloc):this.app.browser.push(newloc);
-    }else{
-      type==='replace'?router.replace(newloc):router.push(newloc);
-    }
+    return [newloc, extern, absolute];
   }
 
-  // interface
-  // ----------------------------
-  recallBefore(location,router) {
+  /*!
+   * for custom party of recall
+   * @method
+   */
+  _recallBefore(location,router) {
     if(this.app.config.login.loginToHomeOrAuto) {
       this.goHome();
       return true;
@@ -162,7 +118,7 @@ class Navigator{
     if(!this.routerStatus)return;
     let {location,router} = this.routerStatus;
     
-    if(this.recallBefore(location,router)) return;
+    if(this._recallBefore(location,router)) return;
 
     if(this.recallLocation && this.recallLocation.isReplace) {
       router.replace(this.recallLocation);
@@ -176,40 +132,72 @@ class Navigator{
   /** 
    * 跳转到指定路由
    * @method
-   * @param {...string} [paths] - 路由列表，取值包括：<br />
-   * **'/'**
-   * **'..'**
-   * **path(string)**
-   * **path(object)**
-   * **[query,pass query,state,pass state]**
+   * @param {...string} [paths] - 路由列表，可以是字符串，path 解析对象或者 router3 location对象，还可能是数组：<br />
+   * **'/'**：出现在字符串或者对象中的pathname 中时，从根路径开始计算，否则从当前路径开始计算
+   * **'..'**：出现在字符串或者对象中的pathname 中时，从当前路径的上一级路径开始计算，每出现一次，返回一级
+   * **params**：如果path 对象包含params 数组，说明该路径包含path info 参宿，会从query 参数生成path info 字符串
+   * **数组对象**：如果是数组对象，4个元素[query,pass query,state,pass state]分别是设置query 键值对，是否将query 键值对传递，state 键值对，和是否将state 键值对传递
    */
   push(...args){
-    this._navi('push',...args);
+    if(!this.routerStatus||!this.routerStatus.router) return;
+    let [newloc, extern, absolute] = _getUrl(...args);
+
+    if(extern&&this.app.browser){
+      this.app.browser.push(newloc);
+    }else{
+      this.routerStatus.router.push(newloc);
+    }
   }
+
   /** 
    * 替换到到指定路由
+   * 参数同push
    * @method
-   * @param {...string} [paths] - 
    */
   replace(...args){
-    this._navi('replace',...args);
+    if(!this.routerStatus||!this.routerStatus.router) return;
+    let [newloc, extern, absolute] = _getUrl(...args);
+
+    if(extern&&this.app.browser){
+      this.app.browser.replace(newloc);
+    }else{
+      this.routerStatus.router.replace(newloc);
+    }
   }
+
   /** 
    * 返回之前页面
    * @method
    * @param {number} [step=1] - 返回的页面数
    */
   back(step=1){
-    this._navi('back',-step);
+    if(!this.routerStatus||!this.routerStatus.router) return;
+    this.routerStatus.router.go(...args);
   }
-  /** 
-   * 获取路由的url 字符串
+
+  /**
+   * app.config.paths 中的首字母大写的路径，比如Xxx 会直接建立goXxx 函数，调用会导航到对应路径
    * @method
-   * @param {...string} [paths] - 
+   * goXxx
+   */
+
+  /** 
+   * 获取导航后的完整url
+   * 参数同push
+   * @method
    */
   getUrl(...args){
-    return this._navi('getUrl',...args);
+    let [loc, extern, absolute] = _getUrl(...args);
+
+    if(extern||absolute){
+      return loc.pathname;
+    }else{
+      let ret = new Url(window.location.href);
+      ret.set('hash', router.createHref(newloc));
+      return ret.toString();
+    }
   }
+
   /**
    * 关闭 app
    * @method
@@ -220,7 +208,7 @@ class Navigator{
 
   // event
   // --------------------
-  onRouterStatusChange(routerStatus){
+  _onRouterStatusChange(routerStatus){
     if(!routerStatus)return;
 
     if(routerStatus.location.pathname===(typeof(this.app.config.paths.Login)==='string'?this.app.config.paths.Login:this.app.config.paths.Login.path)){
@@ -235,6 +223,7 @@ class Navigator{
 
 export default {
   name: 'navigator',
+  depentence: 'browser',
 
   init(app) {
     app.Navigator = Navigator;
@@ -253,10 +242,10 @@ export default {
   },
 
   onNavigated(app, location) {
-    app.navigator.onRouterStatusChange(location);
+    app.navigator._onRouterStatusChange(location);
   },
 
   onNavigatePrevent(app, location) {
-    app.navigator.onRouterStatusChange(location);
+    app.navigator._onRouterStatusChange(location);
   }
 }

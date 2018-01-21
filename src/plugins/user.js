@@ -11,10 +11,10 @@ import md5 from '../utils/md5';
 
 /**
  * 为app 提供用户信息与鉴权的能力扩展
- * @class
  * **插件** 该类为插件类扩展了App 的能力
  * app.User: 该类的原型
  * app.user: 该类的实例
+ * @class
  */
 class User {
   constructor(app){
@@ -22,8 +22,8 @@ class User {
     this._userUpdateListeners = new Set();
   }
 
-  //===========
   // user state
+  //===========
   stateSuccess (result){
     let user = this.storageLoad();
     this.storageSave(Object.assign(user||{},result||{}));
@@ -49,8 +49,8 @@ class User {
     },"user");
   }
 
-  //===========
   // user storage
+  //===========
   storageLoad(){
     return this.app.storage&&this.app.storage.getObj(this.app.config.keys.user);
   }
@@ -61,8 +61,8 @@ class User {
     return this.app.storage&&this.app.storage.remove(this.app.config.keys.user);
   }
 
-  //===========
   // user info
+  //===========
   getToken(){
     let user = this.storageLoad();
     return user?user.token:"";
@@ -79,8 +79,8 @@ class User {
   }
 
 
-  //===========
   // user handle
+  //===========
   onUserUpdate(user){
     if(!user)return {};
     for(let listener of this._userUpdateListeners) {
@@ -94,8 +94,8 @@ class User {
     this._userUpdateListeners.remove(listener);
   }
 
-  //===========
   // user login
+  //===========
   getLoginUrl(data,options) {
     if(typeof(options)==='string') return options;
     
@@ -158,8 +158,8 @@ class User {
     this.loginRequest(...this.loginBefore(data, options));
   }
 
-  //===========
   // user logout
+  //===========
   getLogoutUrl(data, options) {
     let url = this.app.config.login.urls['logout']||'';
     return url.indexOf('http')>=0?url:this.app.config.urls.base+this.app.config.urls.api+url;
@@ -196,8 +196,8 @@ class User {
     this.logoutNavigate(data, options);
   }
 
-  //===========
   // user op
+  //===========
   update(){
     this.state().update();
   }
@@ -239,6 +239,7 @@ class User {
 
 export default {
   name: 'user',
+  dependence: ['request', 'navigator', 'storage'],
 
   init(app) {
     app.User = User;

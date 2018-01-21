@@ -78,7 +78,7 @@ class Browser {
   //url
   //------------------------------
   /**
-   * 返回当前页面的url地址
+   * 返回当前页面的url 地址
    * @method
    */
   url(){
@@ -87,7 +87,7 @@ class Browser {
   /**
    * 返回解析后的url的类，[具体参见](https://github.com/unshiftio/url-parse)
    * @method
-   * @param {string} url - url地址
+   * @param {string} [url=this.url()] - url 地址，如果为空获取当前地址
    * @return {Url} - url解析类
    */
   parseUrl(url){
@@ -95,9 +95,9 @@ class Browser {
     return Url(url,true);
   };
   /**
-   * 将url类格式化成字符串
+   * 将url 对象格式化成url 字符串
    * @method
-   * @param {Url} url 
+   * @param {Url|path} url - Url解析对象或者bnorth path对象 
    * @param {object} [query=null] - 添加到url中的查询字符串 
    * @returns {string} - url字符串 
    */
@@ -118,15 +118,17 @@ class Browser {
   //parser
   //------------------------------
   /**
+   * 将query 字符串解析成键值对的对象
    * @method
-   * @param {...*} args 
+   * @param {string} query - query 字符串 
    */
   queryParse(...args) {
     return Url.qs.parse(...args);
   }
   /**
+   * 将包含query 键值对的对象转换为query 字符串
    * @method
-   * @param {...*} args 
+   * @param {object} obj - 包含query 键值对的对象 
    */
   queryStringify(...args) {
     return Url.qs.stringify(...args);
@@ -137,12 +139,13 @@ class Browser {
   /**
    * 浏览器跳转到指定地址，可返回当前地址
    * @method
-   * @param {string|Url} url - 地址字符串或者url 解析类
+   * @param {string|Url|path|location} url - url地址，可以是字符串，Url 解析类，或者path 解析类，router location类
+   * url，path，location 中的query 和 state 也会合并到查询字符串中
    * @param {object} [params=null] - 查询字符串
    */
   push(url,params){
     if(typeof(url)==='object'){
-      params = Object.assign({},url.state||{},url.query||{});
+      params = Object.assign({},url.state||{},url.query||{}); // TODO:query state where is it used
       url = url.pathname||'/';
     }
 
@@ -150,9 +153,8 @@ class Browser {
   };
   /**
    * 浏览器替换当前地址到指定地址，无法再返回当前地址
+   * 参数同push
    * @method
-   * @param {string|Url} url - 地址字符串或者url 解析类
-   * @param {object} [params=null] - 查询字符串
    */
   replace(url,params){
     if(typeof(url)==='object'){
