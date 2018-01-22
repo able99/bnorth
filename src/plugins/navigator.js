@@ -46,8 +46,8 @@ class Navigator{
         arg = typeof(arg)==="object"?arg:{path: arg};
         if(!arg.path) {this.app.error('invalided navigator params'); continue;}
 
-        let aextern = arg.path.indexOf("http")===0;
-        let aabsolute = arg.path.indexOf("/")===0;
+        let aextern = typeof(arg.path)==='string' && arg.path.indexOf("http")===0;
+        let aabsolute = typeof(arg.path)==='string' && arg.path.indexOf("/")===0;
         extern = extern || arg.extern || aextern;
         absolute = absolute || arg.absolute || aabsolute;
         if(arg.path==="/"){continue}
@@ -172,7 +172,7 @@ class Navigator{
    */
   back(step=1){
     if(!this.routerStatus||!this.routerStatus.router) return;
-    this.routerStatus.router.go(...args);
+    this.routerStatus.router.go(-step);
   }
 
   /**
