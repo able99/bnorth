@@ -244,5 +244,11 @@ export default {
   init(app) {
     app.User = User;
     app.user = new User(app);
-  }
+  },
+
+  onNavigating(app, nextState) {
+    if(nextState.routes.find(v=>v.checkLogin)&&!app.user.isLogin()){
+      return typeof(app.config.paths.Login)==='string'?app.config.paths.Login:app.config.paths.Login.path;
+    }
+  },
 }

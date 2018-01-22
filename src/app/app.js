@@ -44,6 +44,23 @@ export function createRouteComponent (app, page, container) {
 /*!
  * @function
  */
+function routeOnEnter(originOnEnter, nextState, replace, callback) {
+  let ret = app.trigger('onNavigating', nextState);
+
+  if(ret) {
+    app.trigger('onNavigatePrevent', nextState);
+    replace(ret);
+  }
+
+  if(originOnEnter)
+    originOnEnter(nextState, replace, callback);
+  else
+    callback();
+}
+
+/*!
+ * @function
+ */
 function routeProps(route, config, app) {
   if(!route||!route.props) return route;
   if(route.props.onInit) route.props.onInit(app);
@@ -65,18 +82,9 @@ function routeProps(route, config, app) {
       if(purpose)config.paths[purpose[0].toUpperCase()+purpose.slice(1)] = pathItem;
 
       // check login
-      if(true||checkLogin){
-        let originOnEnter = onEnter;
-        onEnter = function(nextState, replace) {debugger;console.log(nextState);
-          if(originOnEnter&&originOnEnter(nextState, replace)) return;
-
-          if(app.user&&app.navigator&&!app.user.isLogin()){
-            app.trigger('onNavigatePrevent', nextState);
-            replace(typeof(app.config.paths.Login)==='string'?app.config.paths.Login:app.config.paths.Login.path);
-          }
-        }
-      }
-
+      let originOnEnter = onEnter;
+      onEnter = routeOnEnter.bind(null, originOnEnter);
+      
       // component
       component = createRouteComponent(app, component, container);
 
@@ -644,7 +652,7 @@ export default class App {
    * @param {object} [options] - 消息显示的配置属性
    */
   errorNotice(...args) {
-    if(!this._pluginReady) {
+    if(!this.started) {
       this.showMessageByAlert(args);
       return;
     }
@@ -833,27 +841,39 @@ export default class App {
 /**
  * 当页面组件render错误时触发
  * @callback onErrorPageRender
+ * @param {App} app - 应用App 的实例
  * @param {Error} error - 页面render 的异常信息对象
  * @return {boolean} - 返回true，将不会触发插件列表中位于其后的插件回调
  */
 
 /**
+ * 当准备导航到新的页面时触发，返回path，将重定向到制定地址
+ * @callback onNavigating
+ * @param {App} app - 应用App 的实例
+ * @param {object} nextState - 页面路由信息，参见[react-router3 router-render函数]()
+ * @return {string} - 返回需要阻止，并替换当前导航的地址，同时将不会触发插件列表中位于其后的插件回调
+ */
+
+/**
  * 当导航到新的页面时触发
  * @callback onNavigated
- * @param {object} props - 页面路由信息，参见[react-router3 router-render函数]()
+ * @param {App} app - 应用App 的实例
+ * @param {object} nextState - 页面路由信息，参见[react-router3 router-render函数]()
  * @return {boolean} - 返回true，将不会触发插件列表中位于其后的插件回调
  */
 
 /**
  * 当当前导航被阻止时触发
  * @callback onNavigatePrevent
- * @param {object} props - 页面路由信息，参见[react-router3 router-render函数]()
+ * @param {App} app - 应用App 的实例
+ * @param {object} nextState - 页面路由信息，参见[react-router3 router-render函数]()
  * @return {boolean} - 返回true，将不会触发插件列表中位于其后的插件回调
  */
 
 /**
  * 当导航出错时触发，比如无法匹配的导航路径等问题
  * @callback onErrorNavigator
+ * @param {App} app - 应用App 的实例
  * @param {object} nextState - 页面路由信息，参见[react-router3 route-onEnter函数]()
  * @param {function} replace - 调用后可重定向路径的函数，参见[react-router3 route-onEnter函数]()
  * @return {boolean} - 返回true，将不会触发插件列表中位于其后的插件回调
@@ -862,6 +882,7 @@ export default class App {
 /**
  * 当需要打印日志时触发
  * @callback onLog
+ * @param {App} app - 应用App 的实例
  * @param {string} type - debug|error|verbose，表示日志的等级
  * @param {boolean} trace - 是否打印trace
  * @param {...*} args - 日志的列表
@@ -871,6 +892,7 @@ export default class App {
 /**
  * 当需要以页面render方式显示信息时触发
  * @callback onRenderMessage
+ * @param {App} app - 应用App 的实例
  * @param {string} title - 消息的标题
  * @param {...*} [args] - 消息列表
  * @return {boolean} - 返回true，将不会触发插件列表中位于其后的插件回调
@@ -879,6 +901,7 @@ export default class App {
 /**
  * 当需要以notice方式显示信息时触发
  * @callback onNoticeMessage
+ * @param {App} app - 应用App 的实例
  * @param {element|string} message - 显示的消息
  * @param {object} [props] - 消息显示的ui 属性
  * @param {object} [options] - 消息显示的配置属性

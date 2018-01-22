@@ -44,7 +44,7 @@ class Navigator{
         [ newloc.query, passQuery, newloc.state, passState, ] = arg;
       }else{
         arg = typeof(arg)==="object"?arg:{path: arg};
-        if(!app.path) {this.app.error('invalided navigator params'); continue;}
+        if(!arg.path) {this.app.error('invalided navigator params'); continue;}
 
         let aextern = arg.path.indexOf("http")===0;
         let aabsolute = arg.path.indexOf("/")===0;
@@ -140,7 +140,7 @@ class Navigator{
    */
   push(...args){
     if(!this.routerStatus||!this.routerStatus.router) return;
-    let [newloc, extern, absolute] = _getUrl(...args);
+    let [newloc, extern, absolute] = this._getUrl(...args);
 
     if(extern&&this.app.browser){
       this.app.browser.push(newloc);
@@ -156,7 +156,7 @@ class Navigator{
    */
   replace(...args){
     if(!this.routerStatus||!this.routerStatus.router) return;
-    let [newloc, extern, absolute] = _getUrl(...args);
+    let [newloc, extern, absolute] = this._getUrl(...args);
 
     if(extern&&this.app.browser){
       this.app.browser.replace(newloc);
@@ -187,7 +187,7 @@ class Navigator{
    * @method
    */
   getUrl(...args){
-    let [loc, extern, absolute] = _getUrl(...args);
+    let [loc, extern, absolute] = this._getUrl(...args);
 
     if(extern||absolute){
       return loc.pathname;
