@@ -20,9 +20,10 @@ is.positive = function(n,checkInput) {
 export function check(val, arule, options={}, checkErrorMessage) {
   if(!arule) return null;
   let message = options.checkErrorMessage||checkErrorMessage||'error';
-  let rule = null;
+  let rule;
   let params = [];
   let checker = null;
+  let ret;
 
   if(typeof(arule)==='object'){
     if(arule.rule) rule = arule.rule;
@@ -30,12 +31,16 @@ export function check(val, arule, options={}, checkErrorMessage) {
     if(arule.message) message = arule.message;
   }else if(typeof(arule)==='string'){
     rule = arule;
+  }else if(typeof(arule)==='function'){
+    rule = arule(val);
   }
-  if(!rule) return null;
+  if(rule===undefined) return null;
 
   let getNot = false;
-  if(typeof(rule)==='function'){
-    checker = rule;
+  if(rule===true||rule===false) {
+    ret = rule;
+  }else if(typeof(rule)==='function'){
+    ret = !rule(val, options.input, ...params);
   }else if(typeof(rule)==='string') {
     if(rule[0]==='!'){
       rule = rule.slice(1);
@@ -46,11 +51,12 @@ export function check(val, arule, options={}, checkErrorMessage) {
       params = [...params, splits.slice(1)];
     }
     checker = is[rule];
+    if(!checker) return null;
+    ret = !checker(val, options.input, ...params);
   }else{
     return null;
   }
- 
-  let ret = !checker(val, options.input, ...params);
+
   if(getNot)ret=!ret;
   return ret?message:null;
 }
