@@ -83,7 +83,7 @@ function routeProps(route, config, app) {
 
       // check login
       let originOnEnter = onEnter;
-      onEnter = routeOnEnter.bind(null, originOnEnter);
+      onEnter = route===Route?routeOnEnter.bind(null, originOnEnter):null;
       
       // component
       component = createRouteComponent(app, component, container);

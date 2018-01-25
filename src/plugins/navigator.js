@@ -37,22 +37,22 @@ class Navigator{
       pathname: '',
     };
 
-    for(let arg of args){
+    args.forEach((arg,i)=>{
       if(!arg){
         this.app.error('invalided navigator params');
       }else if(Array.isArray(arg)){
         [ newloc.query, passQuery, newloc.state, passState, ] = arg;
       }else{
         arg = typeof(arg)==="object"?arg:{path: arg};
-        if(!arg.path) {this.app.error('invalided navigator params'); continue;}
+        if(!arg.path) {this.app.error('invalided navigator params'); return;}
 
-        let aextern = typeof(arg.path)==='string' && arg.path.indexOf("http")===0;
-        let aabsolute = typeof(arg.path)==='string' && arg.path.indexOf("/")===0;
+        let aextern = i===0 && typeof(arg.path)==='string' && arg.path.indexOf("http")===0;
+        let aabsolute = i===0 && typeof(arg.path)==='string' && arg.path.indexOf("/")===0;
         extern = extern || arg.extern || aextern;
         absolute = absolute || arg.absolute || aabsolute;
-        if(arg.path==="/"){continue}
-        if(arg.path==="."){continue}
-        if(arg.path===".."){uper++;continue}
+        if(arg.path==="/"){return}
+        if(arg.path==="."){return}
+        if(arg.path===".."){uper++;return}
       
         if(arg.path) {
           let apath = [aextern||aabsolute?arg.path:encodeURIComponent(arg.path)];
@@ -65,7 +65,7 @@ class Navigator{
           paths.push(apath.join('/'));
         }
       }
-    }
+    });
 
     if(!absolute&&!extern){
       if(uper<=0){
