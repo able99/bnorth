@@ -25,7 +25,11 @@ export class AppComponentPage extends React.Component{
  * 保留了，页面在bnroth 层处理页面的能力，目前实现了页面生命周期映射到 app event 中
  */
 export let appComponentContainer = function(app, props, container) {
-  container.reducers.app = true;
+  container.states._page = app.actionStates.data({initData:{
+    layers: [],
+    ready: app.options.ready,
+  }}), 
+  
 
   container.handlers.onWillStart = ()=>{
     app.trigger('onAppWillStart');

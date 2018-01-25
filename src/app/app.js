@@ -541,6 +541,7 @@ export default class App {
 
     for(let v of this.pages||[]) {
       try{
+        if(!v.props.container||!v.props.container.handlers) continue;
         ret = v.props.container.handlers[event] && v.props.container.handlers[event](...args);
         if(ret){ return ret; }
       }catch(e){ 
