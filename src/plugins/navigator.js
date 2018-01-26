@@ -187,13 +187,14 @@ class Navigator{
    * @method
    */
   getUrl(...args){
-    let [loc, extern, absolute] = this._getUrl(...args);
+    let [newloc, extern, absolute] = this._getUrl(...args);
 
-    if(extern||absolute){
-      return loc.pathname;
+    if(extern){
+      return newloc.pathname;
     }else{
+      if(!this.routerStatus||!this.routerStatus.router) return '';
       let ret = new Url(window.location.href);
-      ret.set('hash', router.createHref(newloc));
+      ret.set('hash', this.routerStatus.router.createHref(newloc));
       return ret.toString();
     }
   }
