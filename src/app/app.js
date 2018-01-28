@@ -437,7 +437,7 @@ export default class App {
    * @method
    */
   showMessageOnRootElement(title, message) {
-    render(<this.ErrorComponent title={title} error={message} />, this.getRootElement());
+    render(<this.ErrorComponent title={title} error={typeof(message)==='object'&&message.message||String(message)} />, this.getRootElement());
   }
 
   /**
