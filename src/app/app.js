@@ -571,8 +571,9 @@ export default class App {
       }
       this.started = true;
     }catch(e){
-      this.error('app start error', e);
-      this.errorRender('app start error', e);
+      let title = this.started?'app uncaught error':'app start error';
+      this.error(title, e);
+      this.errorRender(title, e);
       return e;
     }
   }

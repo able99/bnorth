@@ -80,6 +80,11 @@ export default (app, Wrapper) => class extends Wrapper {
     return super.componentDidBackKey && super.componentDidBackKey();
   }
 
+  componentDidCatch(error, info) {
+    return app.trigger('onErrorPageRender', error);
+    return super.componentDidCatch && super.componentDidCatch(error, info);
+  }
+
   render(){
     let name = Wrapper.displayName||Wrapper.name;
     app.verbose(`page render(${name}):`,this);
