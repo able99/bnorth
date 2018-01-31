@@ -6,8 +6,9 @@
  */
 
 
+import BaseActionState from '../app/BaseActionState';
 import jspath from '../utils/jspath'
-import getUuid from '../utils/uuid';
+
 import getOptions from '../utils/getOptions';
 import { checkObject, checkObjectItem } from '../utils/validator';
 
@@ -53,8 +54,8 @@ let _dataClear = (uuid)=>(app)=>{
  * // page - 修改数据
  * this.props.states.data.setValue('x',xxx);
  */
-class ActionStateData{
-  static maps = {};
+class ActionStateData extends BaseActionState{
+  static stateName = 'data';
 
   /**
    * 构造数据管理state
@@ -79,13 +80,11 @@ class ActionStateData{
    * @param {string} uuid 
    */
   constructor(app, uuid, options){
-    this.app = app;
-    this.uuid = uuid;
+    super(app, uuid);
+
     this.options = options;
     this.options.defaultData = this.options.defaultData||{};
     this.options.initData = this.options.initData || this.options.defaultData;
-
-    ActionStateData.maps[uuid] = this;
   }
 
   // interface
@@ -102,9 +101,6 @@ class ActionStateData{
   get state() { //bnorth use
     return this.data;
   }
-  get states() { //bnorth use
-    return null;
-  }
 
   /**
    * 初始化所管理的数据
@@ -118,9 +114,9 @@ class ActionStateData{
       data = data||this.options.defaultData;
       let changeData = merge?Object.assign({},this.options.initData,data):data;
 
-      changeData = this.onWillChange(changeData,originData)||changeData||this.options.defaultData;
+      changeData = this.trigger('onWillChange', changeData,originData)||changeData||this.options.defaultData;
       this.app.actions._dataInit(this.uuid, changeData);
-      this.onDidChange(changeData,originData);
+      this.trigger('onDidChange', changeData,originData);
     }catch(e){
       this.app.errorNotice(e);
     }
@@ -138,10 +134,10 @@ class ActionStateData{
       let originData = this.data;
       let changeData = data||this.options.defaultData;
 
-      changeData = this.onWillChange(changeData,originData,key)||changeData||this.options.defaultData;
+      changeData = this.trigger('onWillChange', changeData,originData,key)||changeData||this.options.defaultData;
       let invalidate = key&&this.checkChangeItem(key, changeData);
       this.app.actions._dataUpdate(this.uuid, invalidate?originData:changeData, merge, this.options.initData);
-      if(!invalidate)this.onDidChange(changeData,originData,key);
+      if(!invalidate)this.trigger('onDidChange',changeData,originData,key);
       return true;
     }catch(e){
       this.app.errorNotice(e);
@@ -213,7 +209,7 @@ class ActionStateData{
     let ret = checkObjectItem(data, key, this.options.rules[key], {checkErrorMessage:this.options.checkErrorMessage});
 
     if(ret){
-      if(this.options.noticeChangeError) this.onChangeError(ret, key);
+      if(this.options.noticeChangeError) this.trigger('onChangeError', ret, key);
       return ret;
     }else{
       return null;
@@ -333,10 +329,7 @@ export default {
 
   init(app) {
     app.actionStates.data = function(options,uuid) {
-      if(typeof(options)==='string') uuid=options;
-      uuid = uuid||getUuid();
-      if(ActionStateData.maps[uuid]) return ActionStateData.maps[uuid];
-      return new ActionStateData(app, uuid, getOptions(options));
+      return BaseActionState.instance(ActionStateData, app, uuid, options);
     }
   },
 

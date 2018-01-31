@@ -139,6 +139,10 @@ config.keys = {};
  * @property {string} user='BNorthStorageUserKey' - localStarage中存储用户信息的key
  */
 config.keys.user = 'BNorthStorageUserKey';
+/**
+ * @property {string} user='BNorthStorageDebugKey' - localStarage中存储开启调试模式的key
+ */
+config.keys.config = 'BNorthStorageConfigKey';
 
 // login
 // ---------------------

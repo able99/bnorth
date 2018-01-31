@@ -6,6 +6,7 @@
  */
 
 
+import BaseActionState from '../app/BaseActionState';
 import getUuid from '../utils/uuid';
 import getOptions from '../utils/getOptions';
 
@@ -16,27 +17,25 @@ const RequestFetchInvalid = 'RequestFetchInvalid';
 const RequestFetchFetchSuccess = 'RequestFetchFetchSuccess';
 const RequestFetchFetchFail = 'RequestFetchFetchFail';
 let requestFetch = (request, options)=>app=>{
-  if(!app.network){ request.onChangeError('no network plugin'); return; }
-
   app.actions.requestFetching(request.uuid);
-  request.onFetching(true, options.blocking);
+  request.trigger('onFetching', true, options.blocking);
 
   app.network.fetch(options).then(
     (result)=>{
-      request.onFetching(false, options.blocking);
-      let ret = request.onWillChange(result); 
+      request.trigger('onFetching', false, options.blocking);
+      let ret = request.trigger('onWillChange', result); 
       if(ret)result = ret;
       if(ret===false) return;
       app.actions.requestFetchSuccess(request.uuid,result,options.initData,options.append,options.appendField);
-      request.onDidChange(result);
+      request.trigger('onDidChange', result);
     },
     (error)=>{
-      request.onFetching(false, options.blocking);
+      request.trigger('onFetching', false, options.blocking);
       app.actions.requestFetchFail(request.uuid,error);
-      request.onChangeError(error); 
+      request.trigger('onChangeError', error);
     }
   ).catch((error)=>{
-    request.onFetching(false, options.blocking);
+    request.trigger('onFetching', false, options.blocking);
     app.errorNotice(error);
   });    
 }
@@ -113,19 +112,16 @@ let requestSubmit = (options)=>(app)=>{
  * // page - 使用数据
  * this.props.state_xxx
  */
-class ActionStateRequest {
-  static maps = {};
+class ActionStateRequest extends BaseActionState {
+  static stateName = 'request';
 
   constructor(app, uuid, options){
-    this.app = app;
-    this.uuid = uuid;
+    super(app, uuid);
     this.options = options;
     this.options.defaultData = this.options.defaultData||{};
     this.options.initData = this.options.initData || this.options.defaultData;
     this.options.trackState = Boolean(this.options.trackState);
     this.options.noticeChangeError = this.options.noticeChangeError !== false;
-
-    ActionStateRequest.maps[uuid] = this;
   }
 
   // interface
@@ -294,10 +290,7 @@ export default {
 
   init(app) {
     app.actionStates.request = function(options={},uuid=null){
-      if(typeof(options)==='string') uuid=options;
-      uuid = uuid||getUuid();
-      if(uuid&&ActionStateRequest.maps[uuid]) return ActionStateRequest.maps[uuid];
-      return new ActionStateRequest(app, uuid, getOptions(options));
+      return BaseActionState.instance(ActionStateRequest, app, uuid, options);
     }
   },
   onCreateStoreBefore(app) {

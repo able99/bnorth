@@ -7,7 +7,7 @@
 
  
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import bindActionCreators from '../utils/bindActionCreators';
 
 /*!
  * get container unique key, diff key diff params or querys
@@ -52,11 +52,24 @@ function getContainer(app, props, acontainer, cb) {
       reducers: {},
       actions:{},
       handlers: {},
+      trigger(event, ...args) {
+        let handler = container&&container.handlers&&container.handlers[event];
+        if(!handler) return false;
+        let title = `container handler(${event}-${container.displayName||''}):`;
+        try{
+          app.verbose(title, ...args);
+          handler(...args);
+        }catch(e){
+          this.error(title, e); 
+          app.errorNotice(e);
+        }
+      }
     }
 
     if(acontainer!==true) {
       try{
         acontainer(app, props, container);
+        Object.entries(container.states||{}).forEach(([k,v])=>v&&(v.name=k))
       }catch(e){
         app.error(e);
         app.errorRender(e,'container error');
@@ -67,21 +80,6 @@ function getContainer(app, props, acontainer, cb) {
   }
 
   return container;
-}
-
-/*!
- * utiles for states event handle
- * @function
- * @param {array} states - state list
- * @param {string} event - event
- */
-function statesHandler(states, event) {
-  Object.entries(states||{})
-  .forEach(([key,val])=>{
-    if(!key||(key[0]==='_'&&key[0]!=='_page')) return;
-    let func = val&&val[event];
-    if(func)func.apply(val);
-  })
 }
 
 
@@ -123,24 +121,26 @@ export default function(app, acontainer) {
       states: container.states,
 
       onWillStart(page) {
-        if(container.handlers.onWillStart)container.handlers.onWillStart(app,page,container);
+        container.displayName = page.getDisplayName();
+        container.trigger('onWillStart', page);
+        Object.entries(container.states||{}).forEach(([k,v])=>v.displayName = page.getDisplayName());
       },
       onStart(page) {
-        if(container.handlers.onStart)container.handlers.onStart(app,page,container);
-        statesHandler(container.states, 'onStart');
-      },
-      onPause(page) {
-        if(container.handlers.onPause)container.handlers.onPause(app,page,container);
-        statesHandler(container.states, 'onPause');
+        container.trigger('onStart', page);
+        Object.entries(container.states||{}).forEach(([k,v])=>v.trigger('onStart'));
       },
       onResume(page) {
-        if(container.handlers.onResume)container.handlers.onResume(app,page,container);
-        statesHandler(container.states, 'onResume');
+        container.trigger('onResume', page);
+        Object.entries(container.states||{}).forEach(([k,v])=>v.trigger('onResume'));
+      },
+      onPause(page) {
+        container.trigger('onPause', page);
+        Object.entries(container.states||{}).forEach(([k,v])=>v.trigger('onPause'));
       },
       onStop(page) {
         delete acontainer[getContainerKey(app, props)];
-        if(container.handlers.onStop)container.handlers.onStop(app,page,container);
-        statesHandler(container.states, 'onStop');
+        container.trigger('onStop', page);
+        Object.entries(container.states||{}).forEach(([k,v])=>v.trigger('onStop'));
       }
     }
   }

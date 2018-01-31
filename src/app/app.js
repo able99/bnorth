@@ -8,9 +8,10 @@
 
 import React,{cloneElement}  from 'react';
 import { render } from 'react-dom';
-import { bindActionCreators,combineReducers,createStore,applyMiddleware } from 'redux'
+import { combineReducers,createStore,applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import { Router,Route,hashHistory,RouterContext } from 'react-router';
+import bindActionCreators from '../utils/bindActionCreators';
 import config from './config';
 import containerHoc from './containerHoc';
 import pageHoc from './pageHoc';
@@ -122,9 +123,11 @@ function routeProps(route, config, app) {
 function createThunkMiddleware(extraArgument) {
   return ({ dispatch, getState }) => next => action => {
     if (typeof action === 'function') {
+      app.verbose(`action func(${action.fname||action.name||'anonymous'}): do`,);
       return action(app, dispatch, getState, extraArgument);
     }
 
+    app.verbose('action:', action);
     return next(action);
   };
 }
@@ -247,6 +250,7 @@ export let appPlugin = {
   },
 
   onRender(app) {
+    app.verbose('app render:', app.routes, app.config);
     app.routes = routeProps(app.routes, app.config, app);
     render(createRootComponent(),app.getRootElement());
   },
@@ -338,7 +342,8 @@ export default class App {
       /**
        * @property {object} config app 配置类，参见[config](/#/?name=%2Fbase%2Fconfig)
        */
-      this.config = Object.assign(config,this.options.config||null);
+      this.config = Object.assign(config,this.options.config||{});
+      this.loadConfigStorage();
       /**
        * @property {object[]} pages - app 中正在运行的插件列表
        */
@@ -406,7 +411,10 @@ export default class App {
         return <div style={{...styleSetFull, ...styleSetCenter}}>...</div>;
       }
 
-      this.options.plugin&&this.use(this.options.plugin);
+      if(this.options.plugin) {
+        this.options.plugin.name = this.options.plugin.name||'app_custom';
+        this.use(this.options.plugin);
+      }
     }
 
     _instance = this;
@@ -420,6 +428,42 @@ export default class App {
   static instance(...args) {
     if(_instance) return _instance;
     return new App(...args);
+  }
+
+  // config
+  // -------------------
+  /**
+   * 获取保存在存贮中的config 配置内容
+   * @method
+   */
+  getConfigStorage() {
+    let configStr = window.localStorage.getItem(this.config.keys.config);
+    if(configStr){
+      try{
+        return JSON.parse(configStr)||{};
+      }catch(e){
+        return {};
+      }
+    }else{
+      return {};
+    }
+  }
+
+  /**
+   * 从存储中读取并更新config 的配置
+   * @method
+   */
+  loadConfigStorage() {
+    let config = this.getConfigStorage();
+    Object.assign(this.config, config);
+  }
+
+  /**
+   * 修改保存在存贮中的config 配置内容
+   */
+  saveConfigStorage(config, merge=true) {
+    config = merge?Object.assign(this.config,config):config;
+    window.localStorage.setItem(this.config.keys.config, JSON.stringify(config));
   }
 
   // dom
@@ -530,24 +574,31 @@ export default class App {
     let ret;
 
     for(let v of this._plugins) {
+      let title = `app event(${event}-${v&&v.name}):`;
       try{
-        ret = v[event] && v[event](this, ...args);
-        if(ret){ return ret; }
+        let handler = v&&v[event];
+        if(handler) {
+          if(event!=='onLog') app.verbose(title, ...args);
+          ret = handler(this, ...args);
+          if(ret){ return ret; }
+        }
       }catch(e){ 
-        this.error('app trigger error', e); 
-        this.errorNotice(e,{title: 'app trigger error'});
+        this.error(title, e); 
+        this.errorNotice(e,{title: title});
       } 
     }
 
-    for(let v of this.pages||[]) {
-      try{
-        if(!v.props.container||!v.props.container.handlers) continue;
-        ret = v.props.container.handlers[event] && v.props.container.handlers[event](...args);
-        if(ret){ return ret; }
-      }catch(e){ 
-        this.error('app trigger error', e); 
-        this.errorNotice(e,{title: 'app trigger error'});
-      } 
+    if(event!=='onLog') {
+      for(let v of this.pages||[]) {
+        try{
+          ret = v.props.container&&v.props.container.trigger&&v.props.container.trigger(event, ...args);
+          if(ret){ return ret; }
+        }catch(e){ 
+          let title = `app container event(${event}):`;
+          this.error(title, e); 
+          this.errorNotice(e,{title: title});
+        } 
+      }
     }
 
     return ret;
@@ -566,7 +617,11 @@ export default class App {
     try{
       for(let event of this._startEvents){
         for(let v of this._plugins) {
-          if(v[event] &&  await v[event](this)) continue;
+          let handler = v&&v[event];
+          if(handler) {
+            app.verbose(`app start event(${event}-${v&&v.name}):`);
+            if(await handler(this)) continue;
+          }
         }
       }
       this.started = true;

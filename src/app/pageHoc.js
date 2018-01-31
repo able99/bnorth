@@ -86,8 +86,7 @@ export default (app, Wrapper) => class extends Wrapper {
   }
 
   render(){
-    let name = Wrapper.displayName||Wrapper.name;
-    app.verbose(`page render(${name}):`,this);
+    app.verbose(`page render(${this.getDisplayName()}):`,this);
     
     if(this.props.state__page && this.props.state__page.ready===false){
       return <app.WaittingComponent />;
@@ -100,7 +99,7 @@ export default (app, Wrapper) => class extends Wrapper {
       return app.trigger('onErrorPageRender', e);
     }
     ret = React.cloneElement( ret, Object.assign( {
-      'data-bnorth-page': name, 
+      'data-bnorth-page': this.getDisplayName(), 
       'data-blur': !this.isFocus(),
     }, ret.props));
     
@@ -115,6 +114,13 @@ export default (app, Wrapper) => class extends Wrapper {
     )
   }
 
+  /**
+   * 返回page 的display 名称
+   * @method
+   */
+  getDisplayName() {
+    return Wrapper.displayName||Wrapper.name;
+  }
   /*!
    * 返回是否是App 根组件
    * @method 

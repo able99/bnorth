@@ -9,18 +9,21 @@
 import Url from 'url-parse';
 
 
-let fetchTimeout = function(input, opts){
+let fetchTimeout = function(app, input, opts){
   return new Promise(function(resolve, reject){
     var timeoutId = setTimeout(function(){
       reject(new Error("fetch timeout"))
     }, opts.timeout||90000);
+    app.verbose('network request:', input, opts);
     fetch(input, opts).then(
       res=>{
         clearTimeout(timeoutId);
+        app.verbose('network response:', input, opts, res);
         resolve(res)
       },
       err=>{
         clearTimeout(timeoutId);
+        app.verbose('network response error:', input, opts, err);
         reject(err)
       }
     )
@@ -193,7 +196,7 @@ class Network {
       fetchOption.body = this.paramFetchBody(options);
     }
 
-    return fetchTimeout(fetchUrl,fetchOption)
+    return fetchTimeout(app, fetchUrl,fetchOption)
     .then(
       (res) => {
         fetchScope.res = res;
@@ -275,7 +278,7 @@ class Network {
       fetchOption.body = (body instanceof FormData)?body:this.paramOperateBody(options);
     }
 
-    return fetchTimeout(fetchUrl,fetchOption)
+    return fetchTimeout(app, fetchUrl,fetchOption)
     .then(
       (res) => {
         fetchScope.res = res;
