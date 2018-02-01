@@ -60,7 +60,7 @@ export default (app, Wrapper) => class extends Wrapper {
     if(this.props.onStop) this.props.onStop(this);
     let ret = super.componentWillUnmount && super.componentWillUnmount();
 
-    app.pages.splice(app.pages.indexOf(this));
+    app.pages.splice(app.pages.indexOf(this),1);
     return ret;
   }
 

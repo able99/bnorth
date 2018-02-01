@@ -123,8 +123,14 @@ function routeProps(route, config, app) {
 function createThunkMiddleware(extraArgument) {
   return ({ dispatch, getState }) => next => action => {
     if (typeof action === 'function') {
-      app.verbose(`action func(${action.fname||action.name||'anonymous'}): do`,);
-      return action(app, dispatch, getState, extraArgument);
+      let title = `action func(${action.fname||action.name||'anonymous'}): `;
+      try{
+        app.verbose(title);
+        return action(app, dispatch, getState, extraArgument);
+      }catch(e){
+        app.error(title, e);
+        app.noticeMessage(title, e);
+      }
     }
 
     app.verbose('action:', action);
@@ -462,8 +468,8 @@ export default class App {
    * 修改保存在存贮中的config 配置内容
    */
   saveConfigStorage(config, merge=true) {
-    config = merge?Object.assign(this.config,config):config;
     window.localStorage.setItem(this.config.keys.config, JSON.stringify(config));
+    config = merge?Object.assign(this.config,config):config;
   }
 
   // dom
