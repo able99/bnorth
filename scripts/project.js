@@ -19,7 +19,7 @@ var isDoAndroid = isDoAll||process.argv.indexOf("android") >= 0;
 var isDoIos = isDoAll||process.argv.indexOf("ios") >= 0;
 var isDoHelp = isDoAll||process.argv.indexOf("help") >= 0;
 
-var bnorthInPath = 'node_modules/bnorth';
+var bnorthInPath = path.join('','node_modules','bnorth');
 var appPath = process.cwd();
 if(appPath.indexOf(bnorthInPath)>=0) {
    process.chdir('../../');
@@ -54,7 +54,7 @@ if(isDoProject){
 
   // package file
   appPackage.bnorth = true;
-  appPackage.devDependencies = Object.assign(appPackage.devDependencies||{}, {});
+  //appPackage.devDependencies = Object.assign(appPackage.devDependencies||{}, {});
   appPackage.scripts = {
     "start": "bnorth server",
     "build": "bnorth build",
@@ -66,12 +66,12 @@ if(isDoProject){
   );
 
   // npm install
-  console.log(`* npm run...`);
-  var proc = spawn.sync('npm', ['i'], {stdio: 'inherit'});
-  if (proc.status !== 0) {
-    console.error('error!');
-    return;
-  }
+  // console.log(`* npm run...`);
+  // var proc = spawn.sync('npm', ['i'], {stdio: 'inherit'});
+  // if (proc.status !== 0) {
+  //   console.error('error!');
+  //   return;
+  // }
 }
 
 // src

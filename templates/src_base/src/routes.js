@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'bnorth/lib/base/router';
+import { Route } from 'bnorth/lib/app/router';
 
 
 export default (
