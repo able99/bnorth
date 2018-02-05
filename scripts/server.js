@@ -21,7 +21,7 @@ const DEFAULT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
 const isInteractive = process.stdout.isTTY;
 let compiler;
 const argv = require('yargs') 
-.usage('Usage: roadhog server [options]')
+.usage('Usage: ')
 .help('h')
 .argv;
 

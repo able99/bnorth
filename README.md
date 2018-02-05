@@ -77,13 +77,14 @@ app.start();
 **目前实现的脚手架功能**
 
 ```bash
-$ npm install bnroth         # 安装bnroth插件时，自动初始化bnorth示例工程
+$ npm install bnroth            # 安装bnroth插件时，自动初始化bnorth示例工程
 
-$ npm run bnroth project all # 建立模板工程| 参数all(全部), project(项目文件，如.gitignore) ,src(代码文件)
-$ npm start                  # 启动调试服务器
-$ npm run build              # 打包
-$ npm run build -- --debug   # 生成debug模式包
-$ npm run build -- --analyze # 生成依赖库图标，用来分析依赖库size
+$ npm run bnroth project all    # 建立模板工程| 参数all(全部), project(项目文件，如.gitignore) ,src(代码文件)
+$ npm start                     # 启动调试服务器
+$ npm run build                 # 打包
+$ npm run build -- --debug      # 生成debug模式包
+$ npm run build -- --analyze    # 生成依赖库图标，用来分析依赖库size
+$ npm run bnorth newpage name   # 建立新的页面，并生成route 配置代码，具体使用 npm run bnorth newpage -- --help 查看帮助信息
 
 ```
 
@@ -91,22 +92,20 @@ $ npm run build -- --analyze # 生成依赖库图标，用来分析依赖库size
 
 1. cordova助手
 1. electronjs助手
-1. 新建page助手
 
 
 ### 工程配置
 
-bnorth 编译与调试基于优秀的webpack 方案，提供了强大的便捷的功能，并可以通过工程配置文件，修改与扩充功能。
+bnorth 编译与调试基于优秀的webpack 方案，提供了强大的便捷的功能，并可以通过工程配置文件，修改与扩充功能。
 
-1. 编译的控制，比如输出的路径，输出文件是否使用hash 文件名，是否生成调试符号文件等
+1. 编译的控制，比如输出的路径，输出文件是否使用hash 文件名，是否生成调试符号文件等
 1. webpack 的定制配置
 1. 调试服务器的网络代理配置
 1. 调试服务器的mock 数据配置
 
 **[具体参见链接](./ProjectConfig.md)**
 
-
-### MVC 框架
+### MVC 框架
 
 ![architecture](./res/architecture.png "架构图")
 
@@ -154,7 +153,7 @@ let plugin = {
 
 bnorth 的默认行为可满足一般性的应用开发，同时为特殊需求的应用提供定制化的能力，包括修改运行期配置和hook 的方式。
 
-1. app.config 是基于bnorth 的应用的配置类，通过配置可改变bnorth 方案的默认行为，具体可参见 **[config](https://able99.github.io/bnorth/#/?name=%2Fapp%2Fconfig)** 
+1. app.config 是基于bnorth 的应用的配置类，通过配置可改变bnorth 方案的默认行为，具体可参见 **[config](https://able99.github.io/bnorth/#/?name=%2Fapp%2Fconfig)** 
 1. bnorth 及其插件都是将功能挂在到App 的实例对象上。在任何时刻可以通过直接修改app 上的方法与属性的方式进行定制化。一般是在app 启动的hook阶段，在其回调函数中进行定制化修改。比如：
 
 ```js
