@@ -12,34 +12,42 @@
  */
 
 /**
- * react组件，继承于[react-router 3](https://github.com/ReactTraining/react-router/tree/v3/docs)，并扩展了若干属性
+ * 配置路由信息
  * @class Route
  * @example
  * ```js
- * <Route key="order" />
+ * <Route 
+ *   key="order" 
+ *   page={require('pages/order')}
+ *   container={require('pages/_order')} />
  * ```
  */
 
 /**
- * @property {!string} key - react key参数
+ * @property {!string} key - 组件主键
  */
+
 /**
- * @property {string} [path=null] - [react router 3属性](https://github.com/ReactTraining/react-router/blob/v3/docs/API.md#route)， 路由的匹配路径，如果设置为空将从key 属性智能获取
+ * @property {string} [path=null] - 路由的匹配路径，如果设置为空将从key 属性智能获取
  * ```js
  * AAA - 匹配路径AAA
  * AAA/:id - 匹配路径AAA/xxx，匹配带xxx参数的AAA
  * ````
  */
+
 /**
  * @property {string} [pathname=null] - 设置到config.paths 中的名称，如果不指定则从path或者key中智能获取，比如key='order/:id',则pathname 为order
  * @default null
  */
+
 /**
- * @property {element} component - react component, 会自动进行pageHoc 高阶函数转换
+ * @property {element} component - component参数会自动进行pageHoc 高阶函数转换
  */
+
 /**
- * @property {container} [container=null] contianer，会自动进行containerHoc 高阶函数转换
+ * @property {containerCreator} [container=null] contianer参数会自动进行containerHoc 高阶函数转换
  */
+
 /**
  * 动态加载页面组件时的回调函数
  * @callback getComponent
@@ -56,16 +64,24 @@
  * }} />
  * ```
  */
+
 /**
  * @property {object} components 组件组，具体参见react router
  * ```js
  * <Route path="groups" components={{main: Groups, sidebar: GroupsSidebar}} />
  * ```
  */
+
 /**
  * 动态加载组件组，具体参见react router
  * @callback getComponents
  */
+
+/**
+ * 根路由被加载时，被调用
+ * @callback onInit
+ */
+
 /**
  * @property {boolean} [checkLogin=false] - 设置后，进入页面时，如果没登录，将会跳转到登录页面
  */

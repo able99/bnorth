@@ -6,12 +6,52 @@
  */
 
 /**
+ * @typedef {object} config
+ */
+/**
  * config 是app 的配置类，通过app 的config 属性访问config 的属性，读取或设置其属性
  * @class config
+ * @typedef {object} config
  * @example
  * app.config.xxx
  */
 let config = {};
+
+// config
+// -------------------
+/**
+ * 获取保存在存贮中的config 配置内容
+ * @method
+ */
+config._getStorage = function() {
+  let configStr = window.localStorage.getItem(this.keys.config);
+  if(configStr){
+    try{
+      return JSON.parse(configStr)||{};
+    }catch(e){
+      return {};
+    }
+  }else{
+    return {};
+  }
+}
+
+/**
+ * 从存储中读取并更新config 的配置
+ * @method
+ */
+config.loadStorage = function() {
+  let config = this._getStorage();
+  return Object.assign(this, config);
+}
+
+/**
+ * 修改保存在存贮中的config 配置内容
+ */
+config.saveStorage = function(config) {
+  window.localStorage.setItem(this.keys.config, JSON.stringify(config));
+  return Object.assign(this,config);
+}
 
 // browser
 //-------------------------

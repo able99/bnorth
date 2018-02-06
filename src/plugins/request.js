@@ -6,7 +6,7 @@
  */
 
 
-import BaseActionState from '../app/BaseActionState';
+import { ActionState } from '../app/container';
 import getUuid from '../utils/uuid';
 import getOptions from '../utils/getOptions';
 
@@ -112,7 +112,7 @@ let requestSubmit = (options)=>(app)=>{
  * // page - 使用数据
  * this.props.state_xxx
  */
-class ActionStateRequest extends BaseActionState {
+class ActionStateRequest extends ActionState {
   static stateName = 'request';
 
   constructor(app, uuid, options){
@@ -213,9 +213,9 @@ class ActionStateRequest extends BaseActionState {
 }
 
 
-// reducer 
+// reduxer 
 //==================
-export function reducerRequestFetch( state = {
+export function reduxerRequestFetch( state = {
   uuid: null,
   resource: null,
   fetchResult:{},
@@ -290,7 +290,7 @@ export default {
 
   init(app) {
     app.actionStates.request = function(options={},uuid=null){
-      return BaseActionState.instance(ActionStateRequest, app, uuid, options);
+      return ActionState.instance(ActionStateRequest, app, uuid, options);
     }
   },
   onCreateStoreBefore(app) {
@@ -304,6 +304,6 @@ export default {
       requestSubmit
     });
 
-    app.reducers.request = reducerRequestFetch;
+    app.reduxers.request = reduxerRequestFetch;
   },
 }

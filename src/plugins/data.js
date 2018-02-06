@@ -6,9 +6,8 @@
  */
 
 
-import BaseActionState from '../app/BaseActionState';
+import { ActionState } from '../app/container';
 import jspath from '../utils/jspath'
-
 import getOptions from '../utils/getOptions';
 import { checkObject, checkObjectItem } from '../utils/validator';
 
@@ -54,7 +53,7 @@ let _dataClear = (uuid)=>(app)=>{
  * // page - 修改数据
  * this.props.states.data.setValue('x',xxx);
  */
-class ActionStateData extends BaseActionState{
+class ActionStateData extends ActionState{
   static stateName = 'data';
 
   /**
@@ -279,9 +278,9 @@ class ActionStateData extends BaseActionState{
 }
 
 
-// reducer
+// reduxer
 //==================
-export function reducerData(
+export function reduxerData(
   state = {
     uuid: null,
     datas: {},
@@ -329,7 +328,7 @@ export default {
 
   init(app) {
     app.actionStates.data = function(options,uuid) {
-      return BaseActionState.instance(ActionStateData, app, uuid, options);
+      return ActionState.instance(ActionStateData, app, uuid, options);
     }
   },
 
@@ -340,6 +339,6 @@ export default {
       _dataClear,
     });
 
-    app.reducers.data = reducerData;
+    app.reduxers.data = reduxerData;
   },
 }
