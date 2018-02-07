@@ -12,7 +12,23 @@
  */
 
 /**
- * 配置路由信息
+ * @class location
+ * @property {string} action - 当前地址进入方式，POP|PUSH
+ * @property {string} pathname - 当前地址的路径名
+ * @property {object} query - 当前地址对应的query 对象
+ * @property {string} hash - 当前地址的hash 字符串
+ * @property {string} search - 当前地址的search 字符串
+ * @property {string} key - 当前地址state 信息的key 值
+ * @property {object} state - 当前地址的state 对象
+ */
+
+/**
+ * react router
+ * @class router
+ */
+
+/**
+ * 配置路由信息组件
  * @class Route
  * @example
  * ```js

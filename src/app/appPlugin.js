@@ -7,17 +7,18 @@
 
 
 /**
- * **插件** 该类为插件类扩展了App 的能力 - 插件名`app` 依赖插件 `data`
+ * **plugin** name: app dependence: data
  * 应用的基本插件，该插件是start 函数时添加的插件，实现了应用运行的基本功能
- * @class pluginApp
+ * @class appPlugin
  */
 
 // app action
 //-----------------------------------------
 const ActionAppReady = 'ActionAppReady';
 /**
- * **action** 改变app ready 状态，app ready后，会关闭waiting 动画，显示渲染的内容
- * @method appReady
+ * **action** 
+ * 改变app ready 状态，app ready后，会关闭waiting 动画，显示渲染的内容
+ * @method app.actions.appReady
  * @param {boolean} ready 
  * @example
  * ```js
@@ -29,7 +30,8 @@ let appReady = (ready)=>(app)=>{
 }
 
 /**
- * **action** 显示通知内容
+ * **action** 
+ * 显示通知内容
  * @method
  * @param {element|string} message - 消息框内容
  * @param {object} [props] - 消息显示的ui 属性，具体由处理该事件的插件所决
@@ -43,7 +45,8 @@ let noticeMessage = (...args)=>(app)=>{
   app.trigger('onNoticeMessage', ...args);
 }
 /**
- * **action** 显示页面加载进度
+ * **action** 
+ * 显示页面加载进度
  * @method
  * @param {boolean} show - 是否显示，default `true`，调用几次显示，也需要调用几次隐藏
  * @param {object} [props] - 显示的ui 属性，具体由处理该事件的插件所决
@@ -57,6 +60,7 @@ let noticeLoading = (...args)=>(app)=>{
 }
 
 /**
+ * **action**
  * 显示阻塞操作的加载页面
  * @method 
  * @param {boolean} show 是否显示，default `true`，调用几次显示，也需要调用几次隐藏

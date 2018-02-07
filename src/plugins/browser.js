@@ -11,10 +11,13 @@ import { getBrowserTitle, setBrowserTitle } from '../utils/browser';
 
 
 /**
- * 提供操作浏览器的功能插件
- * **插件** 该类为插件类扩展了App 的能力
- * app.Browser: 该类的原型
- * app.browser: 该类的实例
+ * url 解析类，[参考地址](https://github.com/unshiftio/url-parse)
+ * @class Url
+ */
+
+
+/**
+ * 提供操作浏览器的功能c
  * @class
  */
 class Browser {
@@ -63,6 +66,7 @@ class Browser {
     return setBrowserTitle(str);
   };
 
+
   //ico
   //------------------------------
   /**
@@ -80,12 +84,14 @@ class Browser {
   /**
    * 返回当前页面的url 地址
    * @method
+   * @return {string} - url 地址
    */
   url(){
     return window.location.href;
   };
+
   /**
-   * 返回解析后的url的类，[具体参见](https://github.com/unshiftio/url-parse)
+   * 返回解析后的url的类
    * @method
    * @param {string} [url=this.url()] - url 地址，如果为空获取当前地址
    * @return {Url} - url解析类
@@ -94,10 +100,11 @@ class Browser {
     url = url || this.url();
     return Url(url,true);
   };
+
   /**
    * 将url 对象格式化成url 字符串
    * @method
-   * @param {Url|path} url - Url解析对象或者bnorth path对象 
+   * @param {Url|Path|location|string} url - Url解析对象或者bnorth path对象 
    * @param {object} [query=null] - 添加到url中的查询字符串 
    * @returns {string} - url字符串 
    */
@@ -121,14 +128,17 @@ class Browser {
    * 将query 字符串解析成键值对的对象
    * @method
    * @param {string} query - query 字符串 
+   * @return {object} - query 键值对
    */
   queryParse(...args) {
     return Url.qs.parse(...args);
   }
+
   /**
    * 将包含query 键值对的对象转换为query 字符串
    * @method
    * @param {object} obj - 包含query 键值对的对象 
+   * @return {string} - query 字符串
    */
   queryStringify(...args) {
     return Url.qs.stringify(...args);
@@ -139,7 +149,7 @@ class Browser {
   /**
    * 浏览器跳转到指定地址，可返回当前地址
    * @method
-   * @param {string|Url|path|location} url - url地址，可以是字符串，Url 解析类，或者path 解析类，router location类
+   * @param {string|Url|Path|location} url - url地址，可以是字符串，Url 解析类，或者path 解析类，router location类
    * url，path，location 中的query 和 state 也会合并到查询字符串中
    * @param {object} [params=null] - 查询字符串
    */
@@ -207,6 +217,13 @@ class Browser {
   }
 }
 
+/**
+ * **plugin** name: browser dependence: none
+ * 浏览器相关操作插件
+ * @class browserPlugin
+ * @property {class} app.Browser - Browser 类
+ * @property {Browser} app.browser - Browser 类实例
+ */
 export default {
   name: 'browser',
 

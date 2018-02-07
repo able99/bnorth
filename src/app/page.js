@@ -36,11 +36,11 @@ import { setBrowserTitle } from '../utils/browser';
  * @property {App} app - App 实例
  * @property {container} props.container - page 对应的container
  * @property {object} props.state_xxx - container 中states 映射到props 上的数据
- * @property {object} props.params - 页面参数信息-[参考react-router 3](https://github.com/ReactTraining/react-router/tree/v3/docs)
- * @property {object} props.location - 页面地址信息-[参考react-router 3](https://github.com/ReactTraining/react-router/tree/v3/docs)
- * @property {object} props.route - 当前页面对应的路由-[参考react-router 3](https://github.com/ReactTraining/react-router/tree/v3/docs)
- * @property {object} props.routes - 该页面路由列表-[参考react-router 3](https://github.com/ReactTraining/react-router/tree/v3/docs)
- * @property {object} props.router - router实例-[参考react-router 3](https://github.com/ReactTraining/react-router/tree/v3/docs)
+ * @property {object} props.params - 页面参数对象，对应path-info 形式的参数
+ * @property {location} props.location - 当前路径信息
+ * @property {Route} props.route - 当前路由信息
+ * @property {Route[]} props.routes - 当前路径对应的全部路由
+ * @property {router} props.router - router
  */
 export default (app, Wrapper) => class extends Wrapper {
   constructor(props) {
