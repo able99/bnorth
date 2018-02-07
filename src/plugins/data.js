@@ -12,33 +12,36 @@ import getOptions from '../utils/getOptions';
 import { checkObject, checkObjectItem } from '../utils/validator';
 
 
-// actions
-//==================
-const DataInit = 'DataInit';
-function _dataInit(uuid,data){
-  return {
-    type: DataInit,
-    uuid,
-    data,
-  };
-}
-const DataUpdate = 'DataUpdate';
-function _dataUpdate(uuid,data,merge,initData){
-  return {
-    type: DataUpdate,
-    uuid,
-    data,
-    merge,
-    initData,
-  };
-}
-let _dataClear = (uuid)=>(app)=>{
-  let state = app.getState('data',{});
-  delete state.datas[uuid];
-}
+// ActionState
+// --------------------------------------
+/**
+ * @class ActionStateDataOptions
+ * @property {object|array} [defaultData={}] - 默认数据 
+ * @property {object|array} [initData={}] - 初始化数据 
+ * @property {object} [rules] - 需要检验的字段与校验规则的键值对，参考rule
+ * @property {string|string[]} [checkOnInputKeys] - 在update 时需要校验的字段列表
+ * @property {object|array} [checkErrorMessage] - 检验错误时的提示信息
+ * @property {boolean} [noticeChangeError=falae] - 是否检验错误时，显示错误信息
+ * @property {boolean} [updateOnStart=falae] - 是否在container 启动时更新数据
+ * @property {boolean} [updateOnResume=falae] - 是否在container 获取焦点时更新数据
+ * @property {boolean} [clearOnStop=true] - 是否在container 停止时，清除数据管理器
+ */
+/** 
+ * 数据将要改变时触发
+ * @callback onWillChange
+ * @param {object|array} originData - 原始数据
+ * @param {object|array} changeData - 更厚的数据
+ * @param {string|string[]} key - 需要检验的字段 
+ * @return {object|array} - 如果返回则替换为返回的数据 
+ */
+/**
+ * 数据修改后触发
+ * @callback onDidChange
+ * @param {object|array} originData - 原始数据
+ * @param {object|array} changeData - 更厚的数据
+ * @param {string|string[]} key - 需要检验的字段 
+ */
 
-// action state class
-//==================
 /**
  * 为app 扩展state 类型，提供页面数据的管理与校验
  * **插件** 该类为插件类扩展了App 的能力
@@ -57,26 +60,10 @@ class ActionStateData extends ActionState{
   static stateName = 'data';
 
   /**
-   * 构造数据管理state
-   * `工厂函数` 该构造函数为工厂模式
-   * 使用工厂函数构造state
-   * ```js
-   * container.states.data = app.actionStates.data({});
-   * ```
    * @constructor
-   * @param {object} [options] - 参数对象<br />
-   * **defaultData**
-   * **initData**
-   * **rules**
-   * **checkErrorMessage**
-   * **checkOnInputKeys** 
-   * **noticeChangeError**
-   * **updateOnStart** 
-   * **updateOnResume** 
-   * **clearOnStop**
-   * **onWillChange**
-   * **onDidChange**
-   * @param {string} uuid 
+   * @param {App} app - App 的单实例
+   * @param {ActionStateDataOptions} [options] - 参数对象<br />
+   * @param {string} uuid - 数据管理器的唯一id
    */
   constructor(app, uuid, options){
     super(app, uuid);
@@ -89,7 +76,7 @@ class ActionStateData extends ActionState{
   // interface
   // -------------------------
   /**
-   * @property [*] data 管理的数据
+   * @property {object|array} data - 管理的数据
    * @readonly
    */
   get data() {
@@ -97,14 +84,17 @@ class ActionStateData extends ActionState{
     return (state.datas && state.datas[this.uuid]) || this.options.initData;
   }
 
-  get state() { //bnorth use
+  /*!
+   * @override
+   */
+  get state() { 
     return this.data;
   }
 
   /**
    * 初始化所管理的数据
    * @method 
-   * @param {*} [data] - 如果设置该参数，则初始化为该数据，否则初始化为起始数据 
+   * @param {object|array} [data] - 如果设置该参数，则初始化为该数据，否则初始化为起始数据 
    * @param {boolean} [merge=false] - 是否合并之前数据，默认不合并
    */
   init(data, merge=false) {
@@ -124,9 +114,9 @@ class ActionStateData extends ActionState{
   /**
    * 修改管理的数据
    * @method
-   * @param {*} data - 数据
+   * @param {object|array} data - 更新的数据
    * @param {string[]} [key] - 需要校验的字段名 
-   * @param {boolean} [merge=true] 是否合并之前的数据
+   * @param {boolean} [merge=true] - 是否合并之前的数据
    */
   update(data, key=null, merge=true) {
     try{
@@ -179,12 +169,11 @@ class ActionStateData extends ActionState{
 
   // validate
   // ----------------------
-
   /**
    * 根据设置的规则进行校验
    * @method
    * @param {string|string[]} [keys] - 要检查的字段名列表，默认检查全部字段
-   * @returns {boolean} - true: 校验出问题
+   * @return {boolean} - true: 校验出问题
    */
   validate(keys){
     if(!this.options.rules) return false;
@@ -203,6 +192,12 @@ class ActionStateData extends ActionState{
     return checkObject(this.data, rules, {checkErrorMessage: this.options.checkErrorMessage});
   }
 
+  /**
+   * 根据规则校验指定字段
+   * @method
+   * @param {string} key - 字段名
+   * @param {*} data - 数据
+   */
   checkChangeItem(key, data) {
     if(!key||!this.options.rules||!this.options.checkOnInputKeys||this.options.checkOnInputKeys.indexOf(key)<0) return false;
     let ret = checkObjectItem(data, key, this.options.rules[key], {checkErrorMessage:this.options.checkErrorMessage});
@@ -247,9 +242,10 @@ class ActionStateData extends ActionState{
   /*!
    * 数据将要改变时触发
    * @callback
-   * @param {*} originData 
-   * @param {*} changeData 
-   * @param {*} key 
+   * @param {object|array} originData - 原始数据
+   * @param {object|array} changeData - 更厚的数据
+   * @param {string|string[]} key - 需要检验的字段 
+   * @return {object|array} - 如果返回则替换为返回的数据 
    */
   onWillChange(originData, changeData, key) { 
     return this.options.onWillChange&&this.options.onWillChange(originData, changeData, key);
@@ -258,9 +254,9 @@ class ActionStateData extends ActionState{
   /*!
    * 数据修改后触发
    * @callback
-   * @param {*} originData 
-   * @param {*} changeData 
-   * @param {*} key 
+   * @param {object|array} originData - 原始数据
+   * @param {object|array} changeData - 更厚的数据
+   * @param {string|string[]} key - 需要检验的字段 
    */
   onDidChange(originData, changeData, key) { 
     return this.options.onDidChange&&this.options.onDidChange(originData, changeData, key);
@@ -269,8 +265,8 @@ class ActionStateData extends ActionState{
   /*!
    * 数据校验错误时触发
    * @callback
-   * @param {*} message 
-   * @param {*} field 
+   * @param {Error|string} message - 错误信息
+   * @param {string} field - 错误字段名
    */
   onChangeError(message, field){
     if(this.options.noticeChangeError)this.app.errorNotice(message);
@@ -278,15 +274,71 @@ class ActionStateData extends ActionState{
 }
 
 
-// reduxer
-//==================
-export function reduxerData(
-  state = {
-    uuid: null,
-    datas: {},
-  }, 
-  action
-) {
+// plugin
+// ------------------------------------
+/**
+ * **plugin** name: data dependence: none
+ * 页面数据管理器插件，扩展app 的action state 类型，提供页面数据的管理与校验
+ * @class dataPlugin
+ * @example
+ * **使用**
+ * // container
+ * container.states.data = app.actionStates.data({});
+ * // page - 使用数据
+ * this.props.state_data
+ * // page - 修改数据
+ * this.props.states.data.setValue('x',xxx);
+ */
+
+
+const DataInit = 'DataInit';
+/**
+ * 数据初始化
+ * @method app.actions._dataInit
+ * @param {string} uuid - 数据的uuid
+ * @param {object} data - 初始化为该对象
+ */
+function _dataInit(uuid,data){
+  return {
+    type: DataInit,
+    uuid,
+    data,
+  };
+}
+
+const DataUpdate = 'DataUpdate';
+/**
+ * 数据更新
+ * @method app.actions._dataUpdate
+ * @param {string} uuid - 数据的uuid 
+ * @param {object} data - 要更新的数据
+ * @param {boolean} merge - 更新是否为合并操作
+ * @param {object} initData - 在合并操作时，如果原数据为空，采用该初始数据
+ */
+function _dataUpdate(uuid,data,merge,initData){
+  return {
+    type: DataUpdate,
+    uuid,
+    data,
+    merge,
+    initData,
+  };
+}
+
+/**
+ * @method
+ * @param {string} uuid - 数据的uuid
+ */
+let _dataClear = (uuid)=>(app)=>{
+  let state = app.getState('data',{});
+  delete state.datas[uuid];
+}
+
+/*!
+ * reduxer for action state data
+ * @function 
+ */
+function reduxerData(state = {uuid: null, datas: {}}, action) {
   switch (action.type) {
   case DataInit:
     return Object.assign({}, state, {
@@ -321,12 +373,16 @@ export function reduxerData(
 }
 
 
-// export
-//==================
+
 export default {
   name: 'data',
 
   init(app) {
+    /**
+     * @method app.actionStates.data
+     * @param {object} options - 参数，参见ActionStateData 的构造函数
+     * @param {string} [uuid=uuid()] - 指定uuid
+     */
     app.actionStates.data = function(options,uuid) {
       return ActionState.instance(ActionStateData, app, uuid, options);
     }
