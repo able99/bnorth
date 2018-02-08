@@ -22,6 +22,12 @@ import getOptions from '../utils/getOptions';
  * @property {boolean} [updateOnResume=falae] - 是否在container 获取焦点时更新数据
  * @property {boolean} [clearOnStop=true] - 是否在container 停止时，清除数据管理器
  */
+/**
+ * 当获取请求数据时触发
+ * @callback onWillUpdate
+ * @param {ActionStateRequestOptions} options - 本次请求的配置信息
+ * @return {boolean} - 返回false 终止本次请求
+ */
 /** 
  * 数据将要改变时触发
  * @callback onWillChange
