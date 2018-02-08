@@ -109,27 +109,29 @@ bnorth 编译与调试基于优秀的webpack 方案，提供了强大的便捷�
 
 ![architecture](./res/architecture.png "架构图")
 
-1. App 是应用的入口和功能的挂载点。将App 实例化后，调用 app 的start 函数启动应用。
-1. app 启动时，触发各个启动阶段的事件，应用的index 模块实现需要的事件的回调函数，实现对应用的定制。其中最重要的是在onImportRoutes事件中，返回用户定制的路由映射表。
-1. bnorth 使用 [react-router3](https://github.com/ReactTraining/react-router/) 实现浏览器地址与页面的路由映射功能。
-1. 各个页面由页面page 组件和页面container 组件组合而成。页面page 组件是纯react 组件，负责页面描画。页面container 组件是个函数，对container 模板进行定制，用以实现页面的逻辑。container 与 react-router 为页面page 组件的高阶组件，为其提供数据和方法。因此页面page 组件可通过props 获取数据并显示，实现无状态化的纯组件。container 通过 [redux](https://github.com/reactjs/redux) 为其提供数据的流动和方法。
-1. redux 是统一的数据管理仓库，通过 [react-redux](https://github.com/reactjs/react-redux) 将页面与仓库进行连接，以获取相关数据。并提供actions 以操作数据的流动。数据流动时，在container 配置的与流动数据相关的页面将会更新显示。
-1. container 模板的配置包括：
-    * **states** 将app 中的各类数据流管理器添加进来，比如页面数据管理，比如网络数据请求等
-    * **reduxers** 声明需要 redux 数据仓库中的指定数据
-    * **actions** 为页面page 组件提供方法
-    * **handlers** 提供页面生命周期事件和各种应用事件的处理函数
-1. app 可添加插件，为其提供属性和方法，提供丰富的state 和 actions 。丰富的功能适应不同需求的应用开发。
+1. App 是应用的入口和功能的挂载点。将App 实例化后，调用 app 的start 函数启动应用
+1. app 启动时，触发各个启动阶段的事件，用户应用需要实现自己的插件处理事件。如设置config 配置信息，设置css 样式等。其中最重要的是在onImportRoutes事件中，返回用户定制的路由映射表，路由表定义了地址与页面代码的映射关系
+1. bnorth 使用 [react-router3](https://github.com/ReactTraining/react-router/) 实现浏览器地址与页面的路由映射功能
+1. redux 是应用整体的数据管理仓库，通过[react-redux](https://github.com/reactjs/react-redux) 建立页面与数据仓库的连接和触发仓库数据流动的action
+1. 用户实现app 定制插件和路由表后，还需要为每个页面编写代码。页面代码由page 与container creator组成
+1. app 可添加插件，为其提供属性和方法，提供丰富的state 和 actions 。用以适应不同需求的应用开发。
 
+![architecture](./res/architecture1.png "架构图")
+
+1. 每个页面用户需要编写page 与 container creator 两部分，page 是react 组件负责页面描画， container creator 是函数，负责页面逻辑部分
+1. bnorth 调用container creator 这个构建函数，并提供App的实例和页面的属性，包括路由的相关属性。而container creator 构建states，actions，handlers 分别为数据管理器，动作和事件处理器，并且互相可以调用。同时bnorth 还会触发handlers的相关处理器。整体构成逻辑部分
+1. states 被container 处理以操作redux 数据仓库
+1. bnorth 将路由的相关属性和redux 的数据高阶映射到page 组件的属性上，路由状态的变化和redux 数据仓库的变化，将触发page 页面的重绘
+1. page 接收页面上html 元素的事件，并调用app 的actions 和 container 的actions，actions 将会触发路由或者redux 数据仓库的变化
 
 ### 插件与功能扩展
 
-bnorth 通过插件机制，分离代码，提供功能。提高整体的灵活性和可扩展性。
-插件实际是包含一系列事件处理函数的对象，插件添加到app 后，app在事件触发时，会遍历插件列表，逐一调用。任何一个插件处理后，返回 `true` 将终止事件的继续调用。比如实现了显示通知消息的插件，处理后需要终止调用，防止多个插件同时显示消息。
-插件中的函数在不同阶段被触发调用时，可以修改和访问app 中的属性和方法，还可以增加新的属性与方法
+bnorth 通过插件机制，分离代码，提供功能。提高整体的灵活性和可扩展性。
+插件实际是包含一系列事件处理函数的对象，插件添加到app 后，app在事件触发时，会遍历插件列表，逐一调用。任何一个插件处理后，返回 `true` 将终止事件的继续调用。比如实现了显示通知消息的插件，处理后需要终止调用，防止多个插件同时显示消息。
+插件中的函数在不同阶段被触发调用时，可以修改和访问app 中的属性和方法，还可以增加新的属性与方法
 
 **插件使用**
-bnorth 方案提供了丰富的组件，与bnorth 分离，使用时import 进来，并添加到app 中
+bnorth 方案提供了丰富的组件，与bnorth 分离，使用时import 进来，并添加到app 中
 ```js
 app.use(plugin);
 ```

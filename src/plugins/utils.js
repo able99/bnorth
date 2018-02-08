@@ -12,10 +12,7 @@ import { base64decode, base64encode } from '../utils/base64';
 
 
 /**
- * 为app 提供一些工具函数，如md5 等功能
- * **插件** 该类为插件类扩展了App 的能力
- * app.Utils: 该类的原型
- * app.utils: 该类的实例
+ * 工具类，如md5 等功能
  * @class
  */
 
@@ -63,6 +60,13 @@ class Utils {
 }
 
 
+/**
+ * **plugin** name: utils dependence: none
+ * 浏览器相关操作插件
+ * @class utilsPlugin
+ * @property {class} app.Utils - Utils 类
+ * @property {Utils} app.utils - Utils 类实例
+ */
 export default {
   name: 'utils',
 

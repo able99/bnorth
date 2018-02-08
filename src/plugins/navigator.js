@@ -10,10 +10,7 @@ import Url from 'url-parse';
 
 
 /**
- * 为app 提供导航的能力扩展，导航一般区别与browser 插件中的插件，导航指app 应用内的导航
- * **插件** 该类为插件类扩展了App 的能力
- * app.Navigator: 该类的原型
- * app.navigator: 该类的实例
+ * app 应用内无刷新导航功能类
  * @class
  */
 class Navigator{
@@ -132,7 +129,7 @@ class Navigator{
   /** 
    * 跳转到指定路由
    * @method
-   * @param {...string} [paths] - 路由列表，可以是字符串，path 解析对象或者 router3 location对象，还可能是数组：<br />
+   * @param {...(string|array)} [paths] - 路由列表，可以是字符串，path 解析对象或者 router3 location对象，还可能是数组：<br />
    * **'/'**：出现在字符串或者对象中的pathname 中时，从根路径开始计算，否则从当前路径开始计算
    * **'..'**：出现在字符串或者对象中的pathname 中时，从当前路径的上一级路径开始计算，每出现一次，返回一级
    * **params**：如果path 对象包含params 数组，说明该路径包含path info 参宿，会从query 参数生成path info 字符串
@@ -182,7 +179,7 @@ class Navigator{
    */
 
   /** 
-   * 获取导航后的完整url
+   * 获取导航后的完整url，但不会触发导航
    * 参数同push
    * @method
    */
@@ -222,6 +219,13 @@ class Navigator{
 }
 
 
+/**
+ * **plugin** name: navigator dependence: browser
+ * 提供应用内无刷新导航功能
+ * @class navigatorPlugin
+ * @property {class} app.Navigator - Navigator 类
+ * @property {Navigator} app.navigator - Navigator 类实例
+ */
 export default {
   name: 'navigator',
   depentence: 'browser',

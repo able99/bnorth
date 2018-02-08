@@ -15,15 +15,14 @@ import { checkObject, checkObjectItem } from '../utils/validator';
 // ActionState
 // --------------------------------------
 /**
+ * data 数据管理器的构造参数
  * @class ActionStateDataOptions
  * @property {object|array} [defaultData={}] - 默认数据 
  * @property {object|array} [initData={}] - 初始化数据 
- * @property {object} [rules] - 需要检验的字段与校验规则的键值对，参考rule
+ * @property {object.<string, Rule>} [rules] - 规则键值对
  * @property {string|string[]} [checkOnInputKeys] - 在update 时需要校验的字段列表
  * @property {object|array} [checkErrorMessage] - 检验错误时的提示信息
  * @property {boolean} [noticeChangeError=falae] - 是否检验错误时，显示错误信息
- * @property {boolean} [updateOnStart=falae] - 是否在container 启动时更新数据
- * @property {boolean} [updateOnResume=falae] - 是否在container 获取焦点时更新数据
  * @property {boolean} [clearOnStop=true] - 是否在container 停止时，清除数据管理器
  */
 /** 
@@ -43,18 +42,8 @@ import { checkObject, checkObjectItem } from '../utils/validator';
  */
 
 /**
- * 为app 扩展state 类型，提供页面数据的管理与校验
- * **插件** 该类为插件类扩展了App 的能力
- * app.actionStates.data: states 的工厂函数
+ * 页面数据的管理与校验
  * @class
- * @example
- * **使用**
- * // container
- * container.states.data = app.actionStates.data({});
- * // page - 使用数据
- * this.props.state_data
- * // page - 修改数据
- * this.props.states.data.setValue('x',xxx);
  */
 class ActionStateData extends ActionState{
   static stateName = 'data';
@@ -62,12 +51,15 @@ class ActionStateData extends ActionState{
   /**
    * @constructor
    * @param {App} app - App 的单实例
-   * @param {ActionStateDataOptions} [options] - 参数对象<br />
    * @param {string} uuid - 数据管理器的唯一id
+   * @param {ActionStateDataOptions} [options] - 参数对象<br />
    */
   constructor(app, uuid, options){
     super(app, uuid);
 
+    /**
+     * @property {ActionStateDataOptions} options - 数据管理器配置参数
+     */
     this.options = options;
     this.options.defaultData = this.options.defaultData||{};
     this.options.initData = this.options.initData || this.options.defaultData;
@@ -76,7 +68,7 @@ class ActionStateData extends ActionState{
   // interface
   // -------------------------
   /**
-   * @property {object|array} data - 管理的数据
+   * @property {*} data - 管理的数据
    * @readonly
    */
   get data() {
@@ -85,6 +77,7 @@ class ActionStateData extends ActionState{
   }
 
   /*!
+   * @property {*} state - return data for container state
    * @override
    */
   get state() { 
@@ -94,7 +87,7 @@ class ActionStateData extends ActionState{
   /**
    * 初始化所管理的数据
    * @method 
-   * @param {object|array} [data] - 如果设置该参数，则初始化为该数据，否则初始化为起始数据 
+   * @param {*} [data] - 如果设置该参数，则初始化为该数据，否则初始化为起始数据 
    * @param {boolean} [merge=false] - 是否合并之前数据，默认不合并
    */
   init(data, merge=false) {
@@ -213,24 +206,6 @@ class ActionStateData extends ActionState{
   // event
   //----------------------------------
   /*!
-   * 页面启动时触发
-   * @callback
-   */
-  onStart() { //bnorth use
-    if(!this.options.updateOnStart) return;
-    this.update();
-  }
-
-  /*!
-   * 页面获取焦点时触发
-   * @callback
-   */
-  onResume() { //bnorth use
-    if(!this.options.updateOnResume) return;
-    this.update();
-  }
-
-  /*!
    * 页面终止时触发
    * @callback
    */
@@ -282,7 +257,7 @@ class ActionStateData extends ActionState{
  * @class dataPlugin
  * @example
  * **使用**
- * // container
+ * // containerCreator
  * container.states.data = app.actionStates.data({});
  * // page - 使用数据
  * this.props.state_data

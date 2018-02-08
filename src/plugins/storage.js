@@ -7,11 +7,7 @@
 
 
 /**
- * 为app 提供存储的能力扩展
- * **插件** 该类为插件类扩展了App 的能力
- * app.Storage: 该类的原型
- * app.storage: 该类的实例，针对localStorage
- * app.sessionStorage: 该类的实例，针对sessionStorage
+ * 存储能力
  * @class
  */
 class Storage {
@@ -97,6 +93,14 @@ class Storage {
 }
 
 
+/**
+ * **plugin** name: storage dependence: none
+ * 提供存储的能力扩展
+ * @class storagePlugin
+ * @property {class} app.Storage - Storage 类
+ * @property {Storage} app.storage - 处理localStorage 的Storage 类实例
+ * @property {Storage} app.sessionStorage - 处理sessionStorage 的Storage 类实例
+ */
 export default {
   name: 'storage',
 

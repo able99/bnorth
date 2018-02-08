@@ -7,15 +7,261 @@
 
 
 import { ActionState } from '../app/container';
-import getUuid from '../utils/uuid';
 import getOptions from '../utils/getOptions';
 
-// actions 
-//==================
+
+// action state 
+// -----------------------------
+/**
+ * 网络请求管理器的构造参数
+ * @class ActionStateRequestOptions
+ * @property {object|array} [defaultData={}] - 默认数据 
+ * @property {object|array} [initData={}] - 初始化数据 
+ * @property {boolean} [trackState=falae] - 是否显示
+ * @property {boolean} [updateOnStart=falae] - 是否在container 启动时更新数据
+ * @property {boolean} [updateOnResume=falae] - 是否在container 获取焦点时更新数据
+ * @property {boolean} [clearOnStop=true] - 是否在container 停止时，清除数据管理器
+ */
+/** 
+ * 数据将要改变时触发
+ * @callback onWillChange
+ * @param {object|array} result - 请求结果
+ * @return {object|array} - 如果返回则替换为返回的数据 
+ */
+/**
+ * 数据修改后触发
+ * @callback onDidChange
+ * @param {object|array} result - 请求结果
+ */
+/**
+ * @callback onChangeError
+ * @param {Error|string} error - 错误信息
+ * @param {object|array} result - 请求结果
+ */
+
+/**
+ * 提供网络请求与网络请求数据的管理
+ * @class
+ */
+class ActionStateRequest extends ActionState {
+  static stateName = 'request';
+
+  /**
+   * 
+   * @param {App} app - App 单实例
+   * @param {string} uuid - 唯一id
+   * @param {ActionStateRequestOptions} options - 请求参数
+   */
+  constructor(app, uuid, options){
+    super(app, uuid);
+    
+    /**
+     * @property {ActionStateRequestOptions} options - 请求的参数
+     */
+    this.options = options;
+    this.options.defaultData = this.options.defaultData||{};
+    this.options.initData = this.options.initData || this.options.defaultData;
+    this.options.trackState = Boolean(this.options.trackState);
+    this.options.noticeChangeError = this.options.noticeChangeError !== false;
+  }
+
+  // interface
+  // -------------------------
+  /**
+   * @property {*} data - 返回请求的数据
+   * @readonly
+   */
+  get data() {
+    let state = this.app.getState('request',{});
+    return (state.fetchResult && state.fetchResult[this.uuid] && state.fetchResult[this.uuid].result)||this.options.initData;
+  }
+
+  /*!
+   * @property {*} state - return data for container state data
+   * @readonly
+   * @override
+   */
+  get state() { 
+    return this.data;
+  }
+
+  /*!
+   * @property {object} state - return data for container state object
+   * @readonly
+   * @override
+   */
+  get states() { 
+    return !this.options.trackState?null:{
+      state: this._getState(),
+    };
+  }
+ 
+  /**
+   * @method
+   * @param {ActionStateRequestOptions} [options] - 本次请求的参数，为空使用创建时的参数
+   * @param {boolean} [append=false] - 是否是追加数据还是替换之前数据 
+   */
+  update(aoptions={},append=null){
+    let options = Object.assign( {},
+      getOptions(this.options),
+      getOptions(aoptions),
+      (append===true||append===false)?{append}:{},
+    )
+    if(this.options.onWillUpdate && this.options.onWillUpdate(options)===false) return;
+    this.app.actions.requestFetch(this, options);
+  }
+
+  /**
+   * 用户设置数据，模拟请求返回的数据
+   * @method
+   * @param {*} data - 数据
+   * @param {boolean} [append=false] - 是否是追加数据还是替换之前数据 
+   */
+  set(data, append) {
+    app.actions.requestFetchSuccess(this.uuid,data||{},this.options.initData,append!==undefined?append:this.options.append,this.options.appendField);
+  }
+
+  /**
+   * 清除网络数据管理器
+   * @method
+   */
+  clear(){
+    this.app.actions._requestFetchClear(this.uuid);
+    delete ActionStateRequest.maps[this.uuid];
+  }
+
+  // state
+  /*!
+   * return network state data
+   * @method
+   */
+  _getState() {
+    let state = this.app.getState('request',{});
+    return (state.fetchResult && state.fetchResult[this.uuid])||{};
+  }
+
+  /**
+   * 返回请求是否成功完成
+   * @method
+   * @return {boolean} - 是否成功完成
+   */
+  getReady(){
+    let state = this._getState();
+    return state.fetching === false && !state.invalid;
+  }
+
+  /**
+   * 返回请求的错误信息
+   * @method
+   * @return {Error|string} - 错误信息或者null
+   */
+  getError(){
+    let state = this._getState();
+    return state.error;
+  }
+
+  // event
+  //----------------------------------
+  /*!
+   * triiger on container start
+   * @callback
+   */
+  onStart() { //bnorth use
+    if(!this.options.updateOnStart) return;
+    this.update();
+  }
+
+  /*!
+   * triiger on container start
+   * @callback
+   */
+  onResume() { //bnorth use
+    if(!this.options.updateOnResume) return;
+    this.update();
+  }
+
+  /*!
+   * triiger on container start
+   * @callback
+   */
+  onStop() { //bnorth use
+    if(this.options.clearOnStop===false) return;
+    this.clear();
+  }
+
+  /*!
+   * triiger on container start
+   * @callback
+   */
+  onFetching(show=true, blocking=false) {
+    if(blocking){
+      this.app.actions.noticeBlocking(show);
+    }else{
+      this.app.actions.noticeLoading(show);
+    }
+  }
+
+  /*!
+   * triiger on container start
+   * @callback
+   * @param {*} result - network data
+   * @return {*} - return changed data overrided
+   */
+  onWillChange(result) { 
+    return this.options.onWillChange&&this.options.onWillChange(result);
+  }
+
+  /*!
+   * triiger on container start
+   * @callback
+   * @param {*} result - network data
+   */
+  onDidChange(result) { 
+    return this.options.onDidChange&&this.options.onDidChange(result);
+  }
+
+  /*!
+   * triiger on network error
+   * @callback
+   * @param {Error|string} error - error info
+   * @param {*} result - network data
+   */
+  onChangeError(error, result){
+    this.app.error(error);
+    if(this.options.onChangeError&&this.options.onChangeError(error, result));
+    this.app.actions.noticeMessage(error, {cTheme: 'alert'});
+  }
+}
+
+
+// plugin
+// ------------------------------------------------------
+/**
+ * **plugin** name: request dependence: network
+ * 提供网络请求与网络请求数据的管理
+ * @class
+ * @example
+ * **使用**
+ * // containerCreator 创建
+ * container.states.order = app.actionStates.request({resource: 'order', data:{id: 1}});
+ * // containerCreator 使用
+ * container.states.order.update()
+ * // page - 请求数据
+ * this.props.state_order
+ * // page - 请求状态数据
+ * this.props.state_order_state
+ */
+
 const RequestFetchFetching = 'RequestFetchFetching';
 const RequestFetchInvalid = 'RequestFetchInvalid';
 const RequestFetchFetchSuccess = 'RequestFetchFetchSuccess';
 const RequestFetchFetchFail = 'RequestFetchFetchFail';
+/**
+ * 发起获取型请求
+ * @method app.actions.requestFetch
+ * @param {*} request 
+ * @param {*} options 
+ */
 let requestFetch = (request, options)=>app=>{
   app.actions.requestFetching(request.uuid);
   request.trigger('onFetching', true, options.blocking);
@@ -73,6 +319,11 @@ let _requestFetchClear = (uuid)=>(app)=>{
   delete state.fetchResult[uuid];
 }
 
+/**
+ * 发起提交型请求
+ * @method app.actions.requestSubmit
+ * @param {*} options 
+ */
 let requestSubmit = (options)=>(app)=>{
   if(options.blocking!==false)app.actions.noticeBlocking();
   
@@ -94,132 +345,11 @@ let requestSubmit = (options)=>(app)=>{
   });  
 }
 
-
-// action state class
-//==================
-/**
- * 为app 扩展state 类型，提供网络请求与网络请求数据的管理
- * **插件** 该类为插件类扩展了App 的能力
- * app.actionStates.request: states 的工厂函数
- * @class
- * @example
- * **使用**
- * // container
- * container.states.data = app.actionStates.data({});
- * container.states.xxx = app.actionStates.request({
- *   resource: 'xxx',
- * });
- * // page - 使用数据
- * this.props.state_xxx
+/*!
+ * reduxer for request
+ * @function reduxerRequestFetch
  */
-class ActionStateRequest extends ActionState {
-  static stateName = 'request';
-
-  constructor(app, uuid, options){
-    super(app, uuid);
-    this.options = options;
-    this.options.defaultData = this.options.defaultData||{};
-    this.options.initData = this.options.initData || this.options.defaultData;
-    this.options.trackState = Boolean(this.options.trackState);
-    this.options.noticeChangeError = this.options.noticeChangeError !== false;
-  }
-
-  // interface
-  // -------------------------
-  get data() {
-    let state = this.app.getState('request',{});
-    return (state.fetchResult && state.fetchResult[this.uuid] && state.fetchResult[this.uuid].result)||this.options.initData;
-  }
-  get state() { //bnorth use
-    return this.data;
-  }
-  get states() { //bnorth use
-    return {
-      state: this._getState(),
-    };
-  }
- 
-  update(aoptions={},append=null){
-    let options = Object.assign( {},
-      getOptions(this.options),
-      getOptions(aoptions),
-      (append===true||append===false)?{append}:{},
-    )
-    if(this.options.onWillUpdate && this.options.onWillUpdate(options)===false) return;
-    this.app.actions.requestFetch(this, options);
-  }
-
-  set(data) {
-    app.actions.requestFetchSuccess(this.uuid,data||{},this.options.initData,this.options.append,this.options.appendField);
-  }
-
-  clear(){
-    this.app.actions._requestFetchClear(this.uuid);
-    delete ActionStateRequest.maps[this.uuid];
-  }
-
-  // state
-  _getState() {
-    let state = this.app.getState('request',{});
-    return (state.fetchResult && state.fetchResult[this.uuid])||{};
-  }
-  getReady(){
-    let state = this._getState();
-    return state.fetching === false && !state.invalid;
-  }
-  getError(){
-    let state = this._getState();
-    return state.error;
-  }
-
-  // event
-  //----------------------------------
-  onStart() { //bnorth use
-    if(!this.options.updateOnStart) return;
-    this.update();
-  }
-
-  onResume() { //bnorth use
-    if(!this.options.updateOnResume) return;
-    this.update();
-  }
-
-  onStop() { //bnorth use
-    if(this.options.clearOnStop===false) return;
-    this.clear();
-  }
-
-  onFetching(show=true, blocking=false) {
-    if(blocking){
-      this.app.actions.noticeBlocking(show);
-    }else{
-      this.app.actions.noticeLoading(show);
-    }
-  }
-
-  onWillChange(result) { 
-    return this.options.onWillChange&&this.options.onWillChange(result);
-  }
-
-  onDidChange(result) { 
-    return this.options.onDidChange&&this.options.onDidChange(result);
-  }
-
-  onChangeError(error, result){
-    this.app.error(error);
-    if(this.options.onChangeError&&this.options.onChangeError(error, result));
-    this.app.actions.noticeMessage(error, {cTheme: 'alert'});
-  }
-}
-
-
-// reduxer 
-//==================
-export function reduxerRequestFetch( state = {
-  uuid: null,
-  resource: null,
-  fetchResult:{},
-}, action) {
+function reduxerRequestFetch( state = {uuid: null, resource: null, fetchResult:{}}, action ) {
   switch (action.type) {
   case RequestFetchFetching:
     return Object.assign({}, state, {
@@ -281,9 +411,6 @@ export function reduxerRequestFetch( state = {
   }
 }
 
-
-// export
-//==================
 export default {
   name: 'request',
   dependence: 'network',

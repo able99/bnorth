@@ -11,11 +11,8 @@ import { check, checkObject, checkObjectItem } from '../utils/validator';
 
 
 /**
- * 为app 提供格式化输出与数据校验的功能扩展
+ * 格式化输出与数据校验功能类
  * @class
- * **插件** 该类为插件类扩展了App 的能力
- * app.Format: 该类的原型
- * app.format: 该类的实例
  */
 class Format {
   constructor(app){
@@ -126,27 +123,49 @@ class Format {
   }
 
   /**
-   * 校验数据对象的有效性
+   * 校验数据的有效性
    * @method
-   * @param {object} val 
-   * @param {object} arule 
-   * @param {object} options 
-   * @param {string} errorMessage 
+   * @param {object} val - 数据
+   * @param {Rule} rule - 规则
+   * @param {object} options - 校验配置信息 
+   * @param {string} errorMessage - 错误信息
    */
-  check(val, arule, options, errorMessage) {
-    return check(val, arule, options, this.checkErrorMessage);
+  check(val, rule, options, errorMessage) {
+    return check(val, rule, options, this.checkErrorMessage);
   }
 
+  /**
+   * 检验数据对象中指定字段的有效性
+   * @method
+   * @param {object} obj - 需要检验的对象
+   * @param {string} key - 字段名
+   * @param {Rule|Rule[]} rules - 验证规则或列表
+   * @param {object} [options] - 检验配置信息
+   */
   checkObjectItem(obj, key, rules, options)  {
     return checkObjectItem(obj, key, rules, options);
   }
 
+  /**
+   * 检验数据对象的有效性
+   * @method
+   * @param {object} obj - 需要检验的对象
+   * @param {object.<string, Rule>} rules - 规则键值对
+   * @param {object} [options] - 检验配置信息
+   */
   checkObject(obj, rules, options)  {
     return checkObject(obj, rules, options);
   }
 }
 
 
+/**
+ * **plugin** name: format dependence: none
+ * 提供格式化输出与数据校验的功能扩展
+ * @class formatPlugin
+ * @property {class} app.Format - Format 类
+ * @property {Format} app.format - Format 类实例
+ */
 export default {
   name: 'format',
   

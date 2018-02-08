@@ -10,10 +10,7 @@ import md5 from '../utils/md5';
 
 
 /**
- * 为app 提供用户信息与鉴权的能力扩展
- * **插件** 该类为插件类扩展了App 的能力
- * app.User: 该类的原型
- * app.user: 该类的实例
+ * 用户信息与鉴权
  * @class
  */
 class User {
@@ -23,7 +20,7 @@ class User {
   }
 
   // user state
-  //===========
+  // ---------------------------------
   stateSuccess (result){
     let user = this.storageLoad();
     this.storageSave(Object.assign(user||{},result||{}));
@@ -35,6 +32,12 @@ class User {
     let authUrl = this.app.config.login.urls['info'];;
     return this.app.config.urls.base+this.app.config.urls.api+authUrl;
   }
+
+  /**
+   * 返回用户信息请求的ActionState，可添加到container states 中，获取与跟踪用户信息数据
+   * @method
+   * @return {ActionStateRequest} - request state
+   */
   state(){
     return this.app.actionStates.request&&this.app.actionStates.request({
       updateOnStart: true,
@@ -62,17 +65,39 @@ class User {
   }
 
   // user info
-  //===========
+  // --------------------------------
+  /**
+   * 返回缓存的用户token
+   * @method
+   * @return {string} - token
+   */
   getToken(){
     let user = this.storageLoad();
     return user?user.token:"";
   }
+
+  /**
+   * 返回缓存用户信息
+   * @method
+   * @return {object} - 用户信息
+   */
   load(){
     return this.storageLoad()||{};
   }
+
+  /**
+   * 替换缓存的用户信息
+   * @method
+   * @param {object} user - 用户信息 
+   */
   save(user){
     return this.storageSave(user);
   }
+
+  /**
+   * 清除缓存的用户信息
+   * @method
+   */
   clear(){
     this.state().clear();
     this.storageClear();
@@ -80,7 +105,7 @@ class User {
 
 
   // user handle
-  //===========
+  // -------------------------
   onUserUpdate(user){
     if(!user)return {};
     for(let listener of this._userUpdateListeners) {
@@ -95,7 +120,7 @@ class User {
   }
 
   // user login
-  //===========
+  // ---------------------------
   getLoginUrl(data,options) {
     if(typeof(options)==='string') return options;
     
@@ -154,6 +179,12 @@ class User {
   loginNavigate(result,options) {
     this.app.navigator&&this.app.navigator.recall();
   }
+  /**
+   * 用户登录
+   * @method
+   * @param {object} data - 登录的参数 
+   * @param {object} options -  登录的配置
+   */
   login(data,options) {
     this.loginRequest(...this.loginBefore(data, options));
   }
@@ -189,6 +220,13 @@ class User {
       this.app.config.login.logoutToLoginOrHome?this.app.navigator.goLogin():this.app.navigator.goHome();
     }
   }
+
+  /**
+   * 用户登出
+   * @method
+   * @param {object} data - 登出参数
+   * @param {object} options - 参数 
+   */
   logout(data, options){
     this.logoutNetwork(data, options);
     this.logoutAfter(data, options);
@@ -197,10 +235,20 @@ class User {
   }
 
   // user op
-  //===========
+  // ---------------------
+  /**
+   * 更新用户信息与登录状态
+   * @method
+   */
   update(){
     this.state().update();
   }
+
+  /**
+   * 是否登录
+   * @method
+   * @return {boolean} - 是否登录 
+   */
   isLogin(){
     let user = this.load();
     return Boolean(user&&user.token);
@@ -237,6 +285,13 @@ class User {
 }
 
 
+/**
+ * **plugin** name: user dependence: request, navigator, storage
+ * 用户信息与鉴权的能力扩展
+ * @class userPlugin
+ * @property {class} app.User - User 类
+ * @property {User} app.user - User 类实例
+ */
 export default {
   name: 'user',
   dependence: ['request', 'navigator', 'storage'],

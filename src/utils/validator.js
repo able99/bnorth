@@ -1,7 +1,19 @@
 import jspath from 'jspath'
 
-
+// rule
+// -----------------------------
+/**
+ * @class Rule
+ */
 let is = {};
+
+/**
+ * @method required
+ * @example
+ * ```js
+ * 'required'
+ * ```
+ */
 is.required = function(n,checkInput,checkO){
   if(checkInput)return true;
   if(n===undefined||n===null) return false;
@@ -17,6 +29,8 @@ is.positive = function(n,checkInput) {
 };
 
 
+// check
+// -----------------------------
 export function check(val, arule, options={}, checkErrorMessage) {
   if(!arule) return null;
   let message = options.checkErrorMessage||checkErrorMessage||'error';
