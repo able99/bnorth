@@ -68,6 +68,19 @@ export class ActionState{
     return claxx&&(claxx.stateName||claxx.name);
   }
 
+  static getInstance(claxx,uuid) {
+    let className = ActionState.getClassName(claxx);
+    let maps = ActionState.maps[className];
+    return maps && maps[uuid];
+  }
+
+  static deleteInstance(claxx, uuid) {
+    let className = ActionState.getClassName(claxx);
+    let maps = ActionState.maps[className];
+
+    delete maps[uuid];
+  }
+
   static instance(claxx,app,uuid,options) {
     uuid = uuid||getUuid();
     let className = ActionState.getClassName(claxx);

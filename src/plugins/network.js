@@ -6,72 +6,34 @@
  */
 
 
-import Url from 'url-parse';
+import axios from 'axios';
 
 
-let fetchTimeout = function(app, input, opts){
-  return new Promise(function(resolve, reject){
-    var timeoutId = setTimeout(function(){
-      reject(new Error("fetch timeout"))
-    }, opts.timeout||90000);
-    app.verbose('network request:', input, opts);
-    fetch(input, opts).then(
-      res=>{
-        clearTimeout(timeoutId);
-        app.verbose('network response:', input, opts, res);
-        resolve(res)
-      },
-      err=>{
-        clearTimeout(timeoutId);
-        app.verbose('network response error:', input, opts, err);
-        reject(err)
-      }
-    )
-  })
+function getOption(value, defaultValue, ...args) {
+  let ret = typeof(value)==='function'?value(...args):value;
+  return ret||defaultValue;
 }
 
 
 /**
- * 网络访问
+ * 网络请求
  * @class
  */
 class Network {
   constructor(app) {
     this.app = app;
   }
-  //==================
-  // cache
-  //==================
-  clearCache(){
-    this.app.storage&&this.app.storage.clear("^bnorth_netcache");
-  }
-  saveCache(item,data){
-    this.app.storage&&this.app.storage.saveObj("bnorth_netcache_"+item,data);
-  }
-  getCache(item){
-    return this.app.storage&&this.app.storage.getObj("bnorth_netcache_"+item);
-  }
-  getCacheFetchKey(options){
-    return options.resource;
-  }
-  getCacheOperateKey(options){
-    return options.resource;
-  }
 
-  //==================
-  // format
-  //==================
-  formatFetchResult(result){
-    return result;
-  }
-  formatOperateResult(result){
-    return result;
-  }
-
-  //==================
-  // error handle
-  //==================
-  handleStatus(status,isFetch,options){
+  // event
+  // ---------------------------
+  /**
+   * 处理网络请求状态的错误
+   * @method
+   * @param {number} status - 网络请求状态码
+   * @param {boolean} isFetch - 是获取请求还是操作请求
+   * @param {NetworkOptions} options - 请求参数
+   */
+  _handleStatusError(status,isFetch,options) {
     switch(status){
       case 401:
       this.app.user&&this.app.user.toLogin(null, true);
@@ -80,247 +42,166 @@ class Network {
         return false;
     }
   }
-  handleResult(result,isFetch,options){
-    return false;
+
+  /**
+   * 处理返回结果，对结果进行编辑，或者抛出异常，或者跳转
+   * @method
+   * @param {*} result - 请求结果
+   * @param {boolean} isFetch - 是获取请求还是操作请求
+   * @param {NetworkOptions} options - 请求参数
+   */
+  _handleResult(result,isFetch,options) {
+    return result;
   }
 
-  //==================
-  // param
-  //==================
-  //authorization
-  paramAuthorization(options){
-    if(options.noAuth)return {};
-    return { 
-      "authorization": (this.app.user&&this.app.user.getToken())||'',
-    };
+  /**
+   * 处理请求异常
+   * @method
+   * @param {string|Error} error - 异常信息
+   * @param {boolean} isFetch - 是获取请求还是操作请求
+   * @param {NetworkOptions} options - 请求参数
+   * @param {object} config - axios 本次请求的实例 
+   */
+  _handleError(error, isFetch, options, config) {
+
   }
-  //header
-  paramFetchHeader(options){
+
+  // format
+  // ---------------------------
+  /**
+   * 返回请求头部对象
+   * @method 
+   * @param {NetworkOptions} options - 请求参数
+   * @param {boolean} isFetch - 是获取请求还是操作请求
+   * @return {object} - 请求头部
+   */
+  _getRequestHeaders(options, isFetch) {
     return {};
   }
-  paramOperateHeader(options){
+
+  /**
+   * 返回请求查询字符串对象
+   * @method 
+   * @param {NetworkOptions} options - 请求参数
+   * @param {boolean} isFetch - 是获取请求还是操作请求
+   * @return {object} - 查询字符串对象
+   */
+  _getRequestParams(options, isFetch) {
     return {};
   }
-  //url
-  paramFetchUrl(options){
-    let resource = typeof(options.resource)==='function'?options.resource():options.resource;
-    resource = ((resource.indexOf("http")===0||resource.indexOf("//")===0)?'':(this.app.config.urls.base+this.app.config.urls.api))+resource;
-    let uo = Url(resource,true);
 
-    if(this.paramFetchMethod(options).toLowerCase()==='get'){
-      Object.assign(uo.query, this.paramFetchBodyPre(options), options.query||{});
-    }else{
-      Object.assign(uo.query, options.query||{});
-    }
+  /**
+   * 返回请求content type
+   * @method 
+   * @param {NetworkOptions} options - 请求参数
+   * @param {boolean} isFetch - 是获取请求还是操作请求
+   * @return {string} - content type
+   */
+  _getRequestContentType(options, isFetch){
+    return this.app.config.network.contentType;
+  }
 
-    if(options.params){
-      //todo
-    }
-    
-    return uo.toString();
+  /**
+   * 返回请求方法
+   * @method 
+   * @param {NetworkOptions} options - 请求参数
+   * @param {boolean} isFetch - 是获取请求还是操作请求
+   * @return {string} - 请求方法
+   */
+  _getRequestMethod(options, isFetch) {
+    return isFetch?'GET':'POST';
   }
-  paramOperateUrl(options){
-    let resource = typeof(options.resource)==='function'?options.resource():options.resource;
-    resource = ((resource.indexOf("http")===0||resource.indexOf("//")===0)?'':(this.app.config.urls.base+this.app.config.urls.api))+resource;
-    let uo = Url(resource,true);
 
-    Object.assign(uo.query, options.query||{});
-
-    if(options.params){
-      //todo
-    }
-
-    return uo.toString();
+  /**
+   * 返回请求数据
+   * @method 
+   * @param {NetworkOptions} options - 请求参数
+   * @param {boolean} isFetch - 是获取请求还是操作请求
+   * @return {string|object|ArrayBuffer|FormData|File|Bold} - 请求数据
+   */
+  _getRequestData(options, isFetch) {
+    return getOption(options.data, {}, options, isFetch);
   }
-  //method
-  paramFetchMethod(options){
-    return options.method||"get";
-  }
-  paramOperateMethod(options){
-    return options.method||"POST";
-  }
-  //body
-  paramFetchBodyPre(options){
-    return (typeof(options.data)==='function'?options.data():options.data)||{};
-  }
-  paramFetchBody(options){
-    return JSON.stringify(this.paramFetchBodyPre(options));
-  }
-  paramOperateBodyPre(options){
-    return (typeof(options.data)==='function'?options.data():options.data)||{}
-  }
-  paramOperateBody(options){
-    return JSON.stringify(this.paramOperateBodyPre(options));
-  }
-  //contenttype
-  paramFetchContentType(options){
-    return {};
-  }
-  paramOperateContentType(options){
-    return {
-      "Content-Type": "application/json",
+  
+  /**
+   * 格式化请求返回的数据
+   * @method 
+   * @param {NetworkOptions} options - 请求参数
+   * @param {boolean} isFetch - 是获取请求还是操作请求
+   * @return {string|object|blob|Arraybuffer} - 返回的数据
+   */
+  _getResultData(result, isFetch){
+    if(isFetch) {
+      let data = result.data;
+      delete result.data;
+      return { ...data, _bnorth: result };
+    } else {
+      return result;
     }
   }
+  
 
-  //==================
-  // main if
-  //==================
+  // fetch
+  // ---------------------------
+  /**
+   * 网络请求参数
+   * @class NetworkOptions
+   * @property {string|function} [resource=''] - url 地址
+   * @property {string} [baseUrl=app.config.urls.base] - url 地址
+   * @property {string} [apiUrl=app.config.urls.api] - url 地址
+   * @property {object|function} [params] - 请求url 的查询字符串对象
+   * @property {object|function} [header] - 请求头
+   * @property {string} [contentType='application/json'] - content type
+   * @property {string} [method=isFetch?'get':'post'] - http 方法
+   * @property {number} [timeout=app.config.networkTimeout] - 请求超时时间
+   * @property {string} [responseType='json'] - 设定请求结果解析类型(arraybuffer,blob,document,json,text,stream)
+   * @property {function|string|object|ArrayBuffer|FormData|File|Bold} [data] - 请求数据
+   * @property {object} [options] - 直接传递给[axios](https://www.npmjs.com/package/axios) 的参数，比如withCredentials，auth，onDownloadProgress，onUploadProgress 等
+   */
   /**
    * 获取网络数据
    * @method
-   * @param {object} options - 参数对象，具体包括：<br />
-   * **resource**
-   * **data**
-   * **query**
-   * **params**
-   * **methods**
-   * @return {Promise} - 
+   * @param {NetworkOptions} options - 请求参数
+   * @param {boolean} isFetch - 是获取请求还是操作请求
+   * @return {Promise} - 请求返回promise-resolve(返回的数据)-reject(错误信息)
    */
-  fetch(options={}){
-    options.resource = options.resource||"";
-    let fetchScope = {};
-    let fetchUrl = this.paramFetchUrl(options);
-    let fetchOption = {
-      method: this.paramFetchMethod(options),
+  fetch(options={}, isFetch=true){
+    return axios({
+      url: options.apiUrl||this.app.config.network.apiUrl + getOption(options.resource, '', options, isFetch),
+      baseURL: options.baseUrl||this.app.config.network.baseUrl,
+      method: this._getRequestMethod(options,isFetch),
       headers: {
-        ...this.paramAuthorization(options),
-        ...this.paramFetchHeader(options),
-        ...this.paramFetchContentType(options),
+        ...this._getRequestHeaders(options, isFetch),
+        ...getOption(options.headers, {}, options, isFetch),
+        "Content-Type":this._getRequestContentType(options, isFetch),
       },
-      credentials: 'include',
-    }
-    if(fetchOption.method&&fetchOption.method.toString().toLowerCase()!=='get'){
-      fetchOption.body = this.paramFetchBody(options);
-    }
-
-    return fetchTimeout(app, fetchUrl,fetchOption)
-    .then(
-      (res) => {
-        fetchScope.res = res;
-        return res.json();
-      },
-      (error) => {
-        return Promise.reject(error);
+      params: Object.assign({}, 
+        ...this._getRequestParams(options, isFetch),
+        ...getOption(options.params, {}, options, isFetch)
+      ),
+      timeout: options.timeout||this.app.config.timeout,
+      responseType: options.responseType||this.app.config.responseType,
+      data: this._getRequestData(options, isFetch),
+      ...getOption(options.options, {}, options, isFetch)
+    })
+    .then(result=>{
+      result = this._getResultData(result, isFetch);
+      result = this._handleResult(result, isFetch, options);
+      return result;
+    },error=>{
+      if(error.response){
+        error = this._handleStatusError(error.response.status, isFetch, error.response, options, error.config);
+      }else {
+        error = this._handleError(error, isFetch, options, error.config);
       }
-    )
-    .then(
-      (result) => {
-        if(fetchScope.res && (fetchScope.res.ok||(fetchScope.res.status>=200&&fetchScope.res.status<300))) {
-          let handle = this.handleResult(result,true,options,fetchScope.res);
-          if(handle) return Promise.reject(handle===true?null:handle);
-
-          return result;
-        }else{
-          let handle = this.handleStatus(fetchScope.res.status,true,options,result,fetchScope.res);
-          if(handle) return Promise.reject(handle===true?null:handle);
-
-          return Promise.reject(Object.assign({code:fetchScope.res.status, message:fetchScope.res.statusText||this.app.config.strings.networkError},result));
-        }
-      },
-      (error) => {
-        if(!fetchScope.res) {
-          error.message = this.app.config.strings.networkError;
-          return Promise.reject(error);
-        }
-
-        let handle = this.handleStatus(fetchScope.res.status,true,options,null, fetchScope.res);
-        if(handle) return Promise.reject(handle===true?null:handle);
-
-        return Promise.reject({code:fetchScope.res.status, message:fetchScope.res.statusText||this.app.config.strings.networkError});
-      }
-    )
-    .then(
-      (result)=>{
-        result = this.formatFetchResult(result);
-        if(this.app.config.networkCache){this.saveCache(this.getCacheFetchKey(options),result)}
-        return result;
-      },
-      (error)=>{
-        if(this.app.config.networkCache){
-          let cache = this.getCache(this.getCacheFetchKey(options));
-          if(cache){ return Promise.resolve(cache); }
-        }else{
-          return Promise.reject(error);
-        }
-      }
-    );
+      if(error) throw error;
+    })
+    .then(result=>{
+      return result;
+    },error=>{
+      throw error;
+    });
   }
-
-  /**
-   * 提交网络数据
-   * @method
-   * @param {object} options - 参数对象，具体包括：<br />
-   * **resource**
-   * **data**
-   * **query**
-   * **params**
-   * **methods**
-   * @return {Promise} - 
-   */
-  operate(options={}){
-    options.resource = options.resource||"";
-    let fetchScope = {};
-    let fetchUrl = this.paramOperateUrl(options);
-    let fetchOption = {
-      method: this.paramOperateMethod(options),
-      headers: {
-        ...this.paramAuthorization(options),
-        ...this.paramOperateHeader(options),
-        ...(options.data && options.data instanceof FormData)?{}:this.paramOperateContentType(options),
-      },
-      credentials: 'include',
-    }
-    if(fetchOption.method&&fetchOption.method.toString().toLowerCase()!=='get'){
-      let body = this.paramOperateBodyPre(options);
-      fetchOption.body = (body instanceof FormData)?body:this.paramOperateBody(options);
-    }
-
-    return fetchTimeout(app, fetchUrl,fetchOption)
-    .then(
-      (res) => {
-        fetchScope.res = res;
-        return res.json();
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    )
-    .then(
-      (result) => {
-        if(fetchScope.res && (fetchScope.res.ok||(fetchScope.res.status>=200&&fetchScope.res.status<300))) {
-          let handle = this.handleResult(result,false,options,fetchScope.res);
-          if(handle) return Promise.reject(handle===true?null:handle);
-
-          return result;
-        }else{
-          let handle = this.handleStatus(fetchScope.res.status,false,options,result, fetchScope.res);
-          if(handle) return Promise.reject(handle===true?null:handle);
-
-          return Promise.reject(Object.assign({code:fetchScope.res.status, message:fetchScope.res.statusText||this.app.config.strings.networkError},result));
-        }
-      },
-      (error) => {
-        if(!fetchScope.res) {
-          error.message = this.app.config.strings.networkError;
-          return Promise.reject(error);
-        }
-        
-        let handle = this.handleStatus(fetchScope.res.status,false,options,null,fetchScope.res);
-        if(handle) return Promise.reject(handle===true?null:handle);
-
-        return Promise.reject({code:fetchScope.res.status, message:fetchScope.res.statusText||this.app.config.strings.networkError});
-      }
-    )
-    .then(
-      (result) => {
-        return this.formatFetchResult(result);
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-  }
-
 }
 
 

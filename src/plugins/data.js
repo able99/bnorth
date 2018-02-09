@@ -157,7 +157,7 @@ class ActionStateData extends ActionState{
    */
   clear(onlyData){
     this.app.actions._dataClear(this.uuid);
-    delete ActionStateData.maps[this.uuid];
+    ActionStateData.deleteInstance[this.uuid];
   }
 
   // validate
@@ -355,7 +355,7 @@ export default {
   init(app) {
     /**
      * @method app.actionStates.data
-     * @param {object} options - 参数，参见ActionStateData 的构造函数
+     * @param {ActionStateDataOptions|function} options - 参数，参见ActionStateData 的构造函数
      * @param {string} [uuid=uuid()] - 指定uuid
      */
     app.actionStates.data = function(options,uuid) {

@@ -262,7 +262,7 @@ export default class App {
           return action(app, dispatch, getState);
         }catch(e){
           app.error(title, e);
-          app.noticeMessage(title, e);
+          app.errorNotice(title, e);
         }
       }
 

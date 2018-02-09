@@ -8,6 +8,7 @@
 
 import { ActionState } from '../app/container';
 import getOptions from '../utils/getOptions';
+import getUuid from '../utils/uuid';
 
 
 // action state 
@@ -17,10 +18,15 @@ import getOptions from '../utils/getOptions';
  * @class ActionStateRequestOptions
  * @property {object|array} [defaultData={}] - 默认数据 
  * @property {object|array} [initData={}] - 初始化数据 
- * @property {boolean} [trackState=falae] - 是否显示
+ * @property {} append
+ * @property {} appendField
  * @property {boolean} [updateOnStart=falae] - 是否在container 启动时更新数据
  * @property {boolean} [updateOnResume=falae] - 是否在container 获取焦点时更新数据
  * @property {boolean} [clearOnStop=true] - 是否在container 停止时，清除数据管理器
+ * @property {boolean} [trackState=falae] - 是否显示
+ * @property {boolean} [blocking=] - 获取中时显示阻塞式还是非阻塞式的加载中指示
+ * @property {boolean} [notice=true] - 出错时是否显示错误信息 
+ * @property {string} [noticeTheme='alert'] - 错误提示的主题
  */
 /**
  * 当获取请求数据时触发
@@ -44,6 +50,18 @@ import getOptions from '../utils/getOptions';
  * @param {Error|string} error - 错误信息
  * @param {object|array} result - 请求结果
  */
+/**
+ * @callback onSuccess
+ */
+/**
+ * @callback onError
+ */
+/**
+ * @callback onUploadProgress
+ */
+/**
+ * @callback onDownloadProgress
+ */
 
 /**
  * 提供网络请求与网络请求数据的管理
@@ -56,13 +74,13 @@ class ActionStateRequest extends ActionState {
    * 
    * @param {App} app - App 单实例
    * @param {string} uuid - 唯一id
-   * @param {ActionStateRequestOptions} options - 请求参数
+   * @param {ActionStateRequestOptions|NetworkOptions} options - 请求参数与网络请求底层API参数
    */
   constructor(app, uuid, options){
     super(app, uuid);
     
     /**
-     * @property {ActionStateRequestOptions} options - 请求的参数
+     * @property {ActionStateRequestOptions|NetworkOptions} options - 请求的参数
      */
     this.options = options;
     this.options.defaultData = this.options.defaultData||{};
@@ -104,7 +122,7 @@ class ActionStateRequest extends ActionState {
  
   /**
    * @method
-   * @param {ActionStateRequestOptions} [options] - 本次请求的参数，为空使用创建时的参数
+   * @param {ActionStateRequestOptions|NetworkOptions} [options] - 本次请求的参数，为空使用创建时的参数
    * @param {boolean} [append=false] - 是否是追加数据还是替换之前数据 
    */
   update(aoptions={},append=null){
@@ -114,7 +132,7 @@ class ActionStateRequest extends ActionState {
       (append===true||append===false)?{append}:{},
     )
     if(this.options.onWillUpdate && this.options.onWillUpdate(options)===false) return;
-    this.app.actions.requestFetch(this, options);
+    this.app.actions.request(options, true, this.uuid);
   }
 
   /**
@@ -133,7 +151,7 @@ class ActionStateRequest extends ActionState {
    */
   clear(){
     this.app.actions._requestFetchClear(this.uuid);
-    delete ActionStateRequest.maps[this.uuid];
+    ActionStateRequest.deleteInstance[this.uuid];
   }
 
   // state
@@ -198,18 +216,6 @@ class ActionStateRequest extends ActionState {
   /*!
    * triiger on container start
    * @callback
-   */
-  onFetching(show=true, blocking=false) {
-    if(blocking){
-      this.app.actions.noticeBlocking(show);
-    }else{
-      this.app.actions.noticeLoading(show);
-    }
-  }
-
-  /*!
-   * triiger on container start
-   * @callback
    * @param {*} result - network data
    * @return {*} - return changed data overrided
    */
@@ -237,6 +243,41 @@ class ActionStateRequest extends ActionState {
     if(this.options.onChangeError&&this.options.onChangeError(error, result));
     this.app.actions.noticeMessage(error, {cTheme: 'alert'});
   }
+
+  /**
+   * 请求进度条处理函数
+   * @method
+   * @param {boolean} show - 是否显示 
+   * @param {Error|string} error - 异常信息
+   * @param {App} app - App 实例
+   * @param {ActionStateRequestOptions|NetworkOptions} options - 请求参数
+   * @param {boolean} isFetch - 是否是获取型
+   */
+  static _handleRequesting(show, app, options, isFetch) {
+    if(isFetch){
+      if(options.blocking){
+        app.actions.noticeBlocking(show);
+      }else{
+        app.actions.noticeLoading(show);
+      }
+    }else{
+      if(options.blocking!==false){
+        app.actions.noticeBlocking(show);
+      }
+    }
+  }
+
+  /**
+   * 请求异常显示处理函数
+   * @method
+   * @param {Error|string} error - 异常信息
+   * @param {App} app - App 实例
+   * @param {ActionStateRequestOptions|NetworkOptions} options - 请求参数
+   * @param {boolean} isFetch - 是否是获取型
+   */
+  static _handleError(error, app, options, isFetch) {
+    if(error&&options.notice) app.actions.noticeMessage(error, {cTheme: options.noticeTheme||'alert'});
+  }
 }
 
 
@@ -263,99 +304,105 @@ const RequestFetchInvalid = 'RequestFetchInvalid';
 const RequestFetchFetchSuccess = 'RequestFetchFetchSuccess';
 const RequestFetchFetchFail = 'RequestFetchFetchFail';
 /**
- * 发起获取型请求
- * @method app.actions.requestFetch
- * @param {*} request 
- * @param {*} options 
+ * 发起请求
+ * @method app.actions.request
+ * @param {ActionStateRequestOptions|NetworkOptions} options - 网络请求及network 网络请求api的参数
+ * @param {boolean} isFetch - 是否是为请求型还是提交型
+ * @param {string} uuid - 请求的uuid 
  */
-let requestFetch = (request, options)=>app=>{
-  app.actions.requestFetching(request.uuid);
-  request.trigger('onFetching', true, options.blocking);
+let request = (options={}, isFetch=false, uuid=getUuid())=>app=>{
+  isFetch&&app.actions._requestFetching(uuid, options, isFetch);
+  ActionStateRequest._handleRequesting(true, app, options, isFetch);
 
-  app.network.fetch(options).then(
-    (result)=>{
-      request.trigger('onFetching', false, options.blocking);
-      let ret = request.trigger('onWillChange', result); 
-      if(ret)result = ret;
-      if(ret===false) return;
-      app.actions.requestFetchSuccess(request.uuid,result,options.initData,options.append,options.appendField);
-      request.trigger('onDidChange', result);
-    },
-    (error)=>{
-      request.trigger('onFetching', false, options.blocking);
-      app.actions.requestFetchFail(request.uuid,error);
-      request.trigger('onChangeError', error);
-    }
-  ).catch((error)=>{
-    request.trigger('onFetching', false, options.blocking);
-    app.errorNotice(error);
+  app.network.fetch&&app.network.fetch(options, isFetch).then( result=>{
+    ActionStateRequest._handleRequesting(false, app, options, isFetch);
+    if(options.onSuccess&&options.onSuccess(result)) return;
+
+    let request = isFetch&&ActionStateRequest.getInstance(ActionStateRequest, uuid);
+    let ret = request&&request.trigger('onWillChange', result); 
+    if(ret)result = ret;
+    if(request && ret===false) return;
+
+    isFetch&&app.actions._requestFetchSuccess(result, uuid, options, isFetch);
+
+    request&&request.trigger('onDidChange', result);
+  }, error=>{
+    ActionStateRequest._handleRequesting(false, app, options, isFetch);
+    if(options.onError&&options.onError(error)) return;
+
+    isFetch&&app.actions._requestFetchFail(error, uuid, options, isFetch);
+    let request = isFetch&&ActionStateRequest.getInstance(ActionStateRequest, uuid);
+    request&&request.trigger('onChangeError', error);
+    ActionStateRequest._handleError(error, app, options, isFetch);
+  }).catch(error=>{
+    ActionStateRequest._handleRequesting(false, app, options, isFetch);
+    ActionStateRequest._handleError(error, app, options, isFetch);
   });    
 }
-let requestFetching = (uuid)=>{
+
+/**
+ * 更新指定uuid 的请求状态为请求中
+ * @method
+ * @param {stirng} uuid - 唯一id
+ * @param {ActionStateRequestOptions|NetworkOptions} options - 网络请求及network 网络请求api的参数
+ * @param {boolean} isFetch - 是否是为请求型还是提交型
+ */
+let _requestFetching = (uuid, options, isFetch)=>{
   return {
     type: RequestFetchFetching,
     uuid,
   };
 }
-let requestFetchInvalid = (uuid)=>{
-  return {
-    type: RequestFetchInvalid,
-    uuid,
-  };
-}
-let requestFetchSuccess = (uuid,result,initData,append,appendField)=>{
+
+/**
+ * 更新指定uuid 的请求的状态与数据
+ * @method
+ * @param {stirng} uuid - 唯一id
+ * @param {ActionStateRequestOptions|NetworkOptions} options - 网络请求及network 网络请求api的参数
+ * @param {boolean} isFetch - 是否是为请求型还是提交型
+ */
+let _requestFetchSuccess = (result, uuid, options, isFetch)=>{
   return {
     type: RequestFetchFetchSuccess,
     uuid,
     result,
-    initData,
-    append,
-    appendField,
+    options,
   };
 }
-let requestFetchFail = (uuid,error)=>{
+
+/**
+ * 更新指定uuid 的请求错误状态
+ * @method
+ * @param {Error|string} error - 异常信息
+ * @param {stirng} uuid - 唯一id
+ * @param {ActionStateRequestOptions|NetworkOptions} options - 网络请求及network 网络请求api的参数
+ * @param {boolean} isFetch - 是否是为请求型还是提交型
+ */
+let _requestFetchFail = (error, uuid, options, isFetch)=>{
   return {
     type: RequestFetchFetchFail,
     uuid,
     error,
   };
 }
-let _requestFetchClear = (uuid)=>(app)=>{
-  let state = app.getState('request',{});
-  delete state.fetchResult[uuid];
-}
 
 /**
- * 发起提交型请求
- * @method app.actions.requestSubmit
- * @param {*} options 
+ * 删除指定uuid 的请求数据
+ * @method
+ * @param {stirng} uuid - 唯一id
+ * @param {ActionStateRequestOptions|NetworkOptions} options - 网络请求及network 网络请求api的参数
+ * @param {boolean} isFetch - 是否是为请求型还是提交型
  */
-let requestSubmit = (options)=>(app)=>{
-  if(options.blocking!==false)app.actions.noticeBlocking();
-  
-  app.network.operate(options).then(
-    (result)=>{
-      if(options.blocking!==false)app.actions.noticeBlocking(false);
-      if(typeof(options.success)==="function"){options.success(result)};
-    },
-    (error)=>{
-      app.error(error);
-      if(options.blocking!==false)app.actions.noticeBlocking(false);
-      if(typeof(options.error)==="function"){error = options.error(error)||error};
-      if(error&&options.notice!==false)app.actions.noticeMessage(error, {cTheme: 'alert'});
-    }
-  ).catch((error)=>{
-    app.error(error);
-    if(options.blocking!==false)app.actions.noticeBlocking(false);
-    if(options.notice!==false)app.actions.noticeMessage(error, {cTheme: 'alert'});
-  });  
+let _requestFetchClear = (uuid, options, isFetch)=>(app)=>{
+  let state = app.getState('request',{});
+  delete state.fetchResult[uuid];
 }
 
 /*!
  * reduxer for request
  * @function reduxerRequestFetch
  */
-function reduxerRequestFetch( state = {uuid: null, resource: null, fetchResult:{}}, action ) {
+function reduxerRequestFetch( state = {fetchResult:{}}, action ) {
   switch (action.type) {
   case RequestFetchFetching:
     return Object.assign({}, state, {
@@ -366,22 +413,13 @@ function reduxerRequestFetch( state = {uuid: null, resource: null, fetchResult:{
         }),
       }),
     });
-  case RequestFetchInvalid:
-    return Object.assign({}, state, {
-      uuid: action.uuid,
-      fetchResult: Object.assign({}, state.fetchResult, {
-        [action.uuid]:Object.assign({}, state.fetchResult[action.uuid], {
-          invalid: true,
-        }),
-      }),
-    });
   case RequestFetchFetchSuccess:
-    let data = (state.fetchResult[action.uuid]&&state.fetchResult[action.uuid].result)||action.initData;
-    if(action.append&&action.appendField&&data){
+    let data = (state.fetchResult[action.uuid]&&state.fetchResult[action.uuid].result)||action.options.initData;
+    if(action.options.append&&action.options.appendField&&data){
       if(Array.isArray(data)){
         data = Array.concat(data,action.result);
       }else{
-        let fileds = Array.isArray(action.appendField)?action.appendField:(typeof(action.appendField)==='string'?[action.appendField]:['data']);
+        let fileds = Array.isArray(action.options.appendField)?action.options.appendField:(typeof(action.options.appendField)==='string'?[action.options.appendField]:['data']);
         for(let field of fileds){
           action.result[field] = Array.concat(data[field]||[],action.result[field]||[]);
         }
@@ -395,7 +433,6 @@ function reduxerRequestFetch( state = {uuid: null, resource: null, fetchResult:{
       uuid: action.uuid,
       fetchResult: Object.assign({}, state.fetchResult, {
         [action.uuid]:Object.assign({}, state.fetchResult[action.uuid], {
-          invalid: false,
           fetching: false,
           result: data,
         }),
@@ -411,7 +448,6 @@ function reduxerRequestFetch( state = {uuid: null, resource: null, fetchResult:{
         }),
       }),
     });
-
   default:
     return state;
   }
@@ -422,19 +458,22 @@ export default {
   dependence: 'network',
 
   init(app) {
+    /**
+     * @method app.actionsStates.request
+     * @param {ActionStateRequestOptions|NetworkOptions|function} [options] - 本次请求的参数
+     * @param {string} [uuid] - 本次请求的uuid，为空使用随机id，如果该uuid已经存在，则返回该uuid 对象，无需创建
+     */
     app.actionStates.request = function(options={},uuid=null){
       return ActionState.instance(ActionStateRequest, app, uuid, options);
     }
   },
   onCreateStoreBefore(app) {
     Object.assign(app.actions,{
-      requestFetch,
-      requestFetching,
-      requestFetchSuccess,
-      requestFetchFail,
-      requestFetchInvalid,
+      request,
+      _requestFetching,
+      _requestFetchSuccess,
+      _requestFetchFail,
       _requestFetchClear,
-      requestSubmit
     });
 
     app.reduxers.request = reduxerRequestFetch;
