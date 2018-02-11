@@ -85,8 +85,6 @@ class ActionStateRequest extends ActionState {
     this.options = options;
     this.options.defaultData = this.options.defaultData||{};
     this.options.initData = this.options.initData || this.options.defaultData;
-    this.options.trackState = Boolean(this.options.trackState);
-    this.options.noticeChangeError = this.options.noticeChangeError !== false;
   }
 
   // interface
@@ -276,7 +274,7 @@ class ActionStateRequest extends ActionState {
    * @param {boolean} isFetch - 是否是获取型
    */
   static _handleError(error, app, options, isFetch) {
-    if(error&&options.notice) app.actions.noticeMessage(error, {cTheme: options.noticeTheme||'alert'});
+    if(error&&options.notice!==false) app.actions.noticeMessage(error, {cTheme: options.noticeTheme||'alert'});
   }
 }
 

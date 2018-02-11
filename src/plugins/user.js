@@ -8,6 +8,12 @@
 
 import md5 from '../utils/md5';
 
+/**
+ * 用户登录与登出操作参数
+ * @class UserLoginLogoutOptions
+ * @
+ * @property {ActionStateRequestOptions|NetworkOptions} [requestOption] - 直接传递到request api 参数
+ */
 
 /**
  * 用户信息与鉴权
@@ -61,16 +67,6 @@ class User {
   }
 
   /**
-   * 获取用户信息的网络接口地址
-   * @method
-   * @return {string} - 接口地址
-   */
-  _getInfoUrl() {
-    let authUrl = this.app.config.login.urls['info'];;
-    return this.app.config.urls.base+this.app.config.urls.api+authUrl;
-  }
-
-  /**
    * 返回用户信息请求的ActionState，uuid 为user，可添加到container states 中，获取与跟踪用户信息数据
    * @method
    * @return {ActionStateRequest} - request state
@@ -79,7 +75,8 @@ class User {
     return this.app.actionStates.request&&this.app.actionStates.request({
       updateOnStart: true,
       clearOnStop: false,
-      resource: this._getInfoUrl(),
+      resource: this.app.config.login.urls['info'],
+      ...this.app.infoOptions,
       onWillUpdate:()=>this.isLogin(),
       onWillChange:(result)=>{
         this._stateSuccess(result);
@@ -133,26 +130,32 @@ class User {
 
   // user login
   // ---------------------------
-  _getLoginUrl(data,options) {
-    if(typeof(options)==='string') return options;
-    
-    let { type=this.app.config.login.types[0].type } = options||{};
-    let authUrl = this.app.config.login.urls[type];
-    return this.app.config.urls.base+this.app.config.urls.api+authUrl;
+  /**
+   * 数据加密
+   * @method
+   * @param {*} value - 要加密的数据
+   * @param {*} crypto - 加密方法
+   * @param {object} data - 登录数据
+   * @param {UserLoginLogoutOptions} options - 参数 
+   */
+  _getCrypto(value, crypto, data, options) {
+    return md5(value);
   }
-  _getLoginMethod(data,options) {
-    return 'post';
-  }
-  _getPasswordCrypto(password) {
-    return md5(password);
-  }
-  _getLoginData(data,options) {
+
+  /**
+   * 返回用户登录数据
+   * @method
+   * @param {object} data - 登录数据
+   * @param {UserLoginLogoutOptions} options - 参数 
+   * @return {object} - 登录数据
+   */
+  _getLoginData(data, options) {
     let { fields, data:adata={} } = options||{};
     let ret = {};
 
     if(fields){
       fields.forEach(v=>{
-        ret[v.type] = v.crypto?this._getPasswordCrypto(data[v.type]):data[v.type];
+        ret[v.type] = v.crypto?this._getCrypto(data[v.type], v.crypto, data, options):data[v.type];
       })
     }else{
       ret = data;
@@ -160,70 +163,146 @@ class User {
 
     return Object.assign(ret, adata||{});
   }
+
+  /**
+   * 用户登录之前的操作，可对参数进行修改
+   * @method
+   * @param {object} data - 登录数据
+   * @param {UserLoginLogoutOptions} options - 参数 
+   * @return {array} - 返回参数列表
+   */
   _loginBefore(data,options) {
     return [data, options];
   }
-  _loginRequest(data, options) {
-    let { type, fields, success, data:adata, ...params } = options||{};
 
-    this.app.actions.requestSubmit && this.app.actions.requestSubmit({
-      resource: this._getLoginUrl(data,options),
-      method: this._getLoginMethod(data,options),
-      data: this._getLoginData(data,options),
+  /**
+   * 用户登录接口请求
+   * @method
+   * @param {object} data - 登录数据
+   * @param {UserLoginLogoutOptions} options - 参数 
+   */
+  _loginRequest(data, options) {
+    this.app.actions.request && this.app.actions.request({
+      resource: this.app.config.login.urls[(options&&options.type)||'login'],
       noAuth: true,
-      success:(result)=>{
+      ...this.app.config.login.loginOptions,
+      ...((options&&options.requestOptions)||{}),
+      data: this._getLoginData(data,options),
+      onSuccess:(result)=>{
         this._loginSuccess(result, options);
       },
-      ...params,
     });
   }
-  _loginSuccess(result, options) {
-    let { success } = options||{};
 
-    if(success&&success(result, options)) return;
+  /**
+   * 用户登录成功的处理函数
+   * @method
+   * @param {object} data - 登录数据
+   * @param {UserLoginLogoutOptions} options - 参数 
+   */
+  _loginSuccess(result, options) {
+    if(options&&options.onSuccess&&options.onSuccess(result, options)) return;
     this.app.trigger('onUserUpdate', result);
     result = this._loginAfter(result,options)||result;
     this._loginNavigate(result,options);
   }
+
+  /**
+   * 用户登录成功后的操作，保存用户信息
+   * @method
+   * @param {object} data - 登录数据
+   * @param {UserLoginLogoutOptions} options - 参数 
+   */
   _loginAfter(result,options) {
     this.save(result);
   }
+
+  /**
+   * 用户登录成功的跳转操作
+   * @method
+   * @param {object} data - 登录数据
+   * @param {UserLoginLogoutOptions} options - 参数 
+   */
   _loginNavigate(result,options) {
     this.app.navigator&&this.app.navigator.recall();
   }
+
   /**
    * 用户登录
    * @method
-   * @param {object} data - 登录的参数 
-   * @param {object} options -  登录的配置
+   * @param {object} data - 登录数据
+   * @param {UserLoginLogoutOptions} options - 参数 
    */
   login(data,options) {
     this._loginRequest(...this._loginBefore(data, options));
   }
 
+  /**
+   * 用来显示确实是否登录的操作，默认直接确认了，如果需要显示确认框，需要覆盖该函数，并在用户选择确认时，触发回调函数
+   * @method
+   * @param {function} cb - 确认时回调函数
+   */
+  toLoginPrompt(cb) {
+    cb();
+  }
+
+  /**
+   * 跳转到登录页面
+   * @method
+   * @param {boolean} [isForce=true] - 是否直接调转登录，还是弹出确认框
+   * @param {boolean} [isReplace=true] - 是否替换当前页面
+   */
+  toLogin(isForce=true, isReplace=true) {
+    if(isForce) {
+      this.app.navigator.goLogin(isReplace)
+    } else {
+      toLoginPrompt(()=>this.app.navigator.goLogin(isReplace));
+    }
+  }
+
   // user logout
   //===========
-  _getLogoutUrl(data, options) {
-    let url = this.app.config.login.urls['logout']||'';
-    return url.indexOf('http')>=0?url:this.app.config.urls.base+this.app.config.urls.api+url;
-  }
-  _getLogoutMethod(data, options) {
-    return this.app.config.login.logoutMethod||'DELETE';
-  }
+  /**
+   * 获取登出数据
+   * @method
+   * @param {object} data - 登出数据
+   * @param {UserLoginLogoutOptions} options - 参数 
+   */
   _getLogoutData(data, options) {
-    return data||this.app.config.login.logoutData||{};
+    return {};
   }
+
+  /**
+   * 登出的接口调用
+   * @method
+   * @param {object} data - 登出数据
+   * @param {UserLoginLogoutOptions} options - 参数 
+   */
   _logoutNetwork(data, options){
-    this.app.actions.requestSubmit && this.app.actions.requestSubmit({
-      resource: this._getLogoutUrl(data, options),
-      method: this._getLogoutMethod(data, options),
+    this.app.actions.request && this.app.actions.request({
+      resource: this.app.config.login.urls['logout'],
+      ...this.app.config.logoutOptions,
+      ...((options&&options.requestOptions)||{}),
       data:this._getLogoutData(data, options),
-      ...options||{},
     });
   }
+
+  /**
+   * 登出后操作，清理用户信息等
+   * @method
+   * @param {object} data - 登出数据
+   * @param {UserLoginLogoutOptions} options - 参数 
+   */
   _logoutAfter(data, options){
     this.clear();
   }
+
+  /**
+   * 登出后的跳转操作
+   * @method
+   * @param {object} data - 登出数据
+   * @param {UserLoginLogoutOptions} options - 参数 
+   */
   _logoutNavigate(data, options){
     if(this.app.navigator){ this.app.config.login.logoutToLoginOrHome?this.app.navigator.goLogin():this.app.navigator.goHome(); }
   }
@@ -231,8 +310,8 @@ class User {
   /**
    * 用户登出
    * @method
-   * @param {object} data - 登出参数
-   * @param {object} options - 参数 
+   * @param {object} data - 登出数据
+   * @param {UserLoginLogoutOptions} options - 参数 
    */
   logout(data, options){
     this._logoutNetwork(data, options);

@@ -295,7 +295,7 @@ export default class App {
    * 获取root 元素
    * @method
    */
-  _getRootElement() {
+  getRootElement() {
     return document.getElementById(this.options.domIdRoot||'root');
   }
 
@@ -342,7 +342,7 @@ export default class App {
   _render() {
     this.verbose('app render:', this.routes, this.config);
     this.routes = this._configRouteProps(this.routes);
-    render(this._createRootComponent(),this._getRootElement());
+    render(this._createRootComponent(),this.getRootElement());
   }
 
 
@@ -592,7 +592,7 @@ export default class App {
    * @method
    */
   showMessageOnRootElement(title, message) {
-    render(<this._ErrorComponent title={title} error={typeof(message)==='object'&&message.message||String(message)} />, this._getRootElement());
+    render(<this._ErrorComponent title={title} error={typeof(message)==='object'&&message.message||String(message)} />, this.getRootElement());
   }
 
   /**
