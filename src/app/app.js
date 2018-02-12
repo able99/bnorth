@@ -262,7 +262,7 @@ export default class App {
           return action(app, dispatch, getState);
         }catch(e){
           app.error(title, e);
-          app.errorNotice(title, e);
+          app.errorNotice(e);
         }
       }
 
@@ -581,7 +581,7 @@ export default class App {
    */
   errorNotice(...args) {
     if(!this.started) {
-      this.showMessageByAlert(args);
+      this.showMessageByAlert(args[0]);
       return;
     }
     this.trigger('onNoticeMessage',...args);

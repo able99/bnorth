@@ -6,10 +6,6 @@
  */
 
 
-import { timeInit, time, timeFrom } from '../utils/time';
-import { check, checkObject, checkObjectItem } from '../utils/validator';
-
-
 /**
  * 格式化输出与数据校验功能类
  * @class
@@ -44,11 +40,6 @@ class Format {
      * @property {string} [byteSizeB='B'] - 文件大小默认字符串
      */
     this.byteSizeB = 'B';
-
-    /**
-     * @property {string} [checkErrorMessage='error'] - 校验错误的默认字符串
-     */
-    this.checkErrorMessage = 'error';
   }
 
   /**
@@ -75,33 +66,39 @@ class Format {
   }
 
   /**
-   * 初始化时间格式化，由于moment 体积较大，分离初始化
-   * @method
-   */
-  timeInit() {
-    return timeInit();
-  }
-
-  /**
    * 格式化时间
    * @method
-   * @param {*} val 
-   * @param {*} options 
+   * @param {date|number|string} date - 需要格式化的时间
+   * @param {string} [format=app.format.timeFormat] - 格式化字符串<br />
+   * YYYY|YY: 年
+   * MM|M: 月
+   * DD|D: 日
+   * HH|H: 时
+   * mm|m: 分
+   * ss|s: 秒
+   * S: 毫秒
+   * Q: 季度
+   * @return {string} - 格式化后的时间字符串
    */
-  time(val, options){
-    options = options||{};
-    options.format = options.format || this.timeFormat;
-    return time(val, options);
-  }
+  time(date, format){
+    date = date instanceof Date ? date : new Date(date);
+    format = format||this.timeFormat;
+    let o = {   
+      "M+" : date.getMonth()+1,
+      "D+" : date.getDate(),
+      "H+" : date.getHours(), 
+      "m+" : date.getMinutes(), 
+      "s+" : date.getSeconds(), 
+      "Q+" : Math.floor((date.getMonth()+3)/3), 
+      "S"  : date.getMilliseconds(),
+    };   
 
-  /**
-   * 格式化时间比较
-   * @method
-   * @param {*} val 
-   * @param {*} options 
-   */
-  timeFrom(val, options){
-    return timeFrom(val, options);
+    if(/(Y+)/.test(format))   
+      format = format.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));   
+    for(var k in o)   
+      if(new RegExp("("+ k +")").test(format))   
+        format = format.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+    return format; 
   }
 
   /**
@@ -120,41 +117,6 @@ class Format {
     }else{
       return (size?size:0)+this.byteSizeB;
     }
-  }
-
-  /**
-   * 校验数据的有效性
-   * @method
-   * @param {object} val - 数据
-   * @param {Rule} rule - 规则
-   * @param {object} options - 校验配置信息 
-   * @param {string} errorMessage - 错误信息
-   */
-  check(val, rule, options, errorMessage) {
-    return check(val, rule, options, this.checkErrorMessage);
-  }
-
-  /**
-   * 检验数据对象中指定字段的有效性
-   * @method
-   * @param {object} obj - 需要检验的对象
-   * @param {string} key - 字段名
-   * @param {Rule|Rule[]} rules - 验证规则或列表
-   * @param {object} [options] - 检验配置信息
-   */
-  checkObjectItem(obj, key, rules, options)  {
-    return checkObjectItem(obj, key, rules, options);
-  }
-
-  /**
-   * 检验数据对象的有效性
-   * @method
-   * @param {object} obj - 需要检验的对象
-   * @param {object.<string, Rule>} rules - 规则键值对
-   * @param {object} [options] - 检验配置信息
-   */
-  checkObject(obj, rules, options)  {
-    return checkObject(obj, rules, options);
   }
 }
 

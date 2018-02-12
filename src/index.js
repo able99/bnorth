@@ -15,8 +15,4 @@ export { default as pluginUtils } from './plugins/utils';
 
 // TODO: validate, rule
 // TODO: Path, path->pathname
-// TODO: network, ->axios
 // TODO: format, add another moment plugin override format time function
-// TODO: user, opt and cleanup
-// TODO: request, action remove request param
-// TOOD: request action state, comments

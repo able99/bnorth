@@ -22,7 +22,7 @@ import { checkObject, checkObjectItem } from '../utils/validator';
  * @property {object.<string, Rule>} [rules] - 规则键值对
  * @property {string|string[]} [checkOnInputKeys] - 在update 时需要校验的字段列表
  * @property {object|array} [checkErrorMessage] - 检验错误时的提示信息
- * @property {boolean} [noticeChangeError=falae] - 是否检验错误时，显示错误信息
+ * @property {boolean} [noticeInvalidate=falae] - 是否检验错误时，显示错误信息
  * @property {boolean} [clearOnStop=true] - 是否在container 停止时，清除数据管理器
  */
 /** 
@@ -108,19 +108,20 @@ class ActionStateData extends ActionState{
    * 修改管理的数据
    * @method
    * @param {object|array} data - 更新的数据
-   * @param {string[]} [key] - 需要校验的字段名 
    * @param {boolean} [merge=true] - 是否合并之前的数据
+   * @param {string|string[]|boolean} [key] - 更新时需要校验的字段名, false 标示不校验
    */
-  update(data, key=null, merge=true) {
+  update(data, merge=true, keys) {
     try{
       let originData = this.data;
       let changeData = data||this.options.defaultData;
 
-      changeData = this.trigger('onWillChange', changeData,originData,key)||changeData||this.options.defaultData;
-      let invalidate = key&&this.checkChangeItem(key, changeData);
+      changeData = this.trigger('onWillChange', changeData,originData, key)||changeData;
+      let validate = keys!==false && this.validate(keys, true);
+      if(validate) this.trigger('onInvalidate', ret, key);
       this.app.actions._dataUpdate(this.uuid, invalidate?originData:changeData, merge, this.options.initData);
       if(!invalidate)this.trigger('onDidChange',changeData,originData,key);
-      return true;
+      return !validate;
     }catch(e){
       this.app.errorNotice(e);
       return false;
@@ -141,13 +142,14 @@ class ActionStateData extends ActionState{
    * @method
    * @param {string} key - 键名或jspath 字符串
    * @param {*} value - 数据
+   * @param {boolean} [noValidate=false] - 是否不做输入校验
    */
-  setValue(key, value) {
+  setValue(key, value, needValidate) {
     if(!key) return false;
     let originData = this.data;
     let changeData = jspath.setValue(Object.assign({}, originData), key, value);
 
-    return this.update(changeData, key);
+    return this.update(changeData, true, noValidate?false:key);
   }
 
   /**
@@ -166,41 +168,29 @@ class ActionStateData extends ActionState{
    * 根据设置的规则进行校验
    * @method
    * @param {string|string[]} [keys] - 要检查的字段名列表，默认检查全部字段
-   * @return {boolean} - true: 校验出问题
+   * @param {boolean} [input=false] - 是否是输入过程中校验
+   * @return {string|boolean} - string: 校验出问题 false: 校验无误
    */
-  validate(keys){
-    if(!this.options.rules) return false;
+  validate(keys, input){
+    if(!this.options.rules || !app.validate || !app.validate.validate) return false;
 
     let rules={};
-    if(Array.isArray(keys)){
-      keys.forEach((v)=>{
-        rules[v] = this.options.rules[v];
-      });
-    }else if(typeof(keys)==='string') {
+    if(input){
+      if(!this.options.checkOnInputKeys||this.options.checkOnInputKeys.indexOf(keys)<0) return false;
       rules[keys] = this.options.rules[keys];
     }else{
-      rules = this.options.rules;
+      if(Array.isArray(keys)){
+        keys.forEach((v)=>{
+          rules[v] = this.options.rules[v];
+        });
+      }else if(typeof(keys)==='string') {
+        rules[keys] = this.options.rules[keys];
+      }else{
+        rules = this.options.rules;
+      }
     }
 
-    return checkObject(this.data, rules, {checkErrorMessage: this.options.checkErrorMessage});
-  }
-
-  /**
-   * 根据规则校验指定字段
-   * @method
-   * @param {string} key - 字段名
-   * @param {*} data - 数据
-   */
-  checkChangeItem(key, data) {
-    if(!key||!this.options.rules||!this.options.checkOnInputKeys||this.options.checkOnInputKeys.indexOf(key)<0) return false;
-    let ret = checkObjectItem(data, key, this.options.rules[key], {checkErrorMessage:this.options.checkErrorMessage});
-
-    if(ret){
-      if(this.options.noticeChangeError) this.trigger('onChangeError', ret, key);
-      return ret;
-    }else{
-      return null;
-    }
+    return app.validate.validate(this.data, rules, {message: this.options.checkErrorMessage});
   }
 
   // event
@@ -243,8 +233,8 @@ class ActionStateData extends ActionState{
    * @param {Error|string} message - 错误信息
    * @param {string} field - 错误字段名
    */
-  onChangeError(message, field){
-    if(this.options.noticeChangeError)this.app.errorNotice(message);
+  onInvalidate(message, field){
+    if(this.options.noticeInvalidate)this.app.errorNotice(message);
   }
 }
 
@@ -348,9 +338,16 @@ function reduxerData(state = {uuid: null, datas: {}}, action) {
 }
 
 
-
+/**
+ * **plugin** name: data dependence: validate
+ * 提供页面数据管理与数据校验的功能
+ * @class dataPlugin
+ * @property {class} app.Network - Network 类
+ * @property {Network} app.network - Network 类实例
+ */
 export default {
   name: 'data',
+  dependences: 'validate',
 
   init(app) {
     /**
