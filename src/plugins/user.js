@@ -11,7 +11,6 @@ import md5 from '../utils/md5';
 /**
  * 用户登录与登出操作参数
  * @class UserLoginLogoutOptions
- * @
  * @property {ActionStateRequestOptions|NetworkOptions} [requestOption] - 直接传递到request api 参数
  */
 
@@ -339,7 +338,7 @@ export default {
   },
 
   onNavigating(app, nextState) {
-    if(nextState.routes.find(v=>v.checkLogin)&&!app.user.isLogin()){
+    if((app.config.paths.Login!==nextState.location.pathname)&&nextState.routes.find(v=>v.checkLogin)&&!app.user.isLogin()){
       return typeof(app.config.paths.Login)==='string'?app.config.paths.Login:app.config.paths.Login.path;
     }
   },

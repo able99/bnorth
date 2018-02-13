@@ -216,7 +216,7 @@ export default class App {
 
         // check login
         let originOnEnter = onEnter;
-        onEnter = route===Route&&((...args)=>app._handleRouteOnEnter(originOnEnter, ...args));
+        onEnter = (route.type === Route)&&((...args)=>app._handleRouteOnEnter(originOnEnter, ...args));
         
         // component
         component = app._createRouteComponent(component, container);
