@@ -438,6 +438,15 @@ export default class App {
   }
 
   /**
+   * 获取指定名字的plugin
+   * @method
+   * @param {!string} name - 要移除插件的名称 
+   */
+  getPlugin(name) {
+    return this._plugins.find(v.name&&v.name===name);
+  }
+
+  /**
    * 触发app 指定事件
    * @method
    * @param {!string} event - 事件名称

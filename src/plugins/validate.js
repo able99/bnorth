@@ -11,7 +11,7 @@
  * @class ValidateOptions
  * @property {string} [message] - 校验错误信息
  * @property {string} [ruleMessages] - 各个规则分别对应的错误信息
- * @property {boolean} [bail=false] - 对于对象批量校验时，遇到错误是否继续检查其他字段
+ * @property {boolean} [bail=true] - 对于对象批量校验时，遇到错误不再继续检查其他字段
  * @property {boolean} [input=false] - 是否是输入中状态，对于非空校验，输入中状态不会进行校验
  */
 
@@ -36,7 +36,7 @@ class Validate {
   }
 
   /**
-   * **校验规则**: 非空校验
+   * **rule**: 非空校验
    * @method
    * @param {ValidateOptions} [options] - 校验参数
    * @param {*} val - 要校验的数据
@@ -52,7 +52,7 @@ class Validate {
   }
   
   /**
-   * **校验规则**: 数字有效性校验
+   * **rule**: 数字有效性校验
    * @method
    * @param {ValidateOptions} [options] - 校验参数
    * @param {*} val - 要校验的数据
@@ -63,7 +63,7 @@ class Validate {
   }
 
   /**
-   * **校验规则**: 正数有效性校验
+   * **rule**: 正数有效性校验
    * @method
    * @param {ValidateOptions} [options] - 校验参数
    * @param {*} val - 要校验的数据
@@ -98,7 +98,7 @@ class Validate {
     let params = [];
     let ret;
   
-    for(let rule of rules) {
+    for(let rule of Array.isArray(rules)?rules:[rules]) {
       if(rule && typeof(rule)==='object'){
         rule = rule.rule;
         if(rule.params) params = rule.params;
@@ -118,8 +118,7 @@ class Validate {
   
         let checker = this[rule];
         ret = checker&&checker(options, val, ...params);
-        if(getNot) ret=!ret;
-        if(!ret) ret = ruleMessages[rule]||ruleMessages.default;
+        ret = (getNot&&ret)||(!getNot&&!ret)?(ruleMessages[rule]||ruleMessages.default):false;
       }else{
         continue;
       }
@@ -152,6 +151,7 @@ class Validate {
     let message = false;
   
     for(let [key, rule] of Object.entries(rules||{})) {
+      let val = obj[key];
       message = false;
 
       if(Array.isArray(rule)){
@@ -164,7 +164,7 @@ class Validate {
       }
 
       if(message) {
-        result[key] = message;
+        result && (result[key] = message);
         if(!options||!options.bail) break;
       }
     }

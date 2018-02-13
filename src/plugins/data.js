@@ -9,11 +9,8 @@
 import { ActionState } from '../app/container';
 import jspath from '../utils/jspath'
 import getOptions from '../utils/getOptions';
-import { checkObject, checkObjectItem } from '../utils/validator';
 
 
-// ActionState
-// --------------------------------------
 /**
  * data 数据管理器的构造参数
  * @class ActionStateDataOptions
@@ -41,14 +38,16 @@ import { checkObject, checkObjectItem } from '../utils/validator';
  * @param {string|string[]} key - 需要检验的字段 
  */
 
+
 /**
- * 页面数据的管理与校验
+ * 页面数据的管理与校验类
  * @class
  */
 class ActionStateData extends ActionState{
   static stateName = 'data';
 
   /**
+   * 使用action state 构造器构造，不能直接创建
    * @constructor
    * @param {App} app - App 的单实例
    * @param {string} uuid - 数据管理器的唯一id
@@ -116,11 +115,11 @@ class ActionStateData extends ActionState{
       let originData = this.data;
       let changeData = data||this.options.defaultData;
 
-      changeData = this.trigger('onWillChange', changeData,originData, key)||changeData;
+      changeData = this.trigger('onWillChange', changeData,originData, keys)||changeData;
       let validate = keys!==false && this.validate(keys, true);
-      if(validate) this.trigger('onInvalidate', ret, key);
-      this.app.actions._dataUpdate(this.uuid, invalidate?originData:changeData, merge, this.options.initData);
-      if(!invalidate)this.trigger('onDidChange',changeData,originData,key);
+      if(validate) this.trigger('onInvalidate', validate, keys);
+      this.app.actions._dataUpdate(this.uuid, validate?originData:changeData, merge, this.options.initData);
+      if(!validate)this.trigger('onDidChange',changeData,originData,keys);
       return !validate;
     }catch(e){
       this.app.errorNotice(e);
@@ -144,7 +143,7 @@ class ActionStateData extends ActionState{
    * @param {*} value - 数据
    * @param {boolean} [noValidate=false] - 是否不做输入校验
    */
-  setValue(key, value, needValidate) {
+  setValue(key, value, noValidate) {
     if(!key) return false;
     let originData = this.data;
     let changeData = jspath.setValue(Object.assign({}, originData), key, value);
@@ -190,7 +189,7 @@ class ActionStateData extends ActionState{
       }
     }
 
-    return app.validate.validate(this.data, rules, {message: this.options.checkErrorMessage});
+    return app.validate.validateObject(this.data, rules, {message: this.options.checkErrorMessage});
   }
 
   // event
@@ -239,10 +238,8 @@ class ActionStateData extends ActionState{
 }
 
 
-// plugin
-// ------------------------------------
 /**
- * **plugin** name: data dependence: none
+ * **plugin** name: data dependence: validate
  * 页面数据管理器插件，扩展app 的action state 类型，提供页面数据的管理与校验
  * @class dataPlugin
  * @example
@@ -254,119 +251,129 @@ class ActionStateData extends ActionState{
  * // page - 修改数据
  * this.props.states.data.setValue('x',xxx);
  */
+let dataPlugin = {
+  // config plugin
+  // ------------------------------
+  name: 'data',
+  dependences: 'validate',
 
-
-const DataInit = 'DataInit';
-/**
- * 数据初始化
- * @method app.actions._dataInit
- * @param {string} uuid - 数据的uuid
- * @param {object} data - 初始化为该对象
- */
-function _dataInit(uuid,data){
-  return {
-    type: DataInit,
-    uuid,
-    data,
-  };
-}
-
-const DataUpdate = 'DataUpdate';
-/**
- * 数据更新
- * @method app.actions._dataUpdate
- * @param {string} uuid - 数据的uuid 
- * @param {object} data - 要更新的数据
- * @param {boolean} merge - 更新是否为合并操作
- * @param {object} initData - 在合并操作时，如果原数据为空，采用该初始数据
- */
-function _dataUpdate(uuid,data,merge,initData){
-  return {
-    type: DataUpdate,
-    uuid,
-    data,
-    merge,
-    initData,
-  };
-}
-
-/**
- * @method
- * @param {string} uuid - 数据的uuid
- */
-let _dataClear = (uuid)=>(app)=>{
-  let state = app.getState('data',{});
-  delete state.datas[uuid];
-}
-
-/*!
- * reduxer for action state data
- * @function 
- */
-function reduxerData(state = {uuid: null, datas: {}}, action) {
-  switch (action.type) {
-  case DataInit:
-    return Object.assign({}, state, {
-      uuid: action.uuid,
-      datas: Object.assign({}, state.datas, {
-        [action.uuid]: Array.isArray(action.data)?Array.from(action.data):action.data,
-      }),
+  // event
+  // ------------------------------
+  onCreateStoreBefore(app) {
+    Object.assign(app.actions,{
+      _dataInit: dataPlugin._dataInit,
+      _dataUpdate: dataPlugin._dataUpdate,
+      _dataClear: dataPlugin._dataClear,
     });
+    app.reduxers.data = dataPlugin._reduxerData;
+    app.actionStates.data = dataPlugin._actionStateData;
+  },
 
-  case DataUpdate:
-    let data = null;
-    if(action.merge){
-      if(Array.isArray(action.data)){
-        data = Array.from(state.datas[action.uuid]||action.initData);
-        data = data.concat(action.data);
+  // action state
+  // ------------------------------
+  /**
+   * @method app.actionStates.data
+   * @param {ActionStateDataOptions|function} options - 参数，参见ActionStateData 的构造函数
+   * @param {string} [uuid=uuid()] - 指定uuid
+   */
+  _actionStateData(options, uuid) {
+    return ActionState.instance(ActionStateData, app, uuid, options);
+  },
+
+  // action and reduxers
+  // ------------------------------
+  /**
+   * @property {string} [_DataInit='dataInit'] - action type
+   */
+  _DataInit: 'dataInit',
+
+  /**
+   * @property {string} [_DataUpdate='dataUpdate'] - action type
+   */
+  _DataUpdate: 'dataUpdate',
+
+  /**
+   * 数据初始化
+   * @method app.actions._dataInit
+   * @param {string} uuid - 数据的uuid
+   * @param {object} data - 初始化为该对象
+   */
+  _dataInit(uuid, data) {
+    return {
+      type: dataPlugin._DataInit,
+      uuid,
+      data,
+    };
+  },
+
+  /**
+   * 数据更新
+   * @method app.actions._dataUpdate
+   * @param {string} uuid - 数据的uuid 
+   * @param {object} data - 要更新的数据
+   * @param {boolean} merge - 更新是否为合并操作
+   * @param {object} initData - 在合并操作时，如果原数据为空，采用该初始数据
+   */
+  _dataUpdate(uuid, data, merge, initData) {
+    return {
+      type: dataPlugin._DataUpdate,
+      uuid,
+      data,
+      merge,
+      initData,
+    };
+  }, 
+
+  /**
+   * @method
+   * @param {string} uuid - 数据的uuid
+   */
+  _dataClear: (uuid)=>(app)=>{
+    let state = app.getState('data',{});
+    delete state.datas[uuid];
+  },
+
+  /**
+   * reduxer for action state data
+   * @method
+   * @param {object} [state={}] - 原状态
+   * @param {object} action - action
+   * @return {object} - 新状态
+   */
+  _reduxerData(state = {uuid: null, datas: {}}, action) {
+    switch (action.type) {
+    case dataPlugin._DataInit:
+      return Object.assign({}, state, {
+        uuid: action.uuid,
+        datas: Object.assign({}, state.datas, {
+          [action.uuid]: Array.isArray(action.data)?Array.from(action.data):action.data,
+        }),
+      });
+
+    case dataPlugin._DataUpdate:
+      let data = null;
+      if(action.merge){
+        if(Array.isArray(action.data)){
+          data = Array.from(state.datas[action.uuid]||action.initData);
+          data = data.concat(action.data);
+        }else{
+          data = Object.assign({}, state.datas[action.uuid]||action.initData, action.data);
+        }
       }else{
-        data = Object.assign({}, state.datas[action.uuid]||action.initData, action.data);
+        data = action.data;
       }
-    }else{
-      data = action.data;
-    }
-    return Object.assign({}, state, {
-      uuid: action.uuid,
-      datas: Object.assign({}, state.datas, {
-        [action.uuid]:data,
-      }),
-    });
+      return Object.assign({}, state, {
+        uuid: action.uuid,
+        datas: Object.assign({}, state.datas, {
+          [action.uuid]:data,
+        }),
+      });
 
-  default:
-    return state;
+    default:
+      return state;
+    }
   }
 }
 
 
-/**
- * **plugin** name: data dependence: validate
- * 提供页面数据管理与数据校验的功能
- * @class dataPlugin
- * @property {class} app.Network - Network 类
- * @property {Network} app.network - Network 类实例
- */
-export default {
-  name: 'data',
-  dependences: 'validate',
-
-  init(app) {
-    /**
-     * @method app.actionStates.data
-     * @param {ActionStateDataOptions|function} options - 参数，参见ActionStateData 的构造函数
-     * @param {string} [uuid=uuid()] - 指定uuid
-     */
-    app.actionStates.data = function(options,uuid) {
-      return ActionState.instance(ActionStateData, app, uuid, options);
-    }
-  },
-
-  onCreateStoreBefore(app) {
-    Object.assign(app.actions,{
-      _dataInit,
-      _dataUpdate,
-      _dataClear,
-    });
-
-    app.reduxers.data = reduxerData;
-  },
-}
+export default dataPlugin;

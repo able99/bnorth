@@ -8,82 +8,22 @@
 
 /**
  * **plugin** name: app dependence: data
- * 应用的基本插件，该插件是start 函数时添加的插件，实现了应用运行的基本功能
+ * 应用的基本插件，该插件是start 函数运行时添加的插件，是启动阶段添加的最后一个插件，实现了应用运行的基本功能
  * @class appPlugin
  */
-
-// app action
-//-----------------------------------------
-const ActionAppReady = 'ActionAppReady';
-/**
- * **action** 
- * 改变app ready 状态，app ready后，会关闭waiting 动画，显示渲染的内容
- * @method app.actions.appReady
- * @param {boolean} ready 
- * @example
- * ```js
- * app.actions.appReady(true)
- * ```
- */
-let appReady = (ready)=>(app)=>{
-  app.getPage(0).props.states._page.setValue('ready',ready);
-}
-
-/**
- * **action** 
- * 显示通知内容
- * @method
- * @param {element|string} message - 消息框内容
- * @param {object} [props] - 消息显示的ui 属性，具体由处理该事件的插件所决
- * @param {object} [options] - 消息显示的配置属性，具体由处理该事件的插件所决
- * @example
- * ```js
- * app.actions.noticeMessage(message);
- * ```
- */
-let noticeMessage = (...args)=>(app)=>{
-  app.trigger('onNoticeMessage', ...args);
-}
-/**
- * **action** 
- * 显示页面加载进度
- * @method
- * @param {boolean} show - 是否显示，default `true`，调用几次显示，也需要调用几次隐藏
- * @param {object} [props] - 显示的ui 属性，具体由处理该事件的插件所决
- * @param {object} [options] - 显示的配置属性，具体由处理该事件的插件所决
- * @example
- * ```js
- * app.actions.noticeLoading(true);
- */
-let noticeLoading = (...args)=>(app)=>{
-  app.trigger('onNoticeLoading', ...args);
-}
-
-/**
- * **action**
- * 显示阻塞操作的加载页面
- * @method 
- * @param {boolean} show 是否显示，default `true`，调用几次显示，也需要调用几次隐藏
- * @param {object} [props] - 显示的ui 属性，具体由处理该事件的插件所决
- * @param {object} [options] - 显示的配置属性，具体由处理该事件的插件所决
- * @example
- * ```js
- * app.actions.noticeBlocking(true);
- */
-let noticeBlocking = (...args)=>(app)=>{
-  app.trigger('onNoticeBlocking', ...args);
-}
-
-export default {
+let pluginApp = {
+  // plugin config
   name: 'app',
   dependences: ['data'],
 
+  // event
+  // -------------------------
   onCreateStoreBefore(app) {
     Object.assign(app.actions,{
-      appReady,
-      noticeMessage,
-      noticeLoading,
-      noticeBlocking,
+      appReady: pluginApp._appReady,
+      noticeMessage: pluginApp._noticeMessage,
+      noticeLoading: pluginApp._noticeLoading,
+      noticeBlocking: pluginApp._noticeBlocking,
     });
   },
 
@@ -114,9 +54,6 @@ export default {
     app.showMessageByAlert(message)
   },
 
-  /*！
-   * 实现了默认log 显示
-   */
   onLog(app, type, trace, ...args) {
     if(!console) return;
 
@@ -130,4 +67,69 @@ export default {
       console.log(...args);
     }
   },
+
+  // action and reduxer
+  // -----------------------------
+  /**
+   * **action** 
+   * 改变app ready 状态，app ready后，会关闭waiting 动画，显示渲染的内容
+   * @method app.actions.appReady
+   * @param {boolean} ready 
+   * @example
+   * ```js
+   * app.actions.appReady(true)
+   * ```
+   */
+  _appReady: (ready)=>(app)=>{
+    app.getPage(0).props.states._page.setValue('ready',ready);
+  },
+
+  /**
+   * **action** 
+   * 显示通知内容
+   * @method
+   * @param {element|string} message - 消息框内容
+   * @param {object} [props] - 消息显示的ui 属性，具体由处理该事件的插件所决
+   * @param {object} [options] - 消息显示的配置属性，具体由处理该事件的插件所决
+   * @example
+   * ```js
+   * app.actions.noticeMessage(message);
+   * ```
+   */
+  _noticeMessage: (...args)=>(app)=>{
+    app.trigger('onNoticeMessage', ...args);
+  },
+
+  /**
+   * **action** 
+   * 显示页面加载进度
+   * @method
+   * @param {boolean} show - 是否显示，default `true`，调用几次显示，也需要调用几次隐藏
+   * @param {object} [props] - 显示的ui 属性，具体由处理该事件的插件所决
+   * @param {object} [options] - 显示的配置属性，具体由处理该事件的插件所决
+   * @example
+   * ```js
+   * app.actions.noticeLoading(true);
+   */
+  _noticeLoading: (...args)=>(app)=>{
+    app.trigger('onNoticeLoading', ...args);
+  },
+
+  /**
+   * **action**
+   * 显示阻塞操作的加载页面
+   * @method 
+   * @param {boolean} show 是否显示，default `true`，调用几次显示，也需要调用几次隐藏
+   * @param {object} [props] - 显示的ui 属性，具体由处理该事件的插件所决
+   * @param {object} [options] - 显示的配置属性，具体由处理该事件的插件所决
+   * @example
+   * ```js
+   * app.actions.noticeBlocking(true);
+   */
+  _noticeBlocking: (...args)=>(app)=>{
+    app.trigger('onNoticeBlocking', ...args);
+  },
 }
+
+
+export default pluginApp;

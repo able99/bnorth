@@ -16,6 +16,24 @@ function getOption(value, defaultValue, ...args) {
 
 
 /**
+ * 网络请求参数
+ * @class NetworkOptions
+ * @property {string|function} [resource=''] - url 地址
+ * @property {string} [baseUrl=app.config.network.baseUrl] - url 地址
+ * @property {string} [apiUrl=app.config.network.apiUrl] - url 地址
+ * @property {object|function} [params] - 请求url 的查询字符串对象
+ * @property {object|function} [header] - 请求头
+ * @property {string} [contentType='application/json'] - content type
+ * @property {string} [method=isFetch?'get':'post'] - http 方法
+ * @property {number} [timeout=app.config.networkTimeout] - 请求超时时间
+ * @property {boolean} [noAuth=false] - 指示该请求无需登录信息，一般用户登录操作本身
+ * @property {string} [responseType='json'] - 设定请求结果解析类型(arraybuffer,blob,document,json,text,stream)
+ * @property {function|string|object|ArrayBuffer|FormData|File|Bold} [data] - 请求数据
+ * @property {object} [options] - 直接传递给[axios](https://www.npmjs.com/package/axios) 的参数，比如withCredentials，auth，onDownloadProgress，onUploadProgress 等
+ */
+
+
+/**
  * 网络请求
  * @class
  */
@@ -139,22 +157,6 @@ class Network {
 
   // fetch
   // ---------------------------
-  /**
-   * 网络请求参数
-   * @class NetworkOptions
-   * @property {string|function} [resource=''] - url 地址
-   * @property {string} [baseUrl=app.config.network.baseUrl] - url 地址
-   * @property {string} [apiUrl=app.config.network.apiUrl] - url 地址
-   * @property {object|function} [params] - 请求url 的查询字符串对象
-   * @property {object|function} [header] - 请求头
-   * @property {string} [contentType='application/json'] - content type
-   * @property {string} [method=isFetch?'get':'post'] - http 方法
-   * @property {number} [timeout=app.config.networkTimeout] - 请求超时时间
-   * @property {boolean} [noAuth=false] - 指示该请求无需登录信息，一般用户登录操作本身
-   * @property {string} [responseType='json'] - 设定请求结果解析类型(arraybuffer,blob,document,json,text,stream)
-   * @property {function|string|object|ArrayBuffer|FormData|File|Bold} [data] - 请求数据
-   * @property {object} [options] - 直接传递给[axios](https://www.npmjs.com/package/axios) 的参数，比如withCredentials，auth，onDownloadProgress，onUploadProgress 等
-   */
   /**
    * 获取网络数据
    * @method
