@@ -144,9 +144,10 @@ export default class App {
    * @method
    * @param {Page} Page - 页面组件
    * @param {containerCreator} containerCreator - 页面容器
+   * @param {string} name - container 名称，该名称同时作为唯一id
    * @return {element} - 返回经过页面组件与页面容器高阶化后的组件
    */
-  _createRouteComponent (page, container) {
+  _createRouteComponent (page, container, name) {
     if(!page) {
       let title = `_createRouteComponent: page can not be null`;
       app.error(title);
@@ -154,7 +155,7 @@ export default class App {
     }
 
     page = app._pageHoc(app, page);
-    container = app._containerConnect(app, container);
+    container = app._containerConnect(app, container, name);
     return container?container(page):page;
   }
 
@@ -163,7 +164,7 @@ export default class App {
    * @method
    */
   _createRootRouteComponent() {
-    return this._createRouteComponent(this._AppComponentPage, this._appComponentContainerCreator);
+    return this._createRouteComponent(this._AppComponentPage, this._appComponentContainerCreator, 'app');
   }
 
   /**
@@ -219,14 +220,14 @@ export default class App {
         onEnter = (route.type === Route)&&((...args)=>app._handleRouteOnEnter(originOnEnter, ...args));
         
         // component
-        component = app._createRouteComponent(component, container);
+        component = app._createRouteComponent(component, container, `cn:${path}`);
 
         // components
         if(components){
           Object.keys(components).forEach((v)=>{
             let component = components[v];
             if(component&&typeof(component)==='object'){
-              components[v] = app._createRouteComponent(component.component,component.container);
+              components[v] = app._createRouteComponent(component.component, component.container, `cn:${path}:${v}`);
             }
           });
         }

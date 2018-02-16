@@ -94,7 +94,6 @@ export class ActionState{
 
   constructor(app, uuid){
     this.name='';
-    this.displayName = '';
     this.app = app;
     this.uuid = uuid;
   }
@@ -110,7 +109,7 @@ export class ActionState{
   trigger(event, ...args) {
     let handler = this[event];
     if(!handler) return false;
-    let title = `state event(${event}-${this.className}-${this.name}-${this.displayName}):`;
+    let title = `state event(${event}-${this.className}-${this.name}:`;
     try{
       this.app.verbose(title, ...args);
       return handler.apply(this, args);
@@ -138,14 +137,10 @@ export class BaseContainer{
    * @param {App} app - instance of App class
    * @param {object} props - props for page component
    * @param {function} containerCreator - the container creator function
+   * @param {string} name - container name
    * @callback cb
    */
-  static instance(app, props, containerCreator, cb) {
-    let key = 'ck';
-    for(let route of props.routes){
-      if(route.path) { key+='-'+route.path }
-      if(route===props.route) { break; }
-    }
+  static instance(app, props, containerCreator, key, cb) {
     let container = BaseContainer.maps[key];
   
     if(!container){
@@ -153,7 +148,7 @@ export class BaseContainer{
       if(typeof containerCreator === 'function') {
         try{
           containerCreator(app, props, container);
-          Object.entries(container.states||{}).forEach(([k,v])=>v&&(v.name=k))
+          Object.entries(container.states||{}).forEach(([k,v])=>v&&(v.name=`${key}~${k}`))
         }catch(e){
           app.error(e);
           app.errorRender(e,'container error');
@@ -182,11 +177,6 @@ export class BaseContainer{
      * @property {string} key - container unique key
      */
     this.key = key;
-
-    /**
-     * @property {string} name - container display name, ues key as name if no name param
-     */
-    this.name = name;
 
     /**
      * 
@@ -254,7 +244,7 @@ export class BaseContainer{
   trigger(event, ...args) {
     let handler = this.handlers[event];
     if(!handler) return false;
-    let title = `container handler(${event}-${this.name||''}):`;
+    let title = `container handler(${event}-${this.key}):`;
     try{
       app.verbose(title, ...args);
       handler(...args);
@@ -296,12 +286,14 @@ export class BaseContainer{
  * @param {function|array} containerCreator - container creator function<br />
  * **function**: 将函数视为container 生成函数
  * **array**: 如果参数为数组，数组中的元素会按顺序，作为[react-redux](https://github.com/reactjs/react-redux) 的connect 函数参数，使用redux 实现container
+ * @param {string} name - container name, and for unity id
+ * @return {BaseContainer} - container
  */
-export function containerConnect(app, containerCreator) {
+export function containerConnect(app, containerCreator, name) {
   if(Array.isArray(containerCreator)) return connect(...containerCreator);
 
   let mapState = (state, props)=>{
-    let container = BaseContainer.instance(app, props, containerCreator, (container)=>{
+    let container = BaseContainer.instance(app, props, containerCreator, name, (container)=>{
       container.actions = bindActionCreators(container.actions, app.actionStore.dispatch);
     });
 
@@ -320,7 +312,7 @@ export function containerConnect(app, containerCreator) {
   }
 
   let mapDispatch = (dispatch, props)=>{
-    let container = BaseContainer.instance(app, props, containerCreator);
+    let container = BaseContainer.instance(app, props, containerCreator, name);
     if(!container) return {app};
 
     return {
@@ -329,9 +321,7 @@ export function containerConnect(app, containerCreator) {
       states: container.states,
 
       onWillStart(page) {
-        container.displayName = page.getDisplayName();
         container.trigger('onWillStart', page);
-        Object.entries(container.states||{}).forEach(([k,v])=>v.displayName = page.getDisplayName());
       },
       onStart(page) {
         container.trigger('onStart', page);

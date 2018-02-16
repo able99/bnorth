@@ -360,6 +360,8 @@ let pluginRequest = {
     ActionStateRequest._handleRequesting(true, app, options, isFetch);
 
     app.network.fetch&&app.network.fetch(options, isFetch).then( result=>{
+      if(!result) throw app.config.strings.networkError;
+      
       ActionStateRequest._handleRequesting(false, app, options, isFetch);
       if(options.onSuccess&&options.onSuccess(result)) return;
 
