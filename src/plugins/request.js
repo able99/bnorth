@@ -104,7 +104,7 @@ class ActionStateRequest extends ActionState {
    * @override
    */
   get state() { 
-    return this.data;
+    return (this.data&&this.data.data)||this.options.defaultData;
   }
 
   /*!
@@ -361,18 +361,18 @@ let pluginRequest = {
 
     app.network.fetch&&app.network.fetch(options, isFetch).then( result=>{
       if(!result) throw app.config.strings.networkError;
-      
+
       ActionStateRequest._handleRequesting(false, app, options, isFetch);
-      if(options.onSuccess&&options.onSuccess(result)) return;
+      if(options.onSuccess&&options.onSuccess(result.data, result)) return;
 
       let request = isFetch&&ActionStateRequest.getInstance(ActionStateRequest, uuid);
-      let ret = request&&request.trigger('onWillChange', result); 
+      let ret = request&&request.trigger('onWillChange', result.data, result); 
       if(ret)result = ret;
       if(request && ret===false) return;
 
       isFetch&&app.actions._requestFetchSuccess(result, uuid, options, isFetch);
 
-      request&&request.trigger('onDidChange', result);
+      request&&request.trigger('onDidChange', result.data, result);
     }, error=>{
       ActionStateRequest._handleRequesting(false, app, options, isFetch);
       if(options.onError&&options.onError(error)) return;

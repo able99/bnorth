@@ -149,9 +149,7 @@ class Network {
    * @return {string|object|blob|Arraybuffer} - 返回的数据
    */
   _getResultData(result, isFetch){
-    let data = result.data;
-    delete result.data;
-    return { ...data, _bnorth: result };
+    return result;
   }
   
 
