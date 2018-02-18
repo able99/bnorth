@@ -71,60 +71,42 @@ let pluginApp = {
   // action and reduxer
   // -----------------------------
   /**
-   * **action** 
    * 改变app ready 状态，app ready后，会关闭waiting 动画，显示渲染的内容
    * @method app.actions.appReady
    * @param {boolean} ready 
-   * @example
-   * ```js
-   * app.actions.appReady(true)
-   * ```
    */
   _appReady: (ready)=>(app)=>{
     app.getPage(0).props.states._page.setValue('ready',ready);
   },
 
   /**
-   * **action** 
    * 显示通知内容
-   * @method
+   * @method app.actions.noticeMessage
    * @param {element|string} message - 消息框内容
    * @param {object} [props] - 消息显示的ui 属性，具体由处理该事件的插件所决
    * @param {object} [options] - 消息显示的配置属性，具体由处理该事件的插件所决
-   * @example
-   * ```js
-   * app.actions.noticeMessage(message);
-   * ```
    */
   _noticeMessage: (...args)=>(app)=>{
     app.trigger('onNoticeMessage', ...args);
   },
 
   /**
-   * **action** 
    * 显示页面加载进度
-   * @method
+   * @method app.actions.noticeLoading
    * @param {boolean} show - 是否显示，default `true`，调用几次显示，也需要调用几次隐藏
    * @param {object} [props] - 显示的ui 属性，具体由处理该事件的插件所决
    * @param {object} [options] - 显示的配置属性，具体由处理该事件的插件所决
-   * @example
-   * ```js
-   * app.actions.noticeLoading(true);
    */
   _noticeLoading: (...args)=>(app)=>{
     app.trigger('onNoticeLoading', ...args);
   },
 
   /**
-   * **action**
    * 显示阻塞操作的加载页面
-   * @method 
+   * @method app.actions.noticeBlocking
    * @param {boolean} show 是否显示，default `true`，调用几次显示，也需要调用几次隐藏
    * @param {object} [props] - 显示的ui 属性，具体由处理该事件的插件所决
    * @param {object} [options] - 显示的配置属性，具体由处理该事件的插件所决
-   * @example
-   * ```js
-   * app.actions.noticeBlocking(true);
    */
   _noticeBlocking: (...args)=>(app)=>{
     app.trigger('onNoticeBlocking', ...args);

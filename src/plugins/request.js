@@ -217,8 +217,8 @@ class ActionStateRequest extends ActionState {
    * @param {*} result - network data
    * @return {*} - return changed data overrided
    */
-  onWillChange(result) { 
-    return this.options.onWillChange&&this.options.onWillChange(result);
+  onWillChange(...args) { 
+    return this.options.onWillChange&&this.options.onWillChange(...args);
   }
 
   /*!
@@ -226,8 +226,8 @@ class ActionStateRequest extends ActionState {
    * @callback
    * @param {*} result - network data
    */
-  onDidChange(result) { 
-    return this.options.onDidChange&&this.options.onDidChange(result);
+  onDidChange(...args) { 
+    return this.options.onDidChange&&this.options.onDidChange(...args);
   }
 
   /*!

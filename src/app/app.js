@@ -148,11 +148,7 @@ export default class App {
    * @return {element} - 返回经过页面组件与页面容器高阶化后的组件
    */
   _createRouteComponent (page, container, name) {
-    if(!page) {
-      let title = `_createRouteComponent: page can not be null`;
-      app.error(title);
-      app.errorRender(titlec);
-    }
+    if(!page) return null;
 
     page = app._pageHoc(app, page);
     container = app._containerConnect(app, container, name);

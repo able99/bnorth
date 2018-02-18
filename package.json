@@ -83,6 +83,7 @@
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.7",
     "webpack-visualizer-plugin": "^0.1.11",
-    "whatwg-fetch": "^2.0.3"
+    "whatwg-fetch": "^2.0.3",
+    "yargs": "^11.0.0"
   }
 }
