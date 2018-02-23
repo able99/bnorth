@@ -94,8 +94,8 @@ class ActionStateRequest extends ActionState {
    * @readonly
    */
   get data() {
-    let state = this.app.getState('request',{});
-    return (state.fetchResult && state.fetchResult[this.uuid] && state.fetchResult[this.uuid].result)||this.options.initData;
+    let state = this._getState();
+    return (state.result&&state.result.data)||this.options.initData;
   }
 
   /*!
@@ -104,7 +104,7 @@ class ActionStateRequest extends ActionState {
    * @override
    */
   get state() { 
-    return (this.data&&this.data.data)||this.options.defaultData;
+    return this.data||this.options.defaultData;
   }
 
   /*!

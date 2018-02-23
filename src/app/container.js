@@ -249,7 +249,7 @@ export class BaseContainer{
       app.verbose(title, ...args);
       handler(...args);
     }catch(e){
-      this.error(title, e); 
+      app.error(title, e); 
       app.errorNotice(e);
     }
   }

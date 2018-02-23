@@ -312,7 +312,7 @@ export default class App {
    * @param {string} [title='error'] - 错误title
    * @param {Error|element} error - 错误内容
    */
-  _ErrorComponent = function(props) {
+  _ErrorComponent(props) {
     let { title, error } = props;
     return (
       <div className="margin">
