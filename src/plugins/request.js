@@ -23,7 +23,7 @@ import getUuid from '../utils/uuid';
  * @property {boolean} [updateOnStart=falae] - 是否在container 启动时更新数据
  * @property {boolean} [updateOnResume=falae] - 是否在container 获取焦点时更新数据
  * @property {boolean} [clearOnStop=true] - 是否在container 停止时，清除数据管理器
- * @property {boolean} [trackState=falae] - 是否显示
+ * @property {boolean} [trackState=falae] - 是否显示网络请求详细信息，包括请求状态变化信息（请求中，请求完成）和请求完整数据，包括header等
  * @property {boolean} [blocking=] - 获取中时显示阻塞式还是非阻塞式的加载中指示
  * @property {boolean} [notice=true] - 出错时是否显示错误信息 
  * @property {string} [noticeTheme='alert'] - 错误提示的主题
@@ -37,30 +37,21 @@ import getUuid from '../utils/uuid';
 /** 
  * 数据将要改变时触发
  * @callback onWillChange
- * @param {object|array} result - 请求结果
- * @return {object|array} - 如果返回则替换为返回的数据 
+ * @param {object|array} data - 请求的纯数据
+ * @param {object|array} result - 请求的完整数据
+ * @return {object|array} - 如果返回则替换为返回的完整数据 
  */
 /**
  * 数据修改后触发
  * @callback onDidChange
- * @param {object|array} result - 请求结果
+ * @param {object|array} data - 请求的纯数据
+ * @param {object|array} result - 请求的完整数据
  */
 /**
- * @callback onChangeError
+ * @callback onNetworkError
  * @param {Error|string} error - 错误信息
  * @param {object|array} result - 请求结果
- */
-/**
- * @callback onSuccess
- */
-/**
- * @callback onError
- */
-/**
- * @callback onUploadProgress
- */
-/**
- * @callback onDownloadProgress
+ * @return {boolean} - 返回true，阻止默认处理，默认处理会弹出错误信息
  */
 
 /**
@@ -85,12 +76,24 @@ class ActionStateRequest extends ActionState {
     this.options = options;
     this.options.defaultData = this.options.defaultData||{};
     this.options.initData = this.options.initData || this.options.defaultData;
+    this.onWillUpdate = this.options.onWillUpdate;
+    this.onWillChange = this.options.onWillChange;
+    this.onDidChange = this.options.onDidChange;
+    this.onNetworkError = this.options.onNetworkError;
   }
 
   // interface
   // -------------------------
   /**
-   * @property {*} data - 返回请求的数据
+   * 获取网络请求的完整数据
+   * @method
+   */
+  _getState() {
+    let state = this.app.getState('request',{});
+    return (state.fetchResult && state.fetchResult[this.uuid])||{};
+  }
+  /**
+   * @property {*} data - 返回请求返回的纯数据
    * @readonly
    */
   get data() {
@@ -98,8 +101,8 @@ class ActionStateRequest extends ActionState {
     return (state.result&&state.result.data)||this.options.initData;
   }
 
-  /*!
-   * @property {*} state - return data for container state data
+  /**
+   * @property {*} state - 返回注入到page props 中的数据
    * @readonly
    * @override
    */
@@ -107,8 +110,8 @@ class ActionStateRequest extends ActionState {
     return this.data||this.options.defaultData;
   }
 
-  /*!
-   * @property {object} state - return data for container state object
+  /**
+   * @property {object} state - 返回注入到page props 中的完整数据，根据开关trackState 控制
    * @readonly
    * @override
    */
@@ -123,13 +126,13 @@ class ActionStateRequest extends ActionState {
    * @param {ActionStateRequestOptions|NetworkOptions} [options] - 本次请求的参数，为空使用创建时的参数
    * @param {boolean} [append=false] - 是否是追加数据还是替换之前数据 
    */
-  update(aoptions={},append=null){
-    let options = Object.assign( {},
-      getOptions(this.options),
-      getOptions(aoptions),
+  update(options,append=null){
+    options = Object.assign( {},
+      this.options,
+      getOptions(options),
       (append===true||append===false)?{append}:{},
     )
-    if(this.options.onWillUpdate && this.options.onWillUpdate(options)===false) return;
+    if(this.trigger('onWillUpdate', options)===false) return;
     this.app.actions.request(options, true, this.uuid);
   }
 
@@ -150,16 +153,6 @@ class ActionStateRequest extends ActionState {
   clear(){
     this.app.actions._requestFetchClear(this.uuid);
     ActionStateRequest.deleteInstance[this.uuid];
-  }
-
-  // state
-  /*!
-   * return network state data
-   * @method
-   */
-  _getState() {
-    let state = this.app.getState('request',{});
-    return (state.fetchResult && state.fetchResult[this.uuid])||{};
   }
 
   /**
@@ -236,9 +229,9 @@ class ActionStateRequest extends ActionState {
    * @param {Error|string} error - error info
    * @param {*} result - network data
    */
-  onChangeError(error, result){
+  onNetworkError(error, result){
     this.app.error(error);
-    if(this.options.onChangeError&&this.options.onChangeError(error, result));
+    if(this.options.onNetworkError&&this.options.onNetworkError(error, result));
     this.app.actions.noticeMessage(error, {cTheme: 'alert'});
   }
 
@@ -252,6 +245,7 @@ class ActionStateRequest extends ActionState {
    * @param {boolean} isFetch - 是否是获取型
    */
   static _handleRequesting(show, app, options, isFetch) {
+    options = getOptions(options);
     if(isFetch){
       if(options.blocking){
         app.actions.noticeBlocking(show);
@@ -274,6 +268,8 @@ class ActionStateRequest extends ActionState {
    * @param {boolean} isFetch - 是否是获取型
    */
   static _handleError(error, app, options, isFetch) {
+    options = getOptions(options);
+    app.error(error);
     if(error&&options.notice!==false) app.actions.noticeMessage(error, {cTheme: options.noticeTheme||'alert'});
   }
 }
@@ -353,7 +349,7 @@ let pluginRequest = {
    * @method app.actions.request
    * @param {ActionStateRequestOptions|NetworkOptions} options - 网络请求及network 网络请求api的参数
    * @param {boolean} isFetch - 是否是为请求型还是提交型
-   * @param {string} uuid - 请求的uuid 
+   * @param {string} uuid - 请求的uuid，用于匹配管理器，提交型请求无效
    */
   _request: (options={}, isFetch=false, uuid=getUuid())=>app=>{
     isFetch&&app.actions._requestFetching(uuid, options, isFetch);
@@ -378,9 +374,11 @@ let pluginRequest = {
       if(options.onError&&options.onError(error)) return;
 
       isFetch&&app.actions._requestFetchFail(error, uuid, options, isFetch);
+
       let request = isFetch&&ActionStateRequest.getInstance(ActionStateRequest, uuid);
-      request&&request.trigger('onChangeError', error);
-      ActionStateRequest._handleError(error, app, options, isFetch);
+      if(request&&request.trigger('onNetworkError', error)!==true) {
+        ActionStateRequest._handleError(error, app, options, isFetch);
+      }
     }).catch(error=>{
       ActionStateRequest._handleRequesting(false, app, options, isFetch);
       ActionStateRequest._handleError(error, app, options, isFetch);

@@ -91,7 +91,7 @@ class Navigator{
    */
   _recallBefore(location,router) {
     if(this.app.config.login.loginToHomeOrAuto) {
-      this.goHome();
+      this.goHome(true);
       return true;
     }
     

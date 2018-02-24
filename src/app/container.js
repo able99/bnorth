@@ -108,7 +108,7 @@ export class ActionState{
 
   trigger(event, ...args) {
     let handler = this[event];
-    if(!handler) return false;
+    if(!handler) return;
     let title = `state event(${event}-${this.className}-${this.name}:`;
     try{
       this.app.verbose(title, ...args);

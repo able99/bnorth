@@ -37,6 +37,13 @@ import getOptions from '../utils/getOptions';
  * @param {object|array} changeData - 更厚的数据
  * @param {string|string[]} key - 需要检验的字段 
  */
+/**
+ * 数据输入校验失败时触发
+ * @callback onInvalidate
+ * @param {string} error - 校验错误信息
+ * @param {string|string[]|boolean} [key] - 更新时需要校验的字段名, false 标示不校验
+ * @return {boolean} - 返回true，阻止默认处理，默认处理会弹出错误信息
+ */
 
 
 /**
@@ -62,6 +69,9 @@ class ActionStateData extends ActionState{
     this.options = options;
     this.options.defaultData = this.options.defaultData||{};
     this.options.initData = this.options.initData || this.options.defaultData;
+    this.onWillChange = this.options.onWillChange;
+    this.onDidChange = this.options.onDidChange;
+    this.onInvalidate = this.options.onInvalidate;
   }
 
   // interface
@@ -96,6 +106,7 @@ class ActionStateData extends ActionState{
       let changeData = merge?Object.assign({},this.options.initData,data):data;
 
       changeData = this.trigger('onWillChange', changeData,originData)||changeData||this.options.defaultData;
+
       this.app.actions._dataInit(this.uuid, changeData);
       this.trigger('onDidChange', changeData,originData);
     }catch(e){
@@ -105,6 +116,7 @@ class ActionStateData extends ActionState{
 
   /**
    * 修改管理的数据
+   * 如果设置了输入时校验规则，会进行输入校验，校验失败，将恢复到更新前数据
    * @method
    * @param {object|array} data - 更新的数据
    * @param {boolean} [merge=true] - 是否合并之前的数据
@@ -114,12 +126,16 @@ class ActionStateData extends ActionState{
     try{
       let originData = this.data;
       let changeData = data||this.options.defaultData;
-
       changeData = this.trigger('onWillChange', changeData,originData, keys)||changeData;
+
       let validate = keys!==false && this.validate(keys, true);
-      if(validate) this.trigger('onInvalidate', validate, keys);
+      if(validate && !this.trigger('onInvalidate', validate, keys)) {
+        if(this.options.noticeInvalidate)this.app.errorNotice(message);
+      }
+
       this.app.actions._dataUpdate(this.uuid, validate?originData:changeData, merge, this.options.initData);
       if(!validate)this.trigger('onDidChange',changeData,originData,keys);
+
       return !validate;
     }catch(e){
       this.app.errorNotice(e);
@@ -137,7 +153,7 @@ class ActionStateData extends ActionState{
   }
 
   /**
-   * 使用jspath 格式设置数据中的内容
+   * 使用jspath 格式设置数据中的内容，同时触发校验
    * @method
    * @param {string} key - 键名或jspath 字符串
    * @param {*} value - 数据
@@ -194,46 +210,16 @@ class ActionStateData extends ActionState{
 
   // event
   //----------------------------------
-  /*!
-   * 页面终止时触发
-   * @callback
+  /**
+   * 页面终止时触发，负责清理页面数据
+   * @method
    */
-  onStop() { //bnorth use
+  handleOnStop() {
     if(this.options.clearOnStop===false) return;
     this.clear();
   }
-
-  /*!
-   * 数据将要改变时触发
-   * @callback
-   * @param {object|array} originData - 原始数据
-   * @param {object|array} changeData - 更厚的数据
-   * @param {string|string[]} key - 需要检验的字段 
-   * @return {object|array} - 如果返回则替换为返回的数据 
-   */
-  onWillChange(originData, changeData, key) { 
-    return this.options.onWillChange&&this.options.onWillChange(originData, changeData, key);
-  }
-
-  /*!
-   * 数据修改后触发
-   * @callback
-   * @param {object|array} originData - 原始数据
-   * @param {object|array} changeData - 更厚的数据
-   * @param {string|string[]} key - 需要检验的字段 
-   */
-  onDidChange(originData, changeData, key) { 
-    return this.options.onDidChange&&this.options.onDidChange(originData, changeData, key);
-  }
-
-  /*!
-   * 数据校验错误时触发
-   * @callback
-   * @param {Error|string} message - 错误信息
-   * @param {string} field - 错误字段名
-   */
-  onInvalidate(message, field){
-    if(this.options.noticeInvalidate)this.app.errorNotice(message);
+  onStop() { 
+    this.handleOnStop();
   }
 }
 
