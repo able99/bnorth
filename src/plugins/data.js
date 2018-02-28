@@ -25,16 +25,16 @@ import getOptions from '../utils/getOptions';
 /** 
  * 数据将要改变时触发
  * @callback onWillChange
- * @param {object|array} originData - 原始数据
  * @param {object|array} changeData - 更厚的数据
+ * @param {object|array} originData - 原始数据
  * @param {string|string[]} key - 需要检验的字段 
  * @return {object|array} - 如果返回则替换为返回的数据 
  */
 /**
  * 数据修改后触发
  * @callback onDidChange
- * @param {object|array} originData - 原始数据
  * @param {object|array} changeData - 更厚的数据
+ * @param {object|array} originData - 原始数据
  * @param {string|string[]} key - 需要检验的字段 
  */
 /**
@@ -128,7 +128,7 @@ class ActionStateData extends ActionState{
       let changeData = data||this.options.defaultData;
       changeData = this.trigger('onWillChange', changeData,originData, keys)||changeData;
 
-      let validate = keys!==false && this.validate(keys, true);
+      let validate = keys!==false && this.validate(changeData, keys, true);
       if(validate && !this.trigger('onInvalidate', validate, keys)) {
         if(this.options.noticeInvalidate)this.app.errorNotice(message);
       }
@@ -186,7 +186,7 @@ class ActionStateData extends ActionState{
    * @param {boolean} [input=false] - 是否是输入过程中校验
    * @return {string|boolean} - string: 校验出问题 false: 校验无误
    */
-  validate(keys, input){
+  validate(data, keys, input){
     if(!this.options.rules || !app.validate || !app.validate.validate) return false;
 
     let rules={};
@@ -205,7 +205,7 @@ class ActionStateData extends ActionState{
       }
     }
 
-    return app.validate.validateObject(this.data, rules, {message: this.options.checkErrorMessage});
+    return app.validate.validateObject(data||this.data, rules, {message: this.options.checkErrorMessage});
   }
 
   // event

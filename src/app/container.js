@@ -325,20 +325,20 @@ export function containerConnect(app, containerCreator, name) {
       },
       onStart(page) {
         container.trigger('onStart', page);
-        Object.entries(container.states||{}).forEach(([k,v])=>v.trigger('onStart'));
+        Object.entries(container.states||{}).forEach(([k,v])=>k[0]!=='_'&&v.trigger('onStart'));
       },
       onResume(page) {
         container.trigger('onResume', page);
-        Object.entries(container.states||{}).forEach(([k,v])=>v.trigger('onResume'));
+        Object.entries(container.states||{}).forEach(([k,v])=>k[0]!=='_'&&v.trigger('onResume'));
       },
       onPause(page) {
         container.trigger('onPause', page);
-        Object.entries(container.states||{}).forEach(([k,v])=>v.trigger('onPause'));
+        Object.entries(container.states||{}).forEach(([k,v])=>k[0]!=='_'&&v.trigger('onPause'));
       },
       onStop(page) {
         container.clear(props, containerCreator);
         container.trigger('onStop', page);
-        Object.entries(container.states||{}).forEach(([k,v])=>v.trigger('onStop'));
+        Object.entries(container.states||{}).forEach(([k,v])=>k[0]!=='_'&&v.trigger('onStop'));
       }
     }
   }

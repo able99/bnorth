@@ -143,7 +143,9 @@ class ActionStateRequest extends ActionState {
    * @param {boolean} [append=false] - 是否是追加数据还是替换之前数据 
    */
   set(data, append) {
-    app.actions.requestFetchSuccess(this.uuid,data||{},this.options.initData,append!==undefined?append:this.options.append,this.options.appendField);
+    app.actions._requestFetchSuccess( {data:data||{}}, this.uuid, Object.assign({}, this.options, {
+      append: append!==undefined?append:this.options.append
+    }), true, );
   }
 
   /**
@@ -376,7 +378,7 @@ let pluginRequest = {
       isFetch&&app.actions._requestFetchFail(error, uuid, options, isFetch);
 
       let request = isFetch&&ActionStateRequest.getInstance(ActionStateRequest, uuid);
-      if(request&&request.trigger('onNetworkError', error)!==true) {
+      if(!request||(request&&request.trigger('onNetworkError', error)!==true)) {
         ActionStateRequest._handleError(error, app, options, isFetch);
       }
     }).catch(error=>{
