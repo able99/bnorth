@@ -68,7 +68,7 @@ class ActionStateData extends ActionState{
      */
     this.options = options;
     this.options.defaultData = this.options.defaultData||{};
-    this.options.initData = this.options.initData || this.options.defaultData;
+    this.options.initData = Object.assign({}, this.options.initData || this.options.defaultData);
     this.onWillChange = this.options.onWillChange;
     this.onDidChange = this.options.onDidChange;
     this.onInvalidate = this.options.onInvalidate;
@@ -82,7 +82,7 @@ class ActionStateData extends ActionState{
    */
   get data() {
     let state = this.app.getState('data',{});
-    return (state.datas && state.datas[this.uuid]) || this.options.initData;
+    return (state.datas && state.datas[this.uuid]) || Object.assign({}, this.options.initData);
   }
 
   /*!
@@ -174,7 +174,7 @@ class ActionStateData extends ActionState{
    */
   clear(onlyData){
     this.app.actions._dataClear(this.uuid);
-    ActionStateData.deleteInstance[this.uuid];
+    ActionState.deleteInstance(ActionStateData, this.uuid);
   }
 
   // validate

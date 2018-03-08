@@ -89,7 +89,7 @@ export default (app, Wrapper) => class extends Wrapper {
   }
 
   componentDidResume() {
-    setBrowserTitle(this.props.route.title||app.config.browser.title);
+    this.getSubs().indexOf(this.getPageChildPath())<0 && setBrowserTitle(this.props.route.title||app.config.browser.title);
     if(this.props.onResume) this.props.onResume(this);
     return super.componentDidResume && super.componentDidResume();
   }
@@ -160,7 +160,7 @@ export default (app, Wrapper) => class extends Wrapper {
    * @return {boolean} 
    */
   isFocus() {
-    if(this.getSubs().hasOwnProperty(this.getPageChildPath())){
+    if(this.getSubs().indexOf(this.getPageChildPath())>=0){
       return !Boolean(this.props[this.getPageChildPath()] && this.props[this.getPageChildPath()].props.children);
     }else{
       return !Boolean(this.props.children);

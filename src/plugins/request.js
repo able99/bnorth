@@ -75,7 +75,7 @@ class ActionStateRequest extends ActionState {
      */
     this.options = options;
     this.options.defaultData = this.options.defaultData||{};
-    this.options.initData = this.options.initData || this.options.defaultData;
+    this.options.initData = Object.assign(this.options.initData || this.options.defaultData);
     this.onWillUpdate = this.options.onWillUpdate;
     this.onWillChange = this.options.onWillChange;
     this.onDidChange = this.options.onDidChange;
@@ -98,7 +98,7 @@ class ActionStateRequest extends ActionState {
    */
   get data() {
     let state = this._getState();
-    return (state.result&&state.result.data)||this.options.initData;
+    return (state.result&&state.result.data)||Object.assign({}, this.options.initData);
   }
 
   /**
@@ -154,7 +154,7 @@ class ActionStateRequest extends ActionState {
    */
   clear(){
     this.app.actions._requestFetchClear(this.uuid);
-    ActionStateRequest.deleteInstance[this.uuid];
+    ActionState.deleteInstance(ActionStateRequest, this.uuid);
   }
 
   /**
@@ -373,6 +373,11 @@ let pluginRequest = {
       request&&request.trigger('onDidChange', result.data, result);
     }, error=>{
       ActionStateRequest._handleRequesting(false, app, options, isFetch);
+      if(error===null) {
+        app.error('null error or redirect');
+        return;
+      }
+      
       if(options.onError&&options.onError(error)) return;
 
       isFetch&&app.actions._requestFetchFail(error, uuid, options, isFetch);

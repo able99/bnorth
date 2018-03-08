@@ -336,9 +336,9 @@ export function containerConnect(app, containerCreator, name) {
         Object.entries(container.states||{}).forEach(([k,v])=>k[0]!=='_'&&v.trigger('onPause'));
       },
       onStop(page) {
-        container.clear(props, containerCreator);
         container.trigger('onStop', page);
         Object.entries(container.states||{}).forEach(([k,v])=>k[0]!=='_'&&v.trigger('onStop'));
+        container.clear(props, containerCreator);
       }
     }
   }
