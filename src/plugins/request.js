@@ -9,6 +9,7 @@
 import { ActionState } from '../app/container';
 import getOptions from '../utils/getOptions';
 import getUuid from '../utils/uuid';
+import jspath from '../utils/jspath';
 
 
 // action state 
@@ -143,9 +144,16 @@ class ActionStateRequest extends ActionState {
    * @param {boolean} [append=false] - 是否是追加数据还是替换之前数据 
    */
   set(data, append) {
-    app.actions._requestFetchSuccess( {data:data||{}}, this.uuid, Object.assign({}, this.options, {
+    let result = {data:data||{}};
+    let ret = this.trigger('onWillChange', result.data, result); 
+    if(ret)result = ret;
+    if(ret===false) return;
+
+    this.app.actions._requestFetchSuccess(result, this.uuid, Object.assign({}, this.options, {
       append: append!==undefined?append:this.options.append
-    }), true, );
+    }), true);
+
+    this.trigger('onDidChange', result.data, result);
   }
 
   /**
@@ -470,13 +478,19 @@ let pluginRequest = {
       });
     case pluginRequest._RequestFetchFetchSuccess:
       let data = (state.fetchResult[action.uuid]&&state.fetchResult[action.uuid].result)||action.options.initData;
-      if(action.options.append&&action.options.appendField&&data){
+      if((typeof(action.options.append)==='function'?action.options.append():action.options.append)&&action.options.appendField&&data){
         if(Array.isArray(data)){
           data = Array.concat(data,action.result);
         }else{
           let fileds = Array.isArray(action.options.appendField)?action.options.appendField:(typeof(action.options.appendField)==='string'?[action.options.appendField]:['data']);
           for(let field of fileds){
-            action.result[field] = Array.concat(data[field]||[],action.result[field]||[]);
+            jspath.setValue(
+              action.result.data, field, 
+              Array.concat(
+                jspath.getValue(data.data, field)||[], 
+                jspath.getValue(action.result.data, field)||[]
+              )
+            );
           }
           data = Object.assign({},data,action.result);
         }

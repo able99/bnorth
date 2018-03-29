@@ -54,6 +54,7 @@ class User {
    */
   _stateSuccess (result){
     this.save(Object.assign(this.load(),result||{}));
+    this.app.trigger('onUserUpdate', result);
   }
 
   /**
@@ -63,6 +64,10 @@ class User {
    */
   _stateError (error){
     
+  }
+
+  stateName() {
+    return 'user';
   }
 
   /**
@@ -83,7 +88,7 @@ class User {
       onChangeError:(error)=>{
         this._stateError(error);
       },
-    },"user");
+    }, this.stateName());
   }
 
   
