@@ -195,7 +195,7 @@ export default class App {
     let config = this.config;
     if(route.props.onInit) route.props.onInit(app);
 
-    return (function props(route){
+    return (function props(route, parentPath=""){
       return cloneElement(route,{children:React.Children.map(route.props.children,(v,i)=>{
         let { key } = v;
         let { path, pathname, container, component, components, children, checkLogin, restartOnParamChange, restartOnQueryChange, onEnter, purpose } = v.props;
@@ -216,14 +216,14 @@ export default class App {
         onEnter = (route.type === Route)&&((...args)=>app._handleRouteOnEnter(originOnEnter, ...args));
         
         // component
-        component = app._createRouteComponent(component, container, `cn:${path}`);
+        component = app._createRouteComponent(component, container, `cn:${parentPath+'|'+path}`);
 
         // components
         if(components){
           Object.keys(components).forEach((v)=>{
             let component = components[v];
             if(component&&typeof(component)==='object'){
-              components[v] = app._createRouteComponent(component.component, component.container, `cn:${path}:${v}`);
+              components[v] = app._createRouteComponent(component.component, component.container, `cn:${parentPath+'|'+path}:${v}`);
             }
           });
         }
@@ -240,7 +240,7 @@ export default class App {
         }
 
         route = cloneElement(v,{path,onEnter,component,components});
-        if(children){ return props(route); }else{ return cloneElement(route); }
+        if(children){ return props(route, path); }else{ return cloneElement(route); }
       })});
     })(route);
   }
