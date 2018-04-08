@@ -43,8 +43,7 @@ class User {
    * @return {boolean} - 是否登录 
    */
   isLogin(){
-    let user = this.load();
-    return Boolean(user&&user.token);
+    return Boolean(this.getToken());
   }
 
   /**
