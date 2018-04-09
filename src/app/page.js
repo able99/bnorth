@@ -6,7 +6,7 @@
  */
 
  
-import React from 'react';
+import React, { cloneElement } from 'react';
 import uuid from '../utils/uuid';
 import { setBrowserTitle } from '../utils/browser';
 
@@ -43,9 +43,12 @@ import { setBrowserTitle } from '../utils/browser';
  * @property {router} props.router - router
  */
 export default (app, Wrapper) => class extends Wrapper {
+  // life circle
+  // ---------------------------
   constructor(props) {
     super(props);
     this.app = app;
+    this._active = false;
     this._focus = false;
   }
 
@@ -57,24 +60,23 @@ export default (app, Wrapper) => class extends Wrapper {
 
   componentDidMount() {
     if(this.props.onStart) this.props.onStart(this);
-    if(this.checkFocusChange()){this.componentDidResume();}
+    this._registerKeyboard();
+    this.checkActive(true, false);
+    this.checkFocus();
     return super.componentDidMount && super.componentDidMount();
   }
 
   componentDidUpdate(prevProps) {
-    if(this.checkFocusChange()){
-      if(this.isFocus()){
-        this.componentDidResume();
-      }else{
-        this.componentDidPause();
-      }
-    }
+    this.checkActive();
+    this.checkFocus();
 
     return super.componentDidUpdate && super.componentDidUpdate();
   }
 
   componentWillUnmount() {
-    this.componentDidPause();
+    this._ungegisterKeyboard();
+    this.checkActive(true, false, false);
+    //this.checkFocus(false, true, false);
 
     if(this.props.onStop) this.props.onStop(this);
     let ret = super.componentWillUnmount && super.componentWillUnmount();
@@ -85,24 +87,24 @@ export default (app, Wrapper) => class extends Wrapper {
 
   componentDidPause() {
     if(this.props.onPause) this.props.onPause(this);
+    this.checkFocus(true, false);
     return super.componentDidPause && super.componentDidPause();
   }
 
   componentDidResume() {
     this.getSubs().indexOf(this.getPageChildPath())<0 && setBrowserTitle(this.props.route.title||app.config.browser.title);
     if(this.props.onResume) this.props.onResume(this);
+    this.checkFocus(false, true);
     return super.componentDidResume && super.componentDidResume();
-  }
-
-  componentDidBackKey() {
-    if(this.props.onBackKey) this.props.onBackKey(this);
-    return super.componentDidBackKey && super.componentDidBackKey();
   }
 
   componentDidCatch(error, info) {
     return app.trigger('onErrorPageRender', error);
     return super.componentDidCatch && super.componentDidCatch(error, info);
   }
+
+  // render
+  // ---------------------
 
   render(){
     app.verbose(`page render(${this.getDisplayName()}):`,this);
@@ -119,19 +121,21 @@ export default (app, Wrapper) => class extends Wrapper {
     }
     ret = React.cloneElement( ret, Object.assign( {
       'data-bnorth-page': this.getDisplayName(), 
-      'data-blur': !this.isFocus(),
+      'data-blur': !this.isActive(),
     }, ret.props));
-    
+
     return (
-      <div data-bnorth-wrap={this.getDisplayName()} style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, width: '100%', height: '100%'}}>
+      <div data-bnorth-page-wrap={this.getDisplayName()} style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, width: '100%', height: '100%'}}>
         {ret}
-        {this.props.state__page&&!this.isAppPage()?this.props.state__page.layers.map(v=>v.element):null}
-        {this.getSubs().indexOf(this.getPageChildPath())>=0 && this.props[this.getPageChildPath()] && this.props[this.getPageChildPath()].props.children}
-        {this.getSubs().indexOf(this.getPageChildPath())<0 && !this.isSubPage() && this.props.children}
-        {this.props.state__page&&this.isAppPage()?this.props.state__page.layers.map(v=>v.element):null}
+        {!this.isAppPage()?this.getLayers():null}
+        {this.getChildren()}
+        {this.isAppPage()?this.getLayers():null}
       </div>
     )
   }
+
+  // info
+  // --------------------------
 
   /**
    * 返回page 的display 名称
@@ -140,26 +144,10 @@ export default (app, Wrapper) => class extends Wrapper {
   getDisplayName() {
     return Wrapper.displayName||Wrapper.name;
   }
-  /*!
-   * 返回是否是App 根组件
-   * @method 
-   */
-  isAppPage() {
-    return this.props.routes[0]===this.props.route;
-  }
-  
-  checkFocusChange() {
-    let oldFocus = this._focus;
-    this._focus = this.isFocus();
-    return this._focus !== oldFocus;
-  }
 
-  /**
-   * 返回是否页面在顶层
-   * @method
-   * @return {boolean} 
-   */
-  isFocus() {
+  // active focus
+  // --------------------------
+  isActive() {
     if(this.getSubs().indexOf(this.getPageChildPath())>=0){
       return !Boolean(this.props[this.getPageChildPath()] && this.props[this.getPageChildPath()].props.children);
     }else{
@@ -167,21 +155,85 @@ export default (app, Wrapper) => class extends Wrapper {
     }
   }
 
+  checkActive(emitPositive=true,emitNegative=true,val) {
+    let oldVal = this._active;
+    this._active = val!==undefined?val:this.isActive();
+    if(this._active !== oldVal) {
+      if(this._active&&emitPositive) this.componentDidResume();;
+      if(!this._active&&emitNegative) this.componentDidPause();;
+    }
+  }
+
+  isFocus() {
+    return !this.isContainerPage() && this.getFocusLayerIndex()===null;
+  }
+
+  checkFocus(emitPositive=true,emitNegative=true,val) {
+    let oldVal = this._focus;
+    this._focus = val!==undefined?val:this.isFocus();
+  }
+
+  _handleKeyUp(e) {
+    if(!this.isActive()||!this.isFocus()) return;
+    if(this.componentHandleKeyUp && this.componentHandleKeyUp(e)) return;
+    if(e.keyCode===27)
+      app.navigator.back();
+  }
+
+  _registerKeyboard() {
+    if(this._onDocumentKeydownListener) return;
+    this._onDocumentKeydownListener = (e)=>this._handleKeyUp(e);
+    window.document.addEventListener('keyup', this._onDocumentKeydownListener)
+  }
+
+  _ungegisterKeyboard() {
+    this._onDocumentKeydownListener && window.document.removeEventListener('keyup', this._onDocumentKeydownListener);
+    this._onDocumentKeydownListener = null;
+  }
+
+  // sub page
+  // ----------------------
+
+  getChildren() {
+    if(this.getSubs().indexOf(this.getPageChildPath())>=0) {
+      return this.props[this.getPageChildPath()] && this.props[this.getPageChildPath()].props.children;
+    } else {
+      return !this.isSubPage() && this.props.children
+    }
+  }
+
   /**
-   * 返回是否是容器组件
+   * 返回是否是App 根组件
+   * @method 
+   */
+  isAppPage() {
+    return this.props.routes[0]===this.props.route;
+  }
+
+  /**
+   * 返回是否是容器页面
    * @method
    * @return {boolean}
    */
-  isContainer() {
+  isContainerPage() {
     return (this.props.route.childRoutes||[]).find((v)=>{
       return v.components;
     });
   }
 
   /**
-   * 容器组件返回其子组件列表
+   * 返回是否是子页面
    * @method
-   * @return {array} - 子组件的名称数组
+   * @return {boolean}
+   */
+  isSubPage() {
+    return Boolean(this.props.route.components);
+  }
+
+  /**
+   * 返回容器页面的子页面列表
+   * @method
+   * @return {array} - 子页面的名称数组
    */
   getSubs() {
     return (this.props.route.childRoutes||[])
@@ -191,15 +243,6 @@ export default (app, Wrapper) => class extends Wrapper {
     .map((v)=>{
       return v.path;
     });
-  }
-
-  /**
-   * 是否是子组件
-   * @method
-   * @return {boolean}
-   */
-  isSubPage() {
-    return Boolean(this.props.route.components);
   }
 
   /**
@@ -223,7 +266,7 @@ export default (app, Wrapper) => class extends Wrapper {
   }
 
   /**
-   * 容器组件返回当前显示中的子组件路径
+   * 容器组件返回当前页面中的子页面的路径
    * @method
    * @return {string}
    */
@@ -241,7 +284,7 @@ export default (app, Wrapper) => class extends Wrapper {
   }
 
   /**
-   * 子组件返回其容器组件的路径
+   * 返回其父页面的路径
    * @method
    * @return {string}
    */
@@ -256,12 +299,29 @@ export default (app, Wrapper) => class extends Wrapper {
     return ret
   }
 
-  addLayer(element) {
+  // layer
+  // --------------------------
+  getFocusLayerIndex() {
+    let layers = this.props.state__page.layers||[];
+    return layers.reverse().reduce((v1,v2,i)=>v1!==null?v1:(v2.focus?i:null), null);
+  }
+
+  getLayers() {
+    let layers = this.props.state__page.layers||[];
+    let foucsIndex = this.isActive()&&this.getFocusLayerIndex();
+    layers = layers.map((v,i)=>cloneElement(v.element, {
+      focus: i===foucsIndex
+    }));
+    return layers;
+  }
+
+  addLayer(element, focus) {
     let uuidstr = uuid(8,16);
     this.props.container.states._page.update({
-      layers: [...this.props.state__page.layers, {uuid: uuidstr, element}]
+      layers: [...this.props.state__page.layers, {uuid: uuidstr, element, focus}]
     });
 
+    window.setTimeout(()=>this.checkFocus(),50);
     return uuidstr;
   }
 
@@ -277,6 +337,8 @@ export default (app, Wrapper) => class extends Wrapper {
     this.props.container.states._page.update({
       layers: this.props.state__page.layers.filter(v=>v.uuid!==uuid)
     });
+
+    window.setTimeout(()=>this.checkFocus(),50);
   }
 }
 
