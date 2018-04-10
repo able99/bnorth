@@ -165,7 +165,7 @@ export default (app, Wrapper) => class extends Wrapper {
   }
 
   isFocus() {
-    return !this.isContainerPage() && this.getFocusLayerIndex()===null;
+    return this.isActive() && !this.isContainerPage() && this.getFocusLayerIndex()===null;
   }
 
   checkFocus(emitPositive=true,emitNegative=true,val) {
