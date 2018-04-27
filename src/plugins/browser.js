@@ -221,7 +221,11 @@ class Browser {
     return "";
   }
   clearCookie(name) { 
-    this.setCookie(name, "", -1); 
+    if(name){this.setCookie(name, "", -1); return;}
+
+    var keys = document.cookie.match(/[^ =;]+(?=\=)/g).forEach(v=>{
+      this.clearCookie(v); 
+    })
   } 
 
   //jsload

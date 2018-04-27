@@ -51,14 +51,26 @@ class Network {
    * @param {boolean} isFetch - 是获取请求还是操作请求
    * @param {NetworkOptions} options - 请求参数
    */
-  _handleStatusError(status,isFetch,options) {
-    switch(status){
+  _handleStatusError(error,isFetch,options) {
+    switch(error&&error.response&&error.response.status){
       case 401:
-      this.app.user&&this.app.user.toLogin(null, true);
-        return true;
+        this.app.user&&this.app.user.toLogin(null, true);
+        return Promise.reject();
       default:
-        return false;
+        return Promise.reject(error);
     }
+  }
+
+  /**
+   * 处理请求异常
+   * @method
+   * @param {string|Error} error - 异常信息
+   * @param {boolean} isFetch - 是获取请求还是操作请求
+   * @param {NetworkOptions} options - 请求参数
+   * @param {object} config - axios 本次请求的实例 
+   */
+  _handleError(error, isFetch, options) {
+    return Promise.reject(error);
   }
 
   /**
@@ -73,18 +85,6 @@ class Network {
    */
   _handleResult(result,isFetch,options) {
     return result;
-  }
-
-  /**
-   * 处理请求异常
-   * @method
-   * @param {string|Error} error - 异常信息
-   * @param {boolean} isFetch - 是获取请求还是操作请求
-   * @param {NetworkOptions} options - 请求参数
-   * @param {object} config - axios 本次请求的实例 
-   */
-  _handleError(error, isFetch, options, config) {
-
   }
 
   // format
@@ -185,22 +185,16 @@ class Network {
       ...getOption(options.options, {}, options, isFetch)
     })
     .then(result=>{
-      result = this._getResultData(result, isFetch);
-      result = this._handleResult(result, isFetch, options);
-      return result;
+      let ret = this._getResultData(result, isFetch, options, result);
+      ret = this._handleResult(ret, isFetch, options, result);
+      return ret;
     },error=>{
       if(error.response){
-        error = this._handleStatusError(error.response.status, isFetch, error.response, options, error.config);
+        return this._handleStatusError(error, isFetch, options);
       }else {
-        error = this._handleError(error, isFetch, options, error.config);
+        return this._handleError(error, isFetch, options);
       }
-      if(error) throw error;
     })
-    .then(result=>{
-      return result;
-    },error=>{
-      throw error;
-    });
   }
 }
 

@@ -47,8 +47,8 @@ class Format {
    * @method
    * @param {number|string} val - 金额
    */
-  money(val){
-    return !isNaN(val)?Number(val).toFixed(2):this.moneyDefault;
+  money(val, moneyDefault, zeroDefault){
+    return !isNaN(val)&&(!zeroDefault||val>0)?Number(val).toFixed(2):moneyDefault||this.moneyDefault;
   }
 
   /**

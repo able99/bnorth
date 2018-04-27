@@ -258,13 +258,13 @@ class ActionStateRequest extends ActionState {
     options = getOptions(options);
     if(isFetch){
       if(options.blocking){
-        app.actions.noticeBlocking(show);
+        app.actions.noticeBlocking(show, options.blockingProps, options.blockingOptions);
       }else{
         app.actions.noticeLoading(show);
       }
     }else{
       if(options.blocking!==false){
-        app.actions.noticeBlocking(show);
+        app.actions.noticeBlocking(show, options.blockingProps, options.blockingOptions);
       }
     }
   }
@@ -369,29 +369,26 @@ let pluginRequest = {
       if(!result) throw app.config.strings.networkError;
 
       ActionStateRequest._handleRequesting(false, app, options, isFetch);
-      if(options.onSuccess&&options.onSuccess(result.data, result)) return;
+      if(options.onSuccess&&options.onSuccess(result.data, result, options)) return;
 
       let request = isFetch&&ActionStateRequest.getInstance(ActionStateRequest, uuid);
-      let ret = request&&request.trigger('onWillChange', result.data, result); 
+      let ret = request&&request.trigger('onWillChange', result.data, result, options); 
       if(ret)result = ret;
       if(request && ret===false) return;
 
       isFetch&&app.actions._requestFetchSuccess(result, uuid, options, isFetch);
 
-      request&&request.trigger('onDidChange', result.data, result);
+      request&&request.trigger('onDidChange', result.data, result, options);
     }, error=>{
       ActionStateRequest._handleRequesting(false, app, options, isFetch);
-      if(error===null) {
-        app.error('null error or redirect');
-        return;
-      }
+      if(error===null) { app.error('null error or redirect'); return; }
       
-      if(options.onError&&options.onError(error)) return;
+      if(options.onError&&options.onError(error, options)) return;
 
       isFetch&&app.actions._requestFetchFail(error, uuid, options, isFetch);
 
       let request = isFetch&&ActionStateRequest.getInstance(ActionStateRequest, uuid);
-      if(!request||(request&&request.trigger('onNetworkError', error)!==true)) {
+      if(!request||(request&&request.trigger('onNetworkError', error, options)!==true)) {
         ActionStateRequest._handleError(error, app, options, isFetch);
       }
     }).catch(error=>{
