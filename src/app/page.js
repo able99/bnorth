@@ -75,7 +75,7 @@ export default (app, Wrapper) => class extends Wrapper {
 
   componentWillUnmount() {
     this._ungegisterKeyboard();
-    this.checkActive(true, false, false);
+    this.checkActive(true, true, false);
     //this.checkFocus(false, true, false);
 
     if(this.props.onStop) this.props.onStop(this);
