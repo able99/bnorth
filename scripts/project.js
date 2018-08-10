@@ -9,6 +9,7 @@
 'use strict';
 var fs = require('fs-extra');
 var path = require('path');
+var spawn = require('cross-spawn');
 var argv = require('yargs')
   .options({
     'init': {
@@ -77,6 +78,16 @@ if((argv.init||argv.project)&&(argv.force||!isBnorthProject)){
     "start": "bnorth server",
     "build": "bnorth build",
     "bnorth": "bnorth",
+  };
+  appPackage.babel = appPackage.babel || {
+    "presets": [ "react", "es2015", "stage-0", "stage-1" ],
+    "plugins": [
+      [ "transform-runtime", { "polyfill": false, "regenerator": true } ],
+      "babel-plugin-add-module-exports"
+    ]
+  };
+  appPackage.eslintConfig = appPackage.eslintConfig || {
+    "extends": "react-app"
   };
   fs.writeFileSync(
     path.join(appPath, 'package.json'),

@@ -1,6 +1,6 @@
 {
   "name": "bnorth",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "a react based JS framework that covers the functions of scaffolding, routing, data flow and so on. It uses a plug-in mechanism, powerful and easy to extend",
   "main": "lib/index.js",
   "bin": {
@@ -8,7 +8,6 @@
   },
   "scripts": {
     "start": "watch 'npm run build' src",
-    "postinstall": "node scripts/project.js --init",
     "build": "cross-env BABEL_ENV=cjs NODE_ENV=production babel src --out-dir lib",
     "postpublish": "open https://npm.taobao.org/sync/bnorth"
   },
