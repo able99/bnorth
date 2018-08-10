@@ -1,9 +1,10 @@
-const { existsSync } = require('fs');
+let fs = require('fs-extra');
+
 
 let defaultConfig = {
-  bail: true,
+  bail: false,
   devtool: false,
-  outputPath: './dist',
+  outputPath: './www',
   outputFilename: '[name].[hash:8].js',
   outputPublicPath: './',
   outputChunkFilename: '[name].[chunkhash:8].async.js',
@@ -20,6 +21,7 @@ let defaultConfig = {
   externals: undefined,
   node: { fs: 'empty', net: 'empty', tls: 'empty' },
   extractCss: false,
+  urlLoaderLimit: 0,
 }
 
 let defaultConfigDev = {
@@ -31,17 +33,18 @@ let defaultConfigProd = {
   devtool: false,
 }
 
-module.exports = function(cwd, paths, env) {
-  let configFile = paths.resolveApp('.bnorth.config.js');
-  let configFileEnv = paths.resolveApp('.bnorth.config.'+(env||'dev')+'.js');
-  let hasConfigFile = existsSync(configFile);
-  let hasConfigFileEnv = existsSync(configFileEnv);
-  let configEnvDefault = env==='prod'?defaultConfigProd:defaultConfigDev;
-  let config = hasConfigFile?require(configFile):{};
-  let configEnv = hasConfigFileEnv?require(configFileEnv):{};
+module.exports = function(cwd, paths, env, argv) {
+  env = env||'dev';
+  let package = JSON.parse(fs.readFileSync(paths.appPackageJson));
 
-  config = Object.assign({}, defaultConfig, config, configEnvDefault, configEnv);
-  config.NODE_ENV = !env||env==='dev'?'developer':'production';
-  config.outputPath = paths.resolveApp(config.outputPath);
-  return config;
+  let ret = Object.assign({}, 
+    defaultConfig, 
+    package['bnorth']||{},
+    env==='dev'?defaultConfigDev:defaultConfigProd, 
+    (env==='dev'?package['bnorth.dev']:package['bnorth.prod'])||{}, 
+  );
+  ret.NODE_ENV = env==='dev'?'developer':'production';
+  ret.outputPath = paths.resolveApp(ret.outputPath);
+
+  return ret;
 }

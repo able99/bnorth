@@ -20,7 +20,7 @@ function getRules(cwd, paths, config, argv) {
     ],
     loader: 'url',
     options: {
-      limit: 10000,
+      limit: config.urlLoaderLimit,
       name: 'static/[name].[hash:8].[ext]',
     },
   });
@@ -87,7 +87,7 @@ function getPlugins(cwd, paths, config) {
   // html
   if (existsSync(join(paths.appSrc, 'index.ejs'))) {
     ret.push(new HtmlWebpackPlugin({
-      template: 'src/index.ejs',
+      template: join(paths.appSrc, 'index.ejs'),
       inject: true,
     }));
   }

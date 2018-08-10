@@ -47,17 +47,15 @@ var basePath = argv.base || 'pages';
 var modulePath = argv.module || '';
 var descPath = path.join(appPath, srcPath, basePath, modulePath);
 var templatePath = path.join('node_modules', 'bnorth', 'templates', 'newpage');
-fs.copySync(path.join(templatePath, 'container.js'), path.join(descPath, `_${name}.js`));
+fs.copySync(path.join(templatePath, 'controller.js'), path.join(descPath, `_${name}.js`));
 !argv.usebnorth && fs.copySync(path.join(templatePath, 'page.js'), path.join(descPath, `${name}.js`));
 argv.usebnorth && fs.copySync(path.join(templatePath, 'page_bnorth.js'), path.join(descPath, `${name}.js`));
 
 console.log(`------------route config-------------`);
 console.log(`
-  <Route 
-    key="${name}"
-    title="${title||''}"
-    component={require('${path.join('..',basePath, modulePath)}/${name}.js')}
-    container={require('${path.join('..',basePath, modulePath)}/_${name}.js')} >
-  </Route>
+  '${name}': {
+    component: require('${path.join('..',basePath, modulePath)}/${name}.js'),
+    controller: require('${path.join('..',basePath, modulePath)}/_${name}.js'),
+    title:"${title||''}"
+  },
 `);
-console.log(`----------------------------------------`);

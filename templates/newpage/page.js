@@ -1,11 +1,4 @@
 import React from 'react';
 
 
-export default class Page extends React.Component {
-  render() {
-    return (
-      <div>
-      </div>
-    )
-  }
-}
+export default (props)=><h1>Home Page</h1>;
