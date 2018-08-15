@@ -1,0 +1,92 @@
+html {
+  font-size: 16px;
+}
+
+body {
+  font-size: 16px;
+  color: #383838;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Segoe UI", "Microsoft YaHei", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "wenquanyi micro hei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  line-height: 1.4;
+  background: none;
+}
+
+h1 {
+  font-weight: 600;
+  font-size: 22;
+}
+
+h2 {
+  font-weight: 600;
+  font-size: 20;
+}
+
+h3 {
+  font-weight: 600;
+  font-size: 18;
+}
+
+h4 {
+  font-weight: 600;
+  font-size: 16;
+}
+
+h5 {
+  font-weight: 600;
+  font-size: 14;
+}
+
+h6 {
+  font-weight: 600;
+  font-size: 12;
+}
+
+strong {
+  font-weight: 600;
+}
+
+hr {
+  border: 1px solid #e2e2e2;
+  border-width: 1 0 0;
+  clear: both;
+  height: 0;
+}
+
+.transition {
+  transition: .15s ease-out;
+  -moz-transition: .15s ease-out;
+  -ms-transition: .15s ease-out;
+  -oz-transition: .15s ease-out;
+}
+
+.line-height-1 {
+  line-height: 1;
+}
+
+.outline-none {
+  outline: none;
+}
+
+.appearance-none {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.force-hardware-acceleration {
+  transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -oz-transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+
+.font-smoothing-antialiased {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

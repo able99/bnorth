@@ -1,0 +1,328 @@
+.text-size {
+  font-size: 16px;
+}
+
+.text-size-xxxs {
+  font-size: 8px;
+}
+
+.text-size-xxs {
+  font-size: 10px;
+}
+
+.text-size-xs {
+  font-size: 12px;
+}
+
+.text-size-sm {
+  font-size: 14px;
+}
+
+.text-size-lg {
+  font-size: 18px;
+}
+
+.text-size-xl {
+  font-size: 20px;
+}
+
+.text-size-xxl {
+  font-size: 22px;
+}
+
+.text-size-xxxl {
+  font-size: 24px;
+}
+
+.text-size-2x {
+  font-size: 32px;
+}
+
+.text-size-3x {
+  font-size: 48px;
+}
+
+.text-size-4x {
+  font-size: 64px;
+}
+
+.text-weight {
+  font-weight: normal;
+}
+
+.text-weight-light {
+  font-weight: 100;
+}
+
+.text-weight-bold {
+  font-weight: 600;
+}
+
+.text-weight-bolder {
+  font-weight: 1000;
+}
+
+.text-color {
+  color: #383838;
+}
+
+.text-color-component {
+  color: #f6f6f6;
+}
+
+.text-color-view {
+  color: #eff0f4;
+}
+
+.text-color-border {
+  color: #e2e2e2;
+}
+
+.text-color-black {
+  color: plack;
+}
+
+.text-color-white {
+  color: white;
+}
+
+.text-color-success {
+  color: #17c729;
+}
+
+.text-color-warning {
+  color: #faff72;
+}
+
+.text-color-alert {
+  color: #f72a27;
+}
+
+.text-color-notice {
+  color: #00baff;
+}
+
+.text-color-link {
+  color: #00baff;
+}
+
+.text-color-primary {
+  color: #0074c3;
+}
+
+.text-color-normal {
+  color: #383838;
+}
+
+.text-color-light {
+  color: #959595;
+}
+
+.text-color-disable {
+  color: #a2a2a2;
+}
+
+.text-style {
+  font-style: normal;
+}
+
+.text-style-italic {
+  font-style: italic;
+}
+
+.text-style-oblique {
+  font-style: oblique;
+}
+
+.text-style-inherit {
+  font-style: inherit;
+}
+
+.text-decoration {
+  text-decoration: none;
+}
+
+.text-decoration-underline {
+  text-decoration: underline;
+}
+
+.text-decoration-overline {
+  text-decoration: overline;
+}
+
+.text-decoration-line-through {
+  text-decoration: line-through;
+}
+
+.text-decoration-blink {
+  text-decoration: blink;
+}
+
+.text-decoration-inherit {
+  text-decoration: inherit;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+.text-align-justify {
+  text-align: justify;
+}
+
+.text-vertical-align-baseline {
+  vertical-align: baseline;
+}
+
+.text-vertical-align-sub {
+  vertical-align: sub;
+}
+
+.text-vertical-align-super {
+  vertical-align: super;
+}
+
+.text-vertical-align-top {
+  vertical-align: top;
+}
+
+.text-vertical-align-text-top {
+  vertical-align: text-top;
+}
+
+.text-vertical-align-middle {
+  vertical-align: middle;
+}
+
+.text-vertical-align-bottom {
+  vertical-align: bottom;
+}
+
+.text-vertical-align-text-bottom {
+  vertical-align: text-bottom;
+}
+
+.text-vertical-align-inherit {
+  vertical-align: inherit;
+}
+
+.text-white-space {
+  white-space: normal;
+}
+
+.text-white-space-normal {
+  white-space: normal;
+}
+
+.text-white-space-inherit {
+  white-space: inherit;
+}
+
+.text-white-space-pre {
+  white-space: pre;
+}
+
+.text-white-space-nowrap {
+  white-space: nowrap;
+}
+
+.text-white-space-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.text-white-space-pre-line {
+  white-space: pre-line;
+}
+
+.line-height {
+  line-height: 1.4px;
+}
+
+.text-family-sans-serif {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Segoe UI", "Microsoft YaHei", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "wenquanyi micro hei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.text-family-serif {
+  font-family: Georgia, "Times New Roman", Times, SimSun, serif;
+}
+
+.text-family-monospace {
+  font-family: Monaco, Menlo, Consolas, "Courier New";
+}
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-truncate-2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.4;
+  max-height: 2.8em;
+}
+
+.text-truncate-2-placeholder {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.4;
+  max-height: 2.8em;
+  min-height: 2.8em;
+}
+
+.text-truncate-3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-height: 1.4;
+  max-height: 4.2em;
+}
+
+.text-truncate-3-placeholder {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-height: 1.4;
+  max-height: 4.2em;
+  min-height: 4.2em;
+}
+
+.text-truncate-4 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-height: 1.4;
+  max-height: 5.6em;
+}
+
+.text-truncate-4-placeholder {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-height: 1.4;
+  max-height: 5.6em;
+  min-height: 5.6em;
+}

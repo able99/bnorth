@@ -2,13 +2,11 @@
 /.vscode
 
 # dependencies
-/node_modules
-/templates/node_modules
+node_modules/
 
 # mid
-/www
-/platforms
-/plugins
+platforms/
+plugins/
 
 # production
 

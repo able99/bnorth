@@ -1,0 +1,36 @@
+{
+  "name": "bnorth-cli",
+  "version": "3.0.1",
+  "description": "bnorth cli",
+  "keywords": [
+    "bnorth",
+    "react"
+  ],
+  "author": "able99 <8846755@qq.com>",
+  "homepage": "https://github.com/able99",
+  "license": "MIT",
+  "bin": {
+    "bnorth-cli": "./bin/cli.js"
+  },
+  "files": [
+    "lib",
+    "bin",
+    "templates"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/able99/bnorth.git"
+  },
+  "bugs": {
+    "url": "https://github.com/able99/bnorth/issues"
+  },
+  "scripts": {},
+  "dependencies": {
+    "cross-spawn": "^6.0.5",
+    "fs-extra": "^7.0.0",
+    "yargs": "^12.0.1"
+  }
+}

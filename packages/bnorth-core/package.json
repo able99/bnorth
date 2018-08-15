@@ -1,0 +1,37 @@
+{
+  "name": "bnorth-core",
+  "version": "3.0.1",
+  "description": "a react based JS framework that covers the functions of scaffolding, routing, data flow and so on. It uses a plug-in mechanism, powerful and easy to extend",
+  "keywords": [
+    "bnorth",
+    "react"
+  ],
+  "author": "able99 <8846755@qq.com>",
+  "homepage": "https://github.com/able99",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/able99/bnorth.git"
+  },
+  "scripts": {
+    "build": "bnorth-build dev",
+    "postpublish": "open https://npm.taobao.org/sync/bnorth"
+  },
+  "bugs": {
+    "url": "https://github.com/able99/bnorth/issues"
+  },
+  "dependencies": {
+    "history": "^4.7.2",
+    "path-to-regexp": "^2.2.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "url-parse": "^1.4.0"
+  }
+}

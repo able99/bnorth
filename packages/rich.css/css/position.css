@@ -1,0 +1,84 @@
+.position-initial {
+  position: initial;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.position-fixed {
+  position: fixed;
+}
+
+.offset-start-left {
+  left: 0px;
+}
+
+.offset-start-right {
+  right: 0px;
+}
+
+.offset-start-top {
+  top: 0px;
+}
+
+.offset-start-bottom {
+  bottom: 0px;
+}
+
+.offset-center-left {
+  left: 50%;
+}
+
+.offset-center-right {
+  right: 50%;
+}
+
+.offset-center-top {
+  top: 50%;
+}
+
+.offset-center-bottom {
+  bottom: 50%;
+}
+
+.offset-end-left {
+  left: 100%;
+}
+
+.offset-end-right {
+  right: 100%;
+}
+
+.offset-end-top {
+  top: 100%;
+}
+
+.offset-end-bottom {
+  bottom: 100%;
+}
+
+.translate-center {
+  transform: translate3d(-50%, -50%, 0);
+  -moz-transform: translate3d(-50%, -50%, 0);
+  -ms-transform: translate3d(-50%, -50%, 0);
+  -oz-transform: translate3d(-50%, -50%, 0);
+}
+
+.translate-center-x {
+  transform: translate3d(-50%, 0, 0);
+  -moz-transform: translate3d(-50%, 0, 0);
+  -ms-transform: translate3d(-50%, 0, 0);
+  -oz-transform: translate3d(-50%, 0, 0);
+}
+
+.translate-center-y {
+  transform: translate3d(0, -50%, 0);
+  -moz-transform: translate3d(0, -50%, 0);
+  -ms-transform: translate3d(0, -50%, 0);
+  -oz-transform: translate3d(0, -50%, 0);
+}

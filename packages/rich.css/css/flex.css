@@ -1,0 +1,215 @@
+.flex-display-flex {
+  display: flex;
+  display : -webkit-box;
+  display  : -ms-flexbox;
+  display   : -webkit-flex;
+}
+
+.flex-display-flex-inline {
+  display: flex-inline;
+  display : -webkit-inline-box;
+  display  : -ms-inline-flexbox;
+  display   : -webkit-inline-flex;
+}
+
+.flex-direction-h {
+  flex-direction: row;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+}
+
+.flex-direction-v {
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+}
+
+.flex-direction-hv {
+  flex-direction: row-reverse;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+}
+
+.flex-direction-vv {
+  flex-direction: column-reverse;
+  -webkit-flex-direction: column-reverse;
+  -ms-flex-direction: column-reverse;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+}
+
+.flex-justify-start {
+  justify-content: flex-start;
+  -webkit-justify-content: flex-start;
+  -webkit-box-pack: flex-start;
+  -ms-flex-pack: flex-start;
+}
+
+.flex-justify-center {
+  justify-content: center;
+  -webkit-justify-content: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+}
+
+.flex-justify-end {
+  justify-content: flex-end;
+  -webkit-justify-content: flex-end;
+  -webkit-box-pack: flex-end;
+  -ms-flex-pack: flex-end;
+}
+
+.flex-justify-between {
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+  -webkit-box-pack: space-between;
+  -ms-flex-pack: space-between;
+}
+
+.flex-justify-around {
+  justify-content: space-around;
+  -webkit-justify-content: space-around;
+  -webkit-box-pack: space-around;
+  -ms-flex-pack: space-around;
+}
+
+.flex-align-start {
+  align-items: flex-start;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+}
+
+.flex-align-center {
+  align-items: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+}
+
+.flex-align-end {
+  align-items: flex-end;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+}
+
+.flex-align-baseline {
+  align-items: baseline;
+  -webkit-align-items: baseline;
+  -webkit-box-align: baseline;
+  -ms-flex-align: baseline;
+}
+
+.flex-align-stretch {
+  align-items: stretch;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+}
+
+.flex-wrap-wrap {
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -moz-flex-wrap: wrap;
+}
+
+.flex-wrap-nowrap {
+  flex-wrap: nowrap;
+  -webkit-flex-wrap: nowrap;
+  -moz-flex-wrap: nowrap;
+}
+
+.flex-wrap-reverse {
+  flex-wrap: reverse;
+  -webkit-flex-wrap: reverse;
+  -moz-flex-wrap: reverse;
+}
+
+.flex-sub-align-start {
+  align-self: flex-start;
+  -webkit-align-self: flex-start;
+  -ms-flex-item-align: flex-start;
+}
+
+.flex-sub-align-center {
+  align-self: center;
+  -webkit-align-self: center;
+  -ms-flex-item-align: center;
+}
+
+.flex-sub-align-end {
+  align-self: flex-end;
+  -webkit-align-self: flex-end;
+  -ms-flex-item-align: flex-end;
+}
+
+.flex-sub-align-baseline {
+  align-self: baseline;
+  -webkit-align-self: baseline;
+  -ms-flex-item-align: baseline;
+}
+
+.flex-sub-align-stretch {
+  align-self: stretch;
+  -webkit-align-self: stretch;
+  -ms-flex-item-align: stretch;
+}
+
+.flex-sub-flex-auto {
+  flex: auto;
+  -webkit-box-flex: auto;
+  -webkit-flex: auto;
+  -moz-flex: auto;
+}
+
+.flex-sub-flex-none {
+  flex: none;
+  -webkit-box-flex: none;
+  -webkit-flex: none;
+  -moz-flex: none;
+}
+
+.flex-sub-flex-extend {
+  flex: 1;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+}
+
+.flex-sub-flex-grow {
+  flex-grow: 1;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+}
+
+.flex-sub-flex-shrink {
+  flex-shrink: 1;
+  -webkit-flex-shrink: 1;
+  -ms-flex-negative: 1;
+}
+
+.flex-overflow {
+  position: relative;
+  width: 100%;
+}
+
+.flex-overflow:before {
+  content: " ";
+  display: inline-bloc;
+  width: 100%;
+  height: 1px;
+}
+
+.flex-flex-overflow .text-truncate-old {
+  position: absolute;
+  width: 100%;
+  left: 0;
+}

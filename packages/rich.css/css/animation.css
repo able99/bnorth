@@ -1,0 +1,279 @@
+.transition-property-none {
+  transition-property: NaNpx;
+  -moz-transition-property: NaNpx;
+  -ms-transition-property: NaNpx;
+  -oz-transition-property: NaNpx;
+}
+
+.transition-property-all {
+  transition-property: NaNpx;
+  -moz-transition-property: NaNpx;
+  -ms-transition-property: NaNpx;
+  -oz-transition-property: NaNpx;
+}
+
+.transition-property-transform {
+  transition-property: NaNpx;
+  -moz-transition-property: NaNpx;
+  -ms-transition-property: NaNpx;
+  -oz-transition-property: NaNpx;
+}
+
+.transition-property-width {
+  transition-property: NaNpx;
+  -moz-transition-property: NaNpx;
+  -ms-transition-property: NaNpx;
+  -oz-transition-property: NaNpx;
+}
+
+.transition-property-height {
+  transition-property: NaNpx;
+  -moz-transition-property: NaNpx;
+  -ms-transition-property: NaNpx;
+  -oz-transition-property: NaNpx;
+}
+
+.transition-property-opacity {
+  transition-property: NaNpx;
+  -moz-transition-property: NaNpx;
+  -ms-transition-property: NaNpx;
+  -oz-transition-property: NaNpx;
+}
+
+.transition-duration-500 {
+  transition-duration: 500ms;
+  -moz-transition-duration: 500ms;
+  -ms-transition-duration: 500ms;
+  -oz-transition-duration: 500ms;
+}
+
+.transition-duration-1000 {
+  transition-duration: 1000ms;
+  -moz-transition-duration: 1000ms;
+  -ms-transition-duration: 1000ms;
+  -oz-transition-duration: 1000ms;
+}
+
+.transition-duration-1500 {
+  transition-duration: 1500ms;
+  -moz-transition-duration: 1500ms;
+  -ms-transition-duration: 1500ms;
+  -oz-transition-duration: 1500ms;
+}
+
+.transition-duration-2500 {
+  transition-duration: 2500ms;
+  -moz-transition-duration: 2500ms;
+  -ms-transition-duration: 2500ms;
+  -oz-transition-duration: 2500ms;
+}
+
+.transition-duration-3500 {
+  transition-duration: 3500ms;
+  -moz-transition-duration: 3500ms;
+  -ms-transition-duration: 3500ms;
+  -oz-transition-duration: 3500ms;
+}
+
+.transition-delay-500 {
+  transition-delay: 500ms;
+  -moz-transition-delay: 500ms;
+  -ms-transition-delay: 500ms;
+  -oz-transition-delay: 500ms;
+}
+
+.transition-delay-1000 {
+  transition-delay: 1000ms;
+  -moz-transition-delay: 1000ms;
+  -ms-transition-delay: 1000ms;
+  -oz-transition-delay: 1000ms;
+}
+
+.transition-delay-1500 {
+  transition-delay: 1500ms;
+  -moz-transition-delay: 1500ms;
+  -ms-transition-delay: 1500ms;
+  -oz-transition-delay: 1500ms;
+}
+
+.transition-delay-2500 {
+  transition-delay: 2500ms;
+  -moz-transition-delay: 2500ms;
+  -ms-transition-delay: 2500ms;
+  -oz-transition-delay: 2500ms;
+}
+
+.transition-delay-3500 {
+  transition-delay: 3500ms;
+  -moz-transition-delay: 3500ms;
+  -ms-transition-delay: 3500ms;
+  -oz-transition-delay: 3500ms;
+}
+
+.transition-timing-function-ease {
+  transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -ms-transition-timing-function: ease;
+  -oz-transition-timing-function: ease;
+}
+
+.transition-timing-function-linear {
+  transition-timing-function: linear;
+  -moz-transition-timing-function: linear;
+  -ms-transition-timing-function: linear;
+  -oz-transition-timing-function: linear;
+}
+
+.transition-timing-function-ease-in {
+  transition-timing-function: ease-in;
+  -moz-transition-timing-function: ease-in;
+  -ms-transition-timing-function: ease-in;
+  -oz-transition-timing-function: ease-in;
+}
+
+.transition-timing-function-ease-out {
+  transition-timing-function: ease-out;
+  -moz-transition-timing-function: ease-out;
+  -ms-transition-timing-function: ease-out;
+  -oz-transition-timing-function: ease-out;
+}
+
+.transition-timing-function-ease-in-out {
+  transition-timing-function: ease-in-out;
+  -moz-transition-timing-function: ease-in-out;
+  -ms-transition-timing-function: ease-in-out;
+  -oz-transition-timing-function: ease-in-out;
+}
+
+.transition-timing-function-cubic-bezier {
+  transition-timing-function: cubic-bezier;
+  -moz-transition-timing-function: cubic-bezier;
+  -ms-transition-timing-function: cubic-bezier;
+  -oz-transition-timing-function: cubic-bezier;
+}
+
+.animation-iteration-count-1 {
+  animation-iteration-count: 1;
+  -moz-animation-iteration-count: 1;
+  -ms-animation-iteration-count: 1;
+  -oz-animation-iteration-count: 1;
+}
+
+.animation-iteration-count-infinite {
+  animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
+  -oz-animation-iteration-count: infinite;
+}
+
+.animation-direction-normal {
+  animation-direction: normal;
+  -moz-animation-direction: normal;
+  -ms-animation-direction: normal;
+  -oz-animation-direction: normal;
+}
+
+.animation-direction-reverse {
+  animation-direction: reverse;
+  -moz-animation-direction: reverse;
+  -ms-animation-direction: reverse;
+  -oz-animation-direction: reverse;
+}
+
+.animation-direction-alternate {
+  animation-direction: alternate;
+  -moz-animation-direction: alternate;
+  -ms-animation-direction: alternate;
+  -oz-animation-direction: alternate;
+}
+
+.animation-direction-alternate-reverse {
+  animation-direction: alternate-reverse;
+  -moz-animation-direction: alternate-reverse;
+  -ms-animation-direction: alternate-reverse;
+  -oz-animation-direction: alternate-reverse;
+}
+
+.animation-play-state-running {
+  animation-play-state: running;
+  -moz-animation-play-state: running;
+  -ms-animation-play-state: running;
+  -oz-animation-play-state: running;
+}
+
+.animation-play-state-paused {
+  animation-play-state: paused;
+  -moz-animation-play-state: paused;
+  -ms-animation-play-state: paused;
+  -oz-animation-play-state: paused;
+}
+
+.animation-duration-500 {
+  animation-duration: 500ms;
+  -moz-animation-duration: 500ms;
+  -ms-animation-duration: 500ms;
+  -oz-animation-duration: 500ms;
+}
+
+.animation-duration-1000 {
+  animation-duration: 1000ms;
+  -moz-animation-duration: 1000ms;
+  -ms-animation-duration: 1000ms;
+  -oz-animation-duration: 1000ms;
+}
+
+.animation-duration-1500 {
+  animation-duration: 1500ms;
+  -moz-animation-duration: 1500ms;
+  -ms-animation-duration: 1500ms;
+  -oz-animation-duration: 1500ms;
+}
+
+.animation-duration-2500 {
+  animation-duration: 2500ms;
+  -moz-animation-duration: 2500ms;
+  -ms-animation-duration: 2500ms;
+  -oz-animation-duration: 2500ms;
+}
+
+.animation-duration-3500 {
+  animation-duration: 3500ms;
+  -moz-animation-duration: 3500ms;
+  -ms-animation-duration: 3500ms;
+  -oz-animation-duration: 3500ms;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+  -moz-animation-delay: 500ms;
+  -ms-animation-delay: 500ms;
+  -oz-animation-delay: 500ms;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1000ms;
+  -moz-animation-delay: 1000ms;
+  -ms-animation-delay: 1000ms;
+  -oz-animation-delay: 1000ms;
+}
+
+.animation-delay-1500 {
+  animation-delay: 1500ms;
+  -moz-animation-delay: 1500ms;
+  -ms-animation-delay: 1500ms;
+  -oz-animation-delay: 1500ms;
+}
+
+.animation-delay-2500 {
+  animation-delay: 2500ms;
+  -moz-animation-delay: 2500ms;
+  -ms-animation-delay: 2500ms;
+  -oz-animation-delay: 2500ms;
+}
+
+.animation-delay-3500 {
+  animation-delay: 3500ms;
+  -moz-animation-delay: 3500ms;
+  -ms-animation-delay: 3500ms;
+  -oz-animation-delay: 3500ms;
+}

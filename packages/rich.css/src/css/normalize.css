@@ -1,0 +1,122 @@
+@import "~normalize.css/normalize.css";
+
+
+/* html  body */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  position: relative;
+  padding:  0;
+  margin:   0;
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Set box-sizing globally to handle padding and border widths */
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/* Removes webkit border when the element is on focus and appearance */
+* {
+  outline: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-touch-callout: none;
+  background: linear-gradient(to bottom,transparent,transparent);
+}
+
+label {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* select */
+/* * {
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+} */
+input,textarea {
+  -webkit-user-select: auto;
+  user-select: auto;
+  min-width: 0px;
+}
+
+/* break word prevent width change */
+* {
+  word-break: break-all;
+}
+
+/* text */
+small {
+  font-size: 85%;
+}
+big {
+  font-size: 115%;
+}
+
+/* image */
+img {
+  max-width: 100%;
+  height: auto;
+  -ms-interpolation-mode: bicubic;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* link */
+a {
+  text-decoration: none;
+}
+
+/* Remove max-width style for map TODO: add selectors like Baidu Map, Sogou Map, AutoNavi, .etc */
+#map_canvas, .map_canvas img, embed, object {
+  max-width: none !important;
+}
+
+/* table */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td, th {
+  padding: 0;
+}
+
+button {
+  margin: 0;
+}
+
+input, textarea, select, button {
+  font-size: inherit;
+  border-radius: 0;
+  margin: 0;
+  padding: 0;
+}
+
+textarea {
+  height: auto;
+  resize: vertical;
+}
+
+ol, ul, li {
+  padding: 0;
+  margin: 0
+}
+
+ol, ul{
+  list-style: none;
+}

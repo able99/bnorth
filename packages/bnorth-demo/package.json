@@ -1,0 +1,34 @@
+{
+  "name": "bnorth-demo",
+  "version": "3.0.1",
+  "description": "bnorth demo",
+  "keywords": [
+    "bnorth",
+    "demo",
+    "react"
+  ],
+  "author": "able99 <8846755@qq.com>",
+  "homepage": "https://github.com/able99",
+  "license": "MIT",
+  "files": [
+    "www"
+  ],
+  "publishConfig": {
+    "registry": "http://registry.cnpmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/able99/bnorth.git"
+  },
+  "scripts": {
+    "start": "bnorth-cli server",
+    "build": "bnorth-cli build",
+    "bnorth": "bnorth-cli"
+  },
+  "bugs": {
+    "url": "https://github.com/able99/bnorth/issues"
+  },
+  "dependencies": {
+    "bnroth-core": "^0.0.0"
+  }
+}
