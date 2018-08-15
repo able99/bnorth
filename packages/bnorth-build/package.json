@@ -1,6 +1,6 @@
 {
   "name": "bnorth-build",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "bnorth unique build tool",
   "keywords": [
     "react",
@@ -28,7 +28,10 @@
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "node -v",
+    "postpublish": "open https://npm.taobao.org/sync/bnorth-build"
+  },
   "dependencies": {
     "@babel/cli": "^7.0.0-rc.1",
     "@babel/core": "^7.0.0-rc.1",

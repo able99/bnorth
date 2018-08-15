@@ -1,6 +1,6 @@
 {
   "name": "bnorth-core",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "a react based JS framework that covers the functions of scaffolding, routing, data flow and so on. It uses a plug-in mechanism, powerful and easy to extend",
   "keywords": [
     "bnorth",
@@ -33,5 +33,8 @@
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "url-parse": "^1.4.0"
+  },
+  "devDependencies": {
+    "bnorth-build": "^3.0.2"
   }
 }

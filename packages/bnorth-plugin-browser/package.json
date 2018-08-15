@@ -1,15 +1,14 @@
 {
-  "name": "bnorth-components",
+  "name": "bnorth-plugin-browser",
   "version": "3.0.2",
-  "description": "bnorth, components, react",
+  "description": "bnorth plugin for browser",
   "keywords": [
     "bnorth",
-    "components",
-    "react",
-    "rich.css"
+    "plugin",
+    "browser"
   ],
-  "author": "able99 <8846755@qq.com>",
-  "homepage": "https://github.com/able99",
+  "author": "hubn <8846755@qq.com>",
+  "homepage": "https://github.com/able99/",
   "license": "MIT",
   "main": "lib/index.js",
   "files": [
@@ -24,16 +23,13 @@
   },
   "scripts": {
     "build": "bnorth-build dev",
-    "postpublish": "open https://npm.taobao.org/sync/bnorth"
+    "postpublish": "open https://npm.taobao.org/sync/bnorth-plugin-browser"
   },
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"
   },
   "dependencies": {
-    "classnames": "^2.2.6",
-    "dom-helpers": "^3.3.1",
-    "react-transition-group": "^2.4.0",
-    "react-waypoint": "^8.0.3"
+    "url-parse": "^1.4.1"
   },
   "devDependencies": {
     "bnorth-build": "^3.0.2"

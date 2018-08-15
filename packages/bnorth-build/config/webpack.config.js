@@ -195,6 +195,7 @@ function initWebpackConfig() {
     },
     resolve: { 
       modules: [
+        'node_modules',
         appNodeModules,
         bnorhtCoreNodeModules,
         ownNodeModules,

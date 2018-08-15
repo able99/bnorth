@@ -1,6 +1,9 @@
 {
   "name": "bnorth",
   "private": true,
+  "scripts": {
+    "lerna": "lerna"
+  },
   "devDependencies": {
     "lerna": "^3.0.3"
   }

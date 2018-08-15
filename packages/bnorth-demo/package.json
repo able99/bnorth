@@ -1,6 +1,7 @@
 {
+  "private": true,
   "name": "bnorth-demo",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "bnorth demo",
   "keywords": [
     "bnorth",
@@ -21,14 +22,21 @@
     "url": "git+https://github.com/able99/bnorth.git"
   },
   "scripts": {
-    "start": "bnorth-cli server",
-    "build": "bnorth-cli build",
+    "start": "bnorth-build server",
+    "build": "bnorth-build build",
     "bnorth": "bnorth-cli"
   },
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"
   },
   "dependencies": {
-    "bnroth-core": "^0.0.0"
+    "bnorth-components": "^3.0.2",
+    "bnorth-core": "^3.0.2",
+    "bnorth-plugin-network": "^3.0.2",
+    "bnorth-plugin-request": "^3.0.2",
+    "rich.css": "^3.0.2"
+  },
+  "devDependencies": {
+    "bnorth-build": "^3.0.2"
   }
 }

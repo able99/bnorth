@@ -2,8 +2,8 @@
 // import "babel-polyfill";
 
 /* rich css */
-// import 'rich.css/css/normalize.css';
-// import genCss from 'rich.css';
+import 'rich.css/css/normalize.css';
+import genCss from 'rich.css';
 
 import App from 'bnorth-core';
 import routes from './routes';
@@ -23,7 +23,7 @@ let app = new App({
   plugin:{
     onAppStarting: async ()=>{
       /* rich css */
-      // genCss();
+      genCss();
     },
 
     onAppStartConfig: ()=>{
@@ -32,15 +32,8 @@ let app = new App({
   },
 })
 
-/* bnorth plugin */ 
-// app.plugins.add(pluginNetwork);
-// app.plugins.add(pluginRequest);
-// app.plugins.add(pluginValidate);
+app.plugins.add(require('bnorth-plugin-network'));
+app.plugins.add(require('bnorth-plugin-request'));
 
-/* component plugin */
-// app.plugins.add(pluginNotice);
-// app.plugins.add(pluginModal);
-// app.plugins.add(pluginLoading);
-// app.plugins.add(pluginMask);
 
 app.start();
