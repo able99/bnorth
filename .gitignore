@@ -1,5 +1,6 @@
 #project
 /.vscode
+/bnorth.code-workspace
 
 # dependencies
 node_modules/

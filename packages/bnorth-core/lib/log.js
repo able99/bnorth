@@ -11,10 +11,6 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-/**
- * app 的日志管理器模块
- * @class
- */
 var Log =
 /*#__PURE__*/
 function () {

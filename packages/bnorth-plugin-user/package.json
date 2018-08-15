@@ -24,6 +24,7 @@
     "url": "git+https://github.com/able99/bnorth.git"
   },
   "scripts": {
+    "start": "bnorth-build watch",
     "build": "bnorth-build dev",
     "postpublish": "open https://npm.taobao.org/sync/bnorth-plugin-user"
   },
@@ -32,5 +33,6 @@
   },
   "devDependencies": {
     "bnorth-build": "^3.0.2"
-  }
+  },
+  "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }

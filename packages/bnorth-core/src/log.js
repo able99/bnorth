@@ -1,8 +1,3 @@
-/**
- * app 的日志管理器模块
- * @class
- */
-
 export default class Log {
   constructor(app) {
     this.app = app;

@@ -1,7 +1,7 @@
 {
   "name": "bnorth-core",
   "version": "3.0.2",
-  "description": "a react based JS framework that covers the functions of scaffolding, routing, data flow and so on. It uses a plug-in mechanism, powerful and easy to extend",
+  "description": "A react based JS framework that covers the functions of scaffolding, routing, data flow and so on. It uses a plug-in mechanism, powerful and easy to extend",
   "keywords": [
     "bnorth",
     "react"
@@ -21,6 +21,7 @@
     "url": "git+https://github.com/able99/bnorth.git"
   },
   "scripts": {
+    "start": "bnorth-build watch",
     "build": "bnorth-build dev",
     "postpublish": "open https://npm.taobao.org/sync/bnorth"
   },
@@ -36,5 +37,6 @@
   },
   "devDependencies": {
     "bnorth-build": "^3.0.2"
-  }
+  },
+  "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }

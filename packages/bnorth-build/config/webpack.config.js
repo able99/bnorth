@@ -41,13 +41,16 @@ function getRules() {
   });
 
   // js
-  // rules.push({
-  //   test: /\.(js|jsx)$/,
-  //   enforce: "pre",
-  //   include: paths.appSrc, 
-  //   exclude: /node_modules/,
-  //   use: [ "eslint" ],
-  // });
+  rules.push({
+    test: /\.(js|jsx)$/,
+    enforce: "pre",
+    include: appSrc, 
+    exclude: /node_modules/,
+    loader:"eslint",
+    options: {
+      configFile: __dirname+'/eslintrc'
+    },
+  });
 
   rules.push({
     test: /\.(js|jsx)$/,

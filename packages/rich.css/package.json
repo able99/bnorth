@@ -47,5 +47,6 @@
   },
   "devDependencies": {
     "bnorth-build": "*"
-  }
+  },
+  "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }
