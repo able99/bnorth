@@ -89,6 +89,7 @@ module.exports = function run(type) {
 
   choosePort(serverConfig.host, serverConfig.port).then(port=>{
     if (port === null) return;
+    serverConfig.port = port;
     try { doRun(type, serverConfig); } catch (e) { console.log(e) }
   });
 }

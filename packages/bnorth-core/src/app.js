@@ -5,6 +5,7 @@ import Config from './config';
 import Plugins from './plugins';
 import State from './state';
 import Page from './page';
+import View from './view';
 import Router from './router';
 import Context from './context';
 import Render from './render';
@@ -36,6 +37,7 @@ export default class App {
     this.State = State;
     this.states = {};
     this.Page = Page;
+    this.View = View;
     this.Router = this.options.Router||Router;
     this.router = new this.Router(this, options);
     this.Render = this.options.Render||Render;
