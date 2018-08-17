@@ -102,7 +102,7 @@ export default class Page extends React.Component {
   // page life circle
   // ---------------------------
   componentDidMount() {
-    let { app, name, active } = this.props;
+    let { app, name, route:{active} } = this.props;
     app.log.info('page did mount', name);
 
     this._offKeyEvent = app.keyboard.on('keydown', e=>this.handleKeyEvent(e), {pageName: name});
@@ -123,7 +123,7 @@ export default class Page extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    let { app, active } = this.props;
+    let { app, route:{active} } = this.props;
 
     if(prevProps.active !== active) {
       app.event.emitSync(this, active?'onPageActive':'onPageInactive', this, false);
@@ -147,48 +147,34 @@ export default class Page extends React.Component {
   // page render
   // ---------------------------
   render() {
-    let {
-      app, context,
-      name, active, focus, frame,
-      route, match, 
-      views, embed, children,
-      ...props
-    } = this.props;
+    let { context, app, name, route, views, embeds, ...props } = this.props;
     app.log.info('page render', name);
+
+    let { active, embed } = route;
     this._actionNum = 0;
+    let componentProps = { app, name, route, page: this, frame: this.frame, ...this._getStateObjs() }
+    embeds = embeds.map(v=>cloneElement(v, { ...v.props, frame: this.frame }));
 
-
-    let componentProps = {
-      app, 
-      name, page: this, frame: this.frame||frame, route, match, 
-      ...this._getStateObjs(),
-    }
-
-    let ret = (
-      <route.component {...props} {...componentProps}>
-        {React.Children.map(children, children=>(
-          cloneElement(children, {
-            ...children.props,
-            frame: this.frame,
-          })
-        ))}
-      </route.component>
-    );
     if(!embed) {
       let styleSet = {
         position: 'absolute', 
         top: 0, left: 0, bottom: 0, right: 0,
         visibility: active?'visible':'hidden',
       }
-      let refFrame = e=>{
-        if(!e)return;
-        let update=!(this.frame);
-        this.frame=e;
-        if(update)this.forceUpdate()
-      }
-      ret = <main data-page={name} ref={refFrame} style={styleSet}>{ret}</main>
+      let refFrame = e=>{ if(!e)return; let update=!(this.frame); this.frame=e; if(update)this.forceUpdate() }
+      return (
+        <main data-page={name} ref={refFrame} style={styleSet}>
+          <route.component {...props} {...componentProps}>{embeds}</route.component>
+          {views}
+        </main>
+      )
+    }else{
+      return (
+        <React.Fragment>
+          <route.component {...props} {...componentProps}>{embeds}</route.component>
+          {views}
+        </React.Fragment>
+      )
     }
-
-    return ret;
   }
 }

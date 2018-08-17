@@ -9,15 +9,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+
+var _objectSpread3 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -35,106 +37,187 @@ var _createHashHistory = _interopRequireDefault(require("history/createHashHisto
 
 var _path = require("path");
 
+/*
+1.lasy loader 
+2.page error
+3.no match
+4.navigator
+*/
 var RouterComponent =
 /*#__PURE__*/
 function (_React$Component) {
   (0, _inherits2.default)(RouterComponent, _React$Component);
 
-  function RouterComponent() {
+  function RouterComponent(props) {
+    var _this;
+
     (0, _classCallCheck2.default)(this, RouterComponent);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(RouterComponent).apply(this, arguments));
+    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(RouterComponent).call(this, props));
+    _this.pageItems = [];
+    _this.viewItems = [];
+    return _this;
   }
 
   (0, _createClass2.default)(RouterComponent, [{
     key: "_handleRouterUpdate",
     value: function _handleRouterUpdate() {
-      console.log('_handleRouterUpdate');
       var app = this.props.app;
       var router = app.router;
       var history = router.history;
-      var routes = router.routes;
-      var pathname = history.location.pathname;
-      var pathRoutes = [];
-      var pages = [];
-      var Page = app.Page;
-      var View = app.View;
-      var views = [];
-      var parentName = ''; // view
-      // -----------
+      var pageItems = [];
+      var viewItems = [];
+      var parentName = '';
 
-      Object.entries(router.views || {}).forEach(function (_ref, i, a) {
-        var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-            k = _ref2[0],
-            _ref2$ = _ref2[1],
-            content = _ref2$.content,
-            _ref2$$options = _ref2$.options,
-            options = _ref2$$options === void 0 ? {} : _ref2$$options;
+      function getPageByName(pageName, items) {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-        var last = i >= a.length - 1;
+        try {
+          for (var _iterator = items[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var i = _step.value;
+            if (i.name === pageName) return i;
 
-        var view = _react.default.createElement(View, (0, _extends2.default)({}, options, {
-          app: app,
-          key: k
-        }), content);
+            if (i.embeds) {
+              var _iteratorNormalCompletion2 = true;
+              var _didIteratorError2 = false;
+              var _iteratorError2 = undefined;
 
-        views.push(view);
-      }); // page
-      // -----------
+              try {
+                for (var _iterator2 = i.embeds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                  var ii = _step2.value;
+                  if (ii.name === pageName) return i;
+                }
+              } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+                    _iterator2.return();
+                  }
+                } finally {
+                  if (_didIteratorError2) {
+                    throw _iteratorError2;
+                  }
+                }
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+      } // page
 
-      ['/'].concat((0, _toConsumableArray2.default)(pathname.split('/').filter(function (v) {
+
+      ['/'].concat((0, _toConsumableArray2.default)(history.location.pathname.split('/').filter(function (v) {
         return v;
       }))).forEach(function (v) {
         if (v.startsWith('$')) {
-          var pathRoute = pathRoutes[pathRoutes.length - 1];
-          if (pathRoute && pathRoute.params) pathRoute.params.push(v.slice(1));
+          var item = pageItems.slice(-1)[0];
+          if (item) item.params.push(decodeURIComponent(v.slice(1)));
         } else {
-          pathRoutes.push({
-            name: v,
-            params: []
+          if (!router.routes[v]) {
+            return;
+          }
+
+          var embeds = [];
+          (router.routes[v].embeds || []).forEach(function (vv) {
+            if (!router.routes[vv]) {
+              return;
+            }
+
+            embeds.push({
+              name: '#' + (0, _path.join)(parentName, v) + '|' + vv,
+              parentName: '#' + (0, _path.join)(parentName, v),
+              route: router.routes[vv],
+              params: [],
+              active: true,
+              embed: embed,
+              views: []
+            });
           });
+          pageItems.push({
+            name: '#' + (0, _path.join)(parentName, v),
+            parentName: '#' + parentName,
+            route: router.routes[v],
+            params: [],
+            viewItems: [],
+            embeds: embeds
+          });
+          parentName = (0, _path.join)(parentName, v);
         }
-      });
-      pathRoutes.forEach(function (v, i, a) {
-        var route = routes[v.name];
+      }); // view
 
-        if (!route) {
-          return;
+      Object.entries(router.views || {}).forEach(function (_ref) {
+        var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+            id = _ref2[0],
+            _ref2$ = _ref2[1],
+            _ref2$$content = _ref2$.content,
+            content = _ref2$$content === void 0 ? {} : _ref2$$content,
+            _ref2$$options = _ref2$.options,
+            options = _ref2$$options === void 0 ? {} : _ref2$$options;
+
+        var item = {
+          id: id,
+          content: content,
+          options: options
+        };
+        var pageName = options.$pageName;
+
+        if (pageName) {
+          var page = getPageByName(pageName, pageItems);
+          if (page) page.viewItems.push(item);
+        } else {
+          viewItems.push(item);
         }
+      }); // focus
 
-        var last = i >= a.length - 1;
-        var key = (0, _path.join)(parentName, v.name);
-        var pname = '#' + key;
-        parentName = key;
-        var ppathname = v;
-        var views = []; //this.renderViews(key);
-
-        var embeds = [];
-
-        var page = _react.default.createElement(Page, {
-          name: pname,
-          route: route,
-          active: last,
-          match: {
-            active: last
-          },
-          views: views,
-          app: app,
-          key: pname
-        }, embeds);
-
-        pages.push(page);
+      var focusView = viewItems.find(function (v) {
+        return v.options.$isModal;
       });
-      this.views = views;
-      this.pages = pages;
-      this.forceUpdate();
+      if (focusView) focusView.options.$focus = true;
+      var activePage = pageItems.slice(-1)[0];
+
+      if (activePage) {
+        activePage.active = true;
+
+        if (!focusView) {
+          var pageFocusView = Array.from(activePage.viewItems).reverse().find(function (v) {
+            return v.options.$isModal;
+          });
+
+          if (pageFocusView) {
+            pageFocusView.options.$focus = true;
+          } else {
+            activePage.focus = true;
+          }
+        }
+      } // update
+
+
+      this.pageItems = pageItems;
+      this.viewItems = viewItems;
+      return this.forceUpdate();
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this = this;
+      var _this2 = this;
 
       this.eventOffRouterUpdate = this.props.app.event.on(this.props.app, 'onRouterUpdate', function () {
-        return _this._handleRouterUpdate();
+        return _this2._handleRouterUpdate();
       });
     }
   }, {
@@ -145,7 +228,50 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      return _react.default.createElement(_react.default.Fragment, null, this.pages, this.views);
+      var app = this.props.app;
+      return _react.default.createElement(_react.default.Fragment, null, this.pageItems.map(function (_ref3) {
+        var name = _ref3.name,
+            parentName = _ref3.parentName,
+            route = _ref3.route,
+            params = _ref3.params,
+            active = _ref3.active,
+            focus = _ref3.focus,
+            embed = _ref3.embed,
+            viewItems = _ref3.viewItems,
+            embeds = _ref3.embeds;
+        var props = {
+          app: app,
+          key: name,
+          name: name,
+          route: (0, _objectSpread3.default)({}, route, {
+            parentName: parentName,
+            params: params,
+            active: active,
+            focus: focus,
+            embed: embed
+          }),
+          views: viewItems,
+          embeds: embeds
+        };
+        return _react.default.createElement(app.Page, props);
+      }), this.viewItems.map(function (_ref4) {
+        var _objectSpread2;
+
+        var id = _ref4.id,
+            Component = _ref4.content,
+            _ref4$options = _ref4.options;
+        _ref4$options = _ref4$options === void 0 ? {} : _ref4$options;
+        var $pageName = _ref4$options.$pageName,
+            $isContentComponent = _ref4$options.$isContentComponent,
+            $isModal = _ref4$options.$isModal,
+            $isRef = _ref4$options.$isRef,
+            $focus = _ref4$options.$focus,
+            restOptions = (0, _objectWithoutProperties2.default)(_ref4$options, ["$pageName", "$isContentComponent", "$isModal", "$isRef", "$focus"]);
+        var props = (0, _objectSpread3.default)({}, $isContentComponent ? {} : Component.porps, restOptions, (_objectSpread2 = {
+          key: id
+        }, (0, _defineProperty2.default)(_objectSpread2, 'data-app', app), (0, _defineProperty2.default)(_objectSpread2, 'data-view-$id', id), (0, _defineProperty2.default)(_objectSpread2, 'data-$pageName', $pageName), _objectSpread2));
+        return $isContentComponent ? _react.default.createElement(Component, props) : (0, _typeof2.default)(Component) === 'object' && Component.type ? (0, _react.cloneElement)(Component, props) : Component;
+      }));
     }
   }]);
   return RouterComponent;
@@ -157,35 +283,34 @@ function () {
   // constructor
   // ----------------------------------------
   function Router(app) {
-    var _this2 = this;
+    var _this3 = this;
 
     (0, _classCallCheck2.default)(this, Router);
     this.app = app;
     this.routes = {};
     this.views = {};
     this._pages = {};
-    this._views = {};
-    this._viewRefNum = 0;
+    this._viewIdNum = 0;
     this._historyStackCount = 0, this.history = (0, _createHashHistory.default)();
     this.unlisten = this.history.listen(function (location, action) {
       app.log.info('router location', location);
-      if (action === 'PUSH') _this2._historyStackCount++;
-      if (action === 'POP') _this2._historyStackCount = Math.max(--_this2._historyStackCount, 0);
+      if (action === 'PUSH') _this3._historyStackCount++;
+      if (action === 'POP') _this3._historyStackCount = Math.max(--_this3._historyStackCount, 0);
 
-      _this2.update();
+      _this3.update();
     });
     this.app.event.on(this.app, 'onAppStartRender', function () {
-      _this2.update();
+      _this3.update();
     });
     this.app.event.on(this.app, 'onPageAdd', function (name, page) {
-      return page && !page.props.embed && _this2._addPage(name, page);
+      page && !page.props.route.embed && _this3._addPage(name, page);
     });
     this.app.event.on(this.app, 'onPageRemove', function (name, page) {
-      return page && !page.props.embed && _this2._removePage(name);
+      page && !page.props.route.embed && _this3._removePage(name);
     });
     this.app.event.on(this.app, 'onAppStartRouter', function () {
-      return _this2.app.render.component = _react.default.createElement(RouterComponent, {
-        app: _this2.app
+      return _this3.app.render.component = _react.default.createElement(RouterComponent, {
+        app: _this3.app
       });
     });
   }
@@ -205,10 +330,18 @@ function () {
   }, {
     key: "_removePage",
     value: function _removePage(name) {
+      var _this4 = this;
+
       var page = this.getPage(name);
 
       if (page) {
-        this.removePageViews(page.name);
+        Object.entries(this.views).forEach(function (_ref5) {
+          var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
+              id = _ref6[0],
+              $pageName = _ref6[1].options.$pageName;
+
+          return $pageName === name && _this4.removeView(id);
+        });
         delete this._pages[page.name];
       }
     }
@@ -231,28 +364,25 @@ function () {
     value: function addView(content) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       if (!content) return;
-      var page = options.page,
-          ref = options.$ref;
-      ref = ref || "".concat(++this._viewRefNum, "@").concat(page ? page.name : '#');
-      options.$ref = ref;
-      this.views[ref] = {
+      options.$id = options.$id || "".concat(++this._viewIdNum, "@").concat(options.$pageName ? options.$pageName : '#');
+      this.views[options.$id] = {
         content: content,
-        options: options
+        options: options,
+        $id: options.$id
       };
       this.update();
-      return ref;
+      return options.$id;
     }
   }, {
     key: "removeView",
-    value: function removeView(ref) {
-      delete this.views[ref];
+    value: function removeView($id) {
+      delete this.views[$id];
       this.update();
     }
   }, {
     key: "getView",
-    value: function getView(ref) {
-      return this.views[ref];
-      this.update();
+    value: function getView($id) {
+      return this.views[$id];
     } // router navigator
     // ----------------------------------------
 
@@ -271,9 +401,9 @@ function () {
       args.forEach(function (v) {
         if ((0, _typeof2.default)(v) === 'object') {
           if (v.pathname) pathnames.push(v.pathname);
-          if (v.query) query = (0, _objectSpread2.default)({}, query, v.query);
+          if (v.query) query = (0, _objectSpread3.default)({}, query, v.query);
           if (v.hash) hash = (0, _toConsumableArray2.default)(hash).concat((0, _toConsumableArray2.default)(v.hash));
-          pathinfo = (0, _objectSpread2.default)({}, pathinfo, {
+          pathinfo = (0, _objectSpread3.default)({}, pathinfo, {
             v: v
           });
         } else {
@@ -287,12 +417,12 @@ function () {
     }
   }, {
     key: "_pathinfoTrans",
-    value: function _pathinfoTrans(_ref3) {
-      var _ref4 = (0, _slicedToArray2.default)(_ref3, 4),
-          pathinfo = _ref4[0],
-          pathnames = _ref4[1],
-          query = _ref4[2],
-          hash = _ref4[3];
+    value: function _pathinfoTrans(_ref7) {
+      var _ref8 = (0, _slicedToArray2.default)(_ref7, 4),
+          pathinfo = _ref8[0],
+          pathnames = _ref8[1],
+          query = _ref8[2],
+          hash = _ref8[3];
 
       var prevPathname;
       var upCount = pathnames.filter(function (v) {
@@ -311,10 +441,10 @@ function () {
 
       var pathname = pathinfo.pathname || _path.join.apply(void 0, [prevPathname].concat((0, _toConsumableArray2.default)(pathnames)));
 
-      var search = pathinfo.pathname || Object.entries(query).map(function (_ref5) {
-        var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
-            k = _ref6[0],
-            v = _ref6[1];
+      var search = pathinfo.pathname || Object.entries(query).map(function (_ref9) {
+        var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
+            k = _ref10[0],
+            v = _ref10[1];
 
         return k + '=' + v;
       }).join('&');

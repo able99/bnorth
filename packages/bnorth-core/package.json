@@ -30,10 +30,8 @@
   },
   "dependencies": {
     "history": "^4.7.2",
-    "path-to-regexp": "^2.2.1",
     "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "url-parse": "^1.4.0"
+    "react-dom": "^16.3.2"
   },
   "devDependencies": {
     "bnorth-build": "^3.0.2"

@@ -29,8 +29,6 @@ var _state = _interopRequireDefault(require("./state"));
 
 var _page = _interopRequireDefault(require("./page"));
 
-var _view = _interopRequireDefault(require("./view"));
-
 var _router = _interopRequireDefault(require("./router"));
 
 var _context2 = _interopRequireDefault(require("./context"));
@@ -67,7 +65,6 @@ function () {
     this.State = _state.default;
     this.states = {};
     this.Page = _page.default;
-    this.View = _view.default;
     this.Router = this.options.Router || _router.default;
     this.router = new this.Router(this, options);
     this.Render = this.options.Render || _render.default;

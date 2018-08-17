@@ -186,7 +186,7 @@ function (_React$Component) {
       var _this$props = this.props,
           app = _this$props.app,
           name = _this$props.name,
-          active = _this$props.active;
+          active = _this$props.route.active;
       app.log.info('page did mount', name);
       this._offKeyEvent = app.keyboard.on('keydown', function (e) {
         return _this4.handleKeyEvent(e);
@@ -215,7 +215,7 @@ function (_React$Component) {
     value: function componentDidUpdate(prevProps, prevState) {
       var _this$props3 = this.props,
           app = _this$props3.app,
-          active = _this$props3.active;
+          active = _this$props3.route.active;
 
       if (prevProps.active !== active) {
         app.event.emitSync(this, active ? 'onPageActive' : 'onPageInactive', this, false);
@@ -268,34 +268,29 @@ function (_React$Component) {
       var _this5 = this;
 
       var _this$props4 = this.props,
-          app = _this$props4.app,
           context = _this$props4.context,
+          app = _this$props4.app,
           name = _this$props4.name,
-          active = _this$props4.active,
-          focus = _this$props4.focus,
-          frame = _this$props4.frame,
           route = _this$props4.route,
-          match = _this$props4.match,
           views = _this$props4.views,
-          embed = _this$props4.embed,
-          children = _this$props4.children,
-          props = (0, _objectWithoutProperties2.default)(_this$props4, ["app", "context", "name", "active", "focus", "frame", "route", "match", "views", "embed", "children"]);
+          embeds = _this$props4.embeds,
+          props = (0, _objectWithoutProperties2.default)(_this$props4, ["context", "app", "name", "route", "views", "embeds"]);
       app.log.info('page render', name);
+      var active = route.active,
+          embed = route.embed;
       this._actionNum = 0;
       var componentProps = (0, _objectSpread2.default)({
         app: app,
         name: name,
-        page: this,
-        frame: this.frame || frame,
         route: route,
-        match: match
+        page: this,
+        frame: this.frame
       }, this._getStateObjs());
-
-      var ret = _react.default.createElement(route.component, (0, _extends2.default)({}, props, componentProps), _react.default.Children.map(children, function (children) {
-        return (0, _react.cloneElement)(children, (0, _objectSpread2.default)({}, children.props, {
+      embeds = embeds.map(function (v) {
+        return (0, _react.cloneElement)(v, (0, _objectSpread2.default)({}, v.props, {
           frame: _this5.frame
         }));
-      }));
+      });
 
       if (!embed) {
         var styleSet = {
@@ -314,14 +309,14 @@ function (_React$Component) {
           if (update) _this5.forceUpdate();
         };
 
-        ret = _react.default.createElement("main", {
+        return _react.default.createElement("main", {
           "data-page": name,
           ref: refFrame,
           style: styleSet
-        }, ret);
+        }, _react.default.createElement(route.component, (0, _extends2.default)({}, props, componentProps), embeds), views);
+      } else {
+        return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(route.component, (0, _extends2.default)({}, props, componentProps), embeds), views);
       }
-
-      return ret;
     }
   }, {
     key: "name",
