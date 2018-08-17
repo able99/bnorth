@@ -4,11 +4,32 @@ import { join } from 'path';
 
 
 /*
-1.lasy loader 
-2.page error
-3.no match
+-1.lasy loader 
+-2.page error
+-3.no match
 4.navigator
+5.param,query
+6.page view
+7.embeds
 */
+let PageLoading = props=>{
+  return (
+    <div style={{padding: 8}}>loading...</div>
+  )
+}
+
+let PageError = props=>{
+  let { app, match:{params:{title, msg}={}}={} } = props;
+  return (
+    <div style={{padding: 8}}>
+      <div> error: <a style={{padding: 4}} onClick={()=>app.router.back()}>[back]</a> <a style={{padding: 4}} onClick={()=>app.router.goRoot()}>[home]</a> </div>
+      <div>{title}</div>
+      <hr/>
+      <p>{msg}</p>
+    </div>
+  )
+}
+
 class RouterComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -24,38 +45,61 @@ class RouterComponent extends React.Component {
     let viewItems = [];
     let parentName = '';
 
-    function getPageByName(pageName, items) {
-      for(let i of items) {
+    let getPageByName = pageName=>{
+      for(let i of pageItems) {
         if(i.name===pageName) return i;
         if(i.embeds) for(let ii of i.embeds) {
           if(ii.name===pageName) return i;
         }
       }
     }
+
+    let getRoute = pathname=>{
+      let paths = pathname.split(':');
+      let match = Object.entries(router.routes).find(([k,v])=>k.split(':')[0]===paths[0]);
+      if(!match) return [];
+      let items = match[0].split(':');
+      let routeName = items[0];
+      items = items.slice(1);
+      paths = paths.slice(1);
+      if(items.filter(v=>!v.endsWith('?')).length>paths.length) return [];
+      items = items.map(v=>v.endsWith('?')?v.slice(0,-1):v);
+      let route = match[1];
+
+      let params = {};
+      paths.forEach((path,i)=>{
+        params[items[i]||i] = encodeURIComponent(path);
+      })
+      return { routeName, params, route };
+    }
     
     // page
-    ['/', ...history.location.pathname.split('/').filter(v=>v)].forEach(v=>{
-      if(v.startsWith('$')){
-        let item = pageItems.slice(-1)[0];
-        if(item) item.params.push(decodeURIComponent(v.slice(1)));
-      }else{
-        if(!router.routes[v]){ return }
-
-        let embeds = [];
-        (router.routes[v].embeds||[]).forEach(vv=>{
-          if(!router.routes[vv]){ return }
-          embeds.push({ 
-            name: '#'+join(parentName,v)+'|'+vv, parentName: '#'+join(parentName,v), 
-            route: router.routes[vv], params: [], active: true,  embed,
-            views: [] });
-        })
-
-        pageItems.push({ 
-          name: '#'+join(parentName,v), parentName: '#'+parentName, 
-          route: router.routes[v], params: [], 
-          viewItems: [], embeds });
-        parentName = join(parentName,v);
+    ((history.location.pathname[1]===':'?'':'/')+history.location.pathname).split(/(?<!^)\//).filter(v=>v).forEach(v=>{
+      let { routeName, params, route } = getRoute(v);
+      if(!routeName){ 
+        app.render.panic('router nomatch', v);
+        return;
       }
+
+      let embeds = [];
+      (route.embeds||[]).forEach(vv=>{
+        if(!router.routes[vv]){ 
+          app.render.panic('router nomatch', vv);
+          return;
+        }
+        embeds.push({ 
+          name: '#'+join(parentName,v)+'|'+vv, parentName: '#'+join(parentName,v), 
+          route: router.routes[vv], params: [], active: true,  embed,
+          views: [] 
+        });
+      })
+
+      pageItems.push({ 
+        name: '#'+join(parentName,routeName), parentName: '#'+parentName, 
+        route, params, viewItems: [], embeds 
+      });
+
+      parentName = join(parentName,v);
     })
 
     // view
@@ -64,7 +108,7 @@ class RouterComponent extends React.Component {
       let item = { id, content, options };
       let pageName = options.$pageName;
       if(pageName){
-        let page = getPageByName(pageName, pageItems);
+        let page = getPageByName(pageName);
         if(page) page.viewItems.push(item);
       }else{
         viewItems.push(item);
@@ -108,7 +152,17 @@ class RouterComponent extends React.Component {
       <React.Fragment>
         {this.pageItems.map(({name, parentName, route, params, active, focus, embed, viewItems, embeds})=>{
           let props = { app, key: name, name, route: { ...route, parentName, params, active, focus, embed }, views: viewItems, embeds};
-          return <app.Page {...props} />;
+          if(route.loader){
+            route.loader(app).then(v=>{
+              Object.assign(route, v, {loader: null});
+              this._handleRouterUpdate();
+            })
+            return <Router.PageLoading key={name} />;
+          }else if(typeof route.component==='function'){
+            return <app.Page key={name} {...props} />;
+          }else{
+            return <Router.PageError message="wrong component" />
+          }
         })}
         {this.viewItems.map(({id, content:Component, options:{$pageName, $isContentComponent, $isModal, $isRef, $focus, ...restOptions}={}})=>{
           let props = {
@@ -132,7 +186,7 @@ export default class Router {
   // ----------------------------------------
   constructor(app) {
     this.app = app;
-    this.routes = {};
+    this._routes = {};
     this.views = {};
     this._pages = {};
     this._viewIdNum = 0;
@@ -150,11 +204,23 @@ export default class Router {
     });
     this.app.event.on(this.app, 'onPageAdd', (name, page)=>{page&&!page.props.route.embed&&this._addPage(name, page)});
     this.app.event.on(this.app, 'onPageRemove', (name, page)=>{page&&!page.props.route.embed&&this._removePage(name)});
-    this.app.event.on(this.app, 'onAppStartRouter', ()=>(this.app.render.component = <RouterComponent app={this.app} />));
+    this.app.event.on(this.app, 'onAppStartRouter', ()=>(this.app.render.component = <Router.RouterComponent app={this.app} />));
   }
 
   update() {
     this.app.event.emit(this.app, 'onRouterUpdate');
+  }
+
+  set routes(routes) {
+    this._routes = {
+      ...{'err': {name: 'err', component: Router.PageError}},
+      ...routes
+    };
+    this[`goErr`] = (msg, title, options)=>this.push('/err', app.utils.message2String(msg), app.utils.message2String(title));
+  }
+
+  get routes() {
+    return this._routes;
   }
   
 
@@ -271,3 +337,8 @@ export default class Router {
     replace?this.replace(pathinfo):this.push(pathinfo);
   }
 }
+
+
+Router.RouterComponent = RouterComponent;
+Router.PageLoading = PageLoading;
+Router.PageError = PageError;

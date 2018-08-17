@@ -33,8 +33,10 @@ function () {
 
   (0, _createClass2.default)(Render, [{
     key: "critical",
-    value: function critical(message, _ref) {
-      var title = _ref.title;
+    value: function critical(message) {
+      var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          title = _ref.title;
+
       if (this.stopForRenderError) return;
       this.stopForRenderError = true;
 
@@ -42,14 +44,18 @@ function () {
     }
   }, {
     key: "panic",
-    value: function panic(message, _ref2) {
-      var title = _ref2.title;
+    value: function panic(message) {
+      var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          title = _ref2.title;
+
       app.router.goErr(message, title);
     }
   }, {
     key: "error",
-    value: function error(message, _ref3) {
-      var title = _ref3.title;
+    value: function error(message) {
+      var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+          title = _ref3.title;
+
       alert(app.utils.message2String(message));
     }
   }, {

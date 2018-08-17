@@ -5,8 +5,11 @@ export default {
     component: require('./pages/home'),
     controller: require('./pages/_home'),
   },
-  'a': {
-    component: props=><div>page a</div>,
+  'require_param:param1': {
+    component: props=><div>page require_param {JSON.stringify(props.route.params)}</div>,
+  },
+  'option_param:param1?:param2?': {
+    component: props=><div>page option_param {JSON.stringify(props.route.params)}</div>,
   },
   'b': {
     component: props=><div>page b</div>,
@@ -14,10 +17,10 @@ export default {
   'c': {
     loader: ()=>{
       return new Promise((resolve,reject)=>setTimeout(()=>{
-        return {
+        resolve({
           component: props=><div>page c</div>,
-        }
-      },5000));
+        })
+      },1000));
     }
   }
 }

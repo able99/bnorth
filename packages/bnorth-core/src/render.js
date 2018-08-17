@@ -17,14 +17,14 @@ export default class Render {
   }
 
 
-  critical(message, {title}) {
+  critical(message, {title}={}) {
     if(this.stopForRenderError) return; this.stopForRenderError = true;
     ReactDOM.render(<div><h3>{title?app.utils.message2String(title):'error'}</h3><pre>{app.utils.message2String(message)}</pre></div>, this.domRoot);
   }
-  panic(message, {title}) {
+  panic(message, {title}={}) {
     app.router.goErr(message, title);
   }
-  error(message, {title}) { alert(app.utils.message2String(message)); }
+  error(message, {title}={}) { alert(app.utils.message2String(message)); }
   notice(content, options) { alert(app.utils.message2String(content)); }
   mask(show, options) {}
   loading(show, options) {}
