@@ -7,10 +7,12 @@ import { join } from 'path';
 -1.lasy loader 
 -2.page error
 -3.no match
-4.navigator
+-4.navigator
 5.param,query
 6.page view
 7.embeds
+8.block
+9.goXXX
 */
 let PageLoading = props=>{
   return (
@@ -89,14 +91,14 @@ class RouterComponent extends React.Component {
         }
         embeds.push({ 
           name: '#'+join(parentName,v)+'|'+vv, parentName: '#'+join(parentName,v), 
-          route: router.routes[vv], params: [], active: true,  embed,
+          route: router.routes[vv], params: [], query: history.location.query, active: true,  embed,
           views: [] 
         });
       })
 
       pageItems.push({ 
         name: '#'+join(parentName,routeName), parentName: '#'+parentName, 
-        route, params, viewItems: [], embeds 
+        route, params, query: history.location.query, viewItems: [], embeds 
       });
 
       parentName = join(parentName,v);
@@ -150,8 +152,8 @@ class RouterComponent extends React.Component {
 
     return (
       <React.Fragment>
-        {this.pageItems.map(({name, parentName, route, params, active, focus, embed, viewItems, embeds})=>{
-          let props = { app, key: name, name, route: { ...route, parentName, params, active, focus, embed }, views: viewItems, embeds};
+        {this.pageItems.map(({name, parentName, route, params, query, active, focus, embed, viewItems, embeds})=>{
+          let props = { app, key: name, name, route: { ...route, parentName, params, query, active, focus, embed }, views: viewItems, embeds};
           if(route.loader){
             route.loader(app).then(v=>{
               Object.assign(route, v, {loader: null});
@@ -195,6 +197,13 @@ export default class Router {
     this.history = createHistory();
     this.unlisten = this.history.listen((location, action)=>{
       app.log.info('router location', location);
+      location.query = {};
+      if(location.search) {
+        location.search.slice(1).split('&').forEach(v=>{
+          let vs = v.split('=');
+          location.query[vs[0]] =  vs[1];
+        })
+      }
       if(action==='PUSH') this._historyStackCount++;
       if(action==='POP') this._historyStackCount = Math.max(--this._historyStackCount, 0);
       this.update();
@@ -270,47 +279,43 @@ export default class Router {
 
   // router navigator
   // ----------------------------------------
-  _pathinfoParse(...args) {
-    let pathinfo = {};
-    let pathnames = [];
+  _getLocation(...args) {
+    let location = this.history.location;
+    let passQuery;
     let query = {};
-    let hash = [];
+    let paths = ((location.pathname[1]===':'?'':'/')+location.pathname).split(/(?<!^)\//).filter(v=>v);
 
-    args.forEach(v=>{
-      if(typeof v === 'object') {
-        if(v.pathname) pathnames.push(v.pathname);
-        if(v.query) query = {...query, ...v.query};
-        if(v.hash) hash = [...hash, ...v.hash];
-        pathinfo = {...pathinfo, v}
-      }else {
-        pathnames.push(String(v));
-      }
-    });
-
-    pathinfo.pathname = undefined;
-    pathinfo.search = undefined;
-    pathinfo.hash = undefined;
-    return [pathinfo, pathnames, query, hash];
-  }
-
-  _pathinfoTrans([pathinfo, pathnames, query, hash]) {
-    let prevPathname;
-    let upCount = pathnames.filter(v=>v==='..').length;
-    if(pathnames.find(v=>v.startsWith('/')||v.startsWith('http'))){
-      prevPathname = '';
-    }else{
-      let pages = Object.values(this.app.router.pages);
-      let lastPage = pages.slice(upCount?-upCount:-1)[0];
-      prevPathname = lastPage&&lastPage.match.url||'';
+    let addPath = path=>{
+      path.split('/').forEach(v=>{
+        if(v==='') {
+          paths = ['/'];
+        } else if(path==='..') {
+          paths = paths.slice(0, -1);
+        } else {
+          paths.push(v);
+        }
+      });
     }
-    
-    let pathname = pathinfo.pathname || join(prevPathname,...pathnames);
-    let search = pathinfo.pathname || Object.entries(query).map(([k,v])=>k+'='+v).join('&');
-    hash = pathinfo.hash || hash.join();
-    let key = pathinfo.key;
-    let state = pathinfo.state;
-    return { pathname, search, hash, key, state };
+
+    args.forEach(arg=>{
+      let type = typeof arg;
+      if(Array.isArray(arg)) {
+        addPath(arg.map((v,i)=>i?encodeURIComponent(v):v).join(':'));
+      }else if(typeof arg==='object') {
+        if(arg.query) query = {...query, ...arg.query}
+        if(arg.passQuery!==undefined) passQuery = arg.passQuery;
+      }else {
+        addPath(String(arg));
+      }
+    })
+
+    //pathname, search, hash, key, state
+    return {
+      pathname: paths.map((v,i)=>i===0&&v==='/'?'':v).join('/'),
+      search: '?'+Object.entries(passQuery?{...location.query, ...query}:query).map(([k,v])=>k+'='+v).reduce((v1,v2)=>v1+'&'+v2,''),
+    };
   }
+  
 
   restore(location) {
     app.log.info('router restore');
@@ -318,13 +323,13 @@ export default class Router {
   }
 
   push(...args) {
-    app.log.info('router push');
-    return this.history.push(this._pathinfoTrans(this._pathinfoParse(...args)))
+    app.log.info('router push', args);
+    return this.history.push(this._getLocation(...args));
   }
 
   replace(...args) {
-    app.log.info('router replace');
-    return this.history.replace(this._pathinfoTrans(this._pathinfoParse(...args)))
+    app.log.info('router replace', args);
+    return this.history.replace(this._getLocation(...args));
   }
 
   back(step=1) {

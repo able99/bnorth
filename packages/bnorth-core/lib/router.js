@@ -9,8 +9,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
-
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
@@ -43,10 +41,12 @@ var _path = require("path");
 -1.lasy loader 
 -2.page error
 -3.no match
-4.navigator
+-4.navigator
 5.param,query
 6.page view
 7.embeds
+8.block
+9.goXXX
 */
 var PageLoading = function PageLoading(props) {
   return _react.default.createElement("div", {
@@ -201,6 +201,7 @@ function (_React$Component) {
             parentName: '#' + (0, _path.join)(parentName, v),
             route: router.routes[vv],
             params: [],
+            query: history.location.query,
             active: true,
             embed: embed,
             views: []
@@ -211,6 +212,7 @@ function (_React$Component) {
           parentName: '#' + parentName,
           route: route,
           params: params,
+          query: history.location.query,
           viewItems: [],
           embeds: embeds
         });
@@ -293,6 +295,7 @@ function (_React$Component) {
             parentName = _ref5.parentName,
             route = _ref5.route,
             params = _ref5.params,
+            query = _ref5.query,
             active = _ref5.active,
             focus = _ref5.focus,
             embed = _ref5.embed,
@@ -305,6 +308,7 @@ function (_React$Component) {
           route: (0, _objectSpread3.default)({}, route, {
             parentName: parentName,
             params: params,
+            query: query,
             active: active,
             focus: focus,
             embed: embed
@@ -373,6 +377,15 @@ function () {
     this._historyStackCount = 0, this.history = (0, _createHashHistory.default)();
     this.unlisten = this.history.listen(function (location, action) {
       app.log.info('router location', location);
+      location.query = {};
+
+      if (location.search) {
+        location.search.slice(1).split('&').forEach(function (v) {
+          var vs = v.split('=');
+          location.query[vs[0]] = vs[1];
+        });
+      }
+
       if (action === 'PUSH') _this4._historyStackCount++;
       if (action === 'POP') _this4._historyStackCount = Math.max(--_this4._historyStackCount, 0);
 
@@ -466,76 +479,59 @@ function () {
     // ----------------------------------------
 
   }, {
-    key: "_pathinfoParse",
-    value: function _pathinfoParse() {
-      var pathinfo = {};
-      var pathnames = [];
+    key: "_getLocation",
+    value: function _getLocation() {
+      var location = this.history.location;
+      var passQuery;
       var query = {};
-      var hash = [];
+      var paths = ((location.pathname[1] === ':' ? '' : '/') + location.pathname).split(/(?<!^)\//).filter(function (v) {
+        return v;
+      });
+
+      var addPath = function addPath(path) {
+        path.split('/').forEach(function (v) {
+          if (v === '') {
+            paths = ['/'];
+          } else if (path === '..') {
+            paths = paths.slice(0, -1);
+          } else {
+            paths.push(v);
+          }
+        });
+      };
 
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
 
-      args.forEach(function (v) {
-        if ((0, _typeof2.default)(v) === 'object') {
-          if (v.pathname) pathnames.push(v.pathname);
-          if (v.query) query = (0, _objectSpread3.default)({}, query, v.query);
-          if (v.hash) hash = (0, _toConsumableArray2.default)(hash).concat((0, _toConsumableArray2.default)(v.hash));
-          pathinfo = (0, _objectSpread3.default)({}, pathinfo, {
-            v: v
-          });
+      args.forEach(function (arg) {
+        var type = (0, _typeof2.default)(arg);
+
+        if (Array.isArray(arg)) {
+          addPath(arg.map(function (v, i) {
+            return i ? encodeURIComponent(v) : v;
+          }).join(':'));
+        } else if ((0, _typeof2.default)(arg) === 'object') {
+          if (arg.query) query = (0, _objectSpread3.default)({}, query, arg.query);
+          if (arg.passQuery !== undefined) passQuery = arg.passQuery;
         } else {
-          pathnames.push(String(v));
+          addPath(String(arg));
         }
-      });
-      pathinfo.pathname = undefined;
-      pathinfo.search = undefined;
-      pathinfo.hash = undefined;
-      return [pathinfo, pathnames, query, hash];
-    }
-  }, {
-    key: "_pathinfoTrans",
-    value: function _pathinfoTrans(_ref9) {
-      var _ref10 = (0, _slicedToArray2.default)(_ref9, 4),
-          pathinfo = _ref10[0],
-          pathnames = _ref10[1],
-          query = _ref10[2],
-          hash = _ref10[3];
+      }); //pathname, search, hash, key, state
 
-      var prevPathname;
-      var upCount = pathnames.filter(function (v) {
-        return v === '..';
-      }).length;
-
-      if (pathnames.find(function (v) {
-        return v.startsWith('/') || v.startsWith('http');
-      })) {
-        prevPathname = '';
-      } else {
-        var pages = Object.values(this.app.router.pages);
-        var lastPage = pages.slice(upCount ? -upCount : -1)[0];
-        prevPathname = lastPage && lastPage.match.url || '';
-      }
-
-      var pathname = pathinfo.pathname || _path.join.apply(void 0, [prevPathname].concat((0, _toConsumableArray2.default)(pathnames)));
-
-      var search = pathinfo.pathname || Object.entries(query).map(function (_ref11) {
-        var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
-            k = _ref12[0],
-            v = _ref12[1];
-
-        return k + '=' + v;
-      }).join('&');
-      hash = pathinfo.hash || hash.join();
-      var key = pathinfo.key;
-      var state = pathinfo.state;
       return {
-        pathname: pathname,
-        search: search,
-        hash: hash,
-        key: key,
-        state: state
+        pathname: paths.map(function (v, i) {
+          return i === 0 && v === '/' ? '' : v;
+        }).join('/'),
+        search: '?' + Object.entries(passQuery ? (0, _objectSpread3.default)({}, location.query, query) : query).map(function (_ref9) {
+          var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
+              k = _ref10[0],
+              v = _ref10[1];
+
+          return k + '=' + v;
+        }).reduce(function (v1, v2) {
+          return v1 + '&' + v2;
+        }, '')
       };
     }
   }, {
@@ -547,14 +543,22 @@ function () {
   }, {
     key: "push",
     value: function push() {
-      app.log.info('router push');
-      return this.history.push(this._pathinfoTrans(this._pathinfoParse.apply(this, arguments)));
+      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
+
+      app.log.info('router push', args);
+      return this.history.push(this._getLocation.apply(this, args));
     }
   }, {
     key: "replace",
     value: function replace() {
-      app.log.info('router replace');
-      return this.history.replace(this._pathinfoTrans(this._pathinfoParse.apply(this, arguments)));
+      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
+      }
+
+      app.log.info('router replace', args);
+      return this.history.replace(this._getLocation.apply(this, args));
     }
   }, {
     key: "back",
