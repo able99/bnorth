@@ -49,7 +49,7 @@ let Notification = (aprops)=>{
   return (
     <Transition 
       className={cx(classSetContaienr, ontainerClassName)}
-      transitonProps={transitonProps} in={isIn} timeout={timeout} onExited={onExited} {...props}>
+      transitonProps={transitonProps} in={isIn} timeout={timeout} onExited={onExited}>
         <Component className={cx(classSet, className)} {...props}>
           {title&&typeof(title)==='string'?(<big><strong>{title}</strong></big>):title}
           {children}

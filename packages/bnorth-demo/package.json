@@ -30,13 +30,13 @@
     "url": "https://github.com/able99/bnorth/issues"
   },
   "dependencies": {
-    "bnorth-components": "^3.0.2",
-    "bnorth-core": "^3.0.2",
-    "bnorth-plugin-network": "^3.0.2",
-    "bnorth-plugin-request": "^3.0.2",
-    "rich.css": "^3.0.2"
+    "bnorth-components": "*",
+    "bnorth-core": "*",
+    "bnorth-plugin-network": "*",
+    "bnorth-plugin-request": "*",
+    "rich.css": "*"
   },
   "devDependencies": {
-    "bnorth-build": "^3.0.2"
+    "bnorth-build": "*"
   }
 }

@@ -21,7 +21,7 @@ let PageLoading = props=>{
 }
 
 let PageError = props=>{
-  let { app, match:{params:{title, msg}={}}={} } = props;
+  let { app, route:{params:{title, msg}={}}={} } = props;
   return (
     <div style={{padding: 8}}>
       <div> error: <a style={{padding: 4}} onClick={()=>app.router.back()}>[back]</a> <a style={{padding: 4}} onClick={()=>app.router.goRoot()}>[home]</a> </div>
@@ -70,7 +70,7 @@ class RouterComponent extends React.Component {
 
       let params = {};
       paths.forEach((path,i)=>{
-        params[items[i]||i] = encodeURIComponent(path);
+        params[items[i]||i] = decodeURIComponent(path);
       })
       return { routeName, params, route };
     }
@@ -119,7 +119,10 @@ class RouterComponent extends React.Component {
 
     // focus
     let focusView = viewItems.find(v=>v.options.$isModal)
-    if(focusView) focusView.options.$focus = true;
+    if(focusView) {
+      focusView.options.$focus = true;
+      router.focusName = focusView.id;
+    }
     let activePage = pageItems.slice(-1)[0];
     if(activePage) {
       activePage.active = true;
@@ -127,8 +130,10 @@ class RouterComponent extends React.Component {
         let pageFocusView = Array.from(activePage.viewItems).reverse().find(v=>v.options.$isModal);
         if(pageFocusView) {
           pageFocusView.options.$focus = true;
+          router.focusName = pageFocusView.id;
         }else{
           activePage.focus = true;
+          router.focusName = activePage.name; 
         }
       }
     }
@@ -166,14 +171,14 @@ class RouterComponent extends React.Component {
             return <Router.PageError message="wrong component" />
           }
         })}
-        {this.viewItems.map(({id, content:Component, options:{$pageName, $isContentComponent, $isModal, $isRef, $focus, ...restOptions}={}})=>{
+        {this.viewItems.map(({id, content:Component, options:{$pageName, $isContentComponent, $id, $isModal, $isRef, $focus, $onAdd, $onRemove, ...restOptions}={}})=>{
           let props = {
             ...$isContentComponent?{}:Component.porps,
             ...restOptions,
             key: id,
-            ['data-app']: app,
-            ['data-view-$id']: id,
-            ['data-$pageName']: $pageName,
+            ['data-bn-app']: app,
+            ['data-bn-id']: id,
+            ['data-bn-page-name']: $pageName,
           }
           return $isContentComponent?<Component {...props} />:(typeof Component==='object'&&Component.type?cloneElement(Component, props):Component);
         })}
@@ -192,7 +197,8 @@ export default class Router {
     this.views = {};
     this._pages = {};
     this._viewIdNum = 0;
-    this._historyStackCount = 0,
+    this._historyStackCount = 0;
+    this.focusName;
 
     this.history = createHistory();
     this.unlisten = this.history.listen((location, action)=>{
@@ -222,10 +228,10 @@ export default class Router {
 
   set routes(routes) {
     this._routes = {
-      ...{'err': {name: 'err', component: Router.PageError}},
+      ...{'err:msg?:title?': {name: 'err', component: Router.PageError}},
       ...routes
     };
-    this[`goErr`] = (msg, title, options)=>this.push('/err', app.utils.message2String(msg), app.utils.message2String(title));
+    this[`goErr`] = (msg, title, options)=>this.push(['/err', app.utils.message2String(msg), app.utils.message2String(title)]);
   }
 
   get routes() {
@@ -260,15 +266,22 @@ export default class Router {
 
   // views 
   // ----------------------------------------
+  getViewId(options={}) {
+    return options.$id || `${++this._viewIdNum}@${options.$pageName?options.$pageName:'#'}`;
+  }
+
   addView(content, options={}) {
     if(!content) return;
-    options.$id = options.$id || `${++this._viewIdNum}@${options.$pageName?options.$pageName:'#'}`;
+    options.$id = this.getViewId(options);
     this.views[options.$id] = { content, options, $id: options.$id };
+    options.$onAdd && options.$onAdd(options.$id);
     this.update();
     return options.$id;
   }
 
   removeView($id) {
+    let { options={} } = this.getView($id);
+    options.$onRemove && options.$onRemove(options.$id);
     delete this.views[$id];
     this.update();
   }

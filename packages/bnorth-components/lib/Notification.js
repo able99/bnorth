@@ -76,13 +76,13 @@ var Notification = function Notification(aprops) {
     'padding-xs': true,
     'flex-sub-flex-none': true
   };
-  return _react.default.createElement(Transition, (0, _extends2.default)({
+  return _react.default.createElement(Transition, {
     className: (0, _props.cx)(classSetContaienr, ontainerClassName),
     transitonProps: transitonProps,
     in: isIn,
     timeout: timeout,
     onExited: onExited
-  }, props), _react.default.createElement(Component, (0, _extends2.default)({
+  }, _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _props.cx)(classSet, className)
   }, props), title && typeof title === 'string' ? _react.default.createElement("big", null, _react.default.createElement("strong", null, title)) : title, children), hasClose ? _react.default.createElement(_Button.default, (0, _extends2.default)({
     cTheme: closeTheme,

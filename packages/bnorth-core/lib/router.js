@@ -58,12 +58,12 @@ var PageLoading = function PageLoading(props) {
 
 var PageError = function PageError(props) {
   var app = props.app,
-      _props$match = props.match;
-  _props$match = _props$match === void 0 ? {} : _props$match;
-  var _props$match$params = _props$match.params;
-  _props$match$params = _props$match$params === void 0 ? {} : _props$match$params;
-  var title = _props$match$params.title,
-      msg = _props$match$params.msg;
+      _props$route = props.route;
+  _props$route = _props$route === void 0 ? {} : _props$route;
+  var _props$route$params = _props$route.params;
+  _props$route$params = _props$route$params === void 0 ? {} : _props$route$params;
+  var title = _props$route$params.title,
+      msg = _props$route$params.msg;
   return _react.default.createElement("div", {
     style: {
       padding: 8
@@ -166,7 +166,7 @@ function (_React$Component) {
         var route = match[1];
         var params = {};
         paths.forEach(function (path, i) {
-          params[items[i] || i] = encodeURIComponent(path);
+          params[items[i] || i] = decodeURIComponent(path);
         });
         return {
           routeName: routeName,
@@ -246,7 +246,12 @@ function (_React$Component) {
       var focusView = viewItems.find(function (v) {
         return v.options.$isModal;
       });
-      if (focusView) focusView.options.$focus = true;
+
+      if (focusView) {
+        focusView.options.$focus = true;
+        router.focusName = focusView.id;
+      }
+
       var activePage = pageItems.slice(-1)[0];
 
       if (activePage) {
@@ -259,8 +264,10 @@ function (_React$Component) {
 
           if (pageFocusView) {
             pageFocusView.options.$focus = true;
+            router.focusName = pageFocusView.id;
           } else {
             activePage.focus = true;
+            router.focusName = activePage.name;
           }
         }
       } // update
@@ -346,13 +353,16 @@ function (_React$Component) {
         _ref6$options = _ref6$options === void 0 ? {} : _ref6$options;
         var $pageName = _ref6$options.$pageName,
             $isContentComponent = _ref6$options.$isContentComponent,
+            $id = _ref6$options.$id,
             $isModal = _ref6$options.$isModal,
             $isRef = _ref6$options.$isRef,
             $focus = _ref6$options.$focus,
-            restOptions = (0, _objectWithoutProperties2.default)(_ref6$options, ["$pageName", "$isContentComponent", "$isModal", "$isRef", "$focus"]);
+            $onAdd = _ref6$options.$onAdd,
+            $onRemove = _ref6$options.$onRemove,
+            restOptions = (0, _objectWithoutProperties2.default)(_ref6$options, ["$pageName", "$isContentComponent", "$id", "$isModal", "$isRef", "$focus", "$onAdd", "$onRemove"]);
         var props = (0, _objectSpread3.default)({}, $isContentComponent ? {} : Component.porps, restOptions, (_objectSpread2 = {
           key: id
-        }, (0, _defineProperty2.default)(_objectSpread2, 'data-app', app), (0, _defineProperty2.default)(_objectSpread2, 'data-view-$id', id), (0, _defineProperty2.default)(_objectSpread2, 'data-$pageName', $pageName), _objectSpread2));
+        }, (0, _defineProperty2.default)(_objectSpread2, 'data-bn-app', app), (0, _defineProperty2.default)(_objectSpread2, 'data-bn-id', id), (0, _defineProperty2.default)(_objectSpread2, 'data-bn-page-name', $pageName), _objectSpread2));
         return $isContentComponent ? _react.default.createElement(Component, props) : (0, _typeof2.default)(Component) === 'object' && Component.type ? (0, _react.cloneElement)(Component, props) : Component;
       }));
     }
@@ -374,7 +384,9 @@ function () {
     this.views = {};
     this._pages = {};
     this._viewIdNum = 0;
-    this._historyStackCount = 0, this.history = (0, _createHashHistory.default)();
+    this._historyStackCount = 0;
+    this.focusName;
+    this.history = (0, _createHashHistory.default)();
     this.unlisten = this.history.listen(function (location, action) {
       app.log.info('router location', location);
       location.query = {};
@@ -452,22 +464,34 @@ function () {
     // ----------------------------------------
 
   }, {
+    key: "getViewId",
+    value: function getViewId() {
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      return options.$id || "".concat(++this._viewIdNum, "@").concat(options.$pageName ? options.$pageName : '#');
+    }
+  }, {
     key: "addView",
     value: function addView(content) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       if (!content) return;
-      options.$id = options.$id || "".concat(++this._viewIdNum, "@").concat(options.$pageName ? options.$pageName : '#');
+      options.$id = this.getViewId(options);
       this.views[options.$id] = {
         content: content,
         options: options,
         $id: options.$id
       };
+      options.$onAdd && options.$onAdd(options.$id);
       this.update();
       return options.$id;
     }
   }, {
     key: "removeView",
     value: function removeView($id) {
+      var _this$getView = this.getView($id),
+          _this$getView$options = _this$getView.options,
+          options = _this$getView$options === void 0 ? {} : _this$getView$options;
+
+      options.$onRemove && options.$onRemove(options.$id);
       delete this.views[$id];
       this.update();
     }
@@ -579,14 +603,14 @@ function () {
       var _this6 = this;
 
       this._routes = (0, _objectSpread3.default)({}, {
-        'err': {
+        'err:msg?:title?': {
           name: 'err',
           component: Router.PageError
         }
       }, routes);
 
       this["goErr"] = function (msg, title, options) {
-        return _this6.push('/err', app.utils.message2String(msg), app.utils.message2String(title));
+        return _this6.push(['/err', app.utils.message2String(msg), app.utils.message2String(title)]);
       };
     },
     get: function get() {

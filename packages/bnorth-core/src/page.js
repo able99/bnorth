@@ -105,7 +105,7 @@ export default class Page extends React.Component {
     let { app, name, route:{active} } = this.props;
     app.log.info('page did mount', name);
 
-    this._offKeyEvent = app.keyboard.on('keydown', e=>this.handleKeyEvent(e), {pageName: name});
+    this._offKeyEvent = app.keyboard.on(name, 'keydown', e=>this.handleKeyEvent(e));
     app.event.emitSync(app, 'onPageAdd', name, this);
     app.event.emitSync(this, 'onPageStart', this, active);
     active && app.event.emitSync(this, 'onPageActive', this, true);

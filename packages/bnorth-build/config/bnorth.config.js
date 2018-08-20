@@ -19,7 +19,7 @@ let config = {
     urlLoaderLimit: 0,
   },
 
-  config_developer: {
+  config_development: {
     devtool: '#cheap-module-eval-source-map',
     outputPublicPath: '/',
   },
@@ -31,14 +31,13 @@ let config = {
 
 function initBnorthConfig() {
   let env = getEnv();
-
   cache = Object.assign({}, 
     config.config, 
     env.appPackage.bnorth||{},
     config[`config_${env.env}`],
     env.appPackage[`bnorth_${env.env}`]||{},
   );
-
+  
   env.appOut = resolveApp(cache.outputPath);
 
   return cache;

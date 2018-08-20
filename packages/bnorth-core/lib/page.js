@@ -188,10 +188,8 @@ function (_React$Component) {
           name = _this$props.name,
           active = _this$props.route.active;
       app.log.info('page did mount', name);
-      this._offKeyEvent = app.keyboard.on('keydown', function (e) {
+      this._offKeyEvent = app.keyboard.on(name, 'keydown', function (e) {
         return _this4.handleKeyEvent(e);
-      }, {
-        pageName: name
       });
       app.event.emitSync(app, 'onPageAdd', name, this);
       app.event.emitSync(this, 'onPageStart', this, active);

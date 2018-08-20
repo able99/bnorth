@@ -12,26 +12,24 @@ export default class Keyboard {
 
   handleKeyEvent(e) {
     this.app.log.info('keyboard trigger', e);
-    let { viewName:topViewName, pageName:topPageName } = this.app.router.focusRef||{};
-    let listener = this._listeners.reverse().find(({event, callback, pageName, viewName})=>(
-      (callback && e.type===event) &&
-        (!viewName && !topViewName && topPageName===pageName ||
-        viewName && viewName===topViewName && pageName===topPageName) 
-    ))
-
+    let listener = this._listeners.reverse().find(({event, callback, name})=>(callback && e.type===event && this.app.router.focusName === name));
     if(listener) listener.callback(e);
   }
 
-  on(event, callback, {pageName, viewName}) {
-    if(!event||!callback) return;
-    if(this._listeners.find(({aevent, acallback})=>aevent===event&&acallback===calllback)) return;
-    this._listeners.push({event, callback, pageName, viewName});
+  on(name, event, callback) {
+    if(!event||!callback||!name) return;
+    if(this._listeners.find(listener=>listener.event===event&&listener.callback===callback&&listener.name===name)) return;
+    this._listeners.push({event, callback, name});
     return ()=>this.off(callback);
   }
 
-  off(acallback) {
-    let index = acallback && this._listeners.findIndex(({callback})=>acallback===callback);
-    if(index>=0) this._listeners.splice(index,1);
+  off(item) {
+    if(typeof item === 'string') {
+      this._listeners.forEach((listener,i)=>{if(listener.name===item) this._listeners.splice(i,1)});
+    }else if(typeof item === 'function') {
+      let index = this._listeners.findIndex(listener=>listener.callback===item);
+      if(index>=0) this._listeners.splice(index,1);
+    }
   }
 
   emit(event) {

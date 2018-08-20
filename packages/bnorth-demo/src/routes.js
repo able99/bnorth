@@ -8,6 +8,9 @@ export default {
   'require_param:param1': {
     component: props=><div>page require_param {JSON.stringify(props.route.params)}</div>,
   },
+  'overlay': {
+    component: require('./pages/overlay'),
+  },
   'option_param:param1?:param2?': {
     component: props=><div>page option_param {JSON.stringify(props.route.params)}</div>,
   },
