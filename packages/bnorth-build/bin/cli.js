@@ -9,7 +9,7 @@ function run() {
     case 'build': 
     case 'server': 
       let work = require(`../lib/${type}`);
-      work(type);
+      work(type, false);
       break;
     case 'watch':
       let deving = false;
@@ -18,7 +18,7 @@ function run() {
         deving = true;
         let typeBuild = 'dev';
         let work = require(`../lib/${typeBuild}`);
-        work(typeBuild);
+        work(typeBuild, true);
         deving = false;
       }
       

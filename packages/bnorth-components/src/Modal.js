@@ -29,7 +29,7 @@ let Modal = aprops=>{
     'overflow-hidden': true,
     'square-full': role==='popup',
     'bg-color-white': !hascx(className, 'bg-color'),
-    'border-radius': !hascx(className, 'border-radius'),
+    'border-radius': role!=='popup'&&role!=='document'&&!hascx(className, 'border-radius'),
   };
 
   let styleSet = {
@@ -65,7 +65,6 @@ Modal.Container = aprops=>{
     'flex-display-flex': role!=='document',
     'flex-justify-center': role!=='document',
     'flex-align-center': role!=='document',
-    'padding': !className.startsWith('padding')&&role!=='document'&&role==='popup',
   }
 
 

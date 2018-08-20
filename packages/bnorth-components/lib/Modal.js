@@ -54,7 +54,7 @@ var Modal = function Modal(aprops) {
     'overflow-hidden': true,
     'square-full': role === 'popup',
     'bg-color-white': !(0, _props.hascx)(className, 'bg-color'),
-    'border-radius': !(0, _props.hascx)(className, 'border-radius')
+    'border-radius': role !== 'popup' && role !== 'document' && !(0, _props.hascx)(className, 'border-radius')
   };
   var styleSet = (0, _objectSpread2.default)({
     width: role !== 'popup' ? '80%' : undefined
@@ -92,8 +92,7 @@ Modal.Container = function (aprops) {
     'border-none': !className.startsWith('border'),
     'flex-display-flex': role !== 'document',
     'flex-justify-center': role !== 'document',
-    'flex-align-center': role !== 'document',
-    'padding': !className.startsWith('padding') && role !== 'document' && role === 'popup'
+    'flex-align-center': role !== 'document'
   };
   return _react.default.createElement(Transition, (0, _extends2.default)({
     onClick: function onClick() {

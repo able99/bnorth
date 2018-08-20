@@ -13,8 +13,8 @@ const { initBabelOption } = require('../config/babel.config');
 const { initArgv } = require('../config/argv.config');
 
 
-function babelTransform(env, argv, cb) {
-  rimraf.sync(argv.out);
+function babelTransform(env, argv, watch, cb) {
+  !watch && rimraf.sync(argv.out);
 
   const stream = vfs
     .src([`${argv.src}/**/*.js`,`${argv.src}/**/*.jsx`])
@@ -26,13 +26,13 @@ function babelTransform(env, argv, cb) {
   stream.on('end', ()=>cb&&cb());
 }
 
-module.exports = function run(type) {
+module.exports = function run(type, watch) {
   let env = initEnv();
   let argv = initArgv(type);
 
   console.log(`#start build: ${env, env.appName}`);
 
-  babelTransform(env, argv, ()=>{
+  babelTransform(env, argv, watch, ()=>{
     console.log('#OK');
     console.log();
   });
