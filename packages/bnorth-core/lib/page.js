@@ -284,8 +284,8 @@ function (_React$Component) {
         page: this,
         frame: this.frame
       }, this._getStateObjs());
-      embeds = embeds.map(function (v) {
-        return (0, _react.cloneElement)(v, (0, _objectSpread2.default)({}, v.props, {
+      Object.keys(embeds).forEach(function (v) {
+        embeds[v] = (0, _react.cloneElement)(embeds[v], (0, _objectSpread2.default)({}, v.props, {
           frame: _this5.frame
         }));
       });

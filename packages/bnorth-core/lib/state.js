@@ -36,6 +36,7 @@ function () {
     app.log.info('state create', key);
 
     if (app.states[key]) {
+      return app.states[key];
       throw new Error('dup state key:' + key);
     }
 

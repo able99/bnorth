@@ -83,22 +83,20 @@ class RouterComponent extends React.Component {
         return;
       }
 
-      let embeds = [];
-      (route.embeds||[]).forEach(vv=>{
-        if(!router.routes[vv]){ 
-          app.render.panic('router nomatch', vv);
-          return;
-        }
-        embeds.push({ 
+      let embeds = {};
+      Object.entries(route.embeds||{}).forEach(([kk,vv])=>{
+        let { route:routeEmebed } = getRoute(vv);
+        if(!routeEmebed){ app.render.panic('router nomatch', vv); return; }
+        embeds[kk] = { 
           name: '#'+join(parentName,v)+'|'+vv, parentName: '#'+join(parentName,v), 
-          route: router.routes[vv], params: [], query: history.location.query, active: true,  embed,
-          views: [] 
-        });
+          route: routeEmebed, params: [], query: history.location.query, 
+          embeds: {}, views: [] 
+        }
       })
 
       pageItems.push({ 
         name: '#'+join(parentName,routeName), parentName: '#'+parentName, 
-        route, params, query: history.location.query, viewItems: [], embeds 
+        route, params, query: history.location.query, viewItems: [], embeds
       });
 
       parentName = join(parentName,v);
@@ -133,6 +131,7 @@ class RouterComponent extends React.Component {
           router.focusName = pageFocusView.id;
         }else{
           activePage.focus = true;
+          Object.values(activePage.embeds).forEach(v=>v.active=true);
           router.focusName = activePage.name; 
         }
       }
@@ -155,22 +154,28 @@ class RouterComponent extends React.Component {
   render() {
     let app = this.props.app;
 
+    let renderPage = ({name, parentName, route, params, query, active, focus, embed, viewItems, embeds})=>{
+      Object.keys(embeds).forEach(v=>{
+        embeds[v] = renderPage(embeds[v]);
+      })
+      let props = { app, key: name, name, route: { ...route, parentName, params, query, active, focus, embed }, views: viewItems, embeds};
+
+      if(route.loader){
+        route.loader(app).then(v=>{
+          Object.assign(route, v, {loader: null});
+          this._handleRouterUpdate();
+        })
+        return <Router.PageLoading key={name} />;
+      }else if(typeof route.component==='function'){
+        return <app.Page key={name} {...props} />;
+      }else{
+        return <Router.PageError message="wrong component" />
+      }
+    }
+
     return (
       <React.Fragment>
-        {this.pageItems.map(({name, parentName, route, params, query, active, focus, embed, viewItems, embeds})=>{
-          let props = { app, key: name, name, route: { ...route, parentName, params, query, active, focus, embed }, views: viewItems, embeds};
-          if(route.loader){
-            route.loader(app).then(v=>{
-              Object.assign(route, v, {loader: null});
-              this._handleRouterUpdate();
-            })
-            return <Router.PageLoading key={name} />;
-          }else if(typeof route.component==='function'){
-            return <app.Page key={name} {...props} />;
-          }else{
-            return <Router.PageError message="wrong component" />
-          }
-        })}
+        {this.pageItems.map(v=>renderPage(v))}
         {this.viewItems.map(({id, content:Component, options:{$pageName, $isContentComponent, $id, $isModal, $isRef, $focus, $onAdd, $onRemove, ...restOptions}={}})=>{
           let props = {
             ...$isContentComponent?{}:Component.porps,

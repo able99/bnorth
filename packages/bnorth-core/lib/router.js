@@ -189,23 +189,29 @@ function (_React$Component) {
           return;
         }
 
-        var embeds = [];
-        (route.embeds || []).forEach(function (vv) {
-          if (!router.routes[vv]) {
+        var embeds = {};
+        Object.entries(route.embeds || {}).forEach(function (_ref3) {
+          var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+              kk = _ref4[0],
+              vv = _ref4[1];
+
+          var _getRoute2 = getRoute(vv),
+              routeEmebed = _getRoute2.route;
+
+          if (!routeEmebed) {
             app.render.panic('router nomatch', vv);
             return;
           }
 
-          embeds.push({
+          embeds[kk] = {
             name: '#' + (0, _path.join)(parentName, v) + '|' + vv,
             parentName: '#' + (0, _path.join)(parentName, v),
-            route: router.routes[vv],
+            route: routeEmebed,
             params: [],
             query: history.location.query,
-            active: true,
-            embed: embed,
+            embeds: {},
             views: []
-          });
+          };
         });
         pageItems.push({
           name: '#' + (0, _path.join)(parentName, routeName),
@@ -219,14 +225,14 @@ function (_React$Component) {
         parentName = (0, _path.join)(parentName, v);
       }); // view
 
-      Object.entries(router.views || {}).forEach(function (_ref3) {
-        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
-            id = _ref4[0],
-            _ref4$ = _ref4[1],
-            _ref4$$content = _ref4$.content,
-            content = _ref4$$content === void 0 ? {} : _ref4$$content,
-            _ref4$$options = _ref4$.options,
-            options = _ref4$$options === void 0 ? {} : _ref4$$options;
+      Object.entries(router.views || {}).forEach(function (_ref5) {
+        var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
+            id = _ref6[0],
+            _ref6$ = _ref6[1],
+            _ref6$$content = _ref6$.content,
+            content = _ref6$$content === void 0 ? {} : _ref6$$content,
+            _ref6$$options = _ref6$.options,
+            options = _ref6$$options === void 0 ? {} : _ref6$$options;
 
         var item = {
           id: id,
@@ -267,6 +273,9 @@ function (_React$Component) {
             router.focusName = pageFocusView.id;
           } else {
             activePage.focus = true;
+            Object.values(activePage.embeds).forEach(function (v) {
+              return v.active = true;
+            });
             router.focusName = activePage.name;
           }
         }
@@ -297,17 +306,21 @@ function (_React$Component) {
       var _this3 = this;
 
       var app = this.props.app;
-      return _react.default.createElement(_react.default.Fragment, null, this.pageItems.map(function (_ref5) {
-        var name = _ref5.name,
-            parentName = _ref5.parentName,
-            route = _ref5.route,
-            params = _ref5.params,
-            query = _ref5.query,
-            active = _ref5.active,
-            focus = _ref5.focus,
-            embed = _ref5.embed,
-            viewItems = _ref5.viewItems,
-            embeds = _ref5.embeds;
+
+      var renderPage = function renderPage(_ref7) {
+        var name = _ref7.name,
+            parentName = _ref7.parentName,
+            route = _ref7.route,
+            params = _ref7.params,
+            query = _ref7.query,
+            active = _ref7.active,
+            focus = _ref7.focus,
+            embed = _ref7.embed,
+            viewItems = _ref7.viewItems,
+            embeds = _ref7.embeds;
+        Object.keys(embeds).forEach(function (v) {
+          embeds[v] = renderPage(embeds[v]);
+        });
         var props = {
           app: app,
           key: name,
@@ -344,22 +357,26 @@ function (_React$Component) {
             message: "wrong component"
           });
         }
-      }), this.viewItems.map(function (_ref6) {
+      };
+
+      return _react.default.createElement(_react.default.Fragment, null, this.pageItems.map(function (v) {
+        return renderPage(v);
+      }), this.viewItems.map(function (_ref8) {
         var _objectSpread2;
 
-        var id = _ref6.id,
-            Component = _ref6.content,
-            _ref6$options = _ref6.options;
-        _ref6$options = _ref6$options === void 0 ? {} : _ref6$options;
-        var $pageName = _ref6$options.$pageName,
-            $isContentComponent = _ref6$options.$isContentComponent,
-            $id = _ref6$options.$id,
-            $isModal = _ref6$options.$isModal,
-            $isRef = _ref6$options.$isRef,
-            $focus = _ref6$options.$focus,
-            $onAdd = _ref6$options.$onAdd,
-            $onRemove = _ref6$options.$onRemove,
-            restOptions = (0, _objectWithoutProperties2.default)(_ref6$options, ["$pageName", "$isContentComponent", "$id", "$isModal", "$isRef", "$focus", "$onAdd", "$onRemove"]);
+        var id = _ref8.id,
+            Component = _ref8.content,
+            _ref8$options = _ref8.options;
+        _ref8$options = _ref8$options === void 0 ? {} : _ref8$options;
+        var $pageName = _ref8$options.$pageName,
+            $isContentComponent = _ref8$options.$isContentComponent,
+            $id = _ref8$options.$id,
+            $isModal = _ref8$options.$isModal,
+            $isRef = _ref8$options.$isRef,
+            $focus = _ref8$options.$focus,
+            $onAdd = _ref8$options.$onAdd,
+            $onRemove = _ref8$options.$onRemove,
+            restOptions = (0, _objectWithoutProperties2.default)(_ref8$options, ["$pageName", "$isContentComponent", "$id", "$isModal", "$isRef", "$focus", "$onAdd", "$onRemove"]);
         var props = (0, _objectSpread3.default)({}, $isContentComponent ? {} : Component.porps, restOptions, (_objectSpread2 = {
           key: id
         }, (0, _defineProperty2.default)(_objectSpread2, 'data-bn-app', app), (0, _defineProperty2.default)(_objectSpread2, 'data-bn-id', id), (0, _defineProperty2.default)(_objectSpread2, 'data-bn-page-name', $pageName), _objectSpread2));
@@ -439,10 +456,10 @@ function () {
       var page = this.getPage(name);
 
       if (page) {
-        Object.entries(this.views).forEach(function (_ref7) {
-          var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
-              id = _ref8[0],
-              $pageName = _ref8[1].options.$pageName;
+        Object.entries(this.views).forEach(function (_ref9) {
+          var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
+              id = _ref10[0],
+              $pageName = _ref10[1].options.$pageName;
 
           return $pageName === name && _this5.removeView(id);
         });
@@ -547,10 +564,10 @@ function () {
         pathname: paths.map(function (v, i) {
           return i === 0 && v === '/' ? '' : v;
         }).join('/'),
-        search: '?' + Object.entries(passQuery ? (0, _objectSpread3.default)({}, location.query, query) : query).map(function (_ref9) {
-          var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
-              k = _ref10[0],
-              v = _ref10[1];
+        search: '?' + Object.entries(passQuery ? (0, _objectSpread3.default)({}, location.query, query) : query).map(function (_ref11) {
+          var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
+              k = _ref12[0],
+              v = _ref12[1];
 
           return k + '=' + v;
         }).reduce(function (v1, v2) {

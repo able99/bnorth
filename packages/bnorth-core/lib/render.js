@@ -48,6 +48,7 @@ function () {
       var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
           title = _ref2.title;
 
+      app.log.error(message, title);
       app.router.goErr(message, title);
     }
   }, {

@@ -153,7 +153,7 @@ export default class Page extends React.Component {
     let { active, embed } = route;
     this._actionNum = 0;
     let componentProps = { app, name, route, page: this, frame: this.frame, ...this._getStateObjs() }
-    embeds = embeds.map(v=>cloneElement(v, { ...v.props, frame: this.frame }));
+    Object.keys(embeds).forEach(v=>{embeds[v] = cloneElement(embeds[v], { ...v.props, frame: this.frame })});
 
     if(!embed) {
       let styleSet = {
