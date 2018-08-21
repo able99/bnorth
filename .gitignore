@@ -6,8 +6,8 @@
 node_modules/
 
 # mid
-platforms/
-plugins/
+packages/bnorth-demo/platforms/
+packages/bnorth-demo/plugins/
 
 # production
 
