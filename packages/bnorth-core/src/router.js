@@ -49,10 +49,7 @@ class RouterComponent extends React.Component {
     let app = this.props.app;
     let router = app.router;
     let history = router.history;
-    let errorItem;
-    let pageItems = [];
-    let viewItems = [];
-    let parentName = '';
+
 
     let getPageByName = pageName=>{
       for(let i of pageItems) {
@@ -93,30 +90,33 @@ class RouterComponent extends React.Component {
         }
       }
     }
-    
+
+
     // error
-    errorItem  = getError(history.location.pathname);
+    this.errorItem = getError(history.location.pathname);
+    if(this.errorItem || !router.routes || !Object.keys(router.routes).length) {
+      this.pageItems = [];
+      this.viewItems = [];
+      this.forceUpdate();
+      return;
+    }
 
     // page
-    !errorItem && parsePathname(history.location.pathname).forEach(v=>{
-      if(errorItem) return;
+    let pageItems = [];
+    let parentName = '';
+    for (let v of parsePathname(history.location.pathname)) {
       let { routeName, params, route } = getRoute(v);
-      if(!routeName){ 
-        app.render.panic('router nomatch', v);
-        return;
-      }
+      if(!routeName){ app.render.panic('router nomatch', v); return; }
 
       let embeds = {};
-      (Array.isArray(route.embeds)?route.embeds.map(v=>[v,v]):Object.entries(route.embeds||{})).forEach(([kk,vv])=>{
-        if(errorItem) return;
+      for (let [kk,vv] of Array.isArray(route.embeds)?route.embeds.map(v=>[v,v]):Object.entries(route.embeds||{})) {
         let { route:routeEmebed } = getRoute(vv);
         if(!routeEmebed){ app.render.panic('router nomatch', vv); return; }
         embeds[kk] = { 
           name: '#'+join(parentName,v)+'|'+vv, parentName: '#'+join(parentName,v), 
-          route: routeEmebed, params: [], query: history.location.query, 
-          embeds: {}, views: [] 
+          route: routeEmebed, params: [], query: history.location.query, viewItems: [], embeds: {}, 
         }
-      })
+      }
 
       pageItems.push({ 
         name: '#'+join(parentName,routeName), parentName: '#'+parentName, 
@@ -124,11 +124,11 @@ class RouterComponent extends React.Component {
       });
 
       parentName = join(parentName,v);
-    })
+    }
 
     // view
-    !errorItem && Object.entries(router.views||{}).forEach(([id, {content={}, options={}}])=>{
-      if(errorItem) return;
+    let viewItems = [];
+    for (let [id, {content={}, options={}}] of Object.entries(router.views||{})) {
       let item = { id, content, options };
       let pageName = options.$pageName;
       if(pageName){
@@ -137,35 +137,32 @@ class RouterComponent extends React.Component {
       }else{
         viewItems.push(item);
       }
-    });
+    }
 
     // focus
-    if(!errorItem) {
-      let focusView = viewItems.find(v=>v.options.$isModal)
-      if(focusView) {
-        focusView.options.$focus = true;
-        router.focusName = focusView.id;
-      }
-      let activePage = pageItems.slice(-1)[0];
-      if(activePage) {
-        activePage.active = true;
-        if(!focusView){
-          let pageFocusView = Array.from(activePage.viewItems).reverse().find(v=>v.options.$isModal);
-          if(pageFocusView) {
-            pageFocusView.options.$focus = true;
-            router.focusName = pageFocusView.id;
-          }else{
-            activePage.focus = true;
-            Object.values(activePage.embeds).forEach(v=>v.active=true);
-            router.focusName = activePage.name; 
-          }
+    let focusView = viewItems.find(v=>v.options.$isModal)
+    if(focusView) {
+      focusView.options.$focus = true;
+      router.focusName = focusView.id;
+    }
+    let activePage = pageItems.slice(-1)[0];
+    if(activePage) {
+      activePage.active = true;
+      if(!focusView){
+        let pageFocusView = Array.from(activePage.viewItems).reverse().find(v=>v.options.$isModal);
+        if(pageFocusView) {
+          pageFocusView.options.$focus = true;
+          router.focusName = pageFocusView.id;
+        }else{
+          activePage.focus = true;
+          Object.values(activePage.embeds).forEach(v=>v.active=true);
+          router.focusName = activePage.name; 
         }
       }
     }
     
 
     // update
-    this.errorItem = errorItem;
     this.pageItems = pageItems;
     this.viewItems = viewItems;
     return this.forceUpdate();

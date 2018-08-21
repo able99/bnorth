@@ -26,7 +26,7 @@ export default class App {
     this.Log = this.options.Log||Log;
     this.log = new this.Log(this, options);
     this.Event = this.options.Event||Event;
-    this.event = new this.Event(this, this.name);
+    this.event = new this.Event(this, options);
     this.Config = this.options.Config||Config;
     this.config = new this.Config(this, options);
     this.Plugins = this.options.Plugins||Plugins;

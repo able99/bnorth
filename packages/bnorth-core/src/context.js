@@ -9,8 +9,8 @@ class ContextComponent extends React.Component {
     this.app.context.provider = this;
   }
 
-  update(data) {
-    this.setState({...this.state, ...data});
+  update(data, cb) {
+    return this.setState({...this.state, ...data}, cb);
   }
 
   data(name) {
@@ -19,13 +19,10 @@ class ContextComponent extends React.Component {
   }
 
   render() {
-    return (
-      <this.app.context.Provider value={{...this.state}}>
-        {this.props.children}
-      </this.app.context.Provider>
-    );
+    return <this.app.context.Provider value={{...this.state}}>{this.props.children}</this.app.context.Provider> ;
   }
 }
+
 
 export default class Context {
   constructor(app) {
@@ -47,6 +44,7 @@ export default class Context {
         )
       }
     )
+
     this.app.render.component = (
       <ContextComponent app={this.app}>
         {this.app.render.component}
@@ -55,22 +53,22 @@ export default class Context {
     this.app.Page = this.consumerHoc(this.app.Page);
   }
 
-  stateInit(name, data) {
+  stateInit(name, data, cb) {
     let adata = this.provider.data();
     adata[name] = data;
-    return this.provider.update(adata);
+    return this.provider.update(adata, cb);
   }
 
-  stateUpdate(name, data) {
+  stateUpdate(name, data, cb) {
     let adata = this.provider.data();
     adata[name] = this.app.utils.objectUpdate(adata[name], data);
-    return this.provider.update(adata);
+    return this.provider.update(adata, cb);
   }
 
-  stateClean(name) {
+  stateClean(name, cb) {
     let data = this.provider.data();
     delete data[name];
-    return this.provider.update(data);
+    return this.provider.update(data, cb);
   }
 
   stateData(name, defualtValue) {

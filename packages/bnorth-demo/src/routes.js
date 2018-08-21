@@ -1,5 +1,23 @@
 import React from 'react';
 
+
+let PageInfo = props=>{
+  let { name, route:{params, query, parentName}={} } = props;
+
+  return (
+    <div>
+      <h3>{name}</h3>
+      <p>parentName: {parentName}</p>
+      <div className="margin-top">
+        <h4>params</h4>
+        <div>{JSON.stringify(params)}</div>
+        <h4>query</h4>
+        <div>{JSON.stringify(query)}</div>
+      </div>
+    </div>
+  )
+}
+
 export default {
   '/:tab?': {
     component: require('./pages/home'),
@@ -19,10 +37,10 @@ export default {
     component: require('./pages/plugins'),
   },
   'require_param:param1': {
-    component: props=><div>page require_param {JSON.stringify(props.route.params)}</div>,
+    component: PageInfo,
   },
   'option_param:param1?': {
-    component: props=><div>page option_param {JSON.stringify(props.route.params)}</div>,
+    component: PageInfo,
   },
   'dynamic': {
     loader: ()=>{

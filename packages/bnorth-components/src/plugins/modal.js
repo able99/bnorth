@@ -31,7 +31,7 @@ export default {
         options.handleAction = index=>(!onAction || onAction( index, app.context.stateData($id)||{}, ()=>app.modal.close($id), $id)!==false) && app.modal.close($id);
         options.children = app.modal._createContent($id, Content);
 
-        return app.router.addView(<Modal ref={e=>{debugger}}/> , options);
+        return app.router.addView(<Modal /> , options);
       },
       update: ($id, Content, aoptions)=>{
         if(!$id) return;

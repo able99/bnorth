@@ -108,39 +108,54 @@ function (_React$Component) {
       var app = this.props.app;
       var router = app.router;
       var history = router.history;
-      var errorItem;
-      var pageItems = [];
-      var viewItems = [];
-      var parentName = '';
 
       var getPageByName = function getPageByName(pageName) {
-        for (var _i = 0; _i < pageItems.length; _i++) {
-          var i = pageItems[_i];
-          if (i.name === pageName) return i;
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-          if (i.embeds) {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
+        try {
+          for (var _iterator = pageItems[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var i = _step.value;
+            if (i.name === pageName) return i;
 
-            try {
-              for (var _iterator = i.embeds[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var ii = _step.value;
-                if (ii.name === pageName) return i;
-              }
-            } catch (err) {
-              _didIteratorError = true;
-              _iteratorError = err;
-            } finally {
+            if (i.embeds) {
+              var _iteratorNormalCompletion2 = true;
+              var _didIteratorError2 = false;
+              var _iteratorError2 = undefined;
+
               try {
-                if (!_iteratorNormalCompletion && _iterator.return != null) {
-                  _iterator.return();
+                for (var _iterator2 = i.embeds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                  var ii = _step2.value;
+                  if (ii.name === pageName) return i;
                 }
+              } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
               } finally {
-                if (_didIteratorError) {
-                  throw _iteratorError;
+                try {
+                  if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+                    _iterator2.return();
+                  }
+                } finally {
+                  if (_didIteratorError2) {
+                    throw _iteratorError2;
+                  }
                 }
               }
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
             }
           }
         }
@@ -191,71 +206,122 @@ function (_React$Component) {
       }; // error
 
 
-      errorItem = getError(history.location.pathname); // page
+      this.errorItem = getError(history.location.pathname);
 
-      !errorItem && parsePathname(history.location.pathname).forEach(function (v) {
-        if (errorItem) return;
+      if (this.errorItem || !router.routes || !Object.keys(router.routes).length) {
+        this.pageItems = [];
+        this.viewItems = [];
+        this.forceUpdate();
+        return;
+      } // page
 
-        var _getRoute = getRoute(v),
-            routeName = _getRoute.routeName,
-            params = _getRoute.params,
-            route = _getRoute.route;
 
-        if (!routeName) {
-          app.render.panic('router nomatch', v);
-          return;
-        }
+      var pageItems = [];
+      var parentName = '';
+      var _iteratorNormalCompletion3 = true;
+      var _didIteratorError3 = false;
+      var _iteratorError3 = undefined;
 
-        var embeds = {};
-        (Array.isArray(route.embeds) ? route.embeds.map(function (v) {
-          return [v, v];
-        }) : Object.entries(route.embeds || {})).forEach(function (_ref3) {
-          var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
-              kk = _ref4[0],
-              vv = _ref4[1];
+      try {
+        for (var _iterator3 = parsePathname(history.location.pathname)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          var v = _step3.value;
 
-          if (errorItem) return;
+          var _getRoute = getRoute(v),
+              routeName = _getRoute.routeName,
+              params = _getRoute.params,
+              route = _getRoute.route;
 
-          var _getRoute2 = getRoute(vv),
-              routeEmebed = _getRoute2.route;
-
-          if (!routeEmebed) {
-            app.render.panic('router nomatch', vv);
+          if (!routeName) {
+            app.render.panic('router nomatch', v);
             return;
           }
 
-          embeds[kk] = {
-            name: '#' + (0, _path.join)(parentName, v) + '|' + vv,
-            parentName: '#' + (0, _path.join)(parentName, v),
-            route: routeEmebed,
-            params: [],
+          var embeds = {};
+          var _iteratorNormalCompletion4 = true;
+          var _didIteratorError4 = false;
+          var _iteratorError4 = undefined;
+
+          try {
+            for (var _iterator4 = (Array.isArray(route.embeds) ? route.embeds.map(function (v) {
+              return [v, v];
+            }) : Object.entries(route.embeds || {}))[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              var _step4$value = (0, _slicedToArray2.default)(_step4.value, 2),
+                  kk = _step4$value[0],
+                  vv = _step4$value[1];
+
+              var _getRoute2 = getRoute(vv),
+                  routeEmebed = _getRoute2.route;
+
+              if (!routeEmebed) {
+                app.render.panic('router nomatch', vv);
+                return;
+              }
+
+              embeds[kk] = {
+                name: '#' + (0, _path.join)(parentName, v) + '|' + vv,
+                parentName: '#' + (0, _path.join)(parentName, v),
+                route: routeEmebed,
+                params: [],
+                query: history.location.query,
+                viewItems: [],
+                embeds: {}
+              };
+            }
+          } catch (err) {
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+                _iterator4.return();
+              }
+            } finally {
+              if (_didIteratorError4) {
+                throw _iteratorError4;
+              }
+            }
+          }
+
+          pageItems.push({
+            name: '#' + (0, _path.join)(parentName, routeName),
+            parentName: '#' + parentName,
+            route: route,
+            params: params,
             query: history.location.query,
-            embeds: {},
-            views: []
-          };
-        });
-        pageItems.push({
-          name: '#' + (0, _path.join)(parentName, routeName),
-          parentName: '#' + parentName,
-          route: route,
-          params: params,
-          query: history.location.query,
-          viewItems: [],
-          embeds: embeds
-        });
-        parentName = (0, _path.join)(parentName, v);
-      }); // view
+            viewItems: [],
+            embeds: embeds
+          });
+          parentName = (0, _path.join)(parentName, v);
+        } // view
 
-      !errorItem && Object.entries(router.views || {}).forEach(function (_ref5) {
-        var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
-            id = _ref6[0],
-            _ref6$ = _ref6[1],
-            _ref6$$content = _ref6$.content,
-            content = _ref6$$content === void 0 ? {} : _ref6$$content,
-            _ref6$$options = _ref6$.options,
-            options = _ref6$$options === void 0 ? {} : _ref6$$options;
+      } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+            _iterator3.return();
+          }
+        } finally {
+          if (_didIteratorError3) {
+            throw _iteratorError3;
+          }
+        }
+      }
 
-        if (errorItem) return;
+      var viewItems = [];
+
+      var _arr = Object.entries(router.views || {});
+
+      for (var _i = 0; _i < _arr.length; _i++) {
+        var _arr$_i = (0, _slicedToArray2.default)(_arr[_i], 2),
+            id = _arr$_i[0],
+            _arr$_i$ = _arr$_i[1],
+            _arr$_i$$content = _arr$_i$.content,
+            content = _arr$_i$$content === void 0 ? {} : _arr$_i$$content,
+            _arr$_i$$options = _arr$_i$.options,
+            options = _arr$_i$$options === void 0 ? {} : _arr$_i$$options;
+
         var item = {
           id: id,
           content: content,
@@ -269,44 +335,42 @@ function (_React$Component) {
         } else {
           viewItems.push(item);
         }
-      }); // focus
+      } // focus
 
-      if (!errorItem) {
-        var focusView = viewItems.find(function (v) {
-          return v.options.$isModal;
-        });
 
-        if (focusView) {
-          focusView.options.$focus = true;
-          router.focusName = focusView.id;
-        }
+      var focusView = viewItems.find(function (v) {
+        return v.options.$isModal;
+      });
 
-        var activePage = pageItems.slice(-1)[0];
+      if (focusView) {
+        focusView.options.$focus = true;
+        router.focusName = focusView.id;
+      }
 
-        if (activePage) {
-          activePage.active = true;
+      var activePage = pageItems.slice(-1)[0];
 
-          if (!focusView) {
-            var pageFocusView = Array.from(activePage.viewItems).reverse().find(function (v) {
-              return v.options.$isModal;
+      if (activePage) {
+        activePage.active = true;
+
+        if (!focusView) {
+          var pageFocusView = Array.from(activePage.viewItems).reverse().find(function (v) {
+            return v.options.$isModal;
+          });
+
+          if (pageFocusView) {
+            pageFocusView.options.$focus = true;
+            router.focusName = pageFocusView.id;
+          } else {
+            activePage.focus = true;
+            Object.values(activePage.embeds).forEach(function (v) {
+              return v.active = true;
             });
-
-            if (pageFocusView) {
-              pageFocusView.options.$focus = true;
-              router.focusName = pageFocusView.id;
-            } else {
-              activePage.focus = true;
-              Object.values(activePage.embeds).forEach(function (v) {
-                return v.active = true;
-              });
-              router.focusName = activePage.name;
-            }
+            router.focusName = activePage.name;
           }
         }
       } // update
 
 
-      this.errorItem = errorItem;
       this.pageItems = pageItems;
       this.viewItems = viewItems;
       return this.forceUpdate();
@@ -332,17 +396,17 @@ function (_React$Component) {
 
       var app = this.props.app;
 
-      var renderPage = function renderPage(_ref7) {
-        var name = _ref7.name,
-            parentName = _ref7.parentName,
-            route = _ref7.route,
-            params = _ref7.params,
-            query = _ref7.query,
-            active = _ref7.active,
-            focus = _ref7.focus,
-            embed = _ref7.embed,
-            viewItems = _ref7.viewItems,
-            embeds = _ref7.embeds;
+      var renderPage = function renderPage(_ref3) {
+        var name = _ref3.name,
+            parentName = _ref3.parentName,
+            route = _ref3.route,
+            params = _ref3.params,
+            query = _ref3.query,
+            active = _ref3.active,
+            focus = _ref3.focus,
+            embed = _ref3.embed,
+            viewItems = _ref3.viewItems,
+            embeds = _ref3.embeds;
         Object.keys(embeds).forEach(function (v) {
           embeds[v] = renderPage(embeds[v]);
         });
@@ -389,20 +453,20 @@ function (_React$Component) {
         app: app
       }, this.errorItem)) : null, !this.errorItem && this.pageItems.map(function (v) {
         return renderPage(v);
-      }), !this.errorItem && this.viewItems.map(function (_ref8) {
-        var id = _ref8.id,
-            Component = _ref8.content,
-            _ref8$options = _ref8.options;
-        _ref8$options = _ref8$options === void 0 ? {} : _ref8$options;
-        var $pageName = _ref8$options.$pageName,
-            $isContentComponent = _ref8$options.$isContentComponent,
-            $id = _ref8$options.$id,
-            $isModal = _ref8$options.$isModal,
-            $isRef = _ref8$options.$isRef,
-            $focus = _ref8$options.$focus,
-            $onAdd = _ref8$options.$onAdd,
-            $onRemove = _ref8$options.$onRemove,
-            restOptions = (0, _objectWithoutProperties2.default)(_ref8$options, ["$pageName", "$isContentComponent", "$id", "$isModal", "$isRef", "$focus", "$onAdd", "$onRemove"]);
+      }), !this.errorItem && this.viewItems.map(function (_ref4) {
+        var id = _ref4.id,
+            Component = _ref4.content,
+            _ref4$options = _ref4.options;
+        _ref4$options = _ref4$options === void 0 ? {} : _ref4$options;
+        var $pageName = _ref4$options.$pageName,
+            $isContentComponent = _ref4$options.$isContentComponent,
+            $id = _ref4$options.$id,
+            $isModal = _ref4$options.$isModal,
+            $isRef = _ref4$options.$isRef,
+            $focus = _ref4$options.$focus,
+            $onAdd = _ref4$options.$onAdd,
+            $onRemove = _ref4$options.$onRemove,
+            restOptions = (0, _objectWithoutProperties2.default)(_ref4$options, ["$pageName", "$isContentComponent", "$id", "$isModal", "$isRef", "$focus", "$onAdd", "$onRemove"]);
         var props = (0, _objectSpread2.default)({}, $isContentComponent ? {} : Component.porps, restOptions, {
           key: id
         });
@@ -482,10 +546,10 @@ function () {
       var page = this.getPage(name);
 
       if (page) {
-        Object.entries(this.views).forEach(function (_ref9) {
-          var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
-              id = _ref10[0],
-              $pageName = _ref10[1].options.$pageName;
+        Object.entries(this.views).forEach(function (_ref5) {
+          var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
+              id = _ref6[0],
+              $pageName = _ref6[1].options.$pageName;
 
           return $pageName === name && _this5.removeView(id);
         });
@@ -585,10 +649,10 @@ function () {
         pathname: paths.map(function (v, i, a) {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
-        search: '?' + Object.entries(passQuery ? (0, _objectSpread2.default)({}, location.query, query) : query).map(function (_ref11) {
-          var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
-              k = _ref12[0],
-              v = _ref12[1];
+        search: '?' + Object.entries(passQuery ? (0, _objectSpread2.default)({}, location.query, query) : query).map(function (_ref7) {
+          var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
+              k = _ref8[0],
+              v = _ref8[1];
 
           return k + '=' + v;
         }).reduce(function (v1, v2) {

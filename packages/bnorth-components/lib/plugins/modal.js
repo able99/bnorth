@@ -58,11 +58,7 @@ var _default = {
           }, $id) !== false) && app.modal.close($id);
         };
         options.children = app.modal._createContent($id, Content);
-        return app.router.addView(_react.default.createElement(_Modal.default, {
-          ref: function ref(e) {
-            debugger;
-          }
-        }), options);
+        return app.router.addView(_react.default.createElement(_Modal.default, null), options);
       },
       update: function update($id, Content, aoptions) {
         if (!$id) return;

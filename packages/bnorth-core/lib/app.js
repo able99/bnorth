@@ -55,7 +55,7 @@ function () {
     this.Log = this.options.Log || _log.default;
     this.log = new this.Log(this, options);
     this.Event = this.options.Event || _event.default;
-    this.event = new this.Event(this, this.name);
+    this.event = new this.Event(this, options);
     this.Config = this.options.Config || _config.default;
     this.config = new this.Config(this, options);
     this.Plugins = this.options.Plugins || _plugins.default;

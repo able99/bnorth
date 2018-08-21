@@ -1,8 +1,8 @@
 export default class State {
   constructor(app, name, options={}, page) {
-    let key = options.key||(name===true?name:`*${name}${page?('@@'+page.name):''}`);
+    let key = options.key||(name===true?name:`*${name}@${page&&page.name||'#'}`);
     app.log.info('state create', key);
-    if(app.states[key]) { return app.states[key];throw new Error('dup state key:'+key); }
+    if(app.states[key]) { app.log.error('state key dup:', key, page&&page.name); return app.states[key]; }
     if(key!==true) app.states[key] = this;
 
     this.app = app;

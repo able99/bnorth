@@ -22,7 +22,7 @@ var Utils =
 function () {
   function Utils(app, options) {
     (0, _classCallCheck2.default)(this, Utils);
-    this._app = app;
+    this.app = app;
   } // options
   // ------------------------
 

@@ -50,7 +50,7 @@ function () {
           title = _ref2.title;
 
       app.log.error(message, title);
-      app.router.pushError(message, title);
+      app.router.replaceError(message, title);
     }
   }, {
     key: "error",

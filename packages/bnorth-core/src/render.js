@@ -24,7 +24,7 @@ export default class Render {
   }
   panic(message, {title}={}) {
     app.log.error(message, title);
-    app.router.pushError(message, title);
+    app.router.replaceError(message, title);
   }
   error(message, {title}={}) { alert(app.utils.message2String(message)); }
   notice(content, options) { alert(app.utils.message2String(content)); }

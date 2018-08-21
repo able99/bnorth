@@ -1,6 +1,6 @@
 export default class Utils {
   constructor(app, options) {
-    this._app = app;
+    this.app = app;
   }
 
   // options

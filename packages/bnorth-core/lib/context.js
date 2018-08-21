@@ -45,8 +45,8 @@ function (_React$Component) {
 
   (0, _createClass2.default)(ContextComponent, [{
     key: "update",
-    value: function update(data) {
-      this.setState((0, _objectSpread2.default)({}, this.state, data));
+    value: function update(data, cb) {
+      return this.setState((0, _objectSpread2.default)({}, this.state, data), cb);
     }
   }, {
     key: "data",
@@ -107,24 +107,24 @@ function () {
     }
   }, {
     key: "stateInit",
-    value: function stateInit(name, data) {
+    value: function stateInit(name, data, cb) {
       var adata = this.provider.data();
       adata[name] = data;
-      return this.provider.update(adata);
+      return this.provider.update(adata, cb);
     }
   }, {
     key: "stateUpdate",
-    value: function stateUpdate(name, data) {
+    value: function stateUpdate(name, data, cb) {
       var adata = this.provider.data();
       adata[name] = this.app.utils.objectUpdate(adata[name], data);
-      return this.provider.update(adata);
+      return this.provider.update(adata, cb);
     }
   }, {
     key: "stateClean",
-    value: function stateClean(name) {
+    value: function stateClean(name, cb) {
       var data = this.provider.data();
       delete data[name];
-      return this.provider.update(data);
+      return this.provider.update(data, cb);
     }
   }, {
     key: "stateData",

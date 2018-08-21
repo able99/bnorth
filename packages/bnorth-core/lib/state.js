@@ -32,12 +32,12 @@ function () {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     var page = arguments.length > 3 ? arguments[3] : undefined;
     (0, _classCallCheck2.default)(this, State);
-    var key = options.key || (name === true ? name : "*".concat(name).concat(page ? '@@' + page.name : ''));
+    var key = options.key || (name === true ? name : "*".concat(name, "@").concat(page && page.name || '#'));
     app.log.info('state create', key);
 
     if (app.states[key]) {
+      app.log.error('state key dup:', key, page && page.name);
       return app.states[key];
-      throw new Error('dup state key:' + key);
     }
 
     if (key !== true) app.states[key] = this;
