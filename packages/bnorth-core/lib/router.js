@@ -11,13 +11,11 @@ exports.default = void 0;
 
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
-var _objectSpread3 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
@@ -42,12 +40,19 @@ var _path = require("path");
 -2.page error
 -3.no match
 -4.navigator
-5.param,query
-6.page view
-7.embeds
+-5.param,
+-5.query
+-6.page view
+-7.embeds
 8.block
 9.goXXX
 */
+var parsePathname = function parsePathname(pathname) {
+  return ((pathname[1] === ':' ? '' : '/') + pathname).split(/(?<!^)\//).filter(function (v) {
+    return v;
+  });
+};
+
 var PageLoading = function PageLoading(props) {
   return _react.default.createElement("div", {
     style: {
@@ -58,12 +63,8 @@ var PageLoading = function PageLoading(props) {
 
 var PageError = function PageError(props) {
   var app = props.app,
-      _props$route = props.route;
-  _props$route = _props$route === void 0 ? {} : _props$route;
-  var _props$route$params = _props$route.params;
-  _props$route$params = _props$route$params === void 0 ? {} : _props$route$params;
-  var title = _props$route$params.title,
-      msg = _props$route$params.msg;
+      title = props.title,
+      message = props.message;
   return _react.default.createElement("div", {
     style: {
       padding: 8
@@ -80,9 +81,9 @@ var PageError = function PageError(props) {
       padding: 4
     },
     onClick: function onClick() {
-      return app.router.goRoot();
+      return app.router.replaceRoot();
     }
-  }, "[home]"), " "), _react.default.createElement("div", null, title), _react.default.createElement("hr", null), _react.default.createElement("p", null, msg));
+  }, "[home]"), " "), _react.default.createElement("div", null, title), _react.default.createElement("hr", null), _react.default.createElement("p", null, message));
 };
 
 var RouterComponent =
@@ -95,6 +96,7 @@ function (_React$Component) {
 
     (0, _classCallCheck2.default)(this, RouterComponent);
     _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(RouterComponent).call(this, props));
+    _this.errorItem;
     _this.pageItems = [];
     _this.viewItems = [];
     return _this;
@@ -106,6 +108,7 @@ function (_React$Component) {
       var app = this.props.app;
       var router = app.router;
       var history = router.history;
+      var errorItem;
       var pageItems = [];
       var viewItems = [];
       var parentName = '';
@@ -173,12 +176,26 @@ function (_React$Component) {
           params: params,
           route: route
         };
-      }; // page
+      };
+
+      var getError = function getError(pathname) {
+        if (pathname.startsWith('/error')) {
+          var paths = pathname.split(':');
+          return {
+            message: paths[1],
+            title: paths[2],
+            back: paths[3],
+            data: paths.slice(4)
+          };
+        }
+      }; // error
 
 
-      ((history.location.pathname[1] === ':' ? '' : '/') + history.location.pathname).split(/(?<!^)\//).filter(function (v) {
-        return v;
-      }).forEach(function (v) {
+      errorItem = getError(history.location.pathname); // page
+
+      !errorItem && parsePathname(history.location.pathname).forEach(function (v) {
+        if (errorItem) return;
+
         var _getRoute = getRoute(v),
             routeName = _getRoute.routeName,
             params = _getRoute.params,
@@ -190,10 +207,14 @@ function (_React$Component) {
         }
 
         var embeds = {};
-        Object.entries(route.embeds || {}).forEach(function (_ref3) {
+        (Array.isArray(route.embeds) ? route.embeds.map(function (v) {
+          return [v, v];
+        }) : Object.entries(route.embeds || {})).forEach(function (_ref3) {
           var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
               kk = _ref4[0],
               vv = _ref4[1];
+
+          if (errorItem) return;
 
           var _getRoute2 = getRoute(vv),
               routeEmebed = _getRoute2.route;
@@ -225,7 +246,7 @@ function (_React$Component) {
         parentName = (0, _path.join)(parentName, v);
       }); // view
 
-      Object.entries(router.views || {}).forEach(function (_ref5) {
+      !errorItem && Object.entries(router.views || {}).forEach(function (_ref5) {
         var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
             id = _ref6[0],
             _ref6$ = _ref6[1],
@@ -234,6 +255,7 @@ function (_React$Component) {
             _ref6$$options = _ref6$.options,
             options = _ref6$$options === void 0 ? {} : _ref6$$options;
 
+        if (errorItem) return;
         var item = {
           id: id,
           content: content,
@@ -249,39 +271,42 @@ function (_React$Component) {
         }
       }); // focus
 
-      var focusView = viewItems.find(function (v) {
-        return v.options.$isModal;
-      });
+      if (!errorItem) {
+        var focusView = viewItems.find(function (v) {
+          return v.options.$isModal;
+        });
 
-      if (focusView) {
-        focusView.options.$focus = true;
-        router.focusName = focusView.id;
-      }
+        if (focusView) {
+          focusView.options.$focus = true;
+          router.focusName = focusView.id;
+        }
 
-      var activePage = pageItems.slice(-1)[0];
+        var activePage = pageItems.slice(-1)[0];
 
-      if (activePage) {
-        activePage.active = true;
+        if (activePage) {
+          activePage.active = true;
 
-        if (!focusView) {
-          var pageFocusView = Array.from(activePage.viewItems).reverse().find(function (v) {
-            return v.options.$isModal;
-          });
-
-          if (pageFocusView) {
-            pageFocusView.options.$focus = true;
-            router.focusName = pageFocusView.id;
-          } else {
-            activePage.focus = true;
-            Object.values(activePage.embeds).forEach(function (v) {
-              return v.active = true;
+          if (!focusView) {
+            var pageFocusView = Array.from(activePage.viewItems).reverse().find(function (v) {
+              return v.options.$isModal;
             });
-            router.focusName = activePage.name;
+
+            if (pageFocusView) {
+              pageFocusView.options.$focus = true;
+              router.focusName = pageFocusView.id;
+            } else {
+              activePage.focus = true;
+              Object.values(activePage.embeds).forEach(function (v) {
+                return v.active = true;
+              });
+              router.focusName = activePage.name;
+            }
           }
         }
       } // update
 
 
+      this.errorItem = errorItem;
       this.pageItems = pageItems;
       this.viewItems = viewItems;
       return this.forceUpdate();
@@ -325,7 +350,7 @@ function (_React$Component) {
           app: app,
           key: name,
           name: name,
-          route: (0, _objectSpread3.default)({}, route, {
+          route: (0, _objectSpread2.default)({}, route, {
             parentName: parentName,
             params: params,
             query: query,
@@ -354,16 +379,17 @@ function (_React$Component) {
           }, props));
         } else {
           return _react.default.createElement(Router.PageError, {
+            app: app,
             message: "wrong component"
           });
         }
       };
 
-      return _react.default.createElement(_react.default.Fragment, null, this.pageItems.map(function (v) {
+      return _react.default.createElement(_react.default.Fragment, null, this.errorItem ? _react.default.createElement(Router.PageError, (0, _extends2.default)({
+        app: app
+      }, this.errorItem)) : null, !this.errorItem && this.pageItems.map(function (v) {
         return renderPage(v);
-      }), this.viewItems.map(function (_ref8) {
-        var _objectSpread2;
-
+      }), !this.errorItem && this.viewItems.map(function (_ref8) {
         var id = _ref8.id,
             Component = _ref8.content,
             _ref8$options = _ref8.options;
@@ -377,9 +403,9 @@ function (_React$Component) {
             $onAdd = _ref8$options.$onAdd,
             $onRemove = _ref8$options.$onRemove,
             restOptions = (0, _objectWithoutProperties2.default)(_ref8$options, ["$pageName", "$isContentComponent", "$id", "$isModal", "$isRef", "$focus", "$onAdd", "$onRemove"]);
-        var props = (0, _objectSpread3.default)({}, $isContentComponent ? {} : Component.porps, restOptions, (_objectSpread2 = {
+        var props = (0, _objectSpread2.default)({}, $isContentComponent ? {} : Component.porps, restOptions, {
           key: id
-        }, (0, _defineProperty2.default)(_objectSpread2, 'data-bn-app', app), (0, _defineProperty2.default)(_objectSpread2, 'data-bn-id', id), (0, _defineProperty2.default)(_objectSpread2, 'data-bn-page-name', $pageName), _objectSpread2));
+        });
         return $isContentComponent ? _react.default.createElement(Component, props) : (0, _typeof2.default)(Component) === 'object' && Component.type ? (0, _react.cloneElement)(Component, props) : Component;
       }));
     }
@@ -522,12 +548,9 @@ function () {
   }, {
     key: "_getLocation",
     value: function _getLocation() {
-      var location = this.history.location;
       var passQuery;
       var query = {};
-      var paths = ((location.pathname[1] === ':' ? '' : '/') + location.pathname).split(/(?<!^)\//).filter(function (v) {
-        return v;
-      });
+      var paths = parsePathname(this.history.location.pathname);
 
       var addPath = function addPath(path) {
         path.split('/').forEach(function (v) {
@@ -546,14 +569,12 @@ function () {
       }
 
       args.forEach(function (arg) {
-        var type = (0, _typeof2.default)(arg);
-
         if (Array.isArray(arg)) {
           addPath(arg.map(function (v, i) {
             return i ? encodeURIComponent(v) : v;
           }).join(':'));
         } else if ((0, _typeof2.default)(arg) === 'object') {
-          if (arg.query) query = (0, _objectSpread3.default)({}, query, arg.query);
+          if (arg.query) query = (0, _objectSpread2.default)({}, query, arg.query);
           if (arg.passQuery !== undefined) passQuery = arg.passQuery;
         } else {
           addPath(String(arg));
@@ -561,10 +582,10 @@ function () {
       }); //pathname, search, hash, key, state
 
       return {
-        pathname: paths.map(function (v, i) {
-          return i === 0 && v === '/' ? '' : v;
+        pathname: paths.map(function (v, i, a) {
+          return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
-        search: '?' + Object.entries(passQuery ? (0, _objectSpread3.default)({}, location.query, query) : query).map(function (_ref11) {
+        search: '?' + Object.entries(passQuery ? (0, _objectSpread2.default)({}, location.query, query) : query).map(function (_ref11) {
           var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
               k = _ref12[0],
               v = _ref12[1];
@@ -579,7 +600,7 @@ function () {
     key: "restore",
     value: function restore(location) {
       app.log.info('router restore');
-      location || this.location ? this.history.replace(location || this.location) : this.goRoot();
+      location || this.location ? this.history.replace(location || this.location) : this.replaceRoot();
     }
   }, {
     key: "push",
@@ -609,26 +630,37 @@ function () {
       return this.history.go(-step);
     }
   }, {
-    key: "goRoot",
-    value: function goRoot(replace) {
-      var pathinfo = '/';
-      replace ? this.replace(pathinfo) : this.push(pathinfo);
+    key: "pushRoot",
+    value: function pushRoot() {
+      this.push('/');
+    }
+  }, {
+    key: "replaceRoot",
+    value: function replaceRoot() {
+      this.replace('/');
+    }
+  }, {
+    key: "pushError",
+    value: function pushError(message, title, back) {
+      for (var _len4 = arguments.length, data = new Array(_len4 > 3 ? _len4 - 3 : 0), _key4 = 3; _key4 < _len4; _key4++) {
+        data[_key4 - 3] = arguments[_key4];
+      }
+
+      this.push('/', ['error', message, title || '', back || ''].concat(data));
+    }
+  }, {
+    key: "replaceError",
+    value: function replaceError(message, title, back) {
+      for (var _len5 = arguments.length, data = new Array(_len5 > 3 ? _len5 - 3 : 0), _key5 = 3; _key5 < _len5; _key5++) {
+        data[_key5 - 3] = arguments[_key5];
+      }
+
+      this.replace('/', ['error', message, title || '', back || ''].concat(data));
     }
   }, {
     key: "routes",
     set: function set(routes) {
-      var _this6 = this;
-
-      this._routes = (0, _objectSpread3.default)({}, {
-        'err:msg?:title?': {
-          name: 'err',
-          component: Router.PageError
-        }
-      }, routes);
-
-      this["goErr"] = function (msg, title, options) {
-        return _this6.push(['/err', app.utils.message2String(msg), app.utils.message2String(title)]);
-      };
+      this._routes = routes;
     },
     get: function get() {
       return this._routes;

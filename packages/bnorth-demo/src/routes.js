@@ -4,7 +4,7 @@ export default {
   '/:tab?': {
     component: require('./pages/home'),
     controller: require('./pages/_home'),
-    embeds: { components:'components', router:'router', data:'data', plugins:'plugins' },
+    embeds: ['components', 'router', 'data', 'plugins' ],
   },
   'components': {
     component: require('./pages/components'),

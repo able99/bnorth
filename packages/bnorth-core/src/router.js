@@ -8,12 +8,17 @@ import { join } from 'path';
 -2.page error
 -3.no match
 -4.navigator
-5.param,query
-6.page view
-7.embeds
+-5.param,
+-5.query
+-6.page view
+-7.embeds
 8.block
 9.goXXX
 */
+
+let parsePathname = pathname=>((pathname[1]===':'?'':'/')+pathname).split(/(?<!^)\//).filter(v=>v)
+
+
 let PageLoading = props=>{
   return (
     <div style={{padding: 8}}>loading...</div>
@@ -21,13 +26,13 @@ let PageLoading = props=>{
 }
 
 let PageError = props=>{
-  let { app, route:{params:{title, msg}={}}={} } = props;
+  let { app, title, message } = props;
   return (
     <div style={{padding: 8}}>
-      <div> error: <a style={{padding: 4}} onClick={()=>app.router.back()}>[back]</a> <a style={{padding: 4}} onClick={()=>app.router.goRoot()}>[home]</a> </div>
+      <div> error: <a style={{padding: 4}} onClick={()=>app.router.back()}>[back]</a> <a style={{padding: 4}} onClick={()=>app.router.replaceRoot()}>[home]</a> </div>
       <div>{title}</div>
       <hr/>
-      <p>{msg}</p>
+      <p>{message}</p>
     </div>
   )
 }
@@ -35,6 +40,7 @@ let PageError = props=>{
 class RouterComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.errorItem;
     this.pageItems = [];
     this.viewItems = [];
   }
@@ -43,6 +49,7 @@ class RouterComponent extends React.Component {
     let app = this.props.app;
     let router = app.router;
     let history = router.history;
+    let errorItem;
     let pageItems = [];
     let viewItems = [];
     let parentName = '';
@@ -74,9 +81,25 @@ class RouterComponent extends React.Component {
       })
       return { routeName, params, route };
     }
+
+    let getError = pathname=>{
+      if(pathname.startsWith('/error')){
+        let paths = pathname.split(':');
+        return {
+          message: paths[1],
+          title: paths[2],
+          back: paths[3],
+          data: paths.slice(4),
+        }
+      }
+    }
     
+    // error
+    errorItem  = getError(history.location.pathname);
+
     // page
-    ((history.location.pathname[1]===':'?'':'/')+history.location.pathname).split(/(?<!^)\//).filter(v=>v).forEach(v=>{
+    !errorItem && parsePathname(history.location.pathname).forEach(v=>{
+      if(errorItem) return;
       let { routeName, params, route } = getRoute(v);
       if(!routeName){ 
         app.render.panic('router nomatch', v);
@@ -84,7 +107,8 @@ class RouterComponent extends React.Component {
       }
 
       let embeds = {};
-      Object.entries(route.embeds||{}).forEach(([kk,vv])=>{
+      (Array.isArray(route.embeds)?route.embeds.map(v=>[v,v]):Object.entries(route.embeds||{})).forEach(([kk,vv])=>{
+        if(errorItem) return;
         let { route:routeEmebed } = getRoute(vv);
         if(!routeEmebed){ app.render.panic('router nomatch', vv); return; }
         embeds[kk] = { 
@@ -103,8 +127,8 @@ class RouterComponent extends React.Component {
     })
 
     // view
-    Object.entries(router.views||{})
-    .forEach(([id, {content={}, options={}}])=>{
+    !errorItem && Object.entries(router.views||{}).forEach(([id, {content={}, options={}}])=>{
+      if(errorItem) return;
       let item = { id, content, options };
       let pageName = options.$pageName;
       if(pageName){
@@ -116,28 +140,32 @@ class RouterComponent extends React.Component {
     });
 
     // focus
-    let focusView = viewItems.find(v=>v.options.$isModal)
-    if(focusView) {
-      focusView.options.$focus = true;
-      router.focusName = focusView.id;
-    }
-    let activePage = pageItems.slice(-1)[0];
-    if(activePage) {
-      activePage.active = true;
-      if(!focusView){
-        let pageFocusView = Array.from(activePage.viewItems).reverse().find(v=>v.options.$isModal);
-        if(pageFocusView) {
-          pageFocusView.options.$focus = true;
-          router.focusName = pageFocusView.id;
-        }else{
-          activePage.focus = true;
-          Object.values(activePage.embeds).forEach(v=>v.active=true);
-          router.focusName = activePage.name; 
+    if(!errorItem) {
+      let focusView = viewItems.find(v=>v.options.$isModal)
+      if(focusView) {
+        focusView.options.$focus = true;
+        router.focusName = focusView.id;
+      }
+      let activePage = pageItems.slice(-1)[0];
+      if(activePage) {
+        activePage.active = true;
+        if(!focusView){
+          let pageFocusView = Array.from(activePage.viewItems).reverse().find(v=>v.options.$isModal);
+          if(pageFocusView) {
+            pageFocusView.options.$focus = true;
+            router.focusName = pageFocusView.id;
+          }else{
+            activePage.focus = true;
+            Object.values(activePage.embeds).forEach(v=>v.active=true);
+            router.focusName = activePage.name; 
+          }
         }
       }
     }
+    
 
     // update
+    this.errorItem = errorItem;
     this.pageItems = pageItems;
     this.viewItems = viewItems;
     return this.forceUpdate();
@@ -169,21 +197,19 @@ class RouterComponent extends React.Component {
       }else if(typeof route.component==='function'){
         return <app.Page key={name} {...props} />;
       }else{
-        return <Router.PageError message="wrong component" />
+        return <Router.PageError app={app} message="wrong component" />
       }
     }
 
     return (
       <React.Fragment>
-        {this.pageItems.map(v=>renderPage(v))}
-        {this.viewItems.map(({id, content:Component, options:{$pageName, $isContentComponent, $id, $isModal, $isRef, $focus, $onAdd, $onRemove, ...restOptions}={}})=>{
+        {this.errorItem?<Router.PageError app={app} {...this.errorItem}/>:null}
+        {!this.errorItem&&this.pageItems.map(v=>renderPage(v))}
+        {!this.errorItem&&this.viewItems.map(({id, content:Component, options:{$pageName, $isContentComponent, $id, $isModal, $isRef, $focus, $onAdd, $onRemove, ...restOptions}={}})=>{
           let props = {
             ...$isContentComponent?{}:Component.porps,
             ...restOptions,
             key: id,
-            ['data-bn-app']: app,
-            ['data-bn-id']: id,
-            ['data-bn-page-name']: $pageName,
           }
           return $isContentComponent?<Component {...props} />:(typeof Component==='object'&&Component.type?cloneElement(Component, props):Component);
         })}
@@ -232,11 +258,7 @@ export default class Router {
   }
 
   set routes(routes) {
-    this._routes = {
-      ...{'err:msg?:title?': {name: 'err', component: Router.PageError}},
-      ...routes
-    };
-    this[`goErr`] = (msg, title, options)=>this.push(['/err', app.utils.message2String(msg), app.utils.message2String(title)]);
+    this._routes = routes;
   }
 
   get routes() {
@@ -298,10 +320,9 @@ export default class Router {
   // router navigator
   // ----------------------------------------
   _getLocation(...args) {
-    let location = this.history.location;
     let passQuery;
     let query = {};
-    let paths = ((location.pathname[1]===':'?'':'/')+location.pathname).split(/(?<!^)\//).filter(v=>v);
+    let paths = parsePathname(this.history.location.pathname);
 
     let addPath = path=>{
       path.split('/').forEach(v=>{
@@ -316,7 +337,6 @@ export default class Router {
     }
 
     args.forEach(arg=>{
-      let type = typeof arg;
       if(Array.isArray(arg)) {
         addPath(arg.map((v,i)=>i?encodeURIComponent(v):v).join(':'));
       }else if(typeof arg==='object') {
@@ -329,7 +349,7 @@ export default class Router {
 
     //pathname, search, hash, key, state
     return {
-      pathname: paths.map((v,i)=>i===0&&v==='/'?'':v).join('/'),
+      pathname: paths.map((v,i,a)=>i===0&&v==='/'&&a.length>1?'':v).join('/'),
       search: '?'+Object.entries(passQuery?{...location.query, ...query}:query).map(([k,v])=>k+'='+v).reduce((v1,v2)=>v1+'&'+v2,''),
     };
   }
@@ -337,7 +357,7 @@ export default class Router {
 
   restore(location) {
     app.log.info('router restore');
-    location||this.location?this.history.replace(location||this.location):this.goRoot();
+    location||this.location?this.history.replace(location||this.location):this.replaceRoot();
   }
 
   push(...args) {
@@ -355,10 +375,10 @@ export default class Router {
     return this.history.go(-step);
   }
 
-  goRoot(replace) {
-    let pathinfo = '/';
-    replace?this.replace(pathinfo):this.push(pathinfo);
-  }
+  pushRoot() { this.push('/') }
+  replaceRoot() { this.replace('/') }
+  pushError(message, title, back, ...data) { this.push('/', ['error', message, title||'', back||'', ...data])}
+  replaceError(message, title, back, ...data) { this.replace('/', ['error', message, title||'', back||'', ...data])}
 }
 
 

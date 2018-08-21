@@ -37,6 +37,7 @@ function () {
       var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
           title = _ref.title;
 
+      app.log.error(message, title);
       if (this.stopForRenderError) return;
       this.stopForRenderError = true;
 
@@ -49,7 +50,7 @@ function () {
           title = _ref2.title;
 
       app.log.error(message, title);
-      app.router.goErr(message, title);
+      app.router.pushError(message, title);
     }
   }, {
     key: "error",
