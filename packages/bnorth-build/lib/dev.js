@@ -13,17 +13,21 @@ const { initBabelOption } = require('../config/babel.config');
 const { initArgv } = require('../config/argv.config');
 
 
-function babelTransform(env, argv, watch, cb) {
+function babelTransform(env, argv, watch, scb, ecb) {
   !watch && rimraf.sync(argv.out);
 
   const stream = vfs
     .src([`${argv.src}/**/*.js`,`${argv.src}/**/*.jsx`])
     .pipe(through.obj((f, enc, cb) => {
-      f.contents = new Buffer(babel.transform(f.contents, initBabelOption()).code);
-      cb(null, f);
+      try{
+        f.contents = new Buffer(babel.transform(f.contents, initBabelOption()).code);
+        cb(null, f);
+      }catch(e){
+        ecb&&ecb(e, f);
+      }
     }))
     .pipe(vfs.dest(argv.out));
-  stream.on('end', ()=>cb&&cb());
+  stream.on('end', ()=>scb&&scb());
 }
 
 module.exports = function run(type, watch) {
@@ -32,8 +36,19 @@ module.exports = function run(type, watch) {
 
   console.log(`#start build: ${env, env.appName}`);
 
-  babelTransform(env, argv, watch, ()=>{
-    console.log('#OK');
+  try {
+    babelTransform(env, argv, watch, ()=>{
+      console.log('#OK');
+      console.log();
+    }, (e,f)=>{
+      console.log('#ERROR');
+      console.log(e);
+      console.log(f.path);
+      console.log();
+    });
+  } catch(e) {
+    console.log('#ERROR');
+    console.log(e);
     console.log();
-  });
+  }
 }

@@ -32,6 +32,8 @@ var _this = void 0;
 var Modal = function Modal(aprops) {
   var _genCommonProps = (0, _props.genCommonProps)(aprops),
       handleAction = _genCommonProps.handleAction,
+      _genCommonProps$in = _genCommonProps.in,
+      isIn = _genCommonProps$in === void 0 ? true : _genCommonProps$in,
       onExited = _genCommonProps.onExited,
       role = _genCommonProps.role,
       title = _genCommonProps.title,
@@ -46,7 +48,7 @@ var Modal = function Modal(aprops) {
       style = _genCommonProps.style,
       className = _genCommonProps.className,
       children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["handleAction", "onExited", "role", "title", "titleClose", "headerProps", "headerTitleProps", "headerCloseProps", "bodyProps", "footerProps", "footerButtonsProps", "containerProps", "style", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["handleAction", "in", "onExited", "role", "title", "titleClose", "headerProps", "headerTitleProps", "headerCloseProps", "bodyProps", "footerProps", "footerButtonsProps", "containerProps", "style", "className", "children"]);
 
   var classSet = {
     'position-relative': true,

@@ -16,17 +16,11 @@ import { join } from 'path';
 9.goXXX
 */
 
-let parsePathname = pathname=>((pathname[1]===':'?'':'/')+pathname).split(/(?<!^)\//).filter(v=>v)
-
-
-let PageLoading = props=>{
-  return (
-    <div style={{padding: 8}}>loading...</div>
-  )
-}
+let PageLoading = props=><div style={{padding: 8}}>loading...</div>;
 
 let PageError = props=>{
   let { app, title, message } = props;
+
   return (
     <div style={{padding: 8}}>
       <div> error: <a style={{padding: 4}} onClick={()=>app.router.back()}>[back]</a> <a style={{padding: 4}} onClick={()=>app.router.replaceRoot()}>[home]</a> </div>
@@ -45,127 +39,136 @@ class RouterComponent extends React.Component {
     this.viewItems = [];
   }
 
+  _renderView({content:Component, props, options:{_id, isContentComponent}}) {
+    let aprops = {
+      ...isContentComponent?{}:Component.porps,
+      ...props,
+      key: _id,
+    }
+    return isContentComponent?<Component {...aprops} />:(typeof Component==='object'&&Component.type?cloneElement(Component, aprops):Component);
+  }
+
+  _renderPage({name, parentName, route, params, query, active, focus, embed, viewItems, embeds}){
+    Object.keys(embeds).forEach(v=>{
+      embeds[v] = this._renderPage(embeds[v]);
+    })
+    let props = { app, key: name, name, route: { ...route, parentName, params, query, active, focus, embed }, views: viewItems, embeds};
+
+    if(route.loader){
+      route.loader(app).then(v=>{
+        Object.assign(route, v, {loader: null});
+        this._handleRouterUpdate();
+      })
+      return <Router.PageLoading key={name} />;
+    }else if(typeof route.component==='function'){
+      return <app.Page key={name} {...props} />;
+    }else{
+      return <Router.PageError app={app} message="wrong component" />
+    }
+  }
+
+  _getPathnameRouteInfo(pathname, routes) {
+    let paths = pathname.split(':');
+    let match = Object.entries(routes).find(([k,v])=>k.split(':')[0]===paths[0]);
+    if(!match) return [];
+    let items = match[0].split(':');
+    let routeName = items[0];
+    items = items.slice(1);
+    paths = paths.slice(1);
+    if(items.filter(v=>!v.endsWith('?')).length>paths.length) return [];
+    items = items.map(v=>v.endsWith('?')?v.slice(0,-1):v);
+    let route = match[1];
+
+    let params = {};
+    paths.forEach((path,i)=>{
+      params[items[i]||i] = decodeURIComponent(path);
+    })
+
+    return { routeName, params, route };
+  }
+
+  _getPathnameErrorInfo(pathname){
+    if(pathname.startsWith('/error')){
+      let paths = pathname.split(':');
+      return {
+        message: paths[1],
+        title: paths[2],
+        back: paths[3],
+        data: paths.slice(4),
+      }
+    }
+  }
+
+  _update({errorItem, pageItems=[], viewItems=[]}={}) {
+    let focusId = undefined;
+    let focusViewItem = Array.from(viewItems).reverse().find(v=>v.options.isModal);
+    let activePageItem = pageItems.slice(-1)[0];
+
+    if(focusViewItem) focusId = focusViewItem.options._id;
+
+    if(activePageItem) {
+      activePageItem.active = true;
+      Object.values(activePageItem.embeds).forEach(v=>v.active=true);
+    }
+
+    if(activePageItem && !focusId){
+      let pageFocusViewItem = Array.from(activePageItem.viewItems).reverse().find(v=>v.options.isModal);
+      if(pageFocusViewItem) {
+        focusId = pageFocusViewItem.options.id;
+      }else{
+        activePageItem.focus = true;
+        focusId = activePageItem.name; 
+      }
+    }
+
+
+    this.props.app.router.setFocusId(focusId);
+    this.setState({errorItem, pageItems, viewItems});
+  }
+
   _handleRouterUpdate() {
     let app = this.props.app;
     let router = app.router;
     let history = router.history;
 
-
-    let getPageByName = pageName=>{
-      for(let i of pageItems) {
-        if(i.name===pageName) return i;
-        if(i.embeds) for(let ii of i.embeds) {
-          if(ii.name===pageName) return i;
-        }
-      }
-    }
-
-    let getRoute = pathname=>{
-      let paths = pathname.split(':');
-      let match = Object.entries(router.routes).find(([k,v])=>k.split(':')[0]===paths[0]);
-      if(!match) return [];
-      let items = match[0].split(':');
-      let routeName = items[0];
-      items = items.slice(1);
-      paths = paths.slice(1);
-      if(items.filter(v=>!v.endsWith('?')).length>paths.length) return [];
-      items = items.map(v=>v.endsWith('?')?v.slice(0,-1):v);
-      let route = match[1];
-
-      let params = {};
-      paths.forEach((path,i)=>{
-        params[items[i]||i] = decodeURIComponent(path);
-      })
-      return { routeName, params, route };
-    }
-
-    let getError = pathname=>{
-      if(pathname.startsWith('/error')){
-        let paths = pathname.split(':');
-        return {
-          message: paths[1],
-          title: paths[2],
-          back: paths[3],
-          data: paths.slice(4),
-        }
-      }
-    }
-
-
     // error
-    this.errorItem = getError(history.location.pathname);
-    if(this.errorItem || !router.routes || !Object.keys(router.routes).length) {
-      this.pageItems = [];
-      this.viewItems = [];
-      this.forceUpdate();
-      return;
-    }
+    let errorItem = this._getPathnameErrorInfo(history.location.pathname);
+    if(errorItem || !Object.keys(router.getRoutes()).length) return this.setState({errorItem});
 
     // page
+    let pathname = '';
     let pageItems = [];
-    let parentName = '';
-    for (let v of parsePathname(history.location.pathname)) {
-      let { routeName, params, route } = getRoute(v);
+    for (let v of history.location.pathnames) {
+      let { routeName, params, route } = this._getPathnameRouteInfo(v, router.getRoutes());
       if(!routeName){ app.render.panic('router nomatch', v); return; }
 
+      let name = '#'+join(pathname,routeName);
+      let parentName = '#'+pathname;
       let embeds = {};
       for (let [kk,vv] of Array.isArray(route.embeds)?route.embeds.map(v=>[v,v]):Object.entries(route.embeds||{})) {
-        let { route:routeEmebed } = getRoute(vv);
+        let { route:routeEmebed } = this._getPathnameRouteInfo(vv, router.getRoutes());
         if(!routeEmebed){ app.render.panic('router nomatch', vv); return; }
+        let nameEmbed = name+'|'+vv;
+        let parentNameEmbed = name;
+
         embeds[kk] = { 
-          name: '#'+join(parentName,v)+'|'+vv, parentName: '#'+join(parentName,v), 
-          route: routeEmebed, params: [], query: history.location.query, viewItems: [], embeds: {}, 
+          name: nameEmbed, parentName: parentNameEmbed, route: routeEmebed, params: {}, query: history.location.query, viewItems: router.getPageViews(nameEmbed).map(vvv=>({...vvv})), embeds: {}, 
         }
       }
 
       pageItems.push({ 
-        name: '#'+join(parentName,routeName), parentName: '#'+parentName, 
-        route, params, query: history.location.query, viewItems: [], embeds
+        name, parentName, route, params, query: history.location.query, viewItems: router.getPageViews(name).map(vv=>({...vv})), embeds
       });
 
-      parentName = join(parentName,v);
+      pathname = join(pathname,v);
     }
 
-    // view
-    let viewItems = [];
-    for (let [id, {content={}, options={}}] of Object.entries(router.views||{})) {
-      let item = { id, content, options };
-      let pageName = options.$pageName;
-      if(pageName){
-        let page = getPageByName(pageName);
-        if(page) page.viewItems.push(item);
-      }else{
-        viewItems.push(item);
-      }
-    }
-
-    // focus
-    let focusView = viewItems.find(v=>v.options.$isModal)
-    if(focusView) {
-      focusView.options.$focus = true;
-      router.focusName = focusView.id;
-    }
-    let activePage = pageItems.slice(-1)[0];
-    if(activePage) {
-      activePage.active = true;
-      if(!focusView){
-        let pageFocusView = Array.from(activePage.viewItems).reverse().find(v=>v.options.$isModal);
-        if(pageFocusView) {
-          pageFocusView.options.$focus = true;
-          router.focusName = pageFocusView.id;
-        }else{
-          activePage.focus = true;
-          Object.values(activePage.embeds).forEach(v=>v.active=true);
-          router.focusName = activePage.name; 
-        }
-      }
-    }
+    // top view
+    let viewItems = router.getNoPageViews().map(v=>({...v}));
     
 
     // update
-    this.pageItems = pageItems;
-    this.viewItems = viewItems;
-    return this.forceUpdate();
+    return this._update({pageItems, viewItems});
   }
 
   componentDidMount() {
@@ -177,39 +180,12 @@ class RouterComponent extends React.Component {
   }
 
   render() {
-    let app = this.props.app;
-
-    let renderPage = ({name, parentName, route, params, query, active, focus, embed, viewItems, embeds})=>{
-      Object.keys(embeds).forEach(v=>{
-        embeds[v] = renderPage(embeds[v]);
-      })
-      let props = { app, key: name, name, route: { ...route, parentName, params, query, active, focus, embed }, views: viewItems, embeds};
-
-      if(route.loader){
-        route.loader(app).then(v=>{
-          Object.assign(route, v, {loader: null});
-          this._handleRouterUpdate();
-        })
-        return <Router.PageLoading key={name} />;
-      }else if(typeof route.component==='function'){
-        return <app.Page key={name} {...props} />;
-      }else{
-        return <Router.PageError app={app} message="wrong component" />
-      }
-    }
-
+    let {errorItem, pageItems=[], viewItems=[]} = this.state||{};
     return (
       <React.Fragment>
-        {this.errorItem?<Router.PageError app={app} {...this.errorItem}/>:null}
-        {!this.errorItem&&this.pageItems.map(v=>renderPage(v))}
-        {!this.errorItem&&this.viewItems.map(({id, content:Component, options:{$pageName, $isContentComponent, $id, $isModal, $isRef, $focus, $onAdd, $onRemove, ...restOptions}={}})=>{
-          let props = {
-            ...$isContentComponent?{}:Component.porps,
-            ...restOptions,
-            key: id,
-          }
-          return $isContentComponent?<Component {...props} />:(typeof Component==='object'&&Component.type?cloneElement(Component, props):Component);
-        })}
+        {errorItem&&<Router.PageError app={this.props.app} {...errorItem}/>}
+        {!errorItem&&pageItems.map(v=>this._renderPage(v))}
+        {!errorItem&&viewItems.map(v=>this._renderView(v))}
       </React.Fragment>
     );
   }
@@ -222,46 +198,99 @@ export default class Router {
   constructor(app) {
     this.app = app;
     this._routes = {};
-    this.views = {};
+    this._views = [];
     this._pages = {};
     this._viewIdNum = 0;
     this._historyStackCount = 0;
-    this.focusName;
+    this._focusId;
 
-    this.history = createHistory();
-    this.unlisten = this.history.listen((location, action)=>{
-      app.log.info('router location', location);
-      location.query = {};
-      if(location.search) {
-        location.search.slice(1).split('&').forEach(v=>{
-          let vs = v.split('=');
-          location.query[vs[0]] =  vs[1];
-        })
-      }
-      if(action==='PUSH') this._historyStackCount++;
-      if(action==='POP') this._historyStackCount = Math.max(--this._historyStackCount, 0);
-      this.update();
-    });
-    this.app.event.on(this.app, 'onAppStartRender', ()=>{
-      this.update();
-    });
+    this._initEvent();
+    this._initHistory();
+    this._initRoute();
+  }
+
+  _initEvent() {
     this.app.event.on(this.app, 'onPageAdd', (name, page)=>{page&&!page.props.route.embed&&this._addPage(name, page)});
     this.app.event.on(this.app, 'onPageRemove', (name, page)=>{page&&!page.props.route.embed&&this._removePage(name)});
     this.app.event.on(this.app, 'onAppStartRouter', ()=>(this.app.render.component = <Router.RouterComponent app={this.app} />));
+    this.app.event.on(this.app, 'onAppStartRender', ()=>{this.update()});
+  }
+
+  _initHistory() {
+    let handleLocationChange = (location, action)=>{
+      this.app.log.info('router location', location);
+
+      location.query = {};
+      location.search && location.search.slice(1).split('&').forEach(v=>{
+        let vs = v.split('=');
+        location.query[vs[0]] =  vs[1];
+      })
+
+      location.pathnames = ((location.pathname[1]===':'?'':'/')+location.pathname).split(/(?<!^)\//).filter(v=>v);
+
+      if(action==='PUSH') this._historyStackCount++;
+      if(action==='POP') this._historyStackCount = Math.max(--this._historyStackCount, 0);
+
+      this.update();
+    };
+
+    this.history = createHistory();
+    this.history.listen((location, action)=>handleLocationChange(location, action));
+    handleLocationChange(this.history.location, this.history.action);
+  }
+
+  _initRoute() {
+    this._genRouteMethod('/');
+    this._genRouteMethod('/error');
+  }
+
+  
+  // route
+  // --------------------------------------
+  setRoutes(routes) {
+    this._routes = routes;
+    Object.keys(routes||{}).forEach(v=>v&&this._genRouteMethod(v.split(':')[0]));
+    this.update();
+  }
+
+  getRoutes() {
+    return this._routes||{};
+  }
+
+  addRoute(name, route) {
+    if(!name||!route) return;
+    this._routes[name] = route;
+    this._genNaviMethod(name);
+    this.update();
   }
 
   update() {
     this.app.event.emit(this.app, 'onRouterUpdate');
   }
 
-  set routes(routes) {
-    this._routes = routes;
+  _genRouteMethod(path) {
+    if(!path) return;
+    let name = path==='/'?'Root':this.app.utils.captilaze(path);
+    this['push'+name] = (...args)=>this.push([path, ...args]);
+    this['replace'+name] = (...args)=>this.replace([path, ...args]);
   }
 
-  get routes() {
-    return this._routes;
-  }
   
+  // pushRoot() { this.push('/') }
+  // replaceRoot() { this.replace('/') }
+  // pushError(message, title, back, ...data) { this.push('/', ['error', message, title||'', back||'', ...data])}
+  // replaceError(message, title, back, ...data) { this.replace('/', ['error', message, title||'', back||'', ...data])}
+  
+  // focus
+  // ---------------------------------------
+  setFocusId(_id) {
+    this.app.log.info('router focus', _id);
+    this._focusId = _id;
+  }
+
+  isFocus(_id) {
+    return this._focusId === _id;
+  }
 
   // pages
   // ---------------------------------------
@@ -272,7 +301,7 @@ export default class Router {
   _removePage(name) {
     let page = this.getPage(name);
     if(page) {
-      Object.entries(this.views).forEach(([id, {options:{$pageName}}])=>$pageName===name&&this.removeView(id));
+      this.removePageViews(page.name);
       delete this._pages[page.name];
     }
   }
@@ -291,27 +320,54 @@ export default class Router {
   // views 
   // ----------------------------------------
   getViewId(options={}) {
-    return options.$id || `${++this._viewIdNum}@${options.$pageName?options.$pageName:'#'}`;
+    return options._id || `${++this._viewIdNum}@${options.pageName?options.pageName:'#'}`;
   }
 
-  addView(content, options={}) {
+  addView(content, props={}, options={}) {
     if(!content) return;
-    options.$id = this.getViewId(options);
-    this.views[options.$id] = { content, options, $id: options.$id };
-    options.$onAdd && options.$onAdd(options.$id);
+    options._id = this.getViewId(options);
+    let view = this.getView(options._id);
+
+    if(!view) {
+      this._views.push({ content, props, options });
+      options.onAdd && options.onAdd(options._id);
+    }else{
+      view.content = content;
+      view.props = props;
+      view.options = options;
+    }
+    
     this.update();
-    return options.$id;
+    return options._id;
   }
 
-  removeView($id) {
-    let { options={} } = this.getView($id);
-    options.$onRemove && options.$onRemove(options.$id);
-    delete this.views[$id];
+  removeView(_id) {
+    let index = this._views.findIndex(v=>v.options._id===_id);
+    if(index<0) return;
+
+    this._views[index].options.onRemove && this._views[index].options.onRemove();
+    this._views.splice(index, 1);
     this.update();
   }
 
-  getView($id) {
-    return this.views[$id];
+  getView(_id) {
+    return this._views.find(v=>v.options._id===_id);
+  }
+
+  getViews() {
+    return this._views;
+  }
+
+  getNoPageViews() {
+    return this._views.filter(({options})=>!options.pageName);
+  }
+
+  getPageViews(_id) {
+    return this._views.filter(({options})=>options.pageName===_id);
+  }
+
+  removePageViews(_id) {
+    this.getPageViews(_id).forEach(v=>this.removeView(v._id))
   }
 
   // router navigator
@@ -319,16 +375,16 @@ export default class Router {
   _getLocation(...args) {
     let passQuery;
     let query = {};
-    let paths = parsePathname(this.history.location.pathname);
+    let pathnames = Array.from(this.history.location.pathnames);
 
     let addPath = path=>{
       path.split('/').forEach(v=>{
         if(v==='') {
-          paths = ['/'];
+          pathnames = ['/'];
         } else if(path==='..') {
-          paths = paths.slice(0, -1);
+          pathnames = pathnames.slice(0, -1);
         } else {
-          paths.push(v);
+          pathnames.push(v);
         }
       });
     }
@@ -346,7 +402,7 @@ export default class Router {
 
     //pathname, search, hash, key, state
     return {
-      pathname: paths.map((v,i,a)=>i===0&&v==='/'&&a.length>1?'':v).join('/'),
+      pathname: pathnames.map((v,i,a)=>i===0&&v==='/'&&a.length>1?'':v).join('/'),
       search: '?'+Object.entries(passQuery?{...location.query, ...query}:query).map(([k,v])=>k+'='+v).reduce((v1,v2)=>v1+'&'+v2,''),
     };
   }
@@ -371,11 +427,6 @@ export default class Router {
     app.log.info('router back');
     return this.history.go(-step);
   }
-
-  pushRoot() { this.push('/') }
-  replaceRoot() { this.replace('/') }
-  pushError(message, title, back, ...data) { this.push('/', ['error', message, title||'', back||'', ...data])}
-  replaceError(message, title, back, ...data) { this.replace('/', ['error', message, title||'', back||'', ...data])}
 }
 
 

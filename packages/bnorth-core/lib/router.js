@@ -9,15 +9,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
-
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -47,12 +45,6 @@ var _path = require("path");
 8.block
 9.goXXX
 */
-var parsePathname = function parsePathname(pathname) {
-  return ((pathname[1] === ':' ? '' : '/') + pathname).split(/(?<!^)\//).filter(function (v) {
-    return v;
-  });
-};
-
 var PageLoading = function PageLoading(props) {
   return _react.default.createElement("div", {
     style: {
@@ -103,285 +95,294 @@ function (_React$Component) {
   }
 
   (0, _createClass2.default)(RouterComponent, [{
+    key: "_renderView",
+    value: function _renderView(_ref) {
+      var Component = _ref.content,
+          props = _ref.props,
+          _ref$options = _ref.options,
+          _id = _ref$options._id,
+          isContentComponent = _ref$options.isContentComponent;
+      var aprops = (0, _objectSpread2.default)({}, isContentComponent ? {} : Component.porps, props, {
+        key: _id
+      });
+      return isContentComponent ? _react.default.createElement(Component, aprops) : (0, _typeof2.default)(Component) === 'object' && Component.type ? (0, _react.cloneElement)(Component, aprops) : Component;
+    }
+  }, {
+    key: "_renderPage",
+    value: function _renderPage(_ref2) {
+      var _this2 = this;
+
+      var name = _ref2.name,
+          parentName = _ref2.parentName,
+          route = _ref2.route,
+          params = _ref2.params,
+          query = _ref2.query,
+          active = _ref2.active,
+          focus = _ref2.focus,
+          embed = _ref2.embed,
+          viewItems = _ref2.viewItems,
+          embeds = _ref2.embeds;
+      Object.keys(embeds).forEach(function (v) {
+        embeds[v] = _this2._renderPage(embeds[v]);
+      });
+      var props = {
+        app: app,
+        key: name,
+        name: name,
+        route: (0, _objectSpread2.default)({}, route, {
+          parentName: parentName,
+          params: params,
+          query: query,
+          active: active,
+          focus: focus,
+          embed: embed
+        }),
+        views: viewItems,
+        embeds: embeds
+      };
+
+      if (route.loader) {
+        route.loader(app).then(function (v) {
+          Object.assign(route, v, {
+            loader: null
+          });
+
+          _this2._handleRouterUpdate();
+        });
+        return _react.default.createElement(Router.PageLoading, {
+          key: name
+        });
+      } else if (typeof route.component === 'function') {
+        return _react.default.createElement(app.Page, (0, _extends2.default)({
+          key: name
+        }, props));
+      } else {
+        return _react.default.createElement(Router.PageError, {
+          app: app,
+          message: "wrong component"
+        });
+      }
+    }
+  }, {
+    key: "_getPathnameRouteInfo",
+    value: function _getPathnameRouteInfo(pathname, routes) {
+      var paths = pathname.split(':');
+      var match = Object.entries(routes).find(function (_ref3) {
+        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+            k = _ref4[0],
+            v = _ref4[1];
+
+        return k.split(':')[0] === paths[0];
+      });
+      if (!match) return [];
+      var items = match[0].split(':');
+      var routeName = items[0];
+      items = items.slice(1);
+      paths = paths.slice(1);
+      if (items.filter(function (v) {
+        return !v.endsWith('?');
+      }).length > paths.length) return [];
+      items = items.map(function (v) {
+        return v.endsWith('?') ? v.slice(0, -1) : v;
+      });
+      var route = match[1];
+      var params = {};
+      paths.forEach(function (path, i) {
+        params[items[i] || i] = decodeURIComponent(path);
+      });
+      return {
+        routeName: routeName,
+        params: params,
+        route: route
+      };
+    }
+  }, {
+    key: "_getPathnameErrorInfo",
+    value: function _getPathnameErrorInfo(pathname) {
+      if (pathname.startsWith('/error')) {
+        var paths = pathname.split(':');
+        return {
+          message: paths[1],
+          title: paths[2],
+          back: paths[3],
+          data: paths.slice(4)
+        };
+      }
+    }
+  }, {
+    key: "_update",
+    value: function _update() {
+      var _ref5 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          errorItem = _ref5.errorItem,
+          _ref5$pageItems = _ref5.pageItems,
+          pageItems = _ref5$pageItems === void 0 ? [] : _ref5$pageItems,
+          _ref5$viewItems = _ref5.viewItems,
+          viewItems = _ref5$viewItems === void 0 ? [] : _ref5$viewItems;
+
+      var focusId = undefined;
+      var focusViewItem = Array.from(viewItems).reverse().find(function (v) {
+        return v.options.isModal;
+      });
+      var activePageItem = pageItems.slice(-1)[0];
+      if (focusViewItem) focusId = focusViewItem.options._id;
+
+      if (activePageItem) {
+        activePageItem.active = true;
+        Object.values(activePageItem.embeds).forEach(function (v) {
+          return v.active = true;
+        });
+      }
+
+      if (activePageItem && !focusId) {
+        var pageFocusViewItem = Array.from(activePageItem.viewItems).reverse().find(function (v) {
+          return v.options.isModal;
+        });
+
+        if (pageFocusViewItem) {
+          focusId = pageFocusViewItem.options.id;
+        } else {
+          activePageItem.focus = true;
+          focusId = activePageItem.name;
+        }
+      }
+
+      this.props.app.router.setFocusId(focusId);
+      this.setState({
+        errorItem: errorItem,
+        pageItems: pageItems,
+        viewItems: viewItems
+      });
+    }
+  }, {
     key: "_handleRouterUpdate",
     value: function _handleRouterUpdate() {
       var app = this.props.app;
       var router = app.router;
-      var history = router.history;
+      var history = router.history; // error
 
-      var getPageByName = function getPageByName(pageName) {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+      var errorItem = this._getPathnameErrorInfo(history.location.pathname);
 
-        try {
-          for (var _iterator = pageItems[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var i = _step.value;
-            if (i.name === pageName) return i;
+      if (errorItem || !Object.keys(router.getRoutes()).length) return this.setState({
+        errorItem: errorItem
+      }); // page
 
-            if (i.embeds) {
-              var _iteratorNormalCompletion2 = true;
-              var _didIteratorError2 = false;
-              var _iteratorError2 = undefined;
-
-              try {
-                for (var _iterator2 = i.embeds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                  var ii = _step2.value;
-                  if (ii.name === pageName) return i;
-                }
-              } catch (err) {
-                _didIteratorError2 = true;
-                _iteratorError2 = err;
-              } finally {
-                try {
-                  if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-                    _iterator2.return();
-                  }
-                } finally {
-                  if (_didIteratorError2) {
-                    throw _iteratorError2;
-                  }
-                }
-              }
-            }
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return != null) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-      };
-
-      var getRoute = function getRoute(pathname) {
-        var paths = pathname.split(':');
-        var match = Object.entries(router.routes).find(function (_ref) {
-          var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-              k = _ref2[0],
-              v = _ref2[1];
-
-          return k.split(':')[0] === paths[0];
-        });
-        if (!match) return [];
-        var items = match[0].split(':');
-        var routeName = items[0];
-        items = items.slice(1);
-        paths = paths.slice(1);
-        if (items.filter(function (v) {
-          return !v.endsWith('?');
-        }).length > paths.length) return [];
-        items = items.map(function (v) {
-          return v.endsWith('?') ? v.slice(0, -1) : v;
-        });
-        var route = match[1];
-        var params = {};
-        paths.forEach(function (path, i) {
-          params[items[i] || i] = decodeURIComponent(path);
-        });
-        return {
-          routeName: routeName,
-          params: params,
-          route: route
-        };
-      };
-
-      var getError = function getError(pathname) {
-        if (pathname.startsWith('/error')) {
-          var paths = pathname.split(':');
-          return {
-            message: paths[1],
-            title: paths[2],
-            back: paths[3],
-            data: paths.slice(4)
-          };
-        }
-      }; // error
-
-
-      this.errorItem = getError(history.location.pathname);
-
-      if (this.errorItem || !router.routes || !Object.keys(router.routes).length) {
-        this.pageItems = [];
-        this.viewItems = [];
-        this.forceUpdate();
-        return;
-      } // page
-
-
+      var pathname = '';
       var pageItems = [];
-      var parentName = '';
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
       try {
-        for (var _iterator3 = parsePathname(history.location.pathname)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-          var v = _step3.value;
+        for (var _iterator = history.location.pathnames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var v = _step.value;
 
-          var _getRoute = getRoute(v),
-              routeName = _getRoute.routeName,
-              params = _getRoute.params,
-              route = _getRoute.route;
+          var _this$_getPathnameRou = this._getPathnameRouteInfo(v, router.getRoutes()),
+              routeName = _this$_getPathnameRou.routeName,
+              params = _this$_getPathnameRou.params,
+              route = _this$_getPathnameRou.route;
 
           if (!routeName) {
             app.render.panic('router nomatch', v);
             return;
           }
 
+          var name = '#' + (0, _path.join)(pathname, routeName);
+          var parentName = '#' + pathname;
           var embeds = {};
-          var _iteratorNormalCompletion4 = true;
-          var _didIteratorError4 = false;
-          var _iteratorError4 = undefined;
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
 
           try {
-            for (var _iterator4 = (Array.isArray(route.embeds) ? route.embeds.map(function (v) {
+            for (var _iterator2 = (Array.isArray(route.embeds) ? route.embeds.map(function (v) {
               return [v, v];
-            }) : Object.entries(route.embeds || {}))[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-              var _step4$value = (0, _slicedToArray2.default)(_step4.value, 2),
-                  kk = _step4$value[0],
-                  vv = _step4$value[1];
+            }) : Object.entries(route.embeds || {}))[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var _step2$value = (0, _slicedToArray2.default)(_step2.value, 2),
+                  kk = _step2$value[0],
+                  vv = _step2$value[1];
 
-              var _getRoute2 = getRoute(vv),
-                  routeEmebed = _getRoute2.route;
+              var _this$_getPathnameRou2 = this._getPathnameRouteInfo(vv, router.getRoutes()),
+                  routeEmebed = _this$_getPathnameRou2.route;
 
               if (!routeEmebed) {
                 app.render.panic('router nomatch', vv);
                 return;
               }
 
+              var nameEmbed = name + '|' + vv;
+              var parentNameEmbed = name;
               embeds[kk] = {
-                name: '#' + (0, _path.join)(parentName, v) + '|' + vv,
-                parentName: '#' + (0, _path.join)(parentName, v),
+                name: nameEmbed,
+                parentName: parentNameEmbed,
                 route: routeEmebed,
-                params: [],
+                params: {},
                 query: history.location.query,
-                viewItems: [],
+                viewItems: router.getPageViews(nameEmbed).map(function (vvv) {
+                  return (0, _objectSpread2.default)({}, vvv);
+                }),
                 embeds: {}
               };
             }
           } catch (err) {
-            _didIteratorError4 = true;
-            _iteratorError4 = err;
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-                _iterator4.return();
+              if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+                _iterator2.return();
               }
             } finally {
-              if (_didIteratorError4) {
-                throw _iteratorError4;
+              if (_didIteratorError2) {
+                throw _iteratorError2;
               }
             }
           }
 
           pageItems.push({
-            name: '#' + (0, _path.join)(parentName, routeName),
-            parentName: '#' + parentName,
+            name: name,
+            parentName: parentName,
             route: route,
             params: params,
             query: history.location.query,
-            viewItems: [],
+            viewItems: router.getPageViews(name).map(function (vv) {
+              return (0, _objectSpread2.default)({}, vv);
+            }),
             embeds: embeds
           });
-          parentName = (0, _path.join)(parentName, v);
-        } // view
+          pathname = (0, _path.join)(pathname, v);
+        } // top view
 
       } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _didIteratorError = true;
+        _iteratorError = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-            _iterator3.return();
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
           }
         } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
+          if (_didIteratorError) {
+            throw _iteratorError;
           }
         }
       }
 
-      var viewItems = [];
+      var viewItems = router.getNoPageViews().map(function (v) {
+        return (0, _objectSpread2.default)({}, v);
+      }); // update
 
-      var _arr = Object.entries(router.views || {});
-
-      for (var _i = 0; _i < _arr.length; _i++) {
-        var _arr$_i = (0, _slicedToArray2.default)(_arr[_i], 2),
-            id = _arr$_i[0],
-            _arr$_i$ = _arr$_i[1],
-            _arr$_i$$content = _arr$_i$.content,
-            content = _arr$_i$$content === void 0 ? {} : _arr$_i$$content,
-            _arr$_i$$options = _arr$_i$.options,
-            options = _arr$_i$$options === void 0 ? {} : _arr$_i$$options;
-
-        var item = {
-          id: id,
-          content: content,
-          options: options
-        };
-        var pageName = options.$pageName;
-
-        if (pageName) {
-          var page = getPageByName(pageName);
-          if (page) page.viewItems.push(item);
-        } else {
-          viewItems.push(item);
-        }
-      } // focus
-
-
-      var focusView = viewItems.find(function (v) {
-        return v.options.$isModal;
+      return this._update({
+        pageItems: pageItems,
+        viewItems: viewItems
       });
-
-      if (focusView) {
-        focusView.options.$focus = true;
-        router.focusName = focusView.id;
-      }
-
-      var activePage = pageItems.slice(-1)[0];
-
-      if (activePage) {
-        activePage.active = true;
-
-        if (!focusView) {
-          var pageFocusView = Array.from(activePage.viewItems).reverse().find(function (v) {
-            return v.options.$isModal;
-          });
-
-          if (pageFocusView) {
-            pageFocusView.options.$focus = true;
-            router.focusName = pageFocusView.id;
-          } else {
-            activePage.focus = true;
-            Object.values(activePage.embeds).forEach(function (v) {
-              return v.active = true;
-            });
-            router.focusName = activePage.name;
-          }
-        }
-      } // update
-
-
-      this.pageItems = pageItems;
-      this.viewItems = viewItems;
-      return this.forceUpdate();
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.eventOffRouterUpdate = this.props.app.event.on(this.props.app, 'onRouterUpdate', function () {
-        return _this2._handleRouterUpdate();
+        return _this3._handleRouterUpdate();
       });
     }
   }, {
@@ -392,85 +393,21 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
-      var app = this.props.app;
+      var _ref6 = this.state || {},
+          errorItem = _ref6.errorItem,
+          _ref6$pageItems = _ref6.pageItems,
+          pageItems = _ref6$pageItems === void 0 ? [] : _ref6$pageItems,
+          _ref6$viewItems = _ref6.viewItems,
+          viewItems = _ref6$viewItems === void 0 ? [] : _ref6$viewItems;
 
-      var renderPage = function renderPage(_ref3) {
-        var name = _ref3.name,
-            parentName = _ref3.parentName,
-            route = _ref3.route,
-            params = _ref3.params,
-            query = _ref3.query,
-            active = _ref3.active,
-            focus = _ref3.focus,
-            embed = _ref3.embed,
-            viewItems = _ref3.viewItems,
-            embeds = _ref3.embeds;
-        Object.keys(embeds).forEach(function (v) {
-          embeds[v] = renderPage(embeds[v]);
-        });
-        var props = {
-          app: app,
-          key: name,
-          name: name,
-          route: (0, _objectSpread2.default)({}, route, {
-            parentName: parentName,
-            params: params,
-            query: query,
-            active: active,
-            focus: focus,
-            embed: embed
-          }),
-          views: viewItems,
-          embeds: embeds
-        };
-
-        if (route.loader) {
-          route.loader(app).then(function (v) {
-            Object.assign(route, v, {
-              loader: null
-            });
-
-            _this3._handleRouterUpdate();
-          });
-          return _react.default.createElement(Router.PageLoading, {
-            key: name
-          });
-        } else if (typeof route.component === 'function') {
-          return _react.default.createElement(app.Page, (0, _extends2.default)({
-            key: name
-          }, props));
-        } else {
-          return _react.default.createElement(Router.PageError, {
-            app: app,
-            message: "wrong component"
-          });
-        }
-      };
-
-      return _react.default.createElement(_react.default.Fragment, null, this.errorItem ? _react.default.createElement(Router.PageError, (0, _extends2.default)({
-        app: app
-      }, this.errorItem)) : null, !this.errorItem && this.pageItems.map(function (v) {
-        return renderPage(v);
-      }), !this.errorItem && this.viewItems.map(function (_ref4) {
-        var id = _ref4.id,
-            Component = _ref4.content,
-            _ref4$options = _ref4.options;
-        _ref4$options = _ref4$options === void 0 ? {} : _ref4$options;
-        var $pageName = _ref4$options.$pageName,
-            $isContentComponent = _ref4$options.$isContentComponent,
-            $id = _ref4$options.$id,
-            $isModal = _ref4$options.$isModal,
-            $isRef = _ref4$options.$isRef,
-            $focus = _ref4$options.$focus,
-            $onAdd = _ref4$options.$onAdd,
-            $onRemove = _ref4$options.$onRemove,
-            restOptions = (0, _objectWithoutProperties2.default)(_ref4$options, ["$pageName", "$isContentComponent", "$id", "$isModal", "$isRef", "$focus", "$onAdd", "$onRemove"]);
-        var props = (0, _objectSpread2.default)({}, $isContentComponent ? {} : Component.porps, restOptions, {
-          key: id
-        });
-        return $isContentComponent ? _react.default.createElement(Component, props) : (0, _typeof2.default)(Component) === 'object' && Component.type ? (0, _react.cloneElement)(Component, props) : Component;
+      return _react.default.createElement(_react.default.Fragment, null, errorItem && _react.default.createElement(Router.PageError, (0, _extends2.default)({
+        app: this.props.app
+      }, errorItem)), !errorItem && pageItems.map(function (v) {
+        return _this4._renderPage(v);
+      }), !errorItem && viewItems.map(function (v) {
+        return _this4._renderView(v);
       }));
     }
   }]);
@@ -483,76 +420,165 @@ function () {
   // constructor
   // ----------------------------------------
   function Router(app) {
-    var _this4 = this;
-
     (0, _classCallCheck2.default)(this, Router);
     this.app = app;
     this._routes = {};
-    this.views = {};
+    this._views = [];
     this._pages = {};
     this._viewIdNum = 0;
     this._historyStackCount = 0;
-    this.focusName;
-    this.history = (0, _createHashHistory.default)();
-    this.unlisten = this.history.listen(function (location, action) {
-      app.log.info('router location', location);
-      location.query = {};
+    this._focusId;
 
-      if (location.search) {
-        location.search.slice(1).split('&').forEach(function (v) {
-          var vs = v.split('=');
-          location.query[vs[0]] = vs[1];
-        });
-      }
+    this._initEvent();
 
-      if (action === 'PUSH') _this4._historyStackCount++;
-      if (action === 'POP') _this4._historyStackCount = Math.max(--_this4._historyStackCount, 0);
+    this._initHistory();
 
-      _this4.update();
-    });
-    this.app.event.on(this.app, 'onAppStartRender', function () {
-      _this4.update();
-    });
-    this.app.event.on(this.app, 'onPageAdd', function (name, page) {
-      page && !page.props.route.embed && _this4._addPage(name, page);
-    });
-    this.app.event.on(this.app, 'onPageRemove', function (name, page) {
-      page && !page.props.route.embed && _this4._removePage(name);
-    });
-    this.app.event.on(this.app, 'onAppStartRouter', function () {
-      return _this4.app.render.component = _react.default.createElement(Router.RouterComponent, {
-        app: _this4.app
-      });
-    });
+    this._initRoute();
   }
 
   (0, _createClass2.default)(Router, [{
+    key: "_initEvent",
+    value: function _initEvent() {
+      var _this5 = this;
+
+      this.app.event.on(this.app, 'onPageAdd', function (name, page) {
+        page && !page.props.route.embed && _this5._addPage(name, page);
+      });
+      this.app.event.on(this.app, 'onPageRemove', function (name, page) {
+        page && !page.props.route.embed && _this5._removePage(name);
+      });
+      this.app.event.on(this.app, 'onAppStartRouter', function () {
+        return _this5.app.render.component = _react.default.createElement(Router.RouterComponent, {
+          app: _this5.app
+        });
+      });
+      this.app.event.on(this.app, 'onAppStartRender', function () {
+        _this5.update();
+      });
+    }
+  }, {
+    key: "_initHistory",
+    value: function _initHistory() {
+      var _this6 = this;
+
+      var handleLocationChange = function handleLocationChange(location, action) {
+        _this6.app.log.info('router location', location);
+
+        location.query = {};
+        location.search && location.search.slice(1).split('&').forEach(function (v) {
+          var vs = v.split('=');
+          location.query[vs[0]] = vs[1];
+        });
+        location.pathnames = ((location.pathname[1] === ':' ? '' : '/') + location.pathname).split(/(?<!^)\//).filter(function (v) {
+          return v;
+        });
+        if (action === 'PUSH') _this6._historyStackCount++;
+        if (action === 'POP') _this6._historyStackCount = Math.max(--_this6._historyStackCount, 0);
+
+        _this6.update();
+      };
+
+      this.history = (0, _createHashHistory.default)();
+      this.history.listen(function (location, action) {
+        return handleLocationChange(location, action);
+      });
+      handleLocationChange(this.history.location, this.history.action);
+    }
+  }, {
+    key: "_initRoute",
+    value: function _initRoute() {
+      this._genRouteMethod('/');
+
+      this._genRouteMethod('/error');
+    } // route
+    // --------------------------------------
+
+  }, {
+    key: "setRoutes",
+    value: function setRoutes(routes) {
+      var _this7 = this;
+
+      this._routes = routes;
+      Object.keys(routes || {}).forEach(function (v) {
+        return v && _this7._genRouteMethod(v.split(':')[0]);
+      });
+      this.update();
+    }
+  }, {
+    key: "getRoutes",
+    value: function getRoutes() {
+      return this._routes || {};
+    }
+  }, {
+    key: "addRoute",
+    value: function addRoute(name, route) {
+      if (!name || !route) return;
+      this._routes[name] = route;
+
+      this._genNaviMethod(name);
+
+      this.update();
+    }
+  }, {
     key: "update",
     value: function update() {
       this.app.event.emit(this.app, 'onRouterUpdate');
     }
   }, {
-    key: "_addPage",
-    // pages
+    key: "_genRouteMethod",
+    value: function _genRouteMethod(path) {
+      var _this8 = this;
+
+      if (!path) return;
+      var name = path === '/' ? 'Root' : this.app.utils.captilaze(path);
+
+      this['push' + name] = function () {
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        return _this8.push([path].concat(args));
+      };
+
+      this['replace' + name] = function () {
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
+
+        return _this8.replace([path].concat(args));
+      };
+    } // pushRoot() { this.push('/') }
+    // replaceRoot() { this.replace('/') }
+    // pushError(message, title, back, ...data) { this.push('/', ['error', message, title||'', back||'', ...data])}
+    // replaceError(message, title, back, ...data) { this.replace('/', ['error', message, title||'', back||'', ...data])}
+    // focus
     // ---------------------------------------
+
+  }, {
+    key: "setFocusId",
+    value: function setFocusId(_id) {
+      this.app.log.info('router focus', _id);
+      this._focusId = _id;
+    }
+  }, {
+    key: "isFocus",
+    value: function isFocus(_id) {
+      return this._focusId === _id;
+    } // pages
+    // ---------------------------------------
+
+  }, {
+    key: "_addPage",
     value: function _addPage(name, page) {
       this._pages[name] = page;
     }
   }, {
     key: "_removePage",
     value: function _removePage(name) {
-      var _this5 = this;
-
       var page = this.getPage(name);
 
       if (page) {
-        Object.entries(this.views).forEach(function (_ref5) {
-          var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
-              id = _ref6[0],
-              $pageName = _ref6[1].options.$pageName;
-
-          return $pageName === name && _this5.removeView(id);
-        });
+        this.removePageViews(page.name);
         delete this._pages[page.name];
       }
     }
@@ -574,38 +600,84 @@ function () {
     key: "getViewId",
     value: function getViewId() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      return options.$id || "".concat(++this._viewIdNum, "@").concat(options.$pageName ? options.$pageName : '#');
+      return options._id || "".concat(++this._viewIdNum, "@").concat(options.pageName ? options.pageName : '#');
     }
   }, {
     key: "addView",
     value: function addView(content) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
       if (!content) return;
-      options.$id = this.getViewId(options);
-      this.views[options.$id] = {
-        content: content,
-        options: options,
-        $id: options.$id
-      };
-      options.$onAdd && options.$onAdd(options.$id);
+      options._id = this.getViewId(options);
+      var view = this.getView(options._id);
+
+      if (!view) {
+        this._views.push({
+          content: content,
+          props: props,
+          options: options
+        });
+
+        options.onAdd && options.onAdd(options._id);
+      } else {
+        view.content = content;
+        view.props = props;
+        view.options = options;
+      }
+
       this.update();
-      return options.$id;
+      return options._id;
     }
   }, {
     key: "removeView",
-    value: function removeView($id) {
-      var _this$getView = this.getView($id),
-          _this$getView$options = _this$getView.options,
-          options = _this$getView$options === void 0 ? {} : _this$getView$options;
+    value: function removeView(_id) {
+      var index = this._views.findIndex(function (v) {
+        return v.options._id === _id;
+      });
 
-      options.$onRemove && options.$onRemove(options.$id);
-      delete this.views[$id];
+      if (index < 0) return;
+      this._views[index].options.onRemove && this._views[index].options.onRemove();
+
+      this._views.splice(index, 1);
+
       this.update();
     }
   }, {
     key: "getView",
-    value: function getView($id) {
-      return this.views[$id];
+    value: function getView(_id) {
+      return this._views.find(function (v) {
+        return v.options._id === _id;
+      });
+    }
+  }, {
+    key: "getViews",
+    value: function getViews() {
+      return this._views;
+    }
+  }, {
+    key: "getNoPageViews",
+    value: function getNoPageViews() {
+      return this._views.filter(function (_ref7) {
+        var options = _ref7.options;
+        return !options.pageName;
+      });
+    }
+  }, {
+    key: "getPageViews",
+    value: function getPageViews(_id) {
+      return this._views.filter(function (_ref8) {
+        var options = _ref8.options;
+        return options.pageName === _id;
+      });
+    }
+  }, {
+    key: "removePageViews",
+    value: function removePageViews(_id) {
+      var _this9 = this;
+
+      this.getPageViews(_id).forEach(function (v) {
+        return _this9.removeView(v._id);
+      });
     } // router navigator
     // ----------------------------------------
 
@@ -614,22 +686,22 @@ function () {
     value: function _getLocation() {
       var passQuery;
       var query = {};
-      var paths = parsePathname(this.history.location.pathname);
+      var pathnames = Array.from(this.history.location.pathnames);
 
       var addPath = function addPath(path) {
         path.split('/').forEach(function (v) {
           if (v === '') {
-            paths = ['/'];
+            pathnames = ['/'];
           } else if (path === '..') {
-            paths = paths.slice(0, -1);
+            pathnames = pathnames.slice(0, -1);
           } else {
-            paths.push(v);
+            pathnames.push(v);
           }
         });
       };
 
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
+      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
       }
 
       args.forEach(function (arg) {
@@ -646,13 +718,13 @@ function () {
       }); //pathname, search, hash, key, state
 
       return {
-        pathname: paths.map(function (v, i, a) {
+        pathname: pathnames.map(function (v, i, a) {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
-        search: '?' + Object.entries(passQuery ? (0, _objectSpread2.default)({}, location.query, query) : query).map(function (_ref7) {
-          var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
-              k = _ref8[0],
-              v = _ref8[1];
+        search: '?' + Object.entries(passQuery ? (0, _objectSpread2.default)({}, location.query, query) : query).map(function (_ref9) {
+          var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
+              k = _ref10[0],
+              v = _ref10[1];
 
           return k + '=' + v;
         }).reduce(function (v1, v2) {
@@ -669,8 +741,8 @@ function () {
   }, {
     key: "push",
     value: function push() {
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
+      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
       }
 
       app.log.info('router push', args);
@@ -679,8 +751,8 @@ function () {
   }, {
     key: "replace",
     value: function replace() {
-      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
+      for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+        args[_key5] = arguments[_key5];
       }
 
       app.log.info('router replace', args);
@@ -692,42 +764,6 @@ function () {
       var step = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       app.log.info('router back');
       return this.history.go(-step);
-    }
-  }, {
-    key: "pushRoot",
-    value: function pushRoot() {
-      this.push('/');
-    }
-  }, {
-    key: "replaceRoot",
-    value: function replaceRoot() {
-      this.replace('/');
-    }
-  }, {
-    key: "pushError",
-    value: function pushError(message, title, back) {
-      for (var _len4 = arguments.length, data = new Array(_len4 > 3 ? _len4 - 3 : 0), _key4 = 3; _key4 < _len4; _key4++) {
-        data[_key4 - 3] = arguments[_key4];
-      }
-
-      this.push('/', ['error', message, title || '', back || ''].concat(data));
-    }
-  }, {
-    key: "replaceError",
-    value: function replaceError(message, title, back) {
-      for (var _len5 = arguments.length, data = new Array(_len5 > 3 ? _len5 - 3 : 0), _key5 = 3; _key5 < _len5; _key5++) {
-        data[_key5 - 3] = arguments[_key5];
-      }
-
-      this.replace('/', ['error', message, title || '', back || ''].concat(data));
-    }
-  }, {
-    key: "routes",
-    set: function set(routes) {
-      this._routes = routes;
-    },
-    get: function get() {
-      return this._routes;
     }
   }]);
   return Router;

@@ -15,7 +15,7 @@ let app = new App({
     },
 
     onAppStartConfig: ()=>{
-      app.router.routes = routes;
+      app.router.setRoutes(routes);
     },
   },
 })
