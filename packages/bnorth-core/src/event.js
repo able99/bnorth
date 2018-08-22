@@ -6,7 +6,7 @@ export default class Event {
   }
 
   _getEventName(event, target) {
-    return `&${event}@@${target?(target.name||target.pluginName):''}`;
+    return `&${event}@@${target?(target._id||target.pluginName):''}`;
   }
 
   _addListener(target, event, callback, tag, once) {
@@ -57,7 +57,7 @@ export default class Event {
   }
 
   emitMerge(target, event, ...args) {
-    let aevent = ((target&&(target.name||target.pluginName))||'') + event;
+    let aevent = ((target&&(target._id||target.pluginName))||'') + event;
     if(this._events[aevent]) return;
     this._events[aevent] = true;
     

@@ -32,31 +32,31 @@ function () {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     var page = arguments.length > 3 ? arguments[3] : undefined;
     (0, _classCallCheck2.default)(this, State);
-    var key = options.key || (name === true ? name : "*".concat(name, "@").concat(page && page.name || '#'));
+    var key = options.key || (name === true ? name : "*".concat(name, "@").concat(page && page._id || '#'));
     app.log.info('state create', key);
 
     if (app.states[key]) {
-      app.log.error('state key dup:', key, page && page.name);
+      app.log.error('state key dup:', key, page && page._id);
       return app.states[key];
     }
 
     if (key !== true) app.states[key] = this;
     this.app = app;
-    this.name = key;
+    this._id = key;
     this.options = options;
     if (this.options.initialization === undefined) this.options.initialization = {};
     key !== true && page && app.event.on(page, 'onPageStart', function (page, active) {
-      _this.app.event.emit(_this, 'onStateStart', _this.name, active);
-    }, this.name);
+      _this.app.event.emit(_this, 'onStateStart', _this._id, active);
+    }, this._id);
     key !== true && page && app.event.on(page, 'onPageActive', function (page, onStart) {
-      _this.app.event.emit(_this, 'onStateActive', _this.name, onStart);
-    }, this.name);
+      _this.app.event.emit(_this, 'onStateActive', _this._id, onStart);
+    }, this._id);
     key !== true && page && app.event.on(page, 'onPageInactive', function (page, onStop) {
-      _this.app.event.emit(_this, 'onStateInactive', _this.name, onStop);
-    }, this.name);
+      _this.app.event.emit(_this, 'onStateInactive', _this._id, onStop);
+    }, this._id);
     key !== true && page && app.event.on(page, 'onPageStop', function (page) {
-      _this.app.event.emit(_this, 'onStateStop', _this.name);
-    }, this.name);
+      _this.app.event.emit(_this, 'onStateStop', _this._id);
+    }, this._id);
     Object.entries(this.options).filter(function (_ref) {
       var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
           k = _ref2[0],
@@ -68,25 +68,25 @@ function () {
           k = _ref4[0],
           v = _ref4[1];
 
-      return _this.app.event.on(_this, k, v, _this.name);
+      return _this.app.event.on(_this, k, v, _this._id);
     });
     this.app.event.on(this, 'onStateStop', function () {
       _this.destructor();
-    }, this.name);
+    }, this._id);
   }
 
   (0, _createClass2.default)(State, [{
     key: "destructor",
     value: function destructor() {
-      app.log.info('state destructor', this.name);
-      this.app.event.off(this.name);
+      app.log.info('state destructor', this._id);
+      this.app.event.off(this._id);
       if (this.options.cleanOnStop !== false) this.clear();
-      if (this.name !== true && this.options.removeOnStop !== false) delete this.app.states[this.name];
+      if (this._id !== true && this.options.removeOnStop !== false) delete this.app.states[this._id];
     }
   }, {
     key: "data",
     value: function data() {
-      return this.app.context.stateData(this.name, this.options.initialization);
+      return this.app.context.stateData(this._id, this.options.initialization);
     }
   }, {
     key: "dataExt",
@@ -118,7 +118,7 @@ function () {
                 return _context.abrupt("return", ret);
 
               case 7:
-                this.app.context.stateInit(this.name, data);
+                this.app.context.stateInit(this._id, data);
                 return _context.abrupt("return", true);
 
               case 9:
@@ -162,7 +162,7 @@ function () {
 
               case 8:
                 ret = _context2.sent;
-                this.app.context.stateInit(this.name, ret || nextData);
+                this.app.context.stateInit(this._id, ret || nextData);
                 this.app.event.emit(this, 'onStateUpdated', ret || nextData, prevData, data, options);
                 return _context2.abrupt("return", true);
 
@@ -233,7 +233,7 @@ function () {
     key: "clear",
     value: function clear() {
       this.app.log.info('state clear');
-      return this.app.context.stateClean(this.name);
+      return this.app.context.stateClean(this._id);
     }
   }, {
     key: "_dataUpdate",

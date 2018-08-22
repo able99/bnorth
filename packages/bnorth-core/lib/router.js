@@ -9,9 +9,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
@@ -112,8 +112,8 @@ function (_React$Component) {
     value: function _renderPage(_ref2) {
       var _this2 = this;
 
-      var name = _ref2.name,
-          parentName = _ref2.parentName,
+      var _id = _ref2._id,
+          _idParent = _ref2._idParent,
           route = _ref2.route,
           params = _ref2.params,
           query = _ref2.query,
@@ -127,10 +127,10 @@ function (_React$Component) {
       });
       var props = {
         app: app,
-        key: name,
-        name: name,
+        key: _id,
+        _id: _id,
         route: (0, _objectSpread2.default)({}, route, {
-          parentName: parentName,
+          _idParent: _idParent,
           params: params,
           query: query,
           active: active,
@@ -150,14 +150,13 @@ function (_React$Component) {
           _this2._handleRouterUpdate();
         });
         return _react.default.createElement(Router.PageLoading, {
-          key: name
+          key: _id
         });
       } else if (typeof route.component === 'function') {
-        return _react.default.createElement(app.Page, (0, _extends2.default)({
-          key: name
-        }, props));
+        return _react.default.createElement(app.Page, props);
       } else {
         return _react.default.createElement(Router.PageError, {
+          key: _id,
           app: app,
           message: "wrong component"
         });
@@ -242,7 +241,7 @@ function (_React$Component) {
           focusId = pageFocusViewItem.options.id;
         } else {
           activePageItem.focus = true;
-          focusId = activePageItem.name;
+          focusId = activePageItem._id;
         }
       }
 
@@ -286,8 +285,10 @@ function (_React$Component) {
             return;
           }
 
-          var name = '#' + (0, _path.join)(pathname, routeName);
-          var parentName = '#' + pathname;
+          var _id = '#' + (0, _path.join)(pathname, routeName);
+
+          var _idParent = '#' + pathname;
+
           var embeds = {};
           var _iteratorNormalCompletion2 = true;
           var _didIteratorError2 = false;
@@ -309,15 +310,16 @@ function (_React$Component) {
                 return;
               }
 
-              var nameEmbed = name + '|' + vv;
-              var parentNameEmbed = name;
+              var _idEmbed = _id + '|' + vv;
+
+              var _idParentEmbed = _id;
               embeds[kk] = {
-                name: nameEmbed,
-                parentName: parentNameEmbed,
+                _id: _idEmbed,
+                _idParent: _idParentEmbed,
                 route: routeEmebed,
                 params: {},
                 query: history.location.query,
-                viewItems: router.getPageViews(nameEmbed).map(function (vvv) {
+                viewItems: router.getPageViews(_idEmbed).map(function (vvv) {
                   return (0, _objectSpread2.default)({}, vvv);
                 }),
                 embeds: {}
@@ -339,12 +341,12 @@ function (_React$Component) {
           }
 
           pageItems.push({
-            name: name,
-            parentName: parentName,
+            _id: _id,
+            _idParent: _idParent,
             route: route,
             params: params,
             query: history.location.query,
-            viewItems: router.getPageViews(name).map(function (vv) {
+            viewItems: router.getPageViews(_id).map(function (vv) {
               return (0, _objectSpread2.default)({}, vv);
             }),
             embeds: embeds
@@ -441,11 +443,11 @@ function () {
     value: function _initEvent() {
       var _this5 = this;
 
-      this.app.event.on(this.app, 'onPageAdd', function (name, page) {
-        page && !page.props.route.embed && _this5._addPage(name, page);
+      this.app.event.on(this.app, 'onPageAdd', function (_id, page) {
+        page && !page.props.route.embed && _this5._addPage(_id, page);
       });
-      this.app.event.on(this.app, 'onPageRemove', function (name, page) {
-        page && !page.props.route.embed && _this5._removePage(name);
+      this.app.event.on(this.app, 'onPageRemove', function (_id, page) {
+        page && !page.props.route.embed && _this5._removePage(_id);
       });
       this.app.event.on(this.app, 'onAppStartRouter', function () {
         return _this5.app.render.component = _react.default.createElement(Router.RouterComponent, {
@@ -547,11 +549,7 @@ function () {
 
         return _this8.replace([path].concat(args));
       };
-    } // pushRoot() { this.push('/') }
-    // replaceRoot() { this.replace('/') }
-    // pushError(message, title, back, ...data) { this.push('/', ['error', message, title||'', back||'', ...data])}
-    // replaceError(message, title, back, ...data) { this.replace('/', ['error', message, title||'', back||'', ...data])}
-    // focus
+    } // focus
     // ---------------------------------------
 
   }, {
@@ -569,27 +567,27 @@ function () {
 
   }, {
     key: "_addPage",
-    value: function _addPage(name, page) {
-      this._pages[name] = page;
+    value: function _addPage(_id, page) {
+      this._pages[_id] = page;
     }
   }, {
     key: "_removePage",
-    value: function _removePage(name) {
-      var page = this.getPage(name);
+    value: function _removePage(_id) {
+      var page = this.getPage(_id);
 
       if (page) {
-        this.removePageViews(page.name);
-        delete this._pages[page.name];
+        this.removePageViews(page._id);
+        delete this._pages[page._id];
       }
     }
   }, {
     key: "getPage",
-    value: function getPage(name) {
-      if (typeof name === 'string') {
-        return this._pages[name];
-      } else if (typeof name === 'number') {
-        return this._pages[Object.keys(this._pages)[name]];
-      } else if (name === undefined) {
+    value: function getPage(_id) {
+      if (typeof _id === 'string') {
+        return this._pages[_id];
+      } else if (typeof _id === 'number') {
+        return this._pages[Object.keys(this._pages)[_id]];
+      } else if (_id === undefined) {
         var keys = Object.keys(this._pages);
         return this._pages[keys[keys.length - 1]];
       }
@@ -600,7 +598,7 @@ function () {
     key: "getViewId",
     value: function getViewId() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      return options._id || "".concat(++this._viewIdNum, "@").concat(options.pageName ? options.pageName : '#');
+      return options._id || "".concat(++this._viewIdNum, "@").concat(options._idPage ? options._idPage : '#');
     }
   }, {
     key: "addView",
@@ -659,7 +657,7 @@ function () {
     value: function getNoPageViews() {
       return this._views.filter(function (_ref7) {
         var options = _ref7.options;
-        return !options.pageName;
+        return !options._idPage;
       });
     }
   }, {
@@ -667,7 +665,7 @@ function () {
     value: function getPageViews(_id) {
       return this._views.filter(function (_ref8) {
         var options = _ref8.options;
-        return options.pageName === _id;
+        return options._idPage === _id;
       });
     }
   }, {

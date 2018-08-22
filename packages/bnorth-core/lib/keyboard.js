@@ -19,7 +19,7 @@ function () {
 
     (0, _classCallCheck2.default)(this, Keyboard);
     this.app = app;
-    this.name = 'app.keyborad';
+    this._id = 'app.keyborad';
     this._listeners = [];
 
     this._handleKeyEvent = function (e) {
@@ -49,18 +49,18 @@ function () {
     }
   }, {
     key: "on",
-    value: function on(name, event, callback) {
+    value: function on(_id, event, callback) {
       var _this3 = this;
 
-      if (!event || !callback || !name) return;
+      if (!event || !callback || !_id) return;
       if (this._listeners.find(function (listener) {
-        return listener.event === event && listener.callback === callback && listener.name === name;
+        return listener.event === event && listener.callback === callback && listener._id === _id;
       })) return;
 
       this._listeners.push({
         event: event,
         callback: callback,
-        name: name
+        _id: _id
       });
 
       return function () {
@@ -74,7 +74,7 @@ function () {
 
       if (typeof item === 'string') {
         this._listeners.forEach(function (listener, i) {
-          if (listener.name === item) _this4._listeners.splice(i, 1);
+          if (listener._id === item) _this4._listeners.splice(i, 1);
         });
       } else if (typeof item === 'function') {
         var index = this._listeners.findIndex(function (listener) {

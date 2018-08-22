@@ -48,22 +48,22 @@ class RouterComponent extends React.Component {
     return isContentComponent?<Component {...aprops} />:(typeof Component==='object'&&Component.type?cloneElement(Component, aprops):Component);
   }
 
-  _renderPage({name, parentName, route, params, query, active, focus, embed, viewItems, embeds}){
+  _renderPage({_id, _idParent, route, params, query, active, focus, embed, viewItems, embeds}){
     Object.keys(embeds).forEach(v=>{
       embeds[v] = this._renderPage(embeds[v]);
     })
-    let props = { app, key: name, name, route: { ...route, parentName, params, query, active, focus, embed }, views: viewItems, embeds};
+    let props = { app, key: _id, _id, route: { ...route, _idParent, params, query, active, focus, embed }, views: viewItems, embeds};
 
     if(route.loader){
       route.loader(app).then(v=>{
         Object.assign(route, v, {loader: null});
         this._handleRouterUpdate();
       })
-      return <Router.PageLoading key={name} />;
+      return <Router.PageLoading key={_id} />;
     }else if(typeof route.component==='function'){
-      return <app.Page key={name} {...props} />;
+      return <app.Page {...props} />;
     }else{
-      return <Router.PageError app={app} message="wrong component" />
+      return <Router.PageError key={_id} app={app} message="wrong component" />
     }
   }
 
@@ -117,7 +117,7 @@ class RouterComponent extends React.Component {
         focusId = pageFocusViewItem.options.id;
       }else{
         activePageItem.focus = true;
-        focusId = activePageItem.name; 
+        focusId = activePageItem._id; 
       }
     }
 
@@ -142,22 +142,22 @@ class RouterComponent extends React.Component {
       let { routeName, params, route } = this._getPathnameRouteInfo(v, router.getRoutes());
       if(!routeName){ app.render.panic('router nomatch', v); return; }
 
-      let name = '#'+join(pathname,routeName);
-      let parentName = '#'+pathname;
+      let _id = '#'+join(pathname,routeName);
+      let _idParent = '#'+pathname;
       let embeds = {};
       for (let [kk,vv] of Array.isArray(route.embeds)?route.embeds.map(v=>[v,v]):Object.entries(route.embeds||{})) {
         let { route:routeEmebed } = this._getPathnameRouteInfo(vv, router.getRoutes());
         if(!routeEmebed){ app.render.panic('router nomatch', vv); return; }
-        let nameEmbed = name+'|'+vv;
-        let parentNameEmbed = name;
+        let _idEmbed = _id+'|'+vv;
+        let _idParentEmbed = _id;
 
         embeds[kk] = { 
-          name: nameEmbed, parentName: parentNameEmbed, route: routeEmebed, params: {}, query: history.location.query, viewItems: router.getPageViews(nameEmbed).map(vvv=>({...vvv})), embeds: {}, 
+          _id: _idEmbed, _idParent: _idParentEmbed, route: routeEmebed, params: {}, query: history.location.query, viewItems: router.getPageViews(_idEmbed).map(vvv=>({...vvv})), embeds: {}, 
         }
       }
 
       pageItems.push({ 
-        name, parentName, route, params, query: history.location.query, viewItems: router.getPageViews(name).map(vv=>({...vv})), embeds
+        _id, _idParent, route, params, query: history.location.query, viewItems: router.getPageViews(_id).map(vv=>({...vv})), embeds
       });
 
       pathname = join(pathname,v);
@@ -210,8 +210,8 @@ export default class Router {
   }
 
   _initEvent() {
-    this.app.event.on(this.app, 'onPageAdd', (name, page)=>{page&&!page.props.route.embed&&this._addPage(name, page)});
-    this.app.event.on(this.app, 'onPageRemove', (name, page)=>{page&&!page.props.route.embed&&this._removePage(name)});
+    this.app.event.on(this.app, 'onPageAdd', (_id, page)=>{page&&!page.props.route.embed&&this._addPage(_id, page)});
+    this.app.event.on(this.app, 'onPageRemove', (_id, page)=>{page&&!page.props.route.embed&&this._removePage(_id)});
     this.app.event.on(this.app, 'onAppStartRouter', ()=>(this.app.render.component = <Router.RouterComponent app={this.app} />));
     this.app.event.on(this.app, 'onAppStartRender', ()=>{this.update()});
   }
@@ -274,12 +274,6 @@ export default class Router {
     this['push'+name] = (...args)=>this.push([path, ...args]);
     this['replace'+name] = (...args)=>this.replace([path, ...args]);
   }
-
-  
-  // pushRoot() { this.push('/') }
-  // replaceRoot() { this.replace('/') }
-  // pushError(message, title, back, ...data) { this.push('/', ['error', message, title||'', back||'', ...data])}
-  // replaceError(message, title, back, ...data) { this.replace('/', ['error', message, title||'', back||'', ...data])}
   
   // focus
   // ---------------------------------------
@@ -294,24 +288,24 @@ export default class Router {
 
   // pages
   // ---------------------------------------
-  _addPage(name, page) {
-    this._pages[name] = page;
+  _addPage(_id, page) {
+    this._pages[_id] = page;
   }
   
-  _removePage(name) {
-    let page = this.getPage(name);
+  _removePage(_id) {
+    let page = this.getPage(_id);
     if(page) {
-      this.removePageViews(page.name);
-      delete this._pages[page.name];
+      this.removePageViews(page._id);
+      delete this._pages[page._id];
     }
   }
 
-  getPage(name) {
-    if(typeof name === 'string') {
-      return this._pages[name];
-    } else if(typeof name === 'number') {
-      return this._pages[Object.keys(this._pages)[name]];
-    } else if(name===undefined){
+  getPage(_id) {
+    if(typeof _id === 'string') {
+      return this._pages[_id];
+    } else if(typeof _id === 'number') {
+      return this._pages[Object.keys(this._pages)[_id]];
+    } else if(_id===undefined){
       let keys = Object.keys(this._pages);
       return this._pages[keys[keys.length-1]];
     }
@@ -320,7 +314,7 @@ export default class Router {
   // views 
   // ----------------------------------------
   getViewId(options={}) {
-    return options._id || `${++this._viewIdNum}@${options.pageName?options.pageName:'#'}`;
+    return options._id || `${++this._viewIdNum}@${options._idPage?options._idPage:'#'}`;
   }
 
   addView(content, props={}, options={}) {
@@ -359,11 +353,11 @@ export default class Router {
   }
 
   getNoPageViews() {
-    return this._views.filter(({options})=>!options.pageName);
+    return this._views.filter(({options})=>!options._idPage);
   }
 
   getPageViews(_id) {
-    return this._views.filter(({options})=>options.pageName===_id);
+    return this._views.filter(({options})=>options._idPage===_id);
   }
 
   removePageViews(_id) {

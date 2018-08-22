@@ -21,7 +21,6 @@ let PageInfo = props=>{
 export default {
   '/:tab?': {
     component: require('./pages/home'),
-    controller: require('./pages/_home'),
     embeds: ['components', 'router', 'data', 'plugins' ],
   },
   'components': {
@@ -32,6 +31,7 @@ export default {
   },
   'data': {
     component: require('./pages/data'),
+    controller: require('./pages/_data'),
   },
   'plugins': {
     component: require('./pages/plugins'),

@@ -9,10 +9,14 @@ export default class Page extends React.Component {
     this.parseController();
   }
 
-  get name() { return this.props.name}
-  get pathname() { return this.props.route && this.props.route.pathname}
-  get route() { return this.props.route||{}}
-  get match() { return this.props.match||{}}
+  get _id() { 
+    return this.props._id
+  }
+
+  getEmbed(routerName) { 
+    let _id = this.props.embeds[routerName]&&this.props.embeds[routerName].props._id;
+    return _id && this.props.app.router.getPage(_id);
+  }
 
   // key event
   // ---------------------------
@@ -61,14 +65,14 @@ export default class Page extends React.Component {
         // state
       }else if(k.startsWith('onPage')) {
         // page event
-        app.event.on(this, k, v, this.name);
+        app.event.on(this, k, v, this._id);
       }else if(k.startsWith('onState')) {
         // page state event
         let stateEvents = k.split('_');
-        if(stateEvents[0]&&this[stateEvents[1]]) app.event.on(this[stateEvents[1]], stateEvents[0], v, this.name);
+        if(stateEvents[0]&&this[stateEvents[1]]) app.event.on(this[stateEvents[1]], stateEvents[0], v, this._id);
       }else if(k.startsWith('on')) {
         // app event
-        app.event.on(app, k, v, this.name);
+        app.event.on(app, k, v, this._id);
       }else if(k.startsWith('action')){ 
         // action
         this[k] = this.action(v, k);
@@ -82,7 +86,7 @@ export default class Page extends React.Component {
   _getStateKeys() {
     return Object.entries(this)
     .filter(([k,v])=>k.startsWith('_state')||(k.startsWith('state')&&k!=='state'))
-    .map(([k,v])=>v.name);
+    .map(([k,v])=>v._id);
   }
 
   _getStateObjs() {
@@ -102,24 +106,24 @@ export default class Page extends React.Component {
   // page life circle
   // ---------------------------
   componentDidMount() {
-    let { app, name, route:{active} } = this.props;
-    app.log.info('page did mount', name);
+    let { app, _id, route:{active} } = this.props;
+    app.log.info('page did mount', _id);
 
-    this._offKeyEvent = app.keyboard.on(name, 'keydown', e=>this.handleKeyEvent(e));
-    app.event.emitSync(app, 'onPageAdd', name, this);
+    this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this.handleKeyEvent(e));
+    app.event.emitSync(app, 'onPageAdd', _id, this);
     app.event.emitSync(this, 'onPageStart', this, active);
     active && app.event.emitSync(this, 'onPageActive', this, true);
   }
 
   componentWillUnmount() {
-    let { app, name } = this.props;
-    app.log.info('page will unmount', name);
+    let { app, _id } = this.props;
+    app.log.info('page will unmount', _id);
 
     app.event.emitSync(this, 'onPageInactive', this, true);
     app.event.emitSync(this,'onPageStop', this);
-    app.event.emitSync(app, 'onPageRemove', name, this);
+    app.event.emitSync(app, 'onPageRemove', _id, this);
     this._offKeyEvent && this._offKeyEvent();
-    app.event.off(name);
+    app.event.off(_id);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -147,12 +151,12 @@ export default class Page extends React.Component {
   // page render
   // ---------------------------
   render() {
-    let { context, app, name, route, views, embeds, ...props } = this.props;
-    app.log.info('page render', name);
+    let { context, app, _id, route, views, embeds, ...props } = this.props;
+    app.log.info('page render', _id);
 
     let { active, embed } = route;
     this._actionNum = 0;
-    let componentProps = { app, name, route, page: this, frame: this.frame, ...this._getStateObjs() }
+    let componentProps = { app, _id, route, page: this, frame: this.frame, ...this._getStateObjs() }
     Object.keys(embeds).forEach(v=>{embeds[v] = cloneElement(embeds[v], { ...v.props, frame: this.frame })});
 
     if(!embed) {
@@ -163,7 +167,7 @@ export default class Page extends React.Component {
       }
       let refFrame = e=>{ if(!e)return; let update=!(this.frame); this.frame=e; if(update)this.forceUpdate() }
       return (
-        <main data-page={name} ref={refFrame} style={styleSet}>
+        <main data-page={_id} ref={refFrame} style={styleSet}>
           <route.component {...props} {...componentProps}>{embeds}</route.component>
           {views}
         </main>

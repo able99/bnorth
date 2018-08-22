@@ -48,9 +48,16 @@ function (_React$Component) {
   }
 
   (0, _createClass2.default)(Page, [{
-    key: "handleKeyEvent",
-    // key event
+    key: "getEmbed",
+    value: function getEmbed(routerName) {
+      var _id = this.props.embeds[routerName] && this.props.embeds[routerName].props._id;
+
+      return _id && this.props.app.router.getPage(_id);
+    } // key event
     // ---------------------------
+
+  }, {
+    key: "handleKeyEvent",
     value: function handleKeyEvent(e) {
       return e.keyCode === 27 && this.actionGoBack();
     } // controller
@@ -121,14 +128,14 @@ function (_React$Component) {
         if (k.startsWith('state') || k.startsWith('_state')) {// state
         } else if (k.startsWith('onPage')) {
           // page event
-          app.event.on(_this3, k, v, _this3.name);
+          app.event.on(_this3, k, v, _this3._id);
         } else if (k.startsWith('onState')) {
           // page state event
           var stateEvents = k.split('_');
-          if (stateEvents[0] && _this3[stateEvents[1]]) app.event.on(_this3[stateEvents[1]], stateEvents[0], v, _this3.name);
+          if (stateEvents[0] && _this3[stateEvents[1]]) app.event.on(_this3[stateEvents[1]], stateEvents[0], v, _this3._id);
         } else if (k.startsWith('on')) {
           // app event
-          app.event.on(app, k, v, _this3.name);
+          app.event.on(app, k, v, _this3._id);
         } else if (k.startsWith('action')) {
           // action
           _this3[k] = _this3.action(v, k);
@@ -152,7 +159,7 @@ function (_React$Component) {
             k = _ref9[0],
             v = _ref9[1];
 
-        return v.name;
+        return v._id;
       });
     }
   }, {
@@ -185,13 +192,13 @@ function (_React$Component) {
 
       var _this$props = this.props,
           app = _this$props.app,
-          name = _this$props.name,
+          _id = _this$props._id,
           active = _this$props.route.active;
-      app.log.info('page did mount', name);
-      this._offKeyEvent = app.keyboard.on(name, 'keydown', function (e) {
+      app.log.info('page did mount', _id);
+      this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
         return _this4.handleKeyEvent(e);
       });
-      app.event.emitSync(app, 'onPageAdd', name, this);
+      app.event.emitSync(app, 'onPageAdd', _id, this);
       app.event.emitSync(this, 'onPageStart', this, active);
       active && app.event.emitSync(this, 'onPageActive', this, true);
     }
@@ -200,13 +207,13 @@ function (_React$Component) {
     value: function componentWillUnmount() {
       var _this$props2 = this.props,
           app = _this$props2.app,
-          name = _this$props2.name;
-      app.log.info('page will unmount', name);
+          _id = _this$props2._id;
+      app.log.info('page will unmount', _id);
       app.event.emitSync(this, 'onPageInactive', this, true);
       app.event.emitSync(this, 'onPageStop', this);
-      app.event.emitSync(app, 'onPageRemove', name, this);
+      app.event.emitSync(app, 'onPageRemove', _id, this);
       this._offKeyEvent && this._offKeyEvent();
-      app.event.off(name);
+      app.event.off(_id);
     }
   }, {
     key: "componentDidUpdate",
@@ -268,18 +275,18 @@ function (_React$Component) {
       var _this$props4 = this.props,
           context = _this$props4.context,
           app = _this$props4.app,
-          name = _this$props4.name,
+          _id = _this$props4._id,
           route = _this$props4.route,
           views = _this$props4.views,
           embeds = _this$props4.embeds,
-          props = (0, _objectWithoutProperties2.default)(_this$props4, ["context", "app", "name", "route", "views", "embeds"]);
-      app.log.info('page render', name);
+          props = (0, _objectWithoutProperties2.default)(_this$props4, ["context", "app", "_id", "route", "views", "embeds"]);
+      app.log.info('page render', _id);
       var active = route.active,
           embed = route.embed;
       this._actionNum = 0;
       var componentProps = (0, _objectSpread2.default)({
         app: app,
-        name: name,
+        _id: _id,
         route: route,
         page: this,
         frame: this.frame
@@ -308,7 +315,7 @@ function (_React$Component) {
         };
 
         return _react.default.createElement("main", {
-          "data-page": name,
+          "data-page": _id,
           ref: refFrame,
           style: styleSet
         }, _react.default.createElement(route.component, (0, _extends2.default)({}, props, componentProps), embeds), views);
@@ -317,24 +324,9 @@ function (_React$Component) {
       }
     }
   }, {
-    key: "name",
+    key: "_id",
     get: function get() {
-      return this.props.name;
-    }
-  }, {
-    key: "pathname",
-    get: function get() {
-      return this.props.route && this.props.route.pathname;
-    }
-  }, {
-    key: "route",
-    get: function get() {
-      return this.props.route || {};
-    }
-  }, {
-    key: "match",
-    get: function get() {
-      return this.props.match || {};
+      return this.props._id;
     }
   }]);
   return Page;

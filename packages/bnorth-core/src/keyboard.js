@@ -1,7 +1,7 @@
 export default class Keyboard {
   constructor(app) {
     this.app = app;
-    this.name = 'app.keyborad';
+    this._id = 'app.keyborad';
     this._listeners = [];
 
     this._handleKeyEvent = e=>this.handleKeyEvent(e);
@@ -16,16 +16,16 @@ export default class Keyboard {
     if(listener) listener.callback(e);
   }
 
-  on(name, event, callback) {
-    if(!event||!callback||!name) return;
-    if(this._listeners.find(listener=>listener.event===event&&listener.callback===callback&&listener.name===name)) return;
-    this._listeners.push({event, callback, name});
+  on(_id, event, callback) {
+    if(!event||!callback||!_id) return;
+    if(this._listeners.find(listener=>listener.event===event&&listener.callback===callback&&listener._id===_id)) return;
+    this._listeners.push({event, callback, _id});
     return ()=>this.off(callback);
   }
 
   off(item) {
     if(typeof item === 'string') {
-      this._listeners.forEach((listener,i)=>{if(listener.name===item) this._listeners.splice(i,1)});
+      this._listeners.forEach((listener,i)=>{if(listener._id===item) this._listeners.splice(i,1)});
     }else if(typeof item === 'function') {
       let index = this._listeners.findIndex(listener=>listener.callback===item);
       if(index>=0) this._listeners.splice(index,1);

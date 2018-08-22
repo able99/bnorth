@@ -32,7 +32,7 @@ function () {
   (0, _createClass2.default)(Event, [{
     key: "_getEventName",
     value: function _getEventName(event, target) {
-      return "&".concat(event, "@@").concat(target ? target.name || target.pluginName : '');
+      return "&".concat(event, "@@").concat(target ? target._id || target.pluginName : '');
     }
   }, {
     key: "_addListener",
@@ -258,7 +258,7 @@ function () {
         args[_key3 - 2] = arguments[_key3];
       }
 
-      var aevent = (target && (target.name || target.pluginName) || '') + event;
+      var aevent = (target && (target._id || target.pluginName) || '') + event;
       if (this._events[aevent]) return;
       this._events[aevent] = true;
       return setTimeout(function () {

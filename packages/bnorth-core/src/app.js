@@ -16,7 +16,7 @@ export default class App {
     // app props
     // ----------------------------
     this._startEvents = ['onAppStarting', 'onAppStartConfig', 'onAppStartRouter', 'onAppStartContext','onAppStartHack', 'onAppStartRender', 'onAppStarted'];
-    this.name = options.name||'app';
+    this._id = options._id||'app';
     this.options = options;
 
     // app core modal
