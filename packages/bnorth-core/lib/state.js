@@ -45,17 +45,17 @@ function () {
     this._id = key;
     this.options = options;
     if (this.options.initialization === undefined) this.options.initialization = {};
-    key !== true && page && app.event.on(page, 'onPageStart', function (page, active) {
-      _this.app.event.emit(_this, 'onStateStart', _this._id, active);
+    key !== true && page && app.event.on(page._id, 'onPageStart', function (page, active) {
+      _this.app.event.emit(_this._id, 'onStateStart', _this._id, active);
     }, this._id);
-    key !== true && page && app.event.on(page, 'onPageActive', function (page, onStart) {
-      _this.app.event.emit(_this, 'onStateActive', _this._id, onStart);
+    key !== true && page && app.event.on(page._id, 'onPageActive', function (page, onStart) {
+      _this.app.event.emit(_this._id, 'onStateActive', _this._id, onStart);
     }, this._id);
-    key !== true && page && app.event.on(page, 'onPageInactive', function (page, onStop) {
-      _this.app.event.emit(_this, 'onStateInactive', _this._id, onStop);
+    key !== true && page && app.event.on(page._id, 'onPageInactive', function (page, onStop) {
+      _this.app.event.emit(_this._id, 'onStateInactive', _this._id, onStop);
     }, this._id);
-    key !== true && page && app.event.on(page, 'onPageStop', function (page) {
-      _this.app.event.emit(_this, 'onStateStop', _this._id);
+    key !== true && page && app.event.on(page._id, 'onPageStop', function (page) {
+      _this.app.event.emit(_this._id, 'onStateStop', _this._id);
     }, this._id);
     Object.entries(this.options).filter(function (_ref) {
       var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
@@ -68,9 +68,9 @@ function () {
           k = _ref4[0],
           v = _ref4[1];
 
-      return _this.app.event.on(_this, k, v, _this._id);
+      return _this.app.event.on(_this._id, k, v, _this._id);
     });
-    this.app.event.on(this, 'onStateStop', function () {
+    this.app.event.on(this._id, 'onStateStop', function () {
       _this.destructor();
     }, this._id);
   }
@@ -105,7 +105,7 @@ function () {
                 this.app.log.info('state init', data);
                 data = data || this.app.utils.objectCopy(this.options.initialization);
                 _context.next = 4;
-                return app.event.emitSync(this, 'onStateInit', data);
+                return app.event.emitSync(this._id, 'onStateInit', data);
 
               case 4:
                 ret = _context.sent;
@@ -158,12 +158,12 @@ function () {
                 prevData = prevData || this.data();
                 nextData = this._dataUpdate(data, options, prevData);
                 _context2.next = 8;
-                return this.app.event.emitSync(this, 'onStateUpdating', nextData, prevData, data, options);
+                return this.app.event.emitSync(this._id, 'onStateUpdating', nextData, prevData, data, options);
 
               case 8:
                 ret = _context2.sent;
                 this.app.context.stateInit(this._id, ret || nextData);
-                this.app.event.emit(this, 'onStateUpdated', ret || nextData, prevData, data, options);
+                this.app.event.emit(this._id, 'onStateUpdated', ret || nextData, prevData, data, options);
                 return _context2.abrupt("return", true);
 
               case 12:

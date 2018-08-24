@@ -172,7 +172,7 @@ class RouterComponent extends React.Component {
   }
 
   componentDidMount() {
-    this.eventOffRouterUpdate = this.props.app.event.on(this.props.app, 'onRouterUpdate', ()=>this._handleRouterUpdate());
+    this.eventOffRouterUpdate = this.props.app.event.on(this.props.app._id, 'onRouterUpdate', ()=>this._handleRouterUpdate());
   }
 
   componentWillUnmount() {
@@ -210,10 +210,10 @@ export default class Router {
   }
 
   _initEvent() {
-    this.app.event.on(this.app, 'onPageAdd', (_id, page)=>{page&&!page.props.route.embed&&this._addPage(_id, page)});
-    this.app.event.on(this.app, 'onPageRemove', (_id, page)=>{page&&!page.props.route.embed&&this._removePage(_id)});
-    this.app.event.on(this.app, 'onAppStartRouter', ()=>(this.app.render.component = <Router.RouterComponent app={this.app} />));
-    this.app.event.on(this.app, 'onAppStartRender', ()=>{this.update()});
+    this.app.event.on(this.app._id, 'onPageAdd', (_id, page)=>{page&&!page.props.route.embed&&this._addPage(_id, page)});
+    this.app.event.on(this.app._id, 'onPageRemove', (_id, page)=>{page&&!page.props.route.embed&&this._removePage(_id)});
+    this.app.event.on(this.app._id, 'onAppStartRouter', ()=>(this.app.render.component = <Router.RouterComponent app={this.app} />));
+    this.app.event.on(this.app._id, 'onAppStartRender', ()=>{this.update()});
   }
 
   _initHistory() {
@@ -265,7 +265,7 @@ export default class Router {
   }
 
   update() {
-    this.app.event.emit(this.app, 'onRouterUpdate');
+    this.app.event.emit(this.app._id, 'onRouterUpdate');
   }
 
   _genRouteMethod(path) {

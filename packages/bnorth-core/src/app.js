@@ -16,7 +16,7 @@ export default class App {
     // app props
     // ----------------------------
     this._startEvents = ['onAppStarting', 'onAppStartConfig', 'onAppStartRouter', 'onAppStartContext','onAppStartHack', 'onAppStartRender', 'onAppStarted'];
-    this._id = options._id||'app';
+    this._id = options._id||'^app';
     this.options = options;
 
     // app core modal
@@ -48,7 +48,7 @@ export default class App {
     // ----------------------------
     window.app = this;
     if(this.options.plugin) {
-      !this.options.plugin.pluginName&&(this.options.plugin.pluginName='_$user');
+      !this.options.plugin._id&&(this.options.plugin._id='^user');
       this.plugins.add(this.options.plugin);
     }
   }
@@ -56,9 +56,9 @@ export default class App {
   async start() {
     this.log.info('app start');
     try{
-      for (let event of this._startEvents) {
-        await this.event.emitSync(this, event, this);
-        this.event.delete(event, this);
+      for (let v of this._startEvents) {
+        await this.event.emitSync(this._id, v, this);
+        this.event.delete(v, this._id);
       }
     }catch(e){
       this.log.error('app start', e);

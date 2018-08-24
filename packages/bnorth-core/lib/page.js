@@ -128,14 +128,14 @@ function (_React$Component) {
         if (k.startsWith('state') || k.startsWith('_state')) {// state
         } else if (k.startsWith('onPage')) {
           // page event
-          app.event.on(_this3, k, v, _this3._id);
+          app.event.on(_this3._id, k, v, _this3._id);
         } else if (k.startsWith('onState')) {
           // page state event
           var stateEvents = k.split('_');
-          if (stateEvents[0] && _this3[stateEvents[1]]) app.event.on(_this3[stateEvents[1]], stateEvents[0], v, _this3._id);
+          if (stateEvents[0] && _this3[stateEvents[1]]) app.event.on(_this3[stateEvents[1]]._id, stateEvents[0], v, _this3._id);
         } else if (k.startsWith('on')) {
           // app event
-          app.event.on(app, k, v, _this3._id);
+          app.event.on(app._id, k, v, _this3._id);
         } else if (k.startsWith('action')) {
           // action
           _this3[k] = _this3.action(v, k);
@@ -198,9 +198,9 @@ function (_React$Component) {
       this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
         return _this4.handleKeyEvent(e);
       });
-      app.event.emitSync(app, 'onPageAdd', _id, this);
-      app.event.emitSync(this, 'onPageStart', this, active);
-      active && app.event.emitSync(this, 'onPageActive', this, true);
+      app.event.emitSync(app._id, 'onPageAdd', _id, this);
+      app.event.emitSync(this._id, 'onPageStart', this, active);
+      active && app.event.emitSync(this._id, 'onPageActive', this, true);
     }
   }, {
     key: "componentWillUnmount",
@@ -209,9 +209,9 @@ function (_React$Component) {
           app = _this$props2.app,
           _id = _this$props2._id;
       app.log.info('page will unmount', _id);
-      app.event.emitSync(this, 'onPageInactive', this, true);
-      app.event.emitSync(this, 'onPageStop', this);
-      app.event.emitSync(app, 'onPageRemove', _id, this);
+      app.event.emitSync(this._id, 'onPageInactive', this, true);
+      app.event.emitSync(this._id, 'onPageStop', this);
+      app.event.emitSync(app._id, 'onPageRemove', _id, this);
       this._offKeyEvent && this._offKeyEvent();
       app.event.off(_id);
     }
@@ -223,7 +223,7 @@ function (_React$Component) {
           active = _this$props3.route.active;
 
       if (prevProps.active !== active) {
-        app.event.emitSync(this, active ? 'onPageActive' : 'onPageInactive', this, false);
+        app.event.emitSync(this._id, active ? 'onPageActive' : 'onPageInactive', this, false);
       }
     }
   }, {

@@ -9,7 +9,7 @@ export default class Render {
     this.domWaiting = null;
     this.stopForRenderError = false;
 
-    this.app.event.on(this.app, 'onAppStartRender', ()=>{this.renderApp()});
+    this.app.event.on(this.app._id, 'onAppStartRender', ()=>{this.renderApp()});
   }
 
   get domRoot() {

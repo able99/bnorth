@@ -7,8 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -25,6 +23,7 @@ function () {
   function Plugins(app) {
     (0, _classCallCheck2.default)(this, Plugins);
     this.app = app;
+    this._idNum = 0;
     this._plugins = [];
   }
 
@@ -34,14 +33,13 @@ function () {
       var _this = this;
 
       if (!plugin) return;
-      if (!plugin.pluginName) plugin.pluginName = 'noname';
-      if (!plugin.pluginDependence) plugin.pluginDependence = [];
+      if (!plugin._id) plugin._id = 'anonymous' + ++this._idNum;
+      if (!plugin.dependencies) plugin.dependencies = [];
 
       if (this._plugins.find(function (v) {
-        return v.pluginName === plugin.pluginName;
+        return v._id === plugin._id;
       })) {
-        this.app.log.error('plugin dup', plugin.pluginName);
-        this.app.render.critical(plugin.pluginName, {
+        this.app.render.critical(plugin._id, {
           title: 'plugin dup'
         });
         return;
@@ -56,11 +54,9 @@ function () {
           var dependence = _step.value;
 
           if (!_this._plugins.find(function (v) {
-            return v.pluginName === dependence;
+            return v._id === dependence;
           })) {
-            _this.app.log.error('plugin nodeps', plugin.pluginName, dependence);
-
-            _this.app.render.critical("no dependence plugin: ".concat(plugin.pluginName, " - ").concat(dependence), {
+            _this.app.render.critical("no dependence plugin: ".concat(plugin._id, " - ").concat(dependence), {
               title: 'plugin nodeps'
             });
 
@@ -70,7 +66,7 @@ function () {
           }
         };
 
-        for (var _iterator = (Array.isArray(plugin.pluginDependence) ? plugin.pluginDependence : [plugin.pluginDependence])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = (Array.isArray(plugin.dependencies) ? plugin.dependencies : [plugin.dependencies])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var _ret = _loop();
 
           if ((0, _typeof2.default)(_ret) === "object") return _ret.v;
@@ -95,55 +91,31 @@ function () {
   }, {
     key: "add",
     value: function add(plugin) {
-      var _this2 = this;
-
-      this._checkPlugin(plugin);
-
-      this.app.log.info('plugin add', plugin.pluginName);
+      this.app.log.info('plugin add', plugin && plugin._id);
+      if (!this._checkPlugin(plugin)) return;
 
       this._plugins.push(plugin);
 
       plugin.onPluginMount && plugin.onPluginMount(this.app);
-      Object.entries(plugin).forEach(function (_ref) {
-        var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-            k = _ref2[0],
-            v = _ref2[1];
-
-        if (k.indexOf('on') === 0 && k !== 'onPluginMount' && k !== 'onPluginUnmount') {
-          _this2.app.event.on(_this2.app, k, v, plugin.pluginName);
-        }
-      });
-      this.app.event.emitSync(this.app, 'onPluginAdd', plugin);
+      this.app.event.emitSync(this.app._id, 'onPluginAdd', plugin);
     }
   }, {
     key: "remove",
-    value: function remove(name) {
-      var _this3 = this;
-
-      this.app.log.info('plugin remove', name);
+    value: function remove(_id) {
+      this.app.log.info('plugin remove', _id);
 
       var index = this._plugins.findIndex(function (v) {
-        return v.pluginName === name;
+        return v._id === _id;
       });
 
-      if (index >= 0) {
-        var plugin = this._plugins[index];
-        plugin && plugin.onPluginUnmount && plugin.onPluginUnmount(this.app);
-        Object.entries(plugin).forEach(function (_ref3) {
-          var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
-              k = _ref4[0],
-              v = _ref4[1];
+      if (index < 0) return;
+      var plugin = this._plugins[index];
+      plugin.onPluginUnmount && plugin.onPluginUnmount(this.app);
 
-          if (k.indexOf('on') === 0) {
-            _this3.app.event.off(v);
-          }
-        });
+      this._plugins.splice(index, 1);
 
-        this._plugins.splice(index, 1);
-
-        this.app.event.emitSync(this.app, 'onPluginRemove', name);
-        this.app.event.off(name);
-      }
+      this.app.event.emitSync(this.app._id, 'onPluginRemove', name);
+      this.app.event.off(name);
     }
   }]);
   return Plugins;

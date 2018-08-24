@@ -19,7 +19,6 @@ function () {
 
     (0, _classCallCheck2.default)(this, Keyboard);
     this.app = app;
-    this._id = 'app.keyborad';
     this._listeners = [];
 
     this._handleKeyEvent = function (e) {
@@ -41,8 +40,8 @@ function () {
       var listener = this._listeners.reverse().find(function (_ref) {
         var event = _ref.event,
             callback = _ref.callback,
-            name = _ref.name;
-        return callback && e.type === event && _this2.app.router.focusName === name;
+            _id = _ref._id;
+        return callback && e.type === event && _this2.app.router.isFocus(_id);
       });
 
       if (listener) listener.callback(e);

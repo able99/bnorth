@@ -1,7 +1,6 @@
 export default class Keyboard {
   constructor(app) {
     this.app = app;
-    this._id = 'app.keyborad';
     this._listeners = [];
 
     this._handleKeyEvent = e=>this.handleKeyEvent(e);
@@ -12,7 +11,7 @@ export default class Keyboard {
 
   handleKeyEvent(e) {
     this.app.log.info('keyboard trigger', e);
-    let listener = this._listeners.reverse().find(({event, callback, name})=>(callback && e.type===event && this.app.router.focusName === name));
+    let listener = this._listeners.reverse().find(({event, callback, _id})=>(callback && e.type===event && this.app.router.isFocus(_id)));
     if(listener) listener.callback(e);
   }
 

@@ -65,14 +65,14 @@ export default class Page extends React.Component {
         // state
       }else if(k.startsWith('onPage')) {
         // page event
-        app.event.on(this, k, v, this._id);
+        app.event.on(this._id, k, v, this._id);
       }else if(k.startsWith('onState')) {
         // page state event
         let stateEvents = k.split('_');
-        if(stateEvents[0]&&this[stateEvents[1]]) app.event.on(this[stateEvents[1]], stateEvents[0], v, this._id);
+        if(stateEvents[0]&&this[stateEvents[1]]) app.event.on(this[stateEvents[1]]._id, stateEvents[0], v, this._id);
       }else if(k.startsWith('on')) {
         // app event
-        app.event.on(app, k, v, this._id);
+        app.event.on(app._id, k, v, this._id);
       }else if(k.startsWith('action')){ 
         // action
         this[k] = this.action(v, k);
@@ -110,18 +110,18 @@ export default class Page extends React.Component {
     app.log.info('page did mount', _id);
 
     this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this.handleKeyEvent(e));
-    app.event.emitSync(app, 'onPageAdd', _id, this);
-    app.event.emitSync(this, 'onPageStart', this, active);
-    active && app.event.emitSync(this, 'onPageActive', this, true);
+    app.event.emitSync(app._id, 'onPageAdd', _id, this);
+    app.event.emitSync(this._id, 'onPageStart', this, active);
+    active && app.event.emitSync(this._id, 'onPageActive', this, true);
   }
 
   componentWillUnmount() {
     let { app, _id } = this.props;
     app.log.info('page will unmount', _id);
 
-    app.event.emitSync(this, 'onPageInactive', this, true);
-    app.event.emitSync(this,'onPageStop', this);
-    app.event.emitSync(app, 'onPageRemove', _id, this);
+    app.event.emitSync(this._id, 'onPageInactive', this, true);
+    app.event.emitSync(this._id,'onPageStop', this);
+    app.event.emitSync(app._id, 'onPageRemove', _id, this);
     this._offKeyEvent && this._offKeyEvent();
     app.event.off(_id);
   }
@@ -130,7 +130,7 @@ export default class Page extends React.Component {
     let { app, route:{active} } = this.props;
 
     if(prevProps.active !== active) {
-      app.event.emitSync(this, active?'onPageActive':'onPageInactive', this, false);
+      app.event.emitSync(this._id, active?'onPageActive':'onPageInactive', this, false);
     }
   }
 

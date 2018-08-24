@@ -26,7 +26,7 @@ function () {
     this.component = null;
     this.domWaiting = null;
     this.stopForRenderError = false;
-    this.app.event.on(this.app, 'onAppStartRender', function () {
+    this.app.event.on(this.app._id, 'onAppStartRender', function () {
       _this.renderApp();
     });
   }

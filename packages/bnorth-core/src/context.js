@@ -27,7 +27,7 @@ class ContextComponent extends React.Component {
 export default class Context {
   constructor(app) {
     this.app = app;
-    this.app.event.on(this.app, 'onAppStartContext', ()=>{this.createStore()});
+    this.app.event.on(this.app._id, 'onAppStartContext', ()=>{this.createStore()});
   }
 
   createStore() {

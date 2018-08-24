@@ -10,13 +10,13 @@ export default class State {
     this.options = options;
     if(this.options.initialization===undefined) this.options.initialization = {};
     
-    key!==true && page && app.event.on(page, 'onPageStart', (page,active)=>{this.app.event.emit(this, 'onStateStart', this._id, active)}, this._id);
-    key!==true && page && app.event.on(page, 'onPageActive', (page,onStart)=>{this.app.event.emit(this, 'onStateActive', this._id, onStart)}, this._id);
-    key!==true && page && app.event.on(page, 'onPageInactive', (page,onStop)=>{this.app.event.emit(this, 'onStateInactive', this._id, onStop)}, this._id);
-    key!==true && page && app.event.on(page, 'onPageStop', (page)=>{this.app.event.emit(this, 'onStateStop', this._id)}, this._id);
-    Object.entries(this.options).filter(([k,v])=>k.indexOf('onState')===0).forEach(([k,v])=> this.app.event.on(this, k, v, this._id));
+    key!==true && page && app.event.on(page._id, 'onPageStart', (page,active)=>{this.app.event.emit(this._id, 'onStateStart', this._id, active)}, this._id);
+    key!==true && page && app.event.on(page._id, 'onPageActive', (page,onStart)=>{this.app.event.emit(this._id, 'onStateActive', this._id, onStart)}, this._id);
+    key!==true && page && app.event.on(page._id, 'onPageInactive', (page,onStop)=>{this.app.event.emit(this._id, 'onStateInactive', this._id, onStop)}, this._id);
+    key!==true && page && app.event.on(page._id, 'onPageStop', (page)=>{this.app.event.emit(this._id, 'onStateStop', this._id)}, this._id);
+    Object.entries(this.options).filter(([k,v])=>k.indexOf('onState')===0).forEach(([k,v])=> this.app.event.on(this._id, k, v, this._id));
 
-    this.app.event.on(this, 'onStateStop', ()=>{this.destructor()}, this._id);
+    this.app.event.on(this._id, 'onStateStop', ()=>{this.destructor()}, this._id);
   }
 
   destructor() {
@@ -36,7 +36,7 @@ export default class State {
     this.app.log.info('state init', data);
     data = data || this.app.utils.objectCopy(this.options.initialization);
 
-    let ret = await app.event.emitSync(this, 'onStateInit', data); 
+    let ret = await app.event.emitSync(this._id, 'onStateInit', data); 
     if(ret) return ret;
     this.app.context.stateInit(this._id, data);
     return true;
@@ -50,9 +50,9 @@ export default class State {
     prevData = prevData||this.data();
     let nextData = this._dataUpdate(data, options, prevData);
 
-    let ret = await this.app.event.emitSync(this, 'onStateUpdating', nextData, prevData, data, options); 
+    let ret = await this.app.event.emitSync(this._id, 'onStateUpdating', nextData, prevData, data, options); 
     this.app.context.stateInit(this._id, ret||nextData);
-    this.app.event.emit(this, 'onStateUpdated', ret||nextData, prevData, data, options);
+    this.app.event.emit(this._id, 'onStateUpdated', ret||nextData, prevData, data, options);
     return true;
   }
 

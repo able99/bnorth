@@ -383,7 +383,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this3 = this;
 
-      this.eventOffRouterUpdate = this.props.app.event.on(this.props.app, 'onRouterUpdate', function () {
+      this.eventOffRouterUpdate = this.props.app.event.on(this.props.app._id, 'onRouterUpdate', function () {
         return _this3._handleRouterUpdate();
       });
     }
@@ -443,18 +443,18 @@ function () {
     value: function _initEvent() {
       var _this5 = this;
 
-      this.app.event.on(this.app, 'onPageAdd', function (_id, page) {
+      this.app.event.on(this.app._id, 'onPageAdd', function (_id, page) {
         page && !page.props.route.embed && _this5._addPage(_id, page);
       });
-      this.app.event.on(this.app, 'onPageRemove', function (_id, page) {
+      this.app.event.on(this.app._id, 'onPageRemove', function (_id, page) {
         page && !page.props.route.embed && _this5._removePage(_id);
       });
-      this.app.event.on(this.app, 'onAppStartRouter', function () {
+      this.app.event.on(this.app._id, 'onAppStartRouter', function () {
         return _this5.app.render.component = _react.default.createElement(Router.RouterComponent, {
           app: _this5.app
         });
       });
-      this.app.event.on(this.app, 'onAppStartRender', function () {
+      this.app.event.on(this.app._id, 'onAppStartRender', function () {
         _this5.update();
       });
     }
@@ -524,7 +524,7 @@ function () {
   }, {
     key: "update",
     value: function update() {
-      this.app.event.emit(this.app, 'onRouterUpdate');
+      this.app.event.emit(this.app._id, 'onRouterUpdate');
     }
   }, {
     key: "_genRouteMethod",

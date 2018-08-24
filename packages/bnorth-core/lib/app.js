@@ -46,7 +46,7 @@ function () {
     // app props
     // ----------------------------
     this._startEvents = ['onAppStarting', 'onAppStartConfig', 'onAppStartRouter', 'onAppStartContext', 'onAppStartHack', 'onAppStartRender', 'onAppStarted'];
-    this._id = options._id || 'app';
+    this._id = options._id || '^app';
     this.options = options; // app core modal
     // ----------------------------
 
@@ -76,7 +76,7 @@ function () {
     window.app = this;
 
     if (this.options.plugin) {
-      !this.options.plugin.pluginName && (this.options.plugin.pluginName = '_$user');
+      !this.options.plugin._id && (this.options.plugin._id = '^user');
       this.plugins.add(this.options.plugin);
     }
   }
@@ -87,7 +87,7 @@ function () {
       var _start = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
       _regenerator.default.mark(function _callee() {
-        var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, event;
+        var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, v;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -107,12 +107,12 @@ function () {
                   break;
                 }
 
-                event = _step.value;
+                v = _step.value;
                 _context.next = 11;
-                return this.event.emitSync(this, event, this);
+                return this.event.emitSync(this._id, v, this);
 
               case 11:
-                this.event.delete(event, this);
+                this.event.delete(v, this._id);
 
               case 12:
                 _iteratorNormalCompletion = true;

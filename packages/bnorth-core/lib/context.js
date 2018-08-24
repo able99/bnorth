@@ -73,7 +73,7 @@ function () {
 
     (0, _classCallCheck2.default)(this, Context);
     this.app = app;
-    this.app.event.on(this.app, 'onAppStartContext', function () {
+    this.app.event.on(this.app._id, 'onAppStartContext', function () {
       _this2.createStore();
     });
   }
