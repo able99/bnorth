@@ -87,23 +87,28 @@ function genRequestClass(app) {
   });
 }
 
-export default {
-  // plugin 
-  // --------------------------------
-  pluginName: 'request',
-  pluginDependence: ['network'],
+// plugin 
+// --------------------------------
+export default app=>{
+  let Request = genRequestClass(app);
 
-  onPluginMount(app) {
-    let State = genRequestClass(app);
-    app.request = {
-      State,
-      state: new State(app, true),
-      request: (options)=>app.request.state._request(options, false),
-    }
-  },
+  return {
+    _id: 'request',
+    _dependencies: ['network'],
 
-  onPluginUnmount(app) {
-    delete app.request;
-  },
+    stateRequest: { state: Request },
+
+    onPluginMount(app, plugin) {
+      app.Request = Request;
+      app.request = plugin;
+    },
+
+    onPluginUnmount(app, plugin) {
+      delete app.Request;
+      delete app.request;
+    },
+
+    request: options=>app.request.stateRequest._request(options, false),
+  }
 }
 

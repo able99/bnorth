@@ -7,6 +7,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+
 var _react = _interopRequireDefault(require("react"));
 
 var _ProgressBar = _interopRequireDefault(require("../ProgressBar"));
@@ -14,24 +16,28 @@ var _ProgressBar = _interopRequireDefault(require("../ProgressBar"));
 var _default = {
   // plugin 
   // --------------------------------
-  pluginName: 'loading',
-  pluginDependence: [],
+  _id: 'loading',
   onPluginMount: function onPluginMount(app) {
     app.loading = {
       count: 0,
       show: function show() {
-        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+            _ref$options = _ref.options,
+            options = _ref$options === void 0 ? {} : _ref$options,
+            props = (0, _objectWithoutProperties2.default)(_ref, ["options"]);
+
         app.loading.count++;
 
         if (!app.loading.ref) {
-          var $id = app.router.getViewId(options);
-          options.$id = $id;
+          var _id = app.router.getViewId(options);
 
-          options.ref = function (e) {
+          options._id = _id;
+
+          props.ref = function (e) {
             return e && (app.loading.ref = e);
           };
 
-          return app.loading.$id = app.router.addView(_react.default.createElement(_ProgressBar.default, null), options);
+          return app.loading._id = app.router.addView(_react.default.createElement(_ProgressBar.default, null), props, options);
         } else {
           return app.loading.reset();
         }
@@ -52,26 +58,28 @@ var _default = {
           return;
         }
 
-        var _ref = app.router.getView(app.loading.$id) || {},
-            content = _ref.content,
-            _ref$options = _ref.options,
-            options = _ref$options === void 0 ? {} : _ref$options;
+        var _ref2 = app.router.getView(app.loading._id) || {},
+            content = _ref2.content,
+            _ref2$props = _ref2.props,
+            props = _ref2$props === void 0 ? {} : _ref2$props,
+            _ref2$options = _ref2.options,
+            options = _ref2$options === void 0 ? {} : _ref2$options;
 
         if (!content) {
-          app.loading.$id = undefined;
+          app.loading._id = undefined;
           app.loading.ref = undefined;
           return;
         }
 
-        options.isClose = true;
+        props.isClose = true;
 
-        options.onStop = function () {
+        props.onStop = function () {
           app.loading.ref = undefined;
-          app.router.removeView(app.loading.$id);
-          app.loading.$id = undefined;
+          app.router.removeView(app.loading._id);
+          app.loading._id = undefined;
         };
 
-        return app.router.addView(content, options);
+        return app.router.addView(content, props, options);
       }
     };
     app.loading._oldRenderLoading = app.render.loading;

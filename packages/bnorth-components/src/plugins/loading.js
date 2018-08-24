@@ -5,54 +5,49 @@ import ProgressBar from '../ProgressBar';
 export default {
   // plugin 
   // --------------------------------
-  pluginName: 'loading',
-  pluginDependence: [],
+  _id: 'loading',
 
   onPluginMount(app) {
     app.loading = {
       count: 0,
-      show: (options={})=>{
+
+      show: ({options={}, ...props}={})=>{
         app.loading.count++;
 
         if(!app.loading.ref){
-          let $id = app.router.getViewId(options);
-          options.$id = $id;
-          options.ref = e=>e&&(app.loading.ref = e);
-          return app.loading.$id = app.router.addView(<ProgressBar /> , options);
+          let _id = app.router.getViewId(options);
+          options._id = _id;
+          props.ref = e=>e&&(app.loading.ref = e);
+          return app.loading._id = app.router.addView(<ProgressBar /> , props, options);
         }else{
           return app.loading.reset();
         }
       },
+
       reset: ()=>{
         if(!app.loading.ref) return;
         return app.loading.ref.reset();
       },
+
       full: ()=>{
         if(!app.loading.ref) return;
         return app.loading.ref.full();
       },
+
       close: force=>{
         app.loading.count = force?0:Math.max(--app.loading.count,0);
-        if(app.loading.count) {
-          app.loading.full();
-          return;
-        }
+        if(app.loading.count) { app.loading.full(); return }
+        let {content, props={}, options={}} = app.router.getView(app.loading._id)||{};
+        if(!content) { app.loading._id = undefined; app.loading.ref = undefined; return }
 
-        let {content, options={}} = app.router.getView(app.loading.$id)||{};
-        if(!content) {
-          app.loading.$id = undefined;
+        props.isClose = true;
+        props.onStop = ()=>{ 
           app.loading.ref = undefined; 
-          return;
+          app.router.removeView(app.loading._id); 
+          app.loading._id = undefined; 
         }
 
-        options.isClose = true;
-        options.onStop = ()=>{ 
-          app.loading.ref = undefined; 
-          app.router.removeView(app.loading.$id); 
-          app.loading.$id = undefined; 
-        }
-
-        return app.router.addView(content, options);
+        return app.router.addView(content, props, options);
       },
     };
 

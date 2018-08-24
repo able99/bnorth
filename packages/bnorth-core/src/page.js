@@ -68,6 +68,9 @@ export default class Page extends React.Component {
     Object.entries(controllerObj).forEach(([k,v])=>{
       if(k.startsWith('state')||k.startsWith('_state')) {
         // state
+      }else if(k==='onPageAdd'||k==='onPageRemove') {
+        // app event
+        app.event.on(app._id, k, v, this._id);
       }else if(k.startsWith('onPage')) {
         // page event
         app.event.on(this._id, k, v, this._id);

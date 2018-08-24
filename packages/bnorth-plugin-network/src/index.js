@@ -7,21 +7,7 @@ function getOption(value, defaultValue, ...args) {
 }
 
 
-export default class Network {
-  // plugin 
-  // --------------------------------
-  static pluginName = 'network';
-  static pluginDependence = [];
-  static onPluginMount(app) {
-    app.Network = Network;
-    app.network = new Network(app);
-  }
-  static onPluginUnmount(app) {
-    delete app.Network;
-    delete app.network;
-  }
-  
-
+class Network {
   // main
   // --------------------------------
   constructor(app) {
@@ -187,3 +173,19 @@ export default class Network {
   }
 }
 
+
+// plugin 
+// --------------------------------
+export default {
+  _id: 'network',
+
+  onPluginMount: app=>{
+    app.Network = Network;
+    app.network = new Network(app);
+  },
+
+  onPluginUnmount: app=>{
+    app.Network = undefined;
+    app.network = undefined;
+  },
+}

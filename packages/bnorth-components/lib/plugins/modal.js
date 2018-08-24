@@ -22,16 +22,16 @@ var _default = {
   pluginDependence: [],
   onPluginMount: function onPluginMount(app) {
     app.modal = {
-      _createContent: function _createContent($id, Content) {
+      _createContent: function _createContent(_id, Content) {
         return typeof Content === 'function' ? app.context.consumerHoc(function () {
           return _react.default.createElement(Content, {
-            modalRef: $id,
+            modalRef: _id,
             modalClose: function modalClose() {
-              return app.modal.close($id);
+              return app.modal.close(_id);
             },
-            modalStateData: app.context.stateData($id) || {},
+            modalStateData: app.context.stateData(_id) || {},
             modalStateUpdate: function modalStateUpdate(state) {
-              return app.context.stateUpdate($id, state);
+              return app.context.stateUpdate(_id, state);
             }
           });
         }) : Content;
@@ -48,18 +48,18 @@ var _default = {
         var _id = app.router.getViewId(options);
 
         options._id = _id;
-        options.isModal = true, options.onAdd = function ($id) {
-          return app.keyboard.on($id, 'keydown', function (e) {
-            return e.keyCode === 27 && app.modal.close($id);
+        options.isModal = true, options.onAdd = function (_id) {
+          return app.keyboard.on(_id, 'keydown', function (e) {
+            return e.keyCode === 27 && app.modal.close(_id);
           });
-        }, options.onRemove = function ($id) {
-          return app.keyboard.off($id, 'keydown', function (e) {
-            return e.keyCode === 27 && app.modal.close($id);
+        }, options.onRemove = function (_id) {
+          return app.keyboard.off(_id, 'keydown', function (e) {
+            return e.keyCode === 27 && app.modal.close(_id);
           });
         }, props.in = true;
 
         props.handleAction = function (index) {
-          return (!onAction || onAction(index, app.context.stateData($id) || {}, function () {
+          return (!onAction || onAction(index, app.context.stateData(_id) || {}, function () {
             return app.modal.close(_id);
           }, _id) !== false) && app.modal.close(_id);
         };
@@ -67,34 +67,42 @@ var _default = {
         props.children = app.modal._createContent(_id, Content);
         return app.router.addView(_react.default.createElement(_Modal.default, null), props, options);
       },
-      update: function update($id, Content, aoptions) {
-        if (!$id) return;
-
-        var _ref2 = app.router.getView($id) || {},
-            content = _ref2.content,
+      update: function update(_id, Content) {
+        var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
             _ref2$options = _ref2.options,
-            options = _ref2$options === void 0 ? {} : _ref2$options;
+            options = _ref2$options === void 0 ? {} : _ref2$options,
+            props = (0, _objectWithoutProperties2.default)(_ref2, ["options"]);
+
+        if (!_id) return;
+
+        var _ref3 = app.router.getView(_id) || {},
+            content = _ref3.content,
+            _ref3$prevProps = _ref3.prevProps,
+            prevProps = _ref3$prevProps === void 0 ? {} : _ref3$prevProps,
+            _ref3$options = _ref3.options,
+            prevOptions = _ref3$options === void 0 ? {} : _ref3$options;
 
         if (!content) return;
-        options = (0, _objectSpread2.default)({}, options, aoptions, {
-          children: app.modal._createContent($id, Content)
+        props = (0, _objectSpread2.default)({}, prevProps, props, {
+          children: app.modal._createContent(_id, Content)
         });
-        return app.router.addView(content, options);
+        options = (0, _objectSpread2.default)({}, prevOptions, options);
+        return app.router.addView(content, props, options);
       },
-      close: function close($id) {
-        if (!$id) return;
+      close: function close(_id) {
+        if (!_id) return;
 
-        var _ref3 = app.router.getView($id) || {},
-            content = _ref3.content,
-            props = _ref3.props,
-            options = _ref3.options;
+        var _ref4 = app.router.getView(_id) || {},
+            content = _ref4.content,
+            props = _ref4.props,
+            options = _ref4.options;
 
         if (!content) return;
         props.in = false;
 
         props.onExited = function () {
-          app.router.removeView($id);
-          app.context.stateClean($id);
+          app.router.removeView(_id);
+          app.context.stateClean(_id);
         };
 
         return app.router.addView(content, props, options);

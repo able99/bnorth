@@ -147,26 +147,31 @@ function genRequestClass(app) {
       return Request;
     }(app.State)
   );
-}
+} // plugin 
+// --------------------------------
 
-var _default = {
-  // plugin 
-  // --------------------------------
-  pluginName: 'request',
-  pluginDependence: ['network'],
-  onPluginMount: function onPluginMount(app) {
-    var State = genRequestClass(app);
-    app.request = {
-      State: State,
-      state: new State(app, true),
-      request: function request(options) {
-        return app.request.state._request(options, false);
-      }
-    };
-  },
-  onPluginUnmount: function onPluginUnmount(app) {
-    delete app.request;
-  }
+
+var _default = function _default(app) {
+  var Request = genRequestClass(app);
+  return {
+    _id: 'request',
+    _dependencies: ['network'],
+    stateRequest: {
+      state: Request
+    },
+    onPluginMount: function onPluginMount(app, plugin) {
+      app.Request = Request;
+      app.request = plugin;
+    },
+    onPluginUnmount: function onPluginUnmount(app, plugin) {
+      delete app.Request;
+      delete app.request;
+    },
+    request: function request(options) {
+      return app.request.stateRequest._request(options, false);
+    }
+  };
 };
+
 exports.default = _default;
 module.exports = exports["default"];

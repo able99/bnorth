@@ -3,47 +3,41 @@ import Notification from '../Notification';
 
 
 export default {
-  // plugin 
-  // --------------------------------
-  pluginName: 'notice',
-  pluginDependence: [],
+  _id: 'notice',
 
   onPluginMount(app) {
     app.notice = {
-      show: (message, aoptions={})=>{
+      _timer: undefined,
+
+      show: (message, { timeout=3000, options={}, ...props}={})=>{
         message = app.utils.message2String(message);
         if(!message) return;
-        let { timeout=3000, ...options } = aoptions;
 
-        let $id = app.notice.$id || app.router.getViewId(options);
-        options.$id = $id;
-        options.in = true;
-        options.onClose = ()=>app.notice.close();
-        options.children = message;
+        let _id = app.notice._id || app.router.getViewId(options);
+        options._id = _id;
+        props.in = true;
+        props.onClose = ()=>app.notice.close();
+        props.children = message;
 
         if(app.notice._timer) window.clearTimeout(app.notice._timer);
         app.notice._timer = window.setTimeout(()=>app.notice.close(),timeout);
 
-        return app.notice.$id = app.router.addView(<Notification /> , options);
+        return app.notice._id = app.router.addView(<Notification /> , props, options);
       },
+
       close: ()=>{
         if(app.notice._timer) { window.clearTimeout(app.notice._timer); app.notice._timer = undefined; }
-        if(!app.notice.$id) return;
+        if(!app.notice._id) return;
+        let {content, props={}, options={}} = app.router.getView(app.notice._id)||{};
+        if(!content) { app.notice._id = undefined; return; }
 
-        
-        let {content, options={}} = app.router.getView(app.notice.$id)||{};
-        if(!content) {
-          app.notice.$id = undefined;
-          return;
+        props.in = false;
+        props.onExited = ()=>{ 
+          app.router.removeView(app.notice._id); 
+          app.notice._id = undefined; 
         }
 
-        options.in = false;
-        options.onExited = ()=>{ 
-          app.router.removeView(app.notice.$id); 
-          app.notice.$id = undefined; 
-        }
-
-        return app.router.addView(content, options);
+        return app.router.addView(content, props, options);
       },
     };
 

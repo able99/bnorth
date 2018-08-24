@@ -36,9 +36,11 @@ function () {
     value: function _checkPlugin(plugin) {
       var _this = this;
 
+      this.app.log.info('plugin check');
       if (!plugin) return;
+      if (plugin instanceof Function) plugin = plugin(this.app);
       plugin._id = '>' + (plugin._id ? plugin._id : 'anonymous' + ++this._idNum);
-      if (!plugin.dependencies) plugin.dependencies = [];
+      if (!plugin._dependencies) plugin._dependencies = [];
 
       if (this._plugins.find(function (v) {
         return v._id === plugin._id;
@@ -58,7 +60,7 @@ function () {
           var dependence = _step.value;
 
           if (!_this._plugins.find(function (v) {
-            return v._id === dependence;
+            return v._id.slice(1) === dependence;
           })) {
             _this.app.render.critical("no dependence plugin: ".concat(plugin._id, " - ").concat(dependence), {
               title: 'plugin nodeps'
@@ -70,7 +72,7 @@ function () {
           }
         };
 
-        for (var _iterator = (Array.isArray(plugin.dependencies) ? plugin.dependencies : [plugin.dependencies])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = (Array.isArray(plugin._dependencies) ? plugin._dependencies : [plugin._dependencies])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var _ret = _loop();
 
           if ((0, _typeof2.default)(_ret) === "object") return _ret.v;
@@ -90,7 +92,7 @@ function () {
         }
       }
 
-      return true;
+      return plugin;
     }
   }, {
     key: "get",
@@ -104,58 +106,44 @@ function () {
   }, {
     key: "add",
     value: function add(plugin) {
-      var _this3 = this;
-
-      this.app.log.info('plugin add', plugin && plugin._id);
-      if (!this._checkPlugin(plugin)) return;
+      plugin = this._checkPlugin(plugin);
+      if (!plugin) return;
+      var app = this.app;
+      var _id = plugin._id;
+      app.log.info('plugin add', plugin._id);
 
       this._plugins.push(plugin);
 
-      var app = this.app;
-      var _id = plugin._id;
-      if (plugin.onPluginMount) app.event.on(_id, 'onPluginMount', plugin.onPluginMount, _id);
-      if (plugin.onPluginUnmount) app.event.on(_id, 'onPluginUnmount', plugin.onPluginMount, _id);
-      Object.entries(plugin).filter(function (_ref) {
+      Object.entries(plugin).forEach(function (_ref) {
         var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
             k = _ref2[0],
             v = _ref2[1];
 
-        return k.startsWith('on') && k !== 'onPluginMount' && k !== 'onPluginUnmount';
-      }).forEach(function (_ref3) {
-        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
-            k = _ref4[0],
-            v = _ref4[1];
+        if (k === 'onPluginAdd' || k === 'onPluginRemove') {
+          app.event.on(app._id, k, v, _id);
+        } else if (k.startsWith('onPlugin')) {
+          app.event.on(_id, k, v, _id);
+        } else if (k.startsWith('on')) {
+          app.event.on(app._id, k, v, _id);
+        } else if (k.startsWith('state')) {
+          var _ref3 = v || {},
+              _ref3$state = _ref3.state,
+              state = _ref3$state === void 0 ? app.State : _ref3$state,
+              stateOptions = (0, _objectWithoutProperties2.default)(_ref3, ["state"]);
 
-        return _this3.app.event.on(app._id, k, v, _id);
+          var _idState = stateOptions._id || app.State.genStateId(k, _id);
+
+          stateOptions._id = _idState;
+          plugin[k] = new state(app, stateOptions);
+          app.event.on(_id, 'onPluginMount', function (app) {
+            app.event.emit(_idState, 'onStateStart', _idState, false);
+          }, _idState);
+          app.event.on(_id, 'onPluginUnmount', function (app) {
+            app.event.emit(_idState, 'onStateStop', _idState);
+          }, _idState);
+        }
       });
-      Object.entries(plugin).filter(function (_ref5) {
-        var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
-            k = _ref6[0],
-            v = _ref6[1];
-
-        return k.startsWith('state');
-      }).forEach(function (_ref7) {
-        var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
-            k = _ref8[0],
-            v = _ref8[1];
-
-        var _ref9 = v || {},
-            _ref9$state = _ref9.state,
-            state = _ref9$state === void 0 ? app.State : _ref9$state,
-            stateOptions = (0, _objectWithoutProperties2.default)(_ref9, ["state"]);
-
-        var _idState = stateOptions._id || app.State.genStateId(k, _id);
-
-        stateOptions._id = _idState;
-        plugin[k] = new state(app, stateOptions);
-        app.event.on(_id, 'onPluginMount', function (app) {
-          app.event.emit(_idState, 'onStateStart', _idState, false);
-        }, _idState);
-        app.event.on(_id, 'onPluginUnmount', function (app) {
-          app.event.emit(_idState, 'onStateStop', _idState);
-        }, _idState);
-      });
-      app.event.emit(_id, 'onPluginMount', app);
+      app.event.emit(_id, 'onPluginMount', app, plugin);
       app.event.emit(app._id, 'onPluginAdd', plugin);
     }
   }, {
@@ -169,7 +157,7 @@ function () {
 
       if (index < 0) return;
       var plugin = this._plugins[index];
-      app.event.emit(plugin._id._id, 'onPluginUnmount', app);
+      app.event.emit(plugin._id._id, 'onPluginUnmount', app, plugin);
       this.app.event.off(name);
 
       this._plugins.splice(index, 1);

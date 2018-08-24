@@ -139,6 +139,9 @@ function (_React$Component) {
             v = _ref5[1];
 
         if (k.startsWith('state') || k.startsWith('_state')) {// state
+        } else if (k === 'onPageAdd' || k === 'onPageRemove') {
+          // app event
+          app.event.on(app._id, k, v, _this3._id);
         } else if (k.startsWith('onPage')) {
           // page event
           app.event.on(_this3._id, k, v, _this3._id);

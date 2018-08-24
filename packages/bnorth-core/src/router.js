@@ -270,7 +270,7 @@ export default class Router {
 
   _genRouteMethod(path) {
     if(!path) return;
-    let name = path==='/'?'Root':this.app.utils.captilaze(path);
+    let name = path==='/'?'Root':this.app.utils.captilaze(path[0]==='/'?path.slice(1):path);
     this['push'+name] = (...args)=>this.push([path, ...args]);
     this['replace'+name] = (...args)=>this.replace([path, ...args]);
   }

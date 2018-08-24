@@ -532,7 +532,7 @@ function () {
       var _this8 = this;
 
       if (!path) return;
-      var name = path === '/' ? 'Root' : this.app.utils.captilaze(path);
+      var name = path === '/' ? 'Root' : this.app.utils.captilaze(path[0] === '/' ? path.slice(1) : path);
 
       this['push' + name] = function () {
         for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {

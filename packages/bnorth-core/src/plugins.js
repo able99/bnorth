@@ -10,24 +10,26 @@ export default class Plugins {
   }
 
   _checkPlugin(plugin) {
+    this.app.log.info('plugin check');
     if(!plugin) return;
+    if(plugin instanceof Function) plugin = plugin(this.app);
     
     plugin._id = '>' + (plugin._id?plugin._id:('anonymous'+(++this._idNum)));
-    if(!plugin.dependencies) plugin.dependencies = [];
+    if(!plugin._dependencies) plugin._dependencies = [];
 
     if(this._plugins.find(v=>v._id===plugin._id)) {
       this.app.render.critical(plugin._id, {title:'plugin dup'});
       return;
     }
 
-    for(let dependence of (Array.isArray(plugin.dependencies)?plugin.dependencies:[plugin.dependencies])) {
-      if(!this._plugins.find(v=>v._id===dependence)) {
+    for(let dependence of (Array.isArray(plugin._dependencies)?plugin._dependencies:[plugin._dependencies])) {
+      if(!this._plugins.find(v=>v._id.slice(1)===dependence)) {
         this.app.render.critical(`no dependence plugin: ${plugin._id} - ${dependence}`, {title:'plugin nodeps'});
         return;
       }
     }
 
-    return true;
+    return plugin;
   }
 
   get(name) {
@@ -35,21 +37,21 @@ export default class Plugins {
   }
 
   add(plugin) {
-    this.app.log.info('plugin add', plugin&&plugin._id);
-    if(!this._checkPlugin(plugin)) return;
-    this._plugins.push(plugin);
+    plugin = this._checkPlugin(plugin);
+    if(!plugin) return;
     let app = this.app;
     let _id = plugin._id;
-
-    if(plugin.onPluginMount) app.event.on(_id, 'onPluginMount', plugin.onPluginMount, _id);
-    if(plugin.onPluginUnmount) app.event.on(_id, 'onPluginUnmount', plugin.onPluginMount, _id);
-    Object.entries(plugin)
-      .filter(([k,v])=>k.startsWith('on')&&k!=='onPluginMount'&&k!=='onPluginUnmount')
-      .forEach(([k,v])=>this.app.event.on(app._id,k,v,_id))
-      
-    Object.entries(plugin)
-      .filter(([k,v])=>k.startsWith('state'))
-      .forEach(([k,v])=>{
+    app.log.info('plugin add', plugin._id);
+    this._plugins.push(plugin);
+  
+    Object.entries(plugin).forEach(([k,v])=>{
+      if(k==='onPluginAdd'||k==='onPluginRemove') {
+        app.event.on(app._id,k,v,_id);
+      } else if(k.startsWith('onPlugin')) {
+        app.event.on(_id,k,v,_id);
+      } else if(k.startsWith('on')) {
+        app.event.on(app._id,k,v,_id);
+      } else if(k.startsWith('state')) {
         let {state=app.State, ...stateOptions} = v||{};
         let _idState = stateOptions._id||app.State.genStateId(k, _id);
         stateOptions._id = _idState;
@@ -57,9 +59,10 @@ export default class Plugins {
 
         app.event.on(_id, 'onPluginMount', (app)=>{app.event.emit(_idState, 'onStateStart', _idState, false)}, _idState);
         app.event.on(_id, 'onPluginUnmount', (app)=>{app.event.emit(_idState, 'onStateStop', _idState)}, _idState);
-      })
+      }
+    })
 
-    app.event.emit(_id, 'onPluginMount', app);
+    app.event.emit(_id, 'onPluginMount', app, plugin);
     app.event.emit(app._id, 'onPluginAdd', plugin);
   }
 
@@ -69,10 +72,10 @@ export default class Plugins {
     if(index<0) return;
     let plugin = this._plugins[index];
 
-    app.event.emit(plugin._id._id, 'onPluginUnmount', app);
+    app.event.emit(plugin._id._id, 'onPluginUnmount', app, plugin);
     this.app.event.off(name);
-
     this._plugins.splice(index,1);
+
     this.app.event.emitSync(this.app._id, 'onPluginRemove', name);
   }
 }

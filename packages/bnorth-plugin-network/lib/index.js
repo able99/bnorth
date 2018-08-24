@@ -13,8 +13,6 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _axios = _interopRequireDefault(require("axios"));
 
 function getOption(value, defaultValue) {
@@ -29,24 +27,8 @@ function getOption(value, defaultValue) {
 var Network =
 /*#__PURE__*/
 function () {
-  (0, _createClass2.default)(Network, null, [{
-    key: "onPluginMount",
-    // plugin 
-    // --------------------------------
-    value: function onPluginMount(app) {
-      app.Network = Network;
-      app.network = new Network(app);
-    }
-  }, {
-    key: "onPluginUnmount",
-    value: function onPluginUnmount(app) {
-      delete app.Network;
-      delete app.network;
-    } // main
-    // --------------------------------
-
-  }]);
-
+  // main
+  // --------------------------------
   function Network(app) {
     (0, _classCallCheck2.default)(this, Network);
     this.app = app;
@@ -233,9 +215,20 @@ function () {
     }
   }]);
   return Network;
-}();
+}(); // plugin 
+// --------------------------------
 
-exports.default = Network;
-(0, _defineProperty2.default)(Network, "pluginName", 'network');
-(0, _defineProperty2.default)(Network, "pluginDependence", []);
+
+var _default = {
+  _id: 'network',
+  onPluginMount: function onPluginMount(app) {
+    app.Network = Network;
+    app.network = new Network(app);
+  },
+  onPluginUnmount: function onPluginUnmount(app) {
+    app.Network = undefined;
+    app.network = undefined;
+  }
+};
+exports.default = _default;
 module.exports = exports["default"];

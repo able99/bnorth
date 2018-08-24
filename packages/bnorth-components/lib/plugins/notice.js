@@ -16,33 +16,36 @@ var _react = _interopRequireDefault(require("react"));
 var _Notification = _interopRequireDefault(require("../Notification"));
 
 var _default = {
-  // plugin 
-  // --------------------------------
-  pluginName: 'notice',
-  pluginDependence: [],
+  _id: 'notice',
   onPluginMount: function onPluginMount(app) {
     app.notice = {
+      _timer: undefined,
       show: function show(message) {
-        var aoptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            _ref$timeout = _ref.timeout,
+            timeout = _ref$timeout === void 0 ? 3000 : _ref$timeout,
+            _ref$options = _ref.options,
+            options = _ref$options === void 0 ? {} : _ref$options,
+            props = (0, _objectWithoutProperties2.default)(_ref, ["timeout", "options"]);
+
         message = app.utils.message2String(message);
         if (!message) return;
-        var _aoptions$timeout = aoptions.timeout,
-            timeout = _aoptions$timeout === void 0 ? 3000 : _aoptions$timeout,
-            options = (0, _objectWithoutProperties2.default)(aoptions, ["timeout"]);
-        var $id = app.notice.$id || app.router.getViewId(options);
-        options.$id = $id;
-        options.in = true;
 
-        options.onClose = function () {
+        var _id = app.notice._id || app.router.getViewId(options);
+
+        options._id = _id;
+        props.in = true;
+
+        props.onClose = function () {
           return app.notice.close();
         };
 
-        options.children = message;
+        props.children = message;
         if (app.notice._timer) window.clearTimeout(app.notice._timer);
         app.notice._timer = window.setTimeout(function () {
           return app.notice.close();
         }, timeout);
-        return app.notice.$id = app.router.addView(_react.default.createElement(_Notification.default, null), options);
+        return app.notice._id = app.router.addView(_react.default.createElement(_Notification.default, null), props, options);
       },
       close: function close() {
         if (app.notice._timer) {
@@ -50,26 +53,28 @@ var _default = {
           app.notice._timer = undefined;
         }
 
-        if (!app.notice.$id) return;
+        if (!app.notice._id) return;
 
-        var _ref = app.router.getView(app.notice.$id) || {},
-            content = _ref.content,
-            _ref$options = _ref.options,
-            options = _ref$options === void 0 ? {} : _ref$options;
+        var _ref2 = app.router.getView(app.notice._id) || {},
+            content = _ref2.content,
+            _ref2$props = _ref2.props,
+            props = _ref2$props === void 0 ? {} : _ref2$props,
+            _ref2$options = _ref2.options,
+            options = _ref2$options === void 0 ? {} : _ref2$options;
 
         if (!content) {
-          app.notice.$id = undefined;
+          app.notice._id = undefined;
           return;
         }
 
-        options.in = false;
+        props.in = false;
 
-        options.onExited = function () {
-          app.router.removeView(app.notice.$id);
-          app.notice.$id = undefined;
+        props.onExited = function () {
+          app.router.removeView(app.notice._id);
+          app.notice._id = undefined;
         };
 
-        return app.router.addView(content, options);
+        return app.router.addView(content, props, options);
       }
     };
     app.notice._oldNotice = app.render.notice;

@@ -5,31 +5,28 @@ import Mask from '../Mask';
 export default {
   // plugin 
   // --------------------------------
-  pluginName: 'mask',
-  pluginDependence: [],
+  _id: 'mask',
 
   onPluginMount(app) {
     app.mask = {
-      show: (options={})=>{
-        let $id = app.mask.$id || app.router.getViewId(options);
-        options.$id = $id;
-        options.$isModal = true;
-        return app.mask.$id = app.router.addView(<Mask /> , options);
+      show: ({options={}, ...props}={})=>{
+        let _id = app.mask._id||app.router.getViewId(options);
+        options._id = _id;
+        options.isModal = true;
+        return app.mask._id = app.router.addView(<Mask /> , props, options);
       },
+
       close: ()=>{
-        let {content, options={}} = app.router.getView(app.mask.$id)||{};
-        if(!content) {
-          app.mask.$id = undefined;
-          return;
+        let {content, props={}, options={}} = app.router.getView(app.mask._id)||{};
+        if(!content) { app.mask._id = undefined; return }
+
+        props.in = false;
+        props.onExited = ()=>{ 
+          app.router.removeView(app.mask._id); 
+          app.mask._id = undefined; 
         }
 
-        options.in = false;
-        options.onExited = ()=>{ 
-          app.router.removeView(app.mask.$id); 
-          app.mask.$id = undefined; 
-        }
-
-        return app.router.addView(content, options);
+        return app.router.addView(content, props, options);
       },
     };
 

@@ -26,8 +26,8 @@ app.plugins.add(require('bnorth-components/lib/plugins/notice'));
 app.plugins.add(require('bnorth-components/lib/plugins/mask'));
 app.plugins.add(require('bnorth-components/lib/plugins/modal'));
 app.plugins.add(require('bnorth-components/lib/plugins/loading'));
-// app.plugins.add(require('bnorth-plugin-network'));
-// app.plugins.add(require('bnorth-plugin-request'));
+app.plugins.add(require('bnorth-plugin-network'));
+app.plugins.add(require('bnorth-plugin-request'));
 
 
 
