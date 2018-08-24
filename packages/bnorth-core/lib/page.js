@@ -116,7 +116,20 @@ function (_React$Component) {
                 state = _ref3$state === void 0 ? app.State : _ref3$state,
                 stateOptions = (0, _objectWithoutProperties2.default)(_ref3, ["state"]);
 
-            _this3[k] = new state(app, k, stateOptions, _this3);
+            stateOptions._id = stateOptions._id || app.State.genStateId(k, _this3._id);
+            _this3[k] = new state(app, stateOptions);
+            app.event.on(_this3._id, 'onPageStart', function (page, active) {
+              app.event.emit(_this3[k]._id, 'onStateStart', _this3[k]._id, active);
+            }, _this3[k]._id);
+            app.event.on(_this3._id, 'onPageActive', function (page, onStart) {
+              app.event.emit(_this3[k]._id, 'onStateActive', _this3[k]._id, onStart);
+            }, _this3[k]._id);
+            app.event.on(_this3._id, 'onPageInactive', function (page, onStop) {
+              app.event.emit(_this3[k]._id, 'onStateInactive', _this3[k]._id, onStop);
+            }, _this3[k]._id);
+            app.event.on(_this3._id, 'onPageStop', function (page) {
+              app.event.emit(_this3[k]._id, 'onStateStop', _this3[k]._id);
+            }, _this3[k]._id);
           }
         }
       });

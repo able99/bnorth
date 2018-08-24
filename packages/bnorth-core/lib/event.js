@@ -79,7 +79,6 @@ function () {
             switch (_context2.prev = _context2.next) {
               case 0:
                 name = this._getTargetEventName(targetId, eventName);
-                console.log('event trigger', name, this._listener[name]);
 
                 for (_len = _args2.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
                   args[_key - 2] = _args2[_key];
@@ -88,7 +87,7 @@ function () {
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context2.prev = 6;
+                _context2.prev = 5;
                 _loop =
                 /*#__PURE__*/
                 _regenerator.default.mark(function _loop() {
@@ -99,18 +98,17 @@ function () {
                       switch (_context.prev = _context.next) {
                         case 0:
                           _step$value = _step.value, callback = _step$value.callback, once = _step$value.once;
-                          console.log('match');
-                          _context.next = 4;
+                          _context.next = 3;
                           return callback.apply(void 0, args);
 
-                        case 4:
+                        case 3:
                           ret = _context.sent;
                           if (once) (function () {
                             return _this2.off(callback);
                           });
 
                           if (!ret) {
-                            _context.next = 8;
+                            _context.next = 7;
                             break;
                           }
 
@@ -118,7 +116,7 @@ function () {
                             v: ret
                           });
 
-                        case 8:
+                        case 7:
                         case "end":
                           return _context.stop();
                       }
@@ -127,69 +125,69 @@ function () {
                 });
                 _iterator = (this._listener[name] || [])[Symbol.iterator]();
 
-              case 9:
+              case 8:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context2.next = 17;
+                  _context2.next = 16;
                   break;
                 }
 
-                return _context2.delegateYield(_loop(), "t0", 11);
+                return _context2.delegateYield(_loop(), "t0", 10);
 
-              case 11:
+              case 10:
                 _ret = _context2.t0;
 
                 if (!((0, _typeof2.default)(_ret) === "object")) {
-                  _context2.next = 14;
+                  _context2.next = 13;
                   break;
                 }
 
                 return _context2.abrupt("return", _ret.v);
 
-              case 14:
+              case 13:
                 _iteratorNormalCompletion = true;
-                _context2.next = 9;
+                _context2.next = 8;
                 break;
 
-              case 17:
-                _context2.next = 23;
+              case 16:
+                _context2.next = 22;
                 break;
 
-              case 19:
-                _context2.prev = 19;
-                _context2.t1 = _context2["catch"](6);
+              case 18:
+                _context2.prev = 18;
+                _context2.t1 = _context2["catch"](5);
                 _didIteratorError = true;
                 _iteratorError = _context2.t1;
 
-              case 23:
+              case 22:
+                _context2.prev = 22;
                 _context2.prev = 23;
-                _context2.prev = 24;
 
                 if (!_iteratorNormalCompletion && _iterator.return != null) {
                   _iterator.return();
                 }
 
-              case 26:
-                _context2.prev = 26;
+              case 25:
+                _context2.prev = 25;
 
                 if (!_didIteratorError) {
-                  _context2.next = 29;
+                  _context2.next = 28;
                   break;
                 }
 
                 throw _iteratorError;
 
+              case 28:
+                return _context2.finish(25);
+
               case 29:
-                return _context2.finish(26);
+                return _context2.finish(22);
 
               case 30:
-                return _context2.finish(23);
-
-              case 31:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee, this, [[6, 19, 23, 31], [24,, 26, 30]]);
+        }, _callee, this, [[5, 18, 22, 30], [23,, 25, 29]]);
       }));
 
       return function _trigger(_x, _x2) {

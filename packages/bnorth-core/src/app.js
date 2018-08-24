@@ -48,7 +48,7 @@ export default class App {
     // ----------------------------
     window.app = this;
     if(this.options.plugin) {
-      !this.options.plugin._id&&(this.options.plugin._id='^user');
+      this.options.plugin._id = this._id;
       this.plugins.add(this.options.plugin);
     }
   }

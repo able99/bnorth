@@ -46,14 +46,14 @@ export default props=>{
           <Button onClick={()=>app.modal.show('modal', {role: 'document'})}>document</Button>
         </Button.Group>
         <Button.Group justify separator>
-          <Button onClick={()=>app.modal.show(({modalRef, modalClose, modalStateData, modalStateUpdate})=>(
+          <Button onClick={()=>app.modal.show(({modalStateData, modalStateUpdate})=>(
             <div>
               <div>{modalStateData.input}</div>
               <input onChange={e=>modalStateUpdate({input: e.target.value})} value={modalStateData.input}/>
             </div>
           ),{
             role: 'prompt',
-            onAction: (index, data, close, id)=>{
+            onAction: (index, data, close)=>{
               if(index<=0) return;
               if(!data.input) {app.render.error('请输入'); return false;}
               close();

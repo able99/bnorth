@@ -1,21 +1,20 @@
 export default class State {
-  constructor(app, name, options={}, page) {
-    let key = options.key||(name===true?name:`*${name}@${page&&page._id||'#'}`);
-    app.log.info('state create', key);
-    if(app.states[key]) { app.log.error('state key dup:', key, page&&page._id); return app.states[key]; }
-    if(key!==true) app.states[key] = this;
+  static genStateId(_id, ownerId) {
+    if(!_id||!ownerId) return;
+    return `*${_id}@${ownerId}`
+  }
+
+  constructor(app, options={}) {
+    app.log.info('state create', options._id);
+    if(app.states[options._id]) { app.log.error('state _id dup:', options._id); return app.states[options._id]; }
+    app.states[options._id] = this;
 
     this.app = app;
-    this._id = key;
+    this._id = options._id;
     this.options = options;
     if(this.options.initialization===undefined) this.options.initialization = {};
     
-    key!==true && page && app.event.on(page._id, 'onPageStart', (page,active)=>{this.app.event.emit(this._id, 'onStateStart', this._id, active)}, this._id);
-    key!==true && page && app.event.on(page._id, 'onPageActive', (page,onStart)=>{this.app.event.emit(this._id, 'onStateActive', this._id, onStart)}, this._id);
-    key!==true && page && app.event.on(page._id, 'onPageInactive', (page,onStop)=>{this.app.event.emit(this._id, 'onStateInactive', this._id, onStop)}, this._id);
-    key!==true && page && app.event.on(page._id, 'onPageStop', (page)=>{this.app.event.emit(this._id, 'onStateStop', this._id)}, this._id);
     Object.entries(this.options).filter(([k,v])=>k.indexOf('onState')===0).forEach(([k,v])=> this.app.event.on(this._id, k, v, this._id));
-
     this.app.event.on(this._id, 'onStateStop', ()=>{this.destructor()}, this._id);
   }
 
@@ -56,9 +55,9 @@ export default class State {
     return true;
   }
 
-  async delete(key) {
-    this.app.log.info('state delete', key);
-    let data = this._dataDelete(key);
+  async delete(_id) {
+    this.app.log.info('state delete', _id);
+    let data = this._dataDelete(_id);
     return await this.update(data);
   }
   
@@ -100,14 +99,14 @@ export default class State {
     return data;
   }
 
-  _dataDelete(key, options, prevData) {
+  _dataDelete(_id, options, prevData) {
     let pre = prevData||this.data();
     
     if(Array.isArray(pre)) {
-      pre.splice(key, 1);
+      pre.splice(_id, 1);
       pre = [...pre];
     }else{
-      delete pre[key];
+      delete pre[_id];
       pre = {...pre};
     }
 

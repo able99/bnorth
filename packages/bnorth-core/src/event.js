@@ -19,10 +19,8 @@ export default class Event {
 
   async _trigger(targetId, eventName, ...args) {
     let name = this._getTargetEventName(targetId, eventName);
-    console.log('event trigger', name, this._listener[name]);
 
     for (let {callback, once} of (this._listener[name]||[])) {
-      console.log('match');
       let ret = await callback(...args);
       if(once) ()=>this.off(callback);
       if(ret) return ret;

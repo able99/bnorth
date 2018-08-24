@@ -55,7 +55,12 @@ export default class Page extends React.Component {
           this[k] =  app.states[v];
         }else{
           let {state=app.State, ...stateOptions} = v||{};
-          this[k] = new state(app, k, stateOptions, this); 
+          stateOptions._id = stateOptions._id||app.State.genStateId(k, this._id);
+          this[k] = new state(app, stateOptions); 
+          app.event.on(this._id, 'onPageStart', (page,active)=>{app.event.emit(this[k]._id, 'onStateStart', this[k]._id, active)}, this[k]._id);
+          app.event.on(this._id, 'onPageActive', (page,onStart)=>{app.event.emit(this[k]._id, 'onStateActive', this[k]._id, onStart)}, this[k]._id);
+          app.event.on(this._id, 'onPageInactive', (page,onStop)=>{app.event.emit(this[k]._id, 'onStateInactive', this[k]._id, onStop)}, this[k]._id);
+          app.event.on(this._id, 'onPageStop', (page)=>{app.event.emit(this[k]._id, 'onStateStop', this[k]._id)}, this[k]._id);
         }
       }
     });

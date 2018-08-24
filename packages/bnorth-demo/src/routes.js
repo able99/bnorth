@@ -44,9 +44,9 @@ export default {
   },
   'dynamic': {
     loader: ()=>{
-      return new Promise((resolve,reject)=>setTimeout(()=>{
+      return new Promise((resolve)=>setTimeout(()=>{
         resolve({
-          component: props=><div>page c</div>,
+          component: ()=><div>page c</div>,
         })
       },1000));
     }

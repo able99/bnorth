@@ -26,37 +26,31 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 var State =
 /*#__PURE__*/
 function () {
-  function State(app, name) {
+  (0, _createClass2.default)(State, null, [{
+    key: "genStateId",
+    value: function genStateId(_id, ownerId) {
+      if (!_id || !ownerId) return;
+      return "*".concat(_id, "@").concat(ownerId);
+    }
+  }]);
+
+  function State(app) {
     var _this = this;
 
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    var page = arguments.length > 3 ? arguments[3] : undefined;
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     (0, _classCallCheck2.default)(this, State);
-    var key = options.key || (name === true ? name : "*".concat(name, "@").concat(page && page._id || '#'));
-    app.log.info('state create', key);
+    app.log.info('state create', options._id);
 
-    if (app.states[key]) {
-      app.log.error('state key dup:', key, page && page._id);
-      return app.states[key];
+    if (app.states[options._id]) {
+      app.log.error('state _id dup:', options._id);
+      return app.states[options._id];
     }
 
-    if (key !== true) app.states[key] = this;
+    app.states[options._id] = this;
     this.app = app;
-    this._id = key;
+    this._id = options._id;
     this.options = options;
     if (this.options.initialization === undefined) this.options.initialization = {};
-    key !== true && page && app.event.on(page._id, 'onPageStart', function (page, active) {
-      _this.app.event.emit(_this._id, 'onStateStart', _this._id, active);
-    }, this._id);
-    key !== true && page && app.event.on(page._id, 'onPageActive', function (page, onStart) {
-      _this.app.event.emit(_this._id, 'onStateActive', _this._id, onStart);
-    }, this._id);
-    key !== true && page && app.event.on(page._id, 'onPageInactive', function (page, onStop) {
-      _this.app.event.emit(_this._id, 'onStateInactive', _this._id, onStop);
-    }, this._id);
-    key !== true && page && app.event.on(page._id, 'onPageStop', function (page) {
-      _this.app.event.emit(_this._id, 'onStateStop', _this._id);
-    }, this._id);
     Object.entries(this.options).filter(function (_ref) {
       var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
           k = _ref2[0],
@@ -183,14 +177,14 @@ function () {
     value: function () {
       var _delete2 = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
-      _regenerator.default.mark(function _callee3(key) {
+      _regenerator.default.mark(function _callee3(_id) {
         var data;
         return _regenerator.default.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                this.app.log.info('state delete', key);
-                data = this._dataDelete(key);
+                this.app.log.info('state delete', _id);
+                data = this._dataDelete(_id);
                 _context3.next = 4;
                 return this.update(data);
 
@@ -264,14 +258,14 @@ function () {
     }
   }, {
     key: "_dataDelete",
-    value: function _dataDelete(key, options, prevData) {
+    value: function _dataDelete(_id, options, prevData) {
       var pre = prevData || this.data();
 
       if (Array.isArray(pre)) {
-        pre.splice(key, 1);
+        pre.splice(_id, 1);
         pre = (0, _toConsumableArray2.default)(pre);
       } else {
-        delete pre[key];
+        delete pre[_id];
         pre = (0, _objectSpread2.default)({}, pre);
       }
 

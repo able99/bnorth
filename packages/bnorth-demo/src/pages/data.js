@@ -4,7 +4,7 @@ import Panel from 'bnorth-components/lib/Panel'
 import List from 'bnorth-components/lib/List'
 
 export default props=>{
-  let { app, page, stateData, stateInit, stateEvent } = props;
+  let { page, stateData, stateInit, stateEvent } = props;
   return (
     <View>
       <Panel main>
