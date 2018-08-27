@@ -94,10 +94,7 @@ class Storage {
 
 
 export default {
-  // plugin 
-  // --------------------------------
-  pluginName: 'storage',
-  pluginDependence: [],
+  _id: 'storage',
 
   onPluginMount(app) {
     app.Storage = Storage;

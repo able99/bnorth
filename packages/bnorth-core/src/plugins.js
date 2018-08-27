@@ -36,7 +36,7 @@ export default class Plugins {
     return this._plugins.find(v=>v._id===('>'+(name||this.app._id)))
   }
 
-  add(plugin) {
+  add(plugin, ...args) {
     plugin = this._checkPlugin(plugin);
     if(!plugin) return;
     let app = this.app;
@@ -62,7 +62,7 @@ export default class Plugins {
       }
     })
 
-    app.event.emitSync(_id, 'onPluginMount', app, plugin);
+    app.event.emitSync(_id, 'onPluginMount', app, plugin, ...args);
     app.event.emit(app._id, 'onPluginAdd', plugin);
   }
 

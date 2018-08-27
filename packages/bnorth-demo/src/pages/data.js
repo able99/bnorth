@@ -5,7 +5,7 @@ import List from 'bnorth-components/lib/List'
 import Button from 'bnorth-components/lib/Button'
 
 export default props=>{
-  let { app, page, stateData, stateInit, stateEvent, stateNetwork } = props;
+  let { app, page, stateData, stateInit, stateEvent, stateNetwork, stateValidate } = props;
   return (
     <View>
       <Panel main>
@@ -31,6 +31,15 @@ export default props=>{
           <List.Item 
             title="network-update({a:1})" 
             onClick={()=>page.stateNetwork.update({a:1})} />
+        </List>
+        <List className="margin-top">
+          <List.Item 
+            title="validate-add tick-a:required,tick<3" 
+            after={JSON.stringify(stateValidate)}
+            onClick={()=>page.stateValidate.set('tick', (stateValidate.tick||0)+1)} />
+          <List.Item 
+            title="validate-delete a"
+            onClick={()=>page.stateValidate.delete('a')} />
         </List>
       </Panel>
     </View>

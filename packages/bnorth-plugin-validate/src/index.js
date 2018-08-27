@@ -35,68 +35,60 @@ let validate = {
   },
 }
 
-function getValidateState(app) {
-  return ( class Request extends app.State {
-    constructor(app, name, options, page){
-      super(app, name, options, page);
 
-      this.app.event.on(this, 'onStateUpdating', (nextData, prevData, {input,irules,rules,path}={})=>{
-        return this.validate(nextData, input?irules:rules, path, prevData);
-      }, this.name);
+class Validate extends app.State {
+  constructor(app, options){
+    super(app, options);
 
-      this.app.event.on(this, 'onStateUpadteInvalidate', (key, message, nextData, prevData)=>{
-        this.app.render.error(message);
-        return true;
-      }, this.name);
-    }
+    app.event.on(this._id, 'onStateUpdating', (nextData, prevData, data, {input,irules,rules,path}={})=>{return this.validate(nextData, input?irules:rules, path, prevData)}, this._id);
+    app.event.on(this._id, 'onStateUpadteInvalidate', (key, message, nextData, prevData)=>{this.app.render.error(message); return true}, this._id);
+  }
 
-    validateItem(key, data, rules) {
-      let val = data&&this.app.utils.pathGet(data, key);
-      let rule = rules[key];
-      if(!rule) return;
+  validateItem(key, data, rules) {
+    let val = data&&this.app.utils.pathGet(data, key);
+    let rule = rules[key];
+    if(!rule) return;
 
-      let rulesArr = Array.isArray(rule)?rule:[rule];
-      for(let ruleItem of rulesArr) {
-        if(typeof ruleItem==='function') {
-          return ruleItem(key, data, rules);
-        }else if(typeof ruleItem==='object') {
-  
-        }else{
-          let ruleParams = String(ruleItem).split('|');
-          let ret = (typeof(this.app.validate[ruleParams[0]])==='function') && this.app.validate[ruleParams[0]](val, ...ruleParams.slice(1));
-          if(!ret) return this.app.validate.errors[ruleParams[0]] || this.app.validate.errors.default;
-        }
+    let rulesArr = Array.isArray(rule)?rule:[rule];
+    for(let ruleItem of rulesArr) {
+      if(typeof ruleItem==='function') {
+        return ruleItem(key, data, rules);
+      }else if(typeof ruleItem==='object') {
+
+      }else{
+        let ruleParams = String(ruleItem).split('|');
+        let ret = (typeof(this.app.validate[ruleParams[0]])==='function') && this.app.validate[ruleParams[0]](val, ...ruleParams.slice(1));
+        if(!ret) return this.app.validate.errors[ruleParams[0]] || this.app.validate.errors.default;
       }
     }
+  }
 
-    validate(nextData, rules, paths, prevData) {
-      if(!rules) return;
+  validate(nextData, rules, paths, prevData) {
+    if(!rules) return;
 
-      let keys = !paths?Object.keys(rules):(Array.isArray(paths)?paths:[paths])
-      for(let key of keys) {
-        let message = this.validateItem(key, nextData, rules);
-        if(message) {
-          this.app.event.emitSync(this, 'onStateUpadteInvalidate', key, message, nextData, prevData);
-          return prevData;
-        }
+    let keys = !paths?Object.keys(rules):(Array.isArray(paths)?paths:[paths])
+    for(let key of keys) {
+      let message = this.validateItem(key, nextData, rules);
+      if(message) {
+        this.app.event.emitSync(this._id, 'onStateUpadteInvalidate', key, message, nextData, prevData);
+        return prevData;
       }
     }
-  });
+  }
 }
 
+
 export default {
-  // plugin 
-  // --------------------------------
-  pluginName: 'validate',
-  pluginDependence: [],
+  _id: 'validate',
 
   onPluginMount(app) {
     app.validate = validate;
-    app.validate.State = getValidateState(app);
+    app.Validate = Validate;
   },
 
   onPluginUnmount(app) {
     delete app.validate;
+    delete app.Validate;
   },
 }
 

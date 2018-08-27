@@ -106,6 +106,8 @@ function () {
   }, {
     key: "add",
     value: function add(plugin) {
+      var _app$event;
+
       plugin = this._checkPlugin(plugin);
       if (!plugin) return;
       var app = this.app;
@@ -143,7 +145,13 @@ function () {
           }, _idState);
         }
       });
-      app.event.emitSync(_id, 'onPluginMount', app, plugin);
+
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      (_app$event = app.event).emitSync.apply(_app$event, [_id, 'onPluginMount', app, plugin].concat(args));
+
       app.event.emit(app._id, 'onPluginAdd', plugin);
     }
   }, {

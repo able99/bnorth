@@ -101,9 +101,9 @@ Network.Options = {
 };
 var _default = {
   _id: 'network',
-  onPluginMount: function onPluginMount(app) {
+  onPluginMount: function onPluginMount(app, plugin, options) {
     app.Network = Network;
-    app.network = new Network(app);
+    app.network = new Network(app, options);
   },
   onPluginUnmount: function onPluginUnmount(app) {
     delete app.Network;

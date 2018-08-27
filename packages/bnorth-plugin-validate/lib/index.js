@@ -21,8 +21,6 @@ var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/ge
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
-var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/helpers/assertThisInitialized"));
-
 var validate = {
   errors: {
     default: '无效数据',
@@ -54,130 +52,122 @@ var validate = {
   }
 };
 
-function getValidateState(app) {
-  return (
-    /*#__PURE__*/
-    function (_app$State) {
-      (0, _inherits2.default)(Request, _app$State);
+var Validate =
+/*#__PURE__*/
+function (_app$State) {
+  (0, _inherits2.default)(Validate, _app$State);
 
-      function Request(app, name, options, page) {
-        var _this;
+  function Validate(app, options) {
+    var _this;
 
-        (0, _classCallCheck2.default)(this, Request);
-        _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Request).call(this, app, name, options, page));
+    (0, _classCallCheck2.default)(this, Validate);
+    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Validate).call(this, app, options));
+    app.event.on(_this._id, 'onStateUpdating', function (nextData, prevData, data) {
+      var _ref = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
+          input = _ref.input,
+          irules = _ref.irules,
+          rules = _ref.rules,
+          path = _ref.path;
 
-        _this.app.event.on((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), 'onStateUpdating', function (nextData, prevData) {
-          var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
-              input = _ref.input,
-              irules = _ref.irules,
-              rules = _ref.rules,
-              path = _ref.path;
+      return _this.validate(nextData, input ? irules : rules, path, prevData);
+    }, _this._id);
+    app.event.on(_this._id, 'onStateUpadteInvalidate', function (key, message, nextData, prevData) {
+      _this.app.render.error(message);
 
-          return _this.validate(nextData, input ? irules : rules, path, prevData);
-        }, _this.name);
+      return true;
+    }, _this._id);
+    return _this;
+  }
 
-        _this.app.event.on((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), 'onStateUpadteInvalidate', function (key, message, nextData, prevData) {
-          _this.app.render.error(message);
+  (0, _createClass2.default)(Validate, [{
+    key: "validateItem",
+    value: function validateItem(key, data, rules) {
+      var val = data && this.app.utils.pathGet(data, key);
+      var rule = rules[key];
+      if (!rule) return;
+      var rulesArr = Array.isArray(rule) ? rule : [rule];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-          return true;
-        }, _this.name);
+      try {
+        for (var _iterator = rulesArr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var ruleItem = _step.value;
 
-        return _this;
+          if (typeof ruleItem === 'function') {
+            return ruleItem(key, data, rules);
+          } else if ((0, _typeof2.default)(ruleItem) === 'object') {} else {
+            var _this$app$validate;
+
+            var ruleParams = String(ruleItem).split('|');
+
+            var ret = typeof this.app.validate[ruleParams[0]] === 'function' && (_this$app$validate = this.app.validate)[ruleParams[0]].apply(_this$app$validate, [val].concat((0, _toConsumableArray2.default)(ruleParams.slice(1))));
+
+            if (!ret) return this.app.validate.errors[ruleParams[0]] || this.app.validate.errors.default;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
+    }
+  }, {
+    key: "validate",
+    value: function validate(nextData, rules, paths, prevData) {
+      if (!rules) return;
+      var keys = !paths ? Object.keys(rules) : Array.isArray(paths) ? paths : [paths];
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
-      (0, _createClass2.default)(Request, [{
-        key: "validateItem",
-        value: function validateItem(key, data, rules) {
-          var val = data && this.app.utils.pathGet(data, key);
-          var rule = rules[key];
-          if (!rule) return;
-          var rulesArr = Array.isArray(rule) ? rule : [rule];
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
+      try {
+        for (var _iterator2 = keys[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var key = _step2.value;
+          var message = this.validateItem(key, nextData, rules);
 
-          try {
-            for (var _iterator = rulesArr[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var ruleItem = _step.value;
-
-              if (typeof ruleItem === 'function') {
-                return ruleItem(key, data, rules);
-              } else if ((0, _typeof2.default)(ruleItem) === 'object') {} else {
-                var _this$app$validate;
-
-                var ruleParams = String(ruleItem).split('|');
-
-                var ret = typeof this.app.validate[ruleParams[0]] === 'function' && (_this$app$validate = this.app.validate)[ruleParams[0]].apply(_this$app$validate, [val].concat((0, _toConsumableArray2.default)(ruleParams.slice(1))));
-
-                if (!ret) return this.app.validate.errors[ruleParams[0]] || this.app.validate.errors.default;
-              }
-            }
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator.return != null) {
-                _iterator.return();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
-            }
+          if (message) {
+            this.app.event.emitSync(this._id, 'onStateUpadteInvalidate', key, message, nextData, prevData);
+            return prevData;
           }
         }
-      }, {
-        key: "validate",
-        value: function validate(nextData, rules, paths, prevData) {
-          if (!rules) return;
-          var keys = !paths ? Object.keys(rules) : Array.isArray(paths) ? paths : [paths];
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = undefined;
-
-          try {
-            for (var _iterator2 = keys[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var key = _step2.value;
-              var message = this.validateItem(key, nextData, rules);
-
-              if (message) {
-                this.app.event.emitSync(this, 'onStateUpadteInvalidate', key, message, nextData, prevData);
-                return prevData;
-              }
-            }
-          } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-                _iterator2.return();
-              }
-            } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
-              }
-            }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
           }
         }
-      }]);
-      return Request;
-    }(app.State)
-  );
-}
+      }
+    }
+  }]);
+  return Validate;
+}(app.State);
 
 var _default = {
-  // plugin 
-  // --------------------------------
-  pluginName: 'validate',
-  pluginDependence: [],
+  _id: 'validate',
   onPluginMount: function onPluginMount(app) {
     app.validate = validate;
-    app.validate.State = getValidateState(app);
+    app.Validate = Validate;
   },
   onPluginUnmount: function onPluginUnmount(app) {
     delete app.validate;
+    delete app.Validate;
   }
 };
 exports.default = _default;

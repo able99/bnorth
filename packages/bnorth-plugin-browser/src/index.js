@@ -158,10 +158,7 @@ class Browser {
 
 
 export default {
-  // plugin 
-  // --------------------------------
-  pluginName: 'browser',
-  pluginDependence: [],
+  _id: 'browser',
 
   onPluginMount(app) {
     app.Browser = Browser;

@@ -102,11 +102,18 @@ function () {
     key: "dataExt",
     value: function dataExt() {}
   }, {
+    key: "get",
+    value: function get() {
+      var path = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      var data = this.data();
+      return this.app.utils.pathGet(data, path);
+    }
+  }, {
     key: "update",
     value: function () {
       var _update = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
-      _regenerator.default.mark(function _callee(data, options) {
+      _regenerator.default.mark(function _callee(data, options, isRealData) {
         var prevData, nextData, ret;
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -115,7 +122,7 @@ function () {
                 this.app.log.info('state update', data, options);
                 options = this.app.utils.getOptions(this.options, options);
                 prevData = this.data();
-                nextData = this.app.utils.objectUpdate(prevData, data, options.append);
+                nextData = isRealData ? data : this.app.utils.objectUpdate(prevData, data, options.append);
                 _context.next = 6;
                 return this.app.event.emitSync(this._id, 'onStateUpdating', nextData, prevData, data, options);
 
@@ -134,66 +141,83 @@ function () {
         }, _callee, this);
       }));
 
-      return function update(_x, _x2) {
+      return function update(_x, _x2, _x3) {
         return _update.apply(this, arguments);
       };
     }()
   }, {
     key: "delete",
-    value: function _delete(_did) {
-      this.app.log.info('state delete', _id);
-      this.app.context.del(this._id, _did);
-    }
-  }, {
-    key: "get",
-    value: function get() {
-      var path = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-      var data = this.data();
-      return this.app.utils.pathGet(data, path);
-    }
+    value: function () {
+      var _delete2 = (0, _asyncToGenerator2.default)(
+      /*#__PURE__*/
+      _regenerator.default.mark(function _callee2(_did) {
+        var data;
+        return _regenerator.default.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                data = this.app.utils.objectDelete(this.data(), _did);
+                _context2.next = 3;
+                return this.update(data, {}, true);
+
+              case 3:
+                return _context2.abrupt("return", _context2.sent);
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      return function _delete(_x4) {
+        return _delete2.apply(this, arguments);
+      };
+    }()
   }, {
     key: "set",
     value: function () {
       var _set = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
-      _regenerator.default.mark(function _callee2() {
+      _regenerator.default.mark(function _callee3() {
         var path,
             val,
             input,
             data,
-            _args2 = arguments;
-        return _regenerator.default.wrap(function _callee2$(_context2) {
+            _args3 = arguments;
+        return _regenerator.default.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
-                path = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : '';
-                val = _args2.length > 1 ? _args2[1] : undefined;
-                input = _args2.length > 2 ? _args2[2] : undefined;
+                path = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : '';
+                val = _args3.length > 1 ? _args3[1] : undefined;
+                input = _args3.length > 2 ? _args3[2] : undefined;
                 data = this.data();
 
                 if (this.app.utils.pathSet(data, path, val)) {
-                  _context2.next = 6;
+                  _context3.next = 6;
                   break;
                 }
 
-                return _context2.abrupt("return", false);
+                return _context3.abrupt("return", false);
 
               case 6:
-                _context2.next = 8;
+                _context3.next = 8;
                 return this.update(data, {
                   path: path,
                   input: input
                 });
 
               case 8:
-                return _context2.abrupt("return", _context2.sent);
+                return _context3.abrupt("return", _context3.sent);
 
               case 9:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2, this);
+        }, _callee3, this);
       }));
 
       return function set() {

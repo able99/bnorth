@@ -10,10 +10,7 @@ import base64 from 'hi-base64';
 
 
 export default {
-  // plugin 
-  // --------------------------------
-  pluginName: 'base64',
-  pluginDependence: [],
+  _id: 'base64',
 
   onPluginMount(app) {
     app.utils.base64encode = (str, asciiOnly)=>base64.encode(str, asciiOnly);

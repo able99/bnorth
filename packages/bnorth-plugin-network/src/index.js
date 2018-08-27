@@ -90,9 +90,9 @@ Network.Options = {
 export default {
   _id: 'network',
 
-  onPluginMount: app=>{
+  onPluginMount: (app,plugin,options)=>{
     app.Network = Network;
-    app.network = new Network(app);
+    app.network = new Network(app, options);
   },
 
   onPluginUnmount: app=>{

@@ -1,19 +1,7 @@
 class User {
-  constructor(app) {
+  constructor(app, options={}) {
     this.app = app;
-    this.userKey = 'bnorth-keys-user';
-    this.infoOptions = {
-      url: 'user',
-      method: 'get',
-    };
-    this.loginOptions = {
-      url: 'user',
-      method: 'post',
-    };
-    this.logoutOptions = {
-      url: 'user',
-      method: 'delete',
-    };
+    this.options = {...User.options, ...options}
   }
 
   // storage
@@ -28,18 +16,18 @@ class User {
   }
 
   data(){
-    return (this.app.storage&&this.app.storage.getObj(this.userKey))||{};
+    return (this.app.storage&&this.app.storage.getObj(this.options.userKey))||{};
   }
 
   update(user){
-    let ret = this.app.storage&&this.app.storage.setObj(this.userKey, user);
-    this.app.event.emit(this.app, 'onUserUpdate', user);
+    let ret = this.app.storage&&this.app.storage.setObj(this.options.userKey, user);
+    this.app.event.emit(this.app._id, 'onUserUpdate', user);
     return ret;
   }
 
   clear(){
-    let ret = this.app.storage&&this.app.storage.remove(this.userKey);
-    this.app.event.emit(this.app, 'onUserUpdate');
+    let ret = this.app.storage&&this.app.storage.remove(this.options.userKey);
+    this.app.event.emit(this.app._id, 'onUserUpdate');
     return ret;
   }
 
@@ -62,20 +50,22 @@ class User {
   }
 
   login(data,options) {
+    options = this.app.utils.getOptions(this.options, options);
+    options = this.app.utils.getOptions(options, options.login);
+
     if(this._loginPrepare) [data, options] = this._loginPrepare(data, options);
-    return this._loginNetwork(data, options)
-      .then(result=>{
-        if(this._loginResultBefore) result = this._loginResultBefore(result, data, options);
-        if(result) {
-          this._loginResult(result, data, options);
-          this._loginNavigator(result, data, options);
-          if(this._loginResultAfter) result = this._loginResultAfter(result, data, options);
-          return result;
-        }else{
-          if(this._loginError) this._loginError(data, options);
-          return;
-        }
-      })
+    return this._loginNetwork(data, options).then(result=>{
+      if(this._loginResultBefore) result = this._loginResultBefore(result, data, options);
+      if(result) {
+        this._loginResult(result, data, options);
+        this._loginNavigator(result, data, options);
+        if(this._loginResultAfter) result = this._loginResultAfter(result, data, options);
+        return result;
+      }else{
+        if(this._loginError) this._loginError(data, options);
+        return;
+      }
+    })
   }
 
   // logout
@@ -98,6 +88,9 @@ class User {
   }
 
   logout(data, options){
+    options = this.app.utils.getOptions(this.options, options);
+    options = this.app.utils.getOptions(options, options.logout);
+
     if(this._logoutPrepare) [data, options] = this._logoutPrepare(data, options);
     this._logoutNetwork(data, options).then(result=>{
       if(this._logoutResultBefore) result = this._logoutResultBefore(result, data, options);
@@ -115,28 +108,46 @@ class User {
 
   // navigator
   // --------------------------
-  toLogin(isReplace=true,isForce=true) {
-    let goLogin = ()=>this.app.router.goLogin && this.app.router.goLogin(isReplace);
-    isForce?goLogin(isReplace):this.toLoginPrompt(()=>goLogin(isReplace));
+  pushLogin(confirm) {
+    if(!this.app.router.pushLogin) return;
+    return confirm?this.toLoginConfirm(()=>this.app.router.pushLogin()):this.app.router.pushLogin();
   }
 
-  toLoginPrompt(cb) {
+  replaceLogin(confirm) {
+    if(!this.app.router.replaceLogin) return;
+    return confirm?this.toLoginConfirm(()=>this.app.router.replaceLogin()):this.app.router.replaceLogin();
+  }
+
+  toLoginConfirm(confirm, cb) {
     cb();
   }
 }
 
-export default {
-  // plugin 
-  // --------------------------------
-  pluginName: 'user',
-  pluginDependence: ['request', 'storage'],
 
-  onPluginMount(app) {
+User.options = {
+  userKey: 'bnorth-keys-user',
+  info: {
+    url: 'user',
+    method: 'get',
+  },
+  login: {
+    url: 'user',
+    method: 'post',
+  },
+  logout: {
+    url: 'user',
+    method: 'delete',
+  },
+}
+
+
+export default {
+  _id: 'user',
+  _dependencies: ['request', 'storage'],
+
+  onPluginMount(app, plugin, options) {
     app.User = User;
-    app.user = new User(app);
-    app.event.on(app, 'onRouterEnter', (key, route, match)=>{
-      if(route.checkLogin && !app.user.isLogin()) return ()=>app.router.goLogin();
-    })
+    app.user = new User(app, options);
   },
 
   onPluginUnmount(app) {
@@ -144,6 +155,8 @@ export default {
     delete app.user;
   },
 
-  
+  onRouterEnter(key, route, match) {
+    if(route.checkLogin && !app.user.isLogin()) return ()=>app.router.goLogin();
+  }
 }
 

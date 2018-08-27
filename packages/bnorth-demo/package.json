@@ -34,6 +34,7 @@
     "bnorth-core": "*",
     "bnorth-plugin-network": "*",
     "bnorth-plugin-request": "*",
+    "bnorth-plugin-validate": "*",
     "rich.css": "*"
   },
   "devDependencies": {

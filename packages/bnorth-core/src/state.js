@@ -50,12 +50,17 @@ export default class State {
 
   dataExt() {}
 
-  async update(data, options) {
+  get(path='') {
+    let data = this.data()
+    return this.app.utils.pathGet(data, path);
+  }
+
+  async update(data, options, isRealData) {
     this.app.log.info('state update', data, options);
 
     options = this.app.utils.getOptions(this.options, options);
     let prevData = this.data();
-    let nextData = this.app.utils.objectUpdate(prevData, data, options.append);
+    let nextData = isRealData?data:this.app.utils.objectUpdate(prevData, data, options.append);
 
     let ret = await this.app.event.emitSync(this._id, 'onStateUpdating', nextData, prevData, data, options); 
     nextData = ret||nextData;
@@ -65,16 +70,11 @@ export default class State {
     return true;
   }
 
-  delete(_did) {
-    this.app.log.info('state delete', _id);
-    this.app.context.del(this._id, _did);
+  async delete(_did) {
+    let data = this.app.utils.objectDelete(this.data(), _did);
+    return await this.update(data, {}, true);
   }
   
-  get(path='') {
-    let data = this.data()
-    return this.app.utils.pathGet(data, path);
-  }
-
   async set(path='', val, input) {
     let data = this.data();
     if(!this.app.utils.pathSet(data, path, val)) return false;

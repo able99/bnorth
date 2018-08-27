@@ -10,10 +10,7 @@ import md5 from 'js-md5';
 
 
 export default {
-  // plugin 
-  // --------------------------------
-  pluginName: 'md5',
-  pluginDependence: [],
+  _id: 'md5',
 
   onPluginMount(app) {
     app.utils.md5 = (str)=>md5(str);

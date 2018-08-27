@@ -5,41 +5,10 @@
  * @license MIT
  */
 
-
-/**
- * 格式化输出与数据校验功能类
- * @class
- */
 class Format {
-  constructor(app){
+  constructor(app, options={}){
     this.app = app;
-
-    /**
-     * @property {string} [moneyDefault='0.00'] - 金额默认字符串
-     */
-    this.moneyDefault = '0.00';
-
-    /**
-     * @property {string} [timeFormat='YYYY-MM-DD HH:mm:ss'] - 时间默认的格式化字符串
-     */
-    this.timeFormat = "YYYY-MM-DD HH:mm:ss";
-
-    /**
-     * @property {string} [byteSizeG='G'] - 文件大小默认字符串
-     */
-    this.byteSizeG = 'G';
-    /**
-     * @property {string} [byteSizeM='M'] - 文件大小默认字符串
-     */
-    this.byteSizeM = 'M';
-    /**
-     * @property {string} [byteSizeK='K'] - 文件大小默认字符串
-     */
-    this.byteSizeK = 'K';
-    /**
-     * @property {string} [byteSizeB='B'] - 文件大小默认字符串
-     */
-    this.byteSizeB = 'B';
+    this.options = {...Format.options, ...options}
   }
 
   /**
@@ -47,8 +16,9 @@ class Format {
    * @method
    * @param {number|string} val - 金额
    */
-  money(val, moneyDefault, zeroDefault){
-    return !isNaN(val)&&(!zeroDefault||val>0)?Number(val).toFixed(2):moneyDefault||this.moneyDefault;
+  money(val, options){
+    options = this.app.utils.getOptions(this.options, options);
+    return !isNaN(val)&&(!options.zeroDefault||val>0)?Number(val).toFixed(2):options.moneyDefault;
   }
 
   /**
@@ -80,9 +50,8 @@ class Format {
    * Q: 季度
    * @return {string} - 格式化后的时间字符串
    */
-  time(date, format){
+  time(date, format=this.options.timeFormat){
     date = date instanceof Date ? date : new Date(date);
-    format = format||this.timeFormat;
     let o = {   
       "M+" : date.getMonth()+1,
       "D+" : date.getDate(),
@@ -109,27 +78,33 @@ class Format {
    */
   byteSize(size=0, fixed=2){
     if(size>1024*1024*1024){
-      return (size/1024/1024/1024).toFixed(fixed)+this.byteSizeG;
+      return (size/1024/1024/1024).toFixed(fixed)+this.options.byteSizeG;
     }else if(size>1024*1024){
-      return (size/1024/1024).toFixed(fixed)+this.byteSizeM;
+      return (size/1024/1024).toFixed(fixed)+this.options.byteSizeM;
     }else if(size>1024){
-      return (size/1024).toFixed(fixed)+this.byteSizeK;
+      return (size/1024).toFixed(fixed)+this.options.byteSizeK;
     }else{
-      return (size?size:0)+this.byteSizeB;
+      return (size?size:0)+this.options.byteSizeB;
     }
   }
 }
 
+Format.options = {
+  moneyDefault: '0.00',
+  timeFormat: "YYYY-MM-DD HH:mm:ss",
+  byteSizeG: 'G',
+  byteSizeM: 'M',
+  byteSizeK: 'K',
+  byteSizeB: 'B',
+}
+
 
 export default {
-  // plugin 
-  // --------------------------------
-  pluginName: 'format',
-  pluginDependence: [],
+  _id: 'format',
 
-  onPluginMount(app) {
+  onPluginMount(app, plugin, options) {
     app.Foramt = Format;
-    app.format = new Format(app);
+    app.format = new Format(app, options);
   },
 
   onPluginUnmount(app) {
