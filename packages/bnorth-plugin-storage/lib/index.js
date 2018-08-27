@@ -129,10 +129,7 @@ function () {
 }();
 
 var _default = {
-  // plugin 
-  // --------------------------------
-  pluginName: 'storage',
-  pluginDependence: [],
+  _id: 'storage',
   onPluginMount: function onPluginMount(app) {
     app.Storage = Storage;
     app.storage = new app.Storage(app);

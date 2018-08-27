@@ -137,7 +137,7 @@ export default class Page extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     let { app, route:{active} } = this.props;
 
-    if(prevProps.active !== active) {
+    if(prevProps.route.active !== active) {
       app.event.emitSync(this._id, active?'onPageActive':'onPageInactive', this, false);
     }
   }

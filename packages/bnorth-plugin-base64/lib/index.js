@@ -16,10 +16,7 @@ var _hiBase = _interopRequireDefault(require("hi-base64"));
  * @license MIT
  */
 var _default = {
-  // plugin 
-  // --------------------------------
-  pluginName: 'base64',
-  pluginDependence: [],
+  _id: 'base64',
   onPluginMount: function onPluginMount(app) {
     app.utils.base64encode = function (str, asciiOnly) {
       return _hiBase.default.encode(str, asciiOnly);

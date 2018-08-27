@@ -11,7 +11,7 @@ class User {
   }
 
   getToken() {
-    let user = this.load();
+    let user = this.data();
     return user.token;
   }
 
@@ -84,7 +84,7 @@ class User {
   }
 
   _logoutNavigator(result, data, options) {
-    this.toLogin();
+    this.pushLogin();
   }
 
   logout(data, options){

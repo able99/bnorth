@@ -19,21 +19,10 @@ var User =
 /*#__PURE__*/
 function () {
   function User(app) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     (0, _classCallCheck2.default)(this, User);
     this.app = app;
-    this.userKey = 'bnorth-keys-user';
-    this.infoOptions = {
-      url: 'user',
-      method: 'get'
-    };
-    this.loginOptions = {
-      url: 'user',
-      method: 'post'
-    };
-    this.logoutOptions = {
-      url: 'user',
-      method: 'delete'
-    };
+    this.options = (0, _objectSpread2.default)({}, User.options, options);
   } // storage
   // --------------------------
 
@@ -46,26 +35,26 @@ function () {
   }, {
     key: "getToken",
     value: function getToken() {
-      var user = this.load();
+      var user = this.data();
       return user.token;
     }
   }, {
     key: "data",
     value: function data() {
-      return this.app.storage && this.app.storage.getObj(this.userKey) || {};
+      return this.app.storage && this.app.storage.getObj(this.options.userKey) || {};
     }
   }, {
     key: "update",
     value: function update(user) {
-      var ret = this.app.storage && this.app.storage.setObj(this.userKey, user);
-      this.app.event.emit(this.app, 'onUserUpdate', user);
+      var ret = this.app.storage && this.app.storage.setObj(this.options.userKey, user);
+      this.app.event.emit(this.app._id, 'onUserUpdate', user);
       return ret;
     }
   }, {
     key: "clear",
     value: function clear() {
-      var ret = this.app.storage && this.app.storage.remove(this.userKey);
-      this.app.event.emit(this.app, 'onUserUpdate');
+      var ret = this.app.storage && this.app.storage.remove(this.options.userKey);
+      this.app.event.emit(this.app._id, 'onUserUpdate');
       return ret;
     } // login
     // --------------------------
@@ -91,6 +80,9 @@ function () {
     key: "login",
     value: function login(data, options) {
       var _this = this;
+
+      options = this.app.utils.getOptions(this.options, options);
+      options = this.app.utils.getOptions(options, options.login);
 
       if (this._loginPrepare) {
         var _this$_loginPrepare = this._loginPrepare(data, options);
@@ -135,12 +127,15 @@ function () {
   }, {
     key: "_logoutNavigator",
     value: function _logoutNavigator(result, data, options) {
-      this.toLogin();
+      this.pushLogin();
     }
   }, {
     key: "logout",
     value: function logout(data, options) {
       var _this2 = this;
+
+      options = this.app.utils.getOptions(this.options, options);
+      options = this.app.utils.getOptions(options, options.logout);
 
       if (this._logoutPrepare) {
         var _this$_logoutPrepare = this._logoutPrepare(data, options);
@@ -170,47 +165,64 @@ function () {
     // --------------------------
 
   }, {
-    key: "toLogin",
-    value: function toLogin() {
+    key: "pushLogin",
+    value: function pushLogin(confirm) {
       var _this3 = this;
 
-      var isReplace = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-      var isForce = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
-      var goLogin = function goLogin() {
-        return _this3.app.router.goLogin && _this3.app.router.goLogin(isReplace);
-      };
-
-      isForce ? goLogin(isReplace) : this.toLoginPrompt(function () {
-        return goLogin(isReplace);
-      });
+      if (!this.app.router.pushLogin) return;
+      return confirm ? this.toLoginConfirm(function () {
+        return _this3.app.router.pushLogin();
+      }) : this.app.router.pushLogin();
     }
   }, {
-    key: "toLoginPrompt",
-    value: function toLoginPrompt(cb) {
+    key: "replaceLogin",
+    value: function replaceLogin(confirm) {
+      var _this4 = this;
+
+      if (!this.app.router.replaceLogin) return;
+      return confirm ? this.toLoginConfirm(function () {
+        return _this4.app.router.replaceLogin();
+      }) : this.app.router.replaceLogin();
+    }
+  }, {
+    key: "toLoginConfirm",
+    value: function toLoginConfirm(confirm, cb) {
       cb();
     }
   }]);
   return User;
 }();
 
+User.options = {
+  userKey: 'bnorth-keys-user',
+  info: {
+    url: 'user',
+    method: 'get'
+  },
+  login: {
+    url: 'user',
+    method: 'post'
+  },
+  logout: {
+    url: 'user',
+    method: 'delete'
+  }
+};
 var _default = {
-  // plugin 
-  // --------------------------------
-  pluginName: 'user',
-  pluginDependence: ['request', 'storage'],
-  onPluginMount: function onPluginMount(app) {
+  _id: 'user',
+  _dependencies: ['request', 'storage'],
+  onPluginMount: function onPluginMount(app, plugin, options) {
     app.User = User;
-    app.user = new User(app);
-    app.event.on(app, 'onRouterEnter', function (key, route, match) {
-      if (route.checkLogin && !app.user.isLogin()) return function () {
-        return app.router.goLogin();
-      };
-    });
+    app.user = new User(app, options);
   },
   onPluginUnmount: function onPluginUnmount(app) {
     delete app.User;
     delete app.user;
+  },
+  onRouterEnter: function onRouterEnter(key, route, match) {
+    if (route.checkLogin && !app.user.isLogin()) return function () {
+      return app.router.goLogin();
+    };
   }
 };
 exports.default = _default;

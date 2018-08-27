@@ -16,10 +16,7 @@ var _jsMd = _interopRequireDefault(require("js-md5"));
  * @license MIT
  */
 var _default = {
-  // plugin 
-  // --------------------------------
-  pluginName: 'md5',
-  pluginDependence: [],
+  _id: 'md5',
   onPluginMount: function onPluginMount(app) {
     app.utils.md5 = function (str) {
       return (0, _jsMd.default)(str);

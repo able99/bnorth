@@ -213,10 +213,7 @@ function () {
 }();
 
 var _default = {
-  // plugin 
-  // --------------------------------
-  pluginName: 'browser',
-  pluginDependence: [],
+  _id: 'browser',
   onPluginMount: function onPluginMount(app) {
     app.Browser = Browser;
     app.browser = new Browser(app);

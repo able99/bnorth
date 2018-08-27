@@ -77,7 +77,7 @@ Network.Options = {
   },
 
   getRequestData(app, isFetch, data) {
-    return this.data||{};
+    return (typeof this.data==='function'?this.data():this.data)||{};
   },
 
   

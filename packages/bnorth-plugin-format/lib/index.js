@@ -7,6 +7,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -17,47 +19,14 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
  * @author able99 (8846755@qq.com)
  * @license MIT
  */
-
-/**
- * 格式化输出与数据校验功能类
- * @class
- */
 var Format =
 /*#__PURE__*/
 function () {
   function Format(app) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     (0, _classCallCheck2.default)(this, Format);
     this.app = app;
-    /**
-     * @property {string} [moneyDefault='0.00'] - 金额默认字符串
-     */
-
-    this.moneyDefault = '0.00';
-    /**
-     * @property {string} [timeFormat='YYYY-MM-DD HH:mm:ss'] - 时间默认的格式化字符串
-     */
-
-    this.timeFormat = "YYYY-MM-DD HH:mm:ss";
-    /**
-     * @property {string} [byteSizeG='G'] - 文件大小默认字符串
-     */
-
-    this.byteSizeG = 'G';
-    /**
-     * @property {string} [byteSizeM='M'] - 文件大小默认字符串
-     */
-
-    this.byteSizeM = 'M';
-    /**
-     * @property {string} [byteSizeK='K'] - 文件大小默认字符串
-     */
-
-    this.byteSizeK = 'K';
-    /**
-     * @property {string} [byteSizeB='B'] - 文件大小默认字符串
-     */
-
-    this.byteSizeB = 'B';
+    this.options = (0, _objectSpread2.default)({}, Format.options, options);
   }
   /**
    * 格式化金额
@@ -68,8 +37,9 @@ function () {
 
   (0, _createClass2.default)(Format, [{
     key: "money",
-    value: function money(val, moneyDefault, zeroDefault) {
-      return !isNaN(val) && (!zeroDefault || val > 0) ? Number(val).toFixed(2) : moneyDefault || this.moneyDefault;
+    value: function money(val, options) {
+      options = this.app.utils.getOptions(this.options, options);
+      return !isNaN(val) && (!options.zeroDefault || val > 0) ? Number(val).toFixed(2) : options.moneyDefault;
     }
     /**
      * 计算折扣并格式化
@@ -105,9 +75,9 @@ function () {
 
   }, {
     key: "time",
-    value: function time(date, format) {
+    value: function time(date) {
+      var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.options.timeFormat;
       date = date instanceof Date ? date : new Date(date);
-      format = format || this.timeFormat;
       var o = {
         "M+": date.getMonth() + 1,
         "D+": date.getDate(),
@@ -139,27 +109,32 @@ function () {
       var fixed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
 
       if (size > 1024 * 1024 * 1024) {
-        return (size / 1024 / 1024 / 1024).toFixed(fixed) + this.byteSizeG;
+        return (size / 1024 / 1024 / 1024).toFixed(fixed) + this.options.byteSizeG;
       } else if (size > 1024 * 1024) {
-        return (size / 1024 / 1024).toFixed(fixed) + this.byteSizeM;
+        return (size / 1024 / 1024).toFixed(fixed) + this.options.byteSizeM;
       } else if (size > 1024) {
-        return (size / 1024).toFixed(fixed) + this.byteSizeK;
+        return (size / 1024).toFixed(fixed) + this.options.byteSizeK;
       } else {
-        return (size ? size : 0) + this.byteSizeB;
+        return (size ? size : 0) + this.options.byteSizeB;
       }
     }
   }]);
   return Format;
 }();
 
+Format.options = {
+  moneyDefault: '0.00',
+  timeFormat: "YYYY-MM-DD HH:mm:ss",
+  byteSizeG: 'G',
+  byteSizeM: 'M',
+  byteSizeK: 'K',
+  byteSizeB: 'B'
+};
 var _default = {
-  // plugin 
-  // --------------------------------
-  pluginName: 'format',
-  pluginDependence: [],
-  onPluginMount: function onPluginMount(app) {
+  _id: 'format',
+  onPluginMount: function onPluginMount(app, plugin, options) {
     app.Foramt = Format;
-    app.format = new Format(app);
+    app.format = new Format(app, options);
   },
   onPluginUnmount: function onPluginUnmount(app) {
     delete app.Foramt;

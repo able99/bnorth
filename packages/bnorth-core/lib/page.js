@@ -238,7 +238,7 @@ function (_React$Component) {
           app = _this$props3.app,
           active = _this$props3.route.active;
 
-      if (prevProps.active !== active) {
+      if (prevProps.route.active !== active) {
         app.event.emitSync(this._id, active ? 'onPageActive' : 'onPageInactive', this, false);
       }
     }

@@ -93,7 +93,7 @@ Network.Options = {
     return this.method || (isFetch ? 'GET' : 'POST');
   },
   getRequestData: function getRequestData(app, isFetch, data) {
-    return this.data || {};
+    return (typeof this.data === 'function' ? this.data() : this.data) || {};
   },
   getResponseData: function getResponseData(app, isFetch, data) {
     return data;
