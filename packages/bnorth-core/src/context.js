@@ -27,10 +27,10 @@ class ContextComponent extends React.Component {
 export default class Context {
   constructor(app) {
     this.app = app;
-    this.app.event.on(this.app._id, 'onAppStartContext', ()=>{this.createStore()});
+    this.app.event.on(this.app._id, 'onAppStartContext', ()=>{this._createStore()});
   }
 
-  createStore() {
+  _createStore() {
     let { Provider, Consumer } = createContext();
     this.Provider = Provider;
     this.Consumer = Consumer;
@@ -53,25 +53,31 @@ export default class Context {
     this.app.Page = this.consumerHoc(this.app.Page);
   }
 
-  stateInit(name, data, cb) {
-    let adata = this.provider.data();
-    adata[name] = data;
-    return this.provider.update(adata, cb);
+  update(_id, data, cb) {
+    let state = this.provider.data();
+    state[_id] = this.app.utils.objectUpdate(state[_id], data);
+    return this.provider.update(state, cb);
   }
 
-  stateUpdate(name, data, cb) {
-    let adata = this.provider.data();
-    adata[name] = this.app.utils.objectUpdate(adata[name], data);
-    return this.provider.update(adata, cb);
+  clear(_id, cb) {
+    let state = this.provider.data();
+    delete state[_id];
+    return this.provider.update(state, cb);
   }
 
-  stateClean(name, cb) {
-    let data = this.provider.data();
-    delete data[name];
-    return this.provider.update(data, cb);
+  set(_id, data, cb) {
+    let state = this.provider.data();
+    state[_id] = data;
+    return this.provider.update(state, cb);
   }
 
-  stateData(name, defualtValue) {
-    return this.provider.data(name)||defualtValue;
+  del(_id, _did, cb) {
+    let state = this.provider.data();
+    state[_id] = this.app.utils.objectDelete(state[_id], _did);
+    return this.provider.update(state, cb);
+  }
+
+  data(_id, defualtValue, deep) {
+    return this.app.utils.objectCopy(this.provider.data(_id)||defualtValue, deep);
   }
 }

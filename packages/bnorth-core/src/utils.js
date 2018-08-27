@@ -43,14 +43,45 @@ export default class Utils {
 
   // object op
   // --------------------------
-  objectCopy(obj) {
+  objectCopy(obj, deep) {
     if(!obj) return obj;
-    return Array.isArray(data)?[...data]:(typeof data==='object'?{...data}:data);
+    return Array.isArray(obj)?[...obj]:(typeof obj==='object'?{...obj}:obj);
   }
 
-  objectUpdate(prevData, data) {
-    if(!data) return data;
-    return Array.isArray(data)?[...prevData, ...data]:(typeof data==='object'?{...prevData, ...data}:data);
+  objectUpdate(obj, data, append) {
+    if(Array.isArray(data)) {
+      data = [...(append?data:[]),...data];
+    }else if(typeof data==='object'){
+      if(typeof append==='string'){
+        let appendObj = this.app.utils.pathGet(obj, append);
+        let appendData = this.app.utils.pathGet(data, append);
+        let appends = app.utiles.objectUpdate(appendObj, appendData, true);
+        data = {...obj, ...data};
+        this.app.utils.pathSet(data, append, appends)
+      }else if(append===true||append===undefined){
+        data = {...obj, ...data};
+      }else{
+        data = {...data};
+      }
+    }else{
+      data = append?(obj+data):data;
+    }
+    
+    return data;
+  }
+
+  objectDelete(obj, _id) {
+    if(!obj) return;
+    
+    if(Array.isArray(obj)) {
+      obj.splice(_id, 1);
+      obj = [...obj];
+    }else{
+      delete obj[_id];
+      obj = {...obj};
+    }
+
+    return obj;
   }
 
 

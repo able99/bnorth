@@ -93,15 +93,47 @@ function () {
 
   }, {
     key: "objectCopy",
-    value: function objectCopy(obj) {
+    value: function objectCopy(obj, deep) {
       if (!obj) return obj;
-      return Array.isArray(data) ? (0, _toConsumableArray2.default)(data) : (typeof data === "undefined" ? "undefined" : (0, _typeof2.default)(data)) === 'object' ? (0, _objectSpread2.default)({}, data) : data;
+      return Array.isArray(obj) ? (0, _toConsumableArray2.default)(obj) : (0, _typeof2.default)(obj) === 'object' ? (0, _objectSpread2.default)({}, obj) : obj;
     }
   }, {
     key: "objectUpdate",
-    value: function objectUpdate(prevData, data) {
-      if (!data) return data;
-      return Array.isArray(data) ? (0, _toConsumableArray2.default)(prevData).concat((0, _toConsumableArray2.default)(data)) : (0, _typeof2.default)(data) === 'object' ? (0, _objectSpread2.default)({}, prevData, data) : data;
+    value: function objectUpdate(obj, data, append) {
+      if (Array.isArray(data)) {
+        data = (0, _toConsumableArray2.default)(append ? data : []).concat((0, _toConsumableArray2.default)(data));
+      } else if ((0, _typeof2.default)(data) === 'object') {
+        if (typeof append === 'string') {
+          var appendObj = this.app.utils.pathGet(obj, append);
+          var appendData = this.app.utils.pathGet(data, append);
+          var appends = app.utiles.objectUpdate(appendObj, appendData, true);
+          data = (0, _objectSpread2.default)({}, obj, data);
+          this.app.utils.pathSet(data, append, appends);
+        } else if (append === true || append === undefined) {
+          data = (0, _objectSpread2.default)({}, obj, data);
+        } else {
+          data = (0, _objectSpread2.default)({}, data);
+        }
+      } else {
+        data = append ? obj + data : data;
+      }
+
+      return data;
+    }
+  }, {
+    key: "objectDelete",
+    value: function objectDelete(obj, _id) {
+      if (!obj) return;
+
+      if (Array.isArray(obj)) {
+        obj.splice(_id, 1);
+        obj = (0, _toConsumableArray2.default)(obj);
+      } else {
+        delete obj[_id];
+        obj = (0, _objectSpread2.default)({}, obj);
+      }
+
+      return obj;
     }
   }, {
     key: "is",

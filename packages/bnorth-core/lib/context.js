@@ -74,13 +74,13 @@ function () {
     (0, _classCallCheck2.default)(this, Context);
     this.app = app;
     this.app.event.on(this.app._id, 'onAppStartContext', function () {
-      _this2.createStore();
+      _this2._createStore();
     });
   }
 
   (0, _createClass2.default)(Context, [{
-    key: "createStore",
-    value: function createStore() {
+    key: "_createStore",
+    value: function _createStore() {
       var _this3 = this;
 
       var _createContext = (0, _react.createContext)(),
@@ -106,30 +106,37 @@ function () {
       this.app.Page = this.consumerHoc(this.app.Page);
     }
   }, {
-    key: "stateInit",
-    value: function stateInit(name, data, cb) {
-      var adata = this.provider.data();
-      adata[name] = data;
-      return this.provider.update(adata, cb);
+    key: "update",
+    value: function update(_id, data, cb) {
+      var state = this.provider.data();
+      state[_id] = this.app.utils.objectUpdate(state[_id], data);
+      return this.provider.update(state, cb);
     }
   }, {
-    key: "stateUpdate",
-    value: function stateUpdate(name, data, cb) {
-      var adata = this.provider.data();
-      adata[name] = this.app.utils.objectUpdate(adata[name], data);
-      return this.provider.update(adata, cb);
+    key: "clear",
+    value: function clear(_id, cb) {
+      var state = this.provider.data();
+      delete state[_id];
+      return this.provider.update(state, cb);
     }
   }, {
-    key: "stateClean",
-    value: function stateClean(name, cb) {
-      var data = this.provider.data();
-      delete data[name];
-      return this.provider.update(data, cb);
+    key: "set",
+    value: function set(_id, data, cb) {
+      var state = this.provider.data();
+      state[_id] = data;
+      return this.provider.update(state, cb);
     }
   }, {
-    key: "stateData",
-    value: function stateData(name, defualtValue) {
-      return this.provider.data(name) || defualtValue;
+    key: "del",
+    value: function del(_id, _did, cb) {
+      var state = this.provider.data();
+      state[_id] = this.app.utils.objectDelete(state[_id], _did);
+      return this.provider.update(state, cb);
+    }
+  }, {
+    key: "data",
+    value: function data(_id, defualtValue, deep) {
+      return this.app.utils.objectCopy(this.provider.data(_id) || defualtValue, deep);
     }
   }]);
   return Context;

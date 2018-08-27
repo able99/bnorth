@@ -21,27 +21,25 @@ export default class App {
 
     // app core modal
     // ----------------------------
+    this.State = State;
+    this.Page = Page;
+
     this.Utils = this.options.Utiles||Utils;
     this.utils = new this.Utils(this, options);
     this.Log = this.options.Log||Log;
     this.log = new this.Log(this, options);
     this.Event = this.options.Event||Event;
     this.event = new this.Event(this, options);
-    this.Config = this.options.Config||Config;
-    this.config = new this.Config(this, options);
     this.Plugins = this.options.Plugins||Plugins;
     this.plugins = new this.Plugins(this, options);
+    this.Keyboard = this.options.Keyboard||Keyboard;
+    this.keyboard = new this.Keyboard(this, options);
     this.Context = this.options.Context||Context;
     this.context = new this.Context(this, options);
-    this.State = State;
-    this.states = {};
-    this.Page = Page;
     this.Router = this.options.Router||Router;
     this.router = new this.Router(this, options);
     this.Render = this.options.Render||Render;
     this.render = new this.Render(this, options);
-    this.Keyboard = this.options.Keyboard||Keyboard;
-    this.keyboard = new this.Keyboard(this, options);
 
 
     // app init

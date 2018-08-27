@@ -50,27 +50,24 @@ function () {
     this.options = options; // app core modal
     // ----------------------------
 
+    this.State = _state.default;
+    this.Page = _page.default;
     this.Utils = this.options.Utiles || _utils.default;
     this.utils = new this.Utils(this, options);
     this.Log = this.options.Log || _log.default;
     this.log = new this.Log(this, options);
     this.Event = this.options.Event || _event.default;
     this.event = new this.Event(this, options);
-    this.Config = this.options.Config || _config.default;
-    this.config = new this.Config(this, options);
     this.Plugins = this.options.Plugins || _plugins.default;
     this.plugins = new this.Plugins(this, options);
+    this.Keyboard = this.options.Keyboard || _keyboard.default;
+    this.keyboard = new this.Keyboard(this, options);
     this.Context = this.options.Context || _context2.default;
     this.context = new this.Context(this, options);
-    this.State = _state.default;
-    this.states = {};
-    this.Page = _page.default;
     this.Router = this.options.Router || _router.default;
     this.router = new this.Router(this, options);
     this.Render = this.options.Render || _render.default;
-    this.render = new this.Render(this, options);
-    this.Keyboard = this.options.Keyboard || _keyboard.default;
-    this.keyboard = new this.Keyboard(this, options); // app init
+    this.render = new this.Render(this, options); // app init
     // ----------------------------
 
     window.app = this;
