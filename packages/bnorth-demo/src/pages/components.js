@@ -46,10 +46,10 @@ export default props=>{
           <Button onClick={()=>app.modal.show('modal', {role: 'document'})}>document</Button>
         </Button.Group>
         <Button.Group justify separator>
-          <Button onClick={()=>app.modal.show(({modalStateData, modalStateUpdate})=>(
+          <Button onClick={()=>app.modal.show(({modalData, modalUpdate})=>(
             <div>
-              <div>{modalStateData.input}</div>
-              <input onChange={e=>modalStateUpdate({input: e.target.value})} value={modalStateData.input}/>
+              <div>{modalData.input}</div>
+              <input onChange={e=>modalUpdate({input: e.target.value})} value={modalData.input}/>
             </div>
           ),{
             role: 'prompt',

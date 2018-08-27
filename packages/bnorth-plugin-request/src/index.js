@@ -1,10 +1,10 @@
 function genRequestClass(app) {
   return ( class Request extends app.State {
-    constructor(app, name, options, page) {
-      super(app, name, options, page);
+    constructor(app, options={}) {
+      super(app, options);
       
-      this.app.event.on(this, 'onStateStart', (page)=>{this.options.fetchOnStart&&this.fetch()}, this.name);
-      this.app.event.on(this, 'onStateActive', (page, onStart)=>{this.options.fetchOnActive&&(!onStart)&&this.fetch()}, this.name);
+      this.app.event.on(this._id, 'onStateStart', (page)=>{this.options.fetchOnStart&&this.fetch()}, this._id);
+      this.app.event.on(this._id, 'onStateActive', (page, onStart)=>{this.options.fetchOnActive&&(!onStart)&&this.fetch()}, this._id);
     }
 
     _requestFetching(fetching, {loading, mask, noNotice, noLoadingMask}, isFetch) {
@@ -43,37 +43,35 @@ function genRequestClass(app) {
       this._requestFetching(true, options, isFetch);
 
       return this.app.network.fetch(options, isFetch)
-      .then(result=>{
-        if(!result) return;
-        this._requestFetching(false, options, isFetch);
-        if(options.onSuccess&&options.onSuccess(result.data, result, options, isFetch)) return;
-  
-        let ret = this.app.event.emitSync(this, 'onStateWillUpdate', result.data, result, options, isFetch);
-        // if(ret) result = ret;
-        // if(ret===false) return;
-  
-        this._requestSuccess(result, options, isFetch);
-        this.app.event.emitSync(this, 'onStateDidUpdate', result.data, result, options, isFetch);
+        .then(result=>{
+          this._requestFetching(false, options, isFetch);
+          if(!result) return;
 
-        return result;
-      })
-      .catch(error=>{
-        this._requestFetching(false, options, isFetch);
-        if(error===null) return;
-        if(options.onError&&options.onError(error, options)) return;
-        this._requestError(error, options, isFetch);
-        this.app.event.emitSync(this, 'onStateError', error, options, isFetch);
-      });    
+          if(options.onSuccess&&options.onSuccess(result.data, result, options, isFetch)) return;
+          let ret = this.app.event.emitSync(this, 'onStateWillUpdate', result.data, result, options, isFetch);
+          // if(ret) result = ret;
+          // if(ret===false) return;
+    
+          this._requestSuccess(result, options, isFetch);
+          this.app.event.emitSync(this, 'onStateDidUpdate', result.data, result, options, isFetch);
+          return result;
+        })
+        .catch(error=>{
+          this._requestFetching(false, options, isFetch);
+          if(error===null) return;
+
+          if(options.onError&&options.onError(error, options)) return;
+          this._requestError(error, options, isFetch);
+          this.app.event.emit(this, 'onStateError', error, options, isFetch);
+        });    
     }
 
     fetch(options) {
       return this._request(this.app.utils.getOptions(this.options, options));
     }
 
-    update(data, pure) {
-      if(!pure) return super.update(data);
-      data = {data};
-      return super.update(data);
+    update(data, onlyData=true) {
+      return super.update(onlyData?{data}:data);
     }
 
     data() {
@@ -96,8 +94,6 @@ export default app=>{
     _id: 'request',
     _dependencies: ['network'],
 
-    stateRequest: { state: Request },
-
     onPluginMount(app, plugin) {
       app.Request = Request;
       app.request = plugin;
@@ -108,6 +104,7 @@ export default app=>{
       delete app.request;
     },
 
+    stateRequest: { state: Request },
     request: options=>app.request.stateRequest._request(options, false),
   }
 }

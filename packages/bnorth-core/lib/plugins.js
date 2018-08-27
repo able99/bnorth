@@ -143,7 +143,7 @@ function () {
           }, _idState);
         }
       });
-      app.event.emit(_id, 'onPluginMount', app, plugin);
+      app.event.emitSync(_id, 'onPluginMount', app, plugin);
       app.event.emit(app._id, 'onPluginAdd', plugin);
     }
   }, {
@@ -157,7 +157,7 @@ function () {
 
       if (index < 0) return;
       var plugin = this._plugins[index];
-      app.event.emit(plugin._id._id, 'onPluginUnmount', app, plugin);
+      app.event.emitSync(plugin._id._id, 'onPluginUnmount', app, plugin);
       this.app.event.off(name);
 
       this._plugins.splice(index, 1);

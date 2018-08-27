@@ -25,13 +25,13 @@ var _default = {
       _createContent: function _createContent(_id, Content) {
         return typeof Content === 'function' ? app.context.consumerHoc(function () {
           return _react.default.createElement(Content, {
-            modalRef: _id,
+            modalId: _id,
             modalClose: function modalClose() {
               return app.modal.close(_id);
             },
-            modalStateData: app.context.stateData(_id) || {},
-            modalStateUpdate: function modalStateUpdate(state) {
-              return app.context.stateUpdate(_id, state);
+            modalData: app.context.data(_id) || {},
+            modalUpdate: function modalUpdate(state) {
+              return app.context.update(_id, state);
             }
           });
         }) : Content;
@@ -59,7 +59,7 @@ var _default = {
         }, props.in = true;
 
         props.handleAction = function (index) {
-          return (!onAction || onAction(index, app.context.stateData(_id) || {}, function () {
+          return (!onAction || onAction(index, app.context.data(_id) || {}, function () {
             return app.modal.close(_id);
           }, _id) !== false) && app.modal.close(_id);
         };
@@ -102,7 +102,7 @@ var _default = {
 
         props.onExited = function () {
           app.router.removeView(_id);
-          app.context.stateClean(_id);
+          app.context.clear(_id);
         };
 
         return app.router.addView(content, props, options);

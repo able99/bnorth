@@ -21,27 +21,26 @@ var _get2 = _interopRequireDefault(require("@babel/runtime/helpers/get"));
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
-var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/helpers/assertThisInitialized"));
-
 function genRequestClass(app) {
   return (
     /*#__PURE__*/
     function (_app$State) {
       (0, _inherits2.default)(Request, _app$State);
 
-      function Request(app, name, options, page) {
+      function Request(app) {
         var _this;
 
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         (0, _classCallCheck2.default)(this, Request);
-        _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Request).call(this, app, name, options, page));
+        _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Request).call(this, app, options));
 
-        _this.app.event.on((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), 'onStateStart', function (page) {
+        _this.app.event.on(_this._id, 'onStateStart', function (page) {
           _this.options.fetchOnStart && _this.fetch();
-        }, _this.name);
+        }, _this._id);
 
-        _this.app.event.on((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), 'onStateActive', function (page, onStart) {
+        _this.app.event.on(_this._id, 'onStateActive', function (page, onStart) {
           _this.options.fetchOnActive && !onStart && _this.fetch();
-        }, _this.name);
+        }, _this._id);
 
         return _this;
       }
@@ -92,10 +91,9 @@ function genRequestClass(app) {
           this._requestFetching(true, options, isFetch);
 
           return this.app.network.fetch(options, isFetch).then(function (result) {
-            if (!result) return;
-
             _this2._requestFetching(false, options, isFetch);
 
+            if (!result) return;
             if (options.onSuccess && options.onSuccess(result.data, result, options, isFetch)) return;
 
             var ret = _this2.app.event.emitSync(_this2, 'onStateWillUpdate', result.data, result, options, isFetch); // if(ret) result = ret;
@@ -115,7 +113,7 @@ function genRequestClass(app) {
 
             _this2._requestError(error, options, isFetch);
 
-            _this2.app.event.emitSync(_this2, 'onStateError', error, options, isFetch);
+            _this2.app.event.emit(_this2, 'onStateError', error, options, isFetch);
           });
         }
       }, {
@@ -125,12 +123,11 @@ function genRequestClass(app) {
         }
       }, {
         key: "update",
-        value: function update(data, pure) {
-          if (!pure) return (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "update", this).call(this, data);
-          data = {
+        value: function update(data) {
+          var onlyData = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+          return (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "update", this).call(this, onlyData ? {
             data: data
-          };
-          return (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "update", this).call(this, data);
+          } : data);
         }
       }, {
         key: "data",
@@ -156,9 +153,6 @@ var _default = function _default(app) {
   return {
     _id: 'request',
     _dependencies: ['network'],
-    stateRequest: {
-      state: Request
-    },
     onPluginMount: function onPluginMount(app, plugin) {
       app.Request = Request;
       app.request = plugin;
@@ -166,6 +160,9 @@ var _default = function _default(app) {
     onPluginUnmount: function onPluginUnmount(app, plugin) {
       delete app.Request;
       delete app.request;
+    },
+    stateRequest: {
+      state: Request
     },
     request: function request(options) {
       return app.request.stateRequest._request(options, false);

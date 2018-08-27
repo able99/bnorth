@@ -2,9 +2,10 @@ import React from 'react';
 import View from 'bnorth-components/lib/View'
 import Panel from 'bnorth-components/lib/Panel'
 import List from 'bnorth-components/lib/List'
+import Button from 'bnorth-components/lib/Button'
 
 export default props=>{
-  let { page, stateData, stateInit, stateEvent } = props;
+  let { app, page, stateData, stateInit, stateEvent, stateNetwork } = props;
   return (
     <View>
       <Panel main>
@@ -23,6 +24,13 @@ export default props=>{
             onClick={()=>page.stateEvent.set('tick', (stateEvent.tick||0)+1)} />
         </List>
         <List className="margin-top">
+          <List.Item 
+            title="network-fetchOnStart-click fetch" 
+            after={<Button cTheme="link" cStyle="plain" className="padding-0" onClick={()=>app.modal.show(JSON.stringify(stateNetwork), {role: 'alert'})}>show</Button>}
+            onClick={()=>page.stateNetwork.fetch()} />
+          <List.Item 
+            title="network-update({a:1})" 
+            onClick={()=>page.stateNetwork.update({a:1})} />
         </List>
       </Panel>
     </View>

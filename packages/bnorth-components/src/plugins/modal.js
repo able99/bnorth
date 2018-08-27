@@ -12,10 +12,10 @@ export default {
     app.modal = {
       _createContent: (_id, Content)=>(typeof Content==='function'?app.context.consumerHoc(()=>(
         <Content 
-          modalRef={_id}
+          modalId={_id}
           modalClose={()=>app.modal.close(_id)}
-          modalStateData={app.context.stateData(_id)||{}} 
-          modalStateUpdate={state=>app.context.stateUpdate(_id, state)} />
+          modalData={app.context.data(_id)||{}} 
+          modalUpdate={state=>app.context.update(_id, state)} />
       )):Content),
 
       show: (Content, { onAction, options={}, ...props}={})=>{
@@ -27,7 +27,7 @@ export default {
         options.onAdd = _id=>app.keyboard.on(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id)),
         options.onRemove = _id=>app.keyboard.off(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id)),
         props.in = true;
-        props.handleAction = index=>(!onAction || onAction( index, app.context.stateData(_id)||{}, ()=>app.modal.close(_id), _id)!==false) && app.modal.close(_id);
+        props.handleAction = index=>(!onAction || onAction( index, app.context.data(_id)||{}, ()=>app.modal.close(_id), _id)!==false) && app.modal.close(_id);
         props.children = app.modal._createContent(_id, Content);
 
         return app.router.addView(<Modal /> , props, options);
@@ -59,7 +59,7 @@ export default {
         props.in = false;
         props.onExited = ()=>{
           app.router.removeView(_id);
-          app.context.stateClean(_id);
+          app.context.clear(_id);
         }
 
         return app.router.addView(content, props, options);
