@@ -109,15 +109,18 @@ function (_React$Component) {
         if (k.startsWith('state') || k.startsWith('_state')) {
           // state
           if (typeof v === 'string') {
-            _this3[k] = app.states[v];
+            var state = app.State.get(v);
+            state ? _this3[k] = state : app.render.panic(v, {
+              title: 'no state'
+            });
           } else {
             var _ref3 = v || {},
                 _ref3$state = _ref3.state,
-                state = _ref3$state === void 0 ? app.State : _ref3$state,
+                _state = _ref3$state === void 0 ? app.State : _ref3$state,
                 stateOptions = (0, _objectWithoutProperties2.default)(_ref3, ["state"]);
 
             stateOptions._id = stateOptions._id || app.State.genStateId(k, _this3._id);
-            _this3[k] = new state(app, stateOptions);
+            _this3[k] = new _state(app, stateOptions);
             app.event.on(_this3._id, 'onPageStart', function (page, active) {
               app.event.emit(_this3[k]._id, 'onStateStart', _this3[k]._id, active);
             }, _this3[k]._id);
@@ -343,6 +346,11 @@ function (_React$Component) {
     key: "_id",
     get: function get() {
       return this.props._id;
+    }
+  }, {
+    key: "app",
+    get: function get() {
+      return this.props.app;
     }
   }]);
   return Page;

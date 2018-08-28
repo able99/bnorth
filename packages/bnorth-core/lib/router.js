@@ -75,7 +75,7 @@ var PageError = function PageError(props) {
     onClick: function onClick() {
       return app.router.replaceRoot();
     }
-  }, "[home]"), " "), _react.default.createElement("div", null, title), _react.default.createElement("hr", null), _react.default.createElement("p", null, message));
+  }, "[home]"), " "), _react.default.createElement("h3", null, title), _react.default.createElement("hr", null), _react.default.createElement("p", null, message));
 };
 
 var RouterComponent =
@@ -201,10 +201,10 @@ function (_React$Component) {
       if (pathname.startsWith('/error')) {
         var paths = pathname.split(':');
         return {
-          message: paths[1],
-          title: paths[2],
-          back: paths[3],
-          data: paths.slice(4)
+          message: decodeURIComponent(paths[1]),
+          title: decodeURIComponent(paths[2]),
+          back: decodeURIComponent(paths[3]),
+          data: decodeURIComponent(paths.slice(4))
         };
       }
     }
@@ -281,7 +281,9 @@ function (_React$Component) {
               route = _this$_getPathnameRou.route;
 
           if (!routeName) {
-            app.render.panic('router nomatch', v);
+            app.render.panic(v, {
+              title: 'router nomatch'
+            });
             return;
           }
 
@@ -517,7 +519,7 @@ function () {
       if (!name || !route) return;
       this._routes[name] = route;
 
-      this._genNaviMethod(name);
+      this._genRouteMethod(name.split(':')[0]);
 
       this.update();
     }

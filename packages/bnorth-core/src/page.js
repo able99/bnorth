@@ -10,7 +10,11 @@ export default class Page extends React.Component {
   }
 
   get _id() { 
-    return this.props._id
+    return this.props._id;
+  }
+
+  get app() { 
+    return this.props.app;
   }
 
   getEmbed(routerName) { 
@@ -52,7 +56,8 @@ export default class Page extends React.Component {
       if(k.startsWith('state')||k.startsWith('_state')) {
         // state
         if(typeof v==='string'){
-          this[k] =  app.states[v];
+          let state = app.State.get(v);
+          state?(this[k]=state):(app.render.panic(v, {title: 'no state'}))
         }else{
           let {state=app.State, ...stateOptions} = v||{};
           stateOptions._id = stateOptions._id||app.State.genStateId(k, this._id);
@@ -83,7 +88,7 @@ export default class Page extends React.Component {
         app.event.on(app._id, k, v, this._id);
       }else if(k.startsWith('action')){ 
         // action
-        this[k] = this.action(v, k);
+        this[k] = this.action(v, k.slice(6));
       }else{
         // user props
         this[k] = v;

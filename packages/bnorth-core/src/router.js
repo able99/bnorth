@@ -24,7 +24,7 @@ let PageError = props=>{
   return (
     <div style={{padding: 8}}>
       <div> error: <a style={{padding: 4}} onClick={()=>app.router.back()}>[back]</a> <a style={{padding: 4}} onClick={()=>app.router.replaceRoot()}>[home]</a> </div>
-      <div>{title}</div>
+      <h3>{title}</h3>
       <hr/>
       <p>{message}</p>
     </div>
@@ -91,10 +91,10 @@ class RouterComponent extends React.Component {
     if(pathname.startsWith('/error')){
       let paths = pathname.split(':');
       return {
-        message: paths[1],
-        title: paths[2],
-        back: paths[3],
-        data: paths.slice(4),
+        message: decodeURIComponent(paths[1]),
+        title: decodeURIComponent(paths[2]),
+        back: decodeURIComponent(paths[3]),
+        data: decodeURIComponent(paths.slice(4)),
       }
     }
   }
@@ -140,7 +140,7 @@ class RouterComponent extends React.Component {
     let pageItems = [];
     for (let v of history.location.pathnames) {
       let { routeName, params, route } = this._getPathnameRouteInfo(v, router.getRoutes());
-      if(!routeName){ app.render.panic('router nomatch', v); return; }
+      if(!routeName){ app.render.panic(v, {title:'router nomatch'}); return; }
 
       let _id = '#'+join(pathname,routeName);
       let _idParent = '#'+pathname;
@@ -260,7 +260,7 @@ export default class Router {
   addRoute(name, route) {
     if(!name||!route) return;
     this._routes[name] = route;
-    this._genNaviMethod(name);
+    this._genRouteMethod(name.split(':')[0]);
     this.update();
   }
 
