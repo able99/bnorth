@@ -48,11 +48,11 @@ class RouterComponent extends React.Component {
     return isContentComponent?<Component {...aprops} />:(typeof Component==='object'&&Component.type?cloneElement(Component, aprops):Component);
   }
 
-  _renderPage({_id, _idParent, route, params, query, active, focus, embed, viewItems, embeds}){
+  _renderPage({_id, _idParent, routeName, routePattern, route, params, query, active, focus, embed, viewItems, embeds}){
     Object.keys(embeds).forEach(v=>{
       embeds[v] = this._renderPage(embeds[v]);
     })
-    let props = { app, key: _id, _id, route: { ...route, _idParent, params, query, active, focus, embed }, views: viewItems, embeds};
+    let props = { app, key: _id, _id, route: { ...route,routeName, routePattern,  _idParent, params, query, active, focus, embed }, views: viewItems, embeds};
 
     if(route.loader){
       route.loader(app).then(v=>{
@@ -73,6 +73,7 @@ class RouterComponent extends React.Component {
     if(!match) return [];
     let items = match[0].split(':');
     let routeName = items[0];
+    let routePattern = match;
     items = items.slice(1);
     paths = paths.slice(1);
     if(items.filter(v=>!v.endsWith('?')).length>paths.length) return [];
@@ -84,7 +85,7 @@ class RouterComponent extends React.Component {
       params[items[i]||i] = decodeURIComponent(path);
     })
 
-    return { routeName, params, route };
+    return { routeName, routePattern, params, route };
   }
 
   _getPathnameErrorInfo(pathname){
@@ -139,7 +140,7 @@ class RouterComponent extends React.Component {
     let pathname = '';
     let pageItems = [];
     for (let v of history.location.pathnames) {
-      let { routeName, params, route } = this._getPathnameRouteInfo(v, router.getRoutes());
+      let { routeName, routePattern, params, route } = this._getPathnameRouteInfo(v, router.getRoutes());
       if(!routeName){ app.render.panic(v, {title:'router nomatch'}); return; }
 
       let _id = '#'+join(pathname,routeName);
@@ -157,7 +158,7 @@ class RouterComponent extends React.Component {
       }
 
       pageItems.push({ 
-        _id, _idParent, route, params, query: history.location.query, viewItems: router.getPageViews(_id).map(vv=>({...vv})), embeds
+        _id, _idParent, routeName, routePattern, route, params, query: history.location.query, viewItems: router.getPageViews(_id).map(vv=>({...vv})), embeds
       });
 
       pathname = join(pathname,v);

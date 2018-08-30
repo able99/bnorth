@@ -26,9 +26,10 @@ var _default = {
             options = _ref$options === void 0 ? {} : _ref$options,
             props = (0, _objectWithoutProperties2.default)(_ref, ["options"]);
 
+        console.log(11111111, app.loading.count);
         app.loading.count++;
 
-        if (!app.loading.ref) {
+        if (app.loading.count <= 1) {
           var _id = app.router.getViewId(options);
 
           options._id = _id;
@@ -42,15 +43,8 @@ var _default = {
           return app.loading.reset();
         }
       },
-      reset: function reset() {
-        if (!app.loading.ref) return;
-        return app.loading.ref.reset();
-      },
-      full: function full() {
-        if (!app.loading.ref) return;
-        return app.loading.ref.full();
-      },
       close: function close(force) {
+        console.log(2222222, app.loading.count);
         app.loading.count = force ? 0 : Math.max(--app.loading.count, 0);
 
         if (app.loading.count) {
@@ -80,6 +74,14 @@ var _default = {
         };
 
         return app.router.addView(content, props, options);
+      },
+      reset: function reset() {
+        if (!app.loading.ref) return;
+        return app.loading.ref.reset();
+      },
+      full: function full() {
+        if (!app.loading.ref) return;
+        return app.loading.ref.full();
       }
     };
     app.loading._oldRenderLoading = app.render.loading;

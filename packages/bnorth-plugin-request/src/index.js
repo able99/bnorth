@@ -1,6 +1,7 @@
 class Request extends app.State {
   constructor(app, options={}) {
     super(app, options);
+    this.fetched = false;
     
     app.event.on(this._id, 'onStateStart', (page)=>{this.options.fetchOnStart&&this.fetch()}, this._id);
     app.event.on(this._id, 'onStateActive', (page, onStart)=>{this.options.fetchOnActive&&(!onStart)&&this.fetch()}, this._id);
@@ -19,6 +20,7 @@ class Request extends app.State {
   }
 
   _requestSuccess(result, options, isFetch){
+    this.fetched = true;
     isFetch&&super.update({ 
       fetching: false,
       ...result,
@@ -37,6 +39,7 @@ class Request extends app.State {
   }
 
   _request(options={}, isFetch=true) {
+    if(options.once&&this.fetched) { this.app.log.info('plugin once'); return}
     if(!this.app.network||!this.app.network.fetch) throw new Error('plugin error: no dependence network');
 
     this._requestFetching(true, options, isFetch);

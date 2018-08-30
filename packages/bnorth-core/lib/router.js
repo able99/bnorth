@@ -114,6 +114,8 @@ function (_React$Component) {
 
       var _id = _ref2._id,
           _idParent = _ref2._idParent,
+          routeName = _ref2.routeName,
+          routePattern = _ref2.routePattern,
           route = _ref2.route,
           params = _ref2.params,
           query = _ref2.query,
@@ -130,6 +132,8 @@ function (_React$Component) {
         key: _id,
         _id: _id,
         route: (0, _objectSpread2.default)({}, route, {
+          routeName: routeName,
+          routePattern: routePattern,
           _idParent: _idParent,
           params: params,
           query: query,
@@ -176,6 +180,7 @@ function (_React$Component) {
       if (!match) return [];
       var items = match[0].split(':');
       var routeName = items[0];
+      var routePattern = match;
       items = items.slice(1);
       paths = paths.slice(1);
       if (items.filter(function (v) {
@@ -191,6 +196,7 @@ function (_React$Component) {
       });
       return {
         routeName: routeName,
+        routePattern: routePattern,
         params: params,
         route: route
       };
@@ -277,6 +283,7 @@ function (_React$Component) {
 
           var _this$_getPathnameRou = this._getPathnameRouteInfo(v, router.getRoutes()),
               routeName = _this$_getPathnameRou.routeName,
+              routePattern = _this$_getPathnameRou.routePattern,
               params = _this$_getPathnameRou.params,
               route = _this$_getPathnameRou.route;
 
@@ -345,6 +352,8 @@ function (_React$Component) {
           pageItems.push({
             _id: _id,
             _idParent: _idParent,
+            routeName: routeName,
+            routePattern: routePattern,
             route: route,
             params: params,
             query: history.location.query,

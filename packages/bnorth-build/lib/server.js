@@ -54,7 +54,7 @@ function doRun(type, serverConfig) {
     https: serverConfig.protocol === 'https',
     host: serverConfig.host,
     proxy: bnorthConfig.proxy,
-    // contentBase: env.appPublic,
+    contentBase: env.appPublic,
     // publicPath: env.appPublic,
     disableHostCheck: true,
     compress: true,

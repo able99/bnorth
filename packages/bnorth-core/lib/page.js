@@ -157,7 +157,7 @@ function (_React$Component) {
           app.event.on(app._id, k, v, _this3._id);
         } else if (k.startsWith('action')) {
           // action
-          _this3[k] = _this3.action(v, k);
+          _this3[k] = _this3.action(v, k.slice(6));
         } else {
           // user props
           _this3[k] = v;
@@ -250,8 +250,8 @@ function (_React$Component) {
     value: function componentDidCatch(error, info) {
       var app = this.props.app;
       app.log.info('page did catch');
-      app.render.panic(info.componentStack, {
-        title: error
+      app.render.panic(error, {
+        title: 'page error catch:' + this._id
       });
     }
   }, {

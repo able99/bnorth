@@ -32,6 +32,7 @@ function (_app$State) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     (0, _classCallCheck2.default)(this, Request);
     _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Request).call(this, app, options));
+    _this.fetched = false;
     app.event.on(_this._id, 'onStateStart', function (page) {
       _this.options.fetchOnStart && _this.fetch();
     }, _this._id);
@@ -60,6 +61,7 @@ function (_app$State) {
   }, {
     key: "_requestSuccess",
     value: function _requestSuccess(result, options, isFetch) {
+      this.fetched = true;
       isFetch && (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "update", this).call(this, (0, _objectSpread2.default)({
         fetching: false
       }, result), {
@@ -82,6 +84,12 @@ function (_app$State) {
 
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var isFetch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+      if (options.once && this.fetched) {
+        this.app.log.info('plugin once');
+        return;
+      }
+
       if (!this.app.network || !this.app.network.fetch) throw new Error('plugin error: no dependence network');
 
       this._requestFetching(true, options, isFetch);

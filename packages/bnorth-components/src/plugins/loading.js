@@ -12,9 +12,10 @@ export default {
       count: 0,
 
       show: ({options={}, ...props}={})=>{
+        console.log(11111111,app.loading.count);
         app.loading.count++;
 
-        if(!app.loading.ref){
+        if(app.loading.count<=1){
           let _id = app.router.getViewId(options);
           options._id = _id;
           props.ref = e=>e&&(app.loading.ref = e);
@@ -24,17 +25,8 @@ export default {
         }
       },
 
-      reset: ()=>{
-        if(!app.loading.ref) return;
-        return app.loading.ref.reset();
-      },
-
-      full: ()=>{
-        if(!app.loading.ref) return;
-        return app.loading.ref.full();
-      },
-
       close: force=>{
+        console.log(2222222,app.loading.count);
         app.loading.count = force?0:Math.max(--app.loading.count,0);
         if(app.loading.count) { app.loading.full(); return }
         let {content, props={}, options={}} = app.router.getView(app.loading._id)||{};
@@ -48,6 +40,16 @@ export default {
         }
 
         return app.router.addView(content, props, options);
+      },
+
+      reset: ()=>{
+        if(!app.loading.ref) return;
+        return app.loading.ref.reset();
+      },
+
+      full: ()=>{
+        if(!app.loading.ref) return;
+        return app.loading.ref.full();
       },
     };
 
