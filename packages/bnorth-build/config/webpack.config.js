@@ -133,7 +133,7 @@ function getPlugins() {
   existsSync(appPublic) && ret.push(new CopyWebpackPlugin([
     {
       from: appPublic,
-      to: outputPath,
+      to: './',
     },
   ]));
 

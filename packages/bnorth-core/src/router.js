@@ -227,7 +227,10 @@ export default class Router {
         location.query[vs[0]] =  vs[1];
       })
 
-      location.pathnames = ((location.pathname[1]===':'?'':'/')+location.pathname).split(/(?<!^)\//).filter(v=>v);
+      let pathname = location.pathname;
+      if(pathname[0]==='/') pathname=(pathname[1]===':'?'#':'#/')+pathname.slice(1);
+      location.pathnames = pathname.split('/').filter(v=>v);
+      location.pathnames[0]&&location.pathnames[0][0]==='#'&&(location.pathnames[0]='/'+location.pathnames[0].slice(1));
 
       if(action==='PUSH') this._historyStackCount++;
       if(action==='POP') this._historyStackCount = Math.max(--this._historyStackCount, 0);

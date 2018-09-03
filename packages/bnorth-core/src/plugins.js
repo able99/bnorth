@@ -32,8 +32,12 @@ export default class Plugins {
     return plugin;
   }
 
-  get(name) {
+  getByName(name) {
     return this._plugins.find(v=>v._id===('>'+(name||this.app._id)))
+  }
+
+  getById(_id) {
+    return this._plugins.find(v=>v._id===_id);
   }
 
   add(plugin, ...args) {

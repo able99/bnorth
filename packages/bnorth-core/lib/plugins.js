@@ -95,12 +95,19 @@ function () {
       return plugin;
     }
   }, {
-    key: "get",
-    value: function get(name) {
+    key: "getByName",
+    value: function getByName(name) {
       var _this2 = this;
 
       return this._plugins.find(function (v) {
         return v._id === '>' + (name || _this2.app._id);
+      });
+    }
+  }, {
+    key: "getById",
+    value: function getById(_id) {
+      return this._plugins.find(function (v) {
+        return v._id === _id;
       });
     }
   }, {

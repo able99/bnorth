@@ -482,9 +482,12 @@ function () {
           var vs = v.split('=');
           location.query[vs[0]] = vs[1];
         });
-        location.pathnames = ((location.pathname[1] === ':' ? '' : '/') + location.pathname).split(/(?<!^)\//).filter(function (v) {
+        var pathname = location.pathname;
+        if (pathname[0] === '/') pathname = (pathname[1] === ':' ? '#' : '#/') + pathname.slice(1);
+        location.pathnames = pathname.split('/').filter(function (v) {
           return v;
         });
+        location.pathnames[0] && location.pathnames[0][0] === '#' && (location.pathnames[0] = '/' + location.pathnames[0].slice(1));
         if (action === 'PUSH') _this6._historyStackCount++;
         if (action === 'POP') _this6._historyStackCount = Math.max(--_this6._historyStackCount, 0);
 
