@@ -82,8 +82,6 @@ var TabBar = function TabBar(aprops) {
 };
 
 var TabBarItem = function TabBarItem(aprops) {
-  var _classSet2;
-
   var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
       title = _genCommonProps2.title,
       badge = _genCommonProps2.badge,
@@ -105,10 +103,14 @@ var TabBarItem = function TabBarItem(aprops) {
       containerClassName = _genCommonProps2.containerClassName,
       containerStyle = _genCommonProps2.containerStyle,
       cTheme = _genCommonProps2.cTheme,
+      _genCommonProps2$disa = _genCommonProps2.disableWithoutTheme,
+      disableWithoutTheme = _genCommonProps2$disa === void 0 ? 'disable' : _genCommonProps2$disa,
+      _genCommonProps2$disa2 = _genCommonProps2.disableWithTheme,
+      disableWithTheme = _genCommonProps2$disa2 === void 0 ? 'normal' : _genCommonProps2$disa2,
       cStyle = _genCommonProps2.cStyle,
       cSize = _genCommonProps2.cSize,
       children = _genCommonProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["title", "badge", "icon", "iconSelected", "src", "srcSelected", "selected", "eventKey", "iconProps", "titleProps", "badageProps", "component", "className", "containerClassName", "containerStyle", "cTheme", "cStyle", "cSize", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["title", "badge", "icon", "iconSelected", "src", "srcSelected", "selected", "eventKey", "iconProps", "titleProps", "badageProps", "component", "className", "containerClassName", "containerStyle", "cTheme", "disableWithoutTheme", "disableWithTheme", "cStyle", "cSize", "children"]);
 
   var classSetBadge = {
     'position-absolute': true,
@@ -122,7 +124,7 @@ var TabBarItem = function TabBarItem(aprops) {
   };
   iconProps.cTheme = iconProps.cTheme;
   iconProps.cSize = cSize || 'xl';
-  var classSet = (_classSet2 = {
+  var classSet = (0, _defineProperty2.default)({
     'position-relative': true,
     'cursor-pointer': true,
     'text-align-center': !(0, _props.hascx)(className, 'text-align'),
@@ -131,7 +133,22 @@ var TabBarItem = function TabBarItem(aprops) {
     'flex-justify-around': !(0, _props.hascx)(className, 'flex-justify'),
     'flex-align-center': !(0, _props.hascx)(className, 'flex-align'),
     'flex-sub-flex-extend': true
-  }, (0, _defineProperty2.default)(_classSet2, 'text-size-' + cSize, cSize), (0, _defineProperty2.default)(_classSet2, 'text-color-' + (selected ? 'white' : 'disable'), cStyle === 'solid' && cTheme), (0, _defineProperty2.default)(_classSet2, 'text-color-' + (selected ? 'normal' : 'disable'), cStyle === 'solid' && !cTheme), (0, _defineProperty2.default)(_classSet2, 'text-color-' + (selected ? cTheme : 'normal'), cStyle !== 'solid' && cTheme), (0, _defineProperty2.default)(_classSet2, 'text-color-' + (selected ? 'normal' : 'disable'), cStyle !== 'solid' && !cTheme), _classSet2);
+  }, 'text-size-' + cSize, cSize);
+
+  if (cStyle === 'solid') {
+    if (cTheme) {
+      classSet['text-color-' + (selected ? 'white' : disableWithoutTheme)] = true;
+    } else {
+      classSet['text-color-' + (selected ? 'normal' : disableWithoutTheme)] = true;
+    }
+  } else {
+    if (cTheme) {
+      classSet['text-color-' + (selected ? cTheme : disableWithTheme)] = true;
+    } else {
+      classSet['text-color-' + (selected ? 'normal' : disableWithoutTheme)] = true;
+    }
+  }
+
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _props.cx)(classSet, className)
   }, props), icon || src ? _react.default.createElement(_Icon.default, (0, _extends2.default)({}, iconProps, {

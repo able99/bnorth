@@ -57,7 +57,7 @@ let TabBarItem = (aprops)=>{
   let {
     title, badge, icon, iconSelected, src, srcSelected, selected, eventKey,
     iconProps={}, titleProps={}, badageProps={}, 
-    component: Component = 'span', className, containerClassName, containerStyle, cTheme, cStyle, cSize, children, ...props
+    component: Component = 'span', className, containerClassName, containerStyle, cTheme, disableWithoutTheme='disable', disableWithTheme='normal', cStyle, cSize, children, ...props
   } = genCommonProps(aprops);
 
 
@@ -86,11 +86,21 @@ let TabBarItem = (aprops)=>{
     'flex-align-center': !hascx(className, 'flex-align'),
     'flex-sub-flex-extend': true,
     ['text-size-'+cSize]: cSize,
-    ['text-color-'+(selected?'white':'disable')]: cStyle==='solid'&&cTheme,
-    ['text-color-'+(selected?'normal':'disable')]: cStyle==='solid'&&!cTheme,
-    ['text-color-'+(selected?cTheme:'normal')]:     cStyle!=='solid'&&cTheme,
-    ['text-color-'+(selected?'normal':'disable')]: cStyle!=='solid'&&!cTheme,
   };
+
+  if(cStyle==='solid') {
+    if(cTheme) {
+      classSet['text-color-'+(selected?'white':disableWithoutTheme)] = true;
+    }else {
+      classSet['text-color-'+(selected?'normal':disableWithoutTheme)] = true;
+    }
+  }else {
+    if(cTheme) {
+      classSet['text-color-'+(selected?cTheme:disableWithTheme)] = true;
+    }else {
+      classSet['text-color-'+(selected?'normal':disableWithoutTheme)] = true;
+    }
+  }
   
 
   return (
