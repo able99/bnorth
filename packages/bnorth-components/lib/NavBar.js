@@ -36,11 +36,15 @@ var NavBar = function NavBar(aprops) {
       className = _genCommonProps.className,
       containerClassName = _genCommonProps.containerClassName,
       containerStyle = _genCommonProps.containerStyle,
+      _genCommonProps$statu = _genCommonProps.statusbar,
+      statusbar = _genCommonProps$statu === void 0 ? NavBar.statusbar : _genCommonProps$statu,
       cTheme = _genCommonProps.cTheme,
       cStyle = _genCommonProps.cStyle,
       cSize = _genCommonProps.cSize,
+      _genCommonProps$style = _genCommonProps.style,
+      style = _genCommonProps$style === void 0 ? {} : _genCommonProps$style,
       children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["component", "className", "containerClassName", "containerStyle", "cTheme", "cStyle", "cSize", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["component", "className", "containerClassName", "containerStyle", "statusbar", "cTheme", "cStyle", "cSize", "style", "children"]);
 
   var classSet = (_classSet = {
     'flex-display-flex': true,
@@ -50,8 +54,10 @@ var NavBar = function NavBar(aprops) {
     'padding-v-sm': !(0, _props.hascx)(className, 'padding'),
     'border-set-bottom-border': !cStyle && !(0, _props.hascx)(className, 'border')
   }, (0, _defineProperty2.default)(_classSet, 'text-size-' + cSize, cSize), (0, _defineProperty2.default)(_classSet, "bg-color-".concat(cTheme || 'component'), cStyle !== 'hollow'), (0, _defineProperty2.default)(_classSet, 'bg-color-white', cStyle === 'hollow'), (0, _defineProperty2.default)(_classSet, 'border-set-' + cTheme || 'border', cStyle === 'hollow'), (0, _defineProperty2.default)(_classSet, 'text-color-white', cStyle === 'solid'), (0, _defineProperty2.default)(_classSet, 'text-color-' + (cTheme || 'normal'), cStyle !== 'solid'), _classSet);
+  if (statusbar) style.paddingTop = 20;
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cx)(classSet, className)
+    className: (0, _props.cx)(classSet, className),
+    style: style
   }, props), children);
 };
 

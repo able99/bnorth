@@ -82,7 +82,12 @@ class Cordova {
 
   init() {
     if(!this.isOnCordova()) return Promise.resolve();
-    return this.app.browser.loadjs('./cordova.js').then(()=>{window.document.addEventListener("deviceready", ()=>{this._handleReady()}, false)});
+    return this.app.browser.loadjs('./cordova.js').then(()=>new Promise((resolve,reject)=>{
+      window.document.addEventListener("deviceready", ()=>{
+        this._handleReady();
+        resolve(window.cordova);
+      }, false);
+    }));
   }
 
   exitApp() {

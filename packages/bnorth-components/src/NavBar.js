@@ -15,7 +15,7 @@ let NavBar = (aprops)=>{
   if(NavBar.hidden) return null;
 
   let {
-    component: Component = 'nav', className, containerClassName, containerStyle, cTheme, cStyle, cSize, children, ...props
+    component: Component = 'nav', className, containerClassName, containerStyle, statusbar=NavBar.statusbar, cTheme, cStyle, cSize, style={}, children, ...props
   } = genCommonProps(aprops);
 
   let classSet = {
@@ -33,9 +33,11 @@ let NavBar = (aprops)=>{
     ['text-color-'+(cTheme||'normal')]: cStyle!=='solid',
   };
 
+  if(statusbar) style.paddingTop = 20;
+
 
   return (
-    <Component className={cx(classSet, className)} {...props} >
+    <Component className={cx(classSet, className)} style={style} {...props} >
       {children}
     </Component>
   );

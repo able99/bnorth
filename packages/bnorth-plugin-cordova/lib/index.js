@@ -131,9 +131,13 @@ function () {
 
       if (!this.isOnCordova()) return Promise.resolve();
       return this.app.browser.loadjs('./cordova.js').then(function () {
-        window.document.addEventListener("deviceready", function () {
-          _this2._handleReady();
-        }, false);
+        return new Promise(function (resolve, reject) {
+          window.document.addEventListener("deviceready", function () {
+            _this2._handleReady();
+
+            resolve(window.cordova);
+          }, false);
+        });
       });
     }
   }, {
