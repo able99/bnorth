@@ -56,9 +56,14 @@ let NavBarTitle = (aprops)=>{
 
 
   return (
-    <Component className={cx(classSet, className)} {...props}>
-      {typeof(children)==='string'?<big><strong>{children}</strong></big>:children}
-    </Component>
+    <React.Fragment>
+      <Component className={cx(classSet, className, 'position-absolute')} {...props}>
+        {typeof(children)==='string'?<big><big><strong>{children}</strong></big></big>:children}
+      </Component>
+      <Component className={cx(classSet, className, 'visibility-hide')} {...props}>
+        {typeof(children)==='string'?<big><big><strong>{children}</strong></big></big>:children}
+      </Component>
+    </React.Fragment>
   );
 }
 

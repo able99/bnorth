@@ -47,7 +47,7 @@ var Badge = function Badge(aprops) {
     'text-family-monospace': true,
     'line-height-1': true,
     'white-space-nowrap': true
-  }, (0, _defineProperty2.default)(_classSet, 'text-size' + cSize, cSize), (0, _defineProperty2.default)(_classSet, 'display-inline-block', !(0, _props.hascx)(className, 'display')), _classSet);
+  }, (0, _defineProperty2.default)(_classSet, 'text-size-' + cSize, cSize), (0, _defineProperty2.default)(_classSet, 'display-inline-block', !(0, _props.hascx)(className, 'display')), _classSet);
 
   if (cStyle === 'hollow') {
     classSet['bg-none'] = true;

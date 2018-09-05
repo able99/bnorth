@@ -20,7 +20,7 @@ let Badge = (aprops)=>{
     'text-family-monospace': true,
     'line-height-1': true,
     'white-space-nowrap': true,
-    ['text-size'+cSize]: cSize,
+    ['text-size-'+cSize]: cSize,
     'display-inline-block': !hascx(className, 'display'),
   };
 

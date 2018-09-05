@@ -76,9 +76,11 @@ var NavBarTitle = function NavBarTitle(aprops) {
     'text-align-center': !(0, _props.hascx)(className, 'text-align'),
     'flex-sub-flex-extend': !(0, _props.hascx)(className, 'flex-sub-flex')
   };
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cx)(classSet, className)
-  }, props), typeof children === 'string' ? _react.default.createElement("big", null, _react.default.createElement("strong", null, children)) : children);
+  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(Component, (0, _extends2.default)({
+    className: (0, _props.cx)(classSet, className, 'position-absolute')
+  }, props), typeof children === 'string' ? _react.default.createElement("big", null, _react.default.createElement("big", null, _react.default.createElement("strong", null, children))) : children), _react.default.createElement(Component, (0, _extends2.default)({
+    className: (0, _props.cx)(classSet, className, 'visibility-hide')
+  }, props), typeof children === 'string' ? _react.default.createElement("big", null, _react.default.createElement("big", null, _react.default.createElement("strong", null, children))) : children));
 };
 
 var NavBarItem = function NavBarItem(aprops) {
