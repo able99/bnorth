@@ -52,17 +52,15 @@ let NavBarTitle = (aprops)=>{
   let classSet = {
     'text-align-center': !hascx(className, 'text-align'),
     'flex-sub-flex-extend': !hascx(className, 'flex-sub-flex'),
+    'text-weight-bold': !hascx(className, 'text-weight'),
+    'text-size-xl': !hascx(className, 'text-size'),
   };
 
 
   return (
     <React.Fragment>
-      <Component className={cx(classSet, className, 'position-absolute')} {...props}>
-        {typeof(children)==='string'?<big><big><strong>{children}</strong></big></big>:children}
-      </Component>
-      <Component className={cx(classSet, className, 'visibility-hide')} {...props}>
-        {typeof(children)==='string'?<big><big><strong>{children}</strong></big></big>:children}
-      </Component>
+      <Component className={cx(classSet, className, 'position-absolute')} {...props}>{children}</Component>
+      <Component className={cx(classSet, className, 'visibility-hide')} {...props}>0</Component>
     </React.Fragment>
   );
 }
@@ -78,7 +76,9 @@ let NavBarItem = (aprops)=>{
   let classSet = {
     'text-align-center': !hascx(className, 'text-align'),
     'padding-h-sm': !hascx(className, 'padding'),
+    'padding-v-0': !hascx(className, 'padding'),
     'cursor-pointer': true,
+    'line-height-0': true,
   };
 
 

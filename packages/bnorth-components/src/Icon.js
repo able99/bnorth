@@ -58,6 +58,7 @@ let Icon = (aprops)=>{
     'width-auto': true,
     'height-em': true,
     'min-height-em': true,
+    'display-block': true,
   };
 
 

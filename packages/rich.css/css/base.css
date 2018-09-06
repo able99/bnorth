@@ -59,6 +59,10 @@ hr {
   -oz-transition: .15s ease-out;
 }
 
+.line-height-0 {
+  line-height: 0;
+}
+
 .line-height-1 {
   line-height: 1;
 }

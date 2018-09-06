@@ -69,6 +69,9 @@ function gen(config) {
   ret[(0, _utils.getSelector)('transition')] = (0, _compatibleAnimation.default)({
     'transition': '.15s ease-out'
   });
+  ret[(0, _utils.getSelector)('line-height-0')] = {
+    'line-height': '0'
+  };
   ret[(0, _utils.getSelector)('line-height-1')] = {
     'line-height': '1'
   };

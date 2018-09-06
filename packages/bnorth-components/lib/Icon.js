@@ -76,7 +76,8 @@ var Icon = function Icon(aprops) {
   var classSetImg = {
     'width-auto': true,
     'height-em': true,
-    'min-height-em': true
+    'min-height-em': true,
+    'display-block': true
   };
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _props.cx)('icon', classSet, className)

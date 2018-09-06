@@ -70,6 +70,10 @@ export default function gen(config) {
     'transition': '.15s ease-out',
   });
 
+  ret[getSelector('line-height-0')] = {
+    'line-height': '0',
+  };
+
   ret[getSelector('line-height-1')] = {
     'line-height': '1',
   };
