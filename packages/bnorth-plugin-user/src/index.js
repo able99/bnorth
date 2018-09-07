@@ -141,7 +141,7 @@ User.options = {
 }
 
 
-export default {
+export default app=>({
   _id: 'user',
   _dependencies: ['request', 'storage'],
 
@@ -155,8 +155,8 @@ export default {
     delete app.user;
   },
 
-  onRouterEnter(key, route, match) {
-    if(route.checkLogin && !app.user.isLogin()) return ()=>app.router.goLogin();
+  onRouteMatch({route}) {
+    if(route&&route.checkLogin&&!app.user.isLogin()) return app=>app.router.replaceLogin();
   }
-}
+})
 

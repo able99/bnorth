@@ -9,6 +9,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
@@ -209,6 +213,7 @@ function () {
     this._errorInfo;
     this._activeId;
     this._focusId;
+    this._blockLocation;
     this._viewIdNum = 0;
     this._historyStackCount = 0;
     this.app.event.on(this.app._id, 'onPageAdd', function (_id, page) {
@@ -223,7 +228,7 @@ function () {
       });
     }, this._id);
     this.app.event.on(this.app._id, 'onAppStartRender', function () {
-      _this4.update();
+      _this4._updateRender();
     }, this._id);
 
     this._initHistory();
@@ -237,8 +242,8 @@ function () {
       this.app.event.off(this._id);
     }
   }, {
-    key: "update",
-    value: function update() {
+    key: "_updateRender",
+    value: function _updateRender() {
       this.app.event.emit(this.app._id, 'onRouterUpdate');
     } // route
     // --------------------------------------
@@ -253,11 +258,9 @@ function () {
 
         _this5._updateQuerys(location);
 
-        _this5._updatePathInfos(location);
-
         _this5._updateStack(location);
 
-        _this5.update();
+        _this5._updatePathInfos(location);
       };
 
       this.history = (0, _createHashHistory.default)();
@@ -283,164 +286,260 @@ function () {
     }
   }, {
     key: "_updatePathInfos",
-    value: function _updatePathInfos(location) {
-      var _this6 = this;
+    value: function () {
+      var _updatePathInfos2 = (0, _asyncToGenerator2.default)(
+      /*#__PURE__*/
+      _regenerator.default.mark(function _callee(location) {
+        var _this6 = this;
 
-      if (!Object.keys(this.getRoutes()).length) return;
-      var pathname = location.pathname;
-      var spe = '/';
-      var paramSpe = ':';
-      var subPageSpe = '|';
-      var paramOptional = '?';
-      var errorTag = '/error';
-      var pageSign = '#';
-      var pos = 0;
-      var pathinfos = [];
-      var errorInfo = null;
-      var focusId = undefined;
-      var activeId = undefined;
-      /* pathname parse*/
+        var pathname, spe, paramSpe, subPageSpe, paramOptional, errorTag, pageSign, pos, pathinfos, errorInfo, focusId, activeId, index, sub, fullPath, viewItems, focusViewItem, activePageItem, pageFocusViewItem, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, pathinfo, blockInfo;
 
-      while (pos < pathname.length - 1) {
-        var index = pathname.indexOf(spe, pos + 1);
-        index = index >= 0 ? index : pathname.length;
-        var sub = pathname.slice(pos + 1, index);
+        return _regenerator.default.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (Object.keys(this.getRoutes()).length) {
+                  _context.next = 2;
+                  break;
+                }
 
-        if (pos === 0 && (sub[0] === paramSpe || (spe + sub).startsWith(errorTag) || this.getRoute(spe + sub.split(paramSpe)[0]))) {
-          pathinfos.push(spe + sub);
-        } else if (pos === 0) {
-          pathinfos.push(spe);
-          pathinfos.push(sub);
-        } else {
-          pathinfos.push(sub);
-        }
+                return _context.abrupt("return");
 
-        pos = index;
-      }
+              case 2:
+                pathname = location.pathname;
+                spe = '/';
+                paramSpe = ':';
+                subPageSpe = '|';
+                paramOptional = '?';
+                errorTag = '/error';
+                pageSign = '#';
+                pos = 0;
+                pathinfos = [];
+                errorInfo = null;
+                focusId = undefined;
+                activeId = undefined;
+                /* pathname parse*/
 
-      if (!pathinfos.length) pathinfos.push(spe);
-      /* route */
+                while (pos < pathname.length - 1) {
+                  index = pathname.indexOf(spe, pos + 1);
+                  index = index >= 0 ? index : pathname.length;
+                  sub = pathname.slice(pos + 1, index);
 
-      var fullPath = '';
-      pathinfos = pathinfos.map(function (v, i, r) {
-        var vs = v.split(paramSpe);
-        var aFullPath = (0, _path.join)(fullPath, v);
+                  if (pos === 0 && (sub[0] === paramSpe || (spe + sub).startsWith(errorTag) || this.getRoute(spe + sub.split(paramSpe)[0]).length)) {
+                    pathinfos.push(spe + sub);
+                  } else if (pos === 0) {
+                    pathinfos.push(spe);
+                    pathinfos.push(sub);
+                  } else {
+                    pathinfos.push(sub);
+                  }
 
-        var _id = pageSign + aFullPath;
+                  pos = index;
+                }
 
-        var ret = {
-          name: vs[0],
-          params: vs.slice(1),
-          path: v,
-          fullPath: aFullPath,
-          _id: _id,
-          _idParent: pageSign + fullPath,
-          embeds: {},
-          paramObj: {},
-          query: location.query,
-          viewInfos: _this6.getPageViews(_id)
-        };
-        fullPath = ret.fullPath;
+                if (!pathinfos.length) pathinfos.push(spe);
+                /* route */
 
-        var _this6$getRoute = _this6.getRoute(ret.name),
-            _this6$getRoute2 = (0, _slicedToArray2.default)(_this6$getRoute, 2),
-            routeName = _this6$getRoute2[0],
-            route = _this6$getRoute2[1];
+                fullPath = '';
+                pathinfos = pathinfos.map(function (v, i, r) {
+                  var vs = v.split(paramSpe);
+                  var aFullPath = (0, _path.join)(fullPath, v);
 
-        if (ret.name === errorTag) {
-          ret.errorPage = true;
-          !errorInfo && (errorInfo = ret);
-          return;
-        } else {
-          ret.routeName = routeName;
-          ret.route = route;
+                  var _id = pageSign + aFullPath;
 
-          if (!ret.routeName || !ret.route) {
-            ret.errorRoute = 'no route';
-            !errorInfo && (errorInfo = ret);
-            return ret;
+                  var ret = {
+                    name: vs[0],
+                    params: vs.slice(1),
+                    path: v,
+                    fullPath: aFullPath,
+                    _id: _id,
+                    _idParent: pageSign + fullPath,
+                    embeds: {},
+                    paramObj: {},
+                    query: location.query,
+                    viewInfos: _this6.getPageViews(_id)
+                  };
+                  fullPath = ret.fullPath;
+
+                  var _this6$getRoute = _this6.getRoute(ret.name),
+                      _this6$getRoute2 = (0, _slicedToArray2.default)(_this6$getRoute, 2),
+                      routeName = _this6$getRoute2[0],
+                      route = _this6$getRoute2[1];
+
+                  if (ret.name === errorTag) {
+                    ret.errorPage = true;
+                    !errorInfo && (errorInfo = ret);
+                    return;
+                  } else {
+                    ret.routeName = routeName;
+                    ret.route = route;
+
+                    if (!ret.routeName || !ret.route) {
+                      ret.errorRoute = 'no route';
+                      !errorInfo && (errorInfo = ret);
+                      return ret;
+                    }
+                  }
+
+                  (Array.isArray(route.embeds) ? route.embeds.map(function (vv) {
+                    return [vv, vv];
+                  }) : Object.entries(route.embeds || {})).map(function (_ref5) {
+                    var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
+                        kk = _ref6[0],
+                        vv = _ref6[1];
+
+                    var _idEmbed = ret._id + subPageSpe + vv;
+
+                    var retEmbed = {
+                      name: vv,
+                      params: ret.params,
+                      path: ret.path,
+                      fullPath: ret.fullPath,
+                      _id: _idEmbed,
+                      _idParent: ret._id,
+                      embed: true,
+                      embeds: {},
+                      paramObj: ret.paramObj,
+                      query: ret.query,
+                      viewInfos: _this6.getPageViews(_idEmbed)
+                    };
+
+                    var _this6$getRoute3 = _this6.getRoute(retEmbed.name),
+                        _this6$getRoute4 = (0, _slicedToArray2.default)(_this6$getRoute3, 2),
+                        routeNameEmbed = _this6$getRoute4[0],
+                        routeEmbed = _this6$getRoute4[1];
+
+                    retEmbed.routeName = routeNameEmbed;
+                    retEmbed.route = routeEmbed;
+
+                    if (!retEmbed.routeName || !retEmbed.route) {
+                      retEmbed.errorRoute = 'no route';
+                      !errorInfo && (errorInfo = ret);
+                    }
+
+                    ret.embeds[kk] = retEmbed;
+                  });
+                  var routeParams = routeName.split(paramSpe).slice(1);
+
+                  if (routeParams.filter(function (vv) {
+                    return !vv.endsWith(paramOptional);
+                  }).length > ret.params.length) {
+                    ret.errorRoute = 'miss require param';
+                    !errorInfo && (errorInfo = ret);
+                  } else {
+                    ret.params.forEach(function (vv, ii) {
+                      var name = routeParams[ii] ? routeParams[ii].endsWith(paramOptional) ? routeParams[ii].slice(0, -1) : routeParams[ii] : ii;
+                      ret.paramObj[name] = decodeURIComponent(vv);
+                    });
+                  }
+
+                  return ret;
+                });
+                /* active & focus */
+
+                viewItems = this.getNoPageViews();
+                focusViewItem = Array.from(viewItems).reverse().find(function (v) {
+                  return v.options.isModal;
+                });
+                activePageItem = pathinfos.slice(-1)[0];
+                if (focusViewItem) focusId = focusViewItem.options._id;
+                if (activePageItem) activeId = activePageItem._id;
+
+                if (activePageItem && !focusId) {
+                  pageFocusViewItem = activePageItem.viewItems && Array.from(activePageItem.viewItems).reverse().find(function (v) {
+                    return v.options.isModal;
+                  });
+
+                  if (pageFocusViewItem) {
+                    focusId = pageFocusViewItem.options.id;
+                  }
+                }
+
+                _iteratorNormalCompletion = true;
+                _didIteratorError = false;
+                _iteratorError = undefined;
+                _context.prev = 27;
+                _iterator = pathinfos[Symbol.iterator]();
+
+              case 29:
+                if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+                  _context.next = 39;
+                  break;
+                }
+
+                pathinfo = _step.value;
+                _context.next = 33;
+                return this.app.event.emitSync(this.app._id, 'onRouteMatch', pathinfo, location);
+
+              case 33:
+                blockInfo = _context.sent;
+
+                if (!blockInfo) {
+                  _context.next = 36;
+                  break;
+                }
+
+                return _context.abrupt("return", this.block(blockInfo));
+
+              case 36:
+                _iteratorNormalCompletion = true;
+                _context.next = 29;
+                break;
+
+              case 39:
+                _context.next = 45;
+                break;
+
+              case 41:
+                _context.prev = 41;
+                _context.t0 = _context["catch"](27);
+                _didIteratorError = true;
+                _iteratorError = _context.t0;
+
+              case 45:
+                _context.prev = 45;
+                _context.prev = 46;
+
+                if (!_iteratorNormalCompletion && _iterator.return != null) {
+                  _iterator.return();
+                }
+
+              case 48:
+                _context.prev = 48;
+
+                if (!_didIteratorError) {
+                  _context.next = 51;
+                  break;
+                }
+
+                throw _iteratorError;
+
+              case 51:
+                return _context.finish(48);
+
+              case 52:
+                return _context.finish(45);
+
+              case 53:
+                this._focusId = focusId;
+                this._activeId = activeId;
+                this._pathinfos = pathinfos;
+                this._errorInfo = errorInfo;
+
+                this._updateRender();
+
+              case 58:
+              case "end":
+                return _context.stop();
+            }
           }
-        }
+        }, _callee, this, [[27, 41, 45, 53], [46,, 48, 52]]);
+      }));
 
-        (Array.isArray(route.embeds) ? route.embeds.map(function (vv) {
-          return [vv, vv];
-        }) : Object.entries(route.embeds || {})).map(function (_ref5) {
-          var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
-              kk = _ref6[0],
-              vv = _ref6[1];
-
-          var _idEmbed = ret._id + subPageSpe + vv;
-
-          var retEmbed = {
-            name: vv,
-            params: ret.params,
-            path: ret.path,
-            fullPath: ret.fullPath,
-            _id: _idEmbed,
-            _idParent: ret._id,
-            embed: true,
-            embeds: {},
-            paramObj: ret.paramObj,
-            query: ret.query,
-            viewInfos: _this6.getPageViews(_idEmbed)
-          };
-
-          var _this6$getRoute3 = _this6.getRoute(retEmbed.name),
-              _this6$getRoute4 = (0, _slicedToArray2.default)(_this6$getRoute3, 2),
-              routeNameEmbed = _this6$getRoute4[0],
-              routeEmbed = _this6$getRoute4[1];
-
-          retEmbed.routeName = routeNameEmbed;
-          retEmbed.route = routeEmbed;
-
-          if (!retEmbed.routeName || !retEmbed.route) {
-            retEmbed.errorRoute = 'no route';
-            !errorInfo && (errorInfo = ret);
-          }
-
-          ret.embeds[kk] = retEmbed;
-        });
-        var routeParams = routeName.split(paramSpe).slice(1);
-
-        if (routeParams.filter(function (vv) {
-          return !vv.endsWith(paramOptional);
-        }).length > ret.params.length) {
-          ret.errorRoute = 'miss require param';
-          !errorInfo && (errorInfo = ret);
-        } else {
-          ret.params.forEach(function (vv, ii) {
-            var name = routeParams[ii] ? routeParams[ii].endsWith(paramOptional) ? routeParams[ii].slice(0, -1) : routeParams[ii] : ii;
-            ret.paramObj[name] = decodeURIComponent(vv);
-          });
-        }
-
-        return ret;
-      });
-      /* active & focus */
-
-      var viewItems = this.getNoPageViews();
-      var focusViewItem = Array.from(viewItems).reverse().find(function (v) {
-        return v.options.isModal;
-      });
-      var activePageItem = pathinfos.slice(-1)[0];
-      if (focusViewItem) focusId = focusViewItem.options._id;
-      if (activePageItem) activeId = activePageItem._id;
-
-      if (activePageItem && !focusId) {
-        var pageFocusViewItem = activePageItem.viewItems && Array.from(activePageItem.viewItems).reverse().find(function (v) {
-          return v.options.isModal;
-        });
-
-        if (pageFocusViewItem) {
-          focusId = pageFocusViewItem.options.id;
-        }
-      }
-
-      this._focusId = focusId;
-      this._activeId = activeId;
-      this._pathinfos = pathinfos;
-      this._errorInfo = errorInfo;
-    }
+      return function _updatePathInfos(_x) {
+        return _updatePathInfos2.apply(this, arguments);
+      };
+    }()
   }, {
     key: "_initRoute",
     value: function _initRoute() {
@@ -483,8 +582,6 @@ function () {
       });
 
       this._updatePathInfos(this.history.location);
-
-      this.update();
     }
   }, {
     key: "getRoutes",
@@ -511,8 +608,6 @@ function () {
       this._genRouteMethod(name.split(':')[0]);
 
       this._updatePathInfos(this.history.location);
-
-      this.update();
     }
   }, {
     key: "isFocus",
@@ -579,7 +674,8 @@ function () {
         view.options = options;
       }
 
-      this.update();
+      this._updatePathInfos(this.history.location);
+
       return options._id;
     }
   }, {
@@ -594,7 +690,7 @@ function () {
 
       this._views.splice(index, 1);
 
-      this.update();
+      this._updatePathInfos(this.history.location);
     }
   }, {
     key: "getView",
@@ -690,10 +786,18 @@ function () {
       };
     }
   }, {
+    key: "block",
+    value: function block(blockInfo) {
+      app.log.info('router block', blockInfo);
+      this._blockLocation = this.history.location;
+      if (typeof blockInfo === 'function') blockInfo(this.app);
+    }
+  }, {
     key: "restore",
     value: function restore(location) {
-      app.log.info('router restore');
-      location || this.location ? this.history.replace(location || this.location) : this.replaceRoot();
+      app.log.info('router restore', location);
+      location || this._blockLocation ? this.history.replace(location || this._blockLocation) : this.replaceRoot();
+      this._blockLocation = null;
     }
   }, {
     key: "push",
@@ -726,8 +830,6 @@ function () {
     key: "refresh",
     value: function refresh() {
       this._updatePathInfos(this.history.location);
-
-      this.update();
     }
   }]);
   return Router;

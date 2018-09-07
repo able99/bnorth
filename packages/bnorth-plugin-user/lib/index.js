@@ -208,22 +208,27 @@ User.options = {
     method: 'delete'
   }
 };
-var _default = {
-  _id: 'user',
-  _dependencies: ['request', 'storage'],
-  onPluginMount: function onPluginMount(app, plugin, options) {
-    app.User = User;
-    app.user = new User(app, options);
-  },
-  onPluginUnmount: function onPluginUnmount(app) {
-    delete app.User;
-    delete app.user;
-  },
-  onRouterEnter: function onRouterEnter(key, route, match) {
-    if (route.checkLogin && !app.user.isLogin()) return function () {
-      return app.router.goLogin();
-    };
-  }
+
+var _default = function _default(app) {
+  return {
+    _id: 'user',
+    _dependencies: ['request', 'storage'],
+    onPluginMount: function onPluginMount(app, plugin, options) {
+      app.User = User;
+      app.user = new User(app, options);
+    },
+    onPluginUnmount: function onPluginUnmount(app) {
+      delete app.User;
+      delete app.user;
+    },
+    onRouteMatch: function onRouteMatch(_ref) {
+      var route = _ref.route;
+      if (route && route.checkLogin && !app.user.isLogin()) return function (app) {
+        return app.router.replaceLogin();
+      };
+    }
+  };
 };
+
 exports.default = _default;
 module.exports = exports["default"];

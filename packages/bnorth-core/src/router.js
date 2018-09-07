@@ -97,13 +97,14 @@ export default class Router {
     this._errorInfo;
     this._activeId;
     this._focusId;
+    this._blockLocation;
     this._viewIdNum = 0;
     this._historyStackCount = 0;
 
     this.app.event.on(this.app._id, 'onPageAdd', (_id, page)=>{page&&!page.props.route.embed&&this._addPage(_id, page)}, this._id);
     this.app.event.on(this.app._id, 'onPageRemove', (_id, page)=>{page&&!page.props.route.embed&&this._removePage(_id)}, this._id);
     this.app.event.on(this.app._id, 'onAppStartRouter', ()=>(this.app.render.component = <Router.RouterComponent app={this.app} />), this._id);
-    this.app.event.on(this.app._id, 'onAppStartRender', ()=>{this.update()}, this._id);
+    this.app.event.on(this.app._id, 'onAppStartRender', ()=>{this._updateRender()}, this._id);
 
     this._initHistory();
     this._initRoute();
@@ -113,7 +114,7 @@ export default class Router {
     this.app.event.off(this._id);
   }
 
-  update() {
+  _updateRender() {
     this.app.event.emit(this.app._id, 'onRouterUpdate');
   }
 
@@ -123,10 +124,8 @@ export default class Router {
     let handleLocationChange = (location, action)=>{
       this.app.log.info('router location', location);
       this._updateQuerys(location);
-      this._updatePathInfos(location);
       this._updateStack(location);
-
-      this.update();
+      this._updatePathInfos(location);
     };
 
     this.history = createHistory();
@@ -147,7 +146,7 @@ export default class Router {
     })
   }
 
-  _updatePathInfos(location) {
+  async _updatePathInfos(location) {
     if(!Object.keys(this.getRoutes()).length) return;
     let pathname = location.pathname;
     let spe = '/';
@@ -168,7 +167,7 @@ export default class Router {
       index = index>=0?index:pathname.length;
       let sub = pathname.slice(pos+1, index);
 
-      if(pos===0&&(sub[0]===paramSpe||(spe+sub).startsWith(errorTag)||this.getRoute(spe+sub.split(paramSpe)[0]))) {
+      if(pos===0&&(sub[0]===paramSpe||(spe+sub).startsWith(errorTag)||this.getRoute(spe+sub.split(paramSpe)[0]).length)) {
         pathinfos.push(spe+sub);
       }else if(pos===0){
         pathinfos.push(spe);
@@ -249,10 +248,16 @@ export default class Router {
       }
     }
 
+
+    for(let pathinfo of pathinfos) {
+      let blockInfo = await this.app.event.emitSync(this.app._id, 'onRouteMatch', pathinfo, location);
+      if(blockInfo) return this.block(blockInfo);
+    }
     this._focusId = focusId;
     this._activeId = activeId;
     this._pathinfos = pathinfos;
     this._errorInfo = errorInfo;
+    this._updateRender();
   }
 
   _initRoute() {
@@ -271,7 +276,6 @@ export default class Router {
     this._routes = routes;
     Object.keys(routes||{}).forEach(v=>v&&this._genRouteMethod(v.split(':')[0]));
     this._updatePathInfos(this.history.location);
-    this.update();
   }
 
   getRoutes() {
@@ -287,7 +291,6 @@ export default class Router {
     this._routes[name] = route;
     this._genRouteMethod(name.split(':')[0]);
     this._updatePathInfos(this.history.location);
-    this.update();
   }
 
   isFocus(_id) {
@@ -339,7 +342,7 @@ export default class Router {
       view.options = options;
     }
     
-    this.update();
+    this._updatePathInfos(this.history.location);
     return options._id;
   }
 
@@ -349,7 +352,7 @@ export default class Router {
 
     this._views[index].options.onRemove && this._views[index].options.onRemove();
     this._views.splice(index, 1);
-    this.update();
+    this._updatePathInfos(this.history.location);
   }
 
   getView(_id) {
@@ -410,9 +413,16 @@ export default class Router {
   }
   
 
+  block(blockInfo) {
+    app.log.info('router block', blockInfo);
+    this._blockLocation = this.history.location;
+    if(typeof blockInfo==='function') blockInfo(this.app);
+  }
+
   restore(location) {
-    app.log.info('router restore');
-    location||this.location?this.history.replace(location||this.location):this.replaceRoot();
+    app.log.info('router restore', location);
+    location||this._blockLocation?this.history.replace(location||this._blockLocation):this.replaceRoot();
+    this._blockLocation = null;
   }
 
   push(...args) {
@@ -432,7 +442,6 @@ export default class Router {
 
   refresh() {
     this._updatePathInfos(this.history.location);
-    this.update();
   }
 }
 
