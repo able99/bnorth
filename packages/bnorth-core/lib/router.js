@@ -11,11 +11,11 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -33,18 +33,6 @@ var _createHashHistory = _interopRequireDefault(require("history/createHashHisto
 
 var _path = require("path");
 
-/*
--1.lasy loader 
--2.page error
--3.no match
--4.navigator
--5.param,
--5.query
--6.page view
--7.embeds
-8.block
-9.goXXX
-*/
 var PageLoading = function PageLoading(props) {
   return _react.default.createElement("div", {
     style: {
@@ -61,7 +49,7 @@ var PageError = function PageError(props) {
     style: {
       padding: 8
     }
-  }, _react.default.createElement("div", null, " error: ", _react.default.createElement("a", {
+  }, " ", _react.default.createElement("div", null, " error: ", _react.default.createElement("a", {
     style: {
       padding: 4
     },
@@ -75,7 +63,7 @@ var PageError = function PageError(props) {
     onClick: function onClick() {
       return app.router.replaceRoot();
     }
-  }, "[home]"), " "), _react.default.createElement("h3", null, title), _react.default.createElement("hr", null), _react.default.createElement("p", null, message));
+  }, "[home]"), " "), " ", _react.default.createElement("h3", null, title), " ", _react.default.createElement("hr", null), " ", _react.default.createElement("p", null, message), " ");
 };
 
 var RouterComponent =
@@ -83,66 +71,62 @@ var RouterComponent =
 function (_React$Component) {
   (0, _inherits2.default)(RouterComponent, _React$Component);
 
-  function RouterComponent(props) {
-    var _this;
-
+  function RouterComponent() {
     (0, _classCallCheck2.default)(this, RouterComponent);
-    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(RouterComponent).call(this, props));
-    _this.errorItem;
-    _this.pageItems = [];
-    _this.viewItems = [];
-    return _this;
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(RouterComponent).apply(this, arguments));
   }
 
   (0, _createClass2.default)(RouterComponent, [{
-    key: "_renderView",
-    value: function _renderView(_ref) {
-      var Component = _ref.content,
-          props = _ref.props,
-          _ref$options = _ref.options,
-          _id = _ref$options._id,
-          isContentComponent = _ref$options.isContentComponent;
-      var aprops = (0, _objectSpread2.default)({}, isContentComponent ? {} : Component.porps, props, {
-        key: _id
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this = this;
+
+      this.eventOffRouterUpdate = this.props.app.event.on(this.props.app._id, 'onRouterUpdate', function () {
+        return _this.forceUpdate();
       });
-      return isContentComponent ? _react.default.createElement(Component, aprops) : (0, _typeof2.default)(Component) === 'object' && Component.type ? (0, _react.cloneElement)(Component, aprops) : Component;
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this.eventOffRouterUpdate();
     }
   }, {
     key: "_renderPage",
-    value: function _renderPage(_ref2) {
+    value: function _renderPage(_ref, activeId, focusId) {
       var _this2 = this;
 
-      var _id = _ref2._id,
-          _idParent = _ref2._idParent,
-          routeName = _ref2.routeName,
-          routePattern = _ref2.routePattern,
-          route = _ref2.route,
-          params = _ref2.params,
-          query = _ref2.query,
-          active = _ref2.active,
-          focus = _ref2.focus,
-          embed = _ref2.embed,
-          viewItems = _ref2.viewItems,
-          embeds = _ref2.embeds;
-      Object.keys(embeds).forEach(function (v) {
-        embeds[v] = _this2._renderPage(embeds[v]);
+      var _id = _ref._id,
+          _idParent = _ref._idParent,
+          paramObj = _ref.paramObj,
+          query = _ref.query,
+          embed = _ref.embed,
+          viewItems = _ref.viewItems,
+          embeds = _ref.embeds,
+          routeName = _ref.routeName,
+          route = _ref.route;
+      var embedsPage = {};
+      Object.entries(embeds).map(function (_ref2) {
+        var _ref3 = (0, _slicedToArray2.default)(_ref2, 2),
+            k = _ref3[0],
+            v = _ref3[1];
+
+        return embedsPage[k] = _this2._renderPage(v, activeId, focusId);
       });
       var props = {
-        app: app,
+        app: this.props.app,
         key: _id,
         _id: _id,
         route: (0, _objectSpread2.default)({}, route, {
           routeName: routeName,
-          routePattern: routePattern,
           _idParent: _idParent,
-          params: params,
+          params: paramObj,
           query: query,
-          active: active,
+          active: embed ? _idParent === activeId : _id === activeId,
           focus: focus,
           embed: embed
         }),
         views: viewItems,
-        embeds: embeds
+        embeds: embedsPage
       };
 
       if (route.loader) {
@@ -167,261 +151,42 @@ function (_React$Component) {
       }
     }
   }, {
-    key: "_getPathnameRouteInfo",
-    value: function _getPathnameRouteInfo(pathname, routes) {
-      var paths = pathname.split(':');
-      var match = Object.entries(routes).find(function (_ref3) {
-        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
-            k = _ref4[0],
-            v = _ref4[1];
-
-        return k.split(':')[0] === paths[0];
+    key: "_renderView",
+    value: function _renderView(_ref4) {
+      var Component = _ref4.content,
+          props = _ref4.props,
+          _ref4$options = _ref4.options,
+          _id = _ref4$options._id,
+          isContentComponent = _ref4$options.isContentComponent;
+      var aprops = (0, _objectSpread2.default)({}, isContentComponent ? {} : Component.porps, props, {
+        key: _id
       });
-      if (!match) return [];
-      var items = match[0].split(':');
-      var routeName = items[0];
-      var routePattern = match;
-      items = items.slice(1);
-      paths = paths.slice(1);
-      if (items.filter(function (v) {
-        return !v.endsWith('?');
-      }).length > paths.length) return [];
-      items = items.map(function (v) {
-        return v.endsWith('?') ? v.slice(0, -1) : v;
-      });
-      var route = match[1];
-      var params = {};
-      paths.forEach(function (path, i) {
-        params[items[i] || i] = decodeURIComponent(path);
-      });
-      return {
-        routeName: routeName,
-        routePattern: routePattern,
-        params: params,
-        route: route
-      };
-    }
-  }, {
-    key: "_getPathnameErrorInfo",
-    value: function _getPathnameErrorInfo(pathname) {
-      if (pathname.startsWith('/error')) {
-        var paths = pathname.split(':');
-        return {
-          message: decodeURIComponent(paths[1]),
-          title: decodeURIComponent(paths[2]),
-          back: decodeURIComponent(paths[3]),
-          data: decodeURIComponent(paths.slice(4))
-        };
-      }
-    }
-  }, {
-    key: "_update",
-    value: function _update() {
-      var _ref5 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-          errorItem = _ref5.errorItem,
-          _ref5$pageItems = _ref5.pageItems,
-          pageItems = _ref5$pageItems === void 0 ? [] : _ref5$pageItems,
-          _ref5$viewItems = _ref5.viewItems,
-          viewItems = _ref5$viewItems === void 0 ? [] : _ref5$viewItems;
-
-      var focusId = undefined;
-      var focusViewItem = Array.from(viewItems).reverse().find(function (v) {
-        return v.options.isModal;
-      });
-      var activePageItem = pageItems.slice(-1)[0];
-      if (focusViewItem) focusId = focusViewItem.options._id;
-
-      if (activePageItem) {
-        activePageItem.active = true;
-        Object.values(activePageItem.embeds).forEach(function (v) {
-          return v.active = true;
-        });
-      }
-
-      if (activePageItem && !focusId) {
-        var pageFocusViewItem = Array.from(activePageItem.viewItems).reverse().find(function (v) {
-          return v.options.isModal;
-        });
-
-        if (pageFocusViewItem) {
-          focusId = pageFocusViewItem.options.id;
-        } else {
-          activePageItem.focus = true;
-          focusId = activePageItem._id;
-        }
-      }
-
-      this.props.app.router.setFocusId(focusId);
-      this.setState({
-        errorItem: errorItem,
-        pageItems: pageItems,
-        viewItems: viewItems
-      });
-    }
-  }, {
-    key: "_handleRouterUpdate",
-    value: function _handleRouterUpdate() {
-      var app = this.props.app;
-      var router = app.router;
-      var history = router.history; // error
-
-      var errorItem = this._getPathnameErrorInfo(history.location.pathname);
-
-      if (errorItem || !Object.keys(router.getRoutes()).length) return this.setState({
-        errorItem: errorItem
-      }); // page
-
-      var pathname = '';
-      var pageItems = [];
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = history.location.pathnames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var v = _step.value;
-
-          var _this$_getPathnameRou = this._getPathnameRouteInfo(v, router.getRoutes()),
-              routeName = _this$_getPathnameRou.routeName,
-              routePattern = _this$_getPathnameRou.routePattern,
-              params = _this$_getPathnameRou.params,
-              route = _this$_getPathnameRou.route;
-
-          if (!routeName) {
-            app.render.panic(v, {
-              title: 'router nomatch'
-            });
-            return;
-          }
-
-          var _id = '#' + (0, _path.join)(pathname, routeName);
-
-          var _idParent = '#' + pathname;
-
-          var embeds = {};
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = undefined;
-
-          try {
-            for (var _iterator2 = (Array.isArray(route.embeds) ? route.embeds.map(function (v) {
-              return [v, v];
-            }) : Object.entries(route.embeds || {}))[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var _step2$value = (0, _slicedToArray2.default)(_step2.value, 2),
-                  kk = _step2$value[0],
-                  vv = _step2$value[1];
-
-              var _this$_getPathnameRou2 = this._getPathnameRouteInfo(vv, router.getRoutes()),
-                  routeEmebed = _this$_getPathnameRou2.route;
-
-              if (!routeEmebed) {
-                app.render.panic('router nomatch', vv);
-                return;
-              }
-
-              var _idEmbed = _id + '|' + vv;
-
-              var _idParentEmbed = _id;
-              embeds[kk] = {
-                _id: _idEmbed,
-                _idParent: _idParentEmbed,
-                route: routeEmebed,
-                params: {},
-                query: history.location.query,
-                viewItems: router.getPageViews(_idEmbed).map(function (vvv) {
-                  return (0, _objectSpread2.default)({}, vvv);
-                }),
-                embeds: {}
-              };
-            }
-          } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-                _iterator2.return();
-              }
-            } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
-              }
-            }
-          }
-
-          pageItems.push({
-            _id: _id,
-            _idParent: _idParent,
-            routeName: routeName,
-            routePattern: routePattern,
-            route: route,
-            params: params,
-            query: history.location.query,
-            viewItems: router.getPageViews(_id).map(function (vv) {
-              return (0, _objectSpread2.default)({}, vv);
-            }),
-            embeds: embeds
-          });
-          pathname = (0, _path.join)(pathname, v);
-        } // top view
-
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
-      var viewItems = router.getNoPageViews().map(function (v) {
-        return (0, _objectSpread2.default)({}, v);
-      }); // update
-
-      return this._update({
-        pageItems: pageItems,
-        viewItems: viewItems
-      });
-    }
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this3 = this;
-
-      this.eventOffRouterUpdate = this.props.app.event.on(this.props.app._id, 'onRouterUpdate', function () {
-        return _this3._handleRouterUpdate();
-      });
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      this.eventOffRouterUpdate();
+      return isContentComponent ? _react.default.createElement(Component, aprops) : (0, _typeof2.default)(Component) === 'object' && Component.type ? (0, _react.cloneElement)(Component, aprops) : Component;
     }
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
+      var _this3 = this;
 
-      var _ref6 = this.state || {},
-          errorItem = _ref6.errorItem,
-          _ref6$pageItems = _ref6.pageItems,
-          pageItems = _ref6$pageItems === void 0 ? [] : _ref6$pageItems,
-          _ref6$viewItems = _ref6.viewItems,
-          viewItems = _ref6$viewItems === void 0 ? [] : _ref6$viewItems;
+      var _this$props$app$route = this.props.app.router,
+          _pathinfos = _this$props$app$route._pathinfos,
+          _activeId = _this$props$app$route._activeId,
+          _focusId = _this$props$app$route._focusId;
+      var viewItems = this.props.app.router.getNoPageViews().map(function (v) {
+        return (0, _objectSpread2.default)({}, v);
+      });
 
-      return _react.default.createElement(_react.default.Fragment, null, errorItem && _react.default.createElement(Router.PageError, (0, _extends2.default)({
-        app: this.props.app
-      }, errorItem)), !errorItem && pageItems.map(function (v) {
-        return _this4._renderPage(v);
-      }), !errorItem && viewItems.map(function (v) {
-        return _this4._renderView(v);
-      }));
+      if (Array.isArray(_pathinfos)) {
+        return _react.default.createElement(_react.default.Fragment, null, _pathinfos.map(function (v) {
+          return _this3._renderPage(v, _activeId, _focusId);
+        }), viewItems.map(function (v) {
+          return _this3._renderView(v, _activeId, _focusId);
+        }));
+      } else {
+        return _react.default.createElement(Router.PageError, (0, _extends2.default)({
+          app: this.props.app
+        }, _pathinfos));
+      }
     }
   }]);
   return RouterComponent;
@@ -433,16 +198,33 @@ function () {
   // constructor
   // ----------------------------------------
   function Router(app) {
+    var _this4 = this;
+
     (0, _classCallCheck2.default)(this, Router);
     this.app = app;
+    this._id = app._id + '.router';
     this._routes = {};
     this._views = [];
     this._pages = {};
+    this._pathinfos = [];
+    this._activeId;
+    this._focusId;
     this._viewIdNum = 0;
     this._historyStackCount = 0;
-    this._focusId;
-
-    this._initEvent();
+    this.app.event.on(this.app._id, 'onPageAdd', function (_id, page) {
+      page && !page.props.route.embed && _this4._addPage(_id, page);
+    }, this._id);
+    this.app.event.on(this.app._id, 'onPageRemove', function (_id, page) {
+      page && !page.props.route.embed && _this4._removePage(_id);
+    }, this._id);
+    this.app.event.on(this.app._id, 'onAppStartRouter', function () {
+      return _this4.app.render.component = _react.default.createElement(Router.RouterComponent, {
+        app: _this4.app
+      });
+    }, this._id);
+    this.app.event.on(this.app._id, 'onAppStartRender', function () {
+      _this4.update();
+    }, this._id);
 
     this._initHistory();
 
@@ -450,48 +232,32 @@ function () {
   }
 
   (0, _createClass2.default)(Router, [{
-    key: "_initEvent",
-    value: function _initEvent() {
-      var _this5 = this;
-
-      this.app.event.on(this.app._id, 'onPageAdd', function (_id, page) {
-        page && !page.props.route.embed && _this5._addPage(_id, page);
-      });
-      this.app.event.on(this.app._id, 'onPageRemove', function (_id, page) {
-        page && !page.props.route.embed && _this5._removePage(_id);
-      });
-      this.app.event.on(this.app._id, 'onAppStartRouter', function () {
-        return _this5.app.render.component = _react.default.createElement(Router.RouterComponent, {
-          app: _this5.app
-        });
-      });
-      this.app.event.on(this.app._id, 'onAppStartRender', function () {
-        _this5.update();
-      });
+    key: "destructor",
+    value: function destructor() {
+      this.app.event.off(this._id);
     }
+  }, {
+    key: "update",
+    value: function update() {
+      this.app.event.emit(this.app._id, 'onRouterUpdate');
+    } // route
+    // --------------------------------------
+
   }, {
     key: "_initHistory",
     value: function _initHistory() {
-      var _this6 = this;
+      var _this5 = this;
 
       var handleLocationChange = function handleLocationChange(location, action) {
-        _this6.app.log.info('router location', location);
+        _this5.app.log.info('router location', location);
 
-        location.query = {};
-        location.search && location.search.slice(1).split('&').forEach(function (v) {
-          var vs = v.split('=');
-          location.query[vs[0]] = vs[1];
-        });
-        var pathname = location.pathname;
-        if (pathname[0] === '/') pathname = (pathname[1] === ':' ? '#' : '#/') + pathname.slice(1);
-        location.pathnames = pathname.split('/').filter(function (v) {
-          return v;
-        });
-        location.pathnames[0] && location.pathnames[0][0] === '#' && (location.pathnames[0] = '/' + location.pathnames[0].slice(1));
-        if (action === 'PUSH') _this6._historyStackCount++;
-        if (action === 'POP') _this6._historyStackCount = Math.max(--_this6._historyStackCount, 0);
+        _this5._updateQuerys(location);
 
-        _this6.update();
+        _this5._updatePathInfos(location);
+
+        _this5._updateStack(location);
+
+        _this5.update();
       };
 
       this.history = (0, _createHashHistory.default)();
@@ -501,49 +267,181 @@ function () {
       handleLocationChange(this.history.location, this.history.action);
     }
   }, {
+    key: "_updateStack",
+    value: function _updateStack(location) {
+      if (location.action === 'PUSH') this._historyStackCount++;
+      if (location.action === 'POP') this._historyStackCount = Math.max(--this._historyStackCount, 0);
+    }
+  }, {
+    key: "_updateQuerys",
+    value: function _updateQuerys(location) {
+      location.query = {};
+      location.search && location.search.slice(1).split('&').forEach(function (v) {
+        var vs = v.split('=');
+        location.query[vs[0]] = vs[1];
+      });
+    }
+  }, {
+    key: "_updatePathInfos",
+    value: function _updatePathInfos(location) {
+      var _this6 = this;
+
+      if (!Object.keys(this.getRoutes()).length) return;
+      var pathname = location.pathname;
+      var spe = '/';
+      var paramSpe = ':';
+      var subPageSpe = '|';
+      var paramOptional = '?';
+      var errorTag = 'error';
+      var pageSign = '#';
+      var pos = 0;
+      var pathinfos = [];
+      var focusId = undefined;
+      var activeId = undefined;
+      /* pathname parse*/
+
+      while (pos < pathname.length - 1) {
+        var index = pathname.indexOf(spe, pos + 1);
+        index = index >= 0 ? index : pathname.length;
+        var sub = pathname.slice(pos + 1, index);
+
+        if (pos === 0 && (sub[0] === paramSpe || sub.startsWith(errorTag))) {
+          pathinfos.push(spe + sub);
+        } else if (pos === 0) {
+          pathinfos.push(spe);
+          pathinfos.push(sub);
+        } else {
+          pathinfos.push(sub);
+        }
+
+        pos = index;
+      }
+
+      if (!pathinfos.length) pathinfos.push(spe);
+      /* route */
+
+      var fullPath = '';
+      pathinfos = pathinfos.map(function (v, i, r) {
+        var vs = v.split(paramSpe);
+        var aFullPath = (0, _path.join)(fullPath, v);
+
+        var _id = pageSign + aFullPath;
+
+        var ret = {
+          name: vs[0],
+          params: vs.slice(1),
+          path: v,
+          fullPath: aFullPath,
+          _id: _id,
+          _idParent: pageSign + fullPath,
+          embeds: {},
+          paramObj: {},
+          query: location.query,
+          viewInfos: _this6.getPageViews(_id)
+        };
+        fullPath = ret.fullPath;
+
+        var _this6$getRoute = _this6.getRoute(ret.name),
+            _this6$getRoute2 = (0, _slicedToArray2.default)(_this6$getRoute, 2),
+            routeName = _this6$getRoute2[0],
+            route = _this6$getRoute2[1];
+
+        if (ret.name === errorTag) {
+          ret.errorPage = true;
+        } else {
+          ret.routeName = routeName;
+          ret.route = route;
+
+          if (!ret.routeName || !ret.route) {
+            ret.error = 'no route';
+            return ret;
+          }
+        }
+
+        (Array.isArray(route.embeds) ? route.embeds.map(function (vv) {
+          return [vv, vv];
+        }) : Object.entries(route.embeds || {})).map(function (_ref5) {
+          var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
+              kk = _ref6[0],
+              vv = _ref6[1];
+
+          var _idEmbed = ret._id + subPageSpe + vv;
+
+          var retEmbed = {
+            name: vv,
+            params: ret.params,
+            path: ret.path,
+            fullPath: ret.fullPath,
+            _id: _idEmbed,
+            _idParent: ret._id,
+            embed: true,
+            embeds: {},
+            paramObj: ret.paramObj,
+            query: ret.query,
+            viewInfos: _this6.getPageViews(_idEmbed)
+          };
+
+          var _this6$getRoute3 = _this6.getRoute(retEmbed.name),
+              _this6$getRoute4 = (0, _slicedToArray2.default)(_this6$getRoute3, 2),
+              routeNameEmbed = _this6$getRoute4[0],
+              routeEmbed = _this6$getRoute4[1];
+
+          retEmbed.routeName = routeNameEmbed;
+          retEmbed.route = routeEmbed;
+          if (!retEmbed.routeName || !retEmbed.route) retEmbed.error = 'no route';
+          ret.embeds[kk] = retEmbed;
+        });
+        var routeParams = routeName.split(paramSpe).slice(1);
+
+        if (routeParams.filter(function (vv) {
+          return !vv.endsWith('?');
+        }).length > ret.params.length) {
+          ret.error = 'miss require param';
+        } else {
+          ret.params.forEach(function (vv, ii) {
+            var name = routeParams[ii] ? routeParams[ii].endsWith('?') ? routeParams[ii].slice(0, -1) : routeParams[ii] : ii;
+            ret.paramObj[name] = decodeURIComponent(vv);
+          });
+        }
+
+        return ret;
+      });
+      /* active & focus */
+
+      var viewItems = this.getNoPageViews();
+      var focusViewItem = Array.from(viewItems).reverse().find(function (v) {
+        return v.options.isModal;
+      });
+      var activePageItem = pathinfos.slice(-1)[0];
+      if (focusViewItem) focusId = focusViewItem.options._id;
+      if (activePageItem) activeId = activePageItem._id;
+
+      if (activePageItem && !focusId) {
+        var pageFocusViewItem = activePageItem.viewItems && Array.from(activePageItem.viewItems).reverse().find(function (v) {
+          return v.options.isModal;
+        });
+
+        if (pageFocusViewItem) {
+          focusId = pageFocusViewItem.options.id;
+        }
+      }
+
+      this._focusId = focusId;
+      this._activeId = activeId;
+      this._pathinfos = pathinfos;
+      console.log(111111111, pathinfos, activeId, focusId);
+    }
+  }, {
     key: "_initRoute",
     value: function _initRoute() {
       this._genRouteMethod('/');
 
       this._genRouteMethod('/error');
-    } // route
-    // --------------------------------------
-
-  }, {
-    key: "setRoutes",
-    value: function setRoutes(routes) {
-      var _this7 = this;
-
-      this._routes = routes;
-      Object.keys(routes || {}).forEach(function (v) {
-        return v && _this7._genRouteMethod(v.split(':')[0]);
-      });
-      this.update();
-    }
-  }, {
-    key: "getRoutes",
-    value: function getRoutes() {
-      return this._routes || {};
-    }
-  }, {
-    key: "addRoute",
-    value: function addRoute(name, route) {
-      if (!name || !route) return;
-      this._routes[name] = route;
-
-      this._genRouteMethod(name.split(':')[0]);
-
-      this.update();
-    }
-  }, {
-    key: "update",
-    value: function update() {
-      this.app.event.emit(this.app._id, 'onRouterUpdate');
     }
   }, {
     key: "_genRouteMethod",
     value: function _genRouteMethod(path) {
-      var _this8 = this;
+      var _this7 = this;
 
       if (!path) return;
       var name = path === '/' ? 'Root' : this.app.utils.captilaze(path[0] === '/' ? path.slice(1) : path);
@@ -553,7 +451,7 @@ function () {
           args[_key] = arguments[_key];
         }
 
-        return _this8.push([path].concat(args));
+        return _this7.push([path].concat(args));
       };
 
       this['replace' + name] = function () {
@@ -561,16 +459,50 @@ function () {
           args[_key2] = arguments[_key2];
         }
 
-        return _this8.replace([path].concat(args));
+        return _this7.replace([path].concat(args));
       };
-    } // focus
-    // ---------------------------------------
-
+    }
   }, {
-    key: "setFocusId",
-    value: function setFocusId(_id) {
-      this.app.log.info('router focus', _id);
-      this._focusId = _id;
+    key: "setRoutes",
+    value: function setRoutes(routes) {
+      var _this8 = this;
+
+      this._routes = routes;
+      Object.keys(routes || {}).forEach(function (v) {
+        return v && _this8._genRouteMethod(v.split(':')[0]);
+      });
+
+      this._updatePathInfos(this.history.location);
+
+      this.update();
+    }
+  }, {
+    key: "getRoutes",
+    value: function getRoutes() {
+      return this._routes || {};
+    }
+  }, {
+    key: "getRoute",
+    value: function getRoute(name) {
+      return Object.entries(this._routes).find(function (_ref7) {
+        var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
+            k = _ref8[0],
+            v = _ref8[1];
+
+        return k.split(':')[0] === name;
+      }) || [];
+    }
+  }, {
+    key: "addRoute",
+    value: function addRoute(name, route) {
+      if (!name || !route) return;
+      this._routes[name] = route;
+
+      this._genRouteMethod(name.split(':')[0]);
+
+      this._updatePathInfos(this.history.location);
+
+      this.update();
     }
   }, {
     key: "isFocus",
@@ -669,16 +601,16 @@ function () {
   }, {
     key: "getNoPageViews",
     value: function getNoPageViews() {
-      return this._views.filter(function (_ref7) {
-        var options = _ref7.options;
+      return this._views.filter(function (_ref9) {
+        var options = _ref9.options;
         return !options._idPage;
       });
     }
   }, {
     key: "getPageViews",
     value: function getPageViews(_id) {
-      return this._views.filter(function (_ref8) {
-        var options = _ref8.options;
+      return this._views.filter(function (_ref10) {
+        var options = _ref10.options;
         return options._idPage === _id;
       });
     }
@@ -698,7 +630,10 @@ function () {
     value: function _getLocation() {
       var passQuery;
       var query = {};
-      var pathnames = Array.from(this.history.location.pathnames);
+
+      var pathnames = this._pathinfos.map(function (v) {
+        return v.path;
+      });
 
       var addPath = function addPath(path) {
         path.split('/').forEach(function (v) {
@@ -733,10 +668,10 @@ function () {
         pathname: pathnames.map(function (v, i, a) {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
-        search: '?' + Object.entries(passQuery ? (0, _objectSpread2.default)({}, location.query, query) : query).map(function (_ref9) {
-          var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
-              k = _ref10[0],
-              v = _ref10[1];
+        search: '?' + Object.entries(passQuery ? (0, _objectSpread2.default)({}, location.query, query) : query).map(function (_ref11) {
+          var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
+              k = _ref12[0],
+              v = _ref12[1];
 
           return k + '=' + v;
         }).reduce(function (v1, v2) {
