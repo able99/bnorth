@@ -12,7 +12,6 @@ export default {
       count: 0,
 
       show: ({options={}, ...props}={})=>{
-        console.log(11111111,app.loading.count);
         app.loading.count++;
 
         if(app.loading.count<=1){
@@ -26,7 +25,6 @@ export default {
       },
 
       close: force=>{
-        console.log(2222222,app.loading.count);
         app.loading.count = force?0:Math.max(--app.loading.count,0);
         if(app.loading.count) { app.loading.full(); return }
         let {content, props={}, options={}} = app.router.getView(app.loading._id)||{};

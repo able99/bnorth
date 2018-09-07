@@ -9,8 +9,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
-
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
@@ -43,27 +41,26 @@ var PageLoading = function PageLoading(props) {
 
 var PageError = function PageError(props) {
   var app = props.app,
-      title = props.title,
-      message = props.message;
+      data = props.data;
   return _react.default.createElement("div", {
     style: {
       padding: 8
     }
-  }, " ", _react.default.createElement("div", null, " error: ", _react.default.createElement("a", {
+  }, _react.default.createElement("div", null, _react.default.createElement("span", null, "error"), _react.default.createElement("a", {
     style: {
       padding: 4
     },
     onClick: function onClick() {
       return app.router.back();
     }
-  }, "[back]"), " ", _react.default.createElement("a", {
+  }, "[back]"), _react.default.createElement("a", {
     style: {
       padding: 4
     },
     onClick: function onClick() {
       return app.router.replaceRoot();
     }
-  }, "[home]"), " "), " ", _react.default.createElement("h3", null, title), " ", _react.default.createElement("hr", null), " ", _react.default.createElement("p", null, message), " ");
+  }, "[home]")), _react.default.createElement("h3", null, data.errorRoute ? data.errorRoute : data.params[1]), _react.default.createElement("hr", null), _react.default.createElement("p", null, data.errorRoute ? data.name : data.params[0]));
 };
 
 var RouterComponent =
@@ -170,22 +167,24 @@ function (_React$Component) {
 
       var _this$props$app$route = this.props.app.router,
           _pathinfos = _this$props$app$route._pathinfos,
+          _errorInfo = _this$props$app$route._errorInfo,
           _activeId = _this$props$app$route._activeId,
           _focusId = _this$props$app$route._focusId;
       var viewItems = this.props.app.router.getNoPageViews().map(function (v) {
         return (0, _objectSpread2.default)({}, v);
       });
 
-      if (Array.isArray(_pathinfos)) {
+      if (!_errorInfo) {
         return _react.default.createElement(_react.default.Fragment, null, _pathinfos.map(function (v) {
           return _this3._renderPage(v, _activeId, _focusId);
         }), viewItems.map(function (v) {
           return _this3._renderView(v, _activeId, _focusId);
         }));
       } else {
-        return _react.default.createElement(Router.PageError, (0, _extends2.default)({
-          app: this.props.app
-        }, _pathinfos));
+        return _react.default.createElement(Router.PageError, {
+          app: this.props.app,
+          data: _errorInfo
+        });
       }
     }
   }]);
@@ -207,6 +206,7 @@ function () {
     this._views = [];
     this._pages = {};
     this._pathinfos = [];
+    this._errorInfo;
     this._activeId;
     this._focusId;
     this._viewIdNum = 0;
@@ -292,10 +292,11 @@ function () {
       var paramSpe = ':';
       var subPageSpe = '|';
       var paramOptional = '?';
-      var errorTag = 'error';
+      var errorTag = '/error';
       var pageSign = '#';
       var pos = 0;
       var pathinfos = [];
+      var errorInfo = null;
       var focusId = undefined;
       var activeId = undefined;
       /* pathname parse*/
@@ -305,7 +306,7 @@ function () {
         index = index >= 0 ? index : pathname.length;
         var sub = pathname.slice(pos + 1, index);
 
-        if (pos === 0 && (sub[0] === paramSpe || sub.startsWith(errorTag))) {
+        if (pos === 0 && (sub[0] === paramSpe || (spe + sub).startsWith(errorTag) || this.getRoute(spe + sub.split(paramSpe)[0]))) {
           pathinfos.push(spe + sub);
         } else if (pos === 0) {
           pathinfos.push(spe);
@@ -348,12 +349,15 @@ function () {
 
         if (ret.name === errorTag) {
           ret.errorPage = true;
+          !errorInfo && (errorInfo = ret);
+          return;
         } else {
           ret.routeName = routeName;
           ret.route = route;
 
           if (!ret.routeName || !ret.route) {
-            ret.error = 'no route';
+            ret.errorRoute = 'no route';
+            !errorInfo && (errorInfo = ret);
             return ret;
           }
         }
@@ -388,18 +392,24 @@ function () {
 
           retEmbed.routeName = routeNameEmbed;
           retEmbed.route = routeEmbed;
-          if (!retEmbed.routeName || !retEmbed.route) retEmbed.error = 'no route';
+
+          if (!retEmbed.routeName || !retEmbed.route) {
+            retEmbed.errorRoute = 'no route';
+            !errorInfo && (errorInfo = ret);
+          }
+
           ret.embeds[kk] = retEmbed;
         });
         var routeParams = routeName.split(paramSpe).slice(1);
 
         if (routeParams.filter(function (vv) {
-          return !vv.endsWith('?');
+          return !vv.endsWith(paramOptional);
         }).length > ret.params.length) {
-          ret.error = 'miss require param';
+          ret.errorRoute = 'miss require param';
+          !errorInfo && (errorInfo = ret);
         } else {
           ret.params.forEach(function (vv, ii) {
-            var name = routeParams[ii] ? routeParams[ii].endsWith('?') ? routeParams[ii].slice(0, -1) : routeParams[ii] : ii;
+            var name = routeParams[ii] ? routeParams[ii].endsWith(paramOptional) ? routeParams[ii].slice(0, -1) : routeParams[ii] : ii;
             ret.paramObj[name] = decodeURIComponent(vv);
           });
         }
@@ -429,7 +439,7 @@ function () {
       this._focusId = focusId;
       this._activeId = activeId;
       this._pathinfos = pathinfos;
-      console.log(111111111, pathinfos, activeId, focusId);
+      this._errorInfo = errorInfo;
     }
   }, {
     key: "_initRoute",
@@ -711,6 +721,13 @@ function () {
       var step = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       app.log.info('router back');
       return this.history.go(-step);
+    }
+  }, {
+    key: "refresh",
+    value: function refresh() {
+      this._updatePathInfos(this.history.location);
+
+      this.update();
     }
   }]);
   return Router;

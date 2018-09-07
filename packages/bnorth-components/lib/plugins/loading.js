@@ -26,7 +26,6 @@ var _default = {
             options = _ref$options === void 0 ? {} : _ref$options,
             props = (0, _objectWithoutProperties2.default)(_ref, ["options"]);
 
-        console.log(11111111, app.loading.count);
         app.loading.count++;
 
         if (app.loading.count <= 1) {
@@ -44,7 +43,6 @@ var _default = {
         }
       },
       close: function close(force) {
-        console.log(2222222, app.loading.count);
         app.loading.count = force ? 0 : Math.max(--app.loading.count, 0);
 
         if (app.loading.count) {

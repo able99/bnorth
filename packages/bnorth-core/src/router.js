@@ -3,11 +3,26 @@ import createHistory from 'history/createHashHistory';
 import { join } from 'path';
 
 
-let PageLoading = props=><div style={{padding: 8}}>loading...</div>;
+let PageLoading = props=>{
+  return (
+    <div style={{padding: 8}}>loading...</div>
+  )
+}
 
 let PageError = props=>{
-  let { app, title, message } = props;
-  return ( <div style={{padding: 8}}> <div> error: <a style={{padding: 4}} onClick={()=>app.router.back()}>[back]</a> <a style={{padding: 4}} onClick={()=>app.router.replaceRoot()}>[home]</a> </div> <h3>{title}</h3> <hr/> <p>{message}</p> </div>)
+  let { app, data } = props;
+  return ( 
+    <div style={{padding: 8}}> 
+      <div> 
+        <span>error</span> 
+        <a style={{padding: 4}} onClick={()=>app.router.back()}>[back]</a> 
+        <a style={{padding: 4}} onClick={()=>app.router.replaceRoot()}>[home]</a> 
+      </div> 
+      <h3>{data.errorRoute?data.errorRoute:data.params[1]}</h3> 
+      <hr/> 
+      <p>{data.errorRoute?data.name:data.params[0]}</p> 
+    </div>
+  )
 }
 
 class RouterComponent extends React.Component {
@@ -26,7 +41,7 @@ class RouterComponent extends React.Component {
   }, activeId, focusId){
     let embedsPage = {};
     Object.entries(embeds).map(([k,v])=>embedsPage[k]=this._renderPage(v, activeId, focusId));
-    
+
     let props = { 
       app: this.props.app, key: _id, _id, 
       route: { ...route,routeName,  _idParent, params: paramObj, query, active: embed?_idParent===activeId:_id===activeId, focus, embed }, 
@@ -52,10 +67,10 @@ class RouterComponent extends React.Component {
   }
 
   render() {
-    let {_pathinfos, _activeId, _focusId} = this.props.app.router;
+    let {_pathinfos, _errorInfo, _activeId, _focusId} = this.props.app.router;
     let viewItems = this.props.app.router.getNoPageViews().map(v=>({...v}));
     
-    if(Array.isArray(_pathinfos)) {
+    if(!_errorInfo) {
       return (
         <React.Fragment>
           {_pathinfos.map(v=>this._renderPage(v, _activeId, _focusId))}
@@ -63,7 +78,7 @@ class RouterComponent extends React.Component {
         </React.Fragment>
       );
     }else{
-      return <Router.PageError app={this.props.app} {..._pathinfos}/>;
+      return <Router.PageError app={this.props.app} data={_errorInfo} />;
     }
   }
 }
@@ -79,6 +94,7 @@ export default class Router {
     this._views = [];
     this._pages = {};
     this._pathinfos = [];
+    this._errorInfo;
     this._activeId;
     this._focusId;
     this._viewIdNum = 0;
@@ -138,10 +154,11 @@ export default class Router {
     let paramSpe = ':';
     let subPageSpe = '|';
     let paramOptional = '?';
-    let errorTag = 'error';
+    let errorTag = '/error';
     let pageSign = '#';
     let pos = 0;
     let pathinfos = [];
+    let errorInfo = null;
     let focusId = undefined;
     let activeId = undefined;
 
@@ -151,7 +168,7 @@ export default class Router {
       index = index>=0?index:pathname.length;
       let sub = pathname.slice(pos+1, index);
 
-      if(pos===0&&(sub[0]===paramSpe||sub.startsWith(errorTag))) {
+      if(pos===0&&(sub[0]===paramSpe||(spe+sub).startsWith(errorTag)||this.getRoute(spe+sub.split(paramSpe)[0]))) {
         pathinfos.push(spe+sub);
       }else if(pos===0){
         pathinfos.push(spe);
@@ -181,10 +198,12 @@ export default class Router {
       let [routeName, route] = this.getRoute(ret.name);
       if(ret.name===errorTag) {
         ret.errorPage = true;
+        !errorInfo&&(errorInfo=ret);
+        return;
       }else{
         ret.routeName = routeName;
         ret.route = route;
-        if(!ret.routeName||!ret.route) { ret.error = 'no route'; return ret }
+        if(!ret.routeName||!ret.route) { ret.errorRoute = 'no route'; !errorInfo&&(errorInfo=ret); return ret }
       }
 
       (Array.isArray(route.embeds)?route.embeds.map(vv=>[vv,vv]):Object.entries(route.embeds||{})).map(([kk,vv])=>{
@@ -198,17 +217,18 @@ export default class Router {
         let [routeNameEmbed, routeEmbed] = this.getRoute(retEmbed.name);
         retEmbed.routeName = routeNameEmbed;
         retEmbed.route = routeEmbed;
-        if(!retEmbed.routeName||!retEmbed.route) retEmbed.error = 'no route'; 
+        if(!retEmbed.routeName||!retEmbed.route) {retEmbed.errorRoute = 'no route';!errorInfo&&(errorInfo=ret)} 
 
         ret.embeds[kk] = retEmbed;
       });
 
       let routeParams = routeName.split(paramSpe).slice(1);
-      if(routeParams.filter(vv=>!vv.endsWith('?')).length>ret.params.length) { 
-        ret.error = 'miss require param'; 
+      if(routeParams.filter(vv=>!vv.endsWith(paramOptional)).length>ret.params.length) { 
+        ret.errorRoute = 'miss require param'; 
+        !errorInfo&&(errorInfo=ret);
       }else{
         ret.params.forEach((vv,ii)=>{
-          let name = routeParams[ii]?(routeParams[ii].endsWith('?')?routeParams[ii].slice(0,-1):routeParams[ii]):ii;
+          let name = routeParams[ii]?(routeParams[ii].endsWith(paramOptional)?routeParams[ii].slice(0,-1):routeParams[ii]):ii;
           ret.paramObj[name] = decodeURIComponent(vv);
         })
       }
@@ -229,11 +249,10 @@ export default class Router {
       }
     }
 
-
     this._focusId = focusId;
     this._activeId = activeId;
     this._pathinfos = pathinfos;
-    console.log(111111111, pathinfos, activeId, focusId);
+    this._errorInfo = errorInfo;
   }
 
   _initRoute() {
@@ -409,6 +428,11 @@ export default class Router {
   back(step=1) {
     app.log.info('router back');
     return this.history.go(-step);
+  }
+
+  refresh() {
+    this._updatePathInfos(this.history.location);
+    this.update();
   }
 }
 
