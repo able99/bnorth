@@ -245,6 +245,8 @@ export default class Router {
       let pageFocusViewItem = activePageItem.viewItems&&Array.from(activePageItem.viewItems).reverse().find(v=>v.options.isModal);
       if(pageFocusViewItem) {
         focusId = pageFocusViewItem.options.id;
+      }else{
+        focusId = activePageItem._id;
       }
     }
 

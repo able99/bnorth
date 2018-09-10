@@ -452,6 +452,8 @@ function () {
 
                   if (pageFocusViewItem) {
                     focusId = pageFocusViewItem.options.id;
+                  } else {
+                    focusId = activePageItem._id;
                   }
                 }
 
