@@ -6,8 +6,9 @@
  */
 
 class Format {
-  constructor(app, options={}){
+  constructor(app, _id, options={}){
     this.app = app;
+    this._id = _id;
     this.options = {...Format.options, ...options}
   }
 
@@ -104,7 +105,7 @@ export default {
 
   onPluginMount(app, plugin, options) {
     app.Foramt = Format;
-    app.format = new Format(app, options);
+    app.format = new Format(app, plugin._id, options);
   },
 
   onPluginUnmount(app) {

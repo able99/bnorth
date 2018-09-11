@@ -35,7 +35,7 @@ export default class Page extends React.Component {
     let ret = (...args)=>{
       try{
         app.log.info('page action', this.name, name);
-        func.apply(this, args);
+        return func.apply(this, args);
       }catch(e){
         app.log.error('page action', name, e);
         app.render.panic(e, {title:`action(${name}) error`});

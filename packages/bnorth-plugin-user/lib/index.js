@@ -18,10 +18,11 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 var User =
 /*#__PURE__*/
 function () {
-  function User(app) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  function User(app, _id) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     (0, _classCallCheck2.default)(this, User);
     this.app = app;
+    this._id = _id;
     this.options = (0, _objectSpread2.default)({}, User.options, options);
   } // storage
   // --------------------------
@@ -215,14 +216,16 @@ var _default = function _default(app) {
     _dependencies: ['request', 'storage'],
     onPluginMount: function onPluginMount(app, plugin, options) {
       app.User = User;
-      app.user = new User(app, options);
+      app.user = new User(app, plugin._id, options);
     },
     onPluginUnmount: function onPluginUnmount(app) {
       delete app.User;
       delete app.user;
     },
-    onRouteMatch: function onRouteMatch(_ref) {
-      var route = _ref.route;
+    onRouteMatch: function onRouteMatch() {
+      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          route = _ref.route;
+
       if (route && route.checkLogin && !app.user.isLogin()) return function (app) {
         return app.router.replaceLogin();
       };

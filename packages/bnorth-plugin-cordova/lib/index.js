@@ -7,6 +7,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -20,9 +24,11 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 var Cordova =
 /*#__PURE__*/
 function () {
-  function Cordova(app, options, _id) {
+  function Cordova(app, _id) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     (0, _classCallCheck2.default)(this, Cordova);
     this.app = app;
+    this._id = _id;
     this.options = options;
     this.ready = false;
   }
@@ -99,30 +105,63 @@ function () {
           volumeup = _ref.volumeup;
 
       window.document.addEventListener("pause", function () {
-        _this.app.event.emit(_this.options._id, 'onPause');
+        _this.app.event.emit(_this._id, 'onPause');
       }, false);
       window.document.addEventListener("resume", function () {
-        _this.app.event.emit(_this.options._id, 'onResume');
+        _this.app.event.emit(_this._id, 'onResume');
       }, false);
       menu && window.document.addEventListener("menubutton", function (e) {
-        _this.app.event.emitSync(_this.options._id, 'onMenuButton', e);
+        _this.app.event.emitSync(_this._id, 'onMenuButton', e);
       }, false);
       search && window.document.addEventListener("searchbutton", function (e) {
-        _this.app.event.emitSync(_this.options._id, 'onSearchButton', e);
+        _this.app.event.emitSync(_this._id, 'onSearchButton', e);
       }, false);
       volumedown && window.document.addEventListener("volumedownbutton", function (e) {
-        _this.app.event.emitSync(_this.options._id, 'onVolumeDownButton', e);
+        _this.app.event.emitSync(_this._id, 'onVolumeDownButton', e);
       }, false);
       volumeup && window.document.addEventListener("volumeupbutton", function (e) {
-        _this.app.event.emitSync(_this.options._id, 'onVolumeUpButton', e);
+        _this.app.event.emitSync(_this._id, 'onVolumeUpButton', e);
       }, false);
-      back && window.document.addEventListener("backbutton", function (e) {
-        back === true ? _this.app.event.emitSync(_this.options._id, 'onBackButton', e) : app.keyboard.emit({
-          type: 'keydown',
-          keyCode: back
-        });
-      }, false);
-      this.app.event.emit(this.options._id, 'onDeviceReady');
+      back && window.document.addEventListener("backbutton",
+      /*#__PURE__*/
+      function () {
+        var _ref2 = (0, _asyncToGenerator2.default)(
+        /*#__PURE__*/
+        _regenerator.default.mark(function _callee(e) {
+          return _regenerator.default.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  _context.next = 2;
+                  return _this.app.event.emitSync(_this._id, 'onBackButton', e);
+
+                case 2:
+                  if (!_context.sent) {
+                    _context.next = 4;
+                    break;
+                  }
+
+                  return _context.abrupt("return");
+
+                case 4:
+                  back !== true && app.keyboard.emit({
+                    type: 'keydown',
+                    keyCode: back
+                  });
+
+                case 5:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee, this);
+        }));
+
+        return function (_x) {
+          return _ref2.apply(this, arguments);
+        };
+      }(), false);
+      this.app.event.emit(this._id, 'onDeviceReady');
     }
   }, {
     key: "init",
@@ -185,15 +224,27 @@ Cordova.options = {
   fileErrorMessage: '文件读取错误'
 };
 var _default = {
-  pluginName: 'cordova',
+  _id: 'cordova',
   _dependencies: 'browser',
-  onPluginMount: function onPluginMount(app, plugin) {
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  onPluginMount: function onPluginMount(app, plugin, options) {
     app.Cordova = Cordova;
-    options._id = plugin._id;
-    app.cordova = new Cordova(app, options);
+    app.cordova = new Cordova(app, plugin._id, options);
+    app.cordova._oldRouterBack = app.router.back;
+
+    app.router.back = function () {
+      if (app.cordova.ready && app.router.isRootPath()) {
+        app.cordova.exitApp();
+      } else {
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
+
+        app.cordova._oldRouterBack.apply(app.router, args);
+      }
+    };
   },
   onPluginUnmount: function onPluginUnmount(app) {
+    app.router.back = app.cordova._oldRouterBack;
     delete app.Cordova;
     delete app.cordova;
   }

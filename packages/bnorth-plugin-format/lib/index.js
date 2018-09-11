@@ -22,10 +22,11 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 var Format =
 /*#__PURE__*/
 function () {
-  function Format(app) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  function Format(app, _id) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     (0, _classCallCheck2.default)(this, Format);
     this.app = app;
+    this._id = _id;
     this.options = (0, _objectSpread2.default)({}, Format.options, options);
   }
   /**
@@ -134,7 +135,7 @@ var _default = {
   _id: 'format',
   onPluginMount: function onPluginMount(app, plugin, options) {
     app.Foramt = Format;
-    app.format = new Format(app, options);
+    app.format = new Format(app, plugin._id, options);
   },
   onPluginUnmount: function onPluginUnmount(app) {
     delete app.Foramt;

@@ -78,7 +78,7 @@ function (_React$Component) {
             args[_key] = arguments[_key];
           }
 
-          func.apply(_this2, args);
+          return func.apply(_this2, args);
         } catch (e) {
           app.log.error('page action', name, e);
           app.render.panic(e, {

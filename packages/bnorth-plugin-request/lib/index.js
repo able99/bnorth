@@ -156,7 +156,7 @@ var _default = function _default(app) {
       app.Request = Request;
       app.request = plugin;
     },
-    onPluginUnmount: function onPluginUnmount(app, plugin) {
+    onPluginUnmount: function onPluginUnmount(app) {
       delete app.Request;
       delete app.request;
     },

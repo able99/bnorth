@@ -10,8 +10,10 @@ import Url from 'url-parse';
 
 
 class Browser {
-  constructor(app) {
+  constructor(app, _id, options) {
     this.app = app;
+    this._id = id;
+    this.options = options;
     this._uaInit();
   };
 
@@ -160,9 +162,9 @@ class Browser {
 export default {
   _id: 'browser',
 
-  onPluginMount(app) {
+  onPluginMount(app, plugin, options={}) {
     app.Browser = Browser;
-    app.browser = new Browser(app);
+    app.browser = new Browser(app, plugin._id, options);
   },
 
   onPluginUnmount(app) {

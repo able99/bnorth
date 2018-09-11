@@ -7,8 +7,9 @@
 
 
 class Cordova {
-  constructor(app, options, _id) {
+  constructor(app, _id, options={}) {
     this.app = app;
+    this._id = _id;
     this.options = options;
     this.ready = false;
   };
@@ -66,18 +67,19 @@ class Cordova {
     this.ready = true;
     let {back, menu, search, volumedown, volumeup} = this.options.buttons||{};
 
-    window.document.addEventListener("pause", ()=>{this.app.event.emit(this.options._id, 'onPause')}, false);
-    window.document.addEventListener("resume", ()=>{this.app.event.emit(this.options._id, 'onResume')}, false);
+    window.document.addEventListener("pause", ()=>{this.app.event.emit(this._id, 'onPause')}, false);
+    window.document.addEventListener("resume", ()=>{this.app.event.emit(this._id, 'onResume')}, false);
     
-    menu&&window.document.addEventListener("menubutton", e=>{this.app.event.emitSync(this.options._id, 'onMenuButton', e)}, false);
-    search&&window.document.addEventListener("searchbutton", e=>{this.app.event.emitSync(this.options._id, 'onSearchButton', e)}, false);
-    volumedown&&window.document.addEventListener("volumedownbutton", e=>{this.app.event.emitSync(this.options._id, 'onVolumeDownButton', e)}, false);
-    volumeup&&window.document.addEventListener("volumeupbutton", e=>{this.app.event.emitSync(this.options._id, 'onVolumeUpButton', e)}, false);
-    back&&window.document.addEventListener("backbutton", e=>{
-      back===true?this.app.event.emitSync(this.options._id, 'onBackButton', e):app.keyboard.emit({type: 'keydown', keyCode: back});
+    menu&&window.document.addEventListener("menubutton", e=>{this.app.event.emitSync(this._id, 'onMenuButton', e)}, false);
+    search&&window.document.addEventListener("searchbutton", e=>{this.app.event.emitSync(this._id, 'onSearchButton', e)}, false);
+    volumedown&&window.document.addEventListener("volumedownbutton", e=>{this.app.event.emitSync(this._id, 'onVolumeDownButton', e)}, false);
+    volumeup&&window.document.addEventListener("volumeupbutton", e=>{this.app.event.emitSync(this._id, 'onVolumeUpButton', e)}, false);
+    back&&window.document.addEventListener("backbutton", async e=>{
+      if(await this.app.event.emitSync(this._id, 'onBackButton', e)) return;
+      back!==true&&app.keyboard.emit({type: 'keydown', keyCode: back});
     }, false);
 
-    this.app.event.emit(this.options._id, 'onDeviceReady');
+    this.app.event.emit(this._id, 'onDeviceReady');
   }
 
   init() {
@@ -132,16 +134,24 @@ Cordova.options = {
 }
 
 export default {
-  pluginName: 'cordova',
+  _id: 'cordova',
   _dependencies: 'browser',
 
-  onPluginMount(app, plugin, options={}) {
+  onPluginMount(app, plugin, options) {
     app.Cordova = Cordova;
-    options._id = plugin._id;
-    app.cordova = new Cordova(app, options);
+    app.cordova = new Cordova(app, plugin._id, options);
+    app.cordova._oldRouterBack = app.router.back;
+    app.router.back = (...args)=>{
+      if(app.cordova.ready&&app.router.isRootPath()){
+        app.cordova.exitApp();
+      }else{
+        app.cordova._oldRouterBack.apply(app.router, args);
+      }
+    }
   },
 
   onPluginUnmount(app) {
+    app.router.back = app.cordova._oldRouterBack;
     delete app.Cordova;
     delete app.cordova;
   },

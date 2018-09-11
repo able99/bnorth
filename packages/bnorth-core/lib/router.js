@@ -258,7 +258,7 @@ function () {
 
         _this5._updateQuerys(location);
 
-        _this5._updateStack(location);
+        _this5._updateStack(action, location);
 
         _this5._updatePathInfos(location);
       };
@@ -271,9 +271,19 @@ function () {
     }
   }, {
     key: "_updateStack",
-    value: function _updateStack(location) {
-      if (location.action === 'PUSH') this._historyStackCount++;
-      if (location.action === 'POP') this._historyStackCount = Math.max(--this._historyStackCount, 0);
+    value: function _updateStack(action, location) {
+      if (action === 'PUSH') this._historyStackCount++;
+      if (action === 'POP') this._historyStackCount = Math.max(--this._historyStackCount, 0);
+    }
+  }, {
+    key: "getStackCount",
+    value: function getStackCount() {
+      return this._historyStackCount;
+    }
+  }, {
+    key: "isRootPath",
+    value: function isRootPath() {
+      return app.router._pathinfos[app.router._pathinfos.length - 1].name === '/';
     }
   }, {
     key: "_updateQuerys",
@@ -793,6 +803,7 @@ function () {
       app.log.info('router block', blockInfo);
       this._blockLocation = this.history.location;
       if (typeof blockInfo === 'function') blockInfo(this.app);
+      return true;
     }
   }, {
     key: "restore",
@@ -800,6 +811,7 @@ function () {
       app.log.info('router restore', location);
       location || this._blockLocation ? this.history.replace(location || this._blockLocation) : this.replaceRoot();
       this._blockLocation = null;
+      return true;
     }
   }, {
     key: "push",
@@ -809,7 +821,8 @@ function () {
       }
 
       app.log.info('router push', args);
-      return this.history.push(this._getLocation.apply(this, args));
+      this.history.push(this._getLocation.apply(this, args));
+      return true;
     }
   }, {
     key: "replace",
@@ -819,19 +832,23 @@ function () {
       }
 
       app.log.info('router replace', args);
-      return this.history.replace(this._getLocation.apply(this, args));
+      this.history.replace(this._getLocation.apply(this, args));
+      return true;
     }
   }, {
     key: "back",
     value: function back() {
       var step = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       app.log.info('router back');
-      return this.history.go(-step);
+      this.history.go(-step);
+      return true;
     }
   }, {
     key: "refresh",
     value: function refresh() {
       this._updatePathInfos(this.history.location);
+
+      return true;
     }
   }]);
   return Router;

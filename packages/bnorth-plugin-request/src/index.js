@@ -97,7 +97,7 @@ export default app=>{
       app.request = plugin;
     },
 
-    onPluginUnmount(app, plugin) {
+    onPluginUnmount(app) {
       delete app.Request;
       delete app.request;
     },

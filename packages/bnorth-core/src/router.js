@@ -124,7 +124,7 @@ export default class Router {
     let handleLocationChange = (location, action)=>{
       this.app.log.info('router location', location);
       this._updateQuerys(location);
-      this._updateStack(location);
+      this._updateStack(action, location);
       this._updatePathInfos(location);
     };
 
@@ -133,9 +133,17 @@ export default class Router {
     handleLocationChange(this.history.location, this.history.action);
   }
 
-  _updateStack(location) {
-    if(location.action==='PUSH') this._historyStackCount++;
-    if(location.action==='POP') this._historyStackCount = Math.max(--this._historyStackCount, 0);
+  _updateStack(action, location) {
+    if(action==='PUSH') this._historyStackCount++;
+    if(action==='POP') this._historyStackCount = Math.max(--this._historyStackCount, 0);
+  }
+  
+  getStackCount() {
+    return this._historyStackCount;
+  }
+
+  isRootPath() {
+    return app.router._pathinfos[app.router._pathinfos.length-1].name==='/';
   }
 
   _updateQuerys(location) {
@@ -419,31 +427,37 @@ export default class Router {
     app.log.info('router block', blockInfo);
     this._blockLocation = this.history.location;
     if(typeof blockInfo==='function') blockInfo(this.app);
+    return true;
   }
 
   restore(location) {
     app.log.info('router restore', location);
     location||this._blockLocation?this.history.replace(location||this._blockLocation):this.replaceRoot();
     this._blockLocation = null;
+    return true;
   }
 
   push(...args) {
     app.log.info('router push', args);
-    return this.history.push(this._getLocation(...args));
+    this.history.push(this._getLocation(...args));
+    return true;
   }
 
   replace(...args) {
     app.log.info('router replace', args);
-    return this.history.replace(this._getLocation(...args));
+    this.history.replace(this._getLocation(...args));
+    return true;
   }
 
   back(step=1) {
     app.log.info('router back');
-    return this.history.go(-step);
+    this.history.go(-step);
+    return true;
   }
 
   refresh() {
     this._updatePathInfos(this.history.location);
+    return true;
   }
 }
 

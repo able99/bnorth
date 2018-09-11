@@ -11,7 +11,10 @@
  * @class
  */
 class Storage {
-  constructor(app, isSession){
+  constructor(app, _id, options, isSession){
+    this.app = app;
+    this._id = _id;
+    this.options = options;
     this.storage = isSession?window.sessionStorage:window.localStorage;
   }
 
@@ -96,10 +99,10 @@ class Storage {
 export default {
   _id: 'storage',
 
-  onPluginMount(app) {
+  onPluginMount(app, plugin, options) {
     app.Storage = Storage;
-    app.storage = new app.Storage(app);
-    app.storageSession = new app.Storage(app, true);
+    app.storage = new app.Storage(app, plugin._id, options);
+    app.storageSession = new app.Storage(app,  plugin._id, options, true);
   },
 
   onPluginUnmount(app) {

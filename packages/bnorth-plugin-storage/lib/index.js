@@ -25,8 +25,11 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 var Storage =
 /*#__PURE__*/
 function () {
-  function Storage(app, isSession) {
+  function Storage(app, _id, options, isSession) {
     (0, _classCallCheck2.default)(this, Storage);
+    this.app = app;
+    this._id = _id;
+    this.options = options;
     this.storage = isSession ? window.sessionStorage : window.localStorage;
   }
   /**
@@ -130,10 +133,10 @@ function () {
 
 var _default = {
   _id: 'storage',
-  onPluginMount: function onPluginMount(app) {
+  onPluginMount: function onPluginMount(app, plugin, options) {
     app.Storage = Storage;
-    app.storage = new app.Storage(app);
-    app.storageSession = new app.Storage(app, true);
+    app.storage = new app.Storage(app, plugin._id, options);
+    app.storageSession = new app.Storage(app, plugin._id, options, true);
   },
   onPluginUnmount: function onPluginUnmount(app) {
     delete app.Storage;

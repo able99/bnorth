@@ -2,8 +2,9 @@ import axios from 'axios';
 
 
 class Network {
-  constructor(app, options={}) {
+  constructor(app, _id, options={}) {
     this.app = app;
+    this._id = _id;
     this.options = {...Network.Options, ...options};
   }
 
@@ -92,7 +93,7 @@ export default {
 
   onPluginMount: (app,plugin,options)=>{
     app.Network = Network;
-    app.network = new Network(app, options);
+    app.network = new Network(app, plugin._id, options);
   },
 
   onPluginUnmount: app=>{

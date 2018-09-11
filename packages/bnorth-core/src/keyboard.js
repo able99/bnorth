@@ -12,7 +12,10 @@ export default class Keyboard {
   handleKeyEvent(e) {
     this.app.log.info('keyboard trigger', e);
     let listener = this._listeners.reverse().find(({event, callback, _id})=>(callback && e.type===event && this.app.router.isFocus(_id)));
-    if(listener) listener.callback(e);
+    if(listener) {
+      listener.callback(e);
+      return listener._id;
+    }
   }
 
   on(_id, event, callback) {
@@ -32,6 +35,6 @@ export default class Keyboard {
   }
 
   emit(event) {
-    this.handleKeyEvent(event);
+    return this.handleKeyEvent(event);
   }
 }

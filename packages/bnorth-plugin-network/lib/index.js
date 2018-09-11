@@ -18,10 +18,11 @@ var _axios = _interopRequireDefault(require("axios"));
 var Network =
 /*#__PURE__*/
 function () {
-  function Network(app) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  function Network(app, _id) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     (0, _classCallCheck2.default)(this, Network);
     this.app = app;
+    this._id = _id;
     this.options = (0, _objectSpread2.default)({}, Network.Options, options);
   }
 
@@ -103,7 +104,7 @@ var _default = {
   _id: 'network',
   onPluginMount: function onPluginMount(app, plugin, options) {
     app.Network = Network;
-    app.network = new Network(app, options);
+    app.network = new Network(app, plugin._id, options);
   },
   onPluginUnmount: function onPluginUnmount(app) {
     delete app.Network;

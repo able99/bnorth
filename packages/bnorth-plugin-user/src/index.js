@@ -1,6 +1,7 @@
 class User {
-  constructor(app, options={}) {
+  constructor(app, _id, options={}) {
     this.app = app;
+    this._id = _id;
     this.options = {...User.options, ...options}
   }
 
@@ -147,7 +148,7 @@ export default app=>({
 
   onPluginMount(app, plugin, options) {
     app.User = User;
-    app.user = new User(app, options);
+    app.user = new User(app, plugin._id, options);
   },
 
   onPluginUnmount(app) {
@@ -155,7 +156,7 @@ export default app=>({
     delete app.user;
   },
 
-  onRouteMatch({route}) {
+  onRouteMatch({route}={}) {
     if(route&&route.checkLogin&&!app.user.isLogin()) return app=>app.router.replaceLogin();
   }
 })

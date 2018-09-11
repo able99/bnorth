@@ -44,7 +44,10 @@ function () {
         return callback && e.type === event && _this2.app.router.isFocus(_id);
       });
 
-      if (listener) listener.callback(e);
+      if (listener) {
+        listener.callback(e);
+        return listener._id;
+      }
     }
   }, {
     key: "on",
@@ -86,7 +89,7 @@ function () {
   }, {
     key: "emit",
     value: function emit(event) {
-      this.handleKeyEvent(event);
+      return this.handleKeyEvent(event);
     }
   }]);
   return Keyboard;

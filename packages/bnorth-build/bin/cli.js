@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const watch = require('watch');
+const spawn = require('cross-spawn');
 
 function run() {
   const argv = require('yargs').argv;
@@ -41,6 +42,15 @@ function run() {
           setTimeout(()=>dev(),100);
         }
       })
+      break;
+    case 'cordova': 
+      let result = spawn.sync('npx', [type, ...argv._.slice(1)], {stdio: 'inherit'});
+      if (result.signal) {
+        console.log(`exit with signal: ${result.signal}`);
+        process.exit(1);
+      }else{
+        process.exit(result.status);
+      }
       break;
     default: 
       console.log(`unknown sub command '${type}'`);
