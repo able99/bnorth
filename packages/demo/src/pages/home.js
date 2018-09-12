@@ -1,7 +1,7 @@
 import React from 'react';
-import View from 'bnorth-components/lib/View'
-import Panel from 'bnorth-components/lib/Panel'
-import TabBar from 'bnorth-components/lib/TabBar'
+import View from '@bnorth/components/lib/View'
+import Panel from '@bnorth/components/lib/Panel'
+import TabBar from '@bnorth/components/lib/TabBar'
 
 
 let items = [

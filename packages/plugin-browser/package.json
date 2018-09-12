@@ -23,8 +23,7 @@
   },
   "scripts": {
     "start": "bnorth-build watch",
-    "build": "bnorth-build dev",
-    "postpublish": "open https://npm.taobao.org/sync/bnorth-plugin-browser"
+    "build": "bnorth-build dev"
   },
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"
@@ -33,7 +32,7 @@
     "url-parse": "^1.4.1"
   },
   "devDependencies": {
-    "bnorth-build": "^3.0.3"
+    "@bnorth/build": "*"
   },
   "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }

@@ -39,13 +39,12 @@
   "dependencies": {
     "@babel/runtime": "^7.0.0-rc.1",
     "animate.css": "^3.7.0",
-    "bnorth-build": "^3.0.3",
     "fs-extra": "^7.0.0",
     "normalize.css": "^8.0.0",
     "rimraf": "^2.6.2"
   },
   "devDependencies": {
-    "bnorth-build": "*"
+    "@bnorth/build": "*"
   },
   "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }

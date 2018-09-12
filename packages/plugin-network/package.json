@@ -33,7 +33,7 @@
     "axios": "^0.18.0"
   },
   "devDependencies": {
-    "bnorth-build": "^3.0.3"
+    "@bnorth/build": "*"
   },
   "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }

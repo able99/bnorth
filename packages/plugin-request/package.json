@@ -29,7 +29,7 @@
     "url": "https://github.com/able99/bnorth/issues"
   },
   "devDependencies": {
-    "bnorth-build": "^3.0.3"
+    "@bnorth/build": "*"
   },
   "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }

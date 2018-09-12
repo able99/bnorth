@@ -1,7 +1,7 @@
 import React from 'react';
-import View from 'bnorth-components/lib/View'
-import Panel from 'bnorth-components/lib/Panel'
-import List from 'bnorth-components/lib/List'
+import View from '@bnorth/components/lib/View'
+import Panel from '@bnorth/components/lib/Panel'
+import List from '@bnorth/components/lib/List'
 
 export default props=>{
   let { app } = props;
