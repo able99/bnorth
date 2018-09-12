@@ -1,6 +1,6 @@
 {
-  "name": "rich.css",
-  "version": "3.0.3",
+  "name": "@bnorth/rich.css",
+  "version": "3.0.4",
   "description": "all in one css way, or dynamic css way",
   "keywords": [
     "css",
@@ -31,8 +31,7 @@
     "build": "npm run clean && npm run build:js && npm run build:css",
     "build:js": "bnorth-build dev",
     "build:css": "node scripts/index.js",
-    "clean": "rimraf lib css",
-    "postpublish": "open https://npm.taobao.org/sync/rich.css"
+    "clean": "rimraf lib css"
   },
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"

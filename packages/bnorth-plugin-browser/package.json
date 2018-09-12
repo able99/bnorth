@@ -1,6 +1,6 @@
 {
-  "name": "bnorth-plugin-browser",
-  "version": "3.0.3",
+  "name": "@bnorth/plugin-browser",
+  "version": "3.0.4",
   "description": "bnorth plugin for browser",
   "keywords": [
     "bnorth",

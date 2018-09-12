@@ -1,6 +1,6 @@
 {
-  "name": "bnorth-cli",
-  "version": "3.0.3",
+  "name": "@bnorth/cli",
+  "version": "3.0.4",
   "description": "bnorth cli",
   "keywords": [
     "bnorth",
@@ -28,8 +28,7 @@
     "url": "https://github.com/able99/bnorth/issues"
   },
   "scripts": {
-    "build": "node -v",
-    "postpublish": "open https://npm.taobao.org/sync/bnorth-cli"
+    "build": "node -v"
   },
   "dependencies": {
     "cross-spawn": "^6.0.5",

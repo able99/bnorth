@@ -1,6 +1,6 @@
 {
-  "name": "bnorth-plugin-format",
-  "version": "3.0.3",
+  "name": "@bnorth/plugin-format",
+  "version": "3.0.4",
   "description": "bnorth plugin for format",
   "keywords": [
     "bnorth",
@@ -23,8 +23,7 @@
   },
   "scripts": {
     "start": "bnorth-build watch",
-    "build": "bnorth-build dev",
-    "postpublish": "open https://npm.taobao.org/sync/bnorth-plugin-format"
+    "build": "bnorth-build dev"
   },
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"
