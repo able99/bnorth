@@ -68,6 +68,8 @@ var _default = function _default(WrappedComponent) {
             onMove = _this$props.onMove,
             onMoveEnd = _this$props.onMoveEnd,
             onLongTap = _this$props.onLongTap;
+        console.log(1111, event.target, event.touches);
+        if (!event.touches) return;
         var primaryTouch = _dom.domIsTouch ? event.touches[0] : event;
         if (onMoveStart || onMove || onMoveEnd) event.preventDefault();
         if (_dom.domIsTouch && event.touches.length !== 1) return;

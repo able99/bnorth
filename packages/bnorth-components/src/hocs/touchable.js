@@ -36,6 +36,7 @@ export default (WrappedComponent, options={})=>{
   
     down = event => {
       this._processEvent(event);
+      if(!event.touches) return;
   
       const touch = this.touch;
       const { tapLongDuration, onMoveStart, onMove, onMoveEnd, onLongTap } = this.props;
