@@ -1,6 +1,6 @@
 {
   "name": "rich.css",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "all in one css way, or dynamic css way",
   "keywords": [
     "css",
@@ -40,7 +40,7 @@
   "dependencies": {
     "@babel/runtime": "^7.0.0-rc.1",
     "animate.css": "^3.7.0",
-    "bnorth-build": "^3.0.2",
+    "bnorth-build": "^3.0.3",
     "fs-extra": "^7.0.0",
     "normalize.css": "^8.0.0",
     "rimraf": "^2.6.2"
