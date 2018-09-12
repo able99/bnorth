@@ -79,6 +79,7 @@ let NavBarItem = (aprops)=>{
     'padding-v-0': !hascx(className, 'padding'),
     'cursor-pointer': true,
     'line-height-0': true,
+    'status': true,
   };
 
 

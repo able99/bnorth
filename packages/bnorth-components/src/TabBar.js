@@ -86,6 +86,7 @@ let TabBarItem = (aprops)=>{
     'flex-align-center': !hascx(className, 'flex-align'),
     'flex-sub-flex-extend': true,
     ['text-size-'+cSize]: cSize,
+    'status': true,
   };
 
   if(cStyle==='solid') {

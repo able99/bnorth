@@ -11,7 +11,17 @@ export function genButton({textColors, stateOpacityDisabled, stateOpacityActive}
     'pointer-events': 'none',
   }
 
+  ret['.status:disabled, .status[disabled], .status.disabled'] = {
+    'opacity': stateOpacityDisabled,
+    'cursor': 'not-allowed',
+    'pointer-events': 'none',
+  }
+
   ret['button:active, button[active], button.active'] = {
+    'opacity': stateOpacityActive,
+  }
+
+  ret['.status:active, .status[active], .status.active'] = {
     'opacity': stateOpacityActive,
   }
 

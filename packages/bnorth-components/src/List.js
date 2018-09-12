@@ -66,7 +66,7 @@ let List = (aprops)=>{
 
 let ListItem = (aprops)=>{
   let {
-    first, last, part, separatorInset,
+    first, last, part, separatorInset, onClick,
     media, title, subTitle, desc, after, arrow, autoArrow=true, 
     mediaStyle,        afterStyle,        mainStyle,        subTitleStyle,        descStyle,        titleStyle,        arrayStyle, 
     mediaClassName='', afterClassName='', mainClassName='', subTitleClassName='', descClassName='', titleClassName='', arrayClassName='',
@@ -105,6 +105,7 @@ let ListItem = (aprops)=>{
   let classSetDesc = {};
   
   let classSet = {
+    'status': Boolean(onClick),
     'flex-display-flex': true,
     'flex-align-stretch': true,
     'padding': !hascx(className, 'padding'),
@@ -124,7 +125,7 @@ let ListItem = (aprops)=>{
 
   
   return (
-    <Component className={cx(classSet, className)} {...props}>
+    <Component className={cx(classSet, className)} onClick={onClick} {...props}>
       {media?(<div style={mediaStyle} className={cx(classSetMeida, mediaClassName)}>{media}</div>):null}
 
       <div style={mainStyle} className={cx(classSetMain, mainClassName)}>

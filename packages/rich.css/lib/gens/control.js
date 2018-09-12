@@ -27,7 +27,15 @@ function genButton(_ref) {
     'cursor': 'not-allowed',
     'pointer-events': 'none'
   };
+  ret['.status:disabled, .status[disabled], .status.disabled'] = {
+    'opacity': stateOpacityDisabled,
+    'cursor': 'not-allowed',
+    'pointer-events': 'none'
+  };
   ret['button:active, button[active], button.active'] = {
+    'opacity': stateOpacityActive
+  };
+  ret['.status:active, .status[active], .status.active'] = {
     'opacity': stateOpacityActive
   };
   ret['.button-active:not(.selected)'] = {

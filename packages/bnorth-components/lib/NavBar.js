@@ -111,7 +111,8 @@ var NavBarItem = function NavBarItem(aprops) {
     'padding-h-sm': !(0, _props.hascx)(className, 'padding'),
     'padding-v-0': !(0, _props.hascx)(className, 'padding'),
     'cursor-pointer': true,
-    'line-height-0': true
+    'line-height-0': true,
+    'status': true
   };
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _props.cx)(classSet, className)

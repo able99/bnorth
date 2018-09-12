@@ -82,6 +82,8 @@ var TabBar = function TabBar(aprops) {
 };
 
 var TabBarItem = function TabBarItem(aprops) {
+  var _classSet2;
+
   var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
       title = _genCommonProps2.title,
       badge = _genCommonProps2.badge,
@@ -124,7 +126,7 @@ var TabBarItem = function TabBarItem(aprops) {
   };
   iconProps.cTheme = iconProps.cTheme;
   iconProps.cSize = cSize || 'xl';
-  var classSet = (0, _defineProperty2.default)({
+  var classSet = (_classSet2 = {
     'position-relative': true,
     'cursor-pointer': true,
     'text-align-center': !(0, _props.hascx)(className, 'text-align'),
@@ -133,7 +135,7 @@ var TabBarItem = function TabBarItem(aprops) {
     'flex-justify-around': !(0, _props.hascx)(className, 'flex-justify'),
     'flex-align-center': !(0, _props.hascx)(className, 'flex-align'),
     'flex-sub-flex-extend': true
-  }, 'text-size-' + cSize, cSize);
+  }, (0, _defineProperty2.default)(_classSet2, 'text-size-' + cSize, cSize), (0, _defineProperty2.default)(_classSet2, 'status', true), _classSet2);
 
   if (cStyle === 'solid') {
     if (cTheme) {

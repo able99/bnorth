@@ -88,6 +88,7 @@ var ListItem = function ListItem(aprops) {
       last = _genCommonProps2.last,
       part = _genCommonProps2.part,
       separatorInset = _genCommonProps2.separatorInset,
+      onClick = _genCommonProps2.onClick,
       media = _genCommonProps2.media,
       title = _genCommonProps2.title,
       subTitle = _genCommonProps2.subTitle,
@@ -126,7 +127,7 @@ var ListItem = function ListItem(aprops) {
       cStyle = _genCommonProps2.cStyle,
       cSize = _genCommonProps2.cSize,
       children = _genCommonProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["first", "last", "part", "separatorInset", "media", "title", "subTitle", "desc", "after", "arrow", "autoArrow", "mediaStyle", "afterStyle", "mainStyle", "subTitleStyle", "descStyle", "titleStyle", "arrayStyle", "mediaClassName", "afterClassName", "mainClassName", "subTitleClassName", "descClassName", "titleClassName", "arrayClassName", "component", "className", "containerClassName", "containerStyle", "cTheme", "cStyle", "cSize", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["first", "last", "part", "separatorInset", "onClick", "media", "title", "subTitle", "desc", "after", "arrow", "autoArrow", "mediaStyle", "afterStyle", "mainStyle", "subTitleStyle", "descStyle", "titleStyle", "arrayStyle", "mediaClassName", "afterClassName", "mainClassName", "subTitleClassName", "descClassName", "titleClassName", "arrayClassName", "component", "className", "containerClassName", "containerStyle", "cTheme", "cStyle", "cSize", "children"]);
 
   var classSetMeida = {
     'flex-sub-align-center': !mediaClassName.startsWith('flex-sub-align'),
@@ -152,6 +153,7 @@ var ListItem = function ListItem(aprops) {
   var classSetSubTitle = {};
   var classSetDesc = {};
   var classSet = {
+    'status': Boolean(onClick),
     'flex-display-flex': true,
     'flex-align-stretch': true,
     'padding': !(0, _props.hascx)(className, 'padding'),
@@ -170,7 +172,8 @@ var ListItem = function ListItem(aprops) {
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cx)(classSet, className)
+    className: (0, _props.cx)(classSet, className),
+    onClick: onClick
   }, props), media ? _react.default.createElement("div", {
     style: mediaStyle,
     className: (0, _props.cx)(classSetMeida, mediaClassName)
