@@ -143,4 +143,3 @@ function () {
 }();
 
 exports.default = Context;
-module.exports = exports["default"];

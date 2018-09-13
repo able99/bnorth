@@ -8,7 +8,6 @@ function initBabelOption(options) {
     ],
     "plugins": [
       require('@babel/plugin-transform-runtime'),
-      require('babel-plugin-add-module-exports'),
       require('@babel/plugin-syntax-dynamic-import'),
       require('@babel/plugin-syntax-import-meta'),
       require('@babel/plugin-proposal-class-properties'),

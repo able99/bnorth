@@ -4,9 +4,10 @@
   "description": "bnorth app",
   "main": "index.js",
   "scripts": {
-    "start": "bnorth-cli server",
-    "build": "bnorth-cli build",
-    "bnorth": "bnorth-cli"
+    "start": "bnorth-build server",
+    "build": "bnorth-build build",
+    "bnorth": "bnorth-build",
+    "bnorth-cli": "bnorth-cli"
   },
   "keywords": ["react", "bnorth"],
   "author": "able99 (8846755@qq.com)",

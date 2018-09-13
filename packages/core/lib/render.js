@@ -102,4 +102,3 @@ function () {
 }();
 
 exports.default = Render;
-module.exports = exports["default"];

@@ -184,4 +184,3 @@ function () {
 }();
 
 exports.default = Plugins;
-module.exports = exports["default"];

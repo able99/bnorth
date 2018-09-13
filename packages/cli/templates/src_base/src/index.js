@@ -1,9 +1,9 @@
 /* rich css */
-// import 'rich.css/css/normalize.css';
-// import genCss from 'rich.css';
+// import '@bnorth/rich.css/css/normalize.css';
+// import genCss from '@bnorth/rich.css';
 // genCss();
 
-import App from 'bnorth';
+import App from '@bnorth/core';
 import routes from './routes';
 
 let app = new App({

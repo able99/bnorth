@@ -96,4 +96,3 @@ function () {
 }();
 
 exports.default = Keyboard;
-module.exports = exports["default"];

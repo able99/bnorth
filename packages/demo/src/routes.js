@@ -20,21 +20,21 @@ let PageInfo = props=>{
 
 export default {
   '/:tab?': {
-    component: require('./pages/home'),
+    component: require('./pages/home').default,
     embeds: ['components', 'router', 'data', 'plugins' ],
   },
   'components': {
-    component: require('./pages/components'),
+    component: require('./pages/components').default,
   },
   'router': {
-    component: require('./pages/router'),
+    component: require('./pages/router').default,
   },
   'data': {
-    component: require('./pages/data'),
-    controller: require('./pages/_data'),
+    component: require('./pages/data').default,
+    controller: require('./pages/_data').default,
   },
   'plugins': {
-    component: require('./pages/plugins'),
+    component: require('./pages/plugins').default,
   },
   'require_param:param1': {
     component: PageInfo,

@@ -180,4 +180,3 @@ function () {
 }();
 
 exports.default = App;
-module.exports = exports["default"];

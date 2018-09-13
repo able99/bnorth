@@ -73,4 +73,3 @@ function () {
 }();
 
 exports.default = Event;
-module.exports = exports["default"];

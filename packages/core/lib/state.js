@@ -230,4 +230,3 @@ function () {
 
 exports.default = State;
 (0, _defineProperty2.default)(State, "states", {});
-module.exports = exports["default"];

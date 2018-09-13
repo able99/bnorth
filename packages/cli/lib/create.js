@@ -59,7 +59,7 @@ console.log('* OK');
 console.log();
 
 console.log('* run npm install...');
-var proc = spawn.sync('npm', ['i', 'bnorth-core'], {stdio: 'inherit'});
+var proc = spawn.sync('npm', ['i', '@bnorth/core', '@bnorth/build'], {stdio: 'inherit'});
 if (proc.status !== 0) {
   console.log('* ERROR:'+proc.status);
 }else{

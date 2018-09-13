@@ -357,4 +357,3 @@ function (_React$Component) {
 }(_react.default.Component);
 
 exports.default = Page;
-module.exports = exports["default"];

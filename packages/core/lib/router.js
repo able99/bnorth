@@ -147,7 +147,9 @@ function (_React$Component) {
         return _react.default.createElement(Router.PageError, {
           key: _id,
           app: app,
-          message: "wrong component"
+          data: {
+            errorRoute: "wrong component"
+          }
         });
       }
     }
@@ -858,4 +860,3 @@ exports.default = Router;
 Router.RouterComponent = RouterComponent;
 Router.PageLoading = PageLoading;
 Router.PageError = PageError;
-module.exports = exports["default"];

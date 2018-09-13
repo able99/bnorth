@@ -39,7 +39,7 @@ function initEnv({cwd, env}={}) {
     appSrc: resolveApp('src'),
     appNodeModules: resolveApp('node_modules'),
     ownNodeModules: resolveOwn('node_modules'),
-    bnorhtCoreNodeModules: resolveApp('node_modules/bnorth-core/node_modules'),
+    bnorhtCoreNodeModules: resolveApp('node_modules/@bnorth/core/node_modules'),
     appBabelCache: resolveApp('node_modules/.cache/babel-loader'),
   };
 

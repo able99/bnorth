@@ -185,4 +185,3 @@ function () {
 }();
 
 exports.default = Utils;
-module.exports = exports["default"];

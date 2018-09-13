@@ -108,4 +108,3 @@ Log.levels = {
   'warning': 4,
   'error': 5
 };
-module.exports = exports["default"];

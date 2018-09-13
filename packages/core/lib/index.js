@@ -11,4 +11,3 @@ var _app = _interopRequireDefault(require("./app"));
 
 var _default = _app.default;
 exports.default = _default;
-module.exports = exports["default"];

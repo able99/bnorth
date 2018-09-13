@@ -57,7 +57,7 @@ class RouterComponent extends React.Component {
     }else if(typeof route.component==='function'){
       return <app.Page {...props} />;
     }else{
-      return <Router.PageError key={_id} app={app} message="wrong component" />
+      return <Router.PageError key={_id} app={app} data={{errorRoute: "wrong component"}} />
     }
   }
 
