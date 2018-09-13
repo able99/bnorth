@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/plugin-md5",
-  "version": "3.0.4",
+  "version": "3.0.7",
   "description": "bnorth plugin for md5",
   "keywords": [
     "bnorth",
@@ -32,7 +32,7 @@
     "js-md5": "^0.7.3"
   },
   "devDependencies": {
-    "@bnorth/build": "*"
+    "@bnorth/build": "^3.0.7"
   },
   "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }

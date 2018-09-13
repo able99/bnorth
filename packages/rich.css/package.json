@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/rich.css",
-  "version": "3.0.4",
+  "version": "3.0.7",
   "description": "all in one css way, or dynamic css way",
   "keywords": [
     "css",
@@ -44,7 +44,7 @@
     "rimraf": "^2.6.2"
   },
   "devDependencies": {
-    "@bnorth/build": "*"
+    "@bnorth/build": "^3.0.7"
   },
   "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }

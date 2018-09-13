@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/plugin-browser",
-  "version": "3.0.4",
+  "version": "3.0.7",
   "description": "bnorth plugin for browser",
   "keywords": [
     "bnorth",
@@ -32,7 +32,7 @@
     "url-parse": "^1.4.1"
   },
   "devDependencies": {
-    "@bnorth/build": "*"
+    "@bnorth/build": "^3.0.7"
   },
   "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }
