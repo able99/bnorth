@@ -27,7 +27,7 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _animation = require("rich.css/lib/styles/animation");
+var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _props = require("./utils/props");
 

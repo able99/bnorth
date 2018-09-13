@@ -8,7 +8,7 @@
 
 import React from 'react';
 import Transition from 'react-transition-group/Transition';
-import { transiton } from 'rich.css/lib/styles/animation'; 
+import { transiton } from '@bnorth/rich.css/lib/styles/animation'; 
 import { genCommonProps, cx } from './utils/props';
 import { createChainedFunction } from './utils/event';
 import { domGetDimensionValue, domTriggerBrowserReflow, domGetScrollDimensionValue } from './utils/dom';

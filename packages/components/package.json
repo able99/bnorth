@@ -6,7 +6,7 @@
     "bnorth",
     "components",
     "react",
-    "rich.css"
+    "@bnorth/rich.css"
   ],
   "author": "able99 <8846755@qq.com>",
   "homepage": "https://github.com/able99",
@@ -37,6 +37,9 @@
   },
   "devDependencies": {
     "@bnorth/build": "^3.0.7"
+  },
+  "peerdependencies": {
+    "@bnorth/rich.css": "*"
   },
   "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }

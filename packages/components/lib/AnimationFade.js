@@ -19,7 +19,7 @@ var _react = _interopRequireDefault(require("react"));
 
 var _Transition = _interopRequireDefault(require("react-transition-group/Transition"));
 
-var _animation = require("rich.css/lib/styles/animation");
+var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _props = require("./utils/props");
 

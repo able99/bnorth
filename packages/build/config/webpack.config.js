@@ -21,6 +21,7 @@ function getRules() {
 
   let {
     urlLoaderLimit,
+    eslint,
   } = getBnorthConfig();
 
   // url
@@ -48,7 +49,11 @@ function getRules() {
     exclude: /node_modules/,
     loader:"eslint",
     options: {
-      configFile: __dirname+'/eslintrc'
+      configFile: __dirname+'/eslintrc.js',
+      "rules": {
+        'no-unused-vars': ['warn',{args: 'none', ignoreRestSiblings: true}],
+        ...eslint.rules,
+      }
     },
   });
 
@@ -91,7 +96,6 @@ function getRules() {
 
 function getPlugins() {
   let {
-    outputPath,
     extractCss,
   } = getBnorthConfig();
 

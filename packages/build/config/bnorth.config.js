@@ -17,6 +17,12 @@ let config = {
     define: {},
     extractCss: false,
     urlLoaderLimit: 0,
+    eslint: {
+      plugins: [],
+      env: {},
+      parserOptions: {},
+      rules: {},
+    }
   },
 
   config_development: {

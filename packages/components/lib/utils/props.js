@@ -22,7 +22,7 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _classnames = _interopRequireDefault(require("classnames"));
 
-var _flex = require("rich.css/lib/styles/flex");
+var _flex = require("@bnorth/rich.css/lib/styles/flex");
 
 function hascx(className, name) {
   return className && className.split(' ').find(function (v) {

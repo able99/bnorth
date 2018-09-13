@@ -17,9 +17,9 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _shadow = require("rich.css/lib/styles/shadow");
+var _shadow = require("@bnorth/rich.css/lib/styles/shadow");
 
-var _animation = require("rich.css/lib/styles/animation");
+var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _timable = require("./hocs/timable");
 

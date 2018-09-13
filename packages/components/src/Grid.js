@@ -7,7 +7,7 @@
 
 
 import React,{cloneElement} from 'react';
-import { styleFlexSubBasis } from 'rich.css/lib/styles/flex'
+import { styleFlexSubBasis } from '@bnorth/rich.css/lib/styles/flex'
 import { genCommonProps, cx, hascx } from './utils/props';
 
 

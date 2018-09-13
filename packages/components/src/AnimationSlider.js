@@ -7,7 +7,7 @@
 
 
 import React, { cloneElement } from 'react';
-import { transiton, transform } from 'rich.css/lib/styles/animation'; 
+import { transiton, transform } from '@bnorth/rich.css/lib/styles/animation'; 
 import { genCommonProps, cx, hascx } from './utils/props';
 
 

@@ -7,7 +7,7 @@
 
 
 import React from 'react';
-import { animation } from 'rich.css/lib/styles/animation'; 
+import { animation } from '@bnorth/rich.css/lib/styles/animation'; 
 import { genCommonProps, cx, hascx } from './utils/props';
 
  

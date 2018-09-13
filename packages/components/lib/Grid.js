@@ -19,7 +19,7 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _flex = require("rich.css/lib/styles/flex");
+var _flex = require("@bnorth/rich.css/lib/styles/flex");
 
 var _props = require("./utils/props");
 

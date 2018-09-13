@@ -1,5 +1,5 @@
 import cx from 'classnames';
-import { styleFlexSubGrow, styleFlexSubShrink, styleFlexSubBasis, styleFlexSubOrder } from 'rich.css/lib/styles/flex'
+import { styleFlexSubGrow, styleFlexSubShrink, styleFlexSubBasis, styleFlexSubOrder } from '@bnorth/rich.css/lib/styles/flex'
 
 
 export { default as cx } from 'classnames';

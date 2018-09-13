@@ -7,8 +7,8 @@
 
 
 import React from 'react';
-import { shadow } from 'rich.css/lib/styles/shadow'; 
-import { transiton } from 'rich.css/lib/styles/animation'; 
+import { shadow } from '@bnorth/rich.css/lib/styles/shadow'; 
+import { transiton } from '@bnorth/rich.css/lib/styles/animation'; 
 import { timable } from './hocs/timable';
 import { genCommonProps, cx } from './utils/props';
 
