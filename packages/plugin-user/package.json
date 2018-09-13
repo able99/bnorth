@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/plugin-user",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "description": "bnorth plugin for user",
   "keywords": [
     "bnorth",
@@ -31,7 +31,7 @@
     "url": "https://github.com/able99/bnorth/issues"
   },
   "devDependencies": {
-    "@bnorth/build": "^3.0.7"
+    "@bnorth/build": "^3.0.8"
   },
   "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }

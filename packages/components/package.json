@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/components",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "description": "bnorth, components, react",
   "keywords": [
     "bnorth",
@@ -36,7 +36,7 @@
     "react-waypoint": "^8.0.3"
   },
   "devDependencies": {
-    "@bnorth/build": "^3.0.7"
+    "@bnorth/build": "^3.0.8"
   },
   "peerdependencies": {
     "@bnorth/rich.css": "*"
