@@ -23,25 +23,12 @@ export default {
     component: require('./pages/home').default,
     embeds: ['components', 'router', 'data', 'plugins' ],
   },
-  'components': {
-    component: require('./pages/components').default,
-  },
-  'router': {
-    component: require('./pages/router').default,
-  },
-  'data': {
-    component: require('./pages/data').default,
-    controller: require('./pages/_data').default,
-  },
-  'plugins': {
-    component: require('./pages/plugins').default,
-  },
-  'require_param:param1': {
-    component: PageInfo,
-  },
-  'option_param:param1?': {
-    component: PageInfo,
-  },
+  'components': require('./pages/components').default,
+  'router': require('./pages/router').default,
+  'data': require('./pages/data').default,
+  'plugins': require('./pages/plugins').default,
+  'require_param:param1': PageInfo,
+  'option_param:param1?': PageInfo,
   'dynamic': {
     loader: ()=>{
       return new Promise((resolve)=>setTimeout(()=>{

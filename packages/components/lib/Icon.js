@@ -101,4 +101,3 @@ Icon.getCode = function (name) {
 
 var _default = Icon;
 exports.default = _default;
-module.exports = exports["default"];

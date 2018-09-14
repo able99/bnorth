@@ -96,4 +96,3 @@ var Notification = function Notification(aprops) {
 
 var _default = Notification;
 exports.default = _default;
-module.exports = exports["default"];

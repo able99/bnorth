@@ -59,4 +59,3 @@ var _default = function _default(aprops) {
 };
 
 exports.default = _default;
-module.exports = exports["default"];

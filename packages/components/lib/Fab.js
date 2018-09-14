@@ -64,4 +64,3 @@ var Fab = function Fab(aprops) {
 
 var _default = Fab;
 exports.default = _default;
-module.exports = exports["default"];

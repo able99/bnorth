@@ -168,4 +168,3 @@ var TabBarItem = function TabBarItem(aprops) {
 TabBar.Item = TabBarItem;
 var _default = TabBar;
 exports.default = _default;
-module.exports = exports["default"];

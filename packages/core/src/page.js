@@ -46,9 +46,10 @@ export default class Page extends React.Component {
   }
 
   parseController() {
-    let { app } = this.props;
+    let { app, route:{component, controller}={} } = this.props;
+    let acontroller = controller||component.controller||{};
+    let controllerObj = typeof(acontroller)==='function'?acontroller(app, this):acontroller;
 
-    let controllerObj = typeof(this.props.route.controller)==='function'?this.props.route.controller(app, this):(this.props.route.controller||{});
     if(!controllerObj.stateData) controllerObj.stateData = undefined;
     if(!controllerObj.actionGoBack) controllerObj.actionGoBack = ()=>app.router.back();
 

@@ -132,4 +132,3 @@ var Collapse = function Collapse(aprops) {
 
 var _default = Collapse;
 exports.default = _default;
-module.exports = exports["default"];

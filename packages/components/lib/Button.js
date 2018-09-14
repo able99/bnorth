@@ -201,4 +201,3 @@ ButtonGroup.Separator = function (aprops) {
 Button.Group = ButtonGroup;
 var _default = Button;
 exports.default = _default;
-module.exports = exports["default"];

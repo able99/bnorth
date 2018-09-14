@@ -293,7 +293,8 @@ export default class Router {
   }
 
   getRoute(name) {
-    return Object.entries(this._routes).find(([k,v])=>k.split(':')[0]===name)||[];
+    let route = Object.entries(this._routes).find(([k,v])=>k.split(':')[0]===name);
+    return route?[route[0], typeof(route[1])==='function'?{component:route[1]}:route[1]]:[];
   }
 
   addRoute(name, route) {

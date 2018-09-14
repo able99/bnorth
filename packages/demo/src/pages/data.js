@@ -4,7 +4,7 @@ import Panel from '@bnorth/components/lib/Panel'
 import List from '@bnorth/components/lib/List'
 import Button from '@bnorth/components/lib/Button'
 
-export default props=>{
+let Component = props=>{
   let { app, page, stateData, stateInit, stateEvent, stateNetwork, stateValidate } = props;
   return (
     <View>
@@ -45,3 +45,16 @@ export default props=>{
     </View>
   );
 };
+
+let Controller = app=>({
+  stateInit: { initialization: {tick: 111} },
+  stateEvent: { },
+  stateNetwork: {state: app.Request, fetchOnStart: true,},
+  stateValidate: {state: app.Validate, initialization: {a: 1}, rules: {a: 'required'} },
+
+  onStateUpdated_stateEvent: (data, prevData)=>{app.notice.show(`${JSON.stringify(prevData)}->${JSON.stringify(data)}`)}
+});
+
+
+Component.Controller = Controller;
+export default Component;

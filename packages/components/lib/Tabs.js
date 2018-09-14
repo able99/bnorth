@@ -150,4 +150,3 @@ function (_React$Component) {
 Tabs.Item = _Views.default.Item;
 var _default = Tabs;
 exports.default = _default;
-module.exports = exports["default"];

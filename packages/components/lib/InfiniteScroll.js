@@ -48,4 +48,3 @@ var InfiniteScroll = function InfiniteScroll(aprops) {
 
 var _default = InfiniteScroll;
 exports.default = _default;
-module.exports = exports["default"];

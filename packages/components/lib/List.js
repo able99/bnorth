@@ -204,4 +204,3 @@ var ListItem = function ListItem(aprops) {
 List.Item = ListItem;
 var _default = List;
 exports.default = _default;
-module.exports = exports["default"];

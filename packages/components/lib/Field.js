@@ -473,4 +473,3 @@ Field.TypeSwitch = function (aprops) {
 
 var _default = Field;
 exports.default = _default;
-module.exports = exports["default"];

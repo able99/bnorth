@@ -95,8 +95,14 @@ function (_React$Component) {
     value: function parseController() {
       var _this3 = this;
 
-      var app = this.props.app;
-      var controllerObj = typeof this.props.route.controller === 'function' ? this.props.route.controller(app, this) : this.props.route.controller || {};
+      var _this$props = this.props,
+          app = _this$props.app,
+          _this$props$route = _this$props.route;
+      _this$props$route = _this$props$route === void 0 ? {} : _this$props$route;
+      var component = _this$props$route.component,
+          controller = _this$props$route.controller;
+      var acontroller = controller || component.controller || {};
+      var controllerObj = typeof acontroller === 'function' ? acontroller(app, this) : acontroller;
       if (!controllerObj.stateData) controllerObj.stateData = undefined;
       if (!controllerObj.actionGoBack) controllerObj.actionGoBack = function () {
         return app.router.back();
@@ -209,10 +215,10 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this4 = this;
 
-      var _this$props = this.props,
-          app = _this$props.app,
-          _id = _this$props._id,
-          active = _this$props.route.active;
+      var _this$props2 = this.props,
+          app = _this$props2.app,
+          _id = _this$props2._id,
+          active = _this$props2.route.active;
       app.log.info('page did mount', _id);
       this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
         return _this4.handleKeyEvent(e);
@@ -224,9 +230,9 @@ function (_React$Component) {
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      var _this$props2 = this.props,
-          app = _this$props2.app,
-          _id = _this$props2._id;
+      var _this$props3 = this.props,
+          app = _this$props3.app,
+          _id = _this$props3._id;
       app.log.info('page will unmount', _id);
       app.event.emitSync(this._id, 'onPageInactive', this, true);
       app.event.emitSync(this._id, 'onPageStop', this);
@@ -237,9 +243,9 @@ function (_React$Component) {
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
-      var _this$props3 = this.props,
-          app = _this$props3.app,
-          active = _this$props3.route.active;
+      var _this$props4 = this.props,
+          app = _this$props4.app,
+          active = _this$props4.route.active;
 
       if (prevProps.route.active !== active) {
         app.event.emitSync(this._id, active ? 'onPageActive' : 'onPageInactive', this, false);
@@ -291,14 +297,14 @@ function (_React$Component) {
     value: function render() {
       var _this5 = this;
 
-      var _this$props4 = this.props,
-          context = _this$props4.context,
-          app = _this$props4.app,
-          _id = _this$props4._id,
-          route = _this$props4.route,
-          views = _this$props4.views,
-          embeds = _this$props4.embeds,
-          props = (0, _objectWithoutProperties2.default)(_this$props4, ["context", "app", "_id", "route", "views", "embeds"]);
+      var _this$props5 = this.props,
+          context = _this$props5.context,
+          app = _this$props5.app,
+          _id = _this$props5._id,
+          route = _this$props5.route,
+          views = _this$props5.views,
+          embeds = _this$props5.embeds,
+          props = (0, _objectWithoutProperties2.default)(_this$props5, ["context", "app", "_id", "route", "views", "embeds"]);
       app.log.info('page render', _id);
       var active = route.active,
           embed = route.embed;

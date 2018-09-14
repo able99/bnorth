@@ -326,4 +326,3 @@ Carousel.Pager.Item = function (aprops) {
 
 var _default = Carousel;
 exports.default = _default;
-module.exports = exports["default"];

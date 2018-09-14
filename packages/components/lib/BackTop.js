@@ -142,4 +142,3 @@ exports.default = BackTop;
     }
   }
 });
-module.exports = exports["default"];

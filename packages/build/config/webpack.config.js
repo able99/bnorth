@@ -128,8 +128,8 @@ function getPlugins() {
   }));
 
   // html
-  existsSync(join(appSrc, 'index.ejs')) && ret.push(new HtmlWebpackPlugin({
-    template: join(appSrc, 'index.ejs'),
+  ret.push(new HtmlWebpackPlugin({
+    template: join(existsSync(join(appSrc, 'index.ejs'))?appSrc:__dirname, 'index.ejs'),
     inject: true,
   }));
 

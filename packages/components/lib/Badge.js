@@ -80,4 +80,3 @@ var Badge = function Badge(aprops) {
 
 var _default = Badge;
 exports.default = _default;
-module.exports = exports["default"];

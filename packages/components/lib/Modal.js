@@ -271,4 +271,3 @@ Modal.FooterButtons = function (aprops) {
 
 var _default = Modal;
 exports.default = _default;
-module.exports = exports["default"];

@@ -108,4 +108,3 @@ function (_React$Component) {
 }(_react.default.Component);
 
 exports.default = ScrollSpy;
-module.exports = exports["default"];

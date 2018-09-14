@@ -126,4 +126,3 @@ AnimationSlider.Item = function (aprops) {
 
 var _default = AnimationSlider;
 exports.default = _default;
-module.exports = exports["default"];

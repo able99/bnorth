@@ -77,4 +77,3 @@ var Fade = function Fade(aprops) {
 
 var _default = Fade;
 exports.default = _default;
-module.exports = exports["default"];

@@ -80,4 +80,3 @@ var Loader = function Loader(aprops) {
 
 var _default = Loader;
 exports.default = _default;
-module.exports = exports["default"];

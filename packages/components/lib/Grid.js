@@ -119,4 +119,3 @@ var GridItem = function GridItem(aprops) {
 Grid.Item = GridItem;
 var _default = Grid;
 exports.default = _default;
-module.exports = exports["default"];

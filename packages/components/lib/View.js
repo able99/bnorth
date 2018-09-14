@@ -66,4 +66,3 @@ var View = function View(aprops) {
 
 var _default = View;
 exports.default = _default;
-module.exports = exports["default"];

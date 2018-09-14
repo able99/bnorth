@@ -79,4 +79,3 @@ Views.Item = function (aprops) {
 
 var _default = Views;
 exports.default = _default;
-module.exports = exports["default"];

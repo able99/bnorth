@@ -83,4 +83,3 @@ var _default = (0, _timable.timable)(ProgressBar, {
 });
 
 exports.default = _default;
-module.exports = exports["default"];

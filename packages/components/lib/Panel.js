@@ -66,4 +66,3 @@ var Panel = function Panel(aprops) {
 Panel.Touchable = (0, _touchable.default)(Panel);
 var _default = Panel;
 exports.default = _default;
-module.exports = exports["default"];

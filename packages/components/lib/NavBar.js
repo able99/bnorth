@@ -126,4 +126,3 @@ NavBar.Title = NavBarTitle;
 NavBar.Item = NavBarItem;
 var _default = NavBar;
 exports.default = _default;
-module.exports = exports["default"];

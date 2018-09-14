@@ -605,13 +605,16 @@ function () {
   }, {
     key: "getRoute",
     value: function getRoute(name) {
-      return Object.entries(this._routes).find(function (_ref7) {
+      var route = Object.entries(this._routes).find(function (_ref7) {
         var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
             k = _ref8[0],
             v = _ref8[1];
 
         return k.split(':')[0] === name;
-      }) || [];
+      });
+      return route ? [route[0], typeof route[1] === 'function' ? {
+        component: route[1]
+      } : route[1]] : [];
     }
   }, {
     key: "addRoute",

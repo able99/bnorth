@@ -58,4 +58,3 @@ var Spacing = function Spacing(aprops) {
 
 var _default = Spacing;
 exports.default = _default;
-module.exports = exports["default"];

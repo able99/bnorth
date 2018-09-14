@@ -286,4 +286,3 @@ function (_React$Component2) {
 
 var _default = Popover;
 exports.default = _default;
-module.exports = exports["default"];
