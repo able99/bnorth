@@ -41,7 +41,7 @@ function genIconFont(_ref) {
 
 function genIconClass(_ref2) {
   var _ref2$iconClassName = _ref2.iconClassName,
-      iconClassName = _ref2$iconClassName === void 0 ? 'icon' : _ref2$iconClassName;
+      iconClassName = _ref2$iconClassName === void 0 ? 'icon-' : _ref2$iconClassName;
   if (!iconClassName) return;
   var ret = {};
   ret[(0, _utils.getSelector)(iconClassName + ':before')] = {

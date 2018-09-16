@@ -91,5 +91,5 @@ export default {
 
   /* icon */
   iconFonts: null, 
-  iconClassName: 'icon',
+  iconClassName: 'icon-',
 }

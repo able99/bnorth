@@ -24,7 +24,7 @@ let Panel = aprops=>{
     'flex-sub-flex-extend': main,
     'display-block-inline': inline,
     ['text-size-'+(bSize===true?'':bSize)]: bSize,
-    ['text-color'+(bTheme===true?'':bTheme)]: bTheme,
+    ['text-color-'+(bTheme===true?'':bTheme)]: bTheme,
   }
   
   

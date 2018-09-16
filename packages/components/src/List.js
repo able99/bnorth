@@ -5,148 +5,176 @@
  * @license MIT
  */
 
-
 import React, {cloneElement} from 'react';
-import { genCommonProps, cx, hascx } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
+import Panel from './Panel';
 import Icon from './Icon';
 
 
-let List = (aprops)=>{
+let List = aprops=>{
   let {
-    separatorInset,
-    component: Component = 'ul', className, containerClassName, containerStyle ,cTheme, cStyle, cSize, children, ...props
+    separatorInset, innerProps={},
+    itemProps={},
+    component:Component='ul', 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
   } = genCommonProps(aprops);
- 
-
   children = React.Children.toArray(children).filter(v=>v);
+
   let headers = children.filter(v=>v.props.part==='header');
   let footers = children.filter(v=>v.props.part==='footer');
   let items = children.filter(v=>v.props.part==='item'||!v.props.part);
-  
-  let classSet = {
-  };
-
-  let classSetInner = {
-    [`padding-left${separatorInset&&separatorInset!==true?('-'+separatorInset):''}`]: separatorInset,
-    'bg-color-white': !hascx(className, 'bg-color'),
-    'border-set-v': items.length && !hascx(className, 'border'),
-  }
-    
 
   return (
-    <Component className={cx(classSet, className)} {...props}>
-      {headers.map((v,i,arr)=>cloneElement(v, {
-        ...v.props, 
-        ...{
-          first: i===0,
-          last: i===arr.length-1,
-        }
-      }))}
-      <div className={cx(classSetInner)}>
-        {items.map((v,i,arr)=>cloneElement(v, {
-          ...v.props, 
-          ...{
-            first: !headers.length&&i===0,
-            last: !footers.length&&i===arr.length-1,
-            separatorInset,
-          }
-        }))}
-      </div>
-      {footers.map((v,i,arr)=>cloneElement(v, {
-        ...v.props, 
-        ...{
-          first: i===0,
-          last: i===arr.length-1,
-        }
-      }))}
+    <Component {...props}>
+      {headers.map((v,i,a)=>(
+        <List.Item 
+          key={v.key} {...v.props} 
+          first={i===0} last={i===a.length-1}
+          {...itemProps} />
+      ))}
+      <List._Inner separatorInset {...innerProps}>
+        {items.map((v,i,a)=>(
+          <List.Item 
+            key={v.key} {...v.props} 
+            part='item' first={i===0} last={i===a.length-1}
+            separatorInset
+            {...itemProps} />
+        ))}
+      </List._Inner>
+      {footers.map((v,i,a)=>(
+        <List.Item 
+          key={v.key} {...v.props} 
+          first={i===0} last={i===a.length-1}
+          {...itemProps} />
+      ))}
     </Component>
   );
 }
 
-
-let ListItem = (aprops)=>{
+List._Inner = aprops=>{
   let {
-    first, last, part, separatorInset, onClick,
-    media, title, subTitle, desc, after, arrow, autoArrow=true, 
-    mediaStyle,        afterStyle,        mainStyle,        subTitleStyle,        descStyle,        titleStyle,        arrayStyle, 
-    mediaClassName='', afterClassName='', mainClassName='', subTitleClassName='', descClassName='', titleClassName='', arrayClassName='',
-    component: Component = 'li', className, containerClassName, containerStyle,cTheme, cStyle, cSize, children, ...props
+    separatorInset,
+    component:Component=Panel, className, children, ...props
   } = genCommonProps(aprops);
 
-
-  let classSetMeida = {
-    'flex-sub-align-center': !mediaClassName.startsWith('flex-sub-align'),
-    'margin-right': !mediaClassName.startsWith('margin'),
-  };
-
-  let classSetMain = {
-    'width-full': true,
-    'flex-sub-flex-extend': true,
-    'flex-sub-align-center': !mainClassName.startsWith('flex-sub-align'),
-  };
-
-  let classSetAfter = {
-    'flex-sub-align-center': !afterClassName.startsWith('flex-sub-align'),
-    'margin-left': !afterClassName.startsWith('margin'),
-    'text-color-light': !afterClassName.startsWith('text-color'),
-  };
-  
-  let classSetArray = {
-    'flex-sub-align-center': !arrayClassName.startsWith('flex-sub-align'),
-  };
-
-  let classSetTitle = {
-    'flex-sub-flex-extend': true,
-    'width-full': true,
-  };
-
-  let classSetSubTitle = {};
-
-  let classSetDesc = {};
-  
+  let classStr = 'bg-color-white';
   let classSet = {
-    'status': Boolean(onClick),
-    'flex-display-flex': true,
-    'flex-align-stretch': true,
-    'padding': !hascx(className, 'padding'),
-    'padding-left-0': separatorInset,
-    'cursor-pointer': aprops.onClick||arrow,
-    'border-set-bottom-border': part!=='header'&&part!=='footer'&&!last,
-  };
-
-  if(cStyle==='solid') {
-    if(cTheme) {
-      classSet['bg-color-'+cTheme] = true;
-      classSet['text-color-white'] = true;
-    }
-  }else{
-    if(cTheme) classSet['text-color-'+cTheme] = true;
+    [`padding-left${separatorInset&&separatorInset!==true?('-'+separatorInset):''}`]: separatorInset,
   }
 
-  
+  return <div className={cxm(classStr, classSet, className)} {...props}>{children}</div>
+}
+
+List.Item = aprops=>{
+  let {
+    first, last, part, separatorInset, onClick, 
+    colorActiveOnTheme='white',
+    media, mediaProps, mainProps, title, titleProps, subTitle, subTitleProps, desc, descProps, after, afterProps, arrow, arrowProps, arrowIconProps, autoArrow=true, 
+    component:Component='li', className, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
+  } = genCommonProps(aprops);
+
+  let classStr = 'flex-display-block flex-align-stretch padding-a-';
+
+  let classSet = {
+    'status-': Boolean(onClick),
+    'padding-left-0': separatorInset,
+    'cursor-pointer': aprops.onClick||arrow,
+    'border-set-bottom-': (part==='item'&&!last)||(part==='header'&&(last||!first)),
+    'border-set-top-': (part==='footer'&&(first||!last)),
+  };
+  if(bSize) classSet['text-size-'+(bSize===true?'':bSize)] = true;
+  if(bStyle==='solid'&&bTheme) {
+    classSet['bg-color-'+(bTheme===true?'':bTheme)] = true;
+    classSet['text-color-'+colorActiveOnTheme] = true;
+  }else if(bStyle==='solid'&&!bTheme) {
+    classSet['bg-color-component'] = true;
+  }else {
+    if(bTheme) classSet['text-color-'+(bTheme===true?'':bTheme)] = true;
+  }
+
   return (
-    <Component className={cx(classSet, className)} onClick={onClick} {...props}>
-      {media?(<div style={mediaStyle} className={cx(classSetMeida, mediaClassName)}>{media}</div>):null}
-
-      <div style={mainStyle} className={cx(classSetMain, mainClassName)}>
-        {title?(<div style={titleStyle} className={cx(classSetTitle, titleClassName)}>{title}</div>):null}
-        {subTitle?(<div style={subTitleStyle} className={cx(classSetSubTitle, subTitleClassName)}>{subTitle}</div>):null}
-        {desc?(<div style={descStyle} className={cx(classSetDesc, descClassName)}>{desc}</div>):null}
+    <Component className={cxm(classStr, classSet, className)} onClick={onClick} {...props}>
+      {media?(<List.Item._Media {...mediaProps}>{media}</List.Item._Media>):null}
+      <List.Item._Main {...mainProps}>
+        {title?(<List.Item._Title {...titleProps}>{title}</List.Item._Title>):null}
+        {subTitle?(<List.Item._SubTitle {...subTitleProps}>{subTitle}</List.Item._SubTitle>):null}
+        {desc?(<List.Item._Desc {...descProps}>{desc}</List.Item._Desc>):null}
         {children}
-      </div>
-
-      {after?(<div style={afterStyle} className={cx(classSetAfter, afterClassName)}>{after}</div>):null}
-
-      {arrow||(autoArrow&&aprops.onClick)?(
-      <div style={arrayStyle} className={cx(classSetArray, arrayClassName)}>
-        {arrow&&arrow!==true?arrow:(<Icon cTheme="light" name={Icon.getName('right', '>')} />)}
-      </div>
-      ):null}
+      </List.Item._Main>
+      {after?(<List.Item._After {...afterProps}>{after}</List.Item._After>):null}
+      {arrow||(autoArrow&&aprops.onClick)?(<List.Item._Arrow arrowIconProps={arrowIconProps} {...afterProps}>{arrow}</List.Item._Arrow>):null}
     </Component>
   );
 }
 
+List.Item._Media = aprops=>{
+  let {
+    component:Component=Panel, className, children, ...props
+  } = genCommonProps(aprops);
 
-List.Item = ListItem;
+  let classStr = 'flex-sub-align-center flex-sub-flex-none';
+
+  return <Component className={cxm(classStr, className)} {...props}>{children}</Component>;
+}
+
+List.Item._Main = aprops=>{
+  let {
+    component:Component=Panel, className, children, ...props
+  } = genCommonProps(aprops);
+
+  let classStr = 'width-full flex-sub-flex-extend flex-sub-align-center';
+  
+  return <Component className={cxm(classStr, className)} {...props}>{children}</Component>;
+}
+
+List.Item._Title = aprops=>{
+  let {
+    component:Component=Panel, children, ...props
+  } = genCommonProps(aprops);
+
+  return <Component {...props}>{children}</Component>;
+}
+
+List.Item._SubTitle = aprops=>{
+  let {
+    component:Component=Panel, children, ...props
+  } = genCommonProps(aprops);
+
+  return <Component {...props}>{children}</Component>;
+}
+
+List.Item._Desc = aprops=>{
+  let {
+    component:Component=Panel, children, ...props
+  } = genCommonProps(aprops);
+
+  return <Component {...props}>{children}</Component>;
+}
+
+List.Item._After = aprops=>{
+  let {
+    component:Component=Panel, className, 'b-theme':bTheme='light', children, ...props
+  } = genCommonProps(aprops);
+
+  let classStr = 'flex-sub-align-center';
+  
+  return <Component b-theme={bTheme} className={cxm(classStr, className)} {...props}>{children}</Component>;
+}
+
+List.Item._Arrow = aprops=>{
+  let {
+    arrowIconProps,
+    component:Component=Panel, className, children, ...props
+  } = genCommonProps(aprops);
+
+  let classStr = 'flex-sub-align-center flex-sub-flex-none';
+  
+  return (
+    <Component className={cxm(classStr, className)} {...props}>
+      {!children||children===true?<Icon name={Icon.getName('right', '>')} {...arrowIconProps}/>:children}
+    </Component>
+  )
+}
+
+
 export default List;
  

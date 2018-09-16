@@ -50,7 +50,7 @@ var Panel = function Panel(aprops) {
     'scrollable': main,
     'flex-sub-flex-extend': main,
     'display-block-inline': inline
-  }, (0, _defineProperty2.default)(_classSet, 'text-size-' + (bSize === true ? '' : bSize), bSize), (0, _defineProperty2.default)(_classSet, 'text-color' + (bTheme === true ? '' : bTheme), bTheme), _classSet);
+  }, (0, _defineProperty2.default)(_classSet, 'text-size-' + (bSize === true ? '' : bSize), bSize), (0, _defineProperty2.default)(_classSet, 'text-color-' + (bTheme === true ? '' : bTheme), bTheme), _classSet);
   var styleSet = {
     paddingBottom: "".concat(aspect * 100, "%")
   };

@@ -91,6 +91,6 @@ var _default = {
 
   /* icon */
   iconFonts: null,
-  iconClassName: 'icon'
+  iconClassName: 'icon-'
 };
 exports.default = _default;

@@ -27,7 +27,7 @@ export function genIconFont({iconFonts, iconClassName}) {
   return ret;
 }
 
-export function genIconClass({iconClassName='icon'}) {
+export function genIconClass({iconClassName='icon-'}) {
   if(!iconClassName) return;
   let ret = {};
 
