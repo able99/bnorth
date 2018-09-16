@@ -4,7 +4,7 @@ button:disabled, button[disabled], button.disabled {
   pointer-events: none;
 }
 
-.status:disabled, .status[disabled], .status.disabled {
+.status-:disabled, .status-[disabled], .status-.disabled {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
@@ -14,7 +14,7 @@ button:active, button[active], button.active {
   opacity: 0.8;
 }
 
-.status:active, .status[active], .status.active {
+.status-:active, .status-[active], .status-.active {
   opacity: 0.8;
 }
 
@@ -61,10 +61,10 @@ select::-ms-expand {
   display: none;
 }
 
-.state-disabled {
+.status-disabled {
   opacity: 0.5;
 }
 
-.state-active {
+.status-active {
   opacity: 0.8;
 }

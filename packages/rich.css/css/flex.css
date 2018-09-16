@@ -1,11 +1,11 @@
-.flex-display-flex {
+.flex-display-block {
   display: flex;
   display : -webkit-box;
   display  : -ms-flexbox;
   display   : -webkit-flex;
 }
 
-.flex-display-flex-inline {
+.flex-display-inline {
   display: flex-inline;
   display : -webkit-inline-box;
   display  : -ms-inline-flexbox;

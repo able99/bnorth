@@ -66,7 +66,7 @@ function gen(config) {
     'clear': 'both',
     'height': 0
   };
-  ret[(0, _utils.getSelector)('transition')] = (0, _compatibleAnimation.default)({
+  ret[(0, _utils.getSelector)('transition-set-')] = (0, _compatibleAnimation.default)({
     'transition': '.15s ease-out'
   });
   ret[(0, _utils.getSelector)('line-height-0')] = {
@@ -75,27 +75,25 @@ function gen(config) {
   ret[(0, _utils.getSelector)('line-height-1')] = {
     'line-height': '1'
   };
-  ret[(0, _utils.getSelector)('outline-none')] = {
+  ret[(0, _utils.getSelector)('outline-none-')] = {
     'outline': 'none'
   };
-  ret[(0, _utils.getSelector)('appearance-none')] = {
+  ret[(0, _utils.getSelector)('appearance-none-')] = {
     'appearance': 'none',
     '-webkit-appearance': 'none',
     '-moz-appearance': 'none'
   };
-  ret[(0, _utils.getSelector)('backface-hidden')] = {
+  ret[(0, _utils.getSelector)('backface-hidden-')] = {
     'backface-visibility': 'hidden'
   };
-  ret[(0, _utils.getSelector)('force-hardware-acceleration')] = (0, _compatibleAnimation.default)({
+  ret[(0, _utils.getSelector)('force-hardware-acceleration-')] = (0, _compatibleAnimation.default)({
     'transform': 'translateZ(0)',
     'backface-visibility': 'hidden',
     'perspective': '1000'
   });
-  ret[(0, _utils.getSelector)('font-smoothing-antialiased')] = {
+  ret[(0, _utils.getSelector)('font-smoothing-antialiased-')] = {
     '-webkit-font-smoothing': 'antialiased',
     '-moz-osx-font-smoothing': 'grayscale'
   };
   return ret;
 }
-
-module.exports = exports["default"];

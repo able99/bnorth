@@ -36,7 +36,7 @@ function genBgColor(_ref) {
 
 function genBgNone() {
   var ret = {};
-  ret[(0, _utils.getSelector)('bg', 'none')] = {
+  ret[(0, _utils.getSelector)('bg', 'none-')] = {
     'background': 'none'
   };
   return ret;

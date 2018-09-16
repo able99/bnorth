@@ -28,39 +28,36 @@ var _props = require("./utils/props");
 var View = function View(aprops) {
   var _genCommonProps = (0, _props.genCommonProps)(aprops),
       landscape = _genCommonProps.landscape,
+      _genCommonProps$conta = _genCommonProps.container,
+      container = _genCommonProps$conta === void 0 ? window : _genCommonProps$conta,
       _genCommonProps$compo = _genCommonProps.component,
       Component = _genCommonProps$compo === void 0 ? 'div' : _genCommonProps$compo,
-      style = _genCommonProps.style,
       className = _genCommonProps.className,
+      style = _genCommonProps.style,
+      _genCommonProps$bThe = _genCommonProps['b-theme'],
+      bTheme = _genCommonProps$bThe === void 0 ? 'view' : _genCommonProps$bThe,
+      bStyle = _genCommonProps['b-style'],
+      bSize = _genCommonProps['b-size'],
       children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["landscape", "component", "style", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["landscape", "container", "component", "className", "style", 'b-theme', 'b-style', 'b-size', "children"]);
 
-  var classSet = {
-    'position-relative': true,
-    'offset-start-left': true,
-    'offset-start-top': true,
-    'offset-start-right': true,
-    'offset-start-bottom': true,
-    'square-full': true,
-    'overflow-hidden': true,
-    'bg-color-view': !(0, _props.hascx)(className, 'bg-color'),
-    'flex-display-flex': !(0, _props.hascx)(className, 'flex-display'),
-    'flex-direction-v': !(0, _props.hascx)(className, 'flex-direction')
-  };
-  var styleLandscape = {};
+  var classStr = 'position-relative offset-left-start offset-right-start offset-top-start offset-bottom-start square-full overflow-hidden';
+  classStr += ' flex-display-block flex-direction-v';
+  var classSet = ['bg-color-' + bTheme];
+  var styleSet = {};
 
-  if (landscape && window.innerHeight > window.innerWidth) {
-    styleLandscape = (0, _objectSpread2.default)({
-      width: window.innerHeight,
-      height: window.innerWidth,
-      top: (window.innerHeight - window.innerWidth) / 2,
-      left: (window.innerWidth - window.innerHeight) / 2
+  if (landscape && container.innerHeight > container.innerWidth) {
+    styleSet = (0, _objectSpread2.default)({
+      width: container.innerHeight,
+      height: container.innerWidth,
+      top: (container.innerHeight - container.innerWidth) / 2,
+      left: (container.innerWidth - container.innerHeight) / 2
     }, (0, _animation.transform)('rotate', '90deg'));
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
-    style: (0, _objectSpread2.default)({}, styleLandscape, style),
-    className: (0, _props.cx)(classSet, className)
+    style: (0, _objectSpread2.default)({}, styleSet, style),
+    className: (0, _props.cxm)(classStr, classSet, className)
   }, props), children);
 };
 

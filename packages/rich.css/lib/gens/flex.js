@@ -14,8 +14,8 @@ var _utils = require("../utils");
 var _compatibleFlex = _interopRequireDefault(require("../compatibles/compatibleFlex"));
 
 var Inlines = {
-  'flex': 'flex',
-  'flex-inline': 'flex-inline'
+  'block': 'flex',
+  'inline': 'flex-inline'
 };
 var Directions = {
   'h': 'row',
@@ -121,5 +121,3 @@ function gen() {
   };
   return ret;
 }
-
-module.exports = exports["default"];

@@ -1,14 +1,26 @@
 import React from 'react';
 import View from '@bnorth/components/lib/View'
 import Panel from '@bnorth/components/lib/Panel'
-import Button from '@bnorth/components/lib/Button'
+// import Button from '@bnorth/components/lib/Button'
+import Tabs from '@bnorth/components/lib/Tabs'
 
 export default props=>{
-  let { app } = props;
+  // let { app } = props;
   return (
     <View>
       <Panel main>
-        <h4>notice</h4>
+        {/*<Button b-theme="primary" bc-text-align b-style="solid"  bs-width={200} style={{height: 100}}>123</Button>*/}
+        {/*<Button.Group justify separator buttonProps={{'b-theme': 'alert'}}>
+          <Button>1</Button>
+          <Button b-theme="success">2</Button>
+          <Button>3</Button>
+        </Button.Group>*/}
+        {<Tabs buttonGroupProps={{buttonProps:{'b-theme':'primary'}, 'bc-border-set-bottom-primary':true}} bc-height-full>
+          <Tabs.Item title="A" bc-bg-color='primary'>1</Tabs.Item>
+          <Tabs.Item title="B">2</Tabs.Item>
+        </Tabs>}
+
+        {/*<h4>notice</h4>
         <Button.Group justify separator>
           <Button onClick={()=>app.notice.show('dismiss after 3s')}>show</Button>
           <Button onClick={()=>app.notice.show('dismiss after 3s', {hasClose: true})}>close btn</Button>
@@ -62,7 +74,7 @@ export default props=>{
           })}>
             state
           </Button>
-        </Button.Group>
+        </Button.Group>*/}
       </Panel>
     </View>
   );

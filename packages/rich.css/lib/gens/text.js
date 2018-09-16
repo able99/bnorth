@@ -25,13 +25,13 @@ var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/sli
 var _utils = require("../utils");
 
 var Styles = {
-  '': 'normal',
+  '-': 'normal',
   'italic': true,
   'oblique': true,
   'inherit': true
 };
 var Decorations = {
-  '': 'none',
+  '-': 'none',
   'underline': true,
   'overline': true,
   'line-through': true,
@@ -39,12 +39,14 @@ var Decorations = {
   'inherit': true
 };
 var Aligns = {
+  '-': 'left',
   'left': true,
   'center': true,
   'right': true,
   'justify': true
 };
 var VerticalAligns = {
+  '-': 'baseline',
   'baseline': true,
   'sub': true,
   'super': true,
@@ -56,7 +58,7 @@ var VerticalAligns = {
   'inherit': true
 };
 var WhiteSpaces = {
-  '': 'normal',
+  '-': 'normal',
   'normal': true,
   'inherit': true,
   'pre': true,
@@ -106,7 +108,7 @@ function genTextColors(_ref5) {
   var ret = {};
   var func = 'color';
   var colors = (0, _objectSpread2.default)({
-    '': textColors.normal
+    '-': textColors.normal
   }, utilColors, mainColors, textColors);
   var selector = "".concat(baseSelector, "-").concat(func);
   Object.entries(colors).forEach(function (_ref6) {
@@ -237,7 +239,7 @@ function genTruncate(_ref23) {
   var selector = "".concat(baseSelector, "-").concat(func);
   (textTruncateSet || []).forEach(function (v) {
     if (Number(v) === 1) {
-      ret[(0, _utils.getSelector)(selector)] = {
+      ret[(0, _utils.getSelector)(selector, '-')] = {
         'overflow': 'hidden',
         'text-overflow': 'ellipsis',
         'white-space': 'nowrap'

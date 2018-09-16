@@ -17,11 +17,11 @@ export default props=>{
       <Panel main>
         {children[route.params.tab||'components']}
       </Panel>
-      <TabBar>
+      <TabBar b-style='solid' b-theme='primary' itemProps={{colorUnactiveOnTheme:'disable'}}>
         {items.map(v=>(
           <TabBar.Item 
             onClick={()=>app.router.replace(['/', v.key])}
-            selected={route.params.tab?route.params.tab===v.key:'components'}
+            selected={route.params.tab?route.params.tab===v.key:v.key==='components'}
             key={v.key}
             title={v.title} />
         ))}

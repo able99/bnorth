@@ -27,5 +27,3 @@ function compatible(styles, dom) {
   });
   return (0, _utils.stylesToDom)(ret, dom);
 }
-
-module.exports = exports["default"];

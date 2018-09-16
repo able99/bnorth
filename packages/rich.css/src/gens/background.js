@@ -13,7 +13,7 @@ export function genBgColor({utilColors, mainColors, opacityColors}) {
 
 export function genBgNone() {
   let ret = {};
-  ret[getSelector('bg', 'none')] = {
+  ret[getSelector('bg', 'none-')] = {
     'background': 'none',
   };
   return ret;

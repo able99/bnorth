@@ -12,6 +12,7 @@ var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/sli
 var _utils = require("../utils");
 
 var Cursors = {
+  '-': 'default',
   'default': true,
   'auto': true,
   'pointer': true,
@@ -45,5 +46,3 @@ function gen() {
   });
   return ret;
 }
-
-module.exports = exports["default"];

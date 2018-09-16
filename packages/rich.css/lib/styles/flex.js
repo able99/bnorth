@@ -32,6 +32,6 @@ function styleFlexSubShrink(val) {
 
 function styleFlexSubBasis(val) {
   return (0, _compatibleFlex.default)({
-    'flex-basis': String(val.toFixed(2)) + '%'
+    'flex-basis': String(Number(val).toFixed(2)) + '%'
   }, true);
 }

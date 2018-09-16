@@ -14,55 +14,55 @@
   position: fixed;
 }
 
-.offset-start-left {
+.offset-left-start {
   left: 0px;
 }
 
-.offset-start-right {
+.offset-right-start {
   right: 0px;
 }
 
-.offset-start-top {
+.offset-top-start {
   top: 0px;
 }
 
-.offset-start-bottom {
+.offset-bottom-start {
   bottom: 0px;
 }
 
-.offset-center-left {
+.offset-left-center {
   left: 50%;
 }
 
-.offset-center-right {
+.offset-right-center {
   right: 50%;
 }
 
-.offset-center-top {
+.offset-top-center {
   top: 50%;
 }
 
-.offset-center-bottom {
+.offset-bottom-center {
   bottom: 50%;
 }
 
-.offset-end-left {
+.offset-left-end {
   left: 100%;
 }
 
-.offset-end-right {
+.offset-right-end {
   right: 100%;
 }
 
-.offset-end-top {
+.offset-top-end {
   top: 100%;
 }
 
-.offset-end-bottom {
+.offset-bottom-end {
   bottom: 100%;
 }
 
-.translate-center {
+.translate-center-a {
   transform: translate3d(-50%, -50%, 0);
   -moz-transform: translate3d(-50%, -50%, 0);
   -ms-transform: translate3d(-50%, -50%, 0);

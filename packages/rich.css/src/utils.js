@@ -20,7 +20,7 @@ export function getSizeSet(name, config) {
   let maxCalc = config[`${name}SizeMaxCalc`];
   let sizes = config[`${name}SizeSet`]||[];
 
-  if(base!==undefined)ret[''] = base;
+  if(base!==undefined)ret['-'] = base;
   for(let i=minCalc-1; i>=0; i--) {
     ret[i?('x'.repeat(i)+'s'):'sm'] = Math.round(base - (base-min)/minCalc*(i+1));
   }
@@ -51,7 +51,7 @@ export function getSelector(...args) {
   let ret = '.';
   for(let arg of args) {
     if(arg!==0&&!arg) continue;
-    ret += `${ret!=='.'?'-':''}${arg}`;
+    ret += `${ret!=='.'&&arg!=='-'?'-':''}${arg}`;
   }
   return ret;
 }
@@ -76,7 +76,7 @@ export function getStyleSet(pre, val, {key, mapKey, mapVal, ext, showMapKey}={})
   if(Array.isArray(mapVal)) {
     mapVal.forEach(v=>ret[getStyleKey(pre, v, showMapKey?key:'', ext)] = getStyleValue(val, key));
   }else{
-    ret[getStyleKey(pre, mapKey, showMapKey?key:'', ext)] = getStyleValue(val, key);
+    if(val!==false) ret[getStyleKey(pre, mapVal?mapKey:'', showMapKey?key:'', ext)] = getStyleValue(val, key);
   }
   
   return ret;

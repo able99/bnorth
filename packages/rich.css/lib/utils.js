@@ -42,7 +42,7 @@ function getSizeSet(name, config) {
   var max = config["".concat(name, "SizeMax")];
   var maxCalc = config["".concat(name, "SizeMaxCalc")];
   var sizes = config["".concat(name, "SizeSet")] || [];
-  if (base !== undefined) ret[''] = base;
+  if (base !== undefined) ret['-'] = base;
 
   for (var i = minCalc - 1; i >= 0; i--) {
     ret[i ? 'x'.repeat(i) + 's' : 'sm'] = Math.round(base - (base - min) / minCalc * (i + 1));
@@ -107,7 +107,7 @@ function getSelector() {
   for (var _i2 = 0; _i2 < args.length; _i2++) {
     var arg = args[_i2];
     if (arg !== 0 && !arg) continue;
-    ret += "".concat(ret !== '.' ? '-' : '').concat(arg);
+    ret += "".concat(ret !== '.' && arg !== '-' ? '-' : '').concat(arg);
   }
 
   return ret;
@@ -149,7 +149,7 @@ function getStyleSet(pre, val) {
       return ret[getStyleKey(pre, v, showMapKey ? key : '', ext)] = getStyleValue(val, key);
     });
   } else {
-    ret[getStyleKey(pre, mapKey, showMapKey ? key : '', ext)] = getStyleValue(val, key);
+    if (val !== false) ret[getStyleKey(pre, mapVal ? mapKey : '', showMapKey ? key : '', ext)] = getStyleValue(val, key);
   }
 
   return ret;

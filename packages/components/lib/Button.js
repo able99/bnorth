@@ -1,7 +1,5 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -15,7 +13,7 @@ var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends")
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 
 var _props = require("./utils/props");
 
@@ -30,101 +28,83 @@ var Button = function Button(aprops) {
       selected = _genCommonProps.selected,
       _genCommonProps$under = _genCommonProps.underLineProps,
       underLineProps = _genCommonProps$under === void 0 ? {} : _genCommonProps$under,
+      _genCommonProps$color = _genCommonProps.colorOnTheme,
+      colorOnTheme = _genCommonProps$color === void 0 ? 'white' : _genCommonProps$color,
       _genCommonProps$compo = _genCommonProps.component,
       Component = _genCommonProps$compo === void 0 ? 'button' : _genCommonProps$compo,
       className = _genCommonProps.className,
-      cTheme = _genCommonProps.cTheme,
-      cStyle = _genCommonProps.cStyle,
-      cSize = _genCommonProps.cSize,
+      bTheme = _genCommonProps['b-theme'],
+      bStyle = _genCommonProps['b-style'],
+      bSize = _genCommonProps['b-size'],
       children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["selected", "underLineProps", "component", "className", "cTheme", "cStyle", "cSize", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["selected", "underLineProps", "colorOnTheme", "component", "className", 'b-theme', 'b-style', 'b-size', "children"]);
 
-  var classSet = {
-    'outline-none': true,
-    'appearance-none': true,
-    'font-smoothing-antialiased': true,
-    'vertical-align-middle': true,
-    'position-relative': !(0, _props.hascx)(className, 'position'),
-    'transition': true,
-    'line-height-1': true,
-    'cursor-pointer': true,
-    'text-align-center': !(0, _props.hascx)(className, 'text-align'),
-    'padding-xl': !(0, _props.hascx)(className, 'padding'),
-    'button-active': cStyle === 'underline'
-  };
-  classSet["text-size-".concat(cSize)] = cSize;
+  var classStr = ' outline-none- appearance-none- font-smoothing-antialiased- transition-set-';
+  classStr += ' vertical-align-middle position-relative line-height-1 cursor-pointer text-align-center padding-a-xl';
+  var classSet = [];
+  if (bSize !== undefined) classSet.push('text-size-' + (bSize === true ? '' : bSize));
 
-  if (cStyle === 'hollow') {
-    classSet['bg-none'] = !(0, _props.hascx)(className, 'bg-color');
-
-    if (cTheme) {
-      classSet['border-set-' + cTheme] = true;
-      classSet['text-color-' + cTheme] = true;
-    } else {
-      classSet['border-set-border'] = true;
-      classSet['text-color-normal'] = true;
-    }
-  } else if (cStyle === 'underline') {
-    classSet['border-none'] = true;
-    classSet['text-color-' + cTheme] = cTheme;
-  } else if (cStyle === 'plain') {
-    classSet['bg-none'] = true;
-    classSet['border-none'] = true;
-
-    if (cTheme) {
-      classSet['text-color-' + cTheme] = true;
-    }
+  if (bStyle === 'hollow' && bTheme) {
+    classSet.push('bg-none-a-');
+    classSet.push('border-set-' + (bTheme === true ? 'primary' : bTheme));
+    classSet.push('text-color-' + (bTheme === true ? 'primary' : bTheme));
+  } else if (bStyle === 'hollow' && !bTheme) {
+    classSet.push('bg-none-a-');
+    classSet.push('border-set-');
+  } else if (bStyle === 'underline') {
+    classSet.push('border-none-a-');
+    if (bTheme) classSet.push('text-color-' + (bTheme === true ? 'primary' : bTheme));
+    classSet.push('button-active');
+  } else if (bStyle === 'plain') {
+    classSet.push('bg-none-a-');
+    classSet.push('border-none-a-');
+    if (bTheme) classSet.push('text-color-' + (bTheme === true ? 'primary' : bTheme));
+  } else if (bTheme) {
+    classSet.push('bg-color-' + (bTheme === true ? 'primary' : bTheme));
+    classSet.push('border-set-' + (bTheme === true ? 'primary' : bTheme));
+    if (colorOnTheme) classSet.push('text-color-' + (colorOnTheme === true ? '' : colorOnTheme));
   } else {
-    if (cTheme) {
-      classSet['bg-color-' + cTheme] = true;
-      classSet['border-set-' + cTheme] = true;
-      classSet['text-color-white'] = true;
-    } else {
-      classSet['bg-color-component'] = true;
-      classSet['border-set-component'] = true;
-      classSet['text-color-normal'] = true;
-    }
+    classSet.push('bg-color-component');
+    classSet.push('border-set-component');
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cx)(classSet, className)
-  }, props), children, _react.default.createElement(Button.UnderLine, (0, _extends2.default)({
+    className: (0, _props.cxm)(classStr, classSet, className)
+  }, props), children, bStyle === 'underline' ? _react.default.createElement(Button.UnderLine, (0, _extends2.default)({
     selected: selected,
-    cTheme: cTheme,
-    cStyle: cStyle,
-    cSize: cSize
-  }, underLineProps)));
+    "b-theme": bTheme,
+    "b-style": bStyle,
+    "b-size": bSize
+  }, underLineProps)) : null);
 };
 
 Button.UnderLine = function (aprops) {
   var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
       selected = _genCommonProps2.selected,
-      cTheme = _genCommonProps2.cTheme,
-      cStyle = _genCommonProps2.cStyle,
-      cSize = _genCommonProps2.cSize,
-      style = _genCommonProps2.style,
+      _genCommonProps2$comp = _genCommonProps2.component,
+      Component = _genCommonProps2$comp === void 0 ? 'div' : _genCommonProps2$comp,
       className = _genCommonProps2.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["selected", "cTheme", "cStyle", "cSize", "style", "className"]);
+      style = _genCommonProps2.style,
+      _genCommonProps2$bTh = _genCommonProps2['b-theme'],
+      bTheme = _genCommonProps2$bTh === void 0 ? 'component' : _genCommonProps2$bTh,
+      bStyle = _genCommonProps2['b-style'],
+      bSize = _genCommonProps2['b-size'],
+      children = _genCommonProps2.children,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["selected", "component", "className", "style", 'b-theme', 'b-style', 'b-size', "children"]);
 
-  var classSet = {};
-  classSet['position-absolute'] = true;
-  classSet['offset-start-left'] = true;
-  classSet['offset-start-right'] = true;
-  classSet['offset-start-bottom'] = true;
-  classSet['bg-color-' + (cTheme || 'component')] = true;
-  classSet['transition'] = true;
-  classSet['pointer-events-none'] = true;
-  classSet['opacity-' + (selected ? '1' : '0')] = true;
-  var styleSet = {
-    height: 2
-  };
-  return _react.default.createElement("div", (0, _extends2.default)({
+  var classStr = 'position-absolute offset-left-start offset-right-start offset-bottom-start transition-set- pointer-events-none';
+  var styleSet = {};
+  styleSet.height = 2;
+  var classSet = [];
+  classSet.push('opacity-' + (selected ? '1' : '0'));
+  classSet.push('bg-color-' + (bTheme === true ? '' : bTheme));
+  return _react.default.createElement(Component, (0, _extends2.default)({
     style: (0, _objectSpread2.default)({}, styleSet, style),
-    className: (0, _props.cx)(classSet, className)
+    className: (0, _props.cxm)(classStr, classSet, className)
   }, props));
 };
 
-var ButtonGroup = function ButtonGroup(aprops) {
+Button.Group = function (aprops) {
   var _genCommonProps3 = (0, _props.genCommonProps)(aprops),
       stacked = _genCommonProps3.stacked,
       justify = _genCommonProps3.justify,
@@ -133,71 +113,84 @@ var ButtonGroup = function ButtonGroup(aprops) {
       separatorProps = _genCommonProps3$sepa === void 0 ? {} : _genCommonProps3$sepa,
       _genCommonProps3$butt = _genCommonProps3.buttonProps,
       buttonProps = _genCommonProps3$butt === void 0 ? {} : _genCommonProps3$butt,
-      _genCommonProps3$getB = _genCommonProps3.getButtonClassName,
-      getButtonClassName = _genCommonProps3$getB === void 0 ? function (i, size, componentProps, className) {
-    return {
-      'border-none-right': !stacked && !i >= size - 1,
-      'border-none-left': separator && !i === 0,
-      'border-none-bottom': stacked && !i >= size - 1,
-      'flex-sub-flex-extend': justify,
-      'width-full': stacked
-    };
-  } : _genCommonProps3$getB,
-      getButtonProps = _genCommonProps3.getButtonProps,
-      getButtonStyle = _genCommonProps3.getButtonStyle,
+      _genCommonProps3$butt2 = _genCommonProps3.buttonGetClassName,
+      buttonGetClassName = _genCommonProps3$butt2 === void 0 ? Button.Group.buttonGetClassName : _genCommonProps3$butt2,
+      _genCommonProps3$butt3 = _genCommonProps3.buttonGetStyle,
+      buttonGetStyle = _genCommonProps3$butt3 === void 0 ? Button.Group.buttonGetStyle : _genCommonProps3$butt3,
+      _genCommonProps3$butt4 = _genCommonProps3.buttonGetProps,
+      buttonGetProps = _genCommonProps3$butt4 === void 0 ? Button.Group.getButtonProps : _genCommonProps3$butt4,
       _genCommonProps3$comp = _genCommonProps3.component,
-      Component = _genCommonProps3$comp === void 0 ? 'span' : _genCommonProps3$comp,
+      Component = _genCommonProps3$comp === void 0 ? 'div' : _genCommonProps3$comp,
       className = _genCommonProps3.className,
-      cTheme = _genCommonProps3.cTheme,
-      cSize = _genCommonProps3.cSize,
-      cStyle = _genCommonProps3.cStyle,
+      bTheme = _genCommonProps3['b-theme'],
+      bStyle = _genCommonProps3['b-style'],
+      bSize = _genCommonProps3['b-size'],
       children = _genCommonProps3.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["stacked", "justify", "separator", "separatorProps", "buttonProps", "getButtonClassName", "getButtonProps", "getButtonStyle", "component", "className", "cTheme", "cSize", "cStyle", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["stacked", "justify", "separator", "separatorProps", "buttonProps", "buttonGetClassName", "buttonGetStyle", "buttonGetProps", "component", "className", 'b-theme', 'b-style', 'b-size', "children"]);
 
+  children = _react.default.Children.toArray(children).filter(function (v) {
+    return v;
+  });
   var classSet = {
-    'flex-display-flex': justify && !(0, _props.hascx)(className, 'flex-display'),
-    'flex-align-stretch': justify && !(0, _props.hascx)(className, 'flex-align'),
-    'display-inline-block': stacked && !(0, _props.hascx)(className, 'display')
+    'flex-display-block': justify,
+    'flex-align-stretch': justify,
+    'display-inline-block': stacked
   };
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cx)(classSet, className)
-  }, props), _react.default.Children.toArray(children).filter(function (v) {
-    return v;
-  }).map(function (v, i, arr) {
-    return (0, _react.cloneElement)(v, (0, _objectSpread2.default)({
-      cTheme: cTheme,
-      cSize: cSize,
-      cStyle: cStyle
-    }, (0, _props.genItemProps)(i, arr.length, v.props, buttonProps, getButtonClassName, getButtonProps, getButtonStyle)));
-  }).reduce(function (v1, v2, i, arr) {
-    if (!separator || stacked) return arr;
-    if (i > 0) v1.push(_react.default.createElement(ButtonGroup.Separator, (0, _extends2.default)({
+    className: (0, _props.cxm)(classSet, className)
+  }, props), children.map(function (v, i, a) {
+    return _react.default.createElement(Button, (0, _extends2.default)({
+      key: i
+    }, (0, _props.getSubComponentProps)(i, a.length, aprops, v.props, buttonProps, buttonGetClassName, buttonGetStyle, buttonGetProps)));
+  }).reduce(function (v1, v2, i, a) {
+    if (!separator || stacked) return a;
+    if (i > 0) v1.push(_react.default.createElement(Button.Group.Separator, (0, _extends2.default)({
       key: 'sep' + i,
-      i: i
+      i: i,
+      length: a.length
     }, separatorProps)));
     v1.push(v2);
     return v1;
   }, []));
 };
 
-ButtonGroup.Separator = function (aprops) {
-  var _genCommonProps4 = (0, _props.genCommonProps)(aprops),
-      i = _genCommonProps4.i,
-      className = _genCommonProps4.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps4, ["i", "className"]);
+Button.Group.buttonGetClassName = function (i, length) {
+  var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+      stacked = _ref.stacked,
+      justify = _ref.justify,
+      separator = _ref.separator;
 
-  var classSet = {
-    'width-1': true,
-    'display-inline-block': true,
-    'flex-sub-flex-none': true,
-    'bg-color-border': className.startsWith('bg-color') < 0,
-    'margin-v-xl': className.indexOf('margin') < 0
+  var subPropsEach = arguments.length > 3 ? arguments[3] : undefined;
+  var subProps = arguments.length > 4 ? arguments[4] : undefined;
+  return {
+    'border-none-right': !stacked && !i >= length - 1,
+    'border-none-left': separator && !i === 0,
+    'border-none-bottom': stacked && !i >= length - 1,
+    'flex-sub-flex-extend': justify,
+    'width-full': stacked
   };
+};
+
+Button.Group.Separator = function (aprops) {
+  var _genCommonProps4 = (0, _props.genCommonProps)(aprops),
+      _genCommonProps4$comp = _genCommonProps4.component,
+      Component = _genCommonProps4$comp === void 0 ? 'span' : _genCommonProps4$comp,
+      className = _genCommonProps4.className,
+      style = _genCommonProps4.style,
+      bTheme = _genCommonProps4['b-theme'],
+      bStyle = _genCommonProps4['b-style'],
+      bSize = _genCommonProps4['b-size'],
+      children = _genCommonProps4.children,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps4, ["component", "className", "style", 'b-theme', 'b-style', 'b-size', "children"]);
+
+  var classStr = 'display-inline-block lex-sub-flex-none bg-color-border margin-v-xl';
+  var styleSet = {};
+  styleSet.width = 1;
   return _react.default.createElement("span", (0, _extends2.default)({
-    className: (0, _props.cx)(classSet, className)
+    style: (0, _objectSpread2.default)({}, styleSet, style),
+    className: (0, _props.cxm)(classStr, className)
   }, props), "\xA0");
 };
 
-Button.Group = ButtonGroup;
 var _default = Button;
 exports.default = _default;

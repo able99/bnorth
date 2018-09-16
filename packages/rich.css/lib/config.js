@@ -94,4 +94,3 @@ var _default = {
   iconClassName: 'icon'
 };
 exports.default = _default;
-module.exports = exports["default"];

@@ -3,8 +3,8 @@ import compatibleFlex from '../compatibles/compatibleFlex';
 
 
 const Inlines = {
-  'flex':  'flex' ,
-  'flex-inline': 'flex-inline',
+  'block':  'flex' ,
+  'inline': 'flex-inline',
 }
 
 const Directions = {

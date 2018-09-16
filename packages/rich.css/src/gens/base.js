@@ -66,7 +66,7 @@ export default function gen(config) {
     'height': 0,
   }
 
-  ret[getSelector('transition')] = compatibleAnimation({
+  ret[getSelector('transition-set-')] = compatibleAnimation({
     'transition': '.15s ease-out',
   });
 
@@ -78,27 +78,27 @@ export default function gen(config) {
     'line-height': '1',
   };
 
-  ret[getSelector('outline-none')] = {
+  ret[getSelector('outline-none-')] = {
     'outline': 'none',
   };
 
-  ret[getSelector('appearance-none')] = {
+  ret[getSelector('appearance-none-')] = {
     'appearance': 'none',
     '-webkit-appearance': 'none',
     '-moz-appearance': 'none',
   };
 
-  ret[getSelector('backface-hidden')] = {
+  ret[getSelector('backface-hidden-')] = {
     'backface-visibility': 'hidden',
   };
 
-  ret[getSelector('force-hardware-acceleration')] = compatibleAnimation({
+  ret[getSelector('force-hardware-acceleration-')] = compatibleAnimation({
     'transform': 'translateZ(0)',
     'backface-visibility': 'hidden',
     'perspective': '1000',
   });
 
-  ret[getSelector('font-smoothing-antialiased')] = {
+  ret[getSelector('font-smoothing-antialiased-')] = {
     '-webkit-font-smoothing': 'antialiased',
     '-moz-osx-font-smoothing': 'grayscale',
   };

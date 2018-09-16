@@ -11,7 +11,7 @@ export function genButton({textColors, stateOpacityDisabled, stateOpacityActive}
     'pointer-events': 'none',
   }
 
-  ret['.status:disabled, .status[disabled], .status.disabled'] = {
+  ret['.status-:disabled, .status-[disabled], .status-.disabled'] = {
     'opacity': stateOpacityDisabled,
     'cursor': 'not-allowed',
     'pointer-events': 'none',
@@ -21,7 +21,7 @@ export function genButton({textColors, stateOpacityDisabled, stateOpacityActive}
     'opacity': stateOpacityActive,
   }
 
-  ret['.status:active, .status[active], .status.active'] = {
+  ret['.status-:active, .status-[active], .status-.active'] = {
     'opacity': stateOpacityActive,
   }
 
@@ -86,11 +86,11 @@ export function genInput({utilColors, mainColors}) {
 export function genState({stateOpacityDisabled, stateOpacityActive}) {
   let ret = {};
 
-  ret[getSelector('state', 'disabled')] = {
+  ret[getSelector('status', 'disabled')] = {
     'opacity': stateOpacityDisabled,
   }
 
-  ret[getSelector('state', 'active')] = {
+  ret[getSelector('status', 'active')] = {
     'opacity': stateOpacityActive,
   }
 

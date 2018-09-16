@@ -56,7 +56,7 @@ function genOffset() {
         k = _ref4[0],
         v = _ref4[1];
 
-    return ret[(0, _utils.getSelector)(selector, func, k)] = (0, _utils.getStyleSet)(k, 0);
+    return ret[(0, _utils.getSelector)(selector, k, func)] = (0, _utils.getStyleSet)(k, 0);
   });
   func = 'center';
   Object.entries(Offsets).forEach(function (_ref5) {
@@ -64,7 +64,7 @@ function genOffset() {
         k = _ref6[0],
         v = _ref6[1];
 
-    return ret[(0, _utils.getSelector)(selector, func, k)] = (0, _utils.getStyleSet)(k, '50%');
+    return ret[(0, _utils.getSelector)(selector, k, func)] = (0, _utils.getStyleSet)(k, '50%');
   });
   func = 'end';
   Object.entries(Offsets).forEach(function (_ref7) {
@@ -72,7 +72,7 @@ function genOffset() {
         k = _ref8[0],
         v = _ref8[1];
 
-    return ret[(0, _utils.getSelector)(selector, func, k)] = (0, _utils.getStyleSet)(k, '100%');
+    return ret[(0, _utils.getSelector)(selector, k, func)] = (0, _utils.getStyleSet)(k, '100%');
   });
   return ret;
 }
@@ -81,7 +81,7 @@ function genTranslate() {
   var ret = {};
   var selector = 'translate';
   var func = 'center';
-  ret[(0, _utils.getSelector)(selector, func)] = (0, _compatibleAnimation.default)({
+  ret[(0, _utils.getSelector)(selector, func, 'a')] = (0, _compatibleAnimation.default)({
     'transform': 'translate3d(-50%, -50%, 0)'
   });
   ret[(0, _utils.getSelector)(selector, func, 'x')] = (0, _compatibleAnimation.default)({

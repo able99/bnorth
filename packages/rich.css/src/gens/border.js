@@ -3,6 +3,7 @@ import compatibleBorder from '../compatibles/compatibleBorder';
 
 
 const Dimentions = {
+  'a': '',
   'h': ['left', 'right'],
   'v': ['top', 'bottom'],
   'left': true,
@@ -34,7 +35,7 @@ const Styles = {
 export default function gen(config) {
   let ret = {};
   let { utilColors, mainColors } = config;
-  let colors = {'': utilColors.border, ...utilColors, ...mainColors};
+  let colors = {'-': utilColors.border, ...utilColors, ...mainColors};
   let widthSizes = getSizeSet('borderWidth', config);
   let radiusSizes = getSizeSet('borderRadius', config);
   let baseSelector = 'border';
@@ -51,10 +52,6 @@ export default function gen(config) {
 
   func = 'width';
   Object.entries(widthSizes).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, kk.trim())] = getStyleSet(baseSelector, vv, { ext: func })))
-
-  func = 'none';
-  ret[getSelector(baseSelector, func)] = getStyleSet(baseSelector, 'none')
-
 
   func = 'set';
   Object.entries(Dimentions).forEach(([k,v])=>{
@@ -86,7 +83,7 @@ export default function gen(config) {
 
   func = 'none';
   Object.entries(Dimentions).forEach(([k,v])=>{
-    ret[getSelector(baseSelector, func, k)] = getStyleSet(baseSelector, 'none', {
+    ret[getSelector(baseSelector, func, k, '-')] = getStyleSet(baseSelector, 'none', {
       mapKey: k, mapVal: v,
     })
   })

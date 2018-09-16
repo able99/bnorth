@@ -13,7 +13,7 @@ var _utils = require("../utils");
 
 var Types = ['margin', 'padding'];
 var Dimentions = {
-  '': '',
+  'a': '',
   'h': ['left', 'right'],
   'v': ['top', 'bottom'],
   'left': true,
@@ -45,5 +45,3 @@ function gen(config) {
   });
   return ret;
 }
-
-module.exports = exports["default"];

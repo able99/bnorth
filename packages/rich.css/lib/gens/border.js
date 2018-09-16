@@ -16,6 +16,7 @@ var _utils = require("../utils");
 var _compatibleBorder = _interopRequireDefault(require("../compatibles/compatibleBorder"));
 
 var Dimentions = {
+  'a': '',
   'h': ['left', 'right'],
   'v': ['top', 'bottom'],
   'left': true,
@@ -46,7 +47,7 @@ function gen(config) {
   var utilColors = config.utilColors,
       mainColors = config.mainColors;
   var colors = (0, _objectSpread2.default)({
-    '': utilColors.border
+    '-': utilColors.border
   }, utilColors, mainColors);
   var widthSizes = (0, _utils.getSizeSet)('borderWidth', config);
   var radiusSizes = (0, _utils.getSizeSet)('borderRadius', config);
@@ -90,8 +91,6 @@ function gen(config) {
       ext: func
     });
   });
-  func = 'none';
-  ret[(0, _utils.getSelector)(baseSelector, func)] = (0, _utils.getStyleSet)(baseSelector, 'none');
   func = 'set';
   Object.entries(Dimentions).forEach(function (_ref9) {
     var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
@@ -169,7 +168,7 @@ function gen(config) {
         k = _ref26[0],
         v = _ref26[1];
 
-    ret[(0, _utils.getSelector)(baseSelector, func, k)] = (0, _utils.getStyleSet)(baseSelector, 'none', {
+    ret[(0, _utils.getSelector)(baseSelector, func, k, '-')] = (0, _utils.getStyleSet)(baseSelector, 'none', {
       mapKey: k,
       mapVal: v
     });
@@ -194,5 +193,3 @@ function gen(config) {
   });
   return ret;
 }
-
-module.exports = exports["default"];

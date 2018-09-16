@@ -1,4 +1,4 @@
-.border-set {
+.border-set- {
   border: 1px solid #e2e2e2;
 }
 
@@ -46,7 +46,7 @@
   border: 1px solid #0074c3;
 }
 
-.border-color {
+.border-color- {
   border-color: #e2e2e2;
 }
 
@@ -134,11 +134,55 @@
   border-width: 10px;
 }
 
-.border-none {
-  border: none;
+.border-set-a- {
+  border: 1px solid #e2e2e2;
 }
 
-.border-set-h {
+.border-set-a-component {
+  border: 1px solid #f6f6f6;
+}
+
+.border-set-a-view {
+  border: 1px solid #eff0f4;
+}
+
+.border-set-a-border {
+  border: 1px solid #e2e2e2;
+}
+
+.border-set-a-black {
+  border: 1px solid plack;
+}
+
+.border-set-a-white {
+  border: 1px solid white;
+}
+
+.border-set-a-success {
+  border: 1px solid #17c729;
+}
+
+.border-set-a-warning {
+  border: 1px solid #faff72;
+}
+
+.border-set-a-alert {
+  border: 1px solid #f72a27;
+}
+
+.border-set-a-notice {
+  border: 1px solid #00baff;
+}
+
+.border-set-a-link {
+  border: 1px solid #00baff;
+}
+
+.border-set-a-primary {
+  border: 1px solid #0074c3;
+}
+
+.border-set-h- {
   border-left: 1px solid #e2e2e2;
   border-right: 1px solid #e2e2e2;
 }
@@ -198,7 +242,7 @@
   border-right: 1px solid #0074c3;
 }
 
-.border-set-v {
+.border-set-v- {
   border-top: 1px solid #e2e2e2;
   border-bottom: 1px solid #e2e2e2;
 }
@@ -258,7 +302,7 @@
   border-bottom: 1px solid #0074c3;
 }
 
-.border-set-left {
+.border-set-left- {
   border-left: 1px solid #e2e2e2;
 }
 
@@ -306,7 +350,7 @@
   border-left: 1px solid #0074c3;
 }
 
-.border-set-right {
+.border-set-right- {
   border-right: 1px solid #e2e2e2;
 }
 
@@ -354,7 +398,7 @@
   border-right: 1px solid #0074c3;
 }
 
-.border-set-top {
+.border-set-top- {
   border-top: 1px solid #e2e2e2;
 }
 
@@ -402,7 +446,7 @@
   border-top: 1px solid #0074c3;
 }
 
-.border-set-bottom {
+.border-set-bottom- {
   border-bottom: 1px solid #e2e2e2;
 }
 
@@ -450,7 +494,55 @@
   border-bottom: 1px solid #0074c3;
 }
 
-.border-color-h {
+.border-color-a- {
+  border-color: #e2e2e2;
+}
+
+.border-color-a-component {
+  border-color: #f6f6f6;
+}
+
+.border-color-a-view {
+  border-color: #eff0f4;
+}
+
+.border-color-a-border {
+  border-color: #e2e2e2;
+}
+
+.border-color-a-black {
+  border-color: plack;
+}
+
+.border-color-a-white {
+  border-color: white;
+}
+
+.border-color-a-success {
+  border-color: #17c729;
+}
+
+.border-color-a-warning {
+  border-color: #faff72;
+}
+
+.border-color-a-alert {
+  border-color: #f72a27;
+}
+
+.border-color-a-notice {
+  border-color: #00baff;
+}
+
+.border-color-a-link {
+  border-color: #00baff;
+}
+
+.border-color-a-primary {
+  border-color: #0074c3;
+}
+
+.border-color-h- {
   border-left-color: #e2e2e2;
   border-right-color: #e2e2e2;
 }
@@ -510,7 +602,7 @@
   border-right-color: #0074c3;
 }
 
-.border-color-v {
+.border-color-v- {
   border-top-color: #e2e2e2;
   border-bottom-color: #e2e2e2;
 }
@@ -570,7 +662,7 @@
   border-bottom-color: #0074c3;
 }
 
-.border-color-left {
+.border-color-left- {
   border-left-color: #e2e2e2;
 }
 
@@ -618,7 +710,7 @@
   border-left-color: #0074c3;
 }
 
-.border-color-right {
+.border-color-right- {
   border-right-color: #e2e2e2;
 }
 
@@ -666,7 +758,7 @@
   border-right-color: #0074c3;
 }
 
-.border-color-top {
+.border-color-top- {
   border-top-color: #e2e2e2;
 }
 
@@ -714,7 +806,7 @@
   border-top-color: #0074c3;
 }
 
-.border-color-bottom {
+.border-color-bottom- {
   border-bottom-color: #e2e2e2;
 }
 
@@ -760,6 +852,30 @@
 
 .border-color-bottom-primary {
   border-bottom-color: #0074c3;
+}
+
+.border-style-a {
+  border-style: solid;
+}
+
+.border-style-a-solid {
+  border-style: undefined;
+}
+
+.border-style-a-none {
+  border-style: undefined;
+}
+
+.border-style-a-dotted {
+  border-style: undefined;
+}
+
+.border-style-a-dashed {
+  border-style: undefined;
+}
+
+.border-style-a-inherit {
+  border-style: undefined;
 }
 
 .border-style-h {
@@ -918,6 +1034,22 @@
   border-bottom-style: undefined;
 }
 
+.border-width-a-1 {
+  border-width: 1px;
+}
+
+.border-width-a-2 {
+  border-width: 2px;
+}
+
+.border-width-a-5 {
+  border-width: 5px;
+}
+
+.border-width-a-10 {
+  border-width: 10px;
+}
+
 .border-width-h-1 {
   border-left-width: 1px;
   border-right-width: 1px;
@@ -1022,33 +1154,37 @@
   border-bottom-width: 10px;
 }
 
-.border-none-h {
+.border-none-a- {
+  border: none;
+}
+
+.border-none-h- {
   border-left: none;
   border-right: none;
 }
 
-.border-none-v {
+.border-none-v- {
   border-top: none;
   border-bottom: none;
 }
 
-.border-none-left {
+.border-none-left- {
   border-left: none;
 }
 
-.border-none-right {
+.border-none-right- {
   border-right: none;
 }
 
-.border-none-top {
+.border-none-top- {
   border-top: none;
 }
 
-.border-none-bottom {
+.border-none-bottom- {
   border-bottom: none;
 }
 
-.border-radius {
+.border-radius- {
   border-radius: 5px;
   -ms-border-radius: 5px;
   -oz-border-radius: 5px;
@@ -1084,7 +1220,7 @@
   -oz-border-radius: 1000px;
 }
 
-.border-radius-top {
+.border-radius-top- {
   border-top-left-radius: 5px;
   -ms-border-top-left-radius: 5px;
   -oz-border-top-left-radius: 5px;
@@ -1138,7 +1274,7 @@
   -oz-border-top-right-radius: 1000px;
 }
 
-.border-radius-bottom {
+.border-radius-bottom- {
   border-bottom-left-radius: 5px;
   -ms-border-bottom-left-radius: 5px;
   -oz-border-bottom-left-radius: 5px;
@@ -1192,7 +1328,7 @@
   -oz-border-bottom-right-radius: 1000px;
 }
 
-.border-radius-top-left {
+.border-radius-top-left- {
   border-top-left-radius: 5px;
   -ms-border-top-left-radius: 5px;
   -oz-border-top-left-radius: 5px;
@@ -1228,7 +1364,7 @@
   -oz-border-top-left-radius: 1000px;
 }
 
-.border-radius-top-right {
+.border-radius-top-right- {
   border-top-right-radius: 5px;
   -ms-border-top-right-radius: 5px;
   -oz-border-top-right-radius: 5px;
@@ -1264,7 +1400,7 @@
   -oz-border-top-right-radius: 1000px;
 }
 
-.border-radius-bottom-left {
+.border-radius-bottom-left- {
   border-bottom-left-radius: 5px;
   -ms-border-bottom-left-radius: 5px;
   -oz-border-bottom-left-radius: 5px;
@@ -1300,7 +1436,7 @@
   -oz-border-bottom-left-radius: 1000px;
 }
 
-.border-radius-bottom-right {
+.border-radius-bottom-right- {
   border-bottom-right-radius: 5px;
   -ms-border-bottom-right-radius: 5px;
   -oz-border-bottom-right-radius: 5px;

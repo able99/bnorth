@@ -4,7 +4,7 @@ import { getSelector, getStyleSet, getSizeSet } from '../utils';
 const Types = ['margin', 'padding']
 
 const Dimentions = {
-  '':  '',
+  'a':  '',
   'h': ['left', 'right'],
   'v': ['top', 'bottom'],
   'left': true,

@@ -5,44 +5,33 @@
  * @license MIT
  */
 
-
 import React from 'react';
 import { transform } from '@bnorth/rich.css/lib/styles/animation'
-import { genCommonProps, cx, hascx } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
 
 
-let View = (aprops)=>{
+let View = aprops=>{
   let {
-    landscape, 
-    component: Component = 'div', style, className, children, ...props
+    landscape, container=window,
+    component:Component='div', className, style, 'b-theme':bTheme='view', 'b-style':bStyle, 'b-size':bSize, children, ...props
   } = genCommonProps(aprops);
 
+  let classStr = 'position-relative offset-left-start offset-right-start offset-top-start offset-bottom-start square-full overflow-hidden';
+  classStr += ' flex-display-block flex-direction-v';
 
-  let classSet = {
-    'position-relative': true,
-    'offset-start-left': true,
-    'offset-start-top': true,
-    'offset-start-right': true,
-    'offset-start-bottom': true,
-    'square-full': true,
-    'overflow-hidden': true,
-    'bg-color-view': !hascx(className, 'bg-color'),
-    'flex-display-flex': !hascx(className, 'flex-display'),
-    'flex-direction-v': !hascx(className, 'flex-direction'),
-  };
-
-  let styleLandscape = {};
-  if(landscape && window.innerHeight>window.innerWidth) { styleLandscape = {
-    width: window.innerHeight,
-    height: window.innerWidth,
-    top: (window.innerHeight - window.innerWidth) / 2,
-    left: (window.innerWidth - window.innerHeight) / 2,
+  let classSet = ['bg-color-'+bTheme];
+  
+  let styleSet = {};
+  if(landscape && container.innerHeight>container.innerWidth) { styleSet = {
+    width: container.innerHeight,
+    height: container.innerWidth,
+    top: (container.innerHeight - container.innerWidth) / 2,
+    left: (container.innerWidth - container.innerHeight) / 2,
     ...transform('rotate', '90deg'),
   }}
   
-
   return (
-    <Component style={{...styleLandscape, ...style}} className={cx(classSet, className)} {...props}>
+    <Component style={{...styleSet, ...style}} className={cxm(classStr, classSet, className)} {...props}>
       {children}
     </Component>
   );

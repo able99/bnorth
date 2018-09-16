@@ -2,14 +2,14 @@ import { getSelector, getStyleSet, getSizeSet } from '../utils';
 
 
 const Styles = {
-  '': 'normal',
+  '-': 'normal',
   'italic': true,
   'oblique': true,
   'inherit': true,
 }
 
 const Decorations = {
-  '': 'none',
+  '-': 'none',
   'underline': true,
   'overline': true,
   'line-through': true,
@@ -18,6 +18,7 @@ const Decorations = {
 }
 
 const Aligns = {
+  '-': 'left',
   'left': true,
   'center': true,
   'right': true,
@@ -25,6 +26,7 @@ const Aligns = {
 }
 
 const VerticalAligns = {
+  '-': 'baseline',
   'baseline': true,
   'sub': true,
   'super': true,
@@ -37,7 +39,7 @@ const VerticalAligns = {
 }
 
 const WhiteSpaces = {
-  '': 'normal',
+  '-': 'normal',
   'normal': true,
   'inherit': true,
   'pre': true,
@@ -73,7 +75,7 @@ export function genTextWeights(config) {
 export function genTextColors({utilColors, mainColors, textColors}) {
   let ret = {};
   let func = 'color'
-  let colors = { '': textColors.normal, ...utilColors, ...mainColors, ...textColors };
+  let colors = { '-': textColors.normal, ...utilColors, ...mainColors, ...textColors };
   let selector = `${baseSelector}-${func}`;
   Object.entries(colors).forEach(([k,v])=>(ret[getSelector(selector, k)] = getStyleSet(func, v)));
   return ret;
@@ -143,7 +145,7 @@ export function genTruncate({textTruncateSet, lineHeightSizeBase}) {
 
   (textTruncateSet||[]).forEach(v=>{
     if(Number(v)===1){
-      ret[getSelector(selector)] = {
+      ret[getSelector(selector, '-')] = {
         'overflow': 'hidden',
         'text-overflow': 'ellipsis',
         'white-space': 'nowrap',

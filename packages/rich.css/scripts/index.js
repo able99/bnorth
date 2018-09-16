@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const { join, basename } = require('path');
 
-const config = require('../lib/config');
+const config = require('../lib/config').default;
 const { stylesToString } =  require('../lib/utils');
 
 const OutPathCss = './css';

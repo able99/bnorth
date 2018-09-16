@@ -29,11 +29,11 @@ export function genOffset() {
   let func;
 
   func = 'start';
-  Object.entries(Offsets).forEach(([k,v])=>(ret[getSelector(selector, func, k)] = getStyleSet(k, 0)));
+  Object.entries(Offsets).forEach(([k,v])=>(ret[getSelector(selector, k, func)] = getStyleSet(k, 0)));
   func = 'center'
-  Object.entries(Offsets).forEach(([k,v])=>(ret[getSelector(selector, func, k)] = getStyleSet(k, '50%')));
+  Object.entries(Offsets).forEach(([k,v])=>(ret[getSelector(selector, k, func)] = getStyleSet(k, '50%')));
   func = 'end'
-  Object.entries(Offsets).forEach(([k,v])=>(ret[getSelector(selector, func, k)] = getStyleSet(k, '100%')));
+  Object.entries(Offsets).forEach(([k,v])=>(ret[getSelector(selector, k, func)] = getStyleSet(k, '100%')));
   return ret;
 }
 
@@ -42,7 +42,7 @@ export function genTranslate() {
   let selector = 'translate';
   let func = 'center';
 
-  ret[getSelector(selector, func)] = compatibleAnimation({
+  ret[getSelector(selector, func, 'a')] = compatibleAnimation({
     'transform': 'translate3d(-50%, -50%, 0)',
   });
   ret[getSelector(selector, func, 'x')] = compatibleAnimation({

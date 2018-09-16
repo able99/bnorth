@@ -3,7 +3,7 @@ import { getSelector, getStyleSet } from '../utils';
 
 const Displays = {
   'inline': true,
-  'inline-block': true,
+  'inlineblock': true,
   'none': true,
   'block': true,
 }
@@ -58,7 +58,7 @@ export function genOverflows() {
   let ret = {};
   let selector = 'overflow';
   Object.entries(Overflows).forEach(([k,v])=>{
-    ret[getSelector(selector, k)] = getStyleSet(selector, v, { key: k });
+    ret[getSelector(selector, 'a',k)] = getStyleSet(selector, v, { key: k });
     ret[getSelector(selector, 'x', k)] = getStyleSet(`${selector}-x`, v, { key: k });
     ret[getSelector(selector, 'y', k)] = getStyleSet(`${selector}-y`, v, { key: k });
   });
@@ -68,7 +68,7 @@ export function genOverflows() {
 export function genScrollable() {
   let ret = {};
   let selector = 'scrollable';
-  ret[getSelector(selector)] = {
+  ret[getSelector(selector, 'a')] = {
     'max-width': '100%',
     'max-height': '100%',
     'overflow-x': 'hidden',

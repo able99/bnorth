@@ -27,7 +27,7 @@ function genButton(_ref) {
     'cursor': 'not-allowed',
     'pointer-events': 'none'
   };
-  ret['.status:disabled, .status[disabled], .status.disabled'] = {
+  ret['.status-:disabled, .status-[disabled], .status-.disabled'] = {
     'opacity': stateOpacityDisabled,
     'cursor': 'not-allowed',
     'pointer-events': 'none'
@@ -35,7 +35,7 @@ function genButton(_ref) {
   ret['button:active, button[active], button.active'] = {
     'opacity': stateOpacityActive
   };
-  ret['.status:active, .status[active], .status.active'] = {
+  ret['.status-:active, .status-[active], .status-.active'] = {
     'opacity': stateOpacityActive
   };
   ret['.button-active:not(.selected)'] = {
@@ -90,10 +90,10 @@ function genState(_ref3) {
   var stateOpacityDisabled = _ref3.stateOpacityDisabled,
       stateOpacityActive = _ref3.stateOpacityActive;
   var ret = {};
-  ret[(0, _utils.getSelector)('state', 'disabled')] = {
+  ret[(0, _utils.getSelector)('status', 'disabled')] = {
     'opacity': stateOpacityDisabled
   };
-  ret[(0, _utils.getSelector)('state', 'active')] = {
+  ret[(0, _utils.getSelector)('status', 'active')] = {
     'opacity': stateOpacityActive
   };
   return ret;

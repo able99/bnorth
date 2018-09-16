@@ -22,7 +22,7 @@ var _utils = require("../utils");
 
 var Displays = {
   'inline': true,
-  'inline-block': true,
+  'inlineblock': true,
   'none': true,
   'block': true
 };
@@ -96,7 +96,7 @@ function genOverflows() {
         k = _ref6[0],
         v = _ref6[1];
 
-    ret[(0, _utils.getSelector)(selector, k)] = (0, _utils.getStyleSet)(selector, v, {
+    ret[(0, _utils.getSelector)(selector, 'a', k)] = (0, _utils.getStyleSet)(selector, v, {
       key: k
     });
     ret[(0, _utils.getSelector)(selector, 'x', k)] = (0, _utils.getStyleSet)("".concat(selector, "-x"), v, {
@@ -112,7 +112,7 @@ function genOverflows() {
 function genScrollable() {
   var ret = {};
   var selector = 'scrollable';
-  ret[(0, _utils.getSelector)(selector)] = {
+  ret[(0, _utils.getSelector)(selector, 'a')] = {
     'max-width': '100%',
     'max-height': '100%',
     'overflow-x': 'hidden',

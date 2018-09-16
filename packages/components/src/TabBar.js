@@ -5,128 +5,97 @@
  * @license MIT
  */
 
-
 import React from 'react';
-import { genCommonProps, cx, hascx } from './utils/props';
+import { genCommonProps, getSubComponentProps, cxm } from './utils/props';
+import Panel from './Panel';
 import Icon from './Icon';
-import Badge from './Badge';
 
 
-let TabBar = (aprops)=>{
+let TabBar = aprops=>{
   let {
     onAction, onClick,
-    component: Component = 'nav', className, containerClassName, containerStyle, cTheme, cStyle, cSize, children, ...props
+    itemProps, itemGetClassName=TabBar.itemGetClassName, itemGetStyle=TabBar.itemGetStyle, itemGetProps=TabBar.itemGetProps, 
+    component:Component='nav', className, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
   } = genCommonProps(aprops);
 
+  children = React.Children.toArray(children).filter(v=>v);
 
-  let classSet = {
-    'flex-display-flex': true,
-    'flex-justify-around': true,
-    'flex-align-stretch': true,
-    'width-full': true,
-    'padding-v-sm': !hascx(className, 'padding'),
-    'border-set-top-border': !hascx(className, 'border'),
-    [`bg-color-${cTheme||'component'}`]: cStyle==='solid',
-    'bg-color-component': cStyle!=='solid',
-  };
+  let classStr = 'flex-display-block flex-justify-around flex-align-stretch width-full padding-v-sm border-set-top-border';
 
-  let propsSetItem = (i, aprops)=>{
-    let { eventKey, onClick, ...props } = aprops;
-    let key = eventKey || i;
-    let clickHandler = onClick || onAction;
-    eventKey = eventKey || key;
-
-    return {
-      key, eventKey,
-      cTheme, cStyle, cSize,
-      onClick: clickHandler&&clickHandler.bind(null, eventKey),
-      ...props
-    };
-  };
+  let classSet = [];
+  if(bSize) classSet.push('text-size-'+(bSize===true?'':bSize));
+  if(bStyle==='solid') classSet.push('bg-color-'+(bTheme===true?'':(bTheme||'component')));
 
   return (
-    <Component className={cx(classSet, className)} {...props}>
-      {React.Children.toArray(children)
-      .filter(v=>v)
-      .map((v,i)=><TabBar.Item {...propsSetItem(i, v&&v.props)} />)}
+    <Component className={cxm(classStr, classSet, className)} {...props}>
+      {children.map((v,i,a)=>(
+        <TabBar.Item 
+          key={i}
+          b-theme={bTheme} b-style={bStyle} b-size={bSize}
+          {...getSubComponentProps(i, a.length, aprops, v.props, itemProps, itemGetClassName, itemGetStyle, itemGetProps)}/>
+      ))}
     </Component>
   );
 }
 
-let TabBarItem = (aprops)=>{
+
+TabBar.Item = aprops=>{
   let {
-    title, badge, icon, iconSelected, src, srcSelected, selected, eventKey,
-    iconProps={}, titleProps={}, badageProps={}, 
-    component: Component = 'span', className, containerClassName, containerStyle, cTheme, disableWithoutTheme='disable', disableWithTheme='normal', cStyle, cSize, children, ...props
+    selected, eventKey,
+    title, titleProps, 
+    icon, iconSelected, src, srcSelected, iconProps,
+    colorUnactive='disable', colorActiveOnTheme='white', colorUnactiveOnTheme,
+    component:Component='span', className, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
   } = genCommonProps(aprops);
 
+  let classStr = 'position-relative cursor-pointer text-align-center flex-display-block flex-direction-v flex-justify-around flex-align-center flex-sub-flex-extend status-';
 
-  let classSetBadge = {
-    'position-absolute': true,
-    'offset-start-top': true,
-    'offset-start-right': true,
-  };
-
-  let classSetTitle = {
-    'text-truncate': true,
-    'position-relative': true,
-    'display-block': true,
-  };
-
-  iconProps.cTheme = iconProps.cTheme;
-  iconProps.cSize = cSize||'xl';
-
-  let classSet = {
-    'position-relative': true,
-    'cursor-pointer': true,
-    'text-align-center': !hascx(className, 'text-align'),
-    'flex-display-flex': !hascx(className, 'flex-display'),
-    'flex-direction-v': !hascx(className, 'flex-direction'),
-    'flex-justify-around': !hascx(className, 'flex-justify'),
-    'flex-align-center': !hascx(className, 'flex-align'),
-    'flex-sub-flex-extend': true,
-    ['text-size-'+cSize]: cSize,
-    'status': true,
-  };
-
-  if(cStyle==='solid') {
-    if(cTheme) {
-      classSet['text-color-'+(selected?'white':disableWithoutTheme)] = true;
-    }else {
-      classSet['text-color-'+(selected?'normal':disableWithoutTheme)] = true;
-    }
+  let classSet = [];
+  if(bSize) classSet.push('text-size-'+(bSize===true?'':bSize));
+  if(bStyle==='solid'&&bTheme) {
+    if(selected&&colorActiveOnTheme) classSet.push('text-color-'+(colorActiveOnTheme===true?'':colorActiveOnTheme));
+    if(!selected&&colorUnactiveOnTheme) classSet.push('text-color-'+(colorUnactiveOnTheme===true?'':colorUnactiveOnTheme));
+  }else if(bStyle==='solid'&&!bTheme) {
+    if(!selected) classSet.push('text-color-'+(colorUnactive===true?'':colorUnactive))
+  }else if(bTheme) {
+    if(selected)classSet.push('text-color-'+(bTheme===true?'':bTheme));
+    if(!selected&&colorUnactiveOnTheme)classSet.push('text-color-'+(colorUnactiveOnTheme===true?'':colorUnactiveOnTheme));
   }else {
-    if(cTheme) {
-      classSet['text-color-'+(selected?cTheme:disableWithTheme)] = true;
-    }else {
-      classSet['text-color-'+(selected?'normal':disableWithoutTheme)] = true;
-    }
+    if(!selected) classSet.push('text-color-'+(colorUnactive===true?'':colorUnactive))
   }
-  
 
   return (
-    <Component className={cx(classSet, className)} {...props} >
-      {icon||src?(
-        <Icon {...iconProps} name={selected&&iconSelected?iconSelected:icon} src={selected&&srcSelected?srcSelected:src} />
-      ):null}
-
-      {title? (
-        <span {...titleProps} className={cx(classSetTitle, titleProps.className)} >
-          {title}
-        </span>
-      ):null}
-
-      {badge?(
-        <Badge rounded {...badageProps} className={cx(classSetBadge, badageProps.className)} >
-          {badge}
-        </Badge>
-      ):null}
-
+    <Component className={cxm(classStr, classSet, className)} {...props} >
+      <TabBar.Item.Icon selected={selected} icon={icon} iconSelected={iconSelected} src={src} srcSelected={srcSelected} {...iconProps} />
+      <TabBar.Item.Title selected={selected} title={title} {...titleProps}/>
       {children}
     </Component>
   );
 }
 
+TabBar.Item.Icon = aprops=>{
+  let {
+    selected, icon, iconSelected, src, srcSelected, 
+    component:Component=Icon, ...props
+  } = genCommonProps(aprops);
+
+  return icon||src?(
+    <Component name={selected&&iconSelected?iconSelected:icon} src={selected&&srcSelected?srcSelected:src} {...props} />
+  ):null;
+}
+
+TabBar.Item.Title = aprops=>{
+  let {
+    selected, title,
+    component:Component=Panel, className, ...props
+  } = genCommonProps(aprops);
+
+  let classStr = 'text-truncate position-relative';
+
+  return title?(
+    <Component className={cxm(classStr, className)} {...props}>{title}</Component>
+  ):null;
+}
+
     
-TabBar.Item = TabBarItem;
 export default TabBar;

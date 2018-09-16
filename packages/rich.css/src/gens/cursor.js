@@ -2,6 +2,7 @@ import { getSelector, getStyleSet } from '../utils';
 
 
 const Cursors = {
+  '-': 'default',
   'default': true,
   'auto': true,
   'pointer': true,
