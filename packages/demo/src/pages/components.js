@@ -13,7 +13,7 @@ export default props=>{
   return (
     <View>
       <Panel main>
-        <Loader progress={50} />
+        <Loader b-theme="primary" progress={Math.random()*100} />
         {/*<Icon b-theme="alert" name="heart" src1={img} chat1='2' />*/}
         {/*<List itemProps={{'b-theme': 'alert'}}>
           <List.Item part='header'>header</List.Item>

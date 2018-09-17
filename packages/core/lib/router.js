@@ -219,10 +219,10 @@ function () {
     this._viewIdNum = 0;
     this._historyStackCount = 0;
     this.app.event.on(this.app._id, 'onPageAdd', function (_id, page) {
-      page && !page.props.route.embed && _this4._addPage(_id, page);
+      page && _this4._addPage(_id, page);
     }, this._id);
     this.app.event.on(this.app._id, 'onPageRemove', function (_id, page) {
-      page && !page.props.route.embed && _this4._removePage(_id);
+      page && _this4._removePage(_id);
     }, this._id);
     this.app.event.on(this.app._id, 'onAppStartRouter', function () {
       return _this4.app.render.component = _react.default.createElement(Router.RouterComponent, {

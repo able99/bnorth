@@ -101,8 +101,8 @@ export default class Router {
     this._viewIdNum = 0;
     this._historyStackCount = 0;
 
-    this.app.event.on(this.app._id, 'onPageAdd', (_id, page)=>{page&&!page.props.route.embed&&this._addPage(_id, page)}, this._id);
-    this.app.event.on(this.app._id, 'onPageRemove', (_id, page)=>{page&&!page.props.route.embed&&this._removePage(_id)}, this._id);
+    this.app.event.on(this.app._id, 'onPageAdd', (_id, page)=>{page&&this._addPage(_id, page)}, this._id);
+    this.app.event.on(this.app._id, 'onPageRemove', (_id, page)=>{page&&this._removePage(_id)}, this._id);
     this.app.event.on(this.app._id, 'onAppStartRouter', ()=>(this.app.render.component = <Router.RouterComponent app={this.app} />), this._id);
     this.app.event.on(this.app._id, 'onAppStartRender', ()=>{this._updateRender()}, this._id);
 
