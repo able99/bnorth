@@ -9,15 +9,19 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
-var _objectSpread3 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
-var _react = _interopRequireDefault(require("react"));
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
-var _animation = require("@bnorth/rich.css/lib/styles/animation");
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _react = _interopRequireDefault(require("react"));
 
 var _props = require("./utils/props");
 
@@ -27,54 +31,188 @@ var _props = require("./utils/props");
  * @author able99 (8846755@qq.com)
  * @license MIT
  */
-var Loader = function Loader(aprops) {
-  var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      _genCommonProps$timeo = _genCommonProps.timeout,
-      timeout = _genCommonProps$timeo === void 0 ? '1.5s' : _genCommonProps$timeo,
-      _genCommonProps$delay = _genCommonProps.delay,
-      delay = _genCommonProps$delay === void 0 ? 0.2 : _genCommonProps$delay,
-      _genCommonProps$keyfr = _genCommonProps.keyframe,
-      keyframe = _genCommonProps$keyfr === void 0 ? 'bouncedelay' : _genCommonProps$keyfr,
-      _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? 'span' : _genCommonProps$compo,
-      className = _genCommonProps.className,
-      style = _genCommonProps.style,
-      containerClassName = _genCommonProps.containerClassName,
-      containerStyle = _genCommonProps.containerStyle,
-      cTheme = _genCommonProps.cTheme,
-      cStyle = _genCommonProps.cStyle,
-      cSize = _genCommonProps.cSize,
-      children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["timeout", "delay", "keyframe", "component", "className", "style", "containerClassName", "containerStyle", "cTheme", "cStyle", "cSize", "children"]);
+var Loader =
+/*#__PURE__*/
+function (_React$Component) {
+  (0, _inherits2.default)(Loader, _React$Component);
 
-  var classSetItem = function classSetItem(i) {
-    return (0, _objectSpread3.default)({
-      'width-em': true,
-      'height-em': true,
-      'margin-left-sm': i,
-      'display-inline-block': true
-    }, cStyle !== 'hollow' ? (0, _defineProperty2.default)({}, 'bg-color-' + (cTheme || 'component'), !(0, _props.hascx)(className, 'bg-color')) : (0, _defineProperty2.default)({
-      'bg-color-white': !(0, _props.hascx)(className, 'bg-color')
-    }, 'border-set-' + (cTheme || 'component'), !(0, _props.hascx)(className, 'border')), (0, _defineProperty2.default)({}, 'text-size-' + cSize, cSize));
-  };
+  function Loader() {
+    (0, _classCallCheck2.default)(this, Loader);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Loader).apply(this, arguments));
+  }
 
-  var styleSetItem = function styleSetItem(i) {
-    return (0, _objectSpread3.default)({}, (0, _animation.animation)(keyframe, timeout, {
-      delay: "".concat(delay * i, "s")
-    }), style);
-  };
+  (0, _createClass2.default)(Loader, [{
+    key: "render",
+    value: function render() {
+      var _genCommonProps = (0, _props.genCommonProps)(this.props),
+          _genCommonProps$type = _genCommonProps.type,
+          type = _genCommonProps$type === void 0 ? 'circleLoading' : _genCommonProps$type,
+          props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["type"]);
 
-  var classSet = {
-    'text-align-center': true
-  };
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cx)(classSet, containerClassName)
-  }, props), Array(3).fill(0).map(function (v, i) {
-    return _react.default.createElement("div", {
-      key: i,
-      style: styleSetItem(i),
-      className: (0, _props.cx)(classSetItem(i), className)
-    });
+      var Component = Loader['_' + type];
+      if (!Component) return null;
+      return _react.default.createElement(Component, props);
+    }
+  }]);
+  return Loader;
+}(_react.default.Component);
+
+Loader._circleLoading = function (aprops) {
+  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
+      _genCommonProps2$time = _genCommonProps2.timeout,
+      timeout = _genCommonProps2$time === void 0 ? '2s' : _genCommonProps2$time,
+      _genCommonProps2$colo = _genCommonProps2.color,
+      color = _genCommonProps2$colo === void 0 ? "currentColor" : _genCommonProps2$colo,
+      _genCommonProps2$colo2 = _genCommonProps2.colorReverse,
+      colorReverse = _genCommonProps2$colo2 === void 0 ? 'lightgray' : _genCommonProps2$colo2,
+      className = _genCommonProps2.className,
+      children = _genCommonProps2.children,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["timeout", "color", "colorReverse", "className", "children"]);
+
+  var classStr = '';
+  return _react.default.createElement("svg", (0, _extends2.default)({
+    style: {
+      width: 200,
+      height: 100
+    },
+    viewbox: "0 0 100 100",
+    className: (0, _props.cxm)(classStr, className)
+  }, props), _react.default.createElement("circle", {
+    cx: "50",
+    cy: "50",
+    r: "25",
+    "stroke-width": "10",
+    stroke: colorReverse,
+    fill: "none"
+  }), _react.default.createElement("circle", {
+    cx: "50",
+    cy: "50",
+    r: "25",
+    "stroke-width": "10",
+    stroke: color,
+    fill: "none",
+    transform: "matrix(0,-1,1,0,0,100)",
+    "stroke-dasharray": "10,156"
+  }, _react.default.createElement("animate", {
+    attributeName: "stroke-dashoffset",
+    from: "0",
+    to: "-156",
+    dur: timeout,
+    repeatCount: "indefinite"
+  })), children);
+};
+
+Loader._lineLoading = function (aprops) {
+  var _genCommonProps3 = (0, _props.genCommonProps)(aprops),
+      _genCommonProps3$time = _genCommonProps3.timeout,
+      timeout = _genCommonProps3$time === void 0 ? '2s' : _genCommonProps3$time,
+      _genCommonProps3$colo = _genCommonProps3.color,
+      color = _genCommonProps3$colo === void 0 ? "currentColor" : _genCommonProps3$colo,
+      _genCommonProps3$colo2 = _genCommonProps3.colorReverse,
+      colorReverse = _genCommonProps3$colo2 === void 0 ? 'lightgray' : _genCommonProps3$colo2,
+      className = _genCommonProps3.className,
+      children = _genCommonProps3.children,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["timeout", "color", "colorReverse", "className", "children"]);
+
+  var classStr = '';
+  return _react.default.createElement("svg", (0, _extends2.default)({
+    viewbox: "0 0 100 5",
+    className: (0, _props.cxm)(classStr, className)
+  }, props), _react.default.createElement("line", {
+    x1: "0",
+    y1: "2",
+    x2: "100",
+    y2: "2",
+    "stroke-width": "5",
+    stroke: colorReverse,
+    fill: "none"
+  }), _react.default.createElement("line", {
+    x1: "0",
+    y1: "2",
+    x2: "100",
+    y2: "2",
+    "stroke-width": "5",
+    stroke: color,
+    fill: "none",
+    "stroke-dasharray": "10,100"
+  }, _react.default.createElement("animate", {
+    attributeName: "stroke-dashoffset",
+    values: "0;-90;0",
+    dur: timeout,
+    repeatCount: "indefinite"
+  })), children);
+};
+
+Loader._circleProgress = function (aprops) {
+  var _genCommonProps4 = (0, _props.genCommonProps)(aprops),
+      progress = _genCommonProps4.progress,
+      _genCommonProps4$colo = _genCommonProps4.color,
+      color = _genCommonProps4$colo === void 0 ? "currentColor" : _genCommonProps4$colo,
+      _genCommonProps4$colo2 = _genCommonProps4.colorReverse,
+      colorReverse = _genCommonProps4$colo2 === void 0 ? 'lightgray' : _genCommonProps4$colo2,
+      className = _genCommonProps4.className,
+      children = _genCommonProps4.children,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps4, ["progress", "color", "colorReverse", "className", "children"]);
+
+  var classStr = '';
+  return _react.default.createElement("svg", (0, _extends2.default)({
+    width: "100",
+    height: "100",
+    viewbox: "0 0 100 100",
+    className: (0, _props.cxm)(classStr, className)
+  }, props), _react.default.createElement("circle", {
+    cx: "50",
+    cy: "50",
+    r: "25",
+    "stroke-width": "10",
+    stroke: colorReverse,
+    fill: "none"
+  }), _react.default.createElement("circle", {
+    cx: "50",
+    cy: "50",
+    r: "25",
+    "stroke-width": "10",
+    stroke: color,
+    fill: "none",
+    transform: "matrix(0,-1,1,0,0,100)",
+    "stroke-dasharray": "".concat(1.56 * (progress || 0), ",156")
+  }), children);
+};
+
+Loader._lineProgress = function (aprops) {
+  var _genCommonProps5 = (0, _props.genCommonProps)(aprops),
+      progress = _genCommonProps5.progress,
+      _genCommonProps5$colo = _genCommonProps5.color,
+      color = _genCommonProps5$colo === void 0 ? "currentColor" : _genCommonProps5$colo,
+      _genCommonProps5$colo2 = _genCommonProps5.colorReverse,
+      colorReverse = _genCommonProps5$colo2 === void 0 ? 'lightgray' : _genCommonProps5$colo2,
+      className = _genCommonProps5.className,
+      children = _genCommonProps5.children,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps5, ["progress", "color", "colorReverse", "className", "children"]);
+
+  var classStr = '';
+  return _react.default.createElement("svg", (0, _extends2.default)({
+    width: "100",
+    height: "10",
+    viewbox: "0 0 100 10",
+    className: (0, _props.cxm)(classStr, className)
+  }, props), _react.default.createElement("line", {
+    x1: "0",
+    y1: "5",
+    x2: "100",
+    y2: "5",
+    "stroke-width": "10",
+    stroke: colorReverse,
+    fill: "none"
+  }), _react.default.createElement("line", {
+    x1: "0",
+    y1: "5",
+    x2: "100",
+    y2: "5",
+    "stroke-width": "10",
+    stroke: color,
+    fill: "none",
+    "stroke-dasharray": "".concat(progress || 0, ",100")
   }), children);
 };
 

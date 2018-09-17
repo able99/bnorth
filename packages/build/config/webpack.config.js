@@ -24,6 +24,12 @@ function getRules() {
     eslint,
   } = getBnorthConfig();
 
+  // raw
+  rules.push({
+    test: /\.(txt|ico\.svg)$/,
+    use: 'raw-loader'
+  });
+
   // url
   rules.push({
     exclude: [
@@ -31,7 +37,8 @@ function getRules() {
       /\.(js|jsx)$/,
       /\.(css|less|scss)$/,
       /\.json$/,
-      ///\.svg$/,
+      /\.txt$/,
+      /\.ico\.svg$/,
       /\.tsx?$/,
     ],
     loader: 'url',

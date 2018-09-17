@@ -75,6 +75,9 @@ function gen(config) {
   ret[(0, _utils.getSelector)('line-height-1')] = {
     'line-height': '1'
   };
+  ret[(0, _utils.getSelector)('line-height-1em')] = {
+    'line-height': '1em'
+  };
   ret[(0, _utils.getSelector)('outline-none-')] = {
     'outline': 'none'
   };

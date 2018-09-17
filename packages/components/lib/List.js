@@ -1,7 +1,5 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -15,7 +13,7 @@ var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends")
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 
 var _props = require("./utils/props");
 
@@ -249,7 +247,8 @@ List.Item._Arrow = function (aprops) {
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _props.cxm)(classStr, className)
   }, props), !children || children === true ? _react.default.createElement(_Icon.default, (0, _extends2.default)({
-    name: _Icon.default.getName('right', '>')
+    name: "right",
+    nameDefault: ">"
   }, arrowIconProps)) : children);
 };
 

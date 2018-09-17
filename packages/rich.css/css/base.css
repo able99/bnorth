@@ -67,6 +67,10 @@ hr {
   line-height: 1;
 }
 
+.line-height-1em {
+  line-height: 1em;
+}
+
 .outline-none- {
   outline: none;
 }

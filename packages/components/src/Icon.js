@@ -11,68 +11,62 @@ import { genCommonProps, cxm } from './utils/props';
 
 let Icon = aprops=>{
   let {
-    name, src, imageProps,
-    component:Component='span', className, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
+    name, nameDefault, src, chat, 
+    component:Component, className, style, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
   } = genCommonProps(aprops);
   
-  let classStr = 'icon- font-smoothing-antialiased- text-decoration-none line-height-1 display-inline-block overflow-hidden';
+  let classStr = 'display-inline width-1em height-1em';
   
   let classSet = [];
   if(bSize) classSet.push('text-size-'+(bSize===true?'':bSize));
-  // if(cStyle==='hollow'){
-  //   classSet['padding-xxs'] = !hascx(className, 'padding');
-  //   classSet['bg-color-white'] = true;
-    
-  //   if(cTheme){
-  //     classSet['border-set-'+cTheme] = true;
-  //     classSet['text-color-'+cTheme] = true;
-  //   }else{
-  //     classSet['border-set-border'] = true;
-  //   }
-  // }else if(cStyle==='solid'){
-  //   classSet['padding-xxs'] = !hascx(className, 'padding');
+  if(bTheme) classSet.push('text-color-'+(bTheme===true?'':bTheme));
+  
+  let styleSet = {};
 
-  //   if(cTheme){
-  //     classSet['bg-color-'+cTheme] = true;
-  //     classSet['border-set-'+cTheme] = true;
-  //     classSet['text-color-white'] = !hascx(className, 'text-color');
-  //   }else{
-  //     classSet['bg-color-component'] = true;
-  //     classSet['border-set-component'] = true;
-  //   }
-  // }else{
-  //   classSet['text-color-'+cTheme] = cTheme;
-  // }
+  if(name) name = Icon._maps[name]||name;
+  if(!Icon._names.includes(name)) {
+    chat = nameDefault||name;
+    name = undefined;
+  }
 
-  if(name) props['data-icon-name'] = Icon.getCode(name);
+  if(name) {
+    if(!Component) Component = 'svg';
+    styleSet = {strokeWidth: 0,stroke: 'currentColor',fill: 'currentColor'};
+    props.dangerouslySetInnerHTML = {__html: `<use xlink:href="#${name}"></use>`};
+  }else if(src) {
+    if(!Component) Component = 'img';
+    props.src = src;
+    props.alt = '';
+  }else if(chat) {
+    if(!Component) Component = 'span';
+    classSet.push('display-inlineblock text-align-center line-height-1em');
+    props.children = chat[0];
+  }else {
+    return null;
+  }
 
-  return (
-    <Component className={cxm(classStr, classSet, className)} {...props}>
-      {src?(<Icon._Image src={src} {...imageProps}/>):null}
-      {children}
-    </Component>
-  );
-}
-
-Icon._Image = aprops=>{
-  let {
-    src,
-    component:Component='img', className, ...props
-  } = genCommonProps(aprops);
-
-  let classStr = 'width-auto height-em min-height-em display-block';
-
-  return <Component alt="" src={src} className={cx(classStr, className)} {...props}/>
+  return <Component style={{...styleSet, ...style}} className={cxm(classStr, classSet, className)} {...props} />
 }
 
 
-Icon.names = {};
-Icon.codes = {};
-Icon.getName = function(name, defval) {
-  return Icon.names[name]||defval;
+Icon._names = [];
+Icon._maps = {};
+Icon.appendSvgIcons = function(svgStr) {
+  let x = document.createElement('x');
+  x.innerHTML = svgStr;
+  let svg = x.querySelector('svg');
+  if(!svg) return;
+  Icon._names = [...Icon._names, ...Array.from(svg.querySelectorAll('defs symbol')).map(v=>v.id)];
+  return document.body.appendChild(svg);
 }
-Icon.getCode = function(name) {
-  return Icon.codes[name]||name;
+Icon.appendMap = function(val, name) {
+  if(!val) return;
+
+  if(typeof val==='object') {
+    Icon._maps = {...Icon._maps, ...val}
+  }else{
+    Icon._maps[name] = val;
+  }
 }
 
 

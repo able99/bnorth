@@ -7,7 +7,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
@@ -24,75 +30,80 @@ var _props = require("./utils/props");
 var Icon = function Icon(aprops) {
   var _genCommonProps = (0, _props.genCommonProps)(aprops),
       name = _genCommonProps.name,
+      nameDefault = _genCommonProps.nameDefault,
       src = _genCommonProps.src,
-      imageProps = _genCommonProps.imageProps,
-      _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? 'span' : _genCommonProps$compo,
+      chat = _genCommonProps.chat,
+      Component = _genCommonProps.component,
       className = _genCommonProps.className,
+      style = _genCommonProps.style,
       bTheme = _genCommonProps['b-theme'],
       bStyle = _genCommonProps['b-style'],
       bSize = _genCommonProps['b-size'],
       children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["name", "src", "imageProps", "component", "className", 'b-theme', 'b-style', 'b-size', "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["name", "nameDefault", "src", "chat", "component", "className", "style", 'b-theme', 'b-style', 'b-size', "children"]);
 
-  var classStr = 'icon- font-smoothing-antialiased- text-decoration-none line-height-1 display-inline-block overflow-hidden';
+  var classStr = 'display-inline width-1em height-1em';
   var classSet = [];
-  if (bSize) classSet.push('text-size-' + (bSize === true ? '' : bSize)); // if(cStyle==='hollow'){
-  //   classSet['padding-xxs'] = !hascx(className, 'padding');
-  //   classSet['bg-color-white'] = true;
-  //   if(cTheme){
-  //     classSet['border-set-'+cTheme] = true;
-  //     classSet['text-color-'+cTheme] = true;
-  //   }else{
-  //     classSet['border-set-border'] = true;
-  //   }
-  // }else if(cStyle==='solid'){
-  //   classSet['padding-xxs'] = !hascx(className, 'padding');
-  //   if(cTheme){
-  //     classSet['bg-color-'+cTheme] = true;
-  //     classSet['border-set-'+cTheme] = true;
-  //     classSet['text-color-white'] = !hascx(className, 'text-color');
-  //   }else{
-  //     classSet['bg-color-component'] = true;
-  //     classSet['border-set-component'] = true;
-  //   }
-  // }else{
-  //   classSet['text-color-'+cTheme] = cTheme;
-  // }
+  if (bSize) classSet.push('text-size-' + (bSize === true ? '' : bSize));
+  if (bTheme) classSet.push('text-color-' + (bTheme === true ? '' : bTheme));
+  var styleSet = {};
+  if (name) name = Icon._maps[name] || name;
 
-  if (name) props['data-icon-name'] = Icon.getCode(name);
+  if (!Icon._names.includes(name)) {
+    chat = nameDefault || name;
+    name = undefined;
+  }
+
+  if (name) {
+    if (!Component) Component = 'svg';
+    styleSet = {
+      strokeWidth: 0,
+      stroke: 'currentColor',
+      fill: 'currentColor'
+    };
+    props.dangerouslySetInnerHTML = {
+      __html: "<use xlink:href=\"#".concat(name, "\"></use>")
+    };
+  } else if (src) {
+    if (!Component) Component = 'img';
+    props.src = src;
+    props.alt = '';
+  } else if (chat) {
+    if (!Component) Component = 'span';
+    classSet.push('display-inlineblock text-align-center line-height-1em');
+    props.children = chat[0];
+  } else {
+    return null;
+  }
+
   return _react.default.createElement(Component, (0, _extends2.default)({
+    style: (0, _objectSpread2.default)({}, styleSet, style),
     className: (0, _props.cxm)(classStr, classSet, className)
-  }, props), src ? _react.default.createElement(Icon._Image, (0, _extends2.default)({
-    src: src
-  }, imageProps)) : null, children);
-};
-
-Icon._Image = function (aprops) {
-  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
-      src = _genCommonProps2.src,
-      _genCommonProps2$comp = _genCommonProps2.component,
-      Component = _genCommonProps2$comp === void 0 ? 'img' : _genCommonProps2$comp,
-      className = _genCommonProps2.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["src", "component", "className"]);
-
-  var classStr = 'width-auto height-em min-height-em display-block';
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    alt: "",
-    src: src,
-    className: cx(classStr, className)
   }, props));
 };
 
-Icon.names = {};
-Icon.codes = {};
+Icon._names = [];
+Icon._maps = {};
 
-Icon.getName = function (name, defval) {
-  return Icon.names[name] || defval;
+Icon.appendSvgIcons = function (svgStr) {
+  var x = document.createElement('x');
+  x.innerHTML = svgStr;
+  var svg = x.querySelector('svg');
+  if (!svg) return;
+  Icon._names = (0, _toConsumableArray2.default)(Icon._names).concat((0, _toConsumableArray2.default)(Array.from(svg.querySelectorAll('defs symbol')).map(function (v) {
+    return v.id;
+  })));
+  return document.body.appendChild(svg);
 };
 
-Icon.getCode = function (name) {
-  return Icon.codes[name] || name;
+Icon.appendMap = function (val, name) {
+  if (!val) return;
+
+  if ((0, _typeof2.default)(val) === 'object') {
+    Icon._maps = (0, _objectSpread2.default)({}, Icon._maps, val);
+  } else {
+    Icon._maps[name] = val;
+  }
 };
 
 var _default = Icon;

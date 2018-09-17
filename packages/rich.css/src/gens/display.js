@@ -3,7 +3,7 @@ import { getSelector, getStyleSet } from '../utils';
 
 const Displays = {
   'inline': true,
-  'inlineblock': true,
+  'inlineblock': 'inline-block',
   'none': true,
   'block': true,
 }

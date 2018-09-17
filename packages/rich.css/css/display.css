@@ -3,7 +3,7 @@
 }
 
 .display-inlineblock {
-  display: inlineblock;
+  display: inline-block;
 }
 
 .display-none {

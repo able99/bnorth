@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-import React, {cloneElement} from 'react';
+import React from 'react';
 import { genCommonProps, cxm } from './utils/props';
 import Panel from './Panel';
 import Icon from './Icon';
@@ -170,7 +170,7 @@ List.Item._Arrow = aprops=>{
   
   return (
     <Component className={cxm(classStr, className)} {...props}>
-      {!children||children===true?<Icon name={Icon.getName('right', '>')} {...arrowIconProps}/>:children}
+      {!children||children===true?<Icon name='right' nameDefault='>' {...arrowIconProps}/>:children}
     </Component>
   )
 }

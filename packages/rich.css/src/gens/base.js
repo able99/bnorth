@@ -78,6 +78,10 @@ export default function gen(config) {
     'line-height': '1',
   };
 
+  ret[getSelector('line-height-1em')] = {
+    'line-height': '1em',
+  };
+
   ret[getSelector('outline-none-')] = {
     'outline': 'none',
   };

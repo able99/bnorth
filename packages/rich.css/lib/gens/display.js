@@ -22,7 +22,7 @@ var _utils = require("../utils");
 
 var Displays = {
   'inline': true,
-  'inlineblock': true,
+  'inlineblock': 'inline-block',
   'none': true,
   'block': true
 };
