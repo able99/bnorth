@@ -86,13 +86,18 @@ var _default = function _default(WrappedComponent) {
           _this.longTapTimer = setTimeout(onLongTap, tapLongDuration);
         }
 
-        if (onMoveStart) {
-          _this.moveStartTimer = setTimeout(onMoveStart, 0);
-        }
-
         touch.x1 = primaryTouch.pageX;
         touch.y1 = primaryTouch.pageY;
         _this.touchTimes += 1;
+
+        if (onMoveStart) {
+          _this.moveStartTimer = setTimeout(function () {
+            return onMoveStart({
+              x: touch.x1,
+              y: touch.y1
+            });
+          }, 0);
+        }
       });
       (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "move", function (event) {
         _this._processEvent(event);

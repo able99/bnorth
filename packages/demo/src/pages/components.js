@@ -1,7 +1,9 @@
 import React from 'react';
 import View from '@bnorth/components/lib/View'
 import Panel from '@bnorth/components/lib/Panel'
-import Loader from '@bnorth/components/lib/Loader'
+import '@bnorth/components/lib/Panel.PullRefresh'
+import '@bnorth/components/lib/Panel.AspectRatio'
+// import Loader from '@bnorth/components/lib/Loader'
 // import Button from '@bnorth/components/lib/Button'
 // import Tabs from '@bnorth/components/lib/Tabs'
 //  import List from '@bnorth/components/lib/List'
@@ -9,11 +11,21 @@ import Loader from '@bnorth/components/lib/Loader'
 // import img from '../../res/aboutme.svg';
 
 export default props=>{
-  // let { app } = props;
+  let { /*app,*/ page, stateData } = props;
   return (
     <View>
       <Panel main>
-        <Loader b-theme="primary" progress={Math.random()*100} />
+        <Panel.PullRefresh 
+          isLoading={stateData.isLoading} 
+          onRefresh={()=>{
+            page.stateData.update({isLoading: true});
+            setTimeout(()=>page.stateData.update({isLoading: false}), 3000);
+          }} >
+          123
+        </Panel.PullRefresh>
+        <Panel b-style="solid" b-theme="primary" bc-border-radius-rounded bc-padding-a- inline>123</Panel>
+        <Panel.AspectRatio ratio={0.5}>123</Panel.AspectRatio>
+        {/*<Loader b-theme="primary" progress={Math.random()*100} />*/}
         {/*<Icon b-theme="alert" name="heart" src1={img} chat1='2' />*/}
         {/*<List itemProps={{'b-theme': 'alert'}}>
           <List.Item part='header'>header</List.Item>

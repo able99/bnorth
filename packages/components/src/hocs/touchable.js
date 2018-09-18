@@ -58,14 +58,14 @@ export default (WrappedComponent, options={})=>{
         this.longTapTimer = setTimeout(onLongTap, tapLongDuration);
       }
   
-      if (onMoveStart) {
-        this.moveStartTimer = setTimeout(onMoveStart, 0);
-      }
-  
       touch.x1 = primaryTouch.pageX
       touch.y1 = primaryTouch.pageY
   
       this.touchTimes += 1
+
+      if (onMoveStart) {
+        this.moveStartTimer = setTimeout(()=>onMoveStart({ x: touch.x1, y: touch.y1 }), 0);
+      }
     }
   
     move = event => {

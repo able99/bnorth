@@ -6,15 +6,14 @@
  */
 
 import React from 'react';
-import touchable from './hocs/touchable';
 import { genCommonProps, cxm } from './utils/props';
 
 
 let Panel = aprops=>{
   let {
     main, inline,
-    aspect, aspectProps,
-    component:Component='div', className, style, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
+    colorOnTheme='white',
+    component:Component='div', className, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, ...props
   } = genCommonProps(aprops);
 
   let classStr = 'position-relative';
@@ -22,38 +21,27 @@ let Panel = aprops=>{
   let classSet = {
     'scrollable': main,
     'flex-sub-flex-extend': main,
-    'display-block-inline': inline,
-    ['text-size-'+(bSize===true?'':bSize)]: bSize,
-    ['text-color-'+(bTheme===true?'':bTheme)]: bTheme,
-  }
-  
-  
-  let styleSet = {
-    paddingBottom: `${aspect*100}%`,
+    'display-inlineblock': inline,
   }
 
-  return (
-    <Component style={{...styleSet, ...style}} className={cxm(classStr, classSet, className)} {...props} >
-      {aspect&&children?(
-        <Panel.Aspect {...aspectProps}>{children}</Panel.Aspect>
-      ):children}
-    </Component>
-  );
+  if(bSize) classSet['text-size+'+(bSize==='true'?'':bSize)] = true;
+    
+  if(bStyle==='solid'&&bTheme) {
+    classSet['bg-color-'+(bTheme==='true'?'':bTheme)] = true;
+    classSet['text-color-'+(colorOnTheme==='true'?'':colorOnTheme)] = true;
+  }else if(bStyle==='solid'&&!bTheme) {
+    classSet['bg-color-component'] = true;
+  }else if(bStyle==='hollow'&&bTheme) {
+    classSet['border-set-a-'+(bTheme==='true'?'':bTheme)] = true;
+    classSet['text-color+'+(bTheme==='true'?'':bTheme)] = true;
+  }else if(bStyle==='hollow'&&!bTheme) {
+    classSet['border-set-a-'] = true;
+  }{
+    if(bTheme) classSet['text-color+'+(bTheme==='true'?'':bTheme)] = true;
+  }
+  
+  return <Component className={cxm(classStr, classSet, className)} {...props} />
 }
-
-Panel.Aspect = aprops=>{
-  let {
-    main, 
-    aspect, aspectProps,
-    component:Component='div', className, style, 'b-theme':bTheme='view', 'b-style':bStyle, 'b-size':bSize, children, ...props
-  } = genCommonProps(aprops);
-
-  let classStr = 'position-absolute offset-left-start offset-top-start square-full';
-
-  return <Component style={style} className={cxm(classStr, className)} {...props}>{children}</Component>;
-}
-
-Panel.Touchable = touchable(Panel);
 
 
 export default Panel;
