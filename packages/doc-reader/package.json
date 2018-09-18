@@ -1,11 +1,12 @@
 {
   "private": true,
-  "name": "bnorth-demo",
+  "name": "doc-reader",
   "version": "3.0.8",
-  "description": "bnorth demo",
+  "description": "doc reader",
   "keywords": [
     "bnorth",
-    "demo",
+    "doc",
+    "doc reader",
     "react"
   ],
   "author": "able99 <8846755@qq.com>",
@@ -38,6 +39,6 @@
     "@bnorth/build": "^3.0.8"
   },
   "bnorth": {
-    "outputPath": "../../docs/demo/"
+    "outputPath": "../../docs/reader/"
   }
 }

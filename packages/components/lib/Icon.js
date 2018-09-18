@@ -32,7 +32,7 @@ var Icon = function Icon(aprops) {
       name = _genCommonProps.name,
       nameDefault = _genCommonProps.nameDefault,
       src = _genCommonProps.src,
-      chat = _genCommonProps.chat,
+      char = _genCommonProps.char,
       Component = _genCommonProps.component,
       className = _genCommonProps.className,
       style = _genCommonProps.style,
@@ -40,7 +40,7 @@ var Icon = function Icon(aprops) {
       bStyle = _genCommonProps['b-style'],
       bSize = _genCommonProps['b-size'],
       children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["name", "nameDefault", "src", "chat", "component", "className", "style", 'b-theme', 'b-style', 'b-size', "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["name", "nameDefault", "src", "char", "component", "className", "style", 'b-theme', 'b-style', 'b-size', "children"]);
 
   var classStr = 'display-inline width-1em height-1em';
   var classSet = [];
@@ -49,8 +49,8 @@ var Icon = function Icon(aprops) {
   var styleSet = {};
   if (name) name = Icon._maps[name] || name;
 
-  if (!Icon._names.includes(name)) {
-    chat = nameDefault || name;
+  if (name && !Icon._names.includes(name)) {
+    char = nameDefault || name;
     name = undefined;
   }
 
@@ -68,10 +68,10 @@ var Icon = function Icon(aprops) {
     if (!Component) Component = 'img';
     props.src = src;
     props.alt = '';
-  } else if (chat) {
+  } else if (char) {
     if (!Component) Component = 'span';
     classSet.push('display-inlineblock text-align-center line-height-1em');
-    props.children = chat[0];
+    props.children = char[0];
   } else {
     return null;
   }

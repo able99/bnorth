@@ -3,28 +3,99 @@ import View from '@bnorth/components/lib/View'
 import Panel from '@bnorth/components/lib/Panel'
 import '@bnorth/components/lib/Panel.PullRefresh'
 import '@bnorth/components/lib/Panel.AspectRatio'
-// import Loader from '@bnorth/components/lib/Loader'
-// import Button from '@bnorth/components/lib/Button'
-// import Tabs from '@bnorth/components/lib/Tabs'
-//  import List from '@bnorth/components/lib/List'
-// import Icon from '@bnorth/components/lib/Icon'
-// import img from '../../res/aboutme.svg';
+import Loader from '@bnorth/components/lib/Loader'
+import Button from '@bnorth/components/lib/Button'
+import Tabs from '@bnorth/components/lib/Tabs'
+import List from '@bnorth/components/lib/List'
+import Icon from '@bnorth/components/lib/Icon'
+import Space from '@bnorth/components/lib/Space'
+import img from '../../res/aboutme.svg';
 
-export default props=>{
-  let { /*app,*/ page, stateData } = props;
+
+let Component = aprops=>{
+  let { /*app,*/ page, stateData, stateComponentSwitchs,  stateCommonProps} = aprops;
+
+  let Group = aprops=>{
+    let { title, children, ...props } = aprops;
+    let switchOn = stateComponentSwitchs.includes(title);
+    return (
+      <div className="padding-a-xs" {...props}>
+        <div className="flex-display-block flex-align-center margin-v-">
+          <Button 
+            onClick={()=>switchOn?page.stateComponentSwitchs.delete(title):page.stateComponentSwitchs.update([title], {append: true})}
+            b-style="plain" bc-padding-a- bc-flex-sub-flex-none >
+            {switchOn?'-':'+'}
+          </Button>
+          <strong className="flex-sub-flex-extend">{title}</strong>
+        </div>
+        {switchOn?<div className="border-set-a- padding-a-xs bg-color-white">{children}</div>:<div className="border-set-bottom-" />}
+      </div>
+    )
+  }
+  
+  Group.Item = aprops=>{
+    let { title, children, ...props } = aprops;
+    return (
+      <React.Fragment>
+        <h4 className="border-set-bottom-">{title}</h4>
+        {children}
+      </React.Fragment>
+    )
+  }
+
   return (
     <View>
       <Panel main>
-        <Panel.PullRefresh 
-          isLoading={stateData.isLoading} 
-          onRefresh={()=>{
-            page.stateData.update({isLoading: true});
-            setTimeout(()=>page.stateData.update({isLoading: false}), 3000);
-          }} >
-          123
-        </Panel.PullRefresh>
-        <Panel b-style="solid" b-theme="primary" bc-border-radius-rounded bc-padding-a- inline>123</Panel>
-        <Panel.AspectRatio ratio={0.5}>123</Panel.AspectRatio>
+        <Group title="list & pull refresh & infinite scroll">
+          <Panel.PullRefresh 
+            isLoading={stateData.isLoading} 
+            onRefresh={()=>{ page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({isLoading: false}), 3000);}} >
+            <List>
+              <List.Item part='header'>header</List.Item>
+              {Array(10).fill(0).map((v,i)=>(
+                <List.Item 
+                  title={'title'+i} media={'media'+i} subTitle={'subTitle'+i} desc={'desc'+i} after={'after'+i} 
+                  onClick={()=>alert(i)} 
+                  key={i}/>
+              ))}
+              <List.Item part='footer'>footer</List.Item>
+            </List>
+          </Panel.PullRefresh>
+        </Group>
+
+        <Group title="Icon">
+          <Group.Item title="svg">
+            <Icon name="heart" />
+          </Group.Item>
+          <Group.Item title="img">
+            <Icon src={img} />
+          </Group.Item>
+          <Group.Item title="char">
+            <Icon char='B' />
+          </Group.Item>
+        </Group>
+
+        <Group title="Panel">
+          <Group.Item title="Panel">
+            <Panel {...stateCommonProps}>Panel</Panel>
+          </Group.Item>
+          <Group.Item title="Panel.AspectRatio">
+            <Panel.AspectRatio ratio={0.5}>w/h=0.5</Panel.AspectRatio>
+          </Group.Item>
+        </Group>
+
+        <Group title="Space">
+          <Group.Item title="space">
+            <Space count={2} {...stateCommonProps} />
+          </Group.Item>
+          <Group.Item title="wrap">
+            <Space count={2} stacked {...stateCommonProps} />
+          </Group.Item>
+        </Group>
+
+        
+        
+        
         {/*<Loader b-theme="primary" progress={Math.random()*100} />*/}
         {/*<Icon b-theme="alert" name="heart" src1={img} chat1='2' />*/}
         {/*<List itemProps={{'b-theme': 'alert'}}>
@@ -104,3 +175,16 @@ export default props=>{
     </View>
   );
 };
+
+Component.controller = {
+  stateCommonProps: {
+    initialization: {
+      'b-theme': 'primary',
+    }
+  },
+  stateComponentSwitchs: {
+    initialization: [],
+  }
+}
+
+export default Component;

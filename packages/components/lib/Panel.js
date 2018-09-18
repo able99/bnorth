@@ -37,11 +37,11 @@ var Panel = function Panel(aprops) {
 
   var classStr = 'position-relative';
   var classSet = {
-    'scrollable': main,
+    'scrollable-a-': main,
     'flex-sub-flex-extend': main,
     'display-inlineblock': inline
   };
-  if (bSize) classSet['text-size+' + (bSize === 'true' ? '' : bSize)] = true;
+  if (bSize) classSet['text-size-' + (bSize === 'true' ? '' : bSize)] = true;
 
   if (bStyle === 'solid' && bTheme) {
     classSet['bg-color-' + (bTheme === 'true' ? '' : bTheme)] = true;
@@ -50,13 +50,13 @@ var Panel = function Panel(aprops) {
     classSet['bg-color-component'] = true;
   } else if (bStyle === 'hollow' && bTheme) {
     classSet['border-set-a-' + (bTheme === 'true' ? '' : bTheme)] = true;
-    classSet['text-color+' + (bTheme === 'true' ? '' : bTheme)] = true;
+    classSet['text-color-' + (bTheme === 'true' ? '' : bTheme)] = true;
   } else if (bStyle === 'hollow' && !bTheme) {
     classSet['border-set-a-'] = true;
   }
 
   {
-    if (bTheme) classSet['text-color+' + (bTheme === 'true' ? '' : bTheme)] = true;
+    if (bTheme) classSet['text-color-' + (bTheme === 'true' ? '' : bTheme)] = true;
   }
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _props.cxm)(classStr, classSet, className)

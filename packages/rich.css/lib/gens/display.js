@@ -112,19 +112,19 @@ function genOverflows() {
 function genScrollable() {
   var ret = {};
   var selector = 'scrollable';
-  ret[(0, _utils.getSelector)(selector, 'a')] = {
+  ret[(0, _utils.getSelector)(selector, 'a-')] = {
     'max-width': '100%',
     'max-height': '100%',
     'overflow-x': 'hidden',
     'overflow-y': 'auto',
     '-webkit-overflow-scrolling': 'touch'
   };
-  ret[(0, _utils.getSelector)(selector, 'x')] = {
+  ret[(0, _utils.getSelector)(selector, 'x-')] = {
     'max-width': '100%',
     'overflow-x': 'hidden',
     '-webkit-overflow-scrolling': 'touch'
   };
-  ret[(0, _utils.getSelector)(selector, 'y')] = {
+  ret[(0, _utils.getSelector)(selector, 'y-')] = {
     'max-height': '100%',
     'overflow-y': 'auto',
     '-webkit-overflow-scrolling': 'touch'

@@ -11,7 +11,7 @@ import { genCommonProps, cxm } from './utils/props';
 
 let Icon = aprops=>{
   let {
-    name, nameDefault, src, chat, 
+    name, nameDefault, src, char, 
     component:Component, className, style, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
   } = genCommonProps(aprops);
   
@@ -24,8 +24,8 @@ let Icon = aprops=>{
   let styleSet = {};
 
   if(name) name = Icon._maps[name]||name;
-  if(!Icon._names.includes(name)) {
-    chat = nameDefault||name;
+  if(name&&!Icon._names.includes(name)) {
+    char = nameDefault||name;
     name = undefined;
   }
 
@@ -37,10 +37,10 @@ let Icon = aprops=>{
     if(!Component) Component = 'img';
     props.src = src;
     props.alt = '';
-  }else if(chat) {
+  }else if(char) {
     if(!Component) Component = 'span';
     classSet.push('display-inlineblock text-align-center line-height-1em');
-    props.children = chat[0];
+    props.children = char[0];
   }else {
     return null;
   }

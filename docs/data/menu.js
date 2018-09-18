@@ -1,0 +1,4 @@
+window.dataMenu = {
+  title: '',
+  subs: [],
+}

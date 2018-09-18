@@ -19,12 +19,12 @@ let Panel = aprops=>{
   let classStr = 'position-relative';
 
   let classSet = {
-    'scrollable': main,
+    'scrollable-a-': main,
     'flex-sub-flex-extend': main,
     'display-inlineblock': inline,
   }
 
-  if(bSize) classSet['text-size+'+(bSize==='true'?'':bSize)] = true;
+  if(bSize) classSet['text-size-'+(bSize==='true'?'':bSize)] = true;
     
   if(bStyle==='solid'&&bTheme) {
     classSet['bg-color-'+(bTheme==='true'?'':bTheme)] = true;
@@ -33,11 +33,11 @@ let Panel = aprops=>{
     classSet['bg-color-component'] = true;
   }else if(bStyle==='hollow'&&bTheme) {
     classSet['border-set-a-'+(bTheme==='true'?'':bTheme)] = true;
-    classSet['text-color+'+(bTheme==='true'?'':bTheme)] = true;
+    classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
   }else if(bStyle==='hollow'&&!bTheme) {
     classSet['border-set-a-'] = true;
   }{
-    if(bTheme) classSet['text-color+'+(bTheme==='true'?'':bTheme)] = true;
+    if(bTheme) classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
   }
   
   return <Component className={cxm(classStr, classSet, className)} {...props} />
