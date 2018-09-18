@@ -78,7 +78,7 @@ class Request extends app.State {
 
   data() {
     let data = super.data();
-    return (!data.error && data.data)?data.data:(this.options.initialization||{});
+    return (!data.error && data.data)?data.data:(this.options.initialization!==undefined?this.options.initialization:{});
   }
 
   dataExt(force) {

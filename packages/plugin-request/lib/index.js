@@ -137,7 +137,7 @@ function (_app$State) {
     key: "data",
     value: function data() {
       var data = (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "data", this).call(this);
-      return !data.error && data.data ? data.data : this.options.initialization || {};
+      return !data.error && data.data ? data.data : this.options.initialization !== undefined ? this.options.initialization : {};
     }
   }, {
     key: "dataExt",
@@ -170,4 +170,3 @@ var _default = function _default(app) {
 };
 
 exports.default = _default;
-module.exports = exports["default"];

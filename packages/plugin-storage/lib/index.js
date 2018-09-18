@@ -145,4 +145,3 @@ var _default = {
   }
 };
 exports.default = _default;
-module.exports = exports["default"];

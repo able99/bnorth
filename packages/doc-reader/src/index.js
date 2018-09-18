@@ -10,11 +10,14 @@ let app = new App({
     },
     onAppStartConfig: ()=>{
       app.router.setRoutes({
-        '/': require('./pages/home').default,
+        '/:src?': require('./pages/home').default,
       });
     },
   },
 })
+
+app.plugins.add(require('@bnorth/plugin-network').default);
+app.plugins.add(require('@bnorth/plugin-request').default);
 
 
 app.start();

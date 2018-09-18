@@ -234,4 +234,3 @@ var _default = function _default(app) {
 };
 
 exports.default = _default;
-module.exports = exports["default"];

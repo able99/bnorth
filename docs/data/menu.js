@@ -1,4 +1,0 @@
-window.dataMenu = {
-  title: '',
-  subs: [],
-}

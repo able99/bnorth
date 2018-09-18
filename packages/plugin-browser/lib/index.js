@@ -26,9 +26,11 @@ var _urlParse = _interopRequireDefault(require("url-parse"));
 var Browser =
 /*#__PURE__*/
 function () {
-  function Browser(app) {
+  function Browser(app, _id, options) {
     (0, _classCallCheck2.default)(this, Browser);
     this.app = app;
+    this._id = id;
+    this.options = options;
 
     this._uaInit();
   }
@@ -214,9 +216,10 @@ function () {
 
 var _default = {
   _id: 'browser',
-  onPluginMount: function onPluginMount(app) {
+  onPluginMount: function onPluginMount(app, plugin) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     app.Browser = Browser;
-    app.browser = new Browser(app);
+    app.browser = new Browser(app, plugin._id, options);
   },
   onPluginUnmount: function onPluginUnmount(app) {
     delete app.Browser;
@@ -224,4 +227,3 @@ var _default = {
   }
 };
 exports.default = _default;
-module.exports = exports["default"];

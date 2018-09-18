@@ -136,7 +136,8 @@ function () {
   }, {
     key: "data",
     value: function data(_id, defualtValue, deep) {
-      return this.app.utils.objectCopy(this.provider.data(_id) || defualtValue, deep);
+      var data = this.provider.data(_id);
+      return this.app.utils.objectCopy(data === undefined ? defualtValue : data, deep);
     }
   }]);
   return Context;

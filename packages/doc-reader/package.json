@@ -33,7 +33,8 @@
     "@bnorth/plugin-network": "^3.0.8",
     "@bnorth/plugin-request": "^3.0.8",
     "@bnorth/plugin-validate": "^3.0.8",
-    "@bnorth/rich.css": "^3.0.8"
+    "@bnorth/rich.css": "^3.0.8",
+    "react-markdown": "^3.6.0"
   },
   "devDependencies": {
     "@bnorth/build": "^3.0.8"
