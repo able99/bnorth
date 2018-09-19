@@ -52,7 +52,7 @@ function () {
       var _id = arguments.length > 2 ? arguments[2] : undefined;
 
       app.log.error(message, title);
-      app.router.replaceError(message, title);
+      app.router.error(message, title, _id);
     }
   }, {
     key: "error",

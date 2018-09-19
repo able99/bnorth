@@ -107,24 +107,23 @@ function (_React$Component) {
           onClick = _genCommonProps.onClick,
           triggerFunc = _genCommonProps.triggerFunc,
           offset = _genCommonProps.offset,
-          _genCommonProps$iconP = _genCommonProps.iconProps;
-
-      _genCommonProps$iconP = _genCommonProps$iconP === void 0 ? {} : _genCommonProps$iconP;
-      var _genCommonProps$iconP2 = _genCommonProps$iconP.name,
-          name = _genCommonProps$iconP2 === void 0 ? _Icon.default.getName('backTop', '^') : _genCommonProps$iconP2,
-          iconProps = (0, _objectWithoutProperties2.default)(_genCommonProps$iconP, ["name"]),
-          scrollSpyProps = _genCommonProps.scrollSpyProps,
+          _genCommonProps$iconP = _genCommonProps.iconProps,
+          iconProps = _genCommonProps$iconP === void 0 ? {} : _genCommonProps$iconP,
+          _genCommonProps$scrol = _genCommonProps.scrollSpyProps,
+          scrollSpyProps = _genCommonProps$scrol === void 0 ? {} : _genCommonProps$scrol,
           _genCommonProps$compo = _genCommonProps.component,
           Component = _genCommonProps$compo === void 0 ? _Fab.default : _genCommonProps$compo,
           children = _genCommonProps.children,
           props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["onClick", "triggerFunc", "offset", "iconProps", "scrollSpyProps", "component", "children"]);
+
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_ScrollSpy.default, (0, _extends2.default)({
         onScrollPositionChange: this._handleScroll.bind(this)
       }, scrollSpyProps)), this.state.isShow ? _react.default.createElement(Component, (0, _extends2.default)({
         onClick: this._handleClick.bind(this)
-      }, props), children ? children : _react.default.createElement(_Icon.default, (0, _extends2.default)({}, iconProps, {
-        name: name
-      }))) : null);
+      }, props), children ? children : _react.default.createElement(_Icon.default, (0, _extends2.default)({
+        name: "backTop",
+        nameDefault: "^"
+      }, iconProps))) : null);
     }
   }]);
   return BackTop;

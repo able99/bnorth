@@ -9,6 +9,9 @@ import Tabs from '@bnorth/components/lib/Tabs'
 import List from '@bnorth/components/lib/List'
 import Icon from '@bnorth/components/lib/Icon'
 import Space from '@bnorth/components/lib/Space'
+import Fab from '@bnorth/components/lib/Fab'
+import BackTop from '@bnorth/components/lib/BackTop';
+import InfiniteScroll from '@bnorth/components/lib/InfiniteScroll';
 import img from '../../res/aboutme.svg';
 
 
@@ -46,12 +49,12 @@ let Component = aprops=>{
   return (
     <View>
       <Panel main>
-        <Group title="list & pull refresh & infinite scroll">
-          <Panel bs-width="70%" bs-height="300px" bc-border-set->
+        <Group title="list & pull refresh & infinite scroll & backtop">
+          <Panel bs-width="70%" bs-height="300px" bc-border-set- data-container>
             <Panel.PullRefresh 
               bc-height-full bc-scrollable-y- 
               isLoading={stateData.isLoading} 
-              onRefresh={()=>{ page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({isLoading: false}), 3000);}} >
+              onRefresh={()=>{ page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({isLoading: false}), 3000)}} >
               <List>
                 <List.Item part='header'>header</List.Item>
                 {Array(10).fill(0).map((v,i)=>(
@@ -62,6 +65,10 @@ let Component = aprops=>{
                 ))}
                 <List.Item part='footer'>footer</List.Item>
               </List>
+              <BackTop container />
+              <InfiniteScroll
+                isLoading={stateData.isLoadingMore}  
+                onLoading={()=>{page.stateData.update({isLoadingMore: true}); setTimeout(()=>page.stateData.update({isLoadingMore: false}), 5000)}}  />
             </Panel.PullRefresh>
           </Panel>
         </Group>
@@ -75,6 +82,15 @@ let Component = aprops=>{
           </Group.Item>
           <Group.Item title="char">
             <Icon char='B' />
+          </Group.Item>
+        </Group>
+
+        <Group title="Fab">
+          <Group.Item title="container - end, center">
+            <Fab h="end" v="center" container>Fab1</Fab>
+          </Group.Item>
+          <Group.Item title="no container - start, center">
+            <Fab h="start" v="center">Fab2</Fab>
           </Group.Item>
         </Group>
 

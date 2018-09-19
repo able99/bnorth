@@ -64,7 +64,7 @@ var PageError = function PageError(props) {
     onClick: function onClick() {
       return app.router.replaceRoot();
     }
-  }, "[home]")), _react.default.createElement("h3", null, data.errorRoute ? data.errorRoute : data.params[1]), _react.default.createElement("hr", null), _react.default.createElement("p", null, data.errorRoute ? data.name : data.params[0]));
+  }, "[home]")), _react.default.createElement("h3", null, data.errorRoute ? data.errorRoute : data.params[1]), _react.default.createElement("hr", null), _react.default.createElement("p", null, app.utils.message2String(data.errorRoute ? data.name : data.params[0])));
 };
 
 var RouterComponent =

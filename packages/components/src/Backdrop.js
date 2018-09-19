@@ -1,18 +1,19 @@
 import React from 'react';
-import { genCommonProps, cx } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
+import Panel from './Panel';
 
 
 export default (aprops) => {
-  let { component:Component='div', className, mask, ...props } = genCommonProps(aprops);
+  let {
+    mask,
+    component:Component=Panel, className, ...props
+  } = genCommonProps(aprops);
+
+  let classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-hidden';
 
   let classSet = {
-    'position-absolute': true,
-    'square-full': true,
-    'offset-start-left': true,
-    'offset-start-top': true,
-    'bg-color-mask': mask,
-    'overflow-hidden': true,
+    ['bg-color-'+(mask===true?'mask':mask)]: mask,
   };
 
-  return <Component className={cx(classSet,className)} {...props} /> ;
+  return <Component className={cxm(classStr,classSet,className)} {...props} />
 }

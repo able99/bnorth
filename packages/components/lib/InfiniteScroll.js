@@ -17,33 +17,38 @@ var _reactWaypoint = _interopRequireDefault(require("react-waypoint"));
 
 var _props = require("./utils/props");
 
+var _Panel = _interopRequireDefault(require("./Panel"));
+
 var _Loader = _interopRequireDefault(require("./Loader"));
 
 var _this = void 0;
 
 var InfiniteScroll = function InfiniteScroll(aprops) {
   var _genCommonProps = (0, _props.genCommonProps)(aprops),
+      _genCommonProps$spy = _genCommonProps.spy,
+      spy = _genCommonProps$spy === void 0 ? true : _genCommonProps$spy,
       isLoading = _genCommonProps.isLoading,
       onLoading = _genCommonProps.onLoading,
-      _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? _Loader.default : _genCommonProps$compo,
+      _genCommonProps$compo = _genCommonProps.componentLoader,
+      ComponentLoader = _genCommonProps$compo === void 0 ? _Loader.default : _genCommonProps$compo,
+      loaderProps = _genCommonProps.loaderProps,
+      _genCommonProps$compo2 = _genCommonProps.componentTitle,
+      ComponentTitle = _genCommonProps$compo2 === void 0 ? _Panel.default : _genCommonProps$compo2,
+      titleProps = _genCommonProps.titleProps,
+      _genCommonProps$compo3 = _genCommonProps.component,
+      Component = _genCommonProps$compo3 === void 0 ? _Panel.default : _genCommonProps$compo3,
       children = _genCommonProps.children,
       className = _genCommonProps.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["isLoading", "onLoading", "component", "children", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["spy", "isLoading", "onLoading", "componentLoader", "loaderProps", "componentTitle", "titleProps", "component", "children", "className"]);
 
-  if (!isLoading) {
-    return _react.default.createElement(_reactWaypoint.default, {
-      onEnter: onLoading && onLoading.bind(_this)
-    });
-  } else {
-    var classSet = {
-      "text-align-center": className.indexOf('text-align') < 0,
-      "margin": className.indexOf('margin') < 0
-    };
-    return _react.default.createElement(Component, (0, _extends2.default)({
-      className: (0, _props.cx)(classSet, className)
-    }, props), children);
-  }
+  if (!spy) return null;
+  if (!isLoading) return _react.default.createElement(_reactWaypoint.default, {
+    onEnter: onLoading && onLoading.bind(_this)
+  });
+  var classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center padding-a-';
+  return _react.default.createElement(Component, (0, _extends2.default)({
+    className: (0, _props.cxm)(classStr, className)
+  }, props), children ? children : _react.default.createElement(ComponentLoader, loaderProps), children ? children : _react.default.createElement(ComponentTitle, titleProps));
 };
 
 var _default = InfiniteScroll;

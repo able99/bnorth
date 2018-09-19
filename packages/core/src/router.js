@@ -20,7 +20,7 @@ let PageError = props=>{
       </div> 
       <h3>{data.errorRoute?data.errorRoute:data.params[1]}</h3> 
       <hr/> 
-      <p>{data.errorRoute?data.name:data.params[0]}</p> 
+      <p>{app.utils.message2String(data.errorRoute?data.name:data.params[0])}</p> 
     </div>
   )
 }

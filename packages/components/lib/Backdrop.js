@@ -9,30 +9,28 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
 
 var _props = require("./utils/props");
 
+var _Panel = _interopRequireDefault(require("./Panel"));
+
 var _default = function _default(aprops) {
   var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? 'div' : _genCommonProps$compo,
-      className = _genCommonProps.className,
       mask = _genCommonProps.mask,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["component", "className", "mask"]);
+      _genCommonProps$compo = _genCommonProps.component,
+      Component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
+      className = _genCommonProps.className,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["mask", "component", "className"]);
 
-  var classSet = {
-    'position-absolute': true,
-    'square-full': true,
-    'offset-start-left': true,
-    'offset-start-top': true,
-    'bg-color-mask': mask,
-    'overflow-hidden': true
-  };
+  var classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-hidden';
+  var classSet = (0, _defineProperty2.default)({}, 'bg-color-' + (mask === true ? 'mask' : mask), mask);
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cx)(classSet, className)
+    className: (0, _props.cxm)(classStr, classSet, className)
   }, props));
 };
 

@@ -5,35 +5,32 @@
  * @license MIT
  */
 
-
 import React from 'react';
 import Waypoint from 'react-waypoint';
-import { genCommonProps, cx } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
+import Panel from './Panel';
 import Loader from './Loader';
 
 
 let InfiniteScroll = (aprops)=>{
   let { 
-    isLoading, onLoading, 
-    component:Component=Loader, children, className, ...props 
+    spy=true, isLoading, onLoading, 
+    componentLoader:ComponentLoader=Loader, loaderProps,
+    componentTitle:ComponentTitle=Panel, titleProps,
+    component:Component=Panel, children, className, ...props 
   } = genCommonProps(aprops);
 
-  if(!isLoading){
-    return (
-      <Waypoint onEnter={onLoading&&onLoading.bind(this)} />
-    )
-  }else{
-    let classSet = {
-      "text-align-center": className.indexOf('text-align')<0,
-      "margin": className.indexOf('margin')<0,
-    }
+  if(!spy) return null;
+  if(!isLoading) return <Waypoint onEnter={onLoading&&onLoading.bind(this)} />;
+
+  let classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center padding-a-';
   
-    return (
-      <Component className={cx(classSet, className)} {...props}>
-        {children}
-      </Component>
-    );
-  }
+  return (
+    <Component className={cxm(classStr, className)} {...props}>
+      {children?children:<ComponentLoader {...loaderProps} />}
+      {children?children:<ComponentTitle {...titleProps} />}
+    </Component>
+  );
 }
 
 

@@ -54,8 +54,7 @@ export default class BackTop extends React.Component {
   render() {
     let {
       onClick, triggerFunc, offset,
-      iconProps:{name=Icon.getName('backTop','^'), ...iconProps}={},
-      scrollSpyProps,
+      iconProps={}, scrollSpyProps={},
       component:Component=Fab, children, ...props
     } = genCommonProps(this.props);
 
@@ -65,7 +64,7 @@ export default class BackTop extends React.Component {
         <ScrollSpy onScrollPositionChange={this._handleScroll.bind(this)} {...scrollSpyProps} />
         {this.state.isShow?(
           <Component onClick={this._handleClick.bind(this)} {...props} >
-            {children?children:<Icon {...iconProps} name={name} />}
+            {children?children:<Icon name="backTop" nameDefault="^" {...iconProps} />}
           </Component>
         ):null}
       </React.Fragment>

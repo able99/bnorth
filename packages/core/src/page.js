@@ -181,7 +181,7 @@ export default class Page extends React.Component {
       }
       let refFrame = e=>{ if(!e)return; let update=!(this.frame); this.frame=e; if(update)this.forceUpdate() }
       return (
-        <main data-page={_id} ref={refFrame} style={styleSet}>
+        <main data-page={_id} ref={refFrame} style={styleSet} data-container-page='_id'>
           <route.component {...props} {...componentProps}>{embeds}</route.component>
           {views}
         </main>

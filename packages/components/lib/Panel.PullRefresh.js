@@ -107,7 +107,7 @@ function (_React$Component) {
 }(_react.default.Component);
 
 (0, _defineProperty2.default)(PullRefresh, "defaultProps", {
-  triggerOffset: 70
+  triggerOffset: 60
 });
 
 PullRefresh._Loader = function (aprops) {
@@ -136,7 +136,6 @@ PullRefresh._Loader = function (aprops) {
     className: (0, _props.cxm)(classStr, className),
     style: (0, _objectSpread2.default)({}, styleSet, style)
   }, props), !children && loader ? loader : null, !children && !loader ? _react.default.createElement(_Loader.default, (0, _extends2.default)({
-    "b-size": "2x",
     isProgress: !isLoading,
     progress: offset * 100 / triggerOffset
   }, loaderProps)) : null, !children && title ? title : null, children);

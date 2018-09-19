@@ -342,7 +342,8 @@ function (_React$Component) {
         return _react.default.createElement("main", {
           "data-page": _id,
           ref: refFrame,
-          style: styleSet
+          style: styleSet,
+          "data-container-page": "_id"
         }, _react.default.createElement(route.component, (0, _extends2.default)({}, props, componentProps), embeds), views);
       } else {
         return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(route.component, (0, _extends2.default)({}, props, componentProps), embeds), views);

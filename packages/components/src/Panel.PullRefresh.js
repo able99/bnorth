@@ -13,7 +13,7 @@ import Loader from './Loader';
 
 class PullRefresh extends React.Component {
   static defaultProps = {
-    triggerOffset: 70,
+    triggerOffset: 60,
   }
 
   constructor(props) {
@@ -64,7 +64,7 @@ PullRefresh._Loader = aprops=>{
   return (
     <Component className={cxm(classStr, className)} style={{...styleSet, ...style}} {...props}>
       {!children&&loader?loader:null}
-      {!children&&!loader?<Loader b-size="2x" isProgress={!isLoading} progress={offset*100/triggerOffset} {...loaderProps}/>:null}
+      {!children&&!loader?<Loader isProgress={!isLoading} progress={offset*100/triggerOffset} {...loaderProps}/>:null}
       {!children&&title?title:null}
       {children}
     </Component>
