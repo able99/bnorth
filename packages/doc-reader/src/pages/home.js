@@ -21,7 +21,7 @@ let Component = props=>{
 
 Component.controller = (app,page)=>{
   let { route:{params:{src}} } = page.props;
-  let url = '../data/';
+  let url = '/bnorth/data/';
   let type;
 
   if(src&&src.endsWith('.md')) {

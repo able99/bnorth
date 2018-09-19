@@ -49,6 +49,8 @@ function () {
       var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
           title = _ref2.title;
 
+      var _id = arguments.length > 2 ? arguments[2] : undefined;
+
       app.log.error(message, title);
       app.router.replaceError(message, title);
     }

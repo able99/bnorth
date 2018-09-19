@@ -47,20 +47,23 @@ let Component = aprops=>{
     <View>
       <Panel main>
         <Group title="list & pull refresh & infinite scroll">
-          <Panel.PullRefresh 
-            isLoading={stateData.isLoading} 
-            onRefresh={()=>{ page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({isLoading: false}), 3000);}} >
-            <List>
-              <List.Item part='header'>header</List.Item>
-              {Array(10).fill(0).map((v,i)=>(
-                <List.Item 
-                  title={'title'+i} media={'media'+i} subTitle={'subTitle'+i} desc={'desc'+i} after={'after'+i} 
-                  onClick={()=>alert(i)} 
-                  key={i}/>
-              ))}
-              <List.Item part='footer'>footer</List.Item>
-            </List>
-          </Panel.PullRefresh>
+          <Panel bs-width="70%" bs-height="300px" bc-border-set->
+            <Panel.PullRefresh 
+              bc-height-full bc-scrollable-y- 
+              isLoading={stateData.isLoading} 
+              onRefresh={()=>{ page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({isLoading: false}), 3000);}} >
+              <List>
+                <List.Item part='header'>header</List.Item>
+                {Array(10).fill(0).map((v,i)=>(
+                  <List.Item 
+                    title={'title'+i} media={'media'+i} subTitle={'subTitle'+i} desc={'desc'+i} after={'after'+i} 
+                    onClick={()=>alert(i)} 
+                    key={i}/>
+                ))}
+                <List.Item part='footer'>footer</List.Item>
+              </List>
+            </Panel.PullRefresh>
+          </Panel>
         </Group>
 
         <Group title="Icon">

@@ -22,9 +22,6 @@ export default (WrappedComponent, options={})=>{
       this.binded = false;
       this.tapTimer = null;
       this.swipeTimer = null;
-      this.moveStartTimer = null;
-      this.moveTimer = null;
-      this.moveEndTimer = null;
       this.longTapTimer = null;
       this.touchTimes = 0;
       this.doubleTapTimer = null;
@@ -64,7 +61,7 @@ export default (WrappedComponent, options={})=>{
       this.touchTimes += 1
 
       if (onMoveStart) {
-        this.moveStartTimer = setTimeout(()=>onMoveStart({ x: touch.x1, y: touch.y1 }), 0);
+        onMoveStart({ x: touch.x1, y: touch.y1 }, event);
       }
     }
   
@@ -81,7 +78,7 @@ export default (WrappedComponent, options={})=>{
       if (this.longTapTimer) clearTimeout(this.longTapTimer);
   
       if (onMove) {
-        this.moveTimer = setTimeout(()=>onMove({ x: x1, y: y1 }, { x: x2, y: y2 }), 0);
+        onMove({ x: x1, y: y1 }, { x: x2, y: y2 }, event);
       }
   
       touch.x2 = x2;
@@ -98,7 +95,7 @@ export default (WrappedComponent, options={})=>{
   
       // Move
       if (onMoveEnd && x2) {
-        this.moveEndTimer = setTimeout(()=>onMoveEnd({ x: x1, y: y1 }, { x: x2, y: y2 }), 0);
+        onMoveEnd({ x: x1, y: y1 }, { x: x2, y: y2 }, event);
       }
   
       if ((x2 && Math.abs(x1 - x2)>tapLimitDistance)||(y2 && Math.abs(y1 - y2)>tapLimitDistance)) { // Swipe
@@ -135,9 +132,6 @@ export default (WrappedComponent, options={})=>{
   
       if (this.tapTimer) clearTimeout(this.tapTimer);
       if (this.swipeTimer) clearTimeout(this.swipeTimer);
-      if (this.moveStartTimer) clearTimeout(this.moveStartTimer);
-      if (this.moveTimer) clearTimeout(this.moveTimer);
-      if (this.moveEndTimer) clearTimeout(this.moveEndTimer);
       if (this.longTapTimer) clearTimeout(this.longTapTimer);
       if (this.doubleTapTimer) clearTimeout(this.doubleTapTimer);
   

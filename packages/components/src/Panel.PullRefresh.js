@@ -21,14 +21,16 @@ class PullRefresh extends React.Component {
     this.state = {};
   }
 
-  handleMove(from, to) {
-    this.setState({offset: to.y-from.y});
+  handleMove(from, to, event) {
+    let scrollTop = this.el?this.el.scrollTop:0;
+    let offset = to.y-from.y;
+    // console.log(11111,Math.max(offset-scrollTop, 0), offset, scrollTop);
+    this.setState({offset: Math.max(offset-scrollTop, 0)});
   }
 
   handleEndMove(e) {
     let offset = this.state.offset;
     this.setState({offset: 0});
-    console.log(offset,this.props.triggerOffset,this.props.onRefresh);
     if(offset>=this.props.triggerOffset&&this.props.onRefresh) this.props.onRefresh();
   }
 
@@ -39,7 +41,7 @@ class PullRefresh extends React.Component {
     } = genCommonProps(this.props);
 
     return (
-      <Panel.Touchable onMove={(from, to)=>this.handleMove(from, to)} onMoveEnd={e=>this.handleEndMove(e)} {...props}>
+      <Panel.Touchable refWrap={e=>this.el=e} onMove={(...args)=>this.handleMove(...args)} onMoveEnd={(...args)=>this.handleEndMove(...args)} {...props}>
         <PullRefresh._Loader isLoading={isLoading} offset={this.state.offset} triggerOffset={triggerOffset} loaderProps={loaderProps} {...refreshProps} />
         {children}
       </Panel.Touchable>

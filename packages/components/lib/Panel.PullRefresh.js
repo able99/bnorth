@@ -55,9 +55,12 @@ function (_React$Component) {
 
   (0, _createClass2.default)(PullRefresh, [{
     key: "handleMove",
-    value: function handleMove(from, to) {
+    value: function handleMove(from, to, event) {
+      var scrollTop = this.el ? this.el.scrollTop : 0;
+      var offset = to.y - from.y; // console.log(11111,Math.max(offset-scrollTop, 0), offset, scrollTop);
+
       this.setState({
-        offset: to.y - from.y
+        offset: Math.max(offset - scrollTop, 0)
       });
     }
   }, {
@@ -67,7 +70,6 @@ function (_React$Component) {
       this.setState({
         offset: 0
       });
-      console.log(offset, this.props.triggerOffset, this.props.onRefresh);
       if (offset >= this.props.triggerOffset && this.props.onRefresh) this.props.onRefresh();
     }
   }, {
@@ -84,11 +86,14 @@ function (_React$Component) {
           props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["isLoading", "triggerOffset", "refreshProps", "loaderProps", "children"]);
 
       return _react.default.createElement(_Panel.default.Touchable, (0, _extends2.default)({
-        onMove: function onMove(from, to) {
-          return _this2.handleMove(from, to);
+        refWrap: function refWrap(e) {
+          return _this2.el = e;
         },
-        onMoveEnd: function onMoveEnd(e) {
-          return _this2.handleEndMove(e);
+        onMove: function onMove() {
+          return _this2.handleMove.apply(_this2, arguments);
+        },
+        onMoveEnd: function onMoveEnd() {
+          return _this2.handleEndMove.apply(_this2, arguments);
         }
       }, props), _react.default.createElement(PullRefresh._Loader, (0, _extends2.default)({
         isLoading: isLoading,

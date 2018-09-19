@@ -22,7 +22,7 @@ export default class Render {
     if(this.stopForRenderError) return; this.stopForRenderError = true;
     ReactDOM.render(<div><h3>{title?app.utils.message2String(title):'error'}</h3><pre>{app.utils.message2String(message)}</pre></div>, this.domRoot);
   }
-  panic(message, {title}={}) {
+  panic(message, {title}={}, _id) {
     app.log.error(message, title);
     app.router.replaceError(message, title);
   }

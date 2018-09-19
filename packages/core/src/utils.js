@@ -50,7 +50,7 @@ export default class Utils {
 
   objectUpdate(obj, data, append) {
     if(Array.isArray(data)) {
-      data = [...(append?data:[]),...data];
+      data = [...(append?obj:[]),...data];
     }else if(typeof data==='object'){
       if(typeof append==='string'){
         let appendObj = this.app.utils.pathGet(obj, append);

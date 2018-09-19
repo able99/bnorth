@@ -101,7 +101,7 @@ function () {
     key: "objectUpdate",
     value: function objectUpdate(obj, data, append) {
       if (Array.isArray(data)) {
-        data = (0, _toConsumableArray2.default)(append ? data : []).concat((0, _toConsumableArray2.default)(data));
+        data = (0, _toConsumableArray2.default)(append ? obj : []).concat((0, _toConsumableArray2.default)(data));
       } else if ((0, _typeof2.default)(data) === 'object') {
         if (typeof append === 'string') {
           var appendObj = this.app.utils.pathGet(obj, append);

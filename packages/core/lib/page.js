@@ -257,8 +257,8 @@ function (_React$Component) {
       var app = this.props.app;
       app.log.info('page did catch');
       app.render.panic(error, {
-        title: 'page error catch:' + this._id
-      });
+        title: 'page error catch'
+      }, this._id);
     }
   }, {
     key: "shouldComponentUpdate",

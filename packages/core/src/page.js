@@ -151,7 +151,7 @@ export default class Page extends React.Component {
   componentDidCatch(error, info) {
     let { app } = this.props;
     app.log.info('page did catch');
-    app.render.panic(error, {title:'page error catch:'+this._id});
+    app.render.panic(error, {title:'page error catch'}, this._id);
   }
 
   shouldComponentUpdate(nextProps, nextState) {

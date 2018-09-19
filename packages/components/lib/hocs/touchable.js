@@ -51,9 +51,6 @@ var _default = function _default(WrappedComponent) {
         _this.binded = false;
         _this.tapTimer = null;
         _this.swipeTimer = null;
-        _this.moveStartTimer = null;
-        _this.moveTimer = null;
-        _this.moveEndTimer = null;
         _this.longTapTimer = null;
         _this.touchTimes = 0;
         _this.doubleTapTimer = null;
@@ -91,12 +88,10 @@ var _default = function _default(WrappedComponent) {
         _this.touchTimes += 1;
 
         if (onMoveStart) {
-          _this.moveStartTimer = setTimeout(function () {
-            return onMoveStart({
-              x: touch.x1,
-              y: touch.y1
-            });
-          }, 0);
+          onMoveStart({
+            x: touch.x1,
+            y: touch.y1
+          }, event);
         }
       });
       (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "move", function (event) {
@@ -112,15 +107,13 @@ var _default = function _default(WrappedComponent) {
         if (_this.longTapTimer) clearTimeout(_this.longTapTimer);
 
         if (onMove) {
-          _this.moveTimer = setTimeout(function () {
-            return onMove({
-              x: x1,
-              y: y1
-            }, {
-              x: x2,
-              y: y2
-            });
-          }, 0);
+          onMove({
+            x: x1,
+            y: y1
+          }, {
+            x: x2,
+            y: y2
+          }, event);
         }
 
         touch.x2 = x2;
@@ -144,15 +137,13 @@ var _default = function _default(WrappedComponent) {
         if (_this.longTapTimer) clearTimeout(_this.longTapTimer); // Move
 
         if (onMoveEnd && x2) {
-          _this.moveEndTimer = setTimeout(function () {
-            return onMoveEnd({
-              x: x1,
-              y: y1
-            }, {
-              x: x2,
-              y: y2
-            });
-          }, 0);
+          onMoveEnd({
+            x: x1,
+            y: y1
+          }, {
+            x: x2,
+            y: y2
+          }, event);
         }
 
         if (x2 && Math.abs(x1 - x2) > tapLimitDistance || y2 && Math.abs(y1 - y2) > tapLimitDistance) {
@@ -197,9 +188,6 @@ var _default = function _default(WrappedComponent) {
         (0, _event.off)(window, 'scroll', _this.cancel);
         if (_this.tapTimer) clearTimeout(_this.tapTimer);
         if (_this.swipeTimer) clearTimeout(_this.swipeTimer);
-        if (_this.moveStartTimer) clearTimeout(_this.moveStartTimer);
-        if (_this.moveTimer) clearTimeout(_this.moveTimer);
-        if (_this.moveEndTimer) clearTimeout(_this.moveEndTimer);
         if (_this.longTapTimer) clearTimeout(_this.longTapTimer);
         if (_this.doubleTapTimer) clearTimeout(_this.doubleTapTimer);
 

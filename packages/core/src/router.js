@@ -15,7 +15,7 @@ let PageError = props=>{
     <div style={{padding: 8}}> 
       <div> 
         <span>error</span> 
-        <a style={{padding: 4}} onClick={()=>app.router.back()}>[back]</a> 
+        <a style={{padding: 4}} onClick={()=>app.router.refresh()}>[refresh]</a> 
         <a style={{padding: 4}} onClick={()=>app.router.replaceRoot()}>[home]</a> 
       </div> 
       <h3>{data.errorRoute?data.errorRoute:data.params[1]}</h3> 
@@ -459,6 +459,11 @@ export default class Router {
   refresh() {
     this._updatePathInfos(this.history.location);
     return true;
+  }
+
+  error(message, title, _id) {
+    this._errorInfo = {params: [message, title, _id]};
+    this._updateRender();
   }
 }
 

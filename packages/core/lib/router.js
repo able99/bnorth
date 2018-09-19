@@ -55,9 +55,9 @@ var PageError = function PageError(props) {
       padding: 4
     },
     onClick: function onClick() {
-      return app.router.back();
+      return app.router.refresh();
     }
-  }, "[back]"), _react.default.createElement("a", {
+  }, "[refresh]"), _react.default.createElement("a", {
     style: {
       padding: 4
     },
@@ -854,6 +854,15 @@ function () {
       this._updatePathInfos(this.history.location);
 
       return true;
+    }
+  }, {
+    key: "error",
+    value: function error(message, title, _id) {
+      this._errorInfo = {
+        params: [message, title, _id]
+      };
+
+      this._updateRender();
     }
   }]);
   return Router;
