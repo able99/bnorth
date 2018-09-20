@@ -3,53 +3,62 @@ import View from '@bnorth/components/lib/View'
 import Panel from '@bnorth/components/lib/Panel'
 import '@bnorth/components/lib/Panel.PullRefresh'
 import '@bnorth/components/lib/Panel.AspectRatio'
-import Loader from '@bnorth/components/lib/Loader'
 import Button from '@bnorth/components/lib/Button'
-import Tabs from '@bnorth/components/lib/Tabs'
 import List from '@bnorth/components/lib/List'
-import Icon from '@bnorth/components/lib/Icon'
-import Space from '@bnorth/components/lib/Space'
-import Fab from '@bnorth/components/lib/Fab'
-import BackTop from '@bnorth/components/lib/BackTop';
 import InfiniteScroll from '@bnorth/components/lib/InfiniteScroll';
-import img from '../../res/aboutme.svg';
+import BackTop from '@bnorth/components/lib/BackTop';
+// import Icon from '@bnorth/components/lib/Icon'
+// import Space from '@bnorth/components/lib/Space'
+// import Fab from '@bnorth/components/lib/Fab'
+// import Tabs from '@bnorth/components/lib/Tabs'
+// import Loader from '@bnorth/components/lib/Loader'
+// import img from '../../res/aboutme.svg';
+
+
+let Group = aprops=>{
+  let { 
+    app, page, stateData, stateComponentSwitchs,  stateCommonProps, stateComponentProps,
+    title, children, ...props
+  } = aprops;
+  let switchOn = stateComponentSwitchs.includes(title);
+
+  return (
+    <div className="padding-a-xs" {...props}>
+      <div className="flex-display-block flex-align-center margin-v-">
+        <Button 
+          onClick={()=>switchOn?page.stateComponentSwitchs.delete(title):page.stateComponentSwitchs.update([title], {append: true})}
+          b-style="plain" bc-padding-a- bc-flex-sub-flex-none >
+          {switchOn?'-':'+'}
+        </Button>
+        <strong className="flex-sub-flex-extend">{title}</strong>
+      </div>
+      {switchOn?<div className="border-set-a- padding-a-xs bg-color-white">{children}</div>:<div className="border-set-bottom-" />}
+    </div>
+  )
+}
+
+Group.Item = aprops=>{
+  let { title, children } = aprops;
+
+  return (
+    <React.Fragment>
+      <h4 className="border-set-bottom-">{title}</h4>
+      {children}
+    </React.Fragment>
+  )
+}
 
 
 let Component = aprops=>{
-  let { /*app,*/ page, stateData, stateComponentSwitchs,  stateCommonProps} = aprops;
-
-  let Group = aprops=>{
-    let { title, children, ...props } = aprops;
-    let switchOn = stateComponentSwitchs.includes(title);
-    return (
-      <div className="padding-a-xs" {...props}>
-        <div className="flex-display-block flex-align-center margin-v-">
-          <Button 
-            onClick={()=>switchOn?page.stateComponentSwitchs.delete(title):page.stateComponentSwitchs.update([title], {append: true})}
-            b-style="plain" bc-padding-a- bc-flex-sub-flex-none >
-            {switchOn?'-':'+'}
-          </Button>
-          <strong className="flex-sub-flex-extend">{title}</strong>
-        </div>
-        {switchOn?<div className="border-set-a- padding-a-xs bg-color-white">{children}</div>:<div className="border-set-bottom-" />}
-      </div>
-    )
-  }
-  
-  Group.Item = aprops=>{
-    let { title, children, ...props } = aprops;
-    return (
-      <React.Fragment>
-        <h4 className="border-set-bottom-">{title}</h4>
-        {children}
-      </React.Fragment>
-    )
-  }
+  let { app, page, stateData, stateComponentSwitchs,  stateCommonProps, stateComponentProps} = aprops;
 
   return (
     <View>
       <Panel main>
-        <Group title="list & pull refresh & infinite scroll & backtop">
+        <Group 
+          title="list & pull refresh & infinite scroll & backtop" 
+          app={app} page={page}
+          stateData={stateData} stateComponentSwitchs={stateComponentSwitchs} stateCommonProps={stateCommonProps} stateComponentProps={stateComponentProps}>
           <Panel bs-width="70%" bs-height="300px" bc-border-set- data-container>
             <Panel.PullRefresh 
               bc-height-full bc-scrollable-y- 
@@ -58,7 +67,7 @@ let Component = aprops=>{
               <List>
                 <List.Item part='header'>header</List.Item>
                 {Array(10).fill(0).map((v,i)=>(
-                  <List.Item 
+                  <List.Item name="aaa"
                     title={'title'+i} media={'media'+i} subTitle={'subTitle'+i} desc={'desc'+i} after={'after'+i} 
                     onClick={()=>alert(i)} 
                     key={i}/>
@@ -73,7 +82,17 @@ let Component = aprops=>{
           </Panel>
         </Group>
 
-        <Group title="Icon">
+        {/*<Panel.Touchable onPan={(e,el)=>console.log(e,el)} >
+          <List>
+            {Array(10).fill(0).map((v,i)=>(
+              <List.Item 
+                title={i}  
+                key={i}/>
+            ))}
+          </List>
+            </Panel.Touchable>*/}
+
+        {/*<Group title="Icon">
           <Group.Item title="svg">
             <Icon name="heart" />
           </Group.Item>
@@ -110,7 +129,7 @@ let Component = aprops=>{
           <Group.Item title="wrap">
             <Space count={2} stacked {...stateCommonProps} />
           </Group.Item>
-        </Group>
+                </Group>*/}
 
         
         

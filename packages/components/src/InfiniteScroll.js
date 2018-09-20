@@ -6,10 +6,10 @@
  */
 
 import React from 'react';
-import Waypoint from 'react-waypoint';
 import { genCommonProps, cxm } from './utils/props';
 import Panel from './Panel';
 import Loader from './Loader';
+import ScrollSpy from './ScrollSpy';
 
 
 let InfiniteScroll = (aprops)=>{
@@ -19,17 +19,20 @@ let InfiniteScroll = (aprops)=>{
     componentTitle:ComponentTitle=Panel, titleProps,
     component:Component=Panel, children, className, ...props 
   } = genCommonProps(aprops);
-
   if(!spy) return null;
-  if(!isLoading) return <Waypoint onEnter={onLoading&&onLoading.bind(this)} />;
 
   let classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center padding-a-';
   
   return (
-    <Component className={cxm(classStr, className)} {...props}>
-      {children?children:<ComponentLoader {...loaderProps} />}
-      {children?children:<ComponentTitle {...titleProps} />}
-    </Component>
+    <React.Fragment>
+      <ScrollSpy onScrollPositionChange={(container, event)=>!isLoading&&onLoading&&Math.abs(container.scrollTop+container.clientHeight-container.scrollHeight)<35&&onLoading()} />
+      {isLoading?(
+        <Component className={cxm(classStr, className)} {...props}>
+          {children?children:<ComponentLoader {...loaderProps} />}
+          {children?children:<ComponentTitle {...titleProps} />}
+        </Component>
+      ):null}
+    </React.Fragment>
   );
 }
 

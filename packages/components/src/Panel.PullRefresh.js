@@ -21,17 +21,26 @@ class PullRefresh extends React.Component {
     this.state = {};
   }
 
-  handleMove(from, to, event) {
-    let scrollTop = this.el?this.el.scrollTop:0;
-    let offset = to.y-from.y;
-    // console.log(11111,Math.max(offset-scrollTop, 0), offset, scrollTop);
-    this.setState({offset: Math.max(offset-scrollTop, 0)});
+  handleMove(el,e) {
+    console.log(el, e);
+    if(el.scrollTop>0) return;
+    this.setState({offset: Math.max(e.deltaY, 0)});
+    // let scrollTop = this.el?this.el.scrollTop:0;
+    // let offset = to.y-from.y;
+    // // console.log(11111,Math.max(offset-scrollTop, 0), offset, scrollTop);
+    // this.setState({offset: Math.max(offset-scrollTop, 0)});
+    !this.props.isLoading&&this.state.offset&&e.preventDefault();
+    // e.srcEvent.preventDefault();
+    //  e.srcEvent.stopPropagation();
   }
 
-  handleEndMove(e) {
+  handleEnd(el,e) {
     let offset = this.state.offset;
     this.setState({offset: 0});
     if(offset>=this.props.triggerOffset&&this.props.onRefresh) this.props.onRefresh();
+    // e.preventDefault();
+    // e.srcEvent.preventDefault();
+    // e.srcEvent.stopPropagation()
   }
 
   render() {
@@ -41,8 +50,13 @@ class PullRefresh extends React.Component {
     } = genCommonProps(this.props);
 
     return (
-      <Panel.Touchable refWrap={e=>this.el=e} onMove={(...args)=>this.handleMove(...args)} onMoveEnd={(...args)=>this.handleEndMove(...args)} {...props}>
-        <PullRefresh._Loader isLoading={isLoading} offset={this.state.offset} triggerOffset={triggerOffset} loaderProps={loaderProps} {...refreshProps} />
+      <Panel.Touchable 
+        options={{recognizers: {pan:{threshold: 3, direction: Hammer.DIRECTION_VERTICAL}}}}
+        onPan={(el,e)=>this.handleMove(el,e)} onPanCancel={(el,e)=>this.handleEnd(el,e)} onPanEnd={(el,e)=>this.handleEnd(el,e)} 
+        {...props}>
+        <PullRefresh._Loader 
+          isLoading={isLoading} offset={this.state.offset} triggerOffset={triggerOffset} 
+          loaderProps={loaderProps} {...refreshProps} />
         {children}
       </Panel.Touchable>
     )

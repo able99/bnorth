@@ -55,22 +55,29 @@ function (_React$Component) {
 
   (0, _createClass2.default)(PullRefresh, [{
     key: "handleMove",
-    value: function handleMove(from, to, event) {
-      var scrollTop = this.el ? this.el.scrollTop : 0;
-      var offset = to.y - from.y; // console.log(11111,Math.max(offset-scrollTop, 0), offset, scrollTop);
-
+    value: function handleMove(el, e) {
+      console.log(el, e);
+      if (el.scrollTop > 0) return;
       this.setState({
-        offset: Math.max(offset - scrollTop, 0)
-      });
+        offset: Math.max(e.deltaY, 0)
+      }); // let scrollTop = this.el?this.el.scrollTop:0;
+      // let offset = to.y-from.y;
+      // // console.log(11111,Math.max(offset-scrollTop, 0), offset, scrollTop);
+      // this.setState({offset: Math.max(offset-scrollTop, 0)});
+
+      !this.props.isLoading && this.state.offset && e.preventDefault(); // e.srcEvent.preventDefault();
+      //  e.srcEvent.stopPropagation();
     }
   }, {
-    key: "handleEndMove",
-    value: function handleEndMove(e) {
+    key: "handleEnd",
+    value: function handleEnd(el, e) {
       var offset = this.state.offset;
       this.setState({
         offset: 0
       });
-      if (offset >= this.props.triggerOffset && this.props.onRefresh) this.props.onRefresh();
+      if (offset >= this.props.triggerOffset && this.props.onRefresh) this.props.onRefresh(); // e.preventDefault();
+      // e.srcEvent.preventDefault();
+      // e.srcEvent.stopPropagation()
     }
   }, {
     key: "render",
@@ -86,14 +93,22 @@ function (_React$Component) {
           props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["isLoading", "triggerOffset", "refreshProps", "loaderProps", "children"]);
 
       return _react.default.createElement(_Panel.default.Touchable, (0, _extends2.default)({
-        refWrap: function refWrap(e) {
-          return _this2.el = e;
+        options: {
+          recognizers: {
+            pan: {
+              threshold: 3,
+              direction: Hammer.DIRECTION_VERTICAL
+            }
+          }
         },
-        onMove: function onMove() {
-          return _this2.handleMove.apply(_this2, arguments);
+        onPan: function onPan(el, e) {
+          return _this2.handleMove(el, e);
         },
-        onMoveEnd: function onMoveEnd() {
-          return _this2.handleEndMove.apply(_this2, arguments);
+        onPanCancel: function onPanCancel(el, e) {
+          return _this2.handleEnd(el, e);
+        },
+        onPanEnd: function onPanEnd(el, e) {
+          return _this2.handleEnd(el, e);
         }
       }, props), _react.default.createElement(PullRefresh._Loader, (0, _extends2.default)({
         isLoading: isLoading,
