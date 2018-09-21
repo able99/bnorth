@@ -119,7 +119,7 @@ Tabs.ButtonGroup = function (aprops) {
   var classStr = 'flex-sub-flex-none';
   buttonProps.className = (0, _props.cx)(buttonProps.className, 'text-truncate');
   buttonProps['b-style'] = buttonProps['b-style'] || 'underline';
-  return _react.default.createElement(_Button.default.Group, (0, _extends2.default)({
+  return _react.default.createElement(Component, (0, _extends2.default)({
     separator: true,
     justify: true,
     buttonProps: buttonProps,

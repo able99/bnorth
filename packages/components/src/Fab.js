@@ -15,7 +15,7 @@ export default class Fab extends React.Component{
   handleRef(e) {
     let { container } = this.props;
     let el=e;
-    while(el=el.parentElement) {
+    while((el=el.parentElement)) {
       if(el===document.body) {this.container=el; break};
       if(el.getAttribute('data-container-page')) {this.container=el; break};
       if(container===true&&el.getAttribute('data-container')==='true') {this.container=el; break};

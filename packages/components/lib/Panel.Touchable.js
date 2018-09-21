@@ -5,6 +5,12 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+Object.defineProperty(exports, "Hammer", {
+  enumerable: true,
+  get: function get() {
+    return _hammerjs.default;
+  }
+});
 exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
@@ -32,8 +38,8 @@ var _hammerjs = _interopRequireDefault(require("hammerjs"));
  * @license MIT
  */
 _hammerjs.default.defaults.inputClass = 'ontouchstart' in window ? _hammerjs.default.TouchInput : _hammerjs.default.TouchMouseInput;
-_hammerjs.default.defaults.touchAction = 'pan-up'; //, domEvents: false, 
-
+_hammerjs.default.defaults.touchAction = 'pan-up';
+//, domEvents: false, 
 var privateProps = {
   direction: true,
   options: true,

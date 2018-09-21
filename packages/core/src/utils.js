@@ -55,7 +55,7 @@ export default class Utils {
       if(typeof append==='string'){
         let appendObj = this.app.utils.pathGet(obj, append);
         let appendData = this.app.utils.pathGet(data, append);
-        let appends = app.utiles.objectUpdate(appendObj, appendData, true);
+        let appends = this.app.utiles.objectUpdate(appendObj, appendData, true);
         data = {...obj, ...data};
         this.app.utils.pathSet(data, append, appends)
       }else if(append===true||append===undefined){

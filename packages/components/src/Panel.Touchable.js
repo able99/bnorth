@@ -10,6 +10,7 @@ import Panel from './Panel';
 import Hammer from 'hammerjs';
 Hammer.defaults.inputClass = 'ontouchstart' in window?Hammer.TouchInput:Hammer.TouchMouseInput;
 Hammer.defaults.touchAction = 'pan-up';
+export { Hammer }
 //, domEvents: false, 
 
 let privateProps = {

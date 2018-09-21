@@ -68,6 +68,7 @@ function (_React$Component) {
     value: function action(func, name) {
       var _this2 = this;
 
+      var app = this.props.app.app;
       if (!name) name = "_".concat(++this._actionNum);
 
       var ret = function ret() {

@@ -7,7 +7,7 @@
 
 import React from 'react';
 import { genCommonProps, cxm } from './utils/props';
-import Panel from './Panel.Touchable';
+import Panel,{Hammer} from './Panel.Touchable';
 import Loader from './Loader';
 
 

@@ -50,14 +50,14 @@ var PageError = function PageError(props) {
     style: {
       padding: 8
     }
-  }, _react.default.createElement("div", null, _react.default.createElement("span", null, "error"), _react.default.createElement("a", {
+  }, _react.default.createElement("div", null, _react.default.createElement("span", null, "error"), _react.default.createElement("button", {
     style: {
       padding: 4
     },
     onClick: function onClick() {
       return app.router.refresh();
     }
-  }, "[refresh]"), _react.default.createElement("a", {
+  }, "[refresh]"), _react.default.createElement("button", {
     style: {
       padding: 4
     },
@@ -105,6 +105,7 @@ function (_React$Component) {
           embeds = _ref.embeds,
           routeName = _ref.routeName,
           route = _ref.route;
+      var app = this.props.app;
       var embedsPage = {};
       Object.entries(embeds).map(function (_ref2) {
         var _ref3 = (0, _slicedToArray2.default)(_ref2, 2),
@@ -114,7 +115,7 @@ function (_React$Component) {
         return embedsPage[k] = _this2._renderPage(v, activeId, focusId);
       });
       var props = {
-        app: this.props.app,
+        app: app,
         key: _id,
         _id: _id,
         route: (0, _objectSpread2.default)({}, route, {
@@ -123,7 +124,6 @@ function (_React$Component) {
           params: paramObj,
           query: query,
           active: embed ? _idParent === activeId : _id === activeId,
-          focus: focus,
           embed: embed
         }),
         views: viewItems,
@@ -212,10 +212,11 @@ function () {
     this._views = [];
     this._pages = {};
     this._pathinfos = [];
-    this._errorInfo;
-    this._activeId;
-    this._focusId;
-    this._blockLocation;
+    this._errorInfo = undefined;
+    this._activeId = undefined;
+    ;
+    this._focusId = undefined;
+    this._blockLocation = undefined;
     this._viewIdNum = 0;
     this._historyStackCount = 0;
     this.app.event.on(this.app._id, 'onPageAdd', function (_id, page) {
@@ -285,7 +286,7 @@ function () {
   }, {
     key: "isRootPath",
     value: function isRootPath() {
-      return app.router._pathinfos[app.router._pathinfos.length - 1].name === '/';
+      return this.app.router._pathinfos[this.app.router._pathinfos.length - 1].name === '/';
     }
   }, {
     key: "_updateQuerys",
@@ -381,7 +382,7 @@ function () {
                   if (ret.name === errorTag) {
                     ret.errorPage = true;
                     !errorInfo && (errorInfo = ret);
-                    return;
+                    return undefined;
                   } else {
                     ret.routeName = routeName;
                     ret.route = route;
@@ -395,7 +396,7 @@ function () {
 
                   (Array.isArray(route.embeds) ? route.embeds.map(function (vv) {
                     return [vv, vv];
-                  }) : Object.entries(route.embeds || {})).map(function (_ref5) {
+                  }) : Object.entries(route.embeds || {})).forEach(function (_ref5) {
                     var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
                         kk = _ref6[0],
                         vv = _ref6[1];
@@ -791,7 +792,7 @@ function () {
         pathname: pathnames.map(function (v, i, a) {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
-        search: '?' + Object.entries(passQuery ? (0, _objectSpread2.default)({}, location.query, query) : query).map(function (_ref11) {
+        search: '?' + Object.entries(passQuery ? (0, _objectSpread2.default)({}, this.history.location.query, query) : query).map(function (_ref11) {
           var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
               k = _ref12[0],
               v = _ref12[1];
@@ -805,7 +806,7 @@ function () {
   }, {
     key: "block",
     value: function block(blockInfo) {
-      app.log.info('router block', blockInfo);
+      this.app.log.info('router block', blockInfo);
       this._blockLocation = this.history.location;
       if (typeof blockInfo === 'function') blockInfo(this.app);
       return true;
@@ -813,7 +814,7 @@ function () {
   }, {
     key: "restore",
     value: function restore(location) {
-      app.log.info('router restore', location);
+      this.app.log.info('router restore', location);
       location || this._blockLocation ? this.history.replace(location || this._blockLocation) : this.replaceRoot();
       this._blockLocation = null;
       return true;
@@ -825,7 +826,7 @@ function () {
         args[_key4] = arguments[_key4];
       }
 
-      app.log.info('router push', args);
+      this.app.log.info('router push', args);
       this.history.push(this._getLocation.apply(this, args));
       return true;
     }
@@ -836,7 +837,7 @@ function () {
         args[_key5] = arguments[_key5];
       }
 
-      app.log.info('router replace', args);
+      this.app.log.info('router replace', args);
       this.history.replace(this._getLocation.apply(this, args));
       return true;
     }
@@ -844,7 +845,7 @@ function () {
     key: "back",
     value: function back() {
       var step = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      app.log.info('router back');
+      this.app.log.info('router back');
       this.history.go(-step);
       return true;
     }

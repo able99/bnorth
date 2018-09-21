@@ -15,8 +15,8 @@ let PageError = props=>{
     <div style={{padding: 8}}> 
       <div> 
         <span>error</span> 
-        <a style={{padding: 4}} onClick={()=>app.router.refresh()}>[refresh]</a> 
-        <a style={{padding: 4}} onClick={()=>app.router.replaceRoot()}>[home]</a> 
+        <button style={{padding: 4}} onClick={()=>app.router.refresh()}>[refresh]</button> 
+        <button style={{padding: 4}} onClick={()=>app.router.replaceRoot()}>[home]</button> 
       </div> 
       <h3>{data.errorRoute?data.errorRoute:data.params[1]}</h3> 
       <hr/> 
@@ -39,12 +39,13 @@ class RouterComponent extends React.Component {
     paramObj, query, embed, viewItems, embeds,
     routeName, route, 
   }, activeId, focusId){
+    let { app } = this.props;
     let embedsPage = {};
     Object.entries(embeds).map(([k,v])=>embedsPage[k]=this._renderPage(v, activeId, focusId));
 
     let props = { 
-      app: this.props.app, key: _id, _id, 
-      route: { ...route,routeName,  _idParent, params: paramObj, query, active: embed?_idParent===activeId:_id===activeId, focus, embed }, 
+      app, key: _id, _id, 
+      route: { ...route,routeName,  _idParent, params: paramObj, query, active: embed?_idParent===activeId:_id===activeId, embed }, 
       views: viewItems, embeds: embedsPage,
     };
 
@@ -94,10 +95,10 @@ export default class Router {
     this._views = [];
     this._pages = {};
     this._pathinfos = [];
-    this._errorInfo;
-    this._activeId;
-    this._focusId;
-    this._blockLocation;
+    this._errorInfo = undefined;
+    this._activeId = undefined;;
+    this._focusId = undefined;
+    this._blockLocation = undefined;
     this._viewIdNum = 0;
     this._historyStackCount = 0;
 
@@ -143,7 +144,7 @@ export default class Router {
   }
 
   isRootPath() {
-    return app.router._pathinfos[app.router._pathinfos.length-1].name==='/';
+    return this.app.router._pathinfos[this.app.router._pathinfos.length-1].name==='/';
   }
 
   _updateQuerys(location) {
@@ -206,14 +207,14 @@ export default class Router {
       if(ret.name===errorTag) {
         ret.errorPage = true;
         !errorInfo&&(errorInfo=ret);
-        return;
+        return undefined;
       }else{
         ret.routeName = routeName;
         ret.route = route;
         if(!ret.routeName||!ret.route) { ret.errorRoute = 'no route'; !errorInfo&&(errorInfo=ret); return ret }
       }
 
-      (Array.isArray(route.embeds)?route.embeds.map(vv=>[vv,vv]):Object.entries(route.embeds||{})).map(([kk,vv])=>{
+      (Array.isArray(route.embeds)?route.embeds.map(vv=>[vv,vv]):Object.entries(route.embeds||{})).forEach(([kk,vv])=>{
         let _idEmbed = ret._id+subPageSpe+vv;
         let retEmbed = { 
           name: vv, params: ret.params, path: ret.path, fullPath: ret.fullPath, 
@@ -419,39 +420,39 @@ export default class Router {
     //pathname, search, hash, key, state
     return {
       pathname: pathnames.map((v,i,a)=>i===0&&v==='/'&&a.length>1?'':v).join('/'),
-      search: '?'+Object.entries(passQuery?{...location.query, ...query}:query).map(([k,v])=>k+'='+v).reduce((v1,v2)=>v1+'&'+v2,''),
+      search: '?'+Object.entries(passQuery?{...this.history.location.query, ...query}:query).map(([k,v])=>k+'='+v).reduce((v1,v2)=>v1+'&'+v2,''),
     };
   }
   
 
   block(blockInfo) {
-    app.log.info('router block', blockInfo);
+    this.app.log.info('router block', blockInfo);
     this._blockLocation = this.history.location;
     if(typeof blockInfo==='function') blockInfo(this.app);
     return true;
   }
 
   restore(location) {
-    app.log.info('router restore', location);
+    this.app.log.info('router restore', location);
     location||this._blockLocation?this.history.replace(location||this._blockLocation):this.replaceRoot();
     this._blockLocation = null;
     return true;
   }
 
   push(...args) {
-    app.log.info('router push', args);
+    this.app.log.info('router push', args);
     this.history.push(this._getLocation(...args));
     return true;
   }
 
   replace(...args) {
-    app.log.info('router replace', args);
+    this.app.log.info('router replace', args);
     this.history.replace(this._getLocation(...args));
     return true;
   }
 
   back(step=1) {
-    app.log.info('router back');
+    this.app.log.info('router back');
     this.history.go(-step);
     return true;
   }

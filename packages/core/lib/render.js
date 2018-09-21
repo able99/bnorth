@@ -37,11 +37,11 @@ function () {
       var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
           title = _ref.title;
 
-      app.log.error(message, title);
+      this.app.log.error(message, title);
       if (this.stopForRenderError) return;
       this.stopForRenderError = true;
 
-      _reactDom.default.render(_react.default.createElement("div", null, _react.default.createElement("h3", null, title ? app.utils.message2String(title) : 'error'), _react.default.createElement("pre", null, app.utils.message2String(message))), this.domRoot);
+      _reactDom.default.render(_react.default.createElement("div", null, _react.default.createElement("h3", null, title ? this.app.utils.message2String(title) : 'error'), _react.default.createElement("pre", null, this.app.utils.message2String(message))), this.domRoot);
     }
   }, {
     key: "panic",
@@ -51,8 +51,8 @@ function () {
 
       var _id = arguments.length > 2 ? arguments[2] : undefined;
 
-      app.log.error(message, title);
-      app.router.error(message, title, _id);
+      this.app.log.error(message, title);
+      this.app.router.error(message, title, _id);
     }
   }, {
     key: "error",
@@ -60,12 +60,12 @@ function () {
       var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
           title = _ref3.title;
 
-      alert(app.utils.message2String(message));
+      alert(this.app.utils.message2String(message));
     }
   }, {
     key: "notice",
     value: function notice(content, options) {
-      alert(app.utils.message2String(content));
+      alert(this.app.utils.message2String(content));
     }
   }, {
     key: "mask",

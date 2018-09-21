@@ -32,8 +32,7 @@ var _this = void 0;
 var Modal = function Modal(aprops) {
   var _genCommonProps = (0, _props.genCommonProps)(aprops),
       handleAction = _genCommonProps.handleAction,
-      _genCommonProps$in = _genCommonProps.in,
-      isIn = _genCommonProps$in === void 0 ? true : _genCommonProps$in,
+      isIn = _genCommonProps.in,
       onExited = _genCommonProps.onExited,
       role = _genCommonProps.role,
       title = _genCommonProps.title,

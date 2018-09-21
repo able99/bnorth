@@ -1,7 +1,6 @@
 import Utils from './utils';
 import Log from './log';
 import Event from './event';
-import Config from './config';
 import Plugins from './plugins';
 import State from './state';
 import Page from './page';

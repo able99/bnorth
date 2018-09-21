@@ -130,7 +130,7 @@ Button.Group.Separator = aprops=>{
   let styleSet = {};
   styleSet.width = 1;
 
-  return <span style={{...styleSet, ...style}} className={cxm(classStr,className)} {...props}>&nbsp;</span>;
+  return <Component style={{...styleSet, ...style}} className={cxm(classStr,className)} {...props}>&nbsp;</Component>;
 }
 
 

@@ -23,9 +23,9 @@ export default {
 
         let _id = app.router.getViewId(options);
         options._id = _id;
-        options.isModal = true, 
-        options.onAdd = _id=>app.keyboard.on(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id)),
-        options.onRemove = _id=>app.keyboard.off(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id)),
+        options.isModal = true; 
+        options.onAdd = _id=>app.keyboard.on(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id));
+        options.onRemove = _id=>app.keyboard.off(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id));
         props.in = true;
         props.handleAction = index=>(!onAction || onAction( index, app.context.data(_id)||{}, ()=>app.modal.close(_id), _id)!==false) && app.modal.close(_id);
         props.children = app.modal._createContent(_id, Content);

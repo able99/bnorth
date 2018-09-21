@@ -16,7 +16,7 @@ import Icon from './Icon';
 
 let Modal = aprops=>{
   let {
-    handleAction, in:isIn=true, onExited,
+    handleAction, in:isIn, onExited,
     role, title, titleClose, 
     headerProps, headerTitleProps, headerCloseProps, bodyProps, footerProps, footerButtonsProps, containerProps, 
     style, className, children, ...props

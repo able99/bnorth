@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -29,7 +31,7 @@ var _react = _interopRequireDefault(require("react"));
 
 var _props = require("./utils/props");
 
-var _Panel = _interopRequireDefault(require("./Panel.Touchable"));
+var _Panel = _interopRequireWildcard(require("./Panel.Touchable"));
 
 var _Loader = _interopRequireDefault(require("./Loader"));
 
@@ -97,7 +99,7 @@ function (_React$Component) {
           recognizers: {
             pan: {
               threshold: 3,
-              direction: Hammer.DIRECTION_VERTICAL
+              direction: _Panel.Hammer.DIRECTION_VERTICAL
             }
           }
         },

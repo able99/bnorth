@@ -61,7 +61,7 @@ List._Inner = aprops=>{
     [`padding-left${separatorInset&&separatorInset!==true?('-'+separatorInset):''}`]: separatorInset,
   }
 
-  return <div className={cxm(classStr, classSet, className)} {...props}>{children}</div>
+  return <Component className={cxm(classStr, classSet, className)} {...props}>{children}</Component>
 }
 
 List.Item = aprops=>{

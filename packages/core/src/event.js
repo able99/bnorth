@@ -22,7 +22,7 @@ export default class Event {
 
     for (let {callback, once} of (this._listener[name]||[])) {
       let ret = await callback(...args);
-      if(once) ()=>this.off(callback);
+      if(once) this.off(callback);
       if(ret) return ret;
     }
   }
@@ -38,7 +38,7 @@ export default class Event {
   off(item) {
     if(!item) return;
 
-    Object.entries(this._listener).map(([k,v])=>{
+    Object.entries(this._listener).forEach(([k,v])=>{
       let index = v.findIndex(v=>v&&(v.callback===item||v.ownerId===item));
       if(index>=0) v.splice(index, 1);
       if(!v.length) delete this._listener[k];

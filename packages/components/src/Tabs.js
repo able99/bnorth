@@ -57,7 +57,7 @@ Tabs.ButtonGroup = aprops=>{
   buttonProps['b-style'] = buttonProps['b-style']||'underline';
 
   return (
-    <Button.Group 
+    <Component
       separator justify 
       buttonProps={buttonProps} buttonGetClassName={buttonGetClassName} buttonGetStyle={buttonGetStyle} buttonGetProps={buttonGetProps}
       className={cxm(classStr, className)} {...props}>
@@ -73,7 +73,7 @@ Tabs.ButtonGroup = aprops=>{
           </Button>
         )
       })}
-    </Button.Group>
+    </Component>
   )
 }
 

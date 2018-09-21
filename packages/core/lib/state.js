@@ -82,7 +82,7 @@ function () {
   (0, _createClass2.default)(State, [{
     key: "destructor",
     value: function destructor() {
-      app.log.info('state destructor', this._id);
+      this.app.log.info('state destructor', this._id);
       this.app.event.off(this._id);
       if (this.options.cleanOnStop !== false) this.clear();
       if (this._id !== true && this.options.removeOnStop !== false) delete State.states[this._id];

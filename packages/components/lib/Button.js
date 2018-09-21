@@ -186,7 +186,7 @@ Button.Group.Separator = function (aprops) {
   var classStr = 'display-inline-block lex-sub-flex-none bg-color-border margin-v-xl';
   var styleSet = {};
   styleSet.width = 1;
-  return _react.default.createElement("span", (0, _extends2.default)({
+  return _react.default.createElement(Component, (0, _extends2.default)({
     style: (0, _objectSpread2.default)({}, styleSet, style),
     className: (0, _props.cxm)(classStr, className)
   }, props), "\xA0");

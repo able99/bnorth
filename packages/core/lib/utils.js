@@ -106,7 +106,7 @@ function () {
         if (typeof append === 'string') {
           var appendObj = this.app.utils.pathGet(obj, append);
           var appendData = this.app.utils.pathGet(data, append);
-          var appends = app.utiles.objectUpdate(appendObj, appendData, true);
+          var appends = this.app.utiles.objectUpdate(appendObj, appendData, true);
           data = (0, _objectSpread2.default)({}, obj, data);
           this.app.utils.pathSet(data, append, appends);
         } else if (append === true || append === undefined) {

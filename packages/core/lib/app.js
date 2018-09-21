@@ -21,8 +21,6 @@ var _log = _interopRequireDefault(require("./log"));
 
 var _event = _interopRequireDefault(require("./event"));
 
-var _config = _interopRequireDefault(require("./config"));
-
 var _plugins = _interopRequireDefault(require("./plugins"));
 
 var _state = _interopRequireDefault(require("./state"));

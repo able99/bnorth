@@ -31,6 +31,7 @@ export default class Page extends React.Component {
   // controller
   // ---------------------------
   action(func, name) {
+    let { app } = this.props.app;
     if(!name) name = `_${++this._actionNum}`
     let ret = (...args)=>{
       try{

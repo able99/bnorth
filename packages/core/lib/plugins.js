@@ -172,12 +172,12 @@ function () {
 
       if (index < 0) return;
       var plugin = this._plugins[index];
-      app.event.emitSync(plugin._id._id, 'onPluginUnmount', app, plugin);
-      this.app.event.off(name);
+      this.app.event.emitSync(plugin._id._id, 'onPluginUnmount', this.app, plugin);
+      this.app.event.off(_id);
 
       this._plugins.splice(index, 1);
 
-      this.app.event.emitSync(this.app._id, 'onPluginRemove', name);
+      this.app.event.emitSync(this.app._id, 'onPluginRemove', _id);
     }
   }]);
   return Plugins;

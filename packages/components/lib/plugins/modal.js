@@ -48,15 +48,21 @@ var _default = {
         var _id = app.router.getViewId(options);
 
         options._id = _id;
-        options.isModal = true, options.onAdd = function (_id) {
+        options.isModal = true;
+
+        options.onAdd = function (_id) {
           return app.keyboard.on(_id, 'keydown', function (e) {
             return e.keyCode === 27 && app.modal.close(_id);
           });
-        }, options.onRemove = function (_id) {
+        };
+
+        options.onRemove = function (_id) {
           return app.keyboard.off(_id, 'keydown', function (e) {
             return e.keyCode === 27 && app.modal.close(_id);
           });
-        }, props.in = true;
+        };
+
+        props.in = true;
 
         props.handleAction = function (index) {
           return (!onAction || onAction(index, app.context.data(_id) || {}, function () {

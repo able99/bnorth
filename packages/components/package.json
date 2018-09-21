@@ -37,7 +37,7 @@
     "react-waypoint": "^8.0.3"
   },
   "devDependencies": {
-    "@bnorth/build": "^3.0.8"
+    "@bnorth/build": "*"
   },
   "peerdependencies": {
     "@bnorth/rich.css": "*"

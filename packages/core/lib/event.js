@@ -11,8 +11,6 @@ var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/sli
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
-
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -59,8 +57,6 @@ function () {
       var _trigger2 = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
       _regenerator.default.mark(function _callee(targetId, eventName) {
-        var _this2 = this;
-
         var name,
             _len,
             args,
@@ -68,126 +64,96 @@ function () {
             _iteratorNormalCompletion,
             _didIteratorError,
             _iteratorError,
-            _loop,
             _iterator,
             _step,
-            _ret,
-            _args2 = arguments;
+            _step$value,
+            callback,
+            once,
+            ret,
+            _args = arguments;
 
-        return _regenerator.default.wrap(function _callee$(_context2) {
+        return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context.prev = _context.next) {
               case 0:
                 name = this._getTargetEventName(targetId, eventName);
 
-                for (_len = _args2.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-                  args[_key - 2] = _args2[_key];
+                for (_len = _args.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+                  args[_key - 2] = _args[_key];
                 }
 
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context2.prev = 5;
-                _loop =
-                /*#__PURE__*/
-                _regenerator.default.mark(function _loop() {
-                  var _step$value, callback, once, ret;
-
-                  return _regenerator.default.wrap(function _loop$(_context) {
-                    while (1) {
-                      switch (_context.prev = _context.next) {
-                        case 0:
-                          _step$value = _step.value, callback = _step$value.callback, once = _step$value.once;
-                          _context.next = 3;
-                          return callback.apply(void 0, args);
-
-                        case 3:
-                          ret = _context.sent;
-                          if (once) (function () {
-                            return _this2.off(callback);
-                          });
-
-                          if (!ret) {
-                            _context.next = 7;
-                            break;
-                          }
-
-                          return _context.abrupt("return", {
-                            v: ret
-                          });
-
-                        case 7:
-                        case "end":
-                          return _context.stop();
-                      }
-                    }
-                  }, _loop, this);
-                });
+                _context.prev = 5;
                 _iterator = (this._listener[name] || [])[Symbol.iterator]();
 
-              case 8:
+              case 7:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context2.next = 16;
+                  _context.next = 18;
                   break;
                 }
 
-                return _context2.delegateYield(_loop(), "t0", 10);
+                _step$value = _step.value, callback = _step$value.callback, once = _step$value.once;
+                _context.next = 11;
+                return callback.apply(void 0, args);
 
-              case 10:
-                _ret = _context2.t0;
+              case 11:
+                ret = _context.sent;
+                if (once) this.off(callback);
 
-                if (!((0, _typeof2.default)(_ret) === "object")) {
-                  _context2.next = 13;
+                if (!ret) {
+                  _context.next = 15;
                   break;
                 }
 
-                return _context2.abrupt("return", _ret.v);
+                return _context.abrupt("return", ret);
 
-              case 13:
+              case 15:
                 _iteratorNormalCompletion = true;
-                _context2.next = 8;
-                break;
-
-              case 16:
-                _context2.next = 22;
+                _context.next = 7;
                 break;
 
               case 18:
-                _context2.prev = 18;
-                _context2.t1 = _context2["catch"](5);
-                _didIteratorError = true;
-                _iteratorError = _context2.t1;
+                _context.next = 24;
+                break;
 
-              case 22:
-                _context2.prev = 22;
-                _context2.prev = 23;
+              case 20:
+                _context.prev = 20;
+                _context.t0 = _context["catch"](5);
+                _didIteratorError = true;
+                _iteratorError = _context.t0;
+
+              case 24:
+                _context.prev = 24;
+                _context.prev = 25;
 
                 if (!_iteratorNormalCompletion && _iterator.return != null) {
                   _iterator.return();
                 }
 
-              case 25:
-                _context2.prev = 25;
+              case 27:
+                _context.prev = 27;
 
                 if (!_didIteratorError) {
-                  _context2.next = 28;
+                  _context.next = 30;
                   break;
                 }
 
                 throw _iteratorError;
 
-              case 28:
-                return _context2.finish(25);
-
-              case 29:
-                return _context2.finish(22);
-
               case 30:
+                return _context.finish(27);
+
+              case 31:
+                return _context.finish(24);
+
+              case 32:
               case "end":
-                return _context2.stop();
+                return _context.stop();
             }
           }
-        }, _callee, this, [[5, 18, 22, 30], [23,, 25, 29]]);
+        }, _callee, this, [[5, 20, 24, 32], [25,, 27, 31]]);
       }));
 
       return function _trigger(_x, _x2) {
@@ -207,10 +173,10 @@ function () {
   }, {
     key: "off",
     value: function off(item) {
-      var _this3 = this;
+      var _this2 = this;
 
       if (!item) return;
-      Object.entries(this._listener).map(function (_ref) {
+      Object.entries(this._listener).forEach(function (_ref) {
         var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
             k = _ref2[0],
             v = _ref2[1];
@@ -219,7 +185,7 @@ function () {
           return v && (v.callback === item || v.ownerId === item);
         });
         if (index >= 0) v.splice(index, 1);
-        if (!v.length) delete _this3._listener[k];
+        if (!v.length) delete _this2._listener[k];
       });
     }
   }, {
@@ -231,7 +197,7 @@ function () {
   }, {
     key: "emit",
     value: function emit(targetId, eventName) {
-      var _this4 = this;
+      var _this3 = this;
 
       for (var _len2 = arguments.length, args = new Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
         args[_key2 - 2] = arguments[_key2];
@@ -239,7 +205,7 @@ function () {
 
       //return new Promise(()=>this._trigger(targetId, eventName, ...args));
       return setTimeout(function () {
-        return _this4._trigger.apply(_this4, [targetId, eventName].concat(args));
+        return _this3._trigger.apply(_this3, [targetId, eventName].concat(args));
       }, 40);
     }
   }, {
@@ -251,25 +217,25 @@ function () {
         var _len3,
             args,
             _key3,
-            _args3 = arguments;
+            _args2 = arguments;
 
-        return _regenerator.default.wrap(function _callee2$(_context3) {
+        return _regenerator.default.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                for (_len3 = _args3.length, args = new Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
-                  args[_key3 - 2] = _args3[_key3];
+                for (_len3 = _args2.length, args = new Array(_len3 > 2 ? _len3 - 2 : 0), _key3 = 2; _key3 < _len3; _key3++) {
+                  args[_key3 - 2] = _args2[_key3];
                 }
 
-                _context3.next = 3;
+                _context2.next = 3;
                 return this._trigger.apply(this, [targetId, eventName].concat(args));
 
               case 3:
-                return _context3.abrupt("return", _context3.sent);
+                return _context2.abrupt("return", _context2.sent);
 
               case 4:
               case "end":
-                return _context3.stop();
+                return _context2.stop();
             }
           }
         }, _callee2, this);
