@@ -5,61 +5,62 @@
  * @license MIT
  */
 
-
 import React from 'react';
-import { genCommonProps, cx } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
 import AnimationCollapse from './AnimationCollapse';
+import Panel from './Panel';
 import Button from './Button';
 import Icon from './Icon';
 
 
 let Notification = (aprops)=>{
   let {
-    title, 
-    hasClose, closeProps:{closeClassName, closeTheme="white", closeStyle="plain", ...closeProps}={}, onClose,
-    transitonProps, in:isIn=true, timeout, onExited, Transition=AnimationCollapse, 
-    component:Component='div', className, ontainerClassName, containerStyle, cTheme, cStyle, cSize, children, ...props
+    titleProps,
+    hasClose, closeProps, iconProps,
+    transition:Transition=AnimationCollapse, transitionProps, onTransitionFinished,
+    component=Panel, className, children, ...props
   } = genCommonProps(aprops);
 
-
-  let classSetContaienr = {
-    'flex-display-flex': true,
-    'flex-align-center': true,
-    'padding': true,
-    'position-relative': true,
-    'width-full': true,
-    ['text-size'+cSize]: cSize,
-    'bg-color-white': cStyle==='hollow',
-    ['border-color-'+(cTheme||'component')]: cStyle==='hollow',
-    ['text-color-'+(cTheme||'normal')]: cStyle==='hollow',
-    ['bg-color-'+(cTheme||'mask')]: cStyle!=='hollow',
-    'text-color-white': cStyle!=='hollow',
-  };
-  
-  let classSet = {
-    'flex-sub-flex-extend': true,
-  };
-
-  let classSetClose= {
-    'padding-xs': true,
-    'flex-sub-flex-none': true,
-  };
-
+  let classStr = 'flex-display-block flex-align-center padding-a- position-absolute offset-top-start offset-left-top width-full';
   
   return (
     <Transition 
-      className={cx(classSetContaienr, ontainerClassName)}
-      transitonProps={transitonProps} in={isIn} timeout={timeout} onExited={onExited}>
-        <Component className={cx(classSet, className)} {...props}>
-          {title&&typeof(title)==='string'?(<big><strong>{title}</strong></big>):title}
-          {children}
-        </Component>
-        {hasClose?(
-          <Button cTheme={closeTheme} cStyle={closeStyle} className={cx(classSetClose, closeClassName)} onClick={onClose} {...closeProps}>
-            <Icon name={Icon.getName('close','x')} />
-          </Button>
-        ):null}
+      component={component} transitionProps={transitionProps} onTransitionFinished={onTransitionFinished} 
+      b-style="solid" b-theme="mask" className={cxm(classStr, className)} {...props}>
+      <Notification._Title title={children} {...titleProps} />
+      {hasClose?<Notification._Close hasClose={hasClose} {...closeProps} />:null}
     </Transition>
+  );
+}
+
+Notification._Title = aprops=>{
+  let {
+    title, 
+    component:Component=Panel, className, children, ...props
+  } = genCommonProps(aprops);
+
+  let classStr = 'text-weight- text-size-lg flex-sub-flex-extend';
+
+  return (
+    <Component className={cxm(classStr, className)} {...props}>
+      {title}{children}
+    </Component>
+  );
+}
+
+Notification._Close = aprops=>{
+  let {
+    hasClose, iconProps,
+    component:Component=Button, className, children, ...props
+  } = genCommonProps(aprops);
+
+  let classStr = 'padding-a-xs flex-sub-flex-none';
+
+  return hasClose!==true?hasClose:(
+    <Component className={cxm(classStr, className)} {...props}>
+      <Icon name="close" nameDefault="x" {...iconProps} />
+      {children}
+    </Component>
   );
 }
 

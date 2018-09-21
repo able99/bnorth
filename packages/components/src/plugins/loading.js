@@ -1,5 +1,5 @@
 import React from 'react';
-import ProgressBar from '../ProgressBar';
+import Loading from '../Loading';
 
 
 export default {
@@ -10,44 +10,62 @@ export default {
   onPluginMount(app) {
     app.loading = {
       count: 0,
-
-      show: ({options={}, ...props}={})=>{
-        app.loading.count++;
-
-        if(app.loading.count<=1){
-          let _id = app.router.getViewId(options);
-          options._id = _id;
-          props.ref = e=>e&&(app.loading.ref = e);
-          return app.loading._id = app.router.addView(<ProgressBar /> , props, options);
-        }else{
-          return app.loading.reset();
+      _interval: 200,
+      _timerout: 10000,
+      _progress: 0,
+      _timer: null,
+      _timerClose: null,
+      _handleInterval:()=>{
+        app.loading._progress += /*Math.random()**/(100/(app.loading._timerout/app.loading._interval));
+        app.loading.update();
+        if(app.loading._progress>=100) {
+          app.loading._progress = 0;
+          // clearInterval(app.loading._timer);
+          // app.loading._timer = null;
         }
+      },
+      update: (progress=app.loading._progress, aprops, aoptions)=>{
+        app.loading._progress = progress;
+        if(!app.loading._timer&&app.loading._timerout) app.loading._timer = setInterval(()=>app.loading._handleInterval(), app.loading._interval);
+
+        let {content, props={}, options={}} = app.router.getView(app.loading._id)||{};
+        if(!content){
+          return app.loading._id = app.router.addView(<Loading timeout={app.loading._interval} isProgress progress={app.loading._progress} /> , aprops, aoptions);
+        }else{
+          props.progress = app.loading._progress;
+          return app.router.addView(content, props, options);
+        }
+      },
+      show: ({options:{timeout=10000, ...options}={}, ...props}={})=>{
+        if(app.loading._timerClose) {
+          clearTimeout(app.loading._timerClose);
+          app.loading._timerClose = null;
+        } 
+        app.loading._timerout = timeout;
+        app.loading.count++;
+        return app.loading.update(0, props, options);
       },
 
       close: force=>{
         app.loading.count = force?0:Math.max(--app.loading.count,0);
-        if(app.loading.count) { app.loading.full(); return }
-        let {content, props={}, options={}} = app.router.getView(app.loading._id)||{};
-        if(!content) { app.loading._id = undefined; app.loading.ref = undefined; return }
-
-        props.isClose = true;
-        props.onStop = ()=>{ 
-          app.loading.ref = undefined; 
-          app.router.removeView(app.loading._id); 
-          app.loading._id = undefined; 
+        let ret = app.loading.full();
+        if(!app.loading.count&&!app.loading._timerClose){
+          clearInterval(app.loading._timer);
+          app.loading._timer = null;
+          setTimeout(()=>{
+            app.router.removeView(app.loading._id); 
+            app.loading._id = undefined; 
+          }, app.loading._interval);
         }
-
-        return app.router.addView(content, props, options);
+        return ret;
       },
 
       reset: ()=>{
-        if(!app.loading.ref) return;
-        return app.loading.ref.reset();
+        return app.loading.update(0);
       },
 
       full: ()=>{
-        if(!app.loading.ref) return;
-        return app.loading.ref.full();
+        return app.loading.update(100);
       },
     };
 

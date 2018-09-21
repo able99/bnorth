@@ -46,7 +46,7 @@ var _default = {
 
         props.in = false;
 
-        props.onExited = function () {
+        props.onTransitionFinished = function () {
           app.router.removeView(app.mask._id);
           app.mask._id = undefined;
         };

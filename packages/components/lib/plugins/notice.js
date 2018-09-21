@@ -69,7 +69,7 @@ var _default = {
 
         props.in = false;
 
-        props.onExited = function () {
+        props.onTransitionFinished = function () {
           app.router.removeView(app.notice._id);
           app.notice._id = undefined;
         };

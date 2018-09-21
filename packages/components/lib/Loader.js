@@ -43,7 +43,8 @@ var Loader = function Loader(aprops) {
 Loader._line = function (aprops) {
   var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
       isProgress = _genCommonProps2.isProgress,
-      progress = _genCommonProps2.progress,
+      _genCommonProps2$prog = _genCommonProps2.progress,
+      progress = _genCommonProps2$prog === void 0 ? 0 : _genCommonProps2$prog,
       _genCommonProps2$time = _genCommonProps2.timeout,
       timeout = _genCommonProps2$time === void 0 ? '2s' : _genCommonProps2$time,
       _genCommonProps2$colo = _genCommonProps2.color,
@@ -77,7 +78,7 @@ Loader._line = function (aprops) {
     stroke: color,
     fill: "none",
     className: isProgress ? "transition-set-" : null,
-    strokeDasharray: isProgress ? "".concat(2.51 * (progress || 0), ",251") : '10,100'
+    strokeDasharray: isProgress ? "".concat(progress, ",100") : '10,100'
   }, !isProgress ? _react.default.createElement("animate", {
     attributeName: "stroke-dashoffset",
     values: "0;-90;0",

@@ -27,7 +27,7 @@ let Loader = aprops=>{
 
 Loader._line = aprops=>{
   let {
-    isProgress, progress, timeout='2s', color="currentColor", colorReverse='lightgray',
+    isProgress, progress=0, timeout='2s', color="currentColor", colorReverse='lightgray',
     classSet, className, children, ...props
   } = genCommonProps(aprops);
 
@@ -40,7 +40,7 @@ Loader._line = aprops=>{
       <line 
         x1="0" y1="2" x2="100" y2="2" strokeWidth="5" stroke={color} fill="none" 
         className={isProgress?"transition-set-":null}
-        strokeDasharray={isProgress?`${2.51*(progress||0)},251`:'10,100'}>
+        strokeDasharray={isProgress?`${progress},100`:'10,100'}>
         {!isProgress?<animate attributeName="stroke-dashoffset" values="0;-90;0" dur={timeout} repeatCount="indefinite" />:null}
       </line>
       {children}

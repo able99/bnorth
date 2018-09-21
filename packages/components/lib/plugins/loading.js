@@ -11,7 +11,7 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _ProgressBar = _interopRequireDefault(require("../ProgressBar"));
+var _Loading = _interopRequireDefault(require("../Loading"));
 
 var _default = {
   // plugin 
@@ -20,66 +20,88 @@ var _default = {
   onPluginMount: function onPluginMount(app) {
     app.loading = {
       count: 0,
-      show: function show() {
-        var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-            _ref$options = _ref.options,
-            options = _ref$options === void 0 ? {} : _ref$options,
-            props = (0, _objectWithoutProperties2.default)(_ref, ["options"]);
+      _interval: 200,
+      _timerout: 10000,
+      _progress: 0,
+      _timer: null,
+      _timerClose: null,
+      _handleInterval: function _handleInterval() {
+        app.loading._progress +=
+        /*Math.random()**/
+        100 / (app.loading._timerout / app.loading._interval);
+        app.loading.update();
 
-        app.loading.count++;
-
-        if (app.loading.count <= 1) {
-          var _id = app.router.getViewId(options);
-
-          options._id = _id;
-
-          props.ref = function (e) {
-            return e && (app.loading.ref = e);
-          };
-
-          return app.loading._id = app.router.addView(_react.default.createElement(_ProgressBar.default, null), props, options);
-        } else {
-          return app.loading.reset();
+        if (app.loading._progress >= 100) {
+          app.loading._progress = 0; // clearInterval(app.loading._timer);
+          // app.loading._timer = null;
         }
+      },
+      update: function update() {
+        var progress = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : app.loading._progress;
+        var aprops = arguments.length > 1 ? arguments[1] : undefined;
+        var aoptions = arguments.length > 2 ? arguments[2] : undefined;
+        app.loading._progress = progress;
+        if (!app.loading._timer && app.loading._timerout) app.loading._timer = setInterval(function () {
+          return app.loading._handleInterval();
+        }, app.loading._interval);
+
+        var _ref = app.router.getView(app.loading._id) || {},
+            content = _ref.content,
+            _ref$props = _ref.props,
+            props = _ref$props === void 0 ? {} : _ref$props,
+            _ref$options = _ref.options,
+            options = _ref$options === void 0 ? {} : _ref$options;
+
+        if (!content) {
+          return app.loading._id = app.router.addView(_react.default.createElement(_Loading.default, {
+            timeout: app.loading._interval,
+            isProgress: true,
+            progress: app.loading._progress
+          }), aprops, aoptions);
+        } else {
+          props.progress = app.loading._progress;
+          return app.router.addView(content, props, options);
+        }
+      },
+      show: function show() {
+        var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+            _ref2$options = _ref2.options;
+
+        _ref2$options = _ref2$options === void 0 ? {} : _ref2$options;
+        var _ref2$options$timeout = _ref2$options.timeout,
+            timeout = _ref2$options$timeout === void 0 ? 10000 : _ref2$options$timeout,
+            options = (0, _objectWithoutProperties2.default)(_ref2$options, ["timeout"]),
+            props = (0, _objectWithoutProperties2.default)(_ref2, ["options"]);
+
+        if (app.loading._timerClose) {
+          clearTimeout(app.loading._timerClose);
+          app.loading._timerClose = null;
+        }
+
+        app.loading._timerout = timeout;
+        app.loading.count++;
+        return app.loading.update(0, props, options);
       },
       close: function close(force) {
         app.loading.count = force ? 0 : Math.max(--app.loading.count, 0);
+        var ret = app.loading.full();
 
-        if (app.loading.count) {
-          app.loading.full();
-          return;
+        if (!app.loading.count && !app.loading._timerClose) {
+          clearInterval(app.loading._timer);
+          app.loading._timer = null;
+          setTimeout(function () {
+            app.router.removeView(app.loading._id);
+            app.loading._id = undefined;
+          }, app.loading._interval);
         }
 
-        var _ref2 = app.router.getView(app.loading._id) || {},
-            content = _ref2.content,
-            _ref2$props = _ref2.props,
-            props = _ref2$props === void 0 ? {} : _ref2$props,
-            _ref2$options = _ref2.options,
-            options = _ref2$options === void 0 ? {} : _ref2$options;
-
-        if (!content) {
-          app.loading._id = undefined;
-          app.loading.ref = undefined;
-          return;
-        }
-
-        props.isClose = true;
-
-        props.onStop = function () {
-          app.loading.ref = undefined;
-          app.router.removeView(app.loading._id);
-          app.loading._id = undefined;
-        };
-
-        return app.router.addView(content, props, options);
+        return ret;
       },
       reset: function reset() {
-        if (!app.loading.ref) return;
-        return app.loading.ref.reset();
+        return app.loading.update(0);
       },
       full: function full() {
-        if (!app.loading.ref) return;
-        return app.loading.ref.full();
+        return app.loading.update(100);
       }
     };
     app.loading._oldRenderLoading = app.render.loading;

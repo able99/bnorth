@@ -5,44 +5,46 @@
  * @license MIT
  */
 
-
 import React from 'react';
 import Transition from 'react-transition-group/Transition';
 import { transiton } from '@bnorth/rich.css/lib/styles/animation'; 
-import { genCommonProps, cx } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
 import { createChainedFunction } from './utils/event';
 
 
 let Fade = aprops=>{
   let {
-    transitonProps:{ appear=true, onExited:onExitedTransition, ...transitonProps }={},
-    in:isIn=true, timeout=100, onExited,
-    component:Component='div', style, className, containerClassName, containerStyle, children, ...props
+    in:isIn=true, timeout=100, onTransitionFinished, transitionProps={},
+    ...props
   } = genCommonProps(aprops);
-
-
-  let styleSet = {
-    ...containerStyle,
-    ...transiton(`${timeout}ms`, { property: 'opacity' }),
-  };
-
-  let classSet = state=>({
-    [`opacity-${(state==='entered')?'100':'0'}`]:true,
-  })
-
 
   return (
     <Transition 
-      {...transitonProps} in={isIn} timeout={timeout} appear={appear} 
-      onExited={createChainedFunction(onExitedTransition,onExited)}
-      className={containerClassName}>
-      {state=>(
-        <Component style={styleSet} className={cx(classSet(state),className)} {...props}>
-          {children}
-        </Component>
-      )}
+      appear={true} {...transitionProps} in={isIn} timeout={timeout} 
+      onExited={createChainedFunction(transitionProps.onExited,onTransitionFinished)}>
+      {state=><Fade._Component isIn={isIn} timeout={timeout} {...props} animationState={state} />}
     </Transition>
   );
+}
+
+Fade._Component = aprops=>{
+  let {
+    isIn, timeout, animationState,
+    component:Component='div', style, className, children, ...props
+  } = genCommonProps(aprops);
+
+  let classSet = `opacity-${(animationState==='entered')?'100':'0'}`;
+
+  let styleSet = {
+    ...style,
+    ...transiton(`${timeout}ms`, { property: 'opacity' }),
+  };
+
+  return (
+    <Component style={styleSet} className={cxm(classSet,className)} {...props}>
+      {children}
+    </Component>
+  )
 }
 
 

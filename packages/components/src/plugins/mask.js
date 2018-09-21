@@ -21,7 +21,7 @@ export default {
         if(!content) { app.mask._id = undefined; return }
 
         props.in = false;
-        props.onExited = ()=>{ 
+        props.onTransitionFinished = ()=>{ 
           app.router.removeView(app.mask._id); 
           app.mask._id = undefined; 
         }

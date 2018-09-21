@@ -11,15 +11,16 @@ import BackTop from '@bnorth/components/lib/BackTop';
 // import Space from '@bnorth/components/lib/Space'
 // import Fab from '@bnorth/components/lib/Fab'
 // import Tabs from '@bnorth/components/lib/Tabs'
-// import Loader from '@bnorth/components/lib/Loader'
+import Loader from '@bnorth/components/lib/Loader'
 // import img from '../../res/aboutme.svg';
 
 
 let Group = aprops=>{
   let { 
     app, page, stateData, stateComponentSwitchs,  stateCommonProps, stateComponentProps,
-    title, children, ...props
+    title, disabled, children, ...props
   } = aprops;
+  if(disabled) return null;
   let switchOn = stateComponentSwitchs.includes(title);
 
   return (
@@ -56,9 +57,27 @@ let Component = aprops=>{
     <View>
       <Panel main>
         <Group 
-          title="list & pull refresh & infinite scroll & backtop" 
           app={app} page={page}
-          stateData={stateData} stateComponentSwitchs={stateComponentSwitchs} stateCommonProps={stateCommonProps} stateComponentProps={stateComponentProps}>
+          stateData={stateData} stateComponentSwitchs={stateComponentSwitchs} stateCommonProps={stateCommonProps} stateComponentProps={stateComponentProps}
+          title="Panel">
+          <Group.Item title="circle progress">
+            <Loader type="circle" isProgress progress={45}/>
+          </Group.Item>
+          <Group.Item title="circle">
+            <Loader type="circle" />
+          </Group.Item>
+          <Group.Item title="line progress">
+            <Loader type="line" isProgress progress={45}/>
+          </Group.Item>
+          <Group.Item title="line">
+            <Loader type="line"/>
+          </Group.Item>
+        </Group>
+
+        <Group 
+          app={app} page={page}
+          stateData={stateData} stateComponentSwitchs={stateComponentSwitchs} stateCommonProps={stateCommonProps} stateComponentProps={stateComponentProps}
+          title="list & pull refresh & infinite scroll & backtop" disabled>
           <Panel bs-width="70%" bs-height="300px" bc-border-set- data-container>
             <Panel.PullRefresh 
               bc-height-full bc-scrollable-y- 

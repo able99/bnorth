@@ -53,11 +53,10 @@ var Panel = function Panel(aprops) {
     classSet['text-color-' + (bTheme === 'true' ? '' : bTheme)] = true;
   } else if (bStyle === 'hollow' && !bTheme) {
     classSet['border-set-a-'] = true;
-  }
-
-  {
+  } else {
     if (bTheme) classSet['text-color-' + (bTheme === 'true' ? '' : bTheme)] = true;
   }
+
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _props.cxm)(classStr, classSet, className)
   }, props));

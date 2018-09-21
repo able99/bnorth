@@ -7,11 +7,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
+var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
@@ -33,46 +31,51 @@ var _event = require("./utils/event");
  */
 var Fade = function Fade(aprops) {
   var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      _genCommonProps$trans = _genCommonProps.transitonProps;
-
-  _genCommonProps$trans = _genCommonProps$trans === void 0 ? {} : _genCommonProps$trans;
-  var _genCommonProps$trans2 = _genCommonProps$trans.appear,
-      appear = _genCommonProps$trans2 === void 0 ? true : _genCommonProps$trans2,
-      onExitedTransition = _genCommonProps$trans.onExited,
-      transitonProps = (0, _objectWithoutProperties2.default)(_genCommonProps$trans, ["appear", "onExited"]),
       _genCommonProps$in = _genCommonProps.in,
       isIn = _genCommonProps$in === void 0 ? true : _genCommonProps$in,
       _genCommonProps$timeo = _genCommonProps.timeout,
       timeout = _genCommonProps$timeo === void 0 ? 100 : _genCommonProps$timeo,
-      onExited = _genCommonProps.onExited,
-      _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? 'div' : _genCommonProps$compo,
-      style = _genCommonProps.style,
-      className = _genCommonProps.className,
-      containerClassName = _genCommonProps.containerClassName,
-      containerStyle = _genCommonProps.containerStyle,
-      children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["transitonProps", "in", "timeout", "onExited", "component", "style", "className", "containerClassName", "containerStyle", "children"]);
-  var styleSet = (0, _objectSpread2.default)({}, containerStyle, (0, _animation.transiton)("".concat(timeout, "ms"), {
-    property: 'opacity'
-  }));
+      onTransitionFinished = _genCommonProps.onTransitionFinished,
+      _genCommonProps$trans = _genCommonProps.transitionProps,
+      transitionProps = _genCommonProps$trans === void 0 ? {} : _genCommonProps$trans,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["in", "timeout", "onTransitionFinished", "transitionProps"]);
 
-  var classSet = function classSet(state) {
-    return (0, _defineProperty2.default)({}, "opacity-".concat(state === 'entered' ? '100' : '0'), true);
-  };
-
-  return _react.default.createElement(_Transition.default, (0, _extends2.default)({}, transitonProps, {
+  return _react.default.createElement(_Transition.default, (0, _extends2.default)({
+    appear: true
+  }, transitionProps, {
     in: isIn,
     timeout: timeout,
-    appear: appear,
-    onExited: (0, _event.createChainedFunction)(onExitedTransition, onExited),
-    className: containerClassName
+    onExited: (0, _event.createChainedFunction)(transitionProps.onExited, onTransitionFinished)
   }), function (state) {
-    return _react.default.createElement(Component, (0, _extends2.default)({
-      style: styleSet,
-      className: (0, _props.cx)(classSet(state), className)
-    }, props), children);
+    return _react.default.createElement(Fade._Component, (0, _extends2.default)({
+      isIn: isIn,
+      timeout: timeout
+    }, props, {
+      animationState: state
+    }));
   });
+};
+
+Fade._Component = function (aprops) {
+  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
+      isIn = _genCommonProps2.isIn,
+      timeout = _genCommonProps2.timeout,
+      animationState = _genCommonProps2.animationState,
+      _genCommonProps2$comp = _genCommonProps2.component,
+      Component = _genCommonProps2$comp === void 0 ? 'div' : _genCommonProps2$comp,
+      style = _genCommonProps2.style,
+      className = _genCommonProps2.className,
+      children = _genCommonProps2.children,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["isIn", "timeout", "animationState", "component", "style", "className", "children"]);
+
+  var classSet = "opacity-".concat(animationState === 'entered' ? '100' : '0');
+  var styleSet = (0, _objectSpread2.default)({}, style, (0, _animation.transiton)("".concat(timeout, "ms"), {
+    property: 'opacity'
+  }));
+  return _react.default.createElement(Component, (0, _extends2.default)({
+    style: styleSet,
+    className: (0, _props.cxm)(classSet, className)
+  }, props), children);
 };
 
 var _default = Fade;

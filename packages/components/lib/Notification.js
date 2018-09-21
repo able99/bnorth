@@ -9,8 +9,6 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
@@ -18,6 +16,8 @@ var _react = _interopRequireDefault(require("react"));
 var _props = require("./utils/props");
 
 var _AnimationCollapse = _interopRequireDefault(require("./AnimationCollapse"));
+
+var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _Button = _interopRequireDefault(require("./Button"));
 
@@ -30,68 +30,68 @@ var _Icon = _interopRequireDefault(require("./Icon"));
  * @license MIT
  */
 var Notification = function Notification(aprops) {
-  var _classSetContaienr;
-
   var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      title = _genCommonProps.title,
+      titleProps = _genCommonProps.titleProps,
       hasClose = _genCommonProps.hasClose,
-      _genCommonProps$close = _genCommonProps.closeProps;
-
-  _genCommonProps$close = _genCommonProps$close === void 0 ? {} : _genCommonProps$close;
-  var closeClassName = _genCommonProps$close.closeClassName,
-      _genCommonProps$close2 = _genCommonProps$close.closeTheme,
-      closeTheme = _genCommonProps$close2 === void 0 ? "white" : _genCommonProps$close2,
-      _genCommonProps$close3 = _genCommonProps$close.closeStyle,
-      closeStyle = _genCommonProps$close3 === void 0 ? "plain" : _genCommonProps$close3,
-      closeProps = (0, _objectWithoutProperties2.default)(_genCommonProps$close, ["closeClassName", "closeTheme", "closeStyle"]),
-      onClose = _genCommonProps.onClose,
-      transitonProps = _genCommonProps.transitonProps,
-      _genCommonProps$in = _genCommonProps.in,
-      isIn = _genCommonProps$in === void 0 ? true : _genCommonProps$in,
-      timeout = _genCommonProps.timeout,
-      onExited = _genCommonProps.onExited,
-      _genCommonProps$Trans = _genCommonProps.Transition,
-      Transition = _genCommonProps$Trans === void 0 ? _AnimationCollapse.default : _genCommonProps$Trans,
+      closeProps = _genCommonProps.closeProps,
+      iconProps = _genCommonProps.iconProps,
+      _genCommonProps$trans = _genCommonProps.transition,
+      Transition = _genCommonProps$trans === void 0 ? _AnimationCollapse.default : _genCommonProps$trans,
+      transitionProps = _genCommonProps.transitionProps,
+      onTransitionFinished = _genCommonProps.onTransitionFinished,
       _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? 'div' : _genCommonProps$compo,
+      component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
       className = _genCommonProps.className,
-      ontainerClassName = _genCommonProps.ontainerClassName,
-      containerStyle = _genCommonProps.containerStyle,
-      cTheme = _genCommonProps.cTheme,
-      cStyle = _genCommonProps.cStyle,
-      cSize = _genCommonProps.cSize,
       children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["title", "hasClose", "closeProps", "onClose", "transitonProps", "in", "timeout", "onExited", "Transition", "component", "className", "ontainerClassName", "containerStyle", "cTheme", "cStyle", "cSize", "children"]);
-  var classSetContaienr = (_classSetContaienr = {
-    'flex-display-flex': true,
-    'flex-align-center': true,
-    'padding': true,
-    'position-relative': true,
-    'width-full': true
-  }, (0, _defineProperty2.default)(_classSetContaienr, 'text-size' + cSize, cSize), (0, _defineProperty2.default)(_classSetContaienr, 'bg-color-white', cStyle === 'hollow'), (0, _defineProperty2.default)(_classSetContaienr, 'border-color-' + (cTheme || 'component'), cStyle === 'hollow'), (0, _defineProperty2.default)(_classSetContaienr, 'text-color-' + (cTheme || 'normal'), cStyle === 'hollow'), (0, _defineProperty2.default)(_classSetContaienr, 'bg-color-' + (cTheme || 'mask'), cStyle !== 'hollow'), (0, _defineProperty2.default)(_classSetContaienr, 'text-color-white', cStyle !== 'hollow'), _classSetContaienr);
-  var classSet = {
-    'flex-sub-flex-extend': true
-  };
-  var classSetClose = {
-    'padding-xs': true,
-    'flex-sub-flex-none': true
-  };
-  return _react.default.createElement(Transition, {
-    className: (0, _props.cx)(classSetContaienr, ontainerClassName),
-    transitonProps: transitonProps,
-    in: isIn,
-    timeout: timeout,
-    onExited: onExited
-  }, _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cx)(classSet, className)
-  }, props), title && typeof title === 'string' ? _react.default.createElement("big", null, _react.default.createElement("strong", null, title)) : title, children), hasClose ? _react.default.createElement(_Button.default, (0, _extends2.default)({
-    cTheme: closeTheme,
-    cStyle: closeStyle,
-    className: (0, _props.cx)(classSetClose, closeClassName),
-    onClick: onClose
-  }, closeProps), _react.default.createElement(_Icon.default, {
-    name: _Icon.default.getName('close', 'x')
-  })) : null);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["titleProps", "hasClose", "closeProps", "iconProps", "transition", "transitionProps", "onTransitionFinished", "component", "className", "children"]);
+
+  var classStr = 'flex-display-block flex-align-center padding-a- position-absolute offset-top-start offset-left-top width-full';
+  return _react.default.createElement(Transition, (0, _extends2.default)({
+    component: component,
+    transitionProps: transitionProps,
+    onTransitionFinished: onTransitionFinished,
+    "b-style": "solid",
+    "b-theme": "mask",
+    className: (0, _props.cxm)(classStr, className)
+  }, props), _react.default.createElement(Notification._Title, (0, _extends2.default)({
+    title: children
+  }, titleProps)), hasClose ? _react.default.createElement(Notification._Close, (0, _extends2.default)({
+    hasClose: hasClose
+  }, closeProps)) : null);
+};
+
+Notification._Title = function (aprops) {
+  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
+      title = _genCommonProps2.title,
+      _genCommonProps2$comp = _genCommonProps2.component,
+      Component = _genCommonProps2$comp === void 0 ? _Panel.default : _genCommonProps2$comp,
+      className = _genCommonProps2.className,
+      children = _genCommonProps2.children,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["title", "component", "className", "children"]);
+
+  var classStr = 'text-weight- text-size-lg flex-sub-flex-extend';
+  return _react.default.createElement(Component, (0, _extends2.default)({
+    className: (0, _props.cxm)(classStr, className)
+  }, props), title, children);
+};
+
+Notification._Close = function (aprops) {
+  var _genCommonProps3 = (0, _props.genCommonProps)(aprops),
+      hasClose = _genCommonProps3.hasClose,
+      iconProps = _genCommonProps3.iconProps,
+      _genCommonProps3$comp = _genCommonProps3.component,
+      Component = _genCommonProps3$comp === void 0 ? _Button.default : _genCommonProps3$comp,
+      className = _genCommonProps3.className,
+      children = _genCommonProps3.children,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["hasClose", "iconProps", "component", "className", "children"]);
+
+  var classStr = 'padding-a-xs flex-sub-flex-none';
+  return hasClose !== true ? hasClose : _react.default.createElement(Component, (0, _extends2.default)({
+    className: (0, _props.cxm)(classStr, className)
+  }, props), _react.default.createElement(_Icon.default, (0, _extends2.default)({
+    name: "close",
+    nameDefault: "x"
+  }, iconProps)), children);
 };
 
 var _default = Notification;

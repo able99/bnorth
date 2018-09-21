@@ -1,35 +1,28 @@
 import React from 'react';
-import { genCommonProps, cx } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
+import Panel from './Panel';
 import Loader from './Loader';
 import AnimationFade from './AnimationFade';
 
 
 export default (aprops) => {
   let { 
-    transitonProps, in:isIn=true, timeout, onExited, Transition=AnimationFade, 
-    component:Component=Loader, containerClassName, containerStyle, cTheme, ...props 
+    mask=true, 
+    hasLoader=true, componentLoad:ComponnetLoader=Loader, loaderProps,
+    title, componnetTitle:ComponentTitle=Panel, titleProps,
+    transition:Transition=AnimationFade, transitionProps, onTransitionFinished,
+    component=Panel, className, ...props 
   } = genCommonProps(aprops);
 
-
-  let classSetContainer = {
-    'position-absolute': true,
-    'square-full': true,
-    'offset-start-left': true,
-    'offset-start-top': true,
-    'bg-color-mask': true,
-    'overflow-hidden': true,
-    'flex-display-flex': true,
-    'flex-direction-v': true,
-    'flex-justify-center': true,
-    'flex-align-center': true,
-  };
-
+  let classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-hidden flex-display-block flex-direction-v flex-justify-center flex-align-center'
 
   return (
-    <Transition
-      transitonProps={transitonProps} in={isIn} timeout={timeout} onExited={onExited}
-      className={cx(classSetContainer, containerClassName)} >
-      <Component cTheme={cTheme||'white'} {...props} />
+    <Transition 
+      b-style="solid" b-theme={mask===true?'mask':mask} 
+      component={component} transitionProps={transitionProps} onTransitionFinished={onTransitionFinished} 
+      className={cxm(classStr, className)} {...props}>
+      {hasLoader?<ComponnetLoader {...loaderProps} />:null}
+      {title?<ComponentTitle {...titleProps} children={title} />:null}
     </Transition>
   );
 }

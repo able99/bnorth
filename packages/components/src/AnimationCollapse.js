@@ -9,7 +9,7 @@
 import React from 'react';
 import Transition from 'react-transition-group/Transition';
 import { transiton } from '@bnorth/rich.css/lib/styles/animation'; 
-import { genCommonProps, cx } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
 import { createChainedFunction } from './utils/event';
 import { domGetDimensionValue, domTriggerBrowserReflow, domGetScrollDimensionValue } from './utils/dom';
 
@@ -43,41 +43,46 @@ function handleExiting(aprops, elem) {
 
 let Collapse = (aprops)=>{
   let {
-    transitonProps:{ appear=true, onExited:onExitedTransition, ...transitonProps }={},
-    in:isIn=true, timeout=100, onExited,
-    onEnter, onEntering, onEntered, onExit, onExiting, 
-    component:Component='div', style, className, containerClassName, containerStyle ,children, ...props
+    in:isIn=true, timeout=100, onTransitionFinished, transitionProps={},
+    onEnter, onEntering, onEntered, onExit, onExiting, onExited,
+    ...props
   } = genCommonProps(aprops);
-
-
-  const styleSet = {
-    ...containerStyle,
-    ...transiton(`${timeout}ms`, { property: 'height' }),
-  }
-  
-  let classSet = (state)=>{return {
-    'overflow-hidden': true,
-    'display-none': !isIn&state==='exited',
-  }}
-  
 
   return (
     <Transition 
-      onEnter={createChainedFunction(handleEnter.bind(null, aprops), onEnter)}
-      onEntering={createChainedFunction(handleEntering.bind(null, aprops), onEntering)}
-      onEntered={createChainedFunction(handleEntered.bind(null, aprops), onEntered)}
-      onExit={createChainedFunction(handleExit.bind(null, aprops), onExit)}
-      onExiting={createChainedFunction(handleExiting.bind(null, aprops), onExiting)} 
-      {...transitonProps} in={isIn} timeout={timeout} appear={appear} 
-      onExited={createChainedFunction(onExitedTransition,onExited)}
-      className={containerClassName}>
-      {state=>(
-        <Component style={styleSet} className={cx(classSet(state),className)} {...props}>
-          {children}
-        </Component>
-      )}
+      appear={true} {...transitionProps} in={isIn} timeout={timeout} 
+      onEnter={createChainedFunction(handleEnter.bind(null, aprops), transitionProps.onEnter)}
+      onEntering={createChainedFunction(handleEntering.bind(null, aprops), transitionProps.onEntering)}
+      onEntered={createChainedFunction(handleEntered.bind(null, aprops), transitionProps.onEntered)}
+      onExit={createChainedFunction(handleExit.bind(null, aprops), transitionProps.onExit)}
+      onExiting={createChainedFunction(handleExiting.bind(null, aprops), transitionProps.onExiting)} 
+      onExited={createChainedFunction(transitionProps.onExited,onTransitionFinished)}>
+      {state=><Collapse._Component isIn={isIn} timeout={timeout} {...props} animationState={state} />}
     </Transition>
   );
+}
+
+Collapse._Component = aprops=>{
+  let {
+    isIn, timeout, animationState,
+    component:Component='div', style, className, children, ...props
+  } = genCommonProps(aprops);
+
+  let classSet = {
+    'overflow-hidden': true,
+    'display-none': !isIn&animationState==='exited',
+  }
+
+  let styleSet = {
+    ...style,
+    ...transiton(`${timeout}ms`, { property: 'height' }),
+  };
+
+  return (
+    <Component style={styleSet} className={cxm(classSet,className)} {...props}>
+      {children}
+    </Component>
+  )
 }
 
 

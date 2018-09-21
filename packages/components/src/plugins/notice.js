@@ -32,7 +32,7 @@ export default {
         if(!content) { app.notice._id = undefined; return; }
 
         props.in = false;
-        props.onExited = ()=>{ 
+        props.onTransitionFinished = ()=>{ 
           app.router.removeView(app.notice._id); 
           app.notice._id = undefined; 
         }
