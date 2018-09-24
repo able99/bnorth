@@ -16,7 +16,7 @@ let View = aprops=>{
     component:Component='div', className, style, 'b-theme':bTheme='view', 'b-style':bStyle, 'b-size':bSize, children, ...props
   } = genCommonProps(aprops);
 
-  let classStr = 'position-relative offset-left-start offset-right-start offset-top-start offset-bottom-start square-full overflow-hidden';
+  let classStr = 'position-relative offset-left-start offset-right-start offset-top-start offset-bottom-start square-full overflow-a-hidden';
   classStr += ' flex-display-block flex-direction-v';
 
   let classSet = ['bg-color-'+bTheme];

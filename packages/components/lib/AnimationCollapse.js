@@ -123,7 +123,7 @@ Collapse._Component = function (aprops) {
       props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["isIn", "timeout", "animationState", "component", "style", "className", "children"]);
 
   var classSet = {
-    'overflow-hidden': true,
+    'overflow-a-hidden': true,
     'display-none': !isIn & animationState === 'exited'
   };
   var styleSet = (0, _objectSpread2.default)({}, style, (0, _animation.transiton)("".concat(timeout, "ms"), {

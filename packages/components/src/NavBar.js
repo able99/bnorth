@@ -5,97 +5,49 @@
  * @license MIT
  */
 
-
 import React from 'react';
-import { genCommonProps, cx, hascx } from './utils/props';
-import Icon from './Icon';
+import { genCommonProps, cxm } from './utils/props';
+import Panel from './Panel.Icon';
 
 
-let NavBar = (aprops)=>{
+let NavBar = aprops=>{
   if(NavBar.hidden) return null;
-
   let {
-    component: Component = 'nav', className, containerClassName, containerStyle, statusbar=NavBar.statusbar, cTheme, cStyle, cSize, style={}, children, ...props
+    statusbarOverlay=NavBar.statusbarOverlay, 
+    component:Component=Panel, componentPanel='nav', className, style, children, ...props
   } = genCommonProps(aprops);
 
-  let classSet = {
-    'flex-display-flex': true,
-    'flex-justify-around': true,
-    'flex-align-center': true,
-    'width-full': true,
-    'padding-v-sm': !hascx(className, 'padding'),
-    'border-set-bottom-border': !cStyle&&!hascx(className, 'border'),
-    ['text-size-'+cSize]: cSize,
-    [`bg-color-${cTheme||'component'}`]: cStyle!=='hollow',
-    'bg-color-white': cStyle==='hollow',
-    ['border-set-'+cTheme||'border']: cStyle==='hollow',
-    'text-color-white': cStyle==='solid',
-    ['text-color-'+(cTheme||'normal')]: cStyle!=='solid',
-  };
+  let classStr = 'flex-display-block flex-justify-around flex-align-center width-full padding-v-sm border-set-bottom-';
 
-  if(statusbar) style.paddingTop = 20;
+  let styleSet = {};
+  if(statusbarOverlay) styleSet.paddingTop = statusbarOverlay===true?20:statusbarOverlay;
 
-
-  return (
-    <Component className={cx(classSet, className)} style={style} {...props} >
-      {children}
-    </Component>
-  );
+  return <Component component={componentPanel} className={cxm(classStr, className)} style={{...styleSet, ...style}} {...props}>{children}</Component>
 }
 
-let NavBarTitle = (aprops)=>{
+let NavBarTitle = aprops=>{
   let {
-    component: Component = 'span', className, cTheme, cStyle, cSize, children, ...props
+    component:Component=Panel, className, children, ...props
   } = genCommonProps(aprops);
 
-
-  let classSet = {
-    'text-align-center': !hascx(className, 'text-align'),
-    'flex-sub-flex-extend': !hascx(className, 'flex-sub-flex'),
-    'text-weight-bold': !hascx(className, 'text-weight'),
-    'text-size-xl': !hascx(className, 'text-size'),
-  };
-
+  let classStr = 'text-align-center flex-sub-flex-extend text-weight-bold text-size-xl';
 
   return (
     <React.Fragment>
-      <Component className={cx(classSet, className, 'position-absolute')} {...props}>{children}</Component>
-      <Component className={cx(classSet, className, 'visibility-hide')} {...props}>0</Component>
+      <Component inline className={cxm(classStr, className, 'position-absolute')} {...props}>{children}</Component>
+      <Component inline className={cxm(classStr, className, 'visibility-hide')} {...props}>0</Component>
     </React.Fragment>
   );
 }
 
 let NavBarItem = (aprops)=>{
   let {
-    title, icon, src, badge, 
-    iconProps={}, titleProps={}, 
-    component: Component = 'span', className, containerClassName, containerStyle, cTheme, cStyle, cSize, children, ...props
+    component:Component=Panel.Icon, className, children, ...props
   } = genCommonProps(aprops);
 
+  let classStr = 'padding-h-sm cursor-pointer line-height-0 status';
 
-  let classSet = {
-    'text-align-center': !hascx(className, 'text-align'),
-    'padding-h-sm': !hascx(className, 'padding'),
-    'padding-v-0': !hascx(className, 'padding'),
-    'cursor-pointer': true,
-    'line-height-0': true,
-    'status': true,
-  };
-
-
-  return (
-    <Component className={cx(classSet, className)} {...props} >
-      {icon||src?(
-        <Icon {...iconProps} name={icon} src={src} />
-      ):null}
-
-      {title?(
-        <span {...titleProps}>{title}</span>
-      ):null}
-
-      {children}
-    </Component>
-  );
+  return <Component className={cxm(classStr, className)} {...props}>{children}</Component>;
 }
 
 

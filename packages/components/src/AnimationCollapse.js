@@ -69,7 +69,7 @@ Collapse._Component = aprops=>{
   } = genCommonProps(aprops);
 
   let classSet = {
-    'overflow-hidden': true,
+    'overflow-a-hidden': true,
     'display-none': !isIn&animationState==='exited',
   }
 

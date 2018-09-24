@@ -5,24 +5,21 @@
  * @license MIT
  */
 
-
-import React,{cloneElement} from 'react';
+import React from 'react';
 import { styleFlexSubBasis } from '@bnorth/rich.css/lib/styles/flex'
-import { genCommonProps, cx, hascx } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
+import Panel from './Panel';
 
 
-let Grid = (aprops={})=>{
+let Grid = aprops=>{
   let {
     border, avg, align, justify, wrap=avg?'nowrap':'wrap', total=12, 
-    component: Component = 'div', className, cTheme, cStyle, cSize, children, ...props
+    component:Component=Panel, className, children, ...props
   } = genCommonProps(aprops);
 
-
+  let classStr = 'position-relative overflow-a-hidden backface-hidden flex-display-block';
   let classSet = {
-    'position-relative': true,
-    'overflow-hidden': true,
-    'backface-hidden': true,
-    'flex-display-flex': true,
+    
     [`flex-wrap-${wrap}`]: wrap,
     [`flex-align-${align}`]: align,
     [`flex-justify-${justify}`]: justify,

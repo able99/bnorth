@@ -76,7 +76,7 @@ function (_React$Component) {
         return v.type !== AnimationSlider.Item;
       });
       var classSet = {
-        'overflow-hidden': true,
+        'overflow-a-hidden': true,
         'position-relative': !(0, _props.hascx)(className, 'position')
       };
       var classSetInner = {
@@ -116,7 +116,7 @@ AnimationSlider.Item = function (aprops) {
       props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["i", "timeout", "countToShow", "index", "component", "className"]);
 
   var classSet = {
-    'overflow-hidden': true,
+    'overflow-a-hidden': true,
     'flex-sub-flex-extend': true
   };
   return _react.default.createElement(Component, (0, _extends2.default)({

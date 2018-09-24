@@ -14,7 +14,7 @@ export default (aprops) => {
     component=Panel, className, ...props 
   } = genCommonProps(aprops);
 
-  let classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-hidden flex-display-block flex-direction-v flex-justify-center flex-align-center'
+  let classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-a-hidden flex-display-block flex-direction-v flex-justify-center flex-align-center'
 
   return (
     <Transition 

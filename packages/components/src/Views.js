@@ -16,7 +16,7 @@ let Views = aprops=>{
   } = genCommonProps(aprops);
   children = React.Children.toArray(children).filter(v=>v);
 
-  let classStr = 'position-relative overflow-hidden';
+  let classStr = 'position-relative overflow-a-hidden';
 
   let classSet = [];
   if(bSize) classSet.push('text-size-'+(bSize===true?'':bSize));
@@ -43,7 +43,7 @@ Views.Item = aprops=>{
     component:Component='div', className, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
   } = genCommonProps(aprops);
 
-  let classStr = 'position-relative offset-left-start offset-right-start offset-top-start offset-bottom-start square-full overflow-hidden';
+  let classStr = 'position-relative offset-left-start offset-right-start offset-top-start offset-bottom-start square-full overflow-a-hidden';
 
   let classSet = [];
   if(bSize) classSet.push('text-size-'+(bSize===true?'':bSize));

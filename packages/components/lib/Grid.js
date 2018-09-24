@@ -54,7 +54,7 @@ var Grid = function Grid() {
 
   var classSet = (_classSet = {
     'position-relative': true,
-    'overflow-hidden': true,
+    'overflow-a-hidden': true,
     'backface-hidden': true,
     'flex-display-flex': true
   }, (0, _defineProperty2.default)(_classSet, "flex-wrap-".concat(wrap), wrap), (0, _defineProperty2.default)(_classSet, "flex-align-".concat(align), align), (0, _defineProperty2.default)(_classSet, "flex-justify-".concat(justify), justify), _classSet);

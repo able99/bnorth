@@ -58,7 +58,7 @@ List._Inner = aprops=>{
 
   let classStr = 'bg-color-white';
   let classSet = {
-    [`padding-left${separatorInset&&separatorInset!==true?('-'+separatorInset):''}`]: separatorInset,
+    [`padding-left-${separatorInset&&separatorInset!==true?('-'+separatorInset):''}`]: separatorInset,
   }
 
   return <Component className={cxm(classStr, classSet, className)} {...props}>{children}</Component>

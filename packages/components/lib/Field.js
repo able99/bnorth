@@ -79,7 +79,7 @@ var Field = function Field(aprops) {
 
   if (hasContainer) {
     var classSetContainer = (0, _defineProperty2.default)({
-      'overflow-hidden': true,
+      'overflow-a-hidden': true,
       'flex-display-flex': !(0, _props.hascx)(containerClassName, 'flex-display'),
       'flex-align-center': !(0, _props.hascx)(containerClassName, 'flex-align')
     }, 'text-size' + cSize, cSize);

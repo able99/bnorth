@@ -181,7 +181,7 @@ function (_React$Component) {
       var index = this.state.index;
       children = _react.default.Children.toArray(children);
       var classSet = {
-        'overflow-hidden': true
+        'overflow-a-hidden': true
       };
       return _react.default.createElement(_Panel.default.Touchable, (0, _extends2.default)({
         component: _AnimationSlider.default,

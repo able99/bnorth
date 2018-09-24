@@ -12,6 +12,7 @@ import BackTop from '@bnorth/components/lib/BackTop';
 // import Fab from '@bnorth/components/lib/Fab'
 // import Tabs from '@bnorth/components/lib/Tabs'
 import Loader from '@bnorth/components/lib/Loader'
+import NavBar from '@bnorth/components/lib/NavBar'
 // import img from '../../res/aboutme.svg';
 
 
@@ -101,6 +102,18 @@ let Component = aprops=>{
           </Panel>
         </Group>
 
+        <Group 
+          app={app} page={page}
+          stateData={stateData} stateComponentSwitchs={stateComponentSwitchs} stateCommonProps={stateCommonProps} stateComponentProps={stateComponentProps}
+          title="NavBar">
+          <Group.Item title="NavBar">
+            <NavBar>
+              <NavBar.Item> item1item1 </NavBar.Item>
+              <NavBar.Title> title </NavBar.Title>
+              <NavBar.Item> item2 </NavBar.Item>
+            </NavBar>
+          </Group.Item>
+        </Group>
         {/*<Panel.Touchable onPan={(e,el)=>console.log(e,el)} >
           <List>
             {Array(10).fill(0).map((v,i)=>(

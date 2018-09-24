@@ -106,7 +106,7 @@ var _default = {
         if (!content) return;
         props.in = false;
 
-        props.onExited = function () {
+        props.onTransitionFinished = function () {
           app.router.removeView(_id);
           app.context.clear(_id);
         };
