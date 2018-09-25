@@ -43,7 +43,7 @@ let Field = (aprops)=>{
 
   if(hasContainer) {
     let classSetContainer = {
-      'overflow-hidden': true,
+      'overflow-a-hidden': true,
       'flex-display-flex': !hascx(containerClassName, 'flex-display'),
       'flex-align-center': !hascx(containerClassName, 'flex-align'),
       ['text-size'+cSize]: cSize,    

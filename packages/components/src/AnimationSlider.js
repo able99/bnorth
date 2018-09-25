@@ -22,7 +22,7 @@ class AnimationSlider extends React.Component {
 
 
     let classSet = {
-      'overflow-hidden': true,
+      'overflow-a-hidden': true,
       'position-relative': !hascx(className, 'position'),
     }
 
@@ -60,7 +60,7 @@ AnimationSlider.Item = aprops=>{
 
 
   let classSet = {
-    'overflow-hidden': true,
+    'overflow-a-hidden': true,
     'flex-sub-flex-extend': true,
   }
 

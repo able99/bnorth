@@ -27,7 +27,7 @@ var _default = function _default(aprops) {
       className = _genCommonProps.className,
       props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["mask", "component", "className"]);
 
-  var classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-hidden';
+  var classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-a-hidden';
   var classSet = (0, _defineProperty2.default)({}, 'bg-color-' + (mask === true ? 'mask' : mask), mask);
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _props.cxm)(classStr, classSet, className)

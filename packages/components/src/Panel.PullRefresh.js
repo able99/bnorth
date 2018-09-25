@@ -69,7 +69,7 @@ PullRefresh._Loader = aprops=>{
     component:Component=Panel, className, style, children, ...props
   } = genCommonProps(aprops);
 
-  let classStr = 'overflow-hidden transition-property-height flex-display-block flex-direction-v flex-justify-center flex-align-center';
+  let classStr = 'overflow-a-hidden transition-property-height flex-display-block flex-direction-v flex-justify-center flex-align-center';
 
   let styleSet = {height: 0};
   if(offset>0) styleSet.height = offset;

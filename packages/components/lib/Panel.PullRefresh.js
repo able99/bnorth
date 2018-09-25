@@ -143,7 +143,7 @@ PullRefresh._Loader = function (aprops) {
       children = _genCommonProps2.children,
       props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["isLoading", "offset", "triggerOffset", "title", "loader", "loaderProps", "component", "className", "style", "children"]);
 
-  var classStr = 'overflow-hidden transition-property-height flex-display-block flex-direction-v flex-justify-center flex-align-center';
+  var classStr = 'overflow-a-hidden transition-property-height flex-display-block flex-direction-v flex-justify-center flex-align-center';
   var styleSet = {
     height: 0
   };

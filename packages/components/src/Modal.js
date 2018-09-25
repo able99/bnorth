@@ -5,31 +5,30 @@
  * @license MIT
  */
 
-
 import React from 'react';
-import { genCommonProps, cx, hascx } from './utils/props';
-import Backdrop from './Backdrop';
+import { genCommonProps, getSubComponentProps, cxm } from './utils/props';
 import AnimationFade from './AnimationFade';
+import Backdrop from './Backdrop';
 import Button from './Button';
 import Icon from './Icon';
 
 
 let Modal = aprops=>{
   let {
-    handleAction, in:isIn, onExited,
-    role, title, titleClose, 
-    headerProps, headerTitleProps, headerCloseProps, bodyProps, footerProps, footerButtonsProps, containerProps, 
-    style, className, children, ...props
+    role, handleAction, in:isIn=true, onTransitionFinished,
+    containerProps, 
+    headerProps, title, titleProps, hasTitleClose, titleCloseProps, titleCloseIconProps,
+    bodyProps, 
+    footerProps, footerButtonProps, footButtonGetStyle, footButtonGetClassName, footButtonGetProps,
+    component:Component="div", style, className, children, ...props
   } = genCommonProps(aprops);
+  children = typeof(children)==='function'?children(this):children;
   
-  
+  let classStr = 'position-relative backface-hidden overflow-a-hidden bg-color-white';
+
   let classSet = {
-    'position-relative': true,
-    'backface-hidden': true,
-    'overflow-hidden': true,
     'square-full': role==='popup',
-    'bg-color-white': !hascx(className, 'bg-color'),
-    'border-radius': role!=='popup'&&role!=='document'&&!hascx(className, 'border-radius'),
+    'border-radius-': role!=='popup'&&role!=='document',
   };
 
   let styleSet = {
@@ -37,193 +36,175 @@ let Modal = aprops=>{
     ...style||{},
   };
   
-
   return (
-    <Modal.Container {...aprops}>
+    <Modal._Container 
+      handleAction={handleAction} in={isIn} onTransitionFinished={onTransitionFinished}
+      role={role} {...containerProps}>
       {role==='document'?children:(
-        <div style={styleSet} className={cx(classSet, className)} onClick={e=>e.stopPropagation()} {...props}>
-          <Modal.Header {...aprops} />
-          <Modal.Body {...aprops} />
-          <Modal.Footer {...aprops} />
-        </div>
+        <Component 
+          onClick={e=>e.stopPropagation()} 
+          style={styleSet} className={cxm(classStr, classSet, className)} 
+          {...props}>
+          <Modal._Header 
+            title={title} titleProps={titleProps} 
+            hasTitleClose={hasTitleClose} titleCloseProps={titleCloseProps} titleCloseIconProps={titleCloseIconProps}
+            role={role} handleAction={handleAction} {...headerProps} />
+          <Modal._Body 
+            role={role} {...bodyProps}>
+            {children}
+          </Modal._Body>
+          <Modal._Footer 
+            footerButtonProps={footerButtonProps} 
+            footButtonGetStyle={footButtonGetStyle} footButtonGetClassName={footButtonGetClassName} footButtonGetProps={footButtonGetProps}
+            role={role} handleAction={handleAction} {...footerProps} />
+        </Component>
       )}
-    </Modal.Container>
+    </Modal._Container>
   )
 }
 
-Modal.Container = aprops=>{
+Modal._Container = aprops=>{
   let { 
-    role,
-    handleAction, in:isIn=true, onExited,
-    containerProps, children,
-  } = aprops;
-  let { component=Backdrop, className, mask=true, timeout, Transition=AnimationFade, ...props } = genCommonProps(containerProps);
-
+    role, handleAction, 
+    mask=true, transition:Transition=AnimationFade, in:isIn, onTransitionFinished, 
+    component=Backdrop, className, children, ...props
+  } = genCommonProps(aprops);
 
   let classSet = {
-    'border-none': !className.startsWith('border'),
-    'flex-display-flex': role!=='document',
+    'flex-display-block': role!=='document',
     'flex-justify-center': role!=='document',
     'flex-align-center': role!=='document',
   }
 
-
   return (
     <Transition
-      onClick={()=>handleAction && handleAction()}
-      in={isIn} timeout={timeout} onExited={onExited} component={component} mask={mask} 
-      className={cx(classSet, className)} {...props}>
+      onClick={()=>handleAction&&handleAction()}
+      in={isIn} onTransitionFinished={onTransitionFinished} component={component} mask={mask} 
+      className={cxm(classSet, className)} {...props}>
       {children}
     </Transition>
   );
 }
 
-Modal.Header = aprops=>{
-  let { title, titleClose, headerProps={} } = aprops;
-  let { className, ...props } = genCommonProps(headerProps);
+Modal._Header = aprops=>{
+  let { 
+    handleAction,
+    title, titleProps, hasTitleClose, titleCloseProps, titleCloseIconProps,
+    component:Component='div', className, ...props 
+  } = genCommonProps(aprops);
 
-
-  let classSet = {
-    'width-full': true,
-    'padding': true,
-    'border-set-bottom': !hascx(className, 'border'),
-    'flex-display-flex': true,
-    'flex-justify-between': true,
-    'flex-align-center': true,
-  };
-
+  let classStr = 'width-full padding-a- border-set-bottom- flex-display-block flex-justify-between flex-align-center';
   
-  return (title||titleClose?(
-    <div className={cx(classSet, className)} {...props}>
-      <Modal.HeaderTitle {...aprops} />
-      <Modal.HeaderClose {...aprops} />
-    </div>
+  return (title||hasTitleClose?(
+    <Component className={cxm(classStr, className)} {...props}>
+      <Modal._HeaderTitle hasTitleClose={hasTitleClose} {...titleProps}>{title}</Modal._HeaderTitle>
+      {!hasTitleClose?null:(
+        <Modal._HeaderTitleClose 
+          handleAction={handleAction} 
+          titleCloseIconProps={titleCloseIconProps} {...titleCloseProps}>
+          {hasTitleClose} 
+        </Modal._HeaderTitleClose >
+      )}
+    </Component>
   ):null);
 }
 
-Modal.HeaderTitle = aprops=>{
-  let { title, hasClose, headerTitleProps } = aprops;
-  let { className, ...props } = genCommonProps(headerTitleProps);
-
-  
-  let classSet = {
-    'text-align-center': !hasClose&&!className.startsWith('text-align'),
-    'flex-sub-flex-grow': true,
-  };
-
-  
-  return (
-    <big className={cx(classSet, className)} {...props}>
-      <strong>{title}</strong>
-    </big>
-  );
-}
-
-Modal.HeaderClose = aprops=>{
-  let { titleClose=null, headerCloseProps, handleAction } = aprops;
-  let { className, cStyle='plain', name='close', children, ...props } = genCommonProps(headerCloseProps);
-
-
-  let classSet = {
-    'padding-xs': !className.startsWith('padding'),
-  };
-
-  
-  return (titleClose===true?(
-    <Button 
-      onClick={()=>handleAction&&handleAction()}
-      cStyle={cStyle} className={cx(classSet, className)} {...props}>
-      {name?<Icon name={Icon.getName(name,'x')} />:null}
-      {children}
-    </Button>
-  ):titleClose)
-}
-
-Modal.Body = aprops=>{
-  let { bodyProps={}, children, } = aprops;
-  let { className, ...props } = genCommonProps(bodyProps);
-  children = typeof(children)==='function'?children(this):children;
-
-
-  let classSet = {
-    'padding': !hascx(className, 'padding'),
-  };
-  
-
-  return (
-    <div className={cx(classSet, className)} {...props}>
-      {children}
-    </div>
-  );
-}
-
-Modal.Footer =  aprops=>{
-  let { footerProps } = aprops;
-  let { className, ...props } = genCommonProps(footerProps);
-  
-
-  let classSet = {
-    'flex-display-flex': true,
-    'border-set-top': true,
-  };
-    
-  
-  return (
-    <div className={cx(classSet, className)} {...props}>
-      <Modal.FooterButtons {...aprops} />
-    </div>
-  );
-}
-
-Modal.FooterButtons =  aprops=>{
-  let { role, footerButtonProps, handleAction } = aprops;
+Modal._HeaderTitle = aprops=>{
   let { 
-    className, style, cStyle='plain', cTheme, cSize,
-    buttons={ alert: ['确定'], prompt: ['取消','确定'] }[role],
-    itemClassSet=(i,length,v,props,data)=>{ 
-      let ret = {'flex-sub-flex-grow': true};
-      i<=length-1&&(ret['border-right-border']=true);
-      return ret;
-    },
-    itemStyleSet=(i,length,v,props,data)=>{ 
-      let ret = {};
-      return ret;
-    },
-    itemProps=(i,length,v,props,data)=>{
-      let ret = {};
-      i>=length-1&&(ret[cTheme]='primary');
-      return ret;
-    },
-    ...props
-  } = genCommonProps(footerButtonProps);
-  if(!buttons||!buttons.length) return null;
+    hasTitleClose,
+    component:Component='div', className, children, ...props 
+  } = genCommonProps(aprops);
   
+  let classStr = 'flex-sub-flex-grow text-weight-bold text-size-lg';
+  let classSet = {
+    'text-align-center': !hasTitleClose,
+  };  
+
+  return (
+    <Component className={cxm(classStr, classSet, className)} {...props}>{children}</Component>
+  );
+}
+
+Modal._HeaderTitleClose = aprops=>{
+  let { 
+    handleAction, 
+    titleCloseIconProps,
+    component:Component=Button, className, children, ...props 
+  } = genCommonProps(aprops);
+
+  let classStr = 'padding-a-xs';
   
   return (
-    <React.Fragment>
-      {buttons.map((v,i, arr)=>(
-        <Button
-          key={'footer-button'+i}
-          cStyle="plain"
-          onClick={()=>handleAction && handleAction(i)}
-          className={cx(
-            className,
-            itemClassSet(i, arr.length, v, props)
-          )} 
-          style={{
-            ...style,
-            ...itemStyleSet(i, arr.length, v, props),
-          }}
-          {...{
-            cStyle, cSize, cTheme,
-            ...props,
-            ...itemProps(i, arr.length, v, props),
-          }}>
-          {typeof(v)==='object'?v.title:v}
+    <Component
+      b-style="plain"
+      onClick={()=>handleAction&&handleAction()} 
+      className={cxm(classStr, className)}
+      {...props}>
+      {children===true?<Modal._HeaderTitleCloseIcon {...titleCloseIconProps} />:children}
+    </Component>
+  );
+}
+
+Modal._HeaderTitleCloseIcon = aprops=>{
+  let { 
+    title,
+    component:Component=Icon, ...props 
+  } = genCommonProps(aprops);
+
+  return <Component name="close" nameDefault="x" {...props} />
+}
+
+Modal._Body = aprops=>{
+  let { 
+    component:Component='div', className, children, ...props 
+  } = genCommonProps(aprops);
+  children = typeof(children)==='function'?children(this):children;
+  if(!children) return null;
+
+  let classStr = 'padding-a-';
+  
+  return <Component className={cxm(classStr, className)} {...props}>{children}</Component>;
+}
+
+Modal._Footer =  aprops=>{
+  let { 
+    role, handleAction,
+    footerButtons=Modal._footerButtons[aprops.role]||[],
+    footerButtonProps, footButtonGetClassName=Modal._Footer._footButtonGetClassName, footButtonGetStyle=Modal._Footer._footButtonGetStyle, footButtonGetProps=Modal._Footer._footButtonGetProps,
+    component:Component='div', className, children, ...props 
+  } = genCommonProps(aprops);
+  if(!footerButtons.length) return null;
+
+  let classStr = 'border-set-top- overflow-a-hidden flex-display-block flex-align-center';
+
+  let buttonProps = {
+    className: 'flex-sub-flex-extend',
+  }
+  
+  return (
+    <Component className={cxm(classStr, className)} {...props}>
+      {footerButtons.map((v,i,a)=>(
+        <Button 
+          key={i}
+          b-style='plain'
+          onClick={()=>handleAction&&handleAction(i)}
+          {...getSubComponentProps(i, a.length, aprops, buttonProps, footerButtonProps, footButtonGetClassName, footButtonGetStyle, footButtonGetProps)}>
+          {v}
         </Button>
       ))}
-    </React.Fragment>
+    </Component>
   );
+}
+
+Modal._Footer.footButtonGetClassName=(i, length, {stacked, justify, separator}={}, subPropsEach, subProps)=>{
+  return {
+    'border-set-left-': i   
+  };
+}
+
+Modal._footerButtons = {
+  alert: ['确定'], 
+  prompt: ['取消','确定'],
 }
 
 

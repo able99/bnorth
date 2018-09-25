@@ -9,7 +9,7 @@ export default (aprops) => {
     component:Component=Panel, className, ...props
   } = genCommonProps(aprops);
 
-  let classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-hidden';
+  let classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-a-hidden';
 
   let classSet = {
     ['bg-color-'+(mask===true?'mask':mask)]: mask,

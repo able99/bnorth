@@ -43,7 +43,7 @@ var Views = function Views(aprops) {
   children = _react.default.Children.toArray(children).filter(function (v) {
     return v;
   });
-  var classStr = 'position-relative overflow-hidden';
+  var classStr = 'position-relative overflow-a-hidden';
   var classSet = [];
   if (bSize) classSet.push('text-size-' + (bSize === true ? '' : bSize));
 
@@ -76,7 +76,7 @@ Views.Item = function (aprops) {
       children = _genCommonProps2.children,
       props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["component", "className", 'b-theme', 'b-style', 'b-size', "children"]);
 
-  var classStr = 'position-relative offset-left-start offset-right-start offset-top-start offset-bottom-start square-full overflow-hidden';
+  var classStr = 'position-relative offset-left-start offset-right-start offset-top-start offset-bottom-start square-full overflow-a-hidden';
   var classSet = [];
   if (bSize) classSet.push('text-size-' + (bSize === true ? '' : bSize));
   if (bTheme) classSet.push('text-color-' + (bTheme === true ? '' : bTheme));

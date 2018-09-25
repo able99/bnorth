@@ -92,7 +92,7 @@ List._Inner = function (aprops) {
       props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["separatorInset", "component", "className", "children"]);
 
   var classStr = 'bg-color-white';
-  var classSet = (0, _defineProperty2.default)({}, "padding-left".concat(separatorInset && separatorInset !== true ? '-' + separatorInset : ''), separatorInset);
+  var classSet = (0, _defineProperty2.default)({}, "padding-left-".concat(separatorInset && separatorInset !== true ? '-' + separatorInset : ''), separatorInset);
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _props.cxm)(classStr, classSet, className)
   }, props), children);

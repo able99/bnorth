@@ -6,7 +6,7 @@ import TabBar from '@bnorth/components/lib/TabBar'
 
 
 let items = [
-  {title: 'components', key: 'c_components'}, 
+  {title: 'cs', key: 'c_components'}, 
   {title: 'list', key: 'c_list'},
   {title: 'props', key: 'c_props'},
   {title: 'plugins', key: 'c_plugins'},
@@ -17,7 +17,7 @@ export default props=>{
   return (
     <View>
       <NavBar>
-        <NavBar.Item title="back" onClick={()=>app.router.back()} />
+        <NavBar.Item icon="left" iconProps={{nameDefault: '<'}} onClick={()=>app.router.back()} />
         <NavBar.Title>Components</NavBar.Title>
       </NavBar>
       <Panel main>

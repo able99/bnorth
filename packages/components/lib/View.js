@@ -41,7 +41,7 @@ var View = function View(aprops) {
       children = _genCommonProps.children,
       props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["landscape", "container", "component", "className", "style", 'b-theme', 'b-style', 'b-size', "children"]);
 
-  var classStr = 'position-relative offset-left-start offset-right-start offset-top-start offset-bottom-start square-full overflow-hidden';
+  var classStr = 'position-relative offset-left-start offset-right-start offset-top-start offset-bottom-start square-full overflow-a-hidden';
   classStr += ' flex-display-block flex-direction-v';
   var classSet = ['bg-color-' + bTheme];
   var styleSet = {};

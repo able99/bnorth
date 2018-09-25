@@ -88,7 +88,7 @@ class Carousel extends React.Component {
 
 
     let classSet = {
-      'overflow-hidden': true,
+      'overflow-a-hidden': true,
     }
     
 

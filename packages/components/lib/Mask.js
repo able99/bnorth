@@ -43,7 +43,7 @@ var _default = function _default(aprops) {
       className = _genCommonProps.className,
       props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["mask", "hasLoader", "componentLoad", "loaderProps", "title", "componnetTitle", "titleProps", "transition", "transitionProps", "onTransitionFinished", "component", "className"]);
 
-  var classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-hidden flex-display-block flex-direction-v flex-justify-center flex-align-center';
+  var classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-a-hidden flex-display-block flex-direction-v flex-justify-center flex-align-center';
   return _react.default.createElement(Transition, (0, _extends2.default)({
     "b-style": "solid",
     "b-theme": mask === true ? 'mask' : mask,

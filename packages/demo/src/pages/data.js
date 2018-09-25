@@ -1,6 +1,7 @@
 import React from 'react';
 import View from '@bnorth/components/lib/View'
 import Panel from '@bnorth/components/lib/Panel'
+import NavBar from '@bnorth/components/lib/NavBar'
 import List from '@bnorth/components/lib/List'
 import Button from '@bnorth/components/lib/Button'
 
@@ -9,6 +10,10 @@ let Component = props=>{
   return (
     <View>
       <Panel main>
+        <NavBar>
+          <NavBar.Item icon="left" iconProps={{nameDefault: '<'}} onClick={()=>app.router.back()} />
+          <NavBar.Title>Data</NavBar.Title>
+        </NavBar>
         <List>
           <List.Item 
             title="data - add tick" 

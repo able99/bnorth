@@ -1,13 +1,19 @@
 import React from 'react';
 import View from '@bnorth/components/lib/View'
 import Panel from '@bnorth/components/lib/Panel'
+import NavBar from '@bnorth/components/lib/NavBar'
 import List from '@bnorth/components/lib/List'
 
 export default props=>{
   let { app } = props;
+  
   return (
     <View>
       <Panel main>
+        <NavBar>
+          <NavBar.Item icon="left" iconProps={{nameDefault: '<'}} onClick={()=>app.router.back()} />
+          <NavBar.Title>Plugins</NavBar.Title>
+        </NavBar>
         <List>
           <List.Item title="dynamic" onClick={()=>app.router.push('dynamic')} />
         </List>
