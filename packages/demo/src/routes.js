@@ -19,14 +19,18 @@ let PageInfo = props=>{
 }
 
 export default {
-  '/:tab?': {
-    component: require('./pages/home').default,
-    embeds: ['components', 'router', 'data', 'plugins' ],
+  '/': require('./pages/home').default,
+
+  'components:tab?': {
+    component: require('./pages/components').default,
+    embeds: ['c_components', 'c_list', 'c_props', 'c_plugins' ],
   },
-  'components': require('./pages/components').default,
+  'c_components': require('./pages/c-components').default,
+  'c_list': require('./pages/c-list').default,
+  'c_props': require('./pages/c-props').default,
+  'c_plugins': require('./pages/c-plugins').default,
+
   'router': require('./pages/router').default,
-  'data': require('./pages/data').default,
-  'plugins': require('./pages/plugins').default,
   'require_param:param1': PageInfo,
   'option_param:param1?': PageInfo,
   'dynamic': {
@@ -37,5 +41,9 @@ export default {
         })
       },1000));
     }
-  }
+  },
+
+  'data': require('./pages/data').default,
+
+  'plugins': require('./pages/plugins').default,
 }

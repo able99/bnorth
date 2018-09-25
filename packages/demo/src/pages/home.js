@@ -1,31 +1,30 @@
 import React from 'react';
 import View from '@bnorth/components/lib/View'
 import Panel from '@bnorth/components/lib/Panel'
-import TabBar from '@bnorth/components/lib/TabBar'
+import List from '@bnorth/components/lib/List'
 
 
-let items = [
-  {title: '组件', key: 'components'}, 
-  {title: '路由', key: 'router'},
-  {title: '数据', key: 'data'},
-  {title: '其他', key: 'plugins'},
-];
 export default props=>{
-  let { app, route, children } = props;
+  let { app } = props;
+
   return (
     <View>
       <Panel main>
-        {children[route.params.tab||'components']}
+        <List>
+          <List.Item 
+            title="components" 
+            onClick={()=>app.router.push('components')} />
+          <List.Item 
+            title="router" 
+            onClick={()=>app.router.push('router')} />
+          <List.Item 
+            title="data" 
+            onClick={()=>app.router.push('data')} />
+          <List.Item 
+            title="plugins" 
+            onClick={()=>app.router.push('plugins')} />
+        </List>
       </Panel>
-      <TabBar b-style='solid' b-theme='primary' itemProps={{colorUnactiveOnTheme:'disable'}}>
-        {items.map(v=>(
-          <TabBar.Item 
-            onClick={()=>app.router.replace(['/', v.key])}
-            selected={route.params.tab?route.params.tab===v.key:v.key==='components'}
-            key={v.key}
-            title={v.title} />
-        ))}
-      </TabBar>
     </View>
-  )
-}
+  );
+};

@@ -20,7 +20,9 @@ let app = new App({
       app.router.setRoutes(routes);
     },
 
-    stateData: {},
+    stateCommonProps: {},
+    stateComponentProps: {},
+    stateComponentSwitchs: {initialization: []},
   },
 })
 

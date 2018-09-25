@@ -6,8 +6,6 @@ export default ()=>{
   return (
     <View>
       <Panel main>
-        plugins
-        <span dangerouslySetInnerHTML={{__html:'<svg><use xlink:href="#icon-heart"></use></svg>'}}/>
       </Panel>
     </View>
   );
