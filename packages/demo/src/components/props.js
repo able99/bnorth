@@ -7,10 +7,9 @@ let PropSel = aprops=>{
 
   if(Array.isArray(option)) {
     componnet = [undefined,...option].map(v=>(
-      <label key={v}>
-        <span className="margin-right-xxs">{v||'none'}</span>
+      <label key={v} className="margin-right-">
         <input 
-          className="margin-right-"
+          className="margin-right-xxs"
           onChange={e=>{
             if(!sub) return state.update({[title]: v});
             let data = stateData[sub]||{};
@@ -19,6 +18,7 @@ let PropSel = aprops=>{
           }}
           checked={sub?(stateData[sub]&&stateData[sub][title]===v):stateData[title]===v}
           type='radio' key={v} />
+        <span>{v||'none'}</span>
       </label>
     ))
   }else if(!option) {

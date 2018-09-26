@@ -9,7 +9,7 @@ class Network {
   }
 
   fetch(options={}, isFetch=true, cancelTokenCB){
-    app = this.app;
+    let app = this.app;
     options = this.app.utils.getOptions(this.options, options);
 
     return axios({

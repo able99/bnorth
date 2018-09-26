@@ -29,9 +29,9 @@ var _react = _interopRequireDefault(require("react"));
 
 var _props = require("./utils/props");
 
-var _Button = _interopRequireDefault(require("./Button"));
-
 var _Panel = _interopRequireDefault(require("./Panel.Container"));
+
+var _Button = _interopRequireDefault(require("./Button"));
 
 /**
  * @overview bnorth solution
@@ -123,7 +123,7 @@ Tabs.Nav = function (aprops) {
       props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["onAction", "selectedKey", "defaultSelectedKey", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
 
   var classStr = 'flex-sub-flex-none';
-  itemProps.className = (0, _props.cxm)(itemProps.className, 'text-truncate');
+  itemProps.className = (0, _props.cxm)('text-truncate', itemProps.className);
   itemProps['b-style'] = itemProps['b-style'] || 'underline';
   return _react.default.createElement(Component, (0, _extends2.default)({
     separator: true,
@@ -147,10 +147,7 @@ Tabs.Nav.itemGetProps = function (i, length) {
   var _ref2 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
       eventKey = _ref2.eventKey;
 
-  var subProps = arguments.length > 4 ? arguments[4] : undefined;
   return {
-    'data-bbb': i,
-    'data-bbbc': selectedKey === undefined || selectedKey === null ? i === defaultSelectedKey : selectedKey === i,
     key: eventKey || i,
     selected: selectedKey === undefined || selectedKey === null ? i === defaultSelectedKey : selectedKey === i,
     onClick: function onClick(e) {

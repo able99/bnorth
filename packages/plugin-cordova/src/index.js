@@ -76,7 +76,7 @@ class Cordova {
     volumeup&&window.document.addEventListener("volumeupbutton", e=>{this.app.event.emitSync(this._id, 'onVolumeUpButton', e)}, false);
     back&&window.document.addEventListener("backbutton", async e=>{
       if(await this.app.event.emitSync(this._id, 'onBackButton', e)) return;
-      back!==true&&app.keyboard.emit({type: 'keydown', keyCode: back});
+      back!==true&&this.app.keyboard.emit({type: 'keydown', keyCode: back});
     }, false);
 
     this.app.event.emit(this._id, 'onDeviceReady');
@@ -117,11 +117,11 @@ class Cordova {
           resolve(file);
         }, error=>{ 
           error.message = options.fileErrorMessage;
-          reject(err);
+          reject(error);
         })
       },error=>{ 
         error.message = options.fileErrorMessage;
-        reject(err);
+        reject(error);
       })
     });
   }

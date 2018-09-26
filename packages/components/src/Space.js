@@ -13,8 +13,8 @@ import Panel from './Panel';
 
 let Spacing = (aprops)=>{
   let {
-    count = 1, stacked,
-    component: Component = Panel, children, ...props
+    count=1, stacked,
+    component:Component=Panel, children, ...props
   } = genCommonProps(aprops);
 
   return (

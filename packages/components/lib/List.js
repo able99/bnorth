@@ -222,14 +222,12 @@ List.Item._After = function (aprops) {
       _genCommonProps9$comp = _genCommonProps9.component,
       Component = _genCommonProps9$comp === void 0 ? _Panel.default : _genCommonProps9$comp,
       className = _genCommonProps9.className,
-      _genCommonProps9$bTh = _genCommonProps9['b-theme'],
-      bTheme = _genCommonProps9$bTh === void 0 ? 'light' : _genCommonProps9$bTh,
       children = _genCommonProps9.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps9, ["component", "className", 'b-theme', "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps9, ["component", "className", "children"]);
 
   var classStr = 'flex-sub-align-center';
   return _react.default.createElement(Component, (0, _extends2.default)({
-    "b-theme": bTheme,
+    "b-theme": "light",
     className: (0, _props.cxm)(classStr, className)
   }, props), children);
 };
@@ -245,6 +243,7 @@ List.Item._Arrow = function (aprops) {
 
   var classStr = 'flex-sub-align-center flex-sub-flex-none';
   return _react.default.createElement(Component, (0, _extends2.default)({
+    "b-theme": "light",
     className: (0, _props.cxm)(classStr, className)
   }, props), !children || children === true ? _react.default.createElement(_Icon.default, (0, _extends2.default)({
     name: "right",

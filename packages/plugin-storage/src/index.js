@@ -34,7 +34,6 @@ class Storage {
    * @param {string} item - 名称
    */
   getObj(item){
-    let val = this.storage.getItem(item);
     try{ return JSON.parse(this.storage.getItem(item)) }catch(e){ return }
   }
 

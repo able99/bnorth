@@ -144,7 +144,7 @@ function () {
                   return _context.abrupt("return");
 
                 case 4:
-                  back !== true && app.keyboard.emit({
+                  back !== true && _this.app.keyboard.emit({
                     type: 'keydown',
                     keyCode: back
                   });
@@ -207,11 +207,11 @@ function () {
             resolve(file);
           }, function (error) {
             error.message = options.fileErrorMessage;
-            reject(err);
+            reject(error);
           });
         }, function (error) {
           error.message = options.fileErrorMessage;
-          reject(err);
+          reject(error);
         });
       });
     }

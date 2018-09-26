@@ -43,7 +43,7 @@ let Component = aprops=>{
 
         <Group title="Icon" {...groupProps}>
           <Group.Item title="svg">
-            <Icon {...stateCommonProps} name="heart" />
+            <Icon {...stateCommonProps} name="star" />
           </Group.Item>
           <Group.Item title="img">
             <Icon {...stateCommonProps} src={img} />
@@ -81,7 +81,7 @@ let Component = aprops=>{
         </Group>
 
         <Group title="Tabs" {...groupProps}>
-          <Tabs>
+          <Tabs navProps={{itemProps:{'b-theme': 'alert'}}}>
             <Tabs.Item title="title1">tabs1</Tabs.Item>
             <Tabs.Item title="title2">tabs2</Tabs.Item>
             <Tabs.Item title="title3">tabs3</Tabs.Item>
@@ -99,9 +99,9 @@ let Component = aprops=>{
           </Group.Item>
           <Group.Item title="button group">
             <Button.Group {...stateComponentProps['Button.Group']} {...stateCommonProps}>
-              <Button>button1</Button>
-              <Button>button2</Button>
-              <Button>button3</Button>
+              <Button bc-border-set-a->button1</Button>
+              <Button bc-border-set-a->button2</Button>
+              <Button bc-border-set-a->button3</Button>
             </Button.Group>
           </Group.Item>
         </Group>

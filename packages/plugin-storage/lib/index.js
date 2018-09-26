@@ -54,8 +54,6 @@ function () {
   }, {
     key: "getObj",
     value: function getObj(item) {
-      var val = this.storage.getItem(item);
-
       try {
         return JSON.parse(this.storage.getItem(item));
       } catch (e) {

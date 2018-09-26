@@ -29,7 +29,7 @@ function () {
   function Browser(app, _id, options) {
     (0, _classCallCheck2.default)(this, Browser);
     this.app = app;
-    this._id = id;
+    this._id = _id;
     this.options = options;
 
     this._uaInit();
@@ -147,8 +147,8 @@ function () {
         return;
       }
 
-      var keys = document.cookie.match(/[^ =;]+(?=\=)/g).forEach(function (v) {
-        _this.clearCookie(v);
+      document.cookie.match(/[^ =;]+(?=\=)/g).forEach(function (v) {
+        return _this.clearCookie(v);
       });
     } //jsload
     //------------------------------
@@ -187,7 +187,7 @@ function () {
       return window.top.document.title;
     },
     set: function set(str) {
-      return window.top.document.title = title;
+      return window.top.document.title = str;
     }
   }, {
     key: "icon",

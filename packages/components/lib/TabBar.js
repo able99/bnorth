@@ -73,7 +73,8 @@ TabBar.itemGetProps = function (i, length) {
       colorUnselected = _ref$colorUnselected === void 0 ? 'disable' : _ref$colorUnselected,
       _ref$colorSelectedOnT = _ref.colorSelectedOnTheme,
       colorSelectedOnTheme = _ref$colorSelectedOnT === void 0 ? 'white' : _ref$colorSelectedOnT,
-      colorUnselectedOnTheme = _ref.colorUnselectedOnTheme;
+      _ref$colorUnselectedO = _ref.colorUnselectedOnTheme,
+      colorUnselectedOnTheme = _ref$colorUnselectedO === void 0 ? 'disable' : _ref$colorUnselectedO;
 
   var _ref2 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
       selected = _ref2.selected;
@@ -97,6 +98,7 @@ TabBar.itemGetProps = function (i, length) {
   }
 
   return {
+    'bc-cursor-pointer': true,
     'b-theme': theme
   };
 };

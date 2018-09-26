@@ -6,10 +6,10 @@ import TabBar from '@bnorth/components/lib/TabBar'
 
 
 let items = [
-  {title: 'cs', key: 'c_components'}, 
-  {title: 'list', key: 'c_list'},
-  {title: 'props', key: 'c_props'},
-  {title: 'plugins', key: 'c_plugins'},
+  {title: 'cs', key: 'c_components', icon: 'view_comfy'}, 
+  {title: 'list', key: 'c_list', icon: 'format_list_bulleted'},
+  {title: 'props', key: 'c_props', icon: 'settings'},
+  {title: 'plugins', key: 'c_plugins', icon: 'extension'},
 ];
 export default props=>{
   let { app, route, children } = props;
@@ -23,13 +23,13 @@ export default props=>{
       <Panel main>
         {children[route.params.tab||'c_components']}
       </Panel>
-      <TabBar b-style='solid' b-theme='primary' colorUnselectedOnTheme="disable">
+      <TabBar b-style='solid' b-theme='primary'>
         {items.map(v=>(
           <TabBar.Item 
             onClick={()=>app.router.replace(['/components', v.key])}
             selected={route.params.tab?route.params.tab===v.key:v.key==='c_components'}
             key={v.key}
-            icon="heart">
+            icon={v.icon}>
             {v.title}
           </TabBar.Item >
         ))}

@@ -34,7 +34,7 @@ let TabBar = aprops=>{
 
 TabBar.itemGetProps = (
   i, length, 
-  {'b-style':bStyle, 'b-theme':bTheme, colorUnselected='disable', colorSelectedOnTheme='white', colorUnselectedOnTheme}={}, 
+  {'b-style':bStyle, 'b-theme':bTheme, colorUnselected='disable', colorSelectedOnTheme='white', colorUnselectedOnTheme='disable'}={}, 
   {selected}={}
 )=>{
   let theme;
@@ -56,6 +56,7 @@ TabBar.itemGetProps = (
   }
   
   return {
+    'bc-cursor-pointer': true,
     'b-theme': theme,
   }
 }

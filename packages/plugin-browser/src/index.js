@@ -12,7 +12,7 @@ import Url from 'url-parse';
 class Browser {
   constructor(app, _id, options) {
     this.app = app;
-    this._id = id;
+    this._id = _id;
     this.options = options;
     this._uaInit();
   };
@@ -39,7 +39,7 @@ class Browser {
   };
 
   set title(str){
-    return window.top.document.title = title;
+    return window.top.document.title = str;
   };
 
 
@@ -134,11 +134,8 @@ class Browser {
   }
 
   clearCookie(name) { 
-    if(name){this.setCookie(name, "", -1); return;}
-
-    var keys = document.cookie.match(/[^ =;]+(?=\=)/g).forEach(v=>{
-      this.clearCookie(v); 
-    })
+    if(name){ this.setCookie(name, "", -1); return }
+    document.cookie.match(/[^ =;]+(?=\=)/g).forEach(v=>this.clearCookie(v));
   } 
 
   //jsload

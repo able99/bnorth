@@ -152,12 +152,12 @@ List.Item._Desc = aprops=>{
 
 List.Item._After = aprops=>{
   let {
-    component:Component=Panel, className, 'b-theme':bTheme='light', children, ...props
+    component:Component=Panel, className, children, ...props
   } = genCommonProps(aprops);
 
   let classStr = 'flex-sub-align-center';
   
-  return <Component b-theme={bTheme} className={cxm(classStr, className)} {...props}>{children}</Component>;
+  return <Component b-theme="light" className={cxm(classStr, className)} {...props}>{children}</Component>;
 }
 
 List.Item._Arrow = aprops=>{
@@ -169,7 +169,7 @@ List.Item._Arrow = aprops=>{
   let classStr = 'flex-sub-align-center flex-sub-flex-none';
   
   return (
-    <Component className={cxm(classStr, className)} {...props}>
+    <Component b-theme="light" className={cxm(classStr, className)} {...props}>
       {!children||children===true?<Icon name='right' nameDefault='>' {...arrowIconProps}/>:children}
     </Component>
   )

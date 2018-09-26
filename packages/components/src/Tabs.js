@@ -7,8 +7,8 @@
 
 import React from 'react';
 import { genCommonProps, cxm } from './utils/props';
-import Button from './Button';
 import Panel from './Panel.Container';
+import Button from './Button';
 
 
 class Tabs extends React.Component {
@@ -27,8 +27,6 @@ class Tabs extends React.Component {
     children = React.Children.toArray(children).filter(v=>v);
 
     let classStr = 'flex-display-block flex-direction-v flex-align-stretch';
-
-    
 
     return (
       <Component className={cxm(classStr, className)} {...props}>
@@ -52,7 +50,8 @@ Tabs.Nav = aprops=>{
   } = genCommonProps(aprops);
 
   let classStr = 'flex-sub-flex-none';
-  itemProps.className = cxm(itemProps.className, 'text-truncate');
+
+  itemProps.className = cxm('text-truncate', itemProps.className);
   itemProps['b-style'] = itemProps['b-style']||'underline';
 
   return (
@@ -65,10 +64,8 @@ Tabs.Nav = aprops=>{
   )
 }
 
-Tabs.Nav.itemGetProps = (i, length, {onClick, onAction, selectedKey, defaultSelectedKey}={}, {eventKey}={}, subProps)=>{
+Tabs.Nav.itemGetProps = (i, length, {onClick, onAction, selectedKey, defaultSelectedKey}={}, {eventKey}={})=>{
   return {
-    'data-bbb': i,
-    'data-bbbc': selectedKey===undefined||selectedKey===null?i===defaultSelectedKey:selectedKey===i,
     key: eventKey||i, 
     selected: selectedKey===undefined||selectedKey===null?i===defaultSelectedKey:selectedKey===i,
     onClick:e=>!(onAction&&onAction(i, eventKey))&&(onClick&&onClick(e)),
