@@ -23,13 +23,15 @@ export default props=>{
       <Panel main>
         {children[route.params.tab||'c_components']}
       </Panel>
-      <TabBar b-style='solid' b-theme='primary' itemProps={{colorUnactiveOnTheme:'disable'}}>
+      <TabBar b-style='solid' b-theme='primary' colorUnselectedOnTheme="disable">
         {items.map(v=>(
           <TabBar.Item 
             onClick={()=>app.router.replace(['/components', v.key])}
             selected={route.params.tab?route.params.tab===v.key:v.key==='c_components'}
             key={v.key}
-            title={v.title} />
+            icon="heart">
+            {v.title}
+          </TabBar.Item >
         ))}
       </TabBar>
     </View>

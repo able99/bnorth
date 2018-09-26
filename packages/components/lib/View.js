@@ -19,6 +19,8 @@ var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _props = require("./utils/props");
 
+var _Panel = _interopRequireDefault(require("./Panel"));
+
 /**
  * @overview bnorth solution
  * @copyright (c) 2016 able99
@@ -31,19 +33,13 @@ var View = function View(aprops) {
       _genCommonProps$conta = _genCommonProps.container,
       container = _genCommonProps$conta === void 0 ? window : _genCommonProps$conta,
       _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? 'div' : _genCommonProps$compo,
+      Component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
       className = _genCommonProps.className,
       style = _genCommonProps.style,
-      _genCommonProps$bThe = _genCommonProps['b-theme'],
-      bTheme = _genCommonProps$bThe === void 0 ? 'view' : _genCommonProps$bThe,
-      bStyle = _genCommonProps['b-style'],
-      bSize = _genCommonProps['b-size'],
       children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["landscape", "container", "component", "className", "style", 'b-theme', 'b-style', 'b-size', "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["landscape", "container", "component", "className", "style", "children"]);
 
-  var classStr = 'position-relative offset-left-start offset-right-start offset-top-start offset-bottom-start square-full overflow-a-hidden';
-  classStr += ' flex-display-block flex-direction-v';
-  var classSet = ['bg-color-' + bTheme];
+  var classStr = 'position-relative offset-a-start square-full overflow-a-hidden flex-display-block flex-direction-v';
   var styleSet = {};
 
   if (landscape && container.innerHeight > container.innerWidth) {
@@ -56,10 +52,13 @@ var View = function View(aprops) {
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
+    "bc-bg-color": "view",
     style: (0, _objectSpread2.default)({}, styleSet, style),
-    className: (0, _props.cxm)(classStr, classSet, className)
+    className: (0, _props.cxm)(classStr, className)
   }, props), children);
 };
 
-var _default = View;
+var _default = View; // :TODO
+// container
+
 exports.default = _default;

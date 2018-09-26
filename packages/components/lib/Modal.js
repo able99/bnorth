@@ -224,47 +224,49 @@ Modal._Footer = function (aprops) {
       handleAction = _genCommonProps8.handleAction,
       _genCommonProps8$foot = _genCommonProps8.footerButtons,
       footerButtons = _genCommonProps8$foot === void 0 ? Modal._footerButtons[aprops.role] || [] : _genCommonProps8$foot,
-      footerButtonProps = _genCommonProps8.footerButtonProps,
-      _genCommonProps8$foot2 = _genCommonProps8.footButtonGetClassName,
-      footButtonGetClassName = _genCommonProps8$foot2 === void 0 ? Modal._Footer._footButtonGetClassName : _genCommonProps8$foot2,
-      _genCommonProps8$foot3 = _genCommonProps8.footButtonGetStyle,
-      footButtonGetStyle = _genCommonProps8$foot3 === void 0 ? Modal._Footer._footButtonGetStyle : _genCommonProps8$foot3,
-      _genCommonProps8$foot4 = _genCommonProps8.footButtonGetProps,
-      footButtonGetProps = _genCommonProps8$foot4 === void 0 ? Modal._Footer._footButtonGetProps : _genCommonProps8$foot4,
+      _genCommonProps8$item = _genCommonProps8.itemProps,
+      itemProps = _genCommonProps8$item === void 0 ? {} : _genCommonProps8$item,
+      _genCommonProps8$item2 = _genCommonProps8.itemGetClassName,
+      itemGetClassName = _genCommonProps8$item2 === void 0 ? Modal._Footer.itemGetClassName : _genCommonProps8$item2,
+      _genCommonProps8$item3 = _genCommonProps8.itemGetStyle,
+      itemGetStyle = _genCommonProps8$item3 === void 0 ? Modal._Footer.itemGetStyle : _genCommonProps8$item3,
+      _genCommonProps8$item4 = _genCommonProps8.itemGetProps,
+      itemGetProps = _genCommonProps8$item4 === void 0 ? Modal._Footer.itemGetProps : _genCommonProps8$item4,
       _genCommonProps8$comp = _genCommonProps8.component,
-      Component = _genCommonProps8$comp === void 0 ? 'div' : _genCommonProps8$comp,
+      Component = _genCommonProps8$comp === void 0 ? _Button.default.Group : _genCommonProps8$comp,
       className = _genCommonProps8.className,
       children = _genCommonProps8.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps8, ["role", "handleAction", "footerButtons", "footerButtonProps", "footButtonGetClassName", "footButtonGetStyle", "footButtonGetProps", "component", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps8, ["role", "handleAction", "footerButtons", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
 
   if (!footerButtons.length) return null;
-  var classStr = 'border-set-top- overflow-a-hidden flex-display-block flex-align-center';
-  var buttonProps = {
-    className: 'flex-sub-flex-extend'
-  };
+  var classStr = 'border-set-top-';
+  itemProps.className = (0, _props.cxm)(itemProps.className, 'border-set-left-');
   return _react.default.createElement(Component, (0, _extends2.default)({
+    type: "justify",
+    containerProps: aprops,
+    itemProps: itemProps,
+    itemGetClassName: itemGetClassName,
+    itemGetStyle: itemGetStyle,
+    itemGetProps: itemGetProps,
     className: (0, _props.cxm)(classStr, className)
-  }, props), footerButtons.map(function (v, i, a) {
-    return _react.default.createElement(_Button.default, (0, _extends2.default)({
-      key: i,
-      "b-style": "plain",
-      onClick: function onClick() {
-        return handleAction && handleAction(i);
-      }
-    }, (0, _props.getSubComponentProps)(i, a.length, aprops, buttonProps, footerButtonProps, footButtonGetClassName, footButtonGetStyle, footButtonGetProps)), v);
+  }, props), footerButtons.map(function (v, i) {
+    return _react.default.createElement(Component.Item, {
+      key: i
+    }, v);
   }));
 };
 
-Modal._Footer.footButtonGetClassName = function (i, length) {
+Modal._Footer.itemGetProps = function (i, length) {
   var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
-      stacked = _ref.stacked,
-      justify = _ref.justify,
-      separator = _ref.separator;
+      handleAction = _ref.handleAction;
 
   var subPropsEach = arguments.length > 3 ? arguments[3] : undefined;
   var subProps = arguments.length > 4 ? arguments[4] : undefined;
   return {
-    'border-set-left-': i
+    'b-style': 'plain',
+    onClick: function onClick() {
+      return handleAction && handleAction(i);
+    }
   };
 };
 

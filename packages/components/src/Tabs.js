@@ -6,106 +6,101 @@
  */
 
 import React from 'react';
-import { genCommonProps, cx, cxm } from './utils/props';
-import Views from './Views';
+import { genCommonProps, cxm } from './utils/props';
 import Button from './Button';
+import Panel from './Panel.Container';
 
 
 class Tabs extends React.Component {
+  handleAction = i=>{
+    this.setState({selectedKey: i});
+    this.props.onAction&&this.props.onAction(i);
+  }
+
   render() {
     let {
       onAction, selectedKey=this.state&&this.state.selectedKey, defaultSelectedKey=0, 
-      buttonGroupProps={}, viewsProps={}, 
-      component:Component='div', className, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
+      navProps, containerProps, 
+      component:Component=Panel, className, children, ...props
     } = genCommonProps(this.props);
+
     children = React.Children.toArray(children).filter(v=>v);
 
     let classStr = 'flex-display-block flex-direction-v flex-align-stretch';
 
-    let handleAction = i=>{
-      this.setState({selectedKey: i});
-      onAction&&onAction(i);
-    }
+    
 
     return (
       <Component className={cxm(classStr, className)} {...props}>
-        <Tabs.ButtonGroup 
-          onAction={handleAction} selectedKey={selectedKey} defaultSelectedKey={defaultSelectedKey} 
-          {...buttonGroupProps}>
+        <Tabs.Nav onAction={this.handleAction} selectedKey={selectedKey} defaultSelectedKey={defaultSelectedKey} {...navProps}>
           {children}
-        </Tabs.ButtonGroup>
-        <Tabs.Views 
-          selectedKey={selectedKey} defaultSelectedKey={defaultSelectedKey} 
-          {...viewsProps}>
+        </Tabs.Nav>
+        <Tabs.Container onAction={this.handleAction} selectedKey={selectedKey} defaultSelectedKey={defaultSelectedKey} {...containerProps}>
           {children}
-        </Tabs.Views>
+        </Tabs.Container>
       </Component>
     );
   }
 }
 
 
-Tabs.ButtonGroup = aprops=>{
+Tabs.Nav = aprops=>{
   let {
     onAction, selectedKey, defaultSelectedKey,
-    buttonProps={}, buttonGetClassName=Tabs.ButtonGroup.buttonGetClassName, buttonGetStyle=Tabs.ButtonGroup.buttonGetStyle, buttonGetProps=Tabs.ButtonGroup.buttonGetProps,
+    itemProps={}, itemGetClassName=Tabs.Nav.itemGetClassName, itemGetStyle=Tabs.Nav.itemGetStyle, itemGetProps=Tabs.Nav.itemGetProps,
     component:Component=Button.Group, className, children, ...props
   } = genCommonProps(aprops);
 
   let classStr = 'flex-sub-flex-none';
-  buttonProps.className = cx(buttonProps.className, 'text-truncate');
-  buttonProps['b-style'] = buttonProps['b-style']||'underline';
+  itemProps.className = cxm(itemProps.className, 'text-truncate');
+  itemProps['b-style'] = itemProps['b-style']||'underline';
 
   return (
     <Component
       separator justify 
-      buttonProps={buttonProps} buttonGetClassName={buttonGetClassName} buttonGetStyle={buttonGetStyle} buttonGetProps={buttonGetProps}
+      containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={cxm(classStr, className)} {...props}>
-      {children.map((v,i)=>{
-        let {eventKey, title, titleProps, onClick} = v.props;
-        return (
-          <Button 
-            key={eventKey||i} 
-            selected={selectedKey===undefined||selectedKey===null?i===defaultSelectedKey:selectedKey===i}
-            onClick={e=>!(onAction&&onAction(i, eventKey))&&(onClick&&onClick(e))}
-            {...titleProps}>
-            {title}
-          </Button>
-        )
-      })}
+      {children}
     </Component>
   )
 }
 
+Tabs.Nav.itemGetProps = (i, length, {onClick, onAction, selectedKey, defaultSelectedKey}={}, {eventKey}={}, subProps)=>{
+  return {
+    'data-bbb': i,
+    'data-bbbc': selectedKey===undefined||selectedKey===null?i===defaultSelectedKey:selectedKey===i,
+    key: eventKey||i, 
+    selected: selectedKey===undefined||selectedKey===null?i===defaultSelectedKey:selectedKey===i,
+    onClick:e=>!(onAction&&onAction(i, eventKey))&&(onClick&&onClick(e)),
+  }
+}
 
-Tabs.Views = aprops=>{
+
+Tabs.Container = aprops=>{
   let {
     onAction, selectedKey, defaultSelectedKey,
-    viewProps={}, viewGetClassName=Tabs.Views.viewGetClassName, viewGetStyle=Tabs.Views.viewGetStyle, viewGetProps=Tabs.Views.viewGetProps,
-    component:Component=Views, className, children, ...props
+    type='single', itemProps, itemComponent, itemGetClassName=Tabs.Container.itemGetClassName, itemGetStyle=Tabs.Container.itemGetStyle, itemGetProps=Tabs.Container.itemGetProps,
+    component:Component=Panel.Container, className, children, ...props
   } = genCommonProps(aprops);
 
   let classStr = 'flex-sub-flex-extend';
 
   return (
     <Component 
-      viewProps={viewProps} viewGetClassName={viewGetClassName} viewGetStyle={viewGetStyle} viewGetProps={viewGetProps}
+      type={type} containerProps={aprops} itemComponent={itemComponent} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={cxm(classStr, className)} {...props}>
-      {children.map((v,i)=>{
-        let {eventKey, title, titleProps, onClick, ...props} = v.props;
-        return (
-          <Views.Item 
-            key={eventKey||i} 
-            selected={selectedKey===undefined||selectedKey===null?i===defaultSelectedKey:selectedKey===i}
-            {...viewProps} {...props}/>
-        )
-      })}
+      {children}
     </Component>
   )
 }
 
+Tabs.Container.itemGetProps = (i, length, {selectedKey, defaultSelectedKey}={}, {eventKey}={}, subProps)=>{
+  return {
+    key: eventKey||i, 
+    selected: selectedKey===undefined||selectedKey===null?i===defaultSelectedKey:selectedKey===i,
+  }
+}
 
-Tabs.Item = Views.Item;
 
-
+Tabs.Item = Panel.Container.Item;
 export default Tabs;

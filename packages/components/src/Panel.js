@@ -23,20 +23,26 @@ let Panel = aprops=>{
     'flex-sub-flex-extend': main,
     'display-inlineblock': inline,
   }
-
   if(bSize) classSet['text-size-'+(bSize==='true'?'':bSize)] = true;
-    
-  if(bStyle==='solid'&&bTheme) {
-    classSet['bg-color-'+(bTheme==='true'?'':bTheme)] = true;
-    classSet['text-color-'+(colorOnTheme==='true'?'':colorOnTheme)] = true;
-  }else if(bStyle==='solid'&&!bTheme) {
-    classSet['bg-color-component'] = true;
-  }else if(bStyle==='hollow'&&bTheme) {
-    classSet['border-set-a-'+(bTheme==='true'?'':bTheme)] = true;
-    classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
-  }else if(bStyle==='hollow'&&!bTheme) {
-    classSet['border-set-a-'] = true;
-  }else{
+  if(bStyle==='solid') {
+    if(bTheme) {
+      classSet['bg-color-'+(bTheme==='true'?'':bTheme)] = true;
+      classSet['text-color-'+(colorOnTheme==='true'?'':colorOnTheme)] = true;
+    }else{
+      classSet['bg-color-component'] = true;
+    }
+  }else if(bStyle==='hollow') {
+    if(bTheme) {
+      classSet['border-set-a-'+(bTheme==='true'?'':bTheme)] = true;
+      classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
+    }else{
+      classSet['border-set-a-'] = true;
+    }
+  }else if(bStyle==='border') {
+  }else if(bStyle==='underline') {
+  }else if(bStyle==='plain') {
+    if(bTheme) classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
+  }else {
     if(bTheme) classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
   }
   

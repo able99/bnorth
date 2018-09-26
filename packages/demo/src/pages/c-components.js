@@ -1,6 +1,7 @@
 import React from 'react';
 import View from '@bnorth/components/lib/View'
 import Panel from '@bnorth/components/lib/Panel.AspectRatio'
+import '@bnorth/components/lib/Panel.Container'
 import Button from '@bnorth/components/lib/Button'
 import Icon from '@bnorth/components/lib/Icon'
 import Space from '@bnorth/components/lib/Space'
@@ -81,9 +82,9 @@ let Component = aprops=>{
 
         <Group title="Tabs" {...groupProps}>
           <Tabs>
-            <Tabs title="title1">tabs1</Tabs>
-            <Tabs title="title2">tabs2</Tabs>
-            <Tabs title="title3">tabs3</Tabs>
+            <Tabs.Item title="title1">tabs1</Tabs.Item>
+            <Tabs.Item title="title2">tabs2</Tabs.Item>
+            <Tabs.Item title="title3">tabs3</Tabs.Item>
           </Tabs>
         </Group>
 

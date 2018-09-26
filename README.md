@@ -10,6 +10,12 @@
 
 ## Features
 
+1. 一站式整体解决方案
+1. 体系
+1. 插件机制
+1. 完全可定制
+1. 渐进式开发
+
 ## Docs
 
 [Documents](//able99.github.io/bnorth/reader/)

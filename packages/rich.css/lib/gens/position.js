@@ -30,6 +30,15 @@ var Offsets = {
   'top': true,
   'bottom': true
 };
+var Offsets0 = {
+  'a': ['left', 'right', 'top', 'bottom'],
+  'h': ['left', 'right'],
+  'v': ['top', 'bottom'],
+  'left': true,
+  'right': true,
+  'top': true,
+  'bottom': true
+};
 
 function genPosition() {
   var ret = {};
@@ -51,12 +60,15 @@ function genOffset() {
   var selector = 'offset';
   var func;
   func = 'start';
-  Object.entries(Offsets).forEach(function (_ref3) {
+  Object.entries(Offsets0).forEach(function (_ref3) {
     var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
         k = _ref4[0],
         v = _ref4[1];
 
-    return ret[(0, _utils.getSelector)(selector, k, func)] = (0, _utils.getStyleSet)(k, 0);
+    return ret[(0, _utils.getSelector)(selector, k, func)] = (0, _utils.getStyleSet)('', 0, {
+      mapKey: k,
+      mapVal: v
+    });
   });
   func = 'center';
   Object.entries(Offsets).forEach(function (_ref5) {

@@ -15,6 +15,16 @@ const Offsets = {
   'bottom': true,
 }
 
+const Offsets0 = {
+  'a': ['left', 'right', 'top', 'bottom'],
+  'h': ['left', 'right'],
+  'v': ['top', 'bottom'],
+  'left': true,
+  'right': true,
+  'top': true,
+  'bottom': true,
+}
+
 
 export function genPosition() {
   let ret = {};
@@ -29,7 +39,7 @@ export function genOffset() {
   let func;
 
   func = 'start';
-  Object.entries(Offsets).forEach(([k,v])=>(ret[getSelector(selector, k, func)] = getStyleSet(k, 0)));
+  Object.entries(Offsets0).forEach(([k,v])=>(ret[getSelector(selector, k, func)] = getStyleSet('', 0, {mapKey: k, mapVal: v})));
   func = 'center'
   Object.entries(Offsets).forEach(([k,v])=>(ret[getSelector(selector, k, func)] = getStyleSet(k, '50%')));
   func = 'end'

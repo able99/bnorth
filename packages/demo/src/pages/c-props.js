@@ -5,9 +5,12 @@ import Prop from '../components/props'
 
 
 let proplist = {
-  'b-style': ['solid', 'hollow', 'plain'],
+  'b-style': ['solid', 'hollow', 'plain', 'border', 'underline'],
   'b-theme': ['primary', 'alert', 'success'],
   'b-size': ['xs', 'sm', 'lg', 'xl'],
+  'selected': undefined,
+  'active': undefined,
+  'disabled': undefined,
 }
 
 let Component = aprops=>{

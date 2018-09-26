@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { genCommonProps, getSubComponentProps, cxm } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
 import AnimationFade from './AnimationFade';
 import Backdrop from './Backdrop';
 import Button from './Button';
@@ -170,35 +170,29 @@ Modal._Footer =  aprops=>{
   let { 
     role, handleAction,
     footerButtons=Modal._footerButtons[aprops.role]||[],
-    footerButtonProps, footButtonGetClassName=Modal._Footer._footButtonGetClassName, footButtonGetStyle=Modal._Footer._footButtonGetStyle, footButtonGetProps=Modal._Footer._footButtonGetProps,
-    component:Component='div', className, children, ...props 
+    itemProps={}, itemGetClassName=Modal._Footer.itemGetClassName, itemGetStyle=Modal._Footer.itemGetStyle, itemGetProps=Modal._Footer.itemGetProps,
+    component:Component=Button.Group, className, children, ...props 
   } = genCommonProps(aprops);
   if(!footerButtons.length) return null;
 
-  let classStr = 'border-set-top- overflow-a-hidden flex-display-block flex-align-center';
+  let classStr = 'border-set-top-';
 
-  let buttonProps = {
-    className: 'flex-sub-flex-extend',
-  }
+  itemProps.className = cxm(itemProps.className, 'border-set-left-');
   
   return (
-    <Component className={cxm(classStr, className)} {...props}>
-      {footerButtons.map((v,i,a)=>(
-        <Button 
-          key={i}
-          b-style='plain'
-          onClick={()=>handleAction&&handleAction(i)}
-          {...getSubComponentProps(i, a.length, aprops, buttonProps, footerButtonProps, footButtonGetClassName, footButtonGetStyle, footButtonGetProps)}>
-          {v}
-        </Button>
-      ))}
+    <Component 
+      type="justify" 
+      containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
+      className={cxm(classStr, className)} {...props}>
+      {footerButtons.map((v,i)=><Component.Item key={i}>{v}</Component.Item>)}
     </Component>
   );
 }
 
-Modal._Footer.footButtonGetClassName=(i, length, {stacked, justify, separator}={}, subPropsEach, subProps)=>{
+Modal._Footer.itemGetProps=(i, length, {handleAction}={}, subPropsEach, subProps)=>{
   return {
-    'border-set-left-': i   
+    'b-style': 'plain',
+    onClick: ()=>handleAction&&handleAction(i),
   };
 }
 

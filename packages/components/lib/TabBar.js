@@ -15,9 +15,9 @@ var _react = _interopRequireDefault(require("react"));
 
 var _props = require("./utils/props");
 
-var _Panel = _interopRequireDefault(require("./Panel"));
+var _Panel = _interopRequireDefault(require("./Panel.Container"));
 
-var _Icon = _interopRequireDefault(require("./Icon"));
+require("./Panel.Icon");
 
 /**
  * @overview bnorth solution
@@ -27,9 +27,15 @@ var _Icon = _interopRequireDefault(require("./Icon"));
  */
 var TabBar = function TabBar(aprops) {
   var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      onAction = _genCommonProps.onAction,
-      onClick = _genCommonProps.onClick,
-      itemProps = _genCommonProps.itemProps,
+      colorUnselected = _genCommonProps.colorUnselected,
+      colorSelectedOnTheme = _genCommonProps.colorSelectedOnTheme,
+      colorUnselectedOnTheme = _genCommonProps.colorUnselectedOnTheme,
+      _genCommonProps$type = _genCommonProps.type,
+      type = _genCommonProps$type === void 0 ? "justify" : _genCommonProps$type,
+      _genCommonProps$itemC = _genCommonProps.itemComponent,
+      itemComponent = _genCommonProps$itemC === void 0 ? _Panel.default.Icon : _genCommonProps$itemC,
+      _genCommonProps$itemP = _genCommonProps.itemProps,
+      itemProps = _genCommonProps$itemP === void 0 ? {} : _genCommonProps$itemP,
       _genCommonProps$itemG = _genCommonProps.itemGetClassName,
       itemGetClassName = _genCommonProps$itemG === void 0 ? TabBar.itemGetClassName : _genCommonProps$itemG,
       _genCommonProps$itemG2 = _genCommonProps.itemGetStyle,
@@ -37,119 +43,64 @@ var TabBar = function TabBar(aprops) {
       _genCommonProps$itemG3 = _genCommonProps.itemGetProps,
       itemGetProps = _genCommonProps$itemG3 === void 0 ? TabBar.itemGetProps : _genCommonProps$itemG3,
       _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? 'nav' : _genCommonProps$compo,
+      Component = _genCommonProps$compo === void 0 ? _Panel.default.Container : _genCommonProps$compo,
       className = _genCommonProps.className,
-      bTheme = _genCommonProps['b-theme'],
-      bStyle = _genCommonProps['b-style'],
-      bSize = _genCommonProps['b-size'],
       children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["onAction", "onClick", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", 'b-theme', 'b-style', 'b-size', "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["colorUnselected", "colorSelectedOnTheme", "colorUnselectedOnTheme", "type", "itemComponent", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
 
+  var classStr = 'width-full padding-top-sm padding-bottom-xs border-set-top-border';
+  itemProps.iconPosition = 'top';
   children = _react.default.Children.toArray(children).filter(function (v) {
     return v;
   });
-  var classStr = 'flex-display-block flex-justify-around flex-align-stretch width-full padding-v-sm border-set-top-border';
-  var classSet = [];
-  if (bSize) classSet.push('text-size-' + (bSize === true ? '' : bSize));
-  if (bStyle === 'solid') classSet.push('bg-color-' + (bTheme === true ? '' : bTheme || 'component'));
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cxm)(classStr, classSet, className)
-  }, props), children.map(function (v, i, a) {
-    return _react.default.createElement(TabBar.Item, (0, _extends2.default)({
-      key: i,
-      "b-theme": bTheme,
-      "b-style": bStyle,
-      "b-size": bSize
-    }, (0, _props.getSubComponentProps)(i, a.length, aprops, v.props, itemProps, itemGetClassName, itemGetStyle, itemGetProps)));
-  }));
+    type: type,
+    containerProps: aprops,
+    itemComponent: itemComponent,
+    itemProps: itemProps,
+    itemGetClassName: itemGetClassName,
+    itemGetStyle: itemGetStyle,
+    itemGetProps: itemGetProps,
+    className: (0, _props.cxm)(classStr, className)
+  }, props), children);
 };
 
-TabBar.Item = function (aprops) {
-  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
-      selected = _genCommonProps2.selected,
-      eventKey = _genCommonProps2.eventKey,
-      title = _genCommonProps2.title,
-      titleProps = _genCommonProps2.titleProps,
-      icon = _genCommonProps2.icon,
-      iconSelected = _genCommonProps2.iconSelected,
-      src = _genCommonProps2.src,
-      srcSelected = _genCommonProps2.srcSelected,
-      iconProps = _genCommonProps2.iconProps,
-      _genCommonProps2$colo = _genCommonProps2.colorUnactive,
-      colorUnactive = _genCommonProps2$colo === void 0 ? 'disable' : _genCommonProps2$colo,
-      _genCommonProps2$colo2 = _genCommonProps2.colorActiveOnTheme,
-      colorActiveOnTheme = _genCommonProps2$colo2 === void 0 ? 'white' : _genCommonProps2$colo2,
-      colorUnactiveOnTheme = _genCommonProps2.colorUnactiveOnTheme,
-      _genCommonProps2$comp = _genCommonProps2.component,
-      Component = _genCommonProps2$comp === void 0 ? 'span' : _genCommonProps2$comp,
-      className = _genCommonProps2.className,
-      bTheme = _genCommonProps2['b-theme'],
-      bStyle = _genCommonProps2['b-style'],
-      bSize = _genCommonProps2['b-size'],
-      children = _genCommonProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["selected", "eventKey", "title", "titleProps", "icon", "iconSelected", "src", "srcSelected", "iconProps", "colorUnactive", "colorActiveOnTheme", "colorUnactiveOnTheme", "component", "className", 'b-theme', 'b-style', 'b-size', "children"]);
+TabBar.itemGetProps = function (i, length) {
+  var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+      bStyle = _ref['b-style'],
+      bTheme = _ref['b-theme'],
+      _ref$colorUnselected = _ref.colorUnselected,
+      colorUnselected = _ref$colorUnselected === void 0 ? 'disable' : _ref$colorUnselected,
+      _ref$colorSelectedOnT = _ref.colorSelectedOnTheme,
+      colorSelectedOnTheme = _ref$colorSelectedOnT === void 0 ? 'white' : _ref$colorSelectedOnT,
+      colorUnselectedOnTheme = _ref.colorUnselectedOnTheme;
 
-  var classStr = 'position-relative cursor-pointer text-align-center flex-display-block flex-direction-v flex-justify-around flex-align-center flex-sub-flex-extend status-';
-  var classSet = [];
-  if (bSize) classSet.push('text-size-' + (bSize === true ? '' : bSize));
+  var _ref2 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
+      selected = _ref2.selected;
 
-  if (bStyle === 'solid' && bTheme) {
-    if (selected && colorActiveOnTheme) classSet.push('text-color-' + (colorActiveOnTheme === true ? '' : colorActiveOnTheme));
-    if (!selected && colorUnactiveOnTheme) classSet.push('text-color-' + (colorUnactiveOnTheme === true ? '' : colorUnactiveOnTheme));
-  } else if (bStyle === 'solid' && !bTheme) {
-    if (!selected) classSet.push('text-color-' + (colorUnactive === true ? '' : colorUnactive));
-  } else if (bTheme) {
-    if (selected) classSet.push('text-color-' + (bTheme === true ? '' : bTheme));
-    if (!selected && colorUnactiveOnTheme) classSet.push('text-color-' + (colorUnactiveOnTheme === true ? '' : colorUnactiveOnTheme));
+  var theme;
+
+  if (bStyle === 'solid') {
+    if (bTheme) {
+      if (selected && colorSelectedOnTheme) theme = colorSelectedOnTheme;
+      if (!selected && colorUnselectedOnTheme) theme = colorUnselectedOnTheme;
+    } else {
+      if (!selected && colorUnselected) theme = colorUnselected;
+    }
   } else {
-    if (!selected) classSet.push('text-color-' + (colorUnactive === true ? '' : colorUnactive));
+    if (bTheme) {
+      if (selected) theme = bTheme;
+      if (!selected && colorUnselectedOnTheme) theme = colorUnselectedOnTheme;
+    } else {
+      if (!selected) theme = colorUnselected;
+    }
   }
 
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cxm)(classStr, classSet, className)
-  }, props), _react.default.createElement(TabBar.Item.Icon, (0, _extends2.default)({
-    selected: selected,
-    icon: icon,
-    iconSelected: iconSelected,
-    src: src,
-    srcSelected: srcSelected
-  }, iconProps)), _react.default.createElement(TabBar.Item.Title, (0, _extends2.default)({
-    selected: selected,
-    title: title
-  }, titleProps)), children);
+  return {
+    'b-theme': theme
+  };
 };
 
-TabBar.Item.Icon = function (aprops) {
-  var _genCommonProps3 = (0, _props.genCommonProps)(aprops),
-      selected = _genCommonProps3.selected,
-      icon = _genCommonProps3.icon,
-      iconSelected = _genCommonProps3.iconSelected,
-      src = _genCommonProps3.src,
-      srcSelected = _genCommonProps3.srcSelected,
-      _genCommonProps3$comp = _genCommonProps3.component,
-      Component = _genCommonProps3$comp === void 0 ? _Icon.default : _genCommonProps3$comp,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["selected", "icon", "iconSelected", "src", "srcSelected", "component"]);
-
-  return icon || src ? _react.default.createElement(Component, (0, _extends2.default)({
-    name: selected && iconSelected ? iconSelected : icon,
-    src: selected && srcSelected ? srcSelected : src
-  }, props)) : null;
-};
-
-TabBar.Item.Title = function (aprops) {
-  var _genCommonProps4 = (0, _props.genCommonProps)(aprops),
-      selected = _genCommonProps4.selected,
-      title = _genCommonProps4.title,
-      _genCommonProps4$comp = _genCommonProps4.component,
-      Component = _genCommonProps4$comp === void 0 ? _Panel.default : _genCommonProps4$comp,
-      className = _genCommonProps4.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps4, ["selected", "title", "component", "className"]);
-
-  var classStr = 'text-truncate position-relative';
-  return title ? _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cxm)(classStr, className)
-  }, props), title) : null;
-};
-
+TabBar.Item = _Panel.default.Container.Item;
 var _default = TabBar;
 exports.default = _default;

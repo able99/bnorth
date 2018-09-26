@@ -6,10 +6,12 @@
  */
 
 import React from 'react';
-import { genCommonProps, getSubComponentProps, cxm } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
+import Panel from './Panel.Container';
 
 
 let Button = aprops=>{
+  console.log(99,aprops);
   let {
     selected, underLineProps={},
     colorOnTheme='white',
@@ -80,37 +82,30 @@ Button.Group = aprops=>{
   let {
     stacked, justify, separator, 
     separatorProps={},
-    buttonProps={}, buttonGetClassName=Button.Group.buttonGetClassName, buttonGetStyle=Button.Group.buttonGetStyle, buttonGetProps=Button.Group.getButtonProps,
-    component:Component='div', className, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
+    itemComponent=Button, itemProps, itemGetClassName=Button.Group.itemGetClassName, itemGetStyle=Button.Group.itemGetStyle, itemGetProps=Button.Group.itemGetProps,
+    component:Component=Panel.Container, children, ...props
   } = genCommonProps(aprops);
 
-  children = React.Children.toArray(children).filter(v=>v);
-
-  let classSet = {
-    'flex-display-block': justify,
-    'flex-align-stretch': justify,
-    'display-inline-block': stacked,
-  };
+  children = React.Children.toArray(children)
+    .filter(v=>v)
+    .map((v,i)=><Component.Item key={v.key||i} {...v.props} />)
+    .reduce((v1,v2,i,a)=>{
+      if(!separator||stacked) return a;
+      if(i>0)v1.push(<Button.Group.Separator key={'sep'+i} i={i} length={a.length} {...separatorProps} />)
+      v1.push(v2);
+      return v1;
+    },[])
 
   return (
-    <Component className={cxm(classSet, className)} {...props}>
-      {children
-        .map((v,i,a)=>(
-          <Button 
-            key={i}
-            {...getSubComponentProps(i, a.length, aprops, v.props, buttonProps, buttonGetClassName, buttonGetStyle, buttonGetProps)} />
-        ))
-        .reduce((v1,v2,i,a)=>{
-          if(!separator||stacked) return a;
-          if(i>0)v1.push(<Button.Group.Separator key={'sep'+i} i={i} length={a.length} {...separatorProps} />)
-          v1.push(v2);
-          return v1;
-        },[])}
+    <Component 
+      type={justify?"justify":""} containerProps={aprops} itemComponent={itemComponent} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
+      {...props}>
+      {children}
     </Component>
-  );
+  )
 }
 
-Button.Group.buttonGetClassName=(i, length, {stacked, justify, separator}={}, subPropsEach, subProps)=>{
+Button.Group.itemGetClassName=(i, length, {stacked, justify, separator}={})=>{
   return {
     'border-none-right': !stacked&&!i>=length-1,
     'border-none-left': separator&&!i===0,
@@ -122,15 +117,15 @@ Button.Group.buttonGetClassName=(i, length, {stacked, justify, separator}={}, su
 
 Button.Group.Separator = aprops=>{
   let { 
-    component:Component='span', className, style, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
+    component:Component=Panel, className, style, children, ...props
   } = genCommonProps(aprops);
 
-  let classStr = 'display-inline-block lex-sub-flex-none bg-color-border margin-v-xl';
+  let classStr = 'flex-sub-flex-none bg-color-border margin-v-xl';
 
   let styleSet = {};
   styleSet.width = 1;
 
-  return <Component style={{...styleSet, ...style}} className={cxm(classStr,className)} {...props}>&nbsp;</Component>;
+  return <Component inline b-style='solid' b-theme='border' style={{...styleSet, ...style}} className={cxm(classStr,className)} {...props}>&nbsp;</Component>;
 }
 
 

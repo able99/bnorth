@@ -44,10 +44,10 @@ _Panel.default.Icon = function (aprops) {
 
   var classStr = 'flex-display-block flex-justify-center flex-align-center';
   var classSet = [];
-  if (iconPosition === 'top' || iconPosition === 'bottom') classSet.push('flex-direact-v');
+  if (iconPosition === 'top' || iconPosition === 'bottom') classSet.push('flex-direction-v');
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _props.cxm)(classStr, classSet, className)
-  }, props), iconPosition === 'left' || iconPosition === 'top' ? _react.default.createElement(_Panel.default.Icon._Title, (0, _extends2.default)({
+  }, props), iconPosition === 'right' || iconPosition === 'bottom' ? _react.default.createElement(_Panel.default.Icon._Title, (0, _extends2.default)({
     iconPosition: iconPosition
   }, titleProps), children) : null, _react.default.createElement(_Panel.default.Icon._Icon, (0, _extends2.default)({
     selected: selected,
@@ -55,7 +55,7 @@ _Panel.default.Icon = function (aprops) {
     iconSelected: iconSelected,
     src: src,
     srcSelected: srcSelected
-  }, iconProps)), iconPosition === 'right' || iconPosition === 'bottom' ? _react.default.createElement(_Panel.default.Icon._Title, (0, _extends2.default)({
+  }, iconProps)), iconPosition === 'left' || iconPosition === 'top' ? _react.default.createElement(_Panel.default.Icon._Title, (0, _extends2.default)({
     iconPosition: iconPosition
   }, titleProps), children) : null);
 };

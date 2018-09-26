@@ -20,13 +20,13 @@ Panel.Icon = aprops=>{
   
   let classStr = 'flex-display-block flex-justify-center flex-align-center';
   let classSet = [];
-  if(iconPosition==='top'||iconPosition==='bottom') classSet.push('flex-direact-v');
+  if(iconPosition==='top'||iconPosition==='bottom') classSet.push('flex-direction-v');
 
   return (
     <Component className={cxm(classStr, classSet, className)} {...props}>
-      {iconPosition==='left'||iconPosition==='top'?<Panel.Icon._Title iconPosition={iconPosition} {...titleProps}>{children}</Panel.Icon._Title>:null}
-      <Panel.Icon._Icon selected={selected} icon={icon} iconSelected={iconSelected} src={src} srcSelected={srcSelected} {...iconProps} />
       {iconPosition==='right'||iconPosition==='bottom'?<Panel.Icon._Title iconPosition={iconPosition} {...titleProps}>{children}</Panel.Icon._Title>:null}
+      <Panel.Icon._Icon selected={selected} icon={icon} iconSelected={iconSelected} src={src} srcSelected={srcSelected} {...iconProps} />
+      {iconPosition==='left'||iconPosition==='top'?<Panel.Icon._Title iconPosition={iconPosition} {...titleProps}>{children}</Panel.Icon._Title>:null}
     </Component>
   );
 }

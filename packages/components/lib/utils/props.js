@@ -9,7 +9,6 @@ exports.cx = cx;
 exports.cxm = cxm;
 exports.mergeClassName = mergeClassName;
 exports.genCommonProps = genCommonProps;
-exports.getSubComponentProps = getSubComponentProps;
 exports.functions = void 0;
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
@@ -100,37 +99,3 @@ function genCommonProps(aprops) {
     ref: refWrap
   });
 }
-
-function getSubComponentProps(i, length, props) {
-  var _ref4 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
-      subPropsEachClassName = _ref4.className,
-      subPropsEachStyle = _ref4.style,
-      subPropsEach = (0, _objectWithoutProperties2.default)(_ref4, ["className", "style"]);
-
-  var _ref5 = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {},
-      subPropsClassName = _ref5.className,
-      subPropsStyle = _ref5.style,
-      subProps = (0, _objectWithoutProperties2.default)(_ref5, ["className", "style"]);
-
-  var subGetClassName = arguments.length > 5 ? arguments[5] : undefined;
-  var subGetStyle = arguments.length > 6 ? arguments[6] : undefined;
-  var subGetProps = arguments.length > 7 ? arguments[7] : undefined;
-  return (0, _objectSpread2.default)({
-    style: (0, _objectSpread2.default)({}, subGetStyle && subGetStyle(i, length, props, subPropsEach, subProps) || {}, subPropsStyle, subPropsEachStyle),
-    className: cxm(subGetClassName && subGetClassName(i, length, props, subPropsEach, subProps), subPropsClassName, subPropsEachClassName)
-  }, subGetProps && subGetProps(i, length, props, subPropsEach, subProps) || {}, subProps, subPropsEach);
-} // export function hascx(className, name) {
-//   return className && className.split(' ').find(v=>v.trim().startsWith(name));
-// }
-// export function genItemProps(i, size, componentProps={}, aprops, getClassName, getProps, getStyle) {
-//   let { className, style, ...props } = aprops;
-//   let { className:componentClassName } = componentProps;
-//   className = cx(componentClassName, className);
-//   return {
-//     ...componentProps,
-//     ...props,
-//     ...getProps&&getProps(i, size, componentProps),
-//     style: {...style, ...getStyle&&getStyle(i, size, componentProps)},
-//     className: cx(className, getClassName&&getClassName(i, size, componentProps, className)),
-//   }
-// }

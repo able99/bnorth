@@ -17,6 +17,8 @@ var _react = _interopRequireDefault(require("react"));
 
 var _props = require("./utils/props");
 
+var _Panel = _interopRequireDefault(require("./Panel.Container"));
+
 /**
  * bnorth solution
  * @copyright (c) 2016 able99
@@ -24,6 +26,8 @@ var _props = require("./utils/props");
  * @license MIT
  */
 var Button = function Button(aprops) {
+  console.log(99, aprops);
+
   var _genCommonProps = (0, _props.genCommonProps)(aprops),
       selected = _genCommonProps.selected,
       _genCommonProps$under = _genCommonProps.underLineProps,
@@ -111,37 +115,26 @@ Button.Group = function (aprops) {
       separator = _genCommonProps3.separator,
       _genCommonProps3$sepa = _genCommonProps3.separatorProps,
       separatorProps = _genCommonProps3$sepa === void 0 ? {} : _genCommonProps3$sepa,
-      _genCommonProps3$butt = _genCommonProps3.buttonProps,
-      buttonProps = _genCommonProps3$butt === void 0 ? {} : _genCommonProps3$butt,
-      _genCommonProps3$butt2 = _genCommonProps3.buttonGetClassName,
-      buttonGetClassName = _genCommonProps3$butt2 === void 0 ? Button.Group.buttonGetClassName : _genCommonProps3$butt2,
-      _genCommonProps3$butt3 = _genCommonProps3.buttonGetStyle,
-      buttonGetStyle = _genCommonProps3$butt3 === void 0 ? Button.Group.buttonGetStyle : _genCommonProps3$butt3,
-      _genCommonProps3$butt4 = _genCommonProps3.buttonGetProps,
-      buttonGetProps = _genCommonProps3$butt4 === void 0 ? Button.Group.getButtonProps : _genCommonProps3$butt4,
+      _genCommonProps3$item = _genCommonProps3.itemComponent,
+      itemComponent = _genCommonProps3$item === void 0 ? Button : _genCommonProps3$item,
+      itemProps = _genCommonProps3.itemProps,
+      _genCommonProps3$item2 = _genCommonProps3.itemGetClassName,
+      itemGetClassName = _genCommonProps3$item2 === void 0 ? Button.Group.itemGetClassName : _genCommonProps3$item2,
+      _genCommonProps3$item3 = _genCommonProps3.itemGetStyle,
+      itemGetStyle = _genCommonProps3$item3 === void 0 ? Button.Group.itemGetStyle : _genCommonProps3$item3,
+      _genCommonProps3$item4 = _genCommonProps3.itemGetProps,
+      itemGetProps = _genCommonProps3$item4 === void 0 ? Button.Group.itemGetProps : _genCommonProps3$item4,
       _genCommonProps3$comp = _genCommonProps3.component,
-      Component = _genCommonProps3$comp === void 0 ? 'div' : _genCommonProps3$comp,
-      className = _genCommonProps3.className,
-      bTheme = _genCommonProps3['b-theme'],
-      bStyle = _genCommonProps3['b-style'],
-      bSize = _genCommonProps3['b-size'],
+      Component = _genCommonProps3$comp === void 0 ? _Panel.default.Container : _genCommonProps3$comp,
       children = _genCommonProps3.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["stacked", "justify", "separator", "separatorProps", "buttonProps", "buttonGetClassName", "buttonGetStyle", "buttonGetProps", "component", "className", 'b-theme', 'b-style', 'b-size', "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["stacked", "justify", "separator", "separatorProps", "itemComponent", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "children"]);
 
   children = _react.default.Children.toArray(children).filter(function (v) {
     return v;
-  });
-  var classSet = {
-    'flex-display-block': justify,
-    'flex-align-stretch': justify,
-    'display-inline-block': stacked
-  };
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cxm)(classSet, className)
-  }, props), children.map(function (v, i, a) {
-    return _react.default.createElement(Button, (0, _extends2.default)({
-      key: i
-    }, (0, _props.getSubComponentProps)(i, a.length, aprops, v.props, buttonProps, buttonGetClassName, buttonGetStyle, buttonGetProps)));
+  }).map(function (v, i) {
+    return _react.default.createElement(Component.Item, (0, _extends2.default)({
+      key: v.key || i
+    }, v.props));
   }).reduce(function (v1, v2, i, a) {
     if (!separator || stacked) return a;
     if (i > 0) v1.push(_react.default.createElement(Button.Group.Separator, (0, _extends2.default)({
@@ -151,17 +144,24 @@ Button.Group = function (aprops) {
     }, separatorProps)));
     v1.push(v2);
     return v1;
-  }, []));
+  }, []);
+  return _react.default.createElement(Component, (0, _extends2.default)({
+    type: justify ? "justify" : "",
+    containerProps: aprops,
+    itemComponent: itemComponent,
+    itemProps: itemProps,
+    itemGetClassName: itemGetClassName,
+    itemGetStyle: itemGetStyle,
+    itemGetProps: itemGetProps
+  }, props), children);
 };
 
-Button.Group.buttonGetClassName = function (i, length) {
+Button.Group.itemGetClassName = function (i, length) {
   var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
       stacked = _ref.stacked,
       justify = _ref.justify,
       separator = _ref.separator;
 
-  var subPropsEach = arguments.length > 3 ? arguments[3] : undefined;
-  var subProps = arguments.length > 4 ? arguments[4] : undefined;
   return {
     'border-none-right': !stacked && !i >= length - 1,
     'border-none-left': separator && !i === 0,
@@ -174,19 +174,19 @@ Button.Group.buttonGetClassName = function (i, length) {
 Button.Group.Separator = function (aprops) {
   var _genCommonProps4 = (0, _props.genCommonProps)(aprops),
       _genCommonProps4$comp = _genCommonProps4.component,
-      Component = _genCommonProps4$comp === void 0 ? 'span' : _genCommonProps4$comp,
+      Component = _genCommonProps4$comp === void 0 ? _Panel.default : _genCommonProps4$comp,
       className = _genCommonProps4.className,
       style = _genCommonProps4.style,
-      bTheme = _genCommonProps4['b-theme'],
-      bStyle = _genCommonProps4['b-style'],
-      bSize = _genCommonProps4['b-size'],
       children = _genCommonProps4.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps4, ["component", "className", "style", 'b-theme', 'b-style', 'b-size', "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps4, ["component", "className", "style", "children"]);
 
-  var classStr = 'display-inline-block lex-sub-flex-none bg-color-border margin-v-xl';
+  var classStr = 'flex-sub-flex-none bg-color-border margin-v-xl';
   var styleSet = {};
   styleSet.width = 1;
   return _react.default.createElement(Component, (0, _extends2.default)({
+    inline: true,
+    "b-style": "solid",
+    "b-theme": "border",
     style: (0, _objectSpread2.default)({}, styleSet, style),
     className: (0, _props.cxm)(classStr, className)
   }, props), "\xA0");
