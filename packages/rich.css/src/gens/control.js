@@ -40,17 +40,17 @@ export function genSwitchStatus() {
   let ret = {};
 
   
-  ret['.switch-status input + .status .on'] = {
+  ret['.switch-status input + .status- .on-'] = {
     'display': 'none !important',
   }
-  ret['.switch-status input + .status .off'] = {
+  ret['.switch-status input + .status- .off-'] = {
     'display': 'inline-block !important',
   }
 
-  ret['.switch-status input:checked + .status .on'] = {
+  ret['.switch-status input:checked + .status- .on-'] = {
     'display': 'inline-block !important',
   }
-  ret['.switch-status input:checked + .status .off'] = {
+  ret['.switch-status input:checked + .status- .off-'] = {
     'display': 'none !important',
   }
 

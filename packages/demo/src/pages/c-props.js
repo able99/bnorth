@@ -18,7 +18,7 @@ let Component = aprops=>{
 
   return (
     <View>
-      <Panel main>
+      <Panel main bc-bg-color-white bc-padding-a->
         {Object.entries(proplist).map(([k,v])=><Prop key={k} title={k} option={v} state={page.stateCommonProps} stateData={stateCommonProps} />)}
       </Panel>
     </View>

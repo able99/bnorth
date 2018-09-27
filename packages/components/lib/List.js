@@ -241,7 +241,7 @@ List.Item._Arrow = function (aprops) {
       children = _genCommonProps10.children,
       props = (0, _objectWithoutProperties2.default)(_genCommonProps10, ["arrowIconProps", "component", "className", "children"]);
 
-  var classStr = 'flex-sub-align-center flex-sub-flex-none';
+  var classStr = 'flex-sub-align-center flex-sub-flex-none line-height-0';
   return _react.default.createElement(Component, (0, _extends2.default)({
     "b-theme": "light",
     className: (0, _props.cxm)(classStr, className)

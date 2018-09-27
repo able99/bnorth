@@ -64,7 +64,7 @@ let Panel = aprops=>{
   }else {
     if(bTheme) classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
   }
-  
+
   return <Component className={cxm(classStr, classSet, className)} {...props} />
 }
 

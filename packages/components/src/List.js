@@ -166,7 +166,7 @@ List.Item._Arrow = aprops=>{
     component:Component=Panel, className, children, ...props
   } = genCommonProps(aprops);
 
-  let classStr = 'flex-sub-align-center flex-sub-flex-none';
+  let classStr = 'flex-sub-align-center flex-sub-flex-none line-height-0';
   
   return (
     <Component b-theme="light" className={cxm(classStr, className)} {...props}>

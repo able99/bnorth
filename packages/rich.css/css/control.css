@@ -26,19 +26,19 @@ button:active, button[active], button.active {
   color: red;
 }
 
-.switch-status input + .status .on {
+.switch-status input + .status- .on- {
   display: none !important;
 }
 
-.switch-status input + .status .off {
+.switch-status input + .status- .off- {
   display: inline-block !important;
 }
 
-.switch-status input:checked + .status .on {
+.switch-status input:checked + .status- .on- {
   display: inline-block !important;
 }
 
-.switch-status input:checked + .status .off {
+.switch-status input:checked + .status- .off- {
   display: none !important;
 }
 

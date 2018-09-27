@@ -21,6 +21,8 @@ var _react = _interopRequireDefault(require("react"));
 
 var _props = require("./utils/props");
 
+var _Panel = _interopRequireDefault(require("./Panel"));
+
 /**
  * bnorth solution
  * @copyright (c) 2016 able99
@@ -33,19 +35,16 @@ var Icon = function Icon(aprops) {
       nameDefault = _genCommonProps.nameDefault,
       src = _genCommonProps.src,
       char = _genCommonProps.char,
-      Component = _genCommonProps.component,
+      _genCommonProps$compo = _genCommonProps.component,
+      Component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
+      componentPanel = _genCommonProps.componentPanel,
       className = _genCommonProps.className,
       style = _genCommonProps.style,
-      bTheme = _genCommonProps['b-theme'],
-      bStyle = _genCommonProps['b-style'],
-      bSize = _genCommonProps['b-size'],
       children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["name", "nameDefault", "src", "char", "component", "className", "style", 'b-theme', 'b-style', 'b-size', "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["name", "nameDefault", "src", "char", "component", "componentPanel", "className", "style", "children"]);
 
   var classStr = 'display-inline width-1em height-1em';
   var classSet = [];
-  if (bSize) classSet.push('text-size-' + (bSize === true ? '' : bSize));
-  if (bTheme) classSet.push('text-color-' + (bTheme === true ? '' : bTheme));
   var styleSet = {};
   if (name) name = Icon._maps[name] || name;
 
@@ -55,7 +54,7 @@ var Icon = function Icon(aprops) {
   }
 
   if (name) {
-    if (!Component) Component = 'svg';
+    if (!componentPanel) componentPanel = 'svg';
     styleSet = {
       strokeWidth: 0,
       stroke: 'currentColor',
@@ -65,11 +64,11 @@ var Icon = function Icon(aprops) {
       __html: "<use xlink:href=\"#".concat(name, "\"></use>")
     };
   } else if (src) {
-    if (!Component) Component = 'img';
+    if (!componentPanel) componentPanel = 'img';
     props.src = src;
     props.alt = '';
   } else if (char) {
-    if (!Component) Component = 'span';
+    if (!componentPanel) componentPanel = 'span';
     classSet.push('display-inlineblock text-align-center line-height-1em');
     props.children = char[0];
   } else {
@@ -77,6 +76,7 @@ var Icon = function Icon(aprops) {
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
+    component: componentPanel,
     style: (0, _objectSpread2.default)({}, styleSet, style),
     className: (0, _props.cxm)(classStr, classSet, className)
   }, props));

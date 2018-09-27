@@ -5,371 +5,233 @@
  * @license MIT
  */
 
-
-import React, {cloneElement} from 'react';
-import { genCommonProps, cx, hascx } from './utils/props';
+import React from 'react';
+import { genCommonProps, cxm } from './utils/props';
+import Panel from './Panel';
 import Icon from './Icon';
-import Button from './Button';
 
 
-let Field = (aprops)=>{
-  let {
-    type, cTheme, cStyle, cSize, 
-    before, after, label, beforeProps, afterProps, containerProps={},
+let Field = aprops=>{
+  let { 
+    type, value=aprops.value===undefined&&aprops.hasOwnProperty('value')?'':aprops.value,
+    containerProps, before, after, label, beforeProps, afterProps,
     ...props
-  } = genCommonProps(aprops);
-  let {
-    component:ContainerComponent='label', className:containerClassName, ...acontainerProps
-  } = genCommonProps(containerProps);
+  } = aprops;
 
+  let ComponentField = Field._Types[type||'text'];
+  if(!ComponentField) return null;
 
-  let hasContainer = before||after||label;
-  let Component;
-  if(type==='switch') {
-    Component = Field.TypeSwitch; 
-  }else if(type==='checkbox' || type==='radio') {
-    Component = Field.TypeCheckRadio;
-  }else if(type==='static') {
-    Component = Field.TypeStatic;
-  }else if(type==='number') {
-    Component = Field.TypeNumber;
-  }else if(type==='file') {
-    Component = Field.TypeFile;
-  }else{
-    Component = Field.TypeNormal;
-  }
-  let field = <Component type={type} hasContainer={hasContainer} cTheme={cTheme} cStyle={cStyle} cSize={cSize} {...props} />;
+  ComponentField = <ComponentField b-style={before||after} bc-flex-sub-flex-extend={(before||after)&&true} type={type} value={value} {...props} />;
+  if(!before&&!after) return ComponentField;
 
+  return (
+    <Field._Container 
+      before={before} after={after} label={label} 
+      beforeProps={beforeProps} afterProps={afterProps} 
+      {...containerProps}>
+      {ComponentField}
+    </Field._Container>
+  );
+}
 
-  if(hasContainer) {
-    let classSetContainer = {
-      'overflow-a-hidden': true,
-      'flex-display-flex': !hascx(containerClassName, 'flex-display'),
-      'flex-align-center': !hascx(containerClassName, 'flex-align'),
-      ['text-size'+cSize]: cSize,    
-    };
-  
-    if(cStyle==='solid') {
-      classSetContainer['bg-color-'+(cTheme||'component')] = true;
-      classSetContainer['border-set-'+(cTheme||'component')] = true;
-    }else if(cStyle==='hollow') {
-      classSetContainer['bg-none'] = true;
-      classSetContainer['border-set-'+(cTheme||'component')] = true;
-    }else if(cStyle==='underline') {
-      classSetContainer['border-set-bottom-'+(cTheme||'component')] = true;
-    }else{
-      classSetContainer['text-color-'+cTheme] = cTheme;
-    }
-  
-    return <ContainerComponent className={cx(classSetContainer,containerClassName)} {...acontainerProps}>{before}{field}{after}</ContainerComponent>;
-  }else{
-    return field;
-  }
+Field._Container = aprops=>{
+  let { 
+    inline, before, after, label, beforeProps, afterProps,
+    component:Component=Panel, componentPanel=label&&'label', className, children, ...props
+  } = aprops;
+
+  let classStr = 'flex-align-center';
+  let classSet = inline?'flex-display-inline':'flex-display-block';
+
+  return (
+    <Component component={componentPanel} className={cxm(classStr, classSet, className)} {...props}>
+      {before?<Field._Container._Content {...beforeProps}>{before}</Field._Container._Content>:null}
+      {children}
+      {after?<Field._Container._Content {...afterProps}>{after}</Field._Container._Content>:null}
+    </Component>
+  );
+}
+
+Field._Container._Content = aprops=>{
+  let { 
+    component:Component=Panel, className, ...props
+  } = aprops;
+
+  let classStr = 'flex-sub-flex-none';
+
+  return <Component className={cxm(classStr, className)} {...props} />;
 }
 
 
-Field.TypeNormal = aprops=>{
+Field._Normal = aprops=>{
   let {
-    hasContainer,
-    type='text', value=aprops.value===undefined&&aprops.hasOwnProperty('value')?'':aprops.value,
+    type, value,
     onPressEnter, onKeyPress,
-    component:Component='input', className, cTheme, cStyle, cSize, children, ...props
+    component:Component=Panel, componentPanel="input", className, children, ...props
   } = genCommonProps(aprops);
 
+  let classStr = 'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none- border-none-a-';
 
-  let classSet = {
-    'field': true,
-    'transition': true, 
-    'outline-none': true, 
-    'appearance-none': true, 
-    'line-height-1': true, 
-    'font-smoothing-antialiased': true, 
-    'vertical-align-middle': true,     
-    'bg-none': !hascx(className, 'bg-color'), 
-    'flex-sub-flex-extend': hasContainer,
-    ['text-size-'+cSize]: cSize,    
-    'border-none': !hascx(className, 'border'),
+  let handleKeyPress = e=>{
+    if(onPressEnter&&e.charCode===13){
+      e.stopPropagation();
+      e.preventDefault();
+      onPressEnter(e.target.value); 
+    }else{
+      onKeyPress&&onKeyPress(e);
+    }
   }
 
-  if(type==='progress' || type==='select' || type==='textarea') {
-    Component = type;
+  if(Field._Normal._maps.includes(type)) {
+    componentPanel = type;
     type=null;
   }
-  // border : 'select','progress', 'file'
-
 
   return (
-    <Component
-      onKeyPress={e=>{
-        if(onPressEnter&&e.charCode===13){
-          e.stopPropagation();
-          e.preventDefault();
-          onPressEnter(e.target.value); 
-        }else{
-          onKeyPress&&onKeyPress(e);
-        }
-      }}
+    <Component component={componentPanel}
+      onKeyPress={handleKeyPress}
       type={type} value={value}
-      className={cx(classSet, className)} {...props}>
+      className={cxm(classStr, className)} {...props}>
       {children}
     </Component>
   );
 }
 
-Field.TypeStatic = (aprops)=>{
+Field._Normal._maps = ['progress', 'select', 'textarea'];
+
+Field._Static = aprops=>{
   let {
-    hasContainer,
-    value,
-    component:Component='span', className, cTheme, cStyle, cSize, children, ...props
+    type, value,
+    component:Component=Panel, componentPanel="span", className, children, ...props
   } = genCommonProps(aprops);
 
-
-  let classSet = {
-    'line-height-1': true, 
-    'font-smoothing-antialiased': true, 
-    'vertical-align-middle': true,     
-    'flex-sub-flex-extend': hasContainer,
-    ['text-size-'+cSize]: cSize,  
-  }
-
+  let classStr = 'line-height-1 vertical-align-middle';
 
   return (
-    <Component className={cx(classSet, className)} {...props}>
-      {value}
-      {children}
+    <Component component={componentPanel} className={cxm(classStr, className)} {...props}>
+      {value||<pre className="margin-a-0 padding-a-0"> </pre>}
     </Component>
   );
 }
 
-Field.TypeFile = (aprops)=>{
+Field._HiddenInput = aprops=>{
   let {
-    hasContainer,
-    value,
-    component:Component='label', className, style, cTheme, cStyle, cSize, children, ...props
+    component:Component='input', className, ...props
   } = genCommonProps(aprops);
 
+  let classStr = 'visibility-hide display-none';
 
-  let classSet = {
-    'transition': true, 
-    'line-height-1': true, 
-    'font-smoothing-antialiased': true, 
-    'vertical-align-middle': true,     
-    'bg-none': !hascx(className, 'bg-color'), 
-    'flex-sub-flex-extend': hasContainer,
-    ['text-size-'+cSize]: cSize,    
-    'border-none': !hascx(className, 'border'),
-    'position-relative': !hascx(className, 'position'),
-  }
+  return <Component className={cxm(classStr, className)} {...props} />;
   
-  let classSetInput = {
-    'outline-none': true, 
-    'appearance-none': true, 
-    'position-absolute': true,
-    'visibility-hide': true,
-    'display-none': true,
-  }
+}
 
-  let styleSetInput = {
-    left: 0,
-    top: 0,
-  }
+Field._Switch = aprops=>{
+  let {
+    type, value, defaultValue, domValue, onClick, 
+    Content, labelProps, inputProps, innerProps,
+    component:Component=Panel, componentPanel='label', className, children, ...props
+  } = genCommonProps(aprops);
 
+  let classStr = 'switch-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none- flex-sub-flex-extend';
 
   return (
-    <Component className={cx(classSet, className)} style={style}>
-      {children}
-      <input type="file" className={cx(classSetInput)} style={styleSetInput} {...props} />
+    <Component component={componentPanel} onClick={(e)=>{e.stopPropagation();onClick&&onClick(e)}} className={cxm(classStr, className)} {...labelProps}>
+      <Field._HiddenInput type={type} checked={value} defaultChecked={defaultValue} value={domValue} {...inputProps} />
+      <Field._Switch._Inner {...innerProps}>
+        <Field._Switch._Content component={Content} {...props} isOn>X</Field._Switch._Content>
+        <Field._Switch._Content component={Content} {...props}>-</Field._Switch._Content>
+      </Field._Switch._Inner>
     </Component>
   );
 }
 
-Field.TypeNumber = (aprops)=>{
+Field._Switch._Inner = aprops=>{
   let {
-    hasContainer,
-    value, onChange, max, min,
-    component:Component='input', className, cTheme, cStyle, cSize, children, ...props
+    component:Component=Panel, componentPanel='span', className, ...props
   } = genCommonProps(aprops);
 
+  let classStr = 'status- position-relative';
 
-  let classSet = {
-    'line-height-1': true, 
-    'font-smoothing-antialiased': true, 
-    'vertical-align-middle': true,     
-    'flex-sub-flex-extend': true,
-    'width-full': true,
-    ['text-size-'+cSize]: cSize,  
-    'border-none': true,
-    'text-align-center': true,
-  }
-
-  let classSetInner = {
-    'flex-display-flex': true,
-    'flex-sub-flex-extend': hasContainer,
-    ['text-size-'+cSize]: cSize,  
-    'border-set': true,
-  }
-
-  let classSetButton = {
-    'flex-sub-flex-none': true,
-    ['text-size-'+cSize]: cSize,  
-    'padding-v-xs': true,
-    'padding-h': true,
-  }
-
-  let sub = ()=>{
-    let ret = Math.max((value-1)||0, min||0);
-    if(onChange && ret!==value) onChange(ret);
-  }
-
-  let add = ()=>{
-    let ret = Math.min((value+1)||1, (max!==undefined||max!==null)?max:Number.MAX_SAFE_INTEGER);
-    if(onChange && ret!==value) onChange(ret);
-  }
-
-
-  return (
-    <span className={cx(classSetInner)}>
-      <Button className={cx(classSetButton)} onClick={()=>sub()}>-</Button>
-      <Component className={cx(classSet, className)} {...props} value={value} onChange={e=>onChange&&onChange(e.target.value)} />
-      <Button className={cx(classSetButton)} onClick={()=>add()}>+</Button>
-    </span>
-  );
+  return <Component component={componentPanel} className={cxm(classStr, className)} {...props} />;
 }
 
-Field.TypeCheckRadio = (aprops)=>{
+Field._Switch._Content = aprops=>{
   let {
-    hasContainer,
-    type, defaultValue, value=aprops.value===undefined?aprops.value:Boolean(aprops.value), domValue, 
-    contentOn, contentOff, onClick, contentOnProps, contentOffProps,
-    component:Component='input', style, className, cTheme, cStyle, cSize, children, ...props
+    isOn,
+    component:Component=Panel, className, ...props
   } = genCommonProps(aprops);
 
+  let classStr = 'position-relative';
+  let classSet = [isOn?'on-':'off-'];
 
-  let classSetLabel = {
-    'switch-status': true,
-    'transition': true, 
-    'outline-none': true, 
-    'appearance-none': true, 
-    'line-height-1': true, 
-    'font-smoothing-antialiased': true, 
-    'vertical-align-middle': true,     
-    'bg-none': !hascx(className, 'bg-color'), 
-    'flex-sub-flex-extend': hasContainer,
-    ['text-size-'+cSize]: cSize,    
-  }
-
-  let classSetInput = {
-    'visibility-hide': true,
-    'display-none': true,
-  }
-
-  let classSetInner = {
-    'status': true,
-    'position-relative': true,
-    'padding-xs': true,
-  }
-
-
-  return (
-    <label onClick={(e)=>{e.stopPropagation();onClick&&onClick(e)}} style={style} className={cx(classSetLabel, className)} >
-      <Component type={type} defaultChecked={defaultValue}  checked={value} value={domValue} className={cx(classSetInput)} {...props}/>
-      <span className={cx(classSetInner)}>
-        <Field.TypeCheckRadio.On content={contentOn} {...contentOnProps} />
-        <Field.TypeCheckRadio.Off content={contentOff} {...contentOffProps} />
-      </span>
-    </label>
-  );
+  return <Component inline className={cxm(classStr, classSet, className)} {...props} isOn={isOn} />;
 }
 
-Field.TypeCheckRadio.On = aprops=>{
+
+Field._Types = {};
+Field._Types.text = Field._Normal;
+Field._Types.textarea = Field._Normal;
+Field._Types.select = Field._Normal;
+Field._Types.progress = Field._Normal;
+Field._Types.static = Field._Static;
+
+Field._SwitchContentCheckRadio = aprops=>{
   let {
-    content, component:Component=Icon, name=Icon.getName('check', 'X'), rounded=true, className, cTheme, cStyle='hollow', ...props
+    isCheck, isOn, name=aprops.isOn?'check':' ', nameDefault=aprops.isOn?'X':' ', 
+    component:Component=Icon, ...props
   } = aprops;
 
-
-  if(content) {
-    return cloneElement(content,Object.assign({},content.props,{className: cx('on', content.props.className)}))
-  }else{
-    let classSet = {
-      'padding-sm': true,
-    }
-    return <Component name={name} rounded={rounded} cTheme={cTheme} cStyle={cStyle} className={cx('on', classSet)} {...props}/>;
-  }
+  return <Component bc-border-radius-rounded={!Boolean(isCheck)} b-style="hollow" name={name} nameDefault={nameDefault} {...props} />;
 }
+// Field._Types.checkbox = aprops=>{
+//   return <Field._Switch contentOn={<Field._SwitchContentCheckRadio isCheck isOn />} contentOff={<Field._SwitchContentCheckRadio isCheck />} {...aprops} />
+// };
+// Field._Types.radio = aprops=>{
+//   return <Field._Switch contentOn={<Field._SwitchContentCheckRadio isOn />} contentOff={<Field._SwitchContentCheckRadio />} {...aprops} />
+// };
 
-Field.TypeCheckRadio.Off = aprops=>{
+Field._SwitchContentSwitch = aprops=>{
+  
   let {
-    content, component:Component=Icon, name=Icon.getName('check', 'X'), rounded=true, style, className, cTheme='border', cStyle='hollow', ...props
+    component:Component=Panel, className, children, ...props
   } = aprops;
 
+  let classStr = 'border-radius-rounded line-height-0';
 
-  if(content) {
-    return cloneElement(content,Object.assign({},content.props,{className: cx('off', content.props.className)}))
-  }else{
-    let classSet = {
-      'padding-sm': true,
-    }
-    let styleSet = {
-      'color': 'transparent',
-      ...style,
-    }
-    return <Component name={name} rounded={rounded} cTheme={cTheme} cStyle={cStyle} style={styleSet} className={cx('off', classSet)} {...props}/>;
-  }
-}
-
-Field.TypeSwitch = aprops=>{
-  let { cTheme } = aprops;
-
-  let classSetStatusOffContent = {
-    'off': true,
-    'bg-color-white': true,
-    'border-radius-rounded': true,
-    'border-set-component': true,
-    'width-em': true,
-    'height-em': true,
-  }
-
-  let classSetStatusOnContent = {
-    'on': true,
-    'bg-color-white': true,
-    ['border-'+(cTheme||'component')]: true, 
-    'border-radius-rounded': true,
-    'width-em': true,
-    'height-em': true,
-  }
-
-  let classSetStatusOn = {
-    'on': true, 
-    'width-em-2-0': true,
-    'height-em': true,
-    ['bg-color-'+(cTheme||'component')]: true, 
-    'border-radius-rounded': true,
-    'text-align-right': true,
-  }
-
-  let classSetStatusOff = {
-    'off': true, 
-    'width-em-2-0': true,
-    'height-em': true,
-    'bg-color-component': true, 
-    'border-radius-rounded': true,
-    'text-align-left': true,
-  }
-  
   return (
-    <Field.TypeCheckRadio 
-      {...aprops} 
-      contentOn={
-        <span className={cx(classSetStatusOn)}>
-          <span className={cx(classSetStatusOnContent)} />
-        </span>
-      } 
-      contentOff={
-        <span className={cx(classSetStatusOff)}>
-          <span className={cx(classSetStatusOffContent)} />
-        </span>
-      } 
-      type="checkbox" />
+    <Component b-style="hollow" className={cxm(classStr, className)}>
+      <Field._SwitchContentSwitch.Item {...props} isPositive />
+      <Field._SwitchContentSwitch.Item {...props} />
+    </Component>
+  )
+}
+Field._SwitchContentSwitch.Item = aprops=>{
+  let {
+    isOn, isPositive,
+    component:Component=Panel, className, children, ...props
+  } = aprops;
+
+  let classStr = 'border-radius-rounded width-1em height-1em';
+
+  return <Component {...props} inline b-style="solid" b-theme={isPositive?(isOn?'primary':'white'):(isOn?'white':'component')} className={cxm(classStr, className)}  />
+}
+Field._Types.switch = aprops=>{
+  return <Field._Switch Content={Field._SwitchContentSwitch} {...aprops} type="checkbox" />
+};
+
+Field._Types.file = aprops=>{
+  let {
+    type, value, inputProps,
+    component:Component=Panel, componentPanel="label", className, children, ...props
+  } = genCommonProps(aprops);
+
+  let classStr = 'line-height-1 vertical-align-middle';
+
+  return (
+    <Component component={componentPanel} className={cxm(classStr, className)} {...props}>
+      <Field._HiddenInput type={type} value={value} {...inputProps} />
+      {children}
+    </Component>
   );
 }
 

@@ -12,7 +12,9 @@ let Group = aprops=>{
   return (
     <div className="padding-a-xs" {...props}>
       <div 
-        onClick={()=>switchOn?page.stateComponentSwitchs.delete(title):page.stateComponentSwitchs.update([title], {append: true})}
+        onClick={()=>{
+          switchOn?page.stateComponentSwitchs.delete(title):page.stateComponentSwitchs.update([title], {append: true})}
+        }
         className="flex-display-block flex-align-center margin-v- cursor-pointer margin-right-">
         <span>{switchOn?'-':'+'}</span>
         <strong className="flex-sub-flex-extend">{title}</strong>
@@ -27,7 +29,7 @@ Group.Item = aprops=>{
 
   return (
     <React.Fragment>
-      <h4 className="border-set-bottom-">{title}</h4>
+      <div className="text-weight-bolder border-set-bottom-">{title}</div>
       {children}
     </React.Fragment>
   )

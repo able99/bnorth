@@ -7,20 +7,17 @@
 
 import React from 'react';
 import { genCommonProps, cxm } from './utils/props';
+import Panel from './Panel';
 
 
 let Icon = aprops=>{
   let {
     name, nameDefault, src, char, 
-    component:Component, className, style, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
+    component:Component=Panel, componentPanel, className, style, children, ...props
   } = genCommonProps(aprops);
   
   let classStr = 'display-inline width-1em height-1em';
-  
   let classSet = [];
-  if(bSize) classSet.push('text-size-'+(bSize===true?'':bSize));
-  if(bTheme) classSet.push('text-color-'+(bTheme===true?'':bTheme));
-  
   let styleSet = {};
 
   if(name) name = Icon._maps[name]||name;
@@ -30,22 +27,22 @@ let Icon = aprops=>{
   }
 
   if(name) {
-    if(!Component) Component = 'svg';
+    if(!componentPanel) componentPanel = 'svg';
     styleSet = {strokeWidth: 0,stroke: 'currentColor',fill: 'currentColor'};
     props.dangerouslySetInnerHTML = {__html: `<use xlink:href="#${name}"></use>`};
   }else if(src) {
-    if(!Component) Component = 'img';
+    if(!componentPanel) componentPanel = 'img';
     props.src = src;
     props.alt = '';
   }else if(char) {
-    if(!Component) Component = 'span';
+    if(!componentPanel) componentPanel = 'span';
     classSet.push('display-inlineblock text-align-center line-height-1em');
     props.children = char[0];
   }else {
     return null;
   }
 
-  return <Component style={{...styleSet, ...style}} className={cxm(classStr, classSet, className)} {...props} />
+  return <Component component={componentPanel} style={{...styleSet, ...style}} className={cxm(classStr, classSet, className)} {...props} />
 }
 
 

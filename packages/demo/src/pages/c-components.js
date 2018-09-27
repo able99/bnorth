@@ -9,24 +9,52 @@ import Fab from '@bnorth/components/lib/Fab'
 import Tabs from '@bnorth/components/lib/Tabs'
 import Loader from '@bnorth/components/lib/Loader'
 import Carousel from '@bnorth/components/lib/Carousel'
+import Field from '@bnorth/components/lib/Field'
 import Group from '../components/group'
 import Prop from '../components/props'
 import img from '../../res/aboutme.svg';
 
 
 let Component = aprops=>{
-  let { app, page, stateData, stateComponentSwitchs,  stateCommonProps, stateComponentProps } = aprops;
+  let { app, page, stateComponentSwitchs,  stateCommonProps, stateComponentProps } = aprops;
   let groupProps = { app, page, stateComponentSwitchs, stateCommonProps, stateComponentProps };
 
   return (
     <View bc-bg-color-white>
       <Panel main>
-      
-        <Carousel>
-          <Carousel.Item component={Panel.AspectRatio} onClick={()=>alert(1)} ratio={0.2} bc-bg-color-primary>1</Carousel.Item>
-          <Carousel.Item component={Panel.AspectRatio} ratio={0.2} bc-bg-color-alert>2</Carousel.Item>
-          <Carousel.Item component={Panel.AspectRatio} ratio={0.2} bc-bg-color-success>3</Carousel.Item>
-        </Carousel>
+        <Group title="Field" {...groupProps}>
+          <Group.Item title="text">
+            <Field {...stateCommonProps} type="text" />
+          </Group.Item>
+          <Group.Item title="static">
+            <Field {...stateCommonProps} type="static" />
+          </Group.Item>
+          <Group.Item title="textarea">
+            <Field {...stateCommonProps} type="textarea" />
+          </Group.Item>
+          <Group.Item title="checkbox">
+            <Field {...stateCommonProps} type="checkbox" />
+          </Group.Item>
+          <Group.Item title="radio">
+            <Field {...stateCommonProps} type="radio" />
+          </Group.Item>
+          <Group.Item title="switch">
+            <Field {...stateCommonProps} type="switch" />
+          </Group.Item>
+          <Group.Item title="file">
+            <Field {...stateCommonProps} type="file">open</Field>
+          </Group.Item>
+          <Group.Item title="before after">
+            <Field {...stateCommonProps} before="b" after="a" />
+          </Group.Item>
+        </Group>
+        <Group title="Carousel" {...groupProps}>
+          <Carousel>
+            <Carousel.Item component={Panel.AspectRatio} onClick={()=>alert(1)} ratio={0.2} bc-bg-color-primary>1</Carousel.Item>
+            <Carousel.Item component={Panel.AspectRatio} ratio={0.2} bc-bg-color-alert>2</Carousel.Item>
+            <Carousel.Item component={Panel.AspectRatio} ratio={0.2} bc-bg-color-success>3</Carousel.Item>
+          </Carousel>
+        </Group>
         <Group title="Loader" {...groupProps}>
           <Group.Prop>
             <Prop 
