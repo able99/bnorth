@@ -8,18 +8,25 @@ import Space from '@bnorth/components/lib/Space'
 import Fab from '@bnorth/components/lib/Fab'
 import Tabs from '@bnorth/components/lib/Tabs'
 import Loader from '@bnorth/components/lib/Loader'
+import Carousel from '@bnorth/components/lib/Carousel'
 import Group from '../components/group'
 import Prop from '../components/props'
 import img from '../../res/aboutme.svg';
 
 
 let Component = aprops=>{
-  let { app, page, stateComponentSwitchs,  stateCommonProps, stateComponentProps } = aprops;
+  let { app, page, stateData, stateComponentSwitchs,  stateCommonProps, stateComponentProps } = aprops;
   let groupProps = { app, page, stateComponentSwitchs, stateCommonProps, stateComponentProps };
 
   return (
     <View bc-bg-color-white>
       <Panel main>
+      
+        <Carousel>
+          <Carousel.Item component={Panel.AspectRatio} onClick={()=>alert(1)} ratio={0.2} bc-bg-color-primary>1</Carousel.Item>
+          <Carousel.Item component={Panel.AspectRatio} ratio={0.2} bc-bg-color-alert>2</Carousel.Item>
+          <Carousel.Item component={Panel.AspectRatio} ratio={0.2} bc-bg-color-success>3</Carousel.Item>
+        </Carousel>
         <Group title="Loader" {...groupProps}>
           <Group.Prop>
             <Prop 

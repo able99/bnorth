@@ -6,70 +6,65 @@
  */
 
 
-import React, { cloneElement } from 'react';
+import React from 'react';
 import { transiton, transform } from '@bnorth/rich.css/lib/styles/animation'; 
-import { genCommonProps, cx, hascx } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
+import Panel from './Panel';
 
 
 class AnimationSlider extends React.Component {
   render() {
     let {
-      countToShow=1, index, timeout=300, innerProps:{className: classNameInner, style: styleInner, ...innerProps}={},
-      component:Component='div', className, children, ...props
+      countToShow=1, index, timeout=300, innerProps,
+      component:Component=Panel, className, children, ...props
     } = genCommonProps(this.props);
-    let items = React.Children.toArray(children).filter(v=>v.type===AnimationSlider.Item);
-    children = React.Children.toArray(children).filter(v=>v.type!==AnimationSlider.Item);
 
+    children = React.Children.toArray(children);
+    let items = React.Children.toArray(children)
+      .filter(v=>typeof(v)==='object'&&v.type===AnimationSlider.Item)
+      .map((v,i)=><AnimationSlider.Item key={v.key||i} countToShow={countToShow} index={index} timeout={timeout} i={i} {...v.props}/>);
+    children = children.filter(v=>typeof(v)!=='object'||v.type!==AnimationSlider.Item);
 
-    let classSet = {
-      'overflow-a-hidden': true,
-      'position-relative': !hascx(className, 'position'),
-    }
-
-    let classSetInner = {
-      'flex-display-flex': true, 
-      'flex-align-stretch': true, 
-    }
-
-    let styleSetInner = {
-      width: `${100/countToShow*items.length}%`,
-      ...transiton(timeout),
-      ...transform('translateX',`${-100/items.length*index}%`),
-      ...styleInner,
-    }
-
+    let classStr = 'overflow-a-hidden position-relative';
 
     return (
-      <Component className={cx(classSet, className)} {...props}>
-        <div className={cx(classSetInner, classNameInner)} style={styleSetInner} {...innerProps}>
-          {items.map((v,i,arr)=>cloneElement(v, {
-            ...v.props, i, timeout, countToShow, index, 
-          }))}
-        </div>
+      <Component className={cxm(classStr, className)} {...props}>
+        <AnimationSlider._Inner countToShow={countToShow} index={index} timeout={timeout} {...innerProps}>{items}</AnimationSlider._Inner>
         {children}
       </Component>
     )
   }
 }
 
+AnimationSlider._Inner = aprops=>{
+  let {
+    countToShow, index, timeout,
+    component:Component=Panel, className, style, children, ...props
+  } = genCommonProps(aprops);
+
+  children = React.Children.toArray(children);
+
+  let classStr = 'flex-display-block flex-align-stretch';
+  let styleSet = {
+    width: `${100/countToShow*children.length}%`,
+    ...transiton(timeout),
+    ...transform('translateX',`${-100/children.length*(index%children.length)}%`),
+    ...style,
+  }
+
+  return <Component className={cxm(classStr, className)} style={styleSet} {...props}>{children}</Component>;
+}
+
 AnimationSlider.Item = aprops=>{
   let {
     i, timeout, countToShow, index,
-    component:Component='div', className,...props
+    component:Component=Panel, className,...props
   } = genCommonProps(aprops);
 
+  let classStr = 'overflow-a-hidden flex-sub-flex-extend';
 
-  let classSet = {
-    'overflow-a-hidden': true,
-    'flex-sub-flex-extend': true,
-  }
-
-
-  return (
-    <Component className={cx(classSet, className)} {...props} />
-  )
+  return <Component className={cxm(classStr, className)} {...props} />;
 }
-
 
 
 export default AnimationSlider;

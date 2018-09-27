@@ -5,11 +5,10 @@
  * @license MIT
  */
 
-
 import React from 'react';
-import { genCommonProps, cx } from './utils/props';
+import { genCommonProps, cxm } from './utils/props';
 import AnimationSlider from './AnimationSlider';
-import Panel from './Panel';
+import Panel from './Panel.Touchable';
 import Icon from './Icon';
 
 
@@ -81,120 +80,72 @@ class Carousel extends React.Component {
     let {
       defaultIndex, controller=true, pager=true, interval, timeout, autoPlay, loop, pauseOnHover,
       pagerItemProps, controllerPrevProps, controllerNextProps,
-      className, children, ...props
-    } = this.props;
+      component:Component=Panel.Touchable, componentAnimation=AnimationSlider, children, ...props
+    } = genCommonProps(this.props);
     let { index } = this.state;
     children = React.Children.toArray(children);
 
-
-    let classSet = {
-      'overflow-a-hidden': true,
-    }
-    
-
     return (
-      <Panel.Touchable 
-        component={AnimationSlider} className={cx(classSet, className)} 
+      <Component
+        component={componentAnimation}  
         index={index} onSwipeLeft={e=>this.next()} onSwipeRight={e=>this.prev()} onFocus={e=>this.handleFocus()} onBlur={e=>this.handleBlur()}
         {...props}>
+        {controller?<Carousel.Controller onClick={e=>this.prev()} {...controllerPrevProps}/>:null}
+        {controller?<Carousel.Controller onClick={e=>this.next()} {...controllerNextProps} isForward/>:null}
+        {pager?<Carousel.Pager onClick={e=>this.setState({index: e})} count={children.length} index={Math.round(index)} {...pagerItemProps} />:null}
         {children}
-        {pager?<Carousel.Pager onTap={e=>this.setState({index: e})} count={children.length} index={Math.round(index)} {...pagerItemProps} />:null}
-        {controller?<Carousel.Controller onTap={e=>this.prev()} {...controllerPrevProps}/>:null}
-        {controller?<Carousel.Controller onTap={e=>this.next()} {...controllerNextProps} isForward/>:null}
-      </Panel.Touchable>
+      </Component>
     );
   }
 }
 
-Carousel.Item = AnimationSlider.Item;
-
 Carousel.Controller = aprops=>{
   let {
-    isForward,
-    component, name=aprops.isForward?'right':'left', style, className, ...props
+    isForward, name=aprops.isForward?'right':'left', nameDefault=isForward?'>':'<',
+    component:Component=Icon, className, ...props
   } = genCommonProps(aprops);
 
+  let classStr = 'bg-color-mask position-absolute text-color-white cursor-pointer margin-h-xxs offset-top-center translate-center-y text-weight-border';
+  let classSet = [`offset-${isForward?'right':'left'}-start`];
 
-  let classSet = {
-    'bg-color-mask': true,
-    'position-absolute': true,
-    'text-color-white': true,
-    'cursor-pointer': true,
-    'padding': true,
-    'translate-center-y': true,
-    'text-weight-border': true,
-    'corsor-pointer': true,
-  };
-  
-  let styleSet = {
-    top: '50%',
-    [isForward?'right':'left']: 0,
-    ...style,
-  };
-
-
-  return (
-    <Panel.Touchable style={styleSet} className={cx(classSet, className)} {...props}>
-      {component||<Icon name={Icon.getName(name, isForward?'>':'<')} />}
-    </Panel.Touchable>
-  )
+  return <Component b-size="xl" className={cxm(classStr, classSet, className)} name={name} nameDefault={nameDefault} {...props} />
 }
 
 Carousel.Pager = aprops=>{
   let {
-    count, index, onTap, itemProps,
-    component:Component='ol', style, className, ...props
+    count, index, onClick, itemProps,
+    component:Component=Panel, componnetPanel='ol', className, ...props
   } = genCommonProps(aprops);
 
-
-  let classSet = {
-    'position-absolute': true,
-    'flex-display-flex': true,
-    'flex-justify-center': true,
-    'flex-align-center': true,
-    'bg-color-overlay': true,
-    'padding-xs': true,
-    'border-radius-rounded': true,
-    'translate-center-x': true,
-  };
-
-  let styleSet = {
-    left: '50%',
-    bottom: '3%',
-    ...style,
-  };
-  
+  let classStr = 'position-absolute flex-display-block flex-justify-center flex-align-center bg-color-overlay padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
   
   return (
-    <Component style={styleSet} className={cx(classSet, className)} {...props}>
-      {Array(count).fill(0).map((v,i)=>
-        <Carousel.Pager.Item key={i} onTap={onTap} count={count} index={index} i={i} {...itemProps}/>
-      )}
+    <Component component={componnetPanel} className={cxm(classStr, className)} {...props}>
+      {Array
+        .from({length:count},(v,k)=>k)
+        .map(v=><Carousel.Pager.Item key={v} onClick={onClick} count={count} index={index} i={v} {...itemProps}/>)
+      }
     </Component>
   );
 }
 
 Carousel.Pager.Item = aprops=>{
   let {
-    count, index, i, onTap,
-    component='li', className, ...props
-  } = aprops;
+    count, index, i, onClick,
+    component:Component=Panel, componnetPanel='li', className, ...props
+  } = genCommonProps(aprops);
 
-
+  let classStr = 'cursor-pointer width-0em5 height-0em5 border-radius-rounded border-set-a-white';
   let classSet = {
-    'cursor-pointer': true,
-    'margin-left-xxs': i>0,
-    'width-em-0-5': true,
-    'height-em-0-5': true,
-    'border-radius-rounded': true,
-    'border-set-white': true,
     'bg-color-white': i===index,
     'bg-color-component': i===index,
+    'margin-left-xxs': i>0,
   };
 
-
-  return <Panel.Touchable onTap={e=>onTap&&onTap(i)} component={component} className={cx(classSet, className)} {...props} />;
+  return <Component onClick={e=>onClick&&onClick(i)} component={componnetPanel} className={cxm(classStr, classSet, className)} {...props} />;
 }
+
+Carousel.Item = AnimationSlider.Item;
 
 
 export default Carousel;

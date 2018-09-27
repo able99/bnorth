@@ -27,6 +27,8 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _react = _interopRequireDefault(require("react"));
 
+var _reactDom = _interopRequireDefault(require("react-dom"));
+
 var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _hammerjs = _interopRequireDefault(require("hammerjs"));
@@ -144,7 +146,10 @@ function (_React$Component) {
   (0, _createClass2.default)(Touchable, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.hammer = new _hammerjs.default(this.el);
+      var el = _reactDom.default.findDOMNode(this.el);
+
+      if (!el) throw new Error('touchable: no el find');
+      this.hammer = new _hammerjs.default(el);
       updateHammer(this.hammer, this.props);
     }
   }, {

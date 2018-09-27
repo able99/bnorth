@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Panel from './Panel';
 import Hammer from 'hammerjs';
 Hammer.defaults.inputClass = 'ontouchstart' in window?Hammer.TouchInput:Hammer.TouchMouseInput;
@@ -106,7 +107,9 @@ function updateHammer(hammer, props) {
 
 class Touchable extends React.Component{
   componentDidMount() {
-    this.hammer = new Hammer(this.el);
+		let el = ReactDOM.findDOMNode(this.el);
+		if(!el) throw new Error('touchable: no el find');
+    this.hammer = new Hammer(el);
     updateHammer(this.hammer, this.props);
   }
 

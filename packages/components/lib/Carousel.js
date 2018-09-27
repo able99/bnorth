@@ -7,10 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
-var _objectSpread3 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
@@ -31,7 +27,7 @@ var _props = require("./utils/props");
 
 var _AnimationSlider = _interopRequireDefault(require("./AnimationSlider"));
 
-var _Panel = _interopRequireDefault(require("./Panel"));
+var _Panel = _interopRequireDefault(require("./Panel.Touchable"));
 
 var _Icon = _interopRequireDefault(require("./Icon"));
 
@@ -161,31 +157,31 @@ function (_React$Component) {
     value: function render() {
       var _this3 = this;
 
-      var _this$props2 = this.props,
-          defaultIndex = _this$props2.defaultIndex,
-          _this$props2$controll = _this$props2.controller,
-          controller = _this$props2$controll === void 0 ? true : _this$props2$controll,
-          _this$props2$pager = _this$props2.pager,
-          pager = _this$props2$pager === void 0 ? true : _this$props2$pager,
-          interval = _this$props2.interval,
-          timeout = _this$props2.timeout,
-          autoPlay = _this$props2.autoPlay,
-          loop = _this$props2.loop,
-          pauseOnHover = _this$props2.pauseOnHover,
-          pagerItemProps = _this$props2.pagerItemProps,
-          controllerPrevProps = _this$props2.controllerPrevProps,
-          controllerNextProps = _this$props2.controllerNextProps,
-          className = _this$props2.className,
-          children = _this$props2.children,
-          props = (0, _objectWithoutProperties2.default)(_this$props2, ["defaultIndex", "controller", "pager", "interval", "timeout", "autoPlay", "loop", "pauseOnHover", "pagerItemProps", "controllerPrevProps", "controllerNextProps", "className", "children"]);
+      var _genCommonProps = (0, _props.genCommonProps)(this.props),
+          defaultIndex = _genCommonProps.defaultIndex,
+          _genCommonProps$contr = _genCommonProps.controller,
+          controller = _genCommonProps$contr === void 0 ? true : _genCommonProps$contr,
+          _genCommonProps$pager = _genCommonProps.pager,
+          pager = _genCommonProps$pager === void 0 ? true : _genCommonProps$pager,
+          interval = _genCommonProps.interval,
+          timeout = _genCommonProps.timeout,
+          autoPlay = _genCommonProps.autoPlay,
+          loop = _genCommonProps.loop,
+          pauseOnHover = _genCommonProps.pauseOnHover,
+          pagerItemProps = _genCommonProps.pagerItemProps,
+          controllerPrevProps = _genCommonProps.controllerPrevProps,
+          controllerNextProps = _genCommonProps.controllerNextProps,
+          _genCommonProps$compo = _genCommonProps.component,
+          Component = _genCommonProps$compo === void 0 ? _Panel.default.Touchable : _genCommonProps$compo,
+          _genCommonProps$compo2 = _genCommonProps.componentAnimation,
+          componentAnimation = _genCommonProps$compo2 === void 0 ? _AnimationSlider.default : _genCommonProps$compo2,
+          children = _genCommonProps.children,
+          props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["defaultIndex", "controller", "pager", "interval", "timeout", "autoPlay", "loop", "pauseOnHover", "pagerItemProps", "controllerPrevProps", "controllerNextProps", "component", "componentAnimation", "children"]);
+
       var index = this.state.index;
       children = _react.default.Children.toArray(children);
-      var classSet = {
-        'overflow-a-hidden': true
-      };
-      return _react.default.createElement(_Panel.default.Touchable, (0, _extends2.default)({
-        component: _AnimationSlider.default,
-        className: (0, _props.cx)(classSet, className),
+      return _react.default.createElement(Component, (0, _extends2.default)({
+        component: componentAnimation,
         index: index,
         onSwipeLeft: function onSwipeLeft(e) {
           return _this3.next();
@@ -199,130 +195,112 @@ function (_React$Component) {
         onBlur: function onBlur(e) {
           return _this3.handleBlur();
         }
-      }, props), children, pager ? _react.default.createElement(Carousel.Pager, (0, _extends2.default)({
-        onTap: function onTap(e) {
+      }, props), controller ? _react.default.createElement(Carousel.Controller, (0, _extends2.default)({
+        onClick: function onClick(e) {
+          return _this3.prev();
+        }
+      }, controllerPrevProps)) : null, controller ? _react.default.createElement(Carousel.Controller, (0, _extends2.default)({
+        onClick: function onClick(e) {
+          return _this3.next();
+        }
+      }, controllerNextProps, {
+        isForward: true
+      })) : null, pager ? _react.default.createElement(Carousel.Pager, (0, _extends2.default)({
+        onClick: function onClick(e) {
           return _this3.setState({
             index: e
           });
         },
         count: children.length,
         index: Math.round(index)
-      }, pagerItemProps)) : null, controller ? _react.default.createElement(Carousel.Controller, (0, _extends2.default)({
-        onTap: function onTap(e) {
-          return _this3.prev();
-        }
-      }, controllerPrevProps)) : null, controller ? _react.default.createElement(Carousel.Controller, (0, _extends2.default)({
-        onTap: function onTap(e) {
-          return _this3.next();
-        }
-      }, controllerNextProps, {
-        isForward: true
-      })) : null);
+      }, pagerItemProps)) : null, children);
     }
   }]);
   return Carousel;
 }(_react.default.Component);
 
-Carousel.Item = _AnimationSlider.default.Item;
-
 Carousel.Controller = function (aprops) {
-  var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      isForward = _genCommonProps.isForward,
-      component = _genCommonProps.component,
-      _genCommonProps$name = _genCommonProps.name,
-      name = _genCommonProps$name === void 0 ? aprops.isForward ? 'right' : 'left' : _genCommonProps$name,
-      style = _genCommonProps.style,
-      className = _genCommonProps.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["isForward", "component", "name", "style", "className"]);
+  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
+      isForward = _genCommonProps2.isForward,
+      _genCommonProps2$name = _genCommonProps2.name,
+      name = _genCommonProps2$name === void 0 ? aprops.isForward ? 'right' : 'left' : _genCommonProps2$name,
+      _genCommonProps2$name2 = _genCommonProps2.nameDefault,
+      nameDefault = _genCommonProps2$name2 === void 0 ? isForward ? '>' : '<' : _genCommonProps2$name2,
+      _genCommonProps2$comp = _genCommonProps2.component,
+      Component = _genCommonProps2$comp === void 0 ? _Icon.default : _genCommonProps2$comp,
+      className = _genCommonProps2.className,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["isForward", "name", "nameDefault", "component", "className"]);
 
-  var classSet = {
-    'bg-color-mask': true,
-    'position-absolute': true,
-    'text-color-white': true,
-    'cursor-pointer': true,
-    'padding': true,
-    'translate-center-y': true,
-    'text-weight-border': true,
-    'corsor-pointer': true
-  };
-  var styleSet = (0, _objectSpread3.default)((0, _defineProperty2.default)({
-    top: '50%'
-  }, isForward ? 'right' : 'left', 0), style);
-  return _react.default.createElement(_Panel.default.Touchable, (0, _extends2.default)({
-    style: styleSet,
-    className: (0, _props.cx)(classSet, className)
-  }, props), component || _react.default.createElement(_Icon.default, {
-    name: _Icon.default.getName(name, isForward ? '>' : '<')
-  }));
+  var classStr = 'bg-color-mask position-absolute text-color-white cursor-pointer margin-h-xxs offset-top-center translate-center-y text-weight-border';
+  var classSet = ["offset-".concat(isForward ? 'right' : 'left', "-start")];
+  return _react.default.createElement(Component, (0, _extends2.default)({
+    "b-size": "xl",
+    className: (0, _props.cxm)(classStr, classSet, className),
+    name: name,
+    nameDefault: nameDefault
+  }, props));
 };
 
 Carousel.Pager = function (aprops) {
-  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
-      count = _genCommonProps2.count,
-      index = _genCommonProps2.index,
-      onTap = _genCommonProps2.onTap,
-      itemProps = _genCommonProps2.itemProps,
-      _genCommonProps2$comp = _genCommonProps2.component,
-      Component = _genCommonProps2$comp === void 0 ? 'ol' : _genCommonProps2$comp,
-      style = _genCommonProps2.style,
-      className = _genCommonProps2.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["count", "index", "onTap", "itemProps", "component", "style", "className"]);
+  var _genCommonProps3 = (0, _props.genCommonProps)(aprops),
+      count = _genCommonProps3.count,
+      index = _genCommonProps3.index,
+      onClick = _genCommonProps3.onClick,
+      itemProps = _genCommonProps3.itemProps,
+      _genCommonProps3$comp = _genCommonProps3.component,
+      Component = _genCommonProps3$comp === void 0 ? _Panel.default : _genCommonProps3$comp,
+      _genCommonProps3$comp2 = _genCommonProps3.componnetPanel,
+      componnetPanel = _genCommonProps3$comp2 === void 0 ? 'ol' : _genCommonProps3$comp2,
+      className = _genCommonProps3.className,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["count", "index", "onClick", "itemProps", "component", "componnetPanel", "className"]);
 
-  var classSet = {
-    'position-absolute': true,
-    'flex-display-flex': true,
-    'flex-justify-center': true,
-    'flex-align-center': true,
-    'bg-color-overlay': true,
-    'padding-xs': true,
-    'border-radius-rounded': true,
-    'translate-center-x': true
-  };
-  var styleSet = (0, _objectSpread3.default)({
-    left: '50%',
-    bottom: '3%'
-  }, style);
+  var classStr = 'position-absolute flex-display-block flex-justify-center flex-align-center bg-color-overlay padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
   return _react.default.createElement(Component, (0, _extends2.default)({
-    style: styleSet,
-    className: (0, _props.cx)(classSet, className)
-  }, props), Array(count).fill(0).map(function (v, i) {
+    component: componnetPanel,
+    className: (0, _props.cxm)(classStr, className)
+  }, props), Array.from({
+    length: count
+  }, function (v, k) {
+    return k;
+  }).map(function (v) {
     return _react.default.createElement(Carousel.Pager.Item, (0, _extends2.default)({
-      key: i,
-      onTap: onTap,
+      key: v,
+      onClick: onClick,
       count: count,
       index: index,
-      i: i
+      i: v
     }, itemProps));
   }));
 };
 
 Carousel.Pager.Item = function (aprops) {
-  var count = aprops.count,
-      index = aprops.index,
-      i = aprops.i,
-      _onTap = aprops.onTap,
-      _aprops$component = aprops.component,
-      component = _aprops$component === void 0 ? 'li' : _aprops$component,
-      className = aprops.className,
-      props = (0, _objectWithoutProperties2.default)(aprops, ["count", "index", "i", "onTap", "component", "className"]);
+  var _genCommonProps4 = (0, _props.genCommonProps)(aprops),
+      count = _genCommonProps4.count,
+      index = _genCommonProps4.index,
+      i = _genCommonProps4.i,
+      _onClick = _genCommonProps4.onClick,
+      _genCommonProps4$comp = _genCommonProps4.component,
+      Component = _genCommonProps4$comp === void 0 ? _Panel.default : _genCommonProps4$comp,
+      _genCommonProps4$comp2 = _genCommonProps4.componnetPanel,
+      componnetPanel = _genCommonProps4$comp2 === void 0 ? 'li' : _genCommonProps4$comp2,
+      className = _genCommonProps4.className,
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps4, ["count", "index", "i", "onClick", "component", "componnetPanel", "className"]);
+
+  var classStr = 'cursor-pointer width-0em5 height-0em5 border-radius-rounded border-set-a-white';
   var classSet = {
-    'cursor-pointer': true,
-    'margin-left-xxs': i > 0,
-    'width-em-0-5': true,
-    'height-em-0-5': true,
-    'border-radius-rounded': true,
-    'border-set-white': true,
     'bg-color-white': i === index,
-    'bg-color-component': i === index
+    'bg-color-component': i === index,
+    'margin-left-xxs': i > 0
   };
-  return _react.default.createElement(_Panel.default.Touchable, (0, _extends2.default)({
-    onTap: function onTap(e) {
-      return _onTap && _onTap(i);
+  return _react.default.createElement(Component, (0, _extends2.default)({
+    onClick: function onClick(e) {
+      return _onClick && _onClick(i);
     },
-    component: component,
-    className: (0, _props.cx)(classSet, className)
+    component: componnetPanel,
+    className: (0, _props.cxm)(classStr, classSet, className)
   }, props));
 };
 
+Carousel.Item = _AnimationSlider.default.Item;
 var _default = Carousel;
 exports.default = _default;
