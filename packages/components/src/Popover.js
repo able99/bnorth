@@ -5,12 +5,11 @@
  * @license MIT
  */
 
-
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { domIsTouch, domOffset } from './utils/dom';
-import { createChainedFunction } from './utils/event';
-import { genCommonProps, cx, hascx } from './utils/props';
+import { domIsTouch, domOffset, chainedFuncs, domFindContainer } from './utils/dom';
+import { genCommonProps, cxm } from './utils/props';
+import Panel from './Panel';
 import Backdrop from './Backdrop';
 
 
@@ -21,6 +20,7 @@ class Popover extends React.Component {
   }
 
   componentDidMount() {
+    this.container = domFindContainer(this, this.props.container);
     this.props.defaultIsShow&&setTimeout(()=>this.show(), 100);
   }
 
@@ -37,7 +37,7 @@ class Popover extends React.Component {
       defaultIsShow, trigger, onClick, onMouseOver,
       overlay, overlayProps, mask, maskProps,
       calcPosition=Popover.calcPosition, placement, container,
-      component:Component="div", children, ...props
+      component:Component=Panel, children, ...props
     } = genCommonProps(this.props);
     const { show, offsetOverlay, offsetTarget } = this.state;
 
@@ -45,8 +45,8 @@ class Popover extends React.Component {
     let triggerByTouch = trigger?trigger==='click':domIsTouch;
     let triggerByHover = trigger?trigger==='hover':!domIsTouch;
     let triggerProps = {
-      onClick: triggerByTouch?createChainedFunction(onClick, ()=>this.state.show?this.hide():this.show()):onClick,
-      onMouseOver: triggerByHover?createChainedFunction(onMouseOver, (e)=>this.show()):onMouseOver,
+      onClick: triggerByTouch?chainedFuncs(onClick, ()=>this.state.show?this.hide():this.show()):onClick,
+      onMouseOver: triggerByHover?chainedFuncs(onMouseOver, (e)=>this.show()):onMouseOver,
     };
     let closeProps = {
       onClick: triggerByTouch?()=>this.hide():null,
@@ -57,12 +57,10 @@ class Popover extends React.Component {
       }:null,
     };
 
-
     return (
       <Component {...props} {...triggerProps}>
-        {(Array.isArray(children)?children:[children])
-          .map(v=>typeof(v)==='function'?v(show, this.state, this.props):v)}
-        {!show||!container?null:ReactDOM.createPortal((
+        {React.Children.toArray(children).map(v=>typeof(v)==='function'?v(show, this.state, this.props):v)}
+        {!show?null:ReactDOM.createPortal((
           <Backdrop mask={mask} {...closeProps} {...maskProps}>
             <Popover.Overlay 
               calcPosition={calcPosition} placement={placement}
@@ -72,16 +70,14 @@ class Popover extends React.Component {
               {overlay}
             </Popover.Overlay>
           </Backdrop>
-        ), container)}
+        ), this.container)}
       </Component>
     );
   }
 }
 
 Popover.calcPosition = function(offsetTarget, offsetOverlay, placement, main, cross) {
-  let classSet = {
-    'position-absolute': true,
-  };
+  let classSet = {'position-absolute': true};
   let styleSet = {};
 
   switch(placement){
@@ -157,33 +153,15 @@ Popover.calcPosition = function(offsetTarget, offsetOverlay, placement, main, cr
 Popover.Overlay = class extends React.Component {
   render() {
     let {
-      container, calcPosition, offsetTarget, offsetOverlay, placement,
-      style, className, children, ...props
+      calcPosition, offsetTarget, offsetOverlay, placement,
+      component:Component=Panel, style, className, ...props
     } = genCommonProps(this.props);
 
+    let classStr = 'position-absolute bg-color-white border-set-a-';
+    let styleSet = {boxSizing: 'content-box'};
+    let [classSetPosition, styleSetPosition] = offsetOverlay?calcPosition(offsetTarget,offsetOverlay, ...((placement&&placement.split('-'))||[])) : [{'visibility-hidden':true},{}];
 
-    let classSet = {
-      'position-absolute': true,
-      'bg-color-white': !hascx(className, 'bg-color'),
-      'border': !hascx(className, 'border'),
-    };
-
-    let styleSet = {
-      boxSizing: 'content-box'
-    };
-
-    let [classSetPosition, styleSetPosition] = offsetOverlay
-      ?calcPosition(offsetTarget,offsetOverlay, ...((placement&&placement.split('-'))||[]))
-      :[{'visibility-hidden':true},{}]
-
-
-    return (
-      <div 
-        onMouseMove={e=>e.stopPropagation()} 
-        style={{...styleSet,...styleSetPosition,...style}} className={cx(classSet, classSetPosition, className)} {...props}>
-        {children}
-      </div>
-    ) 
+    return <Component onMouseMove={e=>e.stopPropagation()} style={{...styleSet,...styleSetPosition,...style}} className={cxm(classStr, classSetPosition, className)} {...props} />
   }
 }
 

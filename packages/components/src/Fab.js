@@ -8,20 +8,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { genCommonProps, cxm } from './utils/props';
+import { domFindContainer } from './utils/dom';
 import Button from './Button';
 
 
 export default class Fab extends React.Component{
   handleRef(e) {
-    let { container } = this.props;
-    let el=e;
-    while((el=el.parentElement)) {
-      if(el===document.body) {this.container=el; break};
-      if(el.getAttribute('data-container-page')) {this.container=el; break};
-      if(container===true&&el.getAttribute('data-container')==='true') {this.container=el; break};
-      if(container&&el.getAttribute('data-container')===container) {this.container=el; break};
-    }
-    if(!this.container) this.container = document.body;
+    this.container = domFindContainer(e, this.props.container);
     this.forceUpdate();
   }
 

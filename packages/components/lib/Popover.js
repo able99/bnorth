@@ -33,9 +33,9 @@ var _reactDom = _interopRequireDefault(require("react-dom"));
 
 var _dom = require("./utils/dom");
 
-var _event = require("./utils/event");
-
 var _props = require("./utils/props");
+
+var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _Backdrop = _interopRequireDefault(require("./Backdrop"));
 
@@ -64,6 +64,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      this.container = (0, _dom.domFindContainer)(this, this.props.container);
       this.props.defaultIsShow && setTimeout(function () {
         return _this2.show();
       }, 100);
@@ -103,7 +104,7 @@ function (_React$Component) {
           placement = _genCommonProps.placement,
           container = _genCommonProps.container,
           _genCommonProps$compo = _genCommonProps.component,
-          Component = _genCommonProps$compo === void 0 ? "div" : _genCommonProps$compo,
+          Component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
           children = _genCommonProps.children,
           props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["defaultIsShow", "trigger", "onClick", "onMouseOver", "overlay", "overlayProps", "mask", "maskProps", "calcPosition", "placement", "container", "component", "children"]);
 
@@ -114,10 +115,10 @@ function (_React$Component) {
       var triggerByTouch = trigger ? trigger === 'click' : _dom.domIsTouch;
       var triggerByHover = trigger ? trigger === 'hover' : !_dom.domIsTouch;
       var triggerProps = {
-        onClick: triggerByTouch ? (0, _event.createChainedFunction)(onClick, function () {
+        onClick: triggerByTouch ? (0, _dom.chainedFuncs)(onClick, function () {
           return _this3.state.show ? _this3.hide() : _this3.show();
         }) : onClick,
-        onMouseOver: triggerByHover ? (0, _event.createChainedFunction)(onMouseOver, function (e) {
+        onMouseOver: triggerByHover ? (0, _dom.chainedFuncs)(onMouseOver, function (e) {
           return _this3.show();
         }) : onMouseOver
       };
@@ -132,9 +133,9 @@ function (_React$Component) {
           if (!(toffset.left <= x && x <= toffset.left + toffset.width && toffset.top <= y && y <= toffset.top + toffset.height)) _this3.hide();
         } : null
       };
-      return _react.default.createElement(Component, (0, _extends2.default)({}, props, triggerProps), (Array.isArray(children) ? children : [children]).map(function (v) {
+      return _react.default.createElement(Component, (0, _extends2.default)({}, props, triggerProps), _react.default.Children.toArray(children).map(function (v) {
         return typeof v === 'function' ? v(show, _this3.state, _this3.props) : v;
-      }), !show || !container ? null : _reactDom.default.createPortal(_react.default.createElement(_Backdrop.default, (0, _extends2.default)({
+      }), !show ? null : _reactDom.default.createPortal(_react.default.createElement(_Backdrop.default, (0, _extends2.default)({
         mask: mask
       }, closeProps, maskProps), _react.default.createElement(Popover.Overlay, (0, _extends2.default)({
         calcPosition: calcPosition,
@@ -146,7 +147,7 @@ function (_React$Component) {
             offsetOverlay: (0, _dom.domOffset)(e)
           });
         }
-      }, overlayProps), overlay)), container));
+      }, overlayProps), overlay)), this.container));
     }
   }]);
   return Popover;
@@ -246,21 +247,17 @@ function (_React$Component2) {
     key: "render",
     value: function render() {
       var _genCommonProps2 = (0, _props.genCommonProps)(this.props),
-          container = _genCommonProps2.container,
           calcPosition = _genCommonProps2.calcPosition,
           offsetTarget = _genCommonProps2.offsetTarget,
           offsetOverlay = _genCommonProps2.offsetOverlay,
           placement = _genCommonProps2.placement,
+          _genCommonProps2$comp = _genCommonProps2.component,
+          Component = _genCommonProps2$comp === void 0 ? _Panel.default : _genCommonProps2$comp,
           style = _genCommonProps2.style,
           className = _genCommonProps2.className,
-          children = _genCommonProps2.children,
-          props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["container", "calcPosition", "offsetTarget", "offsetOverlay", "placement", "style", "className", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["calcPosition", "offsetTarget", "offsetOverlay", "placement", "component", "style", "className"]);
 
-      var classSet = {
-        'position-absolute': true,
-        'bg-color-white': !(0, _props.hascx)(className, 'bg-color'),
-        'border': !(0, _props.hascx)(className, 'border')
-      };
+      var classStr = 'position-absolute bg-color-white border-set-a-';
       var styleSet = {
         boxSizing: 'content-box'
       };
@@ -272,13 +269,13 @@ function (_React$Component2) {
           classSetPosition = _ref2[0],
           styleSetPosition = _ref2[1];
 
-      return _react.default.createElement("div", (0, _extends2.default)({
+      return _react.default.createElement(Component, (0, _extends2.default)({
         onMouseMove: function onMouseMove(e) {
           return e.stopPropagation();
         },
         style: (0, _objectSpread2.default)({}, styleSet, styleSetPosition, style),
-        className: (0, _props.cx)(classSet, classSetPosition, className)
-      }, props), children);
+        className: (0, _props.cxm)(classStr, classSetPosition, className)
+      }, props));
     }
   }]);
   return _class;

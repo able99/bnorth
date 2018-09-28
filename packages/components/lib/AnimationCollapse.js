@@ -21,8 +21,6 @@ var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _props = require("./utils/props");
 
-var _event = require("./utils/event");
-
 var _dom = require("./utils/dom");
 
 /**
@@ -94,12 +92,12 @@ var Collapse = function Collapse(aprops) {
   }, transitionProps, {
     in: isIn,
     timeout: timeout,
-    onEnter: (0, _event.createChainedFunction)(handleEnter.bind(null, aprops), transitionProps.onEnter),
-    onEntering: (0, _event.createChainedFunction)(handleEntering.bind(null, aprops), transitionProps.onEntering),
-    onEntered: (0, _event.createChainedFunction)(handleEntered.bind(null, aprops), transitionProps.onEntered),
-    onExit: (0, _event.createChainedFunction)(handleExit.bind(null, aprops), transitionProps.onExit),
-    onExiting: (0, _event.createChainedFunction)(handleExiting.bind(null, aprops), transitionProps.onExiting),
-    onExited: (0, _event.createChainedFunction)(transitionProps.onExited, onTransitionFinished)
+    onEnter: (0, _dom.chainedFuncs)(handleEnter.bind(null, aprops), transitionProps.onEnter),
+    onEntering: (0, _dom.chainedFuncs)(handleEntering.bind(null, aprops), transitionProps.onEntering),
+    onEntered: (0, _dom.chainedFuncs)(handleEntered.bind(null, aprops), transitionProps.onEntered),
+    onExit: (0, _dom.chainedFuncs)(handleExit.bind(null, aprops), transitionProps.onExit),
+    onExiting: (0, _dom.chainedFuncs)(handleExiting.bind(null, aprops), transitionProps.onExiting),
+    onExited: (0, _dom.chainedFuncs)(transitionProps.onExited, onTransitionFinished)
   }), function (state) {
     return _react.default.createElement(Collapse._Component, (0, _extends2.default)({
       isIn: isIn,

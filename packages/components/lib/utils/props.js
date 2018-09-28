@@ -49,6 +49,8 @@ function mergeClassName(className) {
   return classNames.filter(function (v, i, a) {
     var key = v.substr(0, v.lastIndexOf('-'));
     return !a.slice(i + 1).find(function (vv) {
+      if (key === 'border-none' && vv.startsWith('border-')) return true;
+      if (key === 'border-' && vv.startsWith('border-none-')) return true;
       return vv.startsWith(key);
     });
   }).join(' ');

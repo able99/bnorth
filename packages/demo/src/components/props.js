@@ -6,8 +6,8 @@ let PropSel = aprops=>{
   let componnet = null;
 
   if(Array.isArray(option)) {
-    componnet = [undefined,...option].map(v=>(
-      <label key={v} className="margin-right-">
+    componnet = [undefined,...option].map((v,i)=>(
+      <label key={(v?v.toString():'')+i} className="margin-right-">
         <input 
           className="margin-right-xxs"
           onChange={e=>{
@@ -16,7 +16,7 @@ let PropSel = aprops=>{
             data[title] = v;
             state.update({[sub]: data});
           }}
-          checked={sub?(stateData[sub]&&stateData[sub][title]===v):stateData[title]===v}
+          checked={(sub?(stateData[sub]&&stateData[sub][title]===v):stateData[title]===v)||false}
           type='radio' key={v} />
         <span>{v||'none'}</span>
       </label>

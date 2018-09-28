@@ -19,9 +19,7 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _react = _interopRequireDefault(require("react"));
 
-var _reactDom = _interopRequireDefault(require("react-dom"));
-
-var _event = require("./utils/event");
+var _dom = require("./utils/dom");
 
 var ScrollSpy =
 /*#__PURE__*/
@@ -36,52 +34,22 @@ function (_React$Component) {
   (0, _createClass2.default)(ScrollSpy, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this$props = this.props,
-          onScrollPositionChange = _this$props.onScrollPositionChange,
-          onScrollContainerChange = _this$props.onScrollContainerChange;
-      if (!onScrollPositionChange && !onScrollContainerChange) return;
-      this.container = this._getContainer();
-      onScrollContainerChange && onScrollContainerChange(this.container);
-      this.scrollEventListener = (0, _event.listen)(this.container, 'scroll', this._handleScrollPositionChange.bind(this), true);
-      this.resizeEventListener = (0, _event.listen)(window, 'resize', this._handleScrollPositionChange.bind(this), true);
+      this.container = (0, _dom.domFindScrollContainer)(this, this.props.container, this.props.horizontal);
+      this.scrollEventListener = (0, _dom.listen)(this.container, 'scroll', this._handleScrollPositionChange.bind(this), true);
+      this.resizeEventListener = (0, _dom.listen)(window, 'resize', this._handleScrollPositionChange.bind(this), true);
 
       this._handleScrollPositionChange();
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
-      var onScrollPositionChange = this.props.onScrollPositionChange;
-      if (!onScrollPositionChange) return;
-
       this._handleScrollPositionChange();
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      var onScrollPositionChange = this.props.onScrollPositionChange;
-      if (!onScrollPositionChange) return;
       this.scrollEventListener && this.scrollEventListener();
       this.resizeEventListener && this.resizeEventListener();
-    }
-  }, {
-    key: "_getContainer",
-    value: function _getContainer() {
-      var _this$props2 = this.props,
-          horizontal = _this$props2.horizontal,
-          container = _this$props2.container;
-      if (container) return _reactDom.default.findDOMNode(container);
-
-      var node = _reactDom.default.findDOMNode(this);
-
-      while (node.parentNode) {
-        node = node.parentNode;
-        if (node === document.body) return node;
-        var style = window.getComputedStyle(node);
-        var overflow = (horizontal ? style.getPropertyValue('overflow-x') : style.getPropertyValue('overflow-y')) || style.getPropertyValue('overflow');
-        if (overflow === 'auto' || overflow === 'scroll') return node;
-      }
-
-      return document.body;
     }
   }, {
     key: "_handleScrollPositionChange",

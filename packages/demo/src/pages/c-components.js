@@ -10,6 +10,7 @@ import Tabs from '@bnorth/components/lib/Tabs'
 import Loader from '@bnorth/components/lib/Loader'
 import Carousel from '@bnorth/components/lib/Carousel'
 import Field from '@bnorth/components/lib/Field'
+import Popover from '@bnorth/components/lib/Popover'
 import Group from '../components/group'
 import Prop from '../components/props'
 import img from '../../res/aboutme.svg';
@@ -22,6 +23,15 @@ let Component = aprops=>{
   return (
     <View bc-bg-color-white>
       <Panel main>
+        <Group title="Popover" {...groupProps}>
+          <Group.Prop>
+            <Prop 
+              title="placement" sub="Popover" 
+              option={['bottom-auto-full','right-auto-center']} 
+              state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <Popover inline {...stateCommonProps} overlay={<div>123<br/>123<br/>123<br/></div>} container {...stateComponentProps.Popover}>popover</Popover>
+        </Group>
         <Group title="Field" {...groupProps}>
           <Group.Item title="text">
             <Field {...stateCommonProps} type="text" />

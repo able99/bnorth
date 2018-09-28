@@ -138,8 +138,8 @@ Field._Switch = aprops=>{
     <Component component={componentPanel} onClick={(e)=>{e.stopPropagation();onClick&&onClick(e)}} className={cxm(classStr, className)} {...labelProps}>
       <Field._HiddenInput type={type} checked={value} defaultChecked={defaultValue} value={domValue} {...inputProps} />
       <Field._Switch._Inner {...innerProps}>
-        <Field._Switch._Content component={Content} {...props} isOn>X</Field._Switch._Content>
-        <Field._Switch._Content component={Content} {...props}>-</Field._Switch._Content>
+        <Field._Switch._Content component={Content} {...props} type={type} isOn>X</Field._Switch._Content>
+        <Field._Switch._Content component={Content} {...props} type={type} >-</Field._Switch._Content>
       </Field._Switch._Inner>
     </Component>
   );
@@ -177,21 +177,19 @@ Field._Types.static = Field._Static;
 
 Field._SwitchContentCheckRadio = aprops=>{
   let {
-    isCheck, isOn, name=aprops.isOn?'check':' ', nameDefault=aprops.isOn?'X':' ', 
+    type, isOn, name=aprops.isOn?'check':' ', nameDefault=aprops.isOn?'X':' ', 
     component:Component=Icon, ...props
   } = aprops;
+  console.log(1111, isOn, name, type,props);
 
-  return <Component bc-border-radius-rounded={!Boolean(isCheck)} b-style="hollow" name={name} nameDefault={nameDefault} {...props} />;
+  return <Component bc-border-radius-rounded={!Boolean(type==='checkbox')} type={type}  name={name} nameDefault={nameDefault} {...props} b-style="hollow" />;
 }
-// Field._Types.checkbox = aprops=>{
-//   return <Field._Switch contentOn={<Field._SwitchContentCheckRadio isCheck isOn />} contentOff={<Field._SwitchContentCheckRadio isCheck />} {...aprops} />
-// };
-// Field._Types.radio = aprops=>{
-//   return <Field._Switch contentOn={<Field._SwitchContentCheckRadio isOn />} contentOff={<Field._SwitchContentCheckRadio />} {...aprops} />
-// };
+Field._Types.checkbox = aprops=>{
+  return <Field._Switch Content={Field._SwitchContentCheckRadio} {...aprops} />
+};
+Field._Types.radio = Field._Types.checkbox;
 
 Field._SwitchContentSwitch = aprops=>{
-  
   let {
     component:Component=Panel, className, children, ...props
   } = aprops;
@@ -207,13 +205,13 @@ Field._SwitchContentSwitch = aprops=>{
 }
 Field._SwitchContentSwitch.Item = aprops=>{
   let {
-    isOn, isPositive,
-    component:Component=Panel, className, children, ...props
+    isOn, isPositive, 
+    component:Component=Panel, 'b-theme':bTheme='component', className, children, ...props
   } = aprops;
 
   let classStr = 'border-radius-rounded width-1em height-1em';
 
-  return <Component {...props} inline b-style="solid" b-theme={isPositive?(isOn?'primary':'white'):(isOn?'white':'component')} className={cxm(classStr, className)}  />
+  return <Component {...props} inline b-style="solid" b-theme={isPositive?(isOn?bTheme:'white'):(isOn?'white':'component')} className={cxm(classStr, className)}  />
 }
 Field._Types.switch = aprops=>{
   return <Field._Switch Content={Field._SwitchContentSwitch} {...aprops} type="checkbox" />

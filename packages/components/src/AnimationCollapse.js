@@ -10,7 +10,7 @@ import React from 'react';
 import Transition from 'react-transition-group/Transition';
 import { transiton } from '@bnorth/rich.css/lib/styles/animation'; 
 import { genCommonProps, cxm } from './utils/props';
-import { createChainedFunction } from './utils/event';
+import { chainedFuncs } from './utils/dom';
 import { domGetDimensionValue, domTriggerBrowserReflow, domGetScrollDimensionValue } from './utils/dom';
 
 
@@ -51,12 +51,12 @@ let Collapse = (aprops)=>{
   return (
     <Transition 
       appear={true} {...transitionProps} in={isIn} timeout={timeout} 
-      onEnter={createChainedFunction(handleEnter.bind(null, aprops), transitionProps.onEnter)}
-      onEntering={createChainedFunction(handleEntering.bind(null, aprops), transitionProps.onEntering)}
-      onEntered={createChainedFunction(handleEntered.bind(null, aprops), transitionProps.onEntered)}
-      onExit={createChainedFunction(handleExit.bind(null, aprops), transitionProps.onExit)}
-      onExiting={createChainedFunction(handleExiting.bind(null, aprops), transitionProps.onExiting)} 
-      onExited={createChainedFunction(transitionProps.onExited,onTransitionFinished)}>
+      onEnter={chainedFuncs(handleEnter.bind(null, aprops), transitionProps.onEnter)}
+      onEntering={chainedFuncs(handleEntering.bind(null, aprops), transitionProps.onEntering)}
+      onEntered={chainedFuncs(handleEntered.bind(null, aprops), transitionProps.onEntered)}
+      onExit={chainedFuncs(handleExit.bind(null, aprops), transitionProps.onExit)}
+      onExiting={chainedFuncs(handleExiting.bind(null, aprops), transitionProps.onExiting)} 
+      onExited={chainedFuncs(transitionProps.onExited,onTransitionFinished)}>
       {state=><Collapse._Component isIn={isIn} timeout={timeout} {...props} animationState={state} />}
     </Transition>
   );

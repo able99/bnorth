@@ -29,6 +29,8 @@ var _reactDom = _interopRequireDefault(require("react-dom"));
 
 var _props = require("./utils/props");
 
+var _dom = require("./utils/dom");
+
 var _Button = _interopRequireDefault(require("./Button"));
 
 /**
@@ -50,40 +52,7 @@ function (_React$Component) {
   (0, _createClass2.default)(Fab, [{
     key: "handleRef",
     value: function handleRef(e) {
-      var container = this.props.container;
-      var el = e;
-
-      while (el = el.parentElement) {
-        if (el === document.body) {
-          this.container = el;
-          break;
-        }
-
-        ;
-
-        if (el.getAttribute('data-container-page')) {
-          this.container = el;
-          break;
-        }
-
-        ;
-
-        if (container === true && el.getAttribute('data-container') === 'true') {
-          this.container = el;
-          break;
-        }
-
-        ;
-
-        if (container && el.getAttribute('data-container') === container) {
-          this.container = el;
-          break;
-        }
-
-        ;
-      }
-
-      if (!this.container) this.container = document.body;
+      this.container = (0, _dom.domFindContainer)(e, this.props.container);
       this.forceUpdate();
     }
   }, {

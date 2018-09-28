@@ -54,7 +54,8 @@ var View = function View(aprops) {
   return _react.default.createElement(Component, (0, _extends2.default)({
     "bc-bg-color": "view",
     style: (0, _objectSpread2.default)({}, styleSet, style),
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _props.cxm)(classStr, className),
+    "data-container": true
   }, props), children);
 };
 

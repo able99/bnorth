@@ -9,7 +9,7 @@ import React from 'react';
 import Transition from 'react-transition-group/Transition';
 import { transiton } from '@bnorth/rich.css/lib/styles/animation'; 
 import { genCommonProps, cxm } from './utils/props';
-import { createChainedFunction } from './utils/event';
+import { chainedFuncs } from './utils/dom';
 
 
 let Fade = aprops=>{
@@ -21,7 +21,7 @@ let Fade = aprops=>{
   return (
     <Transition 
       appear={true} {...transitionProps} in={isIn} timeout={timeout} 
-      onExited={createChainedFunction(transitionProps.onExited,onTransitionFinished)}>
+      onExited={chainedFuncs(transitionProps.onExited,onTransitionFinished)}>
       {state=><Fade._Component isIn={isIn} timeout={timeout} {...props} animationState={state} />}
     </Transition>
   );

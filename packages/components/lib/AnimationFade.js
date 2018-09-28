@@ -21,7 +21,7 @@ var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _props = require("./utils/props");
 
-var _event = require("./utils/event");
+var _dom = require("./utils/dom");
 
 /**
  * @overview bnorth solution
@@ -45,7 +45,7 @@ var Fade = function Fade(aprops) {
   }, transitionProps, {
     in: isIn,
     timeout: timeout,
-    onExited: (0, _event.createChainedFunction)(transitionProps.onExited, onTransitionFinished)
+    onExited: (0, _dom.chainedFuncs)(transitionProps.onExited, onTransitionFinished)
   }), function (state) {
     return _react.default.createElement(Fade._Component, (0, _extends2.default)({
       isIn: isIn,

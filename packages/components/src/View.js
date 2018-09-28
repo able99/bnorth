@@ -28,7 +28,7 @@ let View = aprops=>{
   }}
   
   return (
-    <Component bc-bg-color="view" style={{...styleSet, ...style}} className={cxm(classStr, className)} {...props}>
+    <Component bc-bg-color="view" style={{...styleSet, ...style}} className={cxm(classStr, className)} data-container {...props}>
       {children}
     </Component>
   );

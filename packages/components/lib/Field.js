@@ -198,10 +198,13 @@ Field._Switch = function (aprops) {
   }, inputProps)), _react.default.createElement(Field._Switch._Inner, innerProps, _react.default.createElement(Field._Switch._Content, (0, _extends2.default)({
     component: Content
   }, props, {
+    type: type,
     isOn: true
   }), "X"), _react.default.createElement(Field._Switch._Content, (0, _extends2.default)({
     component: Content
-  }, props), "-")));
+  }, props, {
+    type: type
+  }), "-")));
 };
 
 Field._Switch._Inner = function (aprops) {
@@ -246,7 +249,7 @@ Field._Types.progress = Field._Normal;
 Field._Types.static = Field._Static;
 
 Field._SwitchContentCheckRadio = function (aprops) {
-  var isCheck = aprops.isCheck,
+  var type = aprops.type,
       isOn = aprops.isOn,
       _aprops$name = aprops.name,
       name = _aprops$name === void 0 ? aprops.isOn ? 'check' : ' ' : _aprops$name,
@@ -254,20 +257,25 @@ Field._SwitchContentCheckRadio = function (aprops) {
       nameDefault = _aprops$nameDefault === void 0 ? aprops.isOn ? 'X' : ' ' : _aprops$nameDefault,
       _aprops$component3 = aprops.component,
       Component = _aprops$component3 === void 0 ? _Icon.default : _aprops$component3,
-      props = (0, _objectWithoutProperties2.default)(aprops, ["isCheck", "isOn", "name", "nameDefault", "component"]);
+      props = (0, _objectWithoutProperties2.default)(aprops, ["type", "isOn", "name", "nameDefault", "component"]);
+  console.log(1111, isOn, name, type, props);
   return _react.default.createElement(Component, (0, _extends2.default)({
-    "bc-border-radius-rounded": !Boolean(isCheck),
-    "b-style": "hollow",
+    "bc-border-radius-rounded": !Boolean(type === 'checkbox'),
+    type: type,
     name: name,
     nameDefault: nameDefault
-  }, props));
-}; // Field._Types.checkbox = aprops=>{
-//   return <Field._Switch contentOn={<Field._SwitchContentCheckRadio isCheck isOn />} contentOff={<Field._SwitchContentCheckRadio isCheck />} {...aprops} />
-// };
-// Field._Types.radio = aprops=>{
-//   return <Field._Switch contentOn={<Field._SwitchContentCheckRadio isOn />} contentOff={<Field._SwitchContentCheckRadio />} {...aprops} />
-// };
+  }, props, {
+    "b-style": "hollow"
+  }));
+};
 
+Field._Types.checkbox = function (aprops) {
+  return _react.default.createElement(Field._Switch, (0, _extends2.default)({
+    Content: Field._SwitchContentCheckRadio
+  }, aprops));
+};
+
+Field._Types.radio = Field._Types.checkbox;
 
 Field._SwitchContentSwitch = function (aprops) {
   var _aprops$component4 = aprops.component,
@@ -289,14 +297,16 @@ Field._SwitchContentSwitch.Item = function (aprops) {
       isPositive = aprops.isPositive,
       _aprops$component5 = aprops.component,
       Component = _aprops$component5 === void 0 ? _Panel.default : _aprops$component5,
+      _aprops$bTheme = aprops['b-theme'],
+      bTheme = _aprops$bTheme === void 0 ? 'component' : _aprops$bTheme,
       className = aprops.className,
       children = aprops.children,
-      props = (0, _objectWithoutProperties2.default)(aprops, ["isOn", "isPositive", "component", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(aprops, ["isOn", "isPositive", "component", 'b-theme', "className", "children"]);
   var classStr = 'border-radius-rounded width-1em height-1em';
   return _react.default.createElement(Component, (0, _extends2.default)({}, props, {
     inline: true,
     "b-style": "solid",
-    "b-theme": isPositive ? isOn ? 'primary' : 'white' : isOn ? 'white' : 'component',
+    "b-theme": isPositive ? isOn ? bTheme : 'white' : isOn ? 'white' : 'component',
     className: (0, _props.cxm)(classStr, className)
   }));
 };
