@@ -6,19 +6,20 @@
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { domFindNode, domIsTouch } from './utils/dom';
 import Panel from './Panel';
 import Hammer from 'hammerjs';
-Hammer.defaults.inputClass = 'ontouchstart' in window?Hammer.TouchInput:Hammer.TouchMouseInput;
-Hammer.defaults.touchAction = 'pan-up';
 export { Hammer }
-//, domEvents: false, 
+
+
+Hammer.defaults.inputClass = domIsTouch?Hammer.TouchInput:Hammer.TouchMouseInput;
+Hammer.defaults.touchAction = 'pan-y'; // :TODO 
 
 let privateProps = {
 	direction: true,
 	options: true,
+	recognizers: true,
 	recognizeWith: true,
-	vertical: true,
 };
 
 const handlerToEvent = {
@@ -49,80 +50,61 @@ const handlerToEvent = {
 	onTap: 'tap',
 };
 
-Object.keys(handlerToEvent).forEach(function(i) {
-	privateProps[i] = true;
+Object.keys(handlerToEvent).forEach(v=>{
+	privateProps[v] = true;
 });
 
+
 function updateHammer(hammer, props) {
-	if (props.hasOwnProperty('vertical')) {
-		console.warn('vertical is deprecated, please use `direction` instead');
-	}
-
-	var directionProp = props.direction;
-	if (directionProp || props.hasOwnProperty('vertical')) {
-		var direction = directionProp
-			? directionProp
-			: props.vertical ? 'DIRECTION_ALL' : 'DIRECTION_HORIZONTAL';
-		hammer.get('pan').set({ direction: Hammer[direction] });
-		hammer.get('swipe').set({ direction: Hammer[direction] });
-	}
-
-	if (props.options) {
-		Object.keys(props.options).forEach(function(option) {
-			if (option === 'recognizers') {
-				Object.keys(props.options.recognizers).forEach(function(gesture) {
-					var recognizer = hammer.get(gesture);
-					recognizer.set(props.options.recognizers[gesture]);
-					if (props.options.recognizers[gesture].requireFailure) {
-						recognizer.requireFailure(
-							props.options.recognizers[gesture].requireFailure
-						);
-					}
-				}, this);
-			} else {
-				var key = option;
-				var optionObj = {};
-				optionObj[key] = props.options[option];
-				hammer.set(optionObj);
-			}
-		}, this);
-	}
-
-	if (props.recognizeWith) {
-		Object.keys(props.recognizeWith).forEach(function(gesture) {
-			var recognizer = hammer.get(gesture);
-			recognizer.recognizeWith(props.recognizeWith[gesture]);
-		}, this);
-	}
-
-	Object.keys(props).forEach(function(p) {
-		var e = handlerToEvent[p];
-		if (e) {
-			hammer.off(e);
-			hammer.on(e, props[p]&&props[p].bind(null, hammer));
+	Object.entries(props).forEach(([k,v])=>{
+		if(k==='direction') { // direaction
+			let direction = 'DIRECTION_' + (v?String(v).toUpperCase():'ALL');
+			hammer.get('pan').set({ direction: Hammer[direction] });
+			hammer.get('swipe').set({ direction: Hammer[direction] });
+		}else if(k==='options') { // options
+			Object.entries(v).forEach(([kk,vv])=>{
+				if (kk === 'recognizers') return;
+				hammer.set({kk,vv});
+			})
+		}else if(k==='recognizers') { // recognizers
+			Object.entries(v||{}).forEach(([kk,vv])=>{
+				let recognizer = hammer.get(kk);
+				recognizer.set(vv);
+				if(recognizer.requireFailure) recognizer.requireFailure(vv.requireFailure);
+			})
+		}else if(k==='recognizeWith') { // recognizeWith
+			Object.entries(v||{}).forEach(([kk,vv])=>{
+				let recognizer = hammer.get(kk);
+				recognizer.recognizeWith(vv);
+			})
+		}else{ // event
+			k = handlerToEvent[k];
+			if(!k) return;
+			hammer.off(k);
+			hammer.on(k, v&&v.bind(null, hammer.element));
 		}
 	});
 }
 
 
-class Touchable extends React.Component{
+Panel.Touchable = class Touchable extends React.Component{
   componentDidMount() {
-		let el = ReactDOM.findDOMNode(this.el);
-		if(!el) throw new Error('touchable: no el find');
+		let el = domFindNode(this);
+		if(!el) throw new Error('panel.touchable: no el find');
     this.hammer = new Hammer(el);
     updateHammer(this.hammer, this.props);
   }
 
   componentWillUnmount() {
-		if (this.hammer) {
-			this.hammer.stop();
-			this.hammer.destroy();
-      this.hammer = null;
-		}
+		if(!this.hammer) return;
+		this.hammer.stop();
+		this.hammer.destroy();
+		this.hammer = null;
   }
   
   componentDidUpdate() {
-		this.hammer&&updateHammer(this.hammer, this.props);
+		if(!this.hammer) return;
+		updateHammer(this.hammer, this.props);
 	}
 
   render() {
@@ -131,11 +113,9 @@ class Touchable extends React.Component{
 			if (!privateProps[v]) props[v] = this.props[v];
 		});
 
-    return <Panel refWrap={e=>e&&(this.el=e)} {...props} />
+    return <Panel {...props} />
   }
 }
-
-Panel.Touchable = Touchable;
 
 
 export default Panel;

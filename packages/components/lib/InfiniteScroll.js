@@ -29,8 +29,7 @@ var _ScrollSpy = _interopRequireDefault(require("./ScrollSpy"));
  */
 var InfiniteScroll = function InfiniteScroll(aprops) {
   var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      _genCommonProps$spy = _genCommonProps.spy,
-      spy = _genCommonProps$spy === void 0 ? true : _genCommonProps$spy,
+      disabled = _genCommonProps.disabled,
       isLoading = _genCommonProps.isLoading,
       onLoading = _genCommonProps.onLoading,
       _genCommonProps$compo = _genCommonProps.componentLoader,
@@ -43,17 +42,25 @@ var InfiniteScroll = function InfiniteScroll(aprops) {
       Component = _genCommonProps$compo3 === void 0 ? _Panel.default : _genCommonProps$compo3,
       children = _genCommonProps.children,
       className = _genCommonProps.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["spy", "isLoading", "onLoading", "componentLoader", "loaderProps", "componentTitle", "titleProps", "component", "children", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["disabled", "isLoading", "onLoading", "componentLoader", "loaderProps", "componentTitle", "titleProps", "component", "children", "className"]);
 
-  if (!spy) return null;
+  if (disabled) return null;
   var classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center padding-a-';
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_ScrollSpy.default, {
-    onScrollPositionChange: function onScrollPositionChange(container, event) {
-      return !isLoading && onLoading && Math.abs(container.scrollTop + container.clientHeight - container.scrollHeight) < 35 && onLoading();
+    onScrollPositionChange: function onScrollPositionChange(target, event) {
+      return InfiniteScroll._handleScrollPosChange(target, event, aprops);
     }
-  }), isLoading ? _react.default.createElement(Component, (0, _extends2.default)({
+  }), _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _props.cxm)(classStr, className)
-  }, props), children ? children : _react.default.createElement(ComponentLoader, loaderProps), children ? children : _react.default.createElement(ComponentTitle, titleProps)) : null);
+  }, props), children ? children : _react.default.createElement(ComponentLoader, loaderProps), children ? children : _react.default.createElement(ComponentTitle, titleProps)));
+};
+
+InfiniteScroll._handleScrollPosChange = function (target, event, _ref) {
+  var isLoading = _ref.isLoading,
+      onLoading = _ref.onLoading;
+  if (isLoading || !onLoading) return;
+  var distance = Math.abs(target.scrollTop + target.clientHeight - target.scrollHeight);
+  if (distance < 35) onLoading();
 };
 
 var _default = InfiniteScroll;

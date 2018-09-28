@@ -7,11 +7,11 @@
 
 import React from 'react';
 import { genCommonProps, cxm } from './utils/props';
-import Panel,{Hammer} from './Panel.Touchable';
+import Panel from './Panel.Touchable';
 import Loader from './Loader';
 
 
-class PullRefresh extends React.Component {
+Panel.PullRefresh = class PullRefresh extends React.Component {
   static defaultProps = {
     triggerOffset: 60,
   }
@@ -21,38 +21,29 @@ class PullRefresh extends React.Component {
     this.state = {};
   }
 
-  handleMove(el,e) {
-    console.log(el, e);
-    if(el.scrollTop>0) return;
-    this.setState({offset: Math.max(e.deltaY, 0)});
-    // let scrollTop = this.el?this.el.scrollTop:0;
-    // let offset = to.y-from.y;
-    // // console.log(11111,Math.max(offset-scrollTop, 0), offset, scrollTop);
-    // this.setState({offset: Math.max(offset-scrollTop, 0)});
-    !this.props.isLoading&&this.state.offset&&e.preventDefault();
-    // e.srcEvent.preventDefault();
-    //  e.srcEvent.stopPropagation();
+  handleMove(target,event) {
+    if(target.scrollTop>0) return;
+    this.setState({offset: Math.max(event.deltaY, 0)});
+    !this.props.isLoading&&this.state.offset&&event.preventDefault();
   }
 
-  handleEnd(el,e) {
+  handleEnd(target,event) {
+    let { triggerOffset, onLoad } = this.props;
     let offset = this.state.offset;
     this.setState({offset: 0});
-    if(offset>=this.props.triggerOffset&&this.props.onRefresh) this.props.onRefresh();
-    // e.preventDefault();
-    // e.srcEvent.preventDefault();
-    // e.srcEvent.stopPropagation()
+    if(offset>=triggerOffset&&onLoad) onLoad();
   }
 
   render() {
     let {
-      isLoading, triggerOffset, refreshProps, loaderProps, 
+      isLoading, onLoad, triggerOffset, refreshProps, loaderProps, 
       children, ...props
     } = genCommonProps(this.props);
 
     return (
       <Panel.Touchable 
-        options={{recognizers: {pan:{threshold: 3, direction: Hammer.DIRECTION_VERTICAL}}}}
-        onPan={(el,e)=>this.handleMove(el,e)} onPanCancel={(el,e)=>this.handleEnd(el,e)} onPanEnd={(el,e)=>this.handleEnd(el,e)} 
+        direction="vertical"
+        onPan={this.handleMove.bind(this)} onPanCancel={(el,e)=>this.handleEnd(el,e)} onPanEnd={(el,e)=>this.handleEnd(el,e)} 
         {...props}>
         <PullRefresh._Loader 
           isLoading={isLoading} offset={this.state.offset} triggerOffset={triggerOffset} 
@@ -63,7 +54,7 @@ class PullRefresh extends React.Component {
   }
 }
 
-PullRefresh._Loader = aprops=>{
+Panel.PullRefresh._Loader = aprops=>{
   let {
     isLoading, offset, triggerOffset, title, loader, loaderProps={},
     component:Component=Panel, className, style, children, ...props
@@ -85,7 +76,8 @@ PullRefresh._Loader = aprops=>{
   )
 }
 
-Panel.PullRefresh = PullRefresh;
-
 
 export default Panel;
+
+// : TODO
+// pc pull trigger onClick

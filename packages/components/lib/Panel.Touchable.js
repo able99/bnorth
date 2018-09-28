@@ -13,8 +13,6 @@ Object.defineProperty(exports, "Hammer", {
 });
 exports.default = void 0;
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
-
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -25,9 +23,11 @@ var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/ge
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 var _react = _interopRequireDefault(require("react"));
 
-var _reactDom = _interopRequireDefault(require("react-dom"));
+var _dom = require("./utils/dom");
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -39,14 +39,14 @@ var _hammerjs = _interopRequireDefault(require("hammerjs"));
  * @author able99 (8846755@qq.com)
  * @license MIT
  */
-_hammerjs.default.defaults.inputClass = 'ontouchstart' in window ? _hammerjs.default.TouchInput : _hammerjs.default.TouchMouseInput;
-_hammerjs.default.defaults.touchAction = 'pan-up';
-//, domEvents: false, 
+_hammerjs.default.defaults.inputClass = _dom.domIsTouch ? _hammerjs.default.TouchInput : _hammerjs.default.TouchMouseInput;
+_hammerjs.default.defaults.touchAction = 'pan-y'; // :TODO 
+
 var privateProps = {
   direction: true,
   options: true,
-  recognizeWith: true,
-  vertical: true
+  recognizers: true,
+  recognizeWith: true
 };
 var handlerToEvent = {
   action: 'tap press',
@@ -75,65 +75,70 @@ var handlerToEvent = {
   onSwipeDown: 'swipedown',
   onTap: 'tap'
 };
-Object.keys(handlerToEvent).forEach(function (i) {
-  privateProps[i] = true;
+Object.keys(handlerToEvent).forEach(function (v) {
+  privateProps[v] = true;
 });
 
 function updateHammer(hammer, props) {
-  if (props.hasOwnProperty('vertical')) {
-    console.warn('vertical is deprecated, please use `direction` instead');
-  }
+  Object.entries(props).forEach(function (_ref) {
+    var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+        k = _ref2[0],
+        v = _ref2[1];
 
-  var directionProp = props.direction;
+    if (k === 'direction') {
+      // direaction
+      var direction = 'DIRECTION_' + (v ? String(v).toUpperCase() : 'ALL');
+      hammer.get('pan').set({
+        direction: _hammerjs.default[direction]
+      });
+      hammer.get('swipe').set({
+        direction: _hammerjs.default[direction]
+      });
+    } else if (k === 'options') {
+      // options
+      Object.entries(v).forEach(function (_ref3) {
+        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+            kk = _ref4[0],
+            vv = _ref4[1];
 
-  if (directionProp || props.hasOwnProperty('vertical')) {
-    var direction = directionProp ? directionProp : props.vertical ? 'DIRECTION_ALL' : 'DIRECTION_HORIZONTAL';
-    hammer.get('pan').set({
-      direction: _hammerjs.default[direction]
-    });
-    hammer.get('swipe').set({
-      direction: _hammerjs.default[direction]
-    });
-  }
+        if (kk === 'recognizers') return;
+        hammer.set({
+          kk: kk,
+          vv: vv
+        });
+      });
+    } else if (k === 'recognizers') {
+      // recognizers
+      Object.entries(v || {}).forEach(function (_ref5) {
+        var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
+            kk = _ref6[0],
+            vv = _ref6[1];
 
-  if (props.options) {
-    Object.keys(props.options).forEach(function (option) {
-      if (option === 'recognizers') {
-        Object.keys(props.options.recognizers).forEach(function (gesture) {
-          var recognizer = hammer.get(gesture);
-          recognizer.set(props.options.recognizers[gesture]);
+        var recognizer = hammer.get(kk);
+        recognizer.set(vv);
+        if (recognizer.requireFailure) recognizer.requireFailure(vv.requireFailure);
+      });
+    } else if (k === 'recognizeWith') {
+      // recognizeWith
+      Object.entries(v || {}).forEach(function (_ref7) {
+        var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
+            kk = _ref8[0],
+            vv = _ref8[1];
 
-          if (props.options.recognizers[gesture].requireFailure) {
-            recognizer.requireFailure(props.options.recognizers[gesture].requireFailure);
-          }
-        }, this);
-      } else {
-        var key = option;
-        var optionObj = {};
-        optionObj[key] = props.options[option];
-        hammer.set(optionObj);
-      }
-    }, this);
-  }
-
-  if (props.recognizeWith) {
-    Object.keys(props.recognizeWith).forEach(function (gesture) {
-      var recognizer = hammer.get(gesture);
-      recognizer.recognizeWith(props.recognizeWith[gesture]);
-    }, this);
-  }
-
-  Object.keys(props).forEach(function (p) {
-    var e = handlerToEvent[p];
-
-    if (e) {
-      hammer.off(e);
-      hammer.on(e, props[p] && props[p].bind(null, hammer));
+        var recognizer = hammer.get(kk);
+        recognizer.recognizeWith(vv);
+      });
+    } else {
+      // event
+      k = handlerToEvent[k];
+      if (!k) return;
+      hammer.off(k);
+      hammer.on(k, v && v.bind(null, hammer.element));
     }
   });
 }
 
-var Touchable =
+_Panel.default.Touchable =
 /*#__PURE__*/
 function (_React$Component) {
   (0, _inherits2.default)(Touchable, _React$Component);
@@ -146,25 +151,24 @@ function (_React$Component) {
   (0, _createClass2.default)(Touchable, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var el = _reactDom.default.findDOMNode(this.el);
-
-      if (!el) throw new Error('touchable: no el find');
+      var el = (0, _dom.domFindNode)(this);
+      if (!el) throw new Error('panel.touchable: no el find');
       this.hammer = new _hammerjs.default(el);
       updateHammer(this.hammer, this.props);
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      if (this.hammer) {
-        this.hammer.stop();
-        this.hammer.destroy();
-        this.hammer = null;
-      }
+      if (!this.hammer) return;
+      this.hammer.stop();
+      this.hammer.destroy();
+      this.hammer = null;
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
-      this.hammer && updateHammer(this.hammer, this.props);
+      if (!this.hammer) return;
+      updateHammer(this.hammer, this.props);
     }
   }, {
     key: "render",
@@ -175,16 +179,11 @@ function (_React$Component) {
       Object.keys(this.props).forEach(function (v) {
         if (!privateProps[v]) props[v] = _this.props[v];
       });
-      return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-        refWrap: function refWrap(e) {
-          return e && (_this.el = e);
-        }
-      }, props));
+      return _react.default.createElement(_Panel.default, props);
     }
   }]);
   return Touchable;
 }(_react.default.Component);
 
-_Panel.default.Touchable = Touchable;
 var _default = _Panel.default;
 exports.default = _default;

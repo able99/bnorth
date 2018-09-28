@@ -61,18 +61,16 @@ function () {
     this._id = options._id;
     this.options = options;
     if (this.options.initialization === undefined) this.options.initialization = {};
-    Object.entries(this.options).filter(function (_ref) {
+    Object.entries(this.options).forEach(function (_ref) {
       var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
           k = _ref2[0],
           v = _ref2[1];
 
-      return k.indexOf('onState') === 0;
-    }).forEach(function (_ref3) {
-      var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
-          k = _ref4[0],
-          v = _ref4[1];
-
-      return _this.app.event.on(_this._id, k, v, _this._id);
+      if (k.indexOf('onState') === 0) {
+        _this.app.event.on(_this._id, k, v, _this._id);
+      } else {
+        _this[k] = v;
+      }
     });
     this.app.event.on(this._id, 'onStateStop', function () {
       _this.destructor();

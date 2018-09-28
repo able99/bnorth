@@ -59,12 +59,12 @@ Loader._circle = aprops=>{
   return (
     <svg viewBox="0 0 100 100"  className={cxm(classStr, classSet, className)} {...props}>
       <circle 
-        cx="50" cy="50" r="40" strokeWidth="15" stroke={colorReverse} fill="none" />
+        cx="50" cy="50" r="40" strokeWidth="20" stroke={colorReverse} fill="none" />
       <circle 
-        cx="50" cy="50" r="40" strokeWidth="15" stroke={color} fill="none" 
+        cx="50" cy="50" r="40" strokeWidth="20" stroke={color} fill="none" 
         transform="matrix(0,-1,1,0,0,100)" 
         className={isProgress?"transition-set-":null}
-        strokeDasharray={isProgress?`${2.51*(progress||0)},251`:"10,251"}>
+        strokeDasharray={isProgress?`${2.51*(progress||0)},251`:"50,251"}>
         {!isProgress?<animate attributeName="stroke-dashoffset" from="0" to="-251" dur={timeout} repeatCount="indefinite" />:null}
       </circle>
       {children}

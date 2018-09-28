@@ -110,19 +110,19 @@ Loader._circle = function (aprops) {
     cx: "50",
     cy: "50",
     r: "40",
-    strokeWidth: "15",
+    strokeWidth: "20",
     stroke: colorReverse,
     fill: "none"
   }), _react.default.createElement("circle", {
     cx: "50",
     cy: "50",
     r: "40",
-    strokeWidth: "15",
+    strokeWidth: "20",
     stroke: color,
     fill: "none",
     transform: "matrix(0,-1,1,0,0,100)",
     className: isProgress ? "transition-set-" : null,
-    strokeDasharray: isProgress ? "".concat(2.51 * (progress || 0), ",251") : "10,251"
+    strokeDasharray: isProgress ? "".concat(2.51 * (progress || 0), ",251") : "50,251"
   }, !isProgress ? _react.default.createElement("animate", {
     attributeName: "stroke-dashoffset",
     from: "0",

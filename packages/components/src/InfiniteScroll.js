@@ -14,26 +14,30 @@ import ScrollSpy from './ScrollSpy';
 
 let InfiniteScroll = (aprops)=>{
   let { 
-    spy=true, isLoading, onLoading, 
+    disabled, isLoading, onLoading, 
     componentLoader:ComponentLoader=Loader, loaderProps,
     componentTitle:ComponentTitle=Panel, titleProps,
     component:Component=Panel, children, className, ...props 
   } = genCommonProps(aprops);
-  if(!spy) return null;
+  if(disabled) return null;
 
   let classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center padding-a-';
   
   return (
     <React.Fragment>
-      <ScrollSpy onScrollPositionChange={(container, event)=>!isLoading&&onLoading&&Math.abs(container.scrollTop+container.clientHeight-container.scrollHeight)<35&&onLoading()} />
-      {isLoading?(
-        <Component className={cxm(classStr, className)} {...props}>
-          {children?children:<ComponentLoader {...loaderProps} />}
-          {children?children:<ComponentTitle {...titleProps} />}
-        </Component>
-      ):null}
+      <ScrollSpy onScrollPositionChange={(target, event)=>InfiniteScroll._handleScrollPosChange(target, event, aprops)} />
+      <Component className={cxm(classStr, className)} {...props}>
+        {children?children:<ComponentLoader {...loaderProps} />}
+        {children?children:<ComponentTitle {...titleProps} />}
+      </Component>
     </React.Fragment>
   );
+}
+
+InfiniteScroll._handleScrollPosChange = (target, event, {isLoading, onLoading})=>{
+  if(isLoading||!onLoading) return;
+  let distance = Math.abs(target.scrollTop+target.clientHeight-target.scrollHeight);
+  if(distance<35) onLoading();
 }
 
 

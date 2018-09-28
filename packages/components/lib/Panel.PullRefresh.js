@@ -1,7 +1,5 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -31,17 +29,13 @@ var _react = _interopRequireDefault(require("react"));
 
 var _props = require("./utils/props");
 
-var _Panel = _interopRequireWildcard(require("./Panel.Touchable"));
+var _Panel = _interopRequireDefault(require("./Panel.Touchable"));
 
 var _Loader = _interopRequireDefault(require("./Loader"));
 
-/**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
- */
-var PullRefresh =
+var _class, _temp;
+
+_Panel.default.PullRefresh = (_temp = _class =
 /*#__PURE__*/
 function (_React$Component) {
   (0, _inherits2.default)(PullRefresh, _React$Component);
@@ -57,29 +51,24 @@ function (_React$Component) {
 
   (0, _createClass2.default)(PullRefresh, [{
     key: "handleMove",
-    value: function handleMove(el, e) {
-      console.log(el, e);
-      if (el.scrollTop > 0) return;
+    value: function handleMove(target, event) {
+      if (target.scrollTop > 0) return;
       this.setState({
-        offset: Math.max(e.deltaY, 0)
-      }); // let scrollTop = this.el?this.el.scrollTop:0;
-      // let offset = to.y-from.y;
-      // // console.log(11111,Math.max(offset-scrollTop, 0), offset, scrollTop);
-      // this.setState({offset: Math.max(offset-scrollTop, 0)});
-
-      !this.props.isLoading && this.state.offset && e.preventDefault(); // e.srcEvent.preventDefault();
-      //  e.srcEvent.stopPropagation();
+        offset: Math.max(event.deltaY, 0)
+      });
+      !this.props.isLoading && this.state.offset && event.preventDefault();
     }
   }, {
     key: "handleEnd",
-    value: function handleEnd(el, e) {
+    value: function handleEnd(target, event) {
+      var _this$props = this.props,
+          triggerOffset = _this$props.triggerOffset,
+          onLoad = _this$props.onLoad;
       var offset = this.state.offset;
       this.setState({
         offset: 0
       });
-      if (offset >= this.props.triggerOffset && this.props.onRefresh) this.props.onRefresh(); // e.preventDefault();
-      // e.srcEvent.preventDefault();
-      // e.srcEvent.stopPropagation()
+      if (offset >= triggerOffset && onLoad) onLoad();
     }
   }, {
     key: "render",
@@ -88,24 +77,16 @@ function (_React$Component) {
 
       var _genCommonProps = (0, _props.genCommonProps)(this.props),
           isLoading = _genCommonProps.isLoading,
+          onLoad = _genCommonProps.onLoad,
           triggerOffset = _genCommonProps.triggerOffset,
           refreshProps = _genCommonProps.refreshProps,
           loaderProps = _genCommonProps.loaderProps,
           children = _genCommonProps.children,
-          props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["isLoading", "triggerOffset", "refreshProps", "loaderProps", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["isLoading", "onLoad", "triggerOffset", "refreshProps", "loaderProps", "children"]);
 
       return _react.default.createElement(_Panel.default.Touchable, (0, _extends2.default)({
-        options: {
-          recognizers: {
-            pan: {
-              threshold: 3,
-              direction: _Panel.Hammer.DIRECTION_VERTICAL
-            }
-          }
-        },
-        onPan: function onPan(el, e) {
-          return _this2.handleMove(el, e);
-        },
+        direction: "vertical",
+        onPan: this.handleMove.bind(this),
         onPanCancel: function onPanCancel(el, e) {
           return _this2.handleEnd(el, e);
         },
@@ -121,13 +102,11 @@ function (_React$Component) {
     }
   }]);
   return PullRefresh;
-}(_react.default.Component);
-
-(0, _defineProperty2.default)(PullRefresh, "defaultProps", {
+}(_react.default.Component), (0, _defineProperty2.default)(_class, "defaultProps", {
   triggerOffset: 60
-});
+}), _temp);
 
-PullRefresh._Loader = function (aprops) {
+_Panel.default.PullRefresh._Loader = function (aprops) {
   var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
       isLoading = _genCommonProps2.isLoading,
       offset = _genCommonProps2.offset,
@@ -158,6 +137,7 @@ PullRefresh._Loader = function (aprops) {
   }, loaderProps)) : null, !children && title ? title : null, children);
 };
 
-_Panel.default.PullRefresh = PullRefresh;
-var _default = _Panel.default;
+var _default = _Panel.default; // : TODO
+// pc pull trigger onClick
+
 exports.default = _default;

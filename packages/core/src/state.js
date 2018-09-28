@@ -28,7 +28,14 @@ export default class State {
     this.options = options;
     if(this.options.initialization===undefined) this.options.initialization = {};
     
-    Object.entries(this.options).filter(([k,v])=>k.indexOf('onState')===0).forEach(([k,v])=> this.app.event.on(this._id, k, v, this._id));
+    Object.entries(this.options).forEach(([k,v])=>{
+      if(k.indexOf('onState')===0){
+        this.app.event.on(this._id, k, v, this._id)
+      }else{
+        this[k] = v;
+      }
+    })
+    
     this.app.event.on(this._id, 'onStateStop', ()=>{this.destructor()}, this._id);
   }
 
