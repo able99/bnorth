@@ -16,11 +16,14 @@ const argv = require('yargs')
       default: 'base',
       describe: 'select template',
     },
+    'local': {
+      alias: 'l',
+      type: 'boolean',
+      describe: 'install local bnorth',
+    },
   })
   .help()
   .argv;
-
-
 
 const appName = argv._[0]||path.basename(process.cwd());
 const templatePath = `${__dirname}/../templates`;
@@ -29,8 +32,9 @@ const templatePath = `${__dirname}/../templates`;
 // welcome
 // -----------------------
 console.log('------------welcome to bnoth----------------');
-console.log('bnorth app name=${appName}');
+console.log(`bnorth app name=${appName} template=${argv.template} local=${argv.local}`);
 console.log();
+
 
 // project
 // -----------------------
@@ -59,7 +63,10 @@ console.log('* OK');
 console.log();
 
 console.log('* run npm install...');
-var proc = spawn.sync('npm', ['i', '@bnorth/core', '@bnorth/build'], {stdio: 'inherit'});
+var proc = spawn.sync('npm', ['install', 
+  argv.local?(path.join(__dirname,'..','..','build')):'@bnorth/build',
+  argv.local?(path.join(__dirname,'..','..','core')):'@bnorth/core', 
+], {stdio: 'inherit'});
 if (proc.status !== 0) {
   console.log('* ERROR:'+proc.status);
 }else{

@@ -1,9 +1,5 @@
-import HomeView from './pages/home';
-import HomeController from './pages/_home';
+import Home from './pages/home';
 
 export default {
-  '/': {
-    component: HomeView,
-    controller: HomeController,
-  }
+  '/': Home,
 }

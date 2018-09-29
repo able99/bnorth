@@ -1,10 +1,8 @@
-/* rich css */
-// import '@bnorth/rich.css/css/normalize.css';
-// import genCss from '@bnorth/rich.css';
-// genCss();
-
 import App from '@bnorth/core';
+import initStyle from './style';
+import initPlugins from './plugins';
 import routes from './routes';
+
 
 let app = new App({
   plugin:{
@@ -14,10 +12,6 @@ let app = new App({
   },
 })
 
-/* bnorth plugin */ 
-// ...
-
-/* component plugin */
-// ...
-
+initStyle(app);
+initPlugins(app);
 app.start();

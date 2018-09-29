@@ -35,6 +35,7 @@ var Notification = function Notification(aprops) {
       hasClose = _genCommonProps.hasClose,
       closeProps = _genCommonProps.closeProps,
       iconProps = _genCommonProps.iconProps,
+      onDoClose = _genCommonProps.onDoClose,
       _genCommonProps$trans = _genCommonProps.transition,
       Transition = _genCommonProps$trans === void 0 ? _AnimationCollapse.default : _genCommonProps$trans,
       transitionProps = _genCommonProps.transitionProps,
@@ -43,7 +44,7 @@ var Notification = function Notification(aprops) {
       component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
       className = _genCommonProps.className,
       children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["titleProps", "hasClose", "closeProps", "iconProps", "transition", "transitionProps", "onTransitionFinished", "component", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["titleProps", "hasClose", "closeProps", "iconProps", "onDoClose", "transition", "transitionProps", "onTransitionFinished", "component", "className", "children"]);
 
   var classStr = 'flex-display-block flex-align-center padding-a- position-absolute offset-top-start offset-left-top width-full';
   return _react.default.createElement(Transition, (0, _extends2.default)({
@@ -56,7 +57,8 @@ var Notification = function Notification(aprops) {
   }, props), _react.default.createElement(Notification._Title, (0, _extends2.default)({
     title: children
   }, titleProps)), hasClose ? _react.default.createElement(Notification._Close, (0, _extends2.default)({
-    hasClose: hasClose
+    hasClose: hasClose,
+    onDoClose: onDoClose
   }, closeProps)) : null);
 };
 
@@ -78,15 +80,19 @@ Notification._Title = function (aprops) {
 Notification._Close = function (aprops) {
   var _genCommonProps3 = (0, _props.genCommonProps)(aprops),
       hasClose = _genCommonProps3.hasClose,
+      onDoClose = _genCommonProps3.onDoClose,
       iconProps = _genCommonProps3.iconProps,
       _genCommonProps3$comp = _genCommonProps3.component,
       Component = _genCommonProps3$comp === void 0 ? _Button.default : _genCommonProps3$comp,
       className = _genCommonProps3.className,
       children = _genCommonProps3.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["hasClose", "iconProps", "component", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["hasClose", "onDoClose", "iconProps", "component", "className", "children"]);
 
-  var classStr = 'padding-a-xs flex-sub-flex-none';
+  var classStr = 'padding-h-sm padding-v-0 flex-sub-flex-none';
   return hasClose !== true ? hasClose : _react.default.createElement(Component, (0, _extends2.default)({
+    "b-style": "plain",
+    "b-theme": "white",
+    onClick: onDoClose,
     className: (0, _props.cxm)(classStr, className)
   }, props), _react.default.createElement(_Icon.default, (0, _extends2.default)({
     name: "close",

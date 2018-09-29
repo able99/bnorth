@@ -179,7 +179,7 @@ Modal._HeaderTitleClose = function (aprops) {
       children = _genCommonProps5.children,
       props = (0, _objectWithoutProperties2.default)(_genCommonProps5, ["handleAction", "titleCloseIconProps", "component", "className", "children"]);
 
-  var classStr = 'padding-a-xs';
+  var classStr = 'padding-h-sm padding-v-0';
   return _react.default.createElement(Component, (0, _extends2.default)({
     "b-style": "plain",
     onClick: function onClick() {

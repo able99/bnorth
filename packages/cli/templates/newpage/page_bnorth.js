@@ -3,12 +3,21 @@ import View from '@bnorth/components/lib/View'
 import Panel from '@bnorth/components/lib/Panel'
 
 
-export default props=>{
+let Component = props=>{
+  let { route } = props;
+  
   return (
     <View>
       <Panel main>
-        home page
+       {JSON.stringify(route.params)}
       </Panel>
     </View>
-  );
+  )
 };
+
+
+Component.controller = {
+}
+
+
+export default Component;

@@ -16,7 +16,7 @@ export default {
         let _id = app.notice._id || app.router.getViewId(options);
         options._id = _id;
         props.in = true;
-        props.onClose = ()=>app.notice.close();
+        props.onDoClose = ()=>app.notice.close();
         props.children = message;
 
         if(app.notice._timer) window.clearTimeout(app.notice._timer);

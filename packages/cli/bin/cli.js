@@ -14,7 +14,6 @@ let args = process.argv.slice(3);
 
 
 let scriptPath = `${__dirname}/../lib/${script}.js` 
-console.log(1111,scriptPath);
 if(!fs.existsSync(scriptPath)){
   console.log(`unknown sub command '${script}'`);
   return;

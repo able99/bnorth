@@ -36,7 +36,7 @@ var _default = {
         options._id = _id;
         props.in = true;
 
-        props.onClose = function () {
+        props.onDoClose = function () {
           return app.notice.close();
         };
 

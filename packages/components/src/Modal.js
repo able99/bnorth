@@ -132,7 +132,7 @@ Modal._HeaderTitleClose = aprops=>{
     component:Component=Button, className, children, ...props 
   } = genCommonProps(aprops);
 
-  let classStr = 'padding-a-xs';
+  let classStr = 'padding-h-sm padding-v-0';
   
   return (
     <Component

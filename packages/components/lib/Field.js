@@ -7,12 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-require("core-js/modules/es6.function.name");
-
-require("core-js/modules/es7.array.includes");
-
-require("core-js/modules/es6.string.includes");
-
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
@@ -264,7 +258,6 @@ Field._SwitchContentCheckRadio = function (aprops) {
       _aprops$component3 = aprops.component,
       Component = _aprops$component3 === void 0 ? _Icon.default : _aprops$component3,
       props = (0, _objectWithoutProperties2.default)(aprops, ["type", "isOn", "name", "nameDefault", "component"]);
-  console.log(1111, isOn, name, type, props);
   return _react.default.createElement(Component, (0, _extends2.default)({
     "bc-border-radius-rounded": !Boolean(type === 'checkbox'),
     type: type,

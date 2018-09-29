@@ -180,7 +180,6 @@ Field._SwitchContentCheckRadio = aprops=>{
     type, isOn, name=aprops.isOn?'check':' ', nameDefault=aprops.isOn?'X':' ', 
     component:Component=Icon, ...props
   } = aprops;
-  console.log(1111, isOn, name, type,props);
 
   return <Component bc-border-radius-rounded={!Boolean(type==='checkbox')} type={type}  name={name} nameDefault={nameDefault} {...props} b-style="hollow" />;
 }

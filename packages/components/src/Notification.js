@@ -15,8 +15,7 @@ import Icon from './Icon';
 
 let Notification = (aprops)=>{
   let {
-    titleProps,
-    hasClose, closeProps, iconProps,
+    titleProps, hasClose, closeProps, iconProps, onDoClose, 
     transition:Transition=AnimationCollapse, transitionProps, onTransitionFinished,
     component=Panel, className, children, ...props
   } = genCommonProps(aprops);
@@ -28,7 +27,7 @@ let Notification = (aprops)=>{
       component={component} transitionProps={transitionProps} onTransitionFinished={onTransitionFinished} 
       b-style="solid" b-theme="mask" className={cxm(classStr, className)} {...props}>
       <Notification._Title title={children} {...titleProps} />
-      {hasClose?<Notification._Close hasClose={hasClose} {...closeProps} />:null}
+      {hasClose?<Notification._Close hasClose={hasClose} onDoClose={onDoClose} {...closeProps} />:null}
     </Transition>
   );
 }
@@ -50,14 +49,14 @@ Notification._Title = aprops=>{
 
 Notification._Close = aprops=>{
   let {
-    hasClose, iconProps,
+    hasClose, onDoClose, iconProps,
     component:Component=Button, className, children, ...props
   } = genCommonProps(aprops);
 
-  let classStr = 'padding-a-xs flex-sub-flex-none';
+  let classStr = 'padding-h-sm padding-v-0 flex-sub-flex-none';
 
   return hasClose!==true?hasClose:(
-    <Component className={cxm(classStr, className)} {...props}>
+    <Component b-style="plain" b-theme="white" onClick={onDoClose} className={cxm(classStr, className)} {...props}>
       <Icon name="close" nameDefault="x" {...iconProps} />
       {children}
     </Component>

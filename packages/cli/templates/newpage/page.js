@@ -1,4 +1,17 @@
 import React from 'react';
 
 
-export default (props)=><h1>Home Page</h1>;
+let Component = props=>{
+  let { route } = props;
+
+  return (
+    <div>{JSON.stringify(route.params)}</div>
+  )
+};
+
+
+Component.controller = {
+}
+
+
+export default Component;

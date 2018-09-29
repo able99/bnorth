@@ -1,24 +1,10 @@
-/* polyfill */
-// import "babel-polyfill";
-
-/* rich css */
-import '@bnorth/rich.css/css/normalize.css';
-import genCss from '@bnorth/rich.css';
 import App from '@bnorth/core';
+import initStyle from './style';
+import initPlugins from './plugins';
 import routes from './routes';
-import Icon from '@bnorth/components/lib/Icon';
-import icoSvg from '../res/default.ico.svg';
-Icon.appendSvgIcons(icoSvg);
-Icon.appendMap('keyboard_arrow_left', 'left');
-Icon.appendMap('keyboard_arrow_right', 'right');
-Icon.appendMap('vertical_align_top', 'backTop');
 
 let app = new App({
   plugin:{
-    onAppStarting: async ()=>{
-      genCss();
-    },
-
     onAppStartConfig: ()=>{
       app.router.setRoutes(routes);
     },
@@ -29,14 +15,6 @@ let app = new App({
   },
 })
 
-app.plugins.add(require('@bnorth/components/lib/plugins/notice').default);
-app.plugins.add(require('@bnorth/components/lib/plugins/mask').default);
-app.plugins.add(require('@bnorth/components/lib/plugins/modal').default);
-app.plugins.add(require('@bnorth/components/lib/plugins/loading').default);
-app.plugins.add(require('@bnorth/plugin-network').default);
-app.plugins.add(require('@bnorth/plugin-request').default);
-app.plugins.add(require('@bnorth/plugin-validate').default);
-
-
-
+initStyle(app);
+initPlugins(app);
 app.start();

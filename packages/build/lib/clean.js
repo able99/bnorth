@@ -4,12 +4,13 @@
  * This source code is licensed under MIT.
  */
 
+const { join } = require('path');
 const spawn = require('cross-spawn');
 const { initEnv } = require('../config/env.config');
 
 module.exports = function run(type, watch) {
-  initEnv();
-  spawn.sync('npx', ['rimraf', ...process.argv.slice(3)], {stdio: 'inherit'});
+  let env = initEnv();
+  spawn.sync('node', [join(env.ownNodeModules, '.bin', 'rimraf'), ...process.argv.slice(3)], {stdio: 'inherit'});
 }
 
 
