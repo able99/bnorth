@@ -23,7 +23,6 @@ function initEnv({cwd, env}={}) {
   const appPackagePath = resolveApp('package.json');
   const appPackage = JSON.parse(readFileSync(appPackagePath));
   const appName = appPackage.name;
-  process.env.NODE_ENV = env;
 
   cache = {
     cwd,
@@ -43,6 +42,9 @@ function initEnv({cwd, env}={}) {
     appBabelCache: resolveApp('node_modules/.cache/babel-loader'),
   };
 
+  process.env.NODE_ENV = env;
+  process.env.NODE_PATH = (process.env.NODE_PATH?(process.env.NODE_PATH+':'):'')+cache.ownNodeModules;
+ 
   return cache;
 }
 

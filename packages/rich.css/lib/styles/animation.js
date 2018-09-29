@@ -10,6 +10,12 @@ exports.animation = animation;
 exports.transform = transform;
 exports.transforms = transforms;
 
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es7.object.entries");
+
+require("core-js/modules/web.dom.iterable");
+
 var _compatibleAnimation = _interopRequireDefault(require("../compatibles/compatibleAnimation"));
 
 function transiton() {

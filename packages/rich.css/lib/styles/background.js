@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.backgroundImage = backgroundImage;
 
+require("core-js/modules/es6.string.repeat");
+
 function backgroundImage(image) {
   var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
       _ref$repeat = _ref.repeat,

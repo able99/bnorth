@@ -12,6 +12,18 @@ exports.stylesToDom = stylesToDom;
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es7.object.entries");
+
+require("core-js/modules/es6.string.repeat");
+
+require("core-js/modules/web.dom.iterable");
+
+require("core-js/modules/es6.string.starts-with");
+
+require("core-js/modules/es6.regexp.split");
+
 function getDomSelector(selector) {
   return selector.split('-').filter(function (v) {
     return v;

@@ -12,6 +12,8 @@ exports.getStyleElement = getStyleElement;
 exports.writeStyles = writeStyles;
 exports.default = cssGen;
 
+require("core-js/modules/web.dom.iterable");
+
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _config = _interopRequireDefault(require("./config"));

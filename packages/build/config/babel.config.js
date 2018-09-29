@@ -4,7 +4,10 @@ function initBabelOption(options) {
   cache = {
     "presets": [
       require('@babel/preset-react'),
-      require('@babel/preset-env'),
+      [require('@babel/preset-env'), {
+        "targets": {"browsers": ["Android>=4.4", "iOS>=8", "ie>=11"]},
+        "useBuiltIns": "usage",
+      }],
     ],
     "plugins": [
       require('@babel/plugin-transform-runtime'),

@@ -9,6 +9,12 @@ exports.default = compatible;
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
+require("core-js/modules/web.dom.iterable");
+
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es7.object.entries");
+
 var _utils = require("./utils");
 
 function compatible(styles, dom) {

@@ -14,6 +14,12 @@ var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/obje
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es7.object.entries");
+
+require("core-js/modules/web.dom.iterable");
+
 var _utils = require("../utils");
 
 var _compatibleAnimation = _interopRequireDefault(require("../compatibles/compatibleAnimation"));

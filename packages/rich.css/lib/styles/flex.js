@@ -10,6 +10,8 @@ exports.styleFlexSubGrow = styleFlexSubGrow;
 exports.styleFlexSubShrink = styleFlexSubShrink;
 exports.styleFlexSubBasis = styleFlexSubBasis;
 
+require("core-js/modules/es6.number.constructor");
+
 var _compatibleFlex = _interopRequireDefault(require("../compatibles/compatibleFlex"));
 
 function styleFlexSubOrder(val) {

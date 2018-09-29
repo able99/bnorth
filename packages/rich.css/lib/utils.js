@@ -14,7 +14,19 @@ exports.getStyleSet = getStyleSet;
 
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
+require("core-js/modules/es7.symbol.async-iterator");
+
+require("core-js/modules/es6.symbol");
+
+require("core-js/modules/es6.string.repeat");
+
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+require("core-js/modules/web.dom.iterable");
+
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es7.object.entries");
 
 function stylesToString(styles) {
   return (Array.isArray(styles) ? styles : Object.entries(styles || {})).map(function (_ref) {

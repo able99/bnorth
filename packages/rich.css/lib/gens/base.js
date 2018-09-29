@@ -7,6 +7,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = gen;
 
+require("core-js/modules/es6.string.bold");
+
 var _utils = require("../utils");
 
 var _compatibleAnimation = _interopRequireDefault(require("../compatibles/compatibleAnimation"));

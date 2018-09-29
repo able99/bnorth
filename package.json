@@ -1,11 +1,14 @@
 {
   "name": "bnorth",
   "private": true,
-  "files": ["docs"],
+  "files": [
+    "docs"
+  ],
   "scripts": {
     "lerna": "lerna"
   },
   "devDependencies": {
     "lerna": "^3.0.3"
-  }
+  },
+  "dependencies": {}
 }

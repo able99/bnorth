@@ -9,6 +9,8 @@ function run() {
     case 'dev': 
     case 'build': 
     case 'server': 
+    case 'run': 
+    case 'clean': 
       let work = require(`../lib/${type}`);
       work(type, false);
       break;

@@ -30,21 +30,18 @@
   "scripts": {
     "build": "npm run clean && npm run build:js && npm run build:css",
     "build:js": "bnorth-build dev",
-    "build:css": "node scripts/index.js",
-    "clean": "rimraf lib css"
+    "build:css": "bnorth-build run scripts/index.js",
+    "clean": "bnorth-build clean lib css"
   },
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-rc.1",
     "animate.css": "^3.7.0",
-    "fs-extra": "^7.0.0",
-    "normalize.css": "^8.0.0",
-    "rimraf": "^2.6.2"
+    "normalize.css": "^8.0.0"
   },
   "devDependencies": {
-    "@bnorth/build": "^3.0.8"
+    "@bnorth/build": "*"
   },
   "gitHead": "7bbbf0e3bfab01704bab1cb9552592bb3d8654d2"
 }

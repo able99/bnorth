@@ -11,6 +11,10 @@ exports.default = gen;
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
+require("core-js/modules/es6.string.repeat");
+
+require("core-js/modules/web.dom.iterable");
+
 var _utils = require("../utils");
 
 function genIconFont(_ref) {

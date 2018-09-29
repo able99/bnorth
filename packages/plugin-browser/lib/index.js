@@ -7,6 +7,18 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+require("core-js/modules/es6.promise");
+
+require("core-js/modules/es6.regexp.match");
+
+require("core-js/modules/es6.regexp.split");
+
+require("core-js/modules/web.dom.iterable");
+
+require("core-js/modules/es6.regexp.replace");
+
+require("core-js/modules/es6.regexp.to-string");
+
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
