@@ -21,7 +21,8 @@ var _get2 = _interopRequireDefault(require("@babel/runtime/helpers/get"));
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
-function getClass(app) {
+var getClass = function getClass(app) {
+  var aoptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return (
     /*#__PURE__*/
     function (_app$State) {
@@ -33,6 +34,8 @@ function getClass(app) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         (0, _classCallCheck2.default)(this, Request);
         _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Request).call(this, app, options));
+        options._initialization = options.initialization;
+        options.initialization = {};
         _this.fetched = false;
         app.event.on(_this._id, 'onStateStart', function (page) {
           _this.options.fetchOnStart && _this.fetch();
@@ -45,87 +48,105 @@ function getClass(app) {
 
       (0, _createClass2.default)(Request, [{
         key: "_requestFetching",
-        value: function _requestFetching(fetching, _ref, isFetch) {
+        value: function _requestFetching(fetching, _ref) {
           var loading = _ref.loading,
               mask = _ref.mask,
               noNotice = _ref.noNotice,
-              noLoadingMask = _ref.noLoadingMask;
+              noLoadingMask = _ref.noLoadingMask,
+              isSubmit = _ref.isSubmit;
           loading && this.app.render.loading(fetching);
           mask && this.app.render.mask(fetching);
-          !loading && !mask && !noLoadingMask && (isFetch ? this.app.render.loading(fetching) : this.app.render.mask(fetching));
-          isFetch && (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "update", this).call(this, {
-            fetching: fetching
-          }, {
-            append: true
-          }, this.dataExt(true));
+          !loading && !mask && !noLoadingMask && (!isSubmit ? this.app.render.loading(fetching) : this.app.render.mask(fetching));
+          if (isSubmit) return; // console.log(1111, this.dataExt(true))
+          // super.update({fetching: fetching}, {append: true},true);
+          // console.log(2222, this.dataExt(true))
+
+          var a = this.dataExt(true);
+          console.log(11111111, a);
+          a.fetching = fetching;
+          this.app.context.set(this._id, a);
+          a = this.dataExt(true);
+          console.log(2222222, a);
         }
       }, {
         key: "_requestSuccess",
-        value: function _requestSuccess(result, options, isFetch) {
+        value: function _requestSuccess(result, _ref2) {
+          var append = _ref2.append,
+              isSubmit = _ref2.isSubmit;
           this.fetched = true;
-          isFetch && (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "update", this).call(this, (0, _objectSpread2.default)({
+          if (isSubmit) return;
+          (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "update", this).call(this, (0, _objectSpread2.default)({
             fetching: false
           }, result), {
-            append: typeof options.append === 'string' ? ".data[".concat(options.append, "]") : options.append ? '.data' : options.append
+            append: typeof append === 'string' ? ".data[".concat(append, "]") : append ? '.data' : append
           }, this.dataExt(true));
         }
       }, {
         key: "_requestError",
-        value: function _requestError(error, options, isFetch) {
-          isFetch && (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "update", this).call(this, {
+        value: function _requestError(error, _ref3) {
+          var isSubmit = _ref3.isSubmit;
+          this.app.render.error(error);
+          if (isSubmit) return;
+          (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "update", this).call(this, {
             fetching: false,
             error: error
           });
-          this.app.render.error(error);
         }
       }, {
-        key: "_request",
-        value: function _request() {
+        key: "_requestWork",
+        value: function _requestWork() {
           var _this2 = this;
 
           var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-          var isFetch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
           if (options.once && this.fetched) {
             this.app.log.info('plugin once');
             return;
           }
 
-          if (!this.app.network || !this.app.network.fetch) throw new Error('plugin error: no dependence network');
+          var fetch = options.request || aoptions.request;
+          if (!fetch) throw new Error('plugin request error: no request');
 
-          this._requestFetching(true, options, isFetch);
+          this._requestFetching(true, options);
 
-          return this.app.network.fetch(options, isFetch).then(function (result) {
-            _this2._requestFetching(false, options, isFetch);
+          return fetch(options, this).then(function (result) {
+            _this2._requestFetching(false, options);
 
             if (!result) return;
-            if (options.onSuccess && options.onSuccess(result.data, result, options, isFetch)) return;
+            if (options.onSuccess && options.onSuccess(result.data, result, options)) return;
             /*let ret =*/
 
-            _this2.app.event.emitSync(_this2, 'onStateWillUpdate', result.data, result, options, isFetch); // if(ret) result = ret;
+            _this2.app.event.emitSync(_this2, 'onStateWillUpdate', result.data, result, options); // if(ret) result = ret;
             // if(ret===false) return;
 
 
-            _this2._requestSuccess(result, options, isFetch);
+            _this2._requestSuccess(result, options);
 
-            _this2.app.event.emitSync(_this2, 'onStateDidUpdate', result.data, result, options, isFetch);
+            _this2.app.event.emitSync(_this2, 'onStateDidUpdate', result.data, result, options);
 
             return result;
           }).catch(function (error) {
-            _this2._requestFetching(false, options, isFetch);
+            _this2._requestFetching(false, options);
 
             if (error === null) return;
             if (options.onError && options.onError(error, options)) return;
 
-            _this2._requestError(error, options, isFetch);
+            _this2._requestError(error, options);
 
-            _this2.app.event.emit(_this2, 'onStateError', error, options, isFetch);
+            _this2.app.event.emit(_this2, 'onStateError', error, options);
           });
         }
       }, {
         key: "fetch",
         value: function fetch(options) {
-          return this._request(this.app.utils.getOptions(this.options, options));
+          return this._requestWork(this.app.utils.getOptions(this.options, options));
+        }
+      }, {
+        key: "submit",
+        value: function submit(options) {
+          return this._requestWork(this.app.utils.getOptions(this.options, options, {
+            isSubmit: true
+          }));
         }
       }, {
         key: "update",
@@ -139,7 +160,7 @@ function getClass(app) {
         key: "data",
         value: function data() {
           var data = (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "data", this).call(this);
-          return !data.error && data.data ? data.data : this.options.initialization !== undefined ? this.options.initialization : {};
+          return !data.error && data.data ? data.data : this.options._initialization !== undefined ? this.options._initialization : {};
         }
       }, {
         key: "dataExt",
@@ -150,13 +171,12 @@ function getClass(app) {
       return Request;
     }(app.State)
   );
-}
+};
 
-var _default = function _default(app) {
-  var Request = getClass(app);
+var _default = function _default(app, options) {
+  var Request = getClass(app, options);
   return {
     _id: 'request',
-    _dependencies: ['network'],
     onPluginMount: function onPluginMount(app, plugin) {
       app.Request = Request;
       app.request = plugin;

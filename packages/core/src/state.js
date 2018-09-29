@@ -67,7 +67,7 @@ export default class State {
 
     options = this.app.utils.getOptions(this.options, options);
     let prevData = this.data();
-    let nextData = isRealData?data:this.app.utils.objectUpdate(prevData, data, options.append);
+    let nextData = isRealData?{...prevData,...data}:this.app.utils.objectUpdate(prevData, data, options.append);
 
     let ret = await this.app.event.emitSync(this._id, 'onStateUpdating', nextData, prevData, data, options); 
     nextData = ret||nextData;

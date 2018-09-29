@@ -34,10 +34,16 @@ let InfiniteScroll = (aprops)=>{
   );
 }
 
+let triggerTimer;
+
 InfiniteScroll._handleScrollPosChange = (target, event, {isLoading, onLoading})=>{
-  if(isLoading||!onLoading) return;
+  if(isLoading||!onLoading||triggerTimer) return;
   let distance = Math.abs(target.scrollTop+target.clientHeight-target.scrollHeight);
-  if(distance<35) onLoading();
+  
+  if(distance<35) {
+    triggerTimer = setTimeout(()=>{triggerTimer=null}, 100);
+    onLoading();
+  }
 }
 
 

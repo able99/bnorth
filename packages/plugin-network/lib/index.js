@@ -7,6 +7,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+require("core-js/modules/es6.promise");
+
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -18,8 +20,7 @@ var _axios = _interopRequireDefault(require("axios"));
 var Network =
 /*#__PURE__*/
 function () {
-  function Network(app, _id) {
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  function Network(app, _id, options) {
     (0, _classCallCheck2.default)(this, Network);
     this.app = app;
     this._id = _id;
@@ -28,31 +29,28 @@ function () {
 
   (0, _createClass2.default)(Network, [{
     key: "fetch",
-    value: function fetch() {
-      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var isFetch = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-      var cancelTokenCB = arguments.length > 2 ? arguments[2] : undefined;
-      app = this.app;
-      options = this.app.utils.getOptions(this.options, options);
+    value: function fetch(options, request) {
+      var app = this.app;
+      options = app.utils.getOptions(this.options, options);
       return (0, _axios.default)((0, _objectSpread2.default)({
         url: options.apiUrl + options.url,
         baseURL: options.baseUrl,
-        method: options.getRequestMethod(app, isFetch),
-        headers: (0, _objectSpread2.default)({}, options.getRequestHeaders(app, isFetch), {
-          "Content-Type": options.getRequestContentType(app, isFetch)
+        method: options.getRequestMethod(app),
+        headers: (0, _objectSpread2.default)({}, options.getRequestHeaders(app), {
+          "Content-Type": options.getRequestContentType(app)
         }),
-        params: options.getRequestParams(app, isFetch),
+        params: options.getRequestParams(app),
         timeout: options.timeout,
         responseType: options.responseType,
-        data: options.getRequestData(app, isFetch),
-        cancelToken: cancelTokenCB ? new CancelToken(function (cancel) {
-          return cancelTokenCB(cancel);
-        }) : undefined
+        data: options.getRequestData(app),
+        cancelToken: options.getCancelCB && new _axios.default.CancelToken(function (cancel) {
+          return options.getCancelCB(cancel);
+        })
       }, options.options || {})).then(function (result) {
-        result = options.getResponseData(app, isFetch, result);
-        return options.handleResponse(app, isFetch, result);
+        result = options.getResponseData(app, result);
+        return options.handleResponse(app, result);
       }, function (error) {
-        return error.response ? options.handleStatusError(app, isFetch, error) : options.handleError(app, isFetch, error);
+        return error.response ? options.handleStatusError(app, error) : options.handleError(app, error);
       });
     }
   }]);
@@ -65,7 +63,7 @@ Network.Options = {
   url: '',
   // timeout: 1000*60,
   // responseType: '',
-  handleStatusError: function handleStatusError(app, isFetch, data) {
+  handleStatusError: function handleStatusError(app, data) {
     switch (data && data.response && data.response.status) {
       case 401:
         this.app.user && this.app.user.toLogin(null, true);
@@ -75,40 +73,44 @@ Network.Options = {
         return Promise.reject(data);
     }
   },
-  handleError: function handleError(app, isFetch, data) {
+  handleError: function handleError(app, data) {
     return Promise.reject(data);
   },
-  handleResponse: function handleResponse(app, isFetch, data) {
+  handleResponse: function handleResponse(app, data) {
     return data;
   },
-  getRequestHeaders: function getRequestHeaders(app, isFetch, data) {
+  getRequestHeaders: function getRequestHeaders(app, data) {
     return this.headers || {};
   },
-  getRequestParams: function getRequestParams(app, isFetch, data) {
+  getRequestParams: function getRequestParams(app, data) {
     return this.params || {};
   },
-  getRequestContentType: function getRequestContentType(app, isFetch, data) {
+  getRequestContentType: function getRequestContentType(app, data) {
     return this.contentType;
   },
-  getRequestMethod: function getRequestMethod(app, isFetch, data) {
-    return this.method || (isFetch ? 'GET' : 'POST');
+  getRequestMethod: function getRequestMethod(app, data) {
+    return this.method || (!this.isSubmit ? 'GET' : 'POST');
   },
-  getRequestData: function getRequestData(app, isFetch, data) {
+  getRequestData: function getRequestData(app, data) {
     return (typeof this.data === 'function' ? this.data() : this.data) || {};
   },
-  getResponseData: function getResponseData(app, isFetch, data) {
+  getResponseData: function getResponseData(app, data) {
     return data;
   }
 };
-var _default = {
-  _id: 'network',
-  onPluginMount: function onPluginMount(app, plugin, options) {
-    app.Network = Network;
-    app.network = new Network(app, plugin._id, options);
-  },
-  onPluginUnmount: function onPluginUnmount(app) {
-    delete app.Network;
-    delete app.network;
-  }
+
+var _default = function _default(app, options) {
+  return {
+    _id: 'network',
+    onPluginMount: function onPluginMount(app, plugin) {
+      app.Network = Network;
+      app.network = new Network(app, plugin._id, options);
+    },
+    onPluginUnmount: function onPluginUnmount(app) {
+      delete app.Network;
+      delete app.network;
+    }
+  };
 };
+
 exports.default = _default;

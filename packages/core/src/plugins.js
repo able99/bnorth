@@ -9,10 +9,10 @@ export default class Plugins {
     this._plugins = [];
   }
 
-  _checkPlugin(plugin) {
+  _checkPlugin(plugin, ...args) {
     this.app.log.info('plugin check');
     if(!plugin) return;
-    if(plugin instanceof Function) plugin = plugin(this.app);
+    if(plugin instanceof Function) plugin = plugin(this.app, ...args);
     
     plugin._id = '>' + (plugin._id?plugin._id:('anonymous'+(++this._idNum)));
     if(!plugin._dependencies) plugin._dependencies = [];
@@ -41,7 +41,7 @@ export default class Plugins {
   }
 
   add(plugin, ...args) {
-    plugin = this._checkPlugin(plugin);
+    plugin = this._checkPlugin(plugin, ...args);
     if(!plugin) return;
     let app = this.app;
     let _id = plugin._id;
@@ -66,7 +66,7 @@ export default class Plugins {
       }
     })
 
-    app.event.emitSync(_id, 'onPluginMount', app, plugin, ...args);
+    app.event.emitSync(_id, 'onPluginMount', app, plugin);
     app.event.emit(app._id, 'onPluginAdd', plugin);
   }
 

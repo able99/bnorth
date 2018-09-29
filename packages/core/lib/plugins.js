@@ -54,7 +54,12 @@ function () {
 
       this.app.log.info('plugin check');
       if (!plugin) return;
-      if (plugin instanceof Function) plugin = plugin(this.app);
+
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      if (plugin instanceof Function) plugin = plugin.apply(void 0, [this.app].concat(args));
       plugin._id = '>' + (plugin._id ? plugin._id : 'anonymous' + ++this._idNum);
       if (!plugin._dependencies) plugin._dependencies = [];
 
@@ -129,9 +134,11 @@ function () {
   }, {
     key: "add",
     value: function add(plugin) {
-      var _app$event;
+      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
 
-      plugin = this._checkPlugin(plugin);
+      plugin = this._checkPlugin.apply(this, [plugin].concat(args));
       if (!plugin) return;
       var app = this.app;
       var _id = plugin._id;
@@ -168,13 +175,7 @@ function () {
           }, _idState);
         }
       });
-
-      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-      }
-
-      (_app$event = app.event).emitSync.apply(_app$event, [_id, 'onPluginMount', app, plugin].concat(args));
-
+      app.event.emitSync(_id, 'onPluginMount', app, plugin);
       app.event.emit(app._id, 'onPluginAdd', plugin);
     }
   }, {

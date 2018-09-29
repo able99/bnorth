@@ -13,6 +13,8 @@ require("regenerator-runtime/runtime");
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 require("core-js/modules/es6.array.iterator");
@@ -115,9 +117,17 @@ function () {
       return this.app.utils.pathGet(data, path);
     }
   }, {
+    key: "_update",
+    value: function _update(data, init) {
+      this.app.log.info('state _update', data, init);
+      var nextData = init ? data : (0, _objectSpread2.default)({}, this.data(), data);
+      this.app.context.set(this._id, nextData);
+      return true;
+    }
+  }, {
     key: "update",
     value: function () {
-      var _update = (0, _asyncToGenerator2.default)(
+      var _update2 = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
       _regenerator.default.mark(function _callee(data, options, isRealData) {
         var prevData, nextData, ret;
@@ -128,7 +138,7 @@ function () {
                 this.app.log.info('state update', data, options);
                 options = this.app.utils.getOptions(this.options, options);
                 prevData = this.data();
-                nextData = isRealData ? data : this.app.utils.objectUpdate(prevData, data, options.append);
+                nextData = isRealData ? (0, _objectSpread2.default)({}, prevData, data) : this.app.utils.objectUpdate(prevData, data, options.append);
                 _context.next = 6;
                 return this.app.event.emitSync(this._id, 'onStateUpdating', nextData, prevData, data, options);
 
@@ -148,7 +158,7 @@ function () {
       }));
 
       return function update(_x, _x2, _x3) {
-        return _update.apply(this, arguments);
+        return _update2.apply(this, arguments);
       };
     }()
   }, {

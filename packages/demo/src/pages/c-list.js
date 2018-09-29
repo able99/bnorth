@@ -18,7 +18,7 @@ let Component = aprops=>{
           isLoading={stateData.isLoading} >
           <List>
             <List.Item part='header'>header</List.Item>
-            {Array(stateList.count).fill(0).map((v,i)=>(
+            {stateList.map(i=>(
               <List.Item name="aaa"
                 title={'title'+i} media={'media'+i} subTitle={'subTitle'+i} desc={'desc'+i} after={'after'+i} 
                 onClick={()=>alert(i)} 
@@ -37,17 +37,12 @@ let Component = aprops=>{
 };
 
 Component.controller = (app,page)=>({
-  stateList: {
-    initialization: {count: 20},
-    fetch({append}) {
-      app.loading.show();
-      setTimeout(()=>{
-        let count = this.data().count||0;
-        this.update({count: (append?count:0)+20});
-        app.loading.close();
-      },1000);
-    }
-  }
+  stateList: {state: app.Request, initialization: [], request: ({append}, request)=>(new Promise((resolve, reject)=>{
+    setTimeout(()=>{
+      let count = append?request.data().length:0;
+      resolve({ data: Array.from({length:20},(v,k)=>k+count) });
+    }, 1000);
+  }))},
 })
 
 

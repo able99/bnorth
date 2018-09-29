@@ -2,33 +2,33 @@ import axios from 'axios';
 
 
 class Network {
-  constructor(app, _id, options={}) {
+  constructor(app, _id, options) {
     this.app = app;
     this._id = _id;
     this.options = {...Network.Options, ...options};
   }
 
-  fetch(options={}, isFetch=true, cancelTokenCB){
+  fetch(options, request){
     let app = this.app;
-    options = this.app.utils.getOptions(this.options, options);
+    options = app.utils.getOptions(this.options, options);
 
     return axios({
       url: options.apiUrl + options.url,
       baseURL: options.baseUrl,
-      method: options.getRequestMethod(app, isFetch),
-      headers: { ...options.getRequestHeaders(app, isFetch), "Content-Type":options.getRequestContentType(app, isFetch) },
-      params: options.getRequestParams(app, isFetch),
+      method: options.getRequestMethod(app),
+      headers: { ...options.getRequestHeaders(app), "Content-Type":options.getRequestContentType(app) },
+      params: options.getRequestParams(app),
       timeout: options.timeout,
       responseType: options.responseType,
-      data: options.getRequestData(app, isFetch),
-      cancelToken: cancelTokenCB?new CancelToken(cancel=>cancelTokenCB(cancel)):undefined,
+      data: options.getRequestData(app),
+      cancelToken: options.getCancelCB&&new axios.CancelToken(cancel=>options.getCancelCB(cancel)),
       ...(options.options||{})
     })
     .then(result=>{
-      result = options.getResponseData(app, isFetch, result);
-      return options.handleResponse(app, isFetch, result);
+      result = options.getResponseData(app, result);
+      return options.handleResponse(app, result);
     },error=>{
-      return error.response?options.handleStatusError(app, isFetch, error):options.handleError(app, isFetch, error);
+      return error.response?options.handleStatusError(app, error):options.handleError(app, error);
     })
   }
 }
@@ -42,7 +42,7 @@ Network.Options = {
   // responseType: '',
 
 
-  handleStatusError(app, isFetch, data) {
+  handleStatusError(app, data) {
     switch(data&&data.response&&data.response.status){
       case 401:
         this.app.user&&this.app.user.toLogin(null, true);
@@ -52,46 +52,46 @@ Network.Options = {
     }
   },
 
-  handleError(app, isFetch, data) {
+  handleError(app, data) {
     return Promise.reject(data);
   },
 
-  handleResponse(app, isFetch, data) {
+  handleResponse(app, data) {
     return data;
   },
 
   
-  getRequestHeaders(app, isFetch, data) {
+  getRequestHeaders(app, data) {
     return this.headers||{};
   },
 
-  getRequestParams(app, isFetch, data) {
+  getRequestParams(app, data) {
     return this.params||{};
   },
 
-  getRequestContentType(app, isFetch, data){
+  getRequestContentType(app, data){
     return this.contentType;
   },
 
-  getRequestMethod(app, isFetch, data) {
-    return this.method||(isFetch?'GET':'POST');
+  getRequestMethod(app, data) {
+    return this.method||(!this.isSubmit?'GET':'POST');
   },
 
-  getRequestData(app, isFetch, data) {
+  getRequestData(app, data) {
     return (typeof this.data==='function'?this.data():this.data)||{};
   },
 
   
-  getResponseData(app, isFetch, data){
+  getResponseData(app, data){
     return data;
   },
 }
 
 
-export default {
+export default (app, options)=>({
   _id: 'network',
 
-  onPluginMount: (app,plugin,options)=>{
+  onPluginMount: (app,plugin)=>{
     app.Network = Network;
     app.network = new Network(app, plugin._id, options);
   },
@@ -100,4 +100,4 @@ export default {
     delete app.Network;
     delete app.network;
   },
-}
+})

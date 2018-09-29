@@ -1,100 +1,107 @@
-function getClass(app) {
-  return class Request extends app.State {
-    constructor(app, options={}) {
-      super(app, options);
-      this.fetched = false;
-      
-      app.event.on(this._id, 'onStateStart', (page)=>{this.options.fetchOnStart&&this.fetch()}, this._id);
-      app.event.on(this._id, 'onStateActive', (page, onStart)=>{this.options.fetchOnActive&&(!onStart)&&this.fetch()}, this._id);
-    }
-
-    _requestFetching(fetching, {loading, mask, noNotice, noLoadingMask}, isFetch) {
-      loading && this.app.render.loading(fetching);
-      mask && this.app.render.mask(fetching);
-      (!loading&&!mask) && !noLoadingMask && (isFetch?this.app.render.loading(fetching):this.app.render.mask(fetching));
-
-      isFetch&&super.update({ 
-        fetching: fetching 
-      },{
-        append: true,
-      }, this.dataExt(true));
-    }
-
-    _requestSuccess(result, options, isFetch){
-      this.fetched = true;
-      isFetch&&super.update({ 
-        fetching: false,
-        ...result,
-      }, {
-        append: typeof(options.append)==='string'?(`.data[${options.append}]`):(options.append?'.data':options.append),
-      }, this.dataExt(true));
-    };
-
-    _requestError(error, options, isFetch) {
-      isFetch&&super.update({ 
-        fetching: false,
-        error,
-      });
-
-      this.app.render.error(error);
-    }
-
-    _request(options={}, isFetch=true) {
-      if(options.once&&this.fetched) { this.app.log.info('plugin once'); return}
-      if(!this.app.network||!this.app.network.fetch) throw new Error('plugin error: no dependence network');
-
-      this._requestFetching(true, options, isFetch);
-
-      return this.app.network.fetch(options, isFetch)
-        .then(result=>{
-          this._requestFetching(false, options, isFetch);
-          if(!result) return;
-
-          if(options.onSuccess&&options.onSuccess(result.data, result, options, isFetch)) return;
-          /*let ret =*/ this.app.event.emitSync(this, 'onStateWillUpdate', result.data, result, options, isFetch);
-          // if(ret) result = ret;
-          // if(ret===false) return;
+let getClass = (app, aoptions={})=>class Request extends app.State {
+  constructor(app, options={}) {
+    super(app, options);
+    options._initialization = options.initialization;
+    options.initialization = {};
+    this.fetched = false;
     
-          this._requestSuccess(result, options, isFetch);
-          this.app.event.emitSync(this, 'onStateDidUpdate', result.data, result, options, isFetch);
-          return result;
-        })
-        .catch(error=>{
-          this._requestFetching(false, options, isFetch);
-          if(error===null) return;
+    app.event.on(this._id, 'onStateStart', (page)=>{this.options.fetchOnStart&&this.fetch()}, this._id);
+    app.event.on(this._id, 'onStateActive', (page, onStart)=>{this.options.fetchOnActive&&(!onStart)&&this.fetch()}, this._id);
+  }
 
-          if(options.onError&&options.onError(error, options)) return;
-          this._requestError(error, options, isFetch);
-          this.app.event.emit(this, 'onStateError', error, options, isFetch);
-        });    
-    }
+  _requestFetching(fetching, {loading, mask, noNotice, noLoadingMask, isSubmit}) {
+    loading && this.app.render.loading(fetching);
+    mask && this.app.render.mask(fetching);
+    (!loading&&!mask) && !noLoadingMask && (!isSubmit?this.app.render.loading(fetching):this.app.render.mask(fetching));
 
-    fetch(options) {
-      return this._request(this.app.utils.getOptions(this.options, options));
-    }
+    if(isSubmit) return;
+    // console.log(1111, this.dataExt(true))
+    // super.update({fetching: fetching}, {append: true},true);
+    // console.log(2222, this.dataExt(true))
+    let a = this.dataExt(true);
+    console.log(11111111,a);
+    a.fetching=fetching;
+    this.app.context.set(this._id, a);
+    a = this.dataExt(true);
+    console.log(2222222,a);
+  }
 
-    update(data, onlyData=true) {
-      return super.update(onlyData?{data}:data);
-    }
+  _requestSuccess(result, {append, isSubmit}){
+    this.fetched = true;
 
-    data() {
-      let data = super.data();
-      return (!data.error && data.data)?data.data:(this.options.initialization!==undefined?this.options.initialization:{});
-    }
+    if(isSubmit) return;
+    super.update(
+      { fetching: false, ...result, }, 
+      { append: typeof(append)==='string'?(`.data[${append}]`):(append?'.data':append), }, 
+      this.dataExt(true),
+    );
+  };
 
-    dataExt(force) {
-      if(force||this.options.trackState) return super.data();
-    }
+  _requestError(error, {isSubmit}) {
+    this.app.render.error(error);
+    if(isSubmit) return;
+    super.update({fetching: false, error});
+  }
+
+  _requestWork(options={}) {
+    if(options.once&&this.fetched) { this.app.log.info('plugin once'); return }
+    let fetch = options.request||aoptions.request;
+    if(!fetch) throw new Error('plugin request error: no request');
+
+    this._requestFetching(true, options);
+
+    return fetch(options, this)
+      .then(result=>{
+        this._requestFetching(false, options);
+        if(!result) return;
+
+        if(options.onSuccess&&options.onSuccess(result.data, result, options)) return;
+        /*let ret =*/ this.app.event.emitSync(this, 'onStateWillUpdate', result.data, result, options);
+        // if(ret) result = ret;
+        // if(ret===false) return;
+  
+        this._requestSuccess(result, options);
+        this.app.event.emitSync(this, 'onStateDidUpdate', result.data, result, options);
+        return result;
+      })
+      .catch(error=>{
+        this._requestFetching(false, options);
+        if(error===null) return;
+
+        if(options.onError&&options.onError(error, options)) return;
+        this._requestError(error, options);
+        this.app.event.emit(this, 'onStateError', error, options);
+      });    
+  }
+
+  fetch(options) {
+    return this._requestWork(this.app.utils.getOptions(this.options, options));
+  }
+
+  submit(options) {
+    return this._requestWork(this.app.utils.getOptions(this.options, options, {isSubmit: true}));
+  }
+
+  update(data, onlyData=true) {
+    return super.update(onlyData?{data}:data);
+  }
+
+  data() {
+    let data = super.data();
+    return (!data.error && data.data)?data.data:(this.options._initialization!==undefined?this.options._initialization:{});
+  }
+
+  dataExt(force) {
+    if(force||this.options.trackState) return super.data();
   }
 }
 
 
-export default app=>{
-  let Request = getClass(app);
-  
+export default (app, options)=>{
+  let Request = getClass(app, options);
+
   return {
     _id: 'request',
-    _dependencies: ['network'],
 
     onPluginMount(app, plugin) {
       app.Request = Request;

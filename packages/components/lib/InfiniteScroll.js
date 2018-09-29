@@ -55,12 +55,20 @@ var InfiniteScroll = function InfiniteScroll(aprops) {
   }, props), children ? children : _react.default.createElement(ComponentLoader, loaderProps), children ? children : _react.default.createElement(ComponentTitle, titleProps)));
 };
 
+var triggerTimer;
+
 InfiniteScroll._handleScrollPosChange = function (target, event, _ref) {
   var isLoading = _ref.isLoading,
       onLoading = _ref.onLoading;
-  if (isLoading || !onLoading) return;
+  if (isLoading || !onLoading || triggerTimer) return;
   var distance = Math.abs(target.scrollTop + target.clientHeight - target.scrollHeight);
-  if (distance < 35) onLoading();
+
+  if (distance < 35) {
+    triggerTimer = setTimeout(function () {
+      triggerTimer = null;
+    }, 100);
+    onLoading();
+  }
 };
 
 var _default = InfiniteScroll;
