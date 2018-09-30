@@ -56,11 +56,11 @@ export default class Plugins {
       } else if(k.startsWith('on')) {
         app.event.on(app._id,k,v,_id);
       } else if(k.startsWith('state')) {
-        let {state=app.State, ...stateOptions} = v||{};
-        let _idState = stateOptions._id||app.State.genStateId(k, _id);
-        stateOptions._id = _idState;
-        plugin[k] = new state(app, stateOptions); 
+        plugin[k] = app.State.createState(app, v, k, _id);
+        if(!plugin[k]) { app.render.panic(v, {title: 'no state'}); return } 
+        if(typeof v==='string') return;
 
+        let _idState = plugin[k]._id;
         app.event.on(_id, 'onPluginMount', (app)=>{app.event.emit(_idState, 'onStateStart', _idState, false)}, _idState);
         app.event.on(_id, 'onPluginUnmount', (app)=>{app.event.emit(_idState, 'onStateStop', _idState)}, _idState);
       }

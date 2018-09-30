@@ -10,30 +10,35 @@ export default {
 
   onPluginMount(app) {
     app.modal = {
-      _createContent: (_id, Content)=>(typeof Content==='function'?app.context.consumerHoc(()=>(
-        <Content 
-          modalId={_id}
-          modalClose={()=>app.modal.close(_id)}
-          modalData={app.context.data(_id)||{}} 
-          modalUpdate={state=>app.context.update(_id, state)} />
-      )):Content),
+      _createContent: (_id, Content, state)=>(typeof Content==='function'?app.context.consumerHoc(()=>{
+        return (
+          <Content 
+            modalId={_id}
+            modalClose={()=>app.modal.close(_id)}
+            modalStateData={state&&state.data()} 
+            modalStateDataExt={state&&state.extData()} 
+            modalState={state} />
+        )
+      }):Content),
 
-      show: (Content, { onAction, options={}, ...props}={})=>{
+      show: (Content, { onAction, options={}, state, ...props}={})=>{
         if(!Content) return;
 
         let _id = app.router.getViewId(options);
+        state = state&&app.State.createState(app, state===true?undefined:state, 'state', _id);
+
         options._id = _id;
         options.isModal = true; 
         options.onAdd = _id=>app.keyboard.on(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id));
         options.onRemove = _id=>app.keyboard.off(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id));
         props.in = true;
-        props.handleAction = index=>(!onAction || onAction( index, app.context.data(_id)||{}, ()=>app.modal.close(_id), _id)!==false) && app.modal.close(_id);
-        props.children = app.modal._createContent(_id, Content);
+        props.handleAction = index=>(!onAction || onAction( index, state, ()=>app.modal.close(_id), _id)!==false) && app.modal.close(_id);
+        props.children = app.modal._createContent(_id, Content, state);
 
         return app.router.addView(<Modal /> , props, options);
       },
 
-      update: (_id, Content, { options={}, ...props}={})=>{
+      update: (_id, Content, { options={}, state, ...props}={})=>{
         if(!_id) return;
         let {content, prevProps={}, options:prevOptions={}} = app.router.getView(_id)||{};
         if(!content) return;
@@ -41,7 +46,7 @@ export default {
         props = {
           ...prevProps,
           ...props,
-          children: app.modal._createContent(_id, Content),
+          children: app.modal._createContent(_id, Content, state),
         }
         options = {
           ...prevOptions,

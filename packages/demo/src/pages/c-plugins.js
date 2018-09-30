@@ -86,18 +86,20 @@ let Component = aprops=>{
           <List.Item 
             title="state" 
             onClick={()=>app.modal.show(
-              ({modalData, modalUpdate})=>(
+              ({modalId, modalState, modalStateData})=>(
                 <div>
-                  <div>{modalData.input||'no input'}</div>
-                  <input onChange={e=>modalUpdate({input: e.target.value})} value={modalData.input}/>
+                  <strong>modalId: {modalId}</strong>
+                  <div>input: {modalStateData&&modalStateData.input}</div>
+                  <input className="border-set-a-" onChange={e=>modalState.update({input: e.target.value})} value={(modalStateData&&modalStateData.input)||''}/>
                 </div>
               ),{
                 role: 'prompt',
-                onAction: (index, data, close)=>{
+                state: true,
+                onAction: (index, state, close)=>{
                   if(index<=0) return;
-                  if(!data.input) {app.render.error('请输入'); return false;}
+                  if(!state||!state.data().input) {app.render.error('请输入'); return false;}
                   close();
-                  app.render.notice('输入:'+data.input);
+                  app.render.notice('输入:'+state.data().input);
                 }
               })
             } />

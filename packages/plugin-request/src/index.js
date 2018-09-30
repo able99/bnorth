@@ -1,6 +1,6 @@
 let getClass = (app, aoptions={})=>class Request extends app.State {
-  constructor(app, options={}) {
-    super(app, options);
+  constructor(app, _id, options) {
+    super(app, _id, options);
     this.fetched = false;
     
     app.event.on(this._id, 'onStateStart', (page)=>{this.options.fetchOnStart&&this.fetch()}, this._id);

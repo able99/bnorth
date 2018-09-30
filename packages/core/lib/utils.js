@@ -7,6 +7,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+require("core-js/modules/es7.array.includes");
+
+require("core-js/modules/es6.string.includes");
+
 require("core-js/modules/web.dom.iterable");
 
 require("core-js/modules/es6.array.iterator");
@@ -61,6 +65,7 @@ function () {
     value: function pathSet(data, path, val) {
       path = this._checkPath(path);
       if (!path) return false;
+      /* eslint-disable no-eval*/
 
       try {
         eval("data".concat(path, "=val"));
@@ -75,6 +80,7 @@ function () {
     value: function pathGet(data, path) {
       path = this._checkPath(path);
       if (!path) return false;
+      /* eslint-disable no-eval*/
 
       try {
         return eval("data".concat(path));
@@ -143,39 +149,24 @@ function () {
       }
 
       return obj;
-    }
-  }, {
-    key: "is",
-    value: function is(x, y) {
-      if (x === y) {
-        //排除 +0 == -0
-        return x !== 0 || y !== 0 || 1 / x === 1 / y;
-      } else {
-        return x !== x && y !== y;
-      }
-    }
+    } // compare
+    // --------------------------
+
   }, {
     key: "shallowEqual",
     value: function shallowEqual(objA, objB) {
-      if (this.is(objA, objB)) {
-        return true;
-      }
-
-      if ((0, _typeof2.default)(objA) !== 'object' || objA === null || (0, _typeof2.default)(objB) !== 'object' || objB === null) {
-        return false;
-      }
-
+      var checkEqualProps = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+      if (objA === objB) return true;
+      if ((0, _typeof2.default)(objA) !== 'object' || objA === null || (0, _typeof2.default)(objB) !== 'object' || objB === null) return false;
       var keysA = Object.keys(objA);
       var keysB = Object.keys(objB);
+      if (keysA.length !== keysB.length) return false;
 
-      if (keysA.length !== keysB.length) {
-        return false;
-      }
+      for (var _i = 0; _i < keysA.length; _i++) {
+        var key = keysA[_i];
 
-      for (var i = 0; i < keysA.length; i++) {
-        if (keysA[i] === 'context') continue;
-
-        if (!hasOwnProperty.call(objB, keysA[i]) || !this.is(objA[keysA[i]], objB[keysA[i]])) {
+        if (!objB.hasOwnProperty(key) || (checkEqualProps.includes(key) ? !this.shallowEqual(objA[key], objB[key]) : objA[key] !== objB[key])) {
+          console.log("shallowEqual: ", key);
           return false;
         }
       }

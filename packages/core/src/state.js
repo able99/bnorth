@@ -16,26 +16,34 @@ export default class State {
     return State.get(this.genStateId(stateId, ownerId));
   }
 
+  static createState(app, aoptions, sid, ownerId) {
+    if(typeof aoptions==='string') {
+      return app.State.get(aoptions);
+    }
+    
+    let {state, ...options} = aoptions||{state: app.State};
+    let _id = options._id||State.genStateId(sid, ownerId);
+    let {constructor=app.State, ...props} = ((typeof state)==='object')?state:{constructor: state};
+
+    if(State.states[_id]) { 
+      app.log.error('state _id dup:', _id); 
+      State.states[_id].destructor(); 
+    }
+
+    return State.states[_id] = Object.assign(new constructor(app, _id, options), props); 
+  }
+
   // constructor
   // ---------------
-  constructor(app, options={}) {
-    app.log.info('state create', options._id);
-    if(State.states[options._id]) { app.log.error('state _id dup:', options._id); return State.states[options._id]; }
-    State.states[options._id] = this;
+  constructor(app, _id, options={}) {
+    app.log.info('state constructor', _id);
 
     this.app = app;
-    this._id = options._id;
+    this._id = _id;
     this.options = options;
     if(this.options.initialization===undefined) this.options.initialization = {};
     
-    Object.entries(this.options).forEach(([k,v])=>{
-      if(k.indexOf('onState')===0){
-        this.app.event.on(this._id, k, v, this._id)
-      }else{
-        //this[k] = v;
-      }
-    })
-    
+    Object.entries(this.options).forEach(([k,v])=>k.indexOf('onState')===0&&this.app.event.on(this._id, k, v, this._id));
     this.app.event.on(this._id, 'onStateStop', ()=>{this.destructor()}, this._id);
   }
 

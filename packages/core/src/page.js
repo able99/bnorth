@@ -56,19 +56,13 @@ export default class Page extends React.Component {
 
     Object.entries(controllerObj).forEach(([k,v])=>{
       if(k.startsWith('state')||k.startsWith('_state')) {
-        // state
-        if(typeof v==='string'){
-          let state = app.State.get(v);
-          state?(this[k]=state):(app.render.panic(v, {title: 'no state'}))
-        }else{
-          let {state=app.State, ...stateOptions} = v||{};
-          stateOptions._id = stateOptions._id||app.State.genStateId(k, this._id);
-          this[k] = new state(app, stateOptions); 
-          app.event.on(this._id, 'onPageStart', (page,active)=>{app.event.emit(this[k]._id, 'onStateStart', this[k]._id, active)}, this[k]._id);
-          app.event.on(this._id, 'onPageActive', (page,onStart)=>{app.event.emit(this[k]._id, 'onStateActive', this[k]._id, onStart)}, this[k]._id);
-          app.event.on(this._id, 'onPageInactive', (page,onStop)=>{app.event.emit(this[k]._id, 'onStateInactive', this[k]._id, onStop)}, this[k]._id);
-          app.event.on(this._id, 'onPageStop', (page)=>{app.event.emit(this[k]._id, 'onStateStop', this[k]._id)}, this[k]._id);
-        }
+        this[k] = app.State.createState(app, v, k, this._id);
+        if(!this[k]) { app.render.panic(v, {title: 'no state'}); return } 
+        if(typeof v==='string') return;
+        app.event.on(this._id, 'onPageStart', (page,active)=>{app.event.emit(this[k]._id, 'onStateStart', this[k]._id, active)}, this[k]._id);
+        app.event.on(this._id, 'onPageActive', (page,onStart)=>{app.event.emit(this[k]._id, 'onStateActive', this[k]._id, onStart)}, this[k]._id);
+        app.event.on(this._id, 'onPageInactive', (page,onStop)=>{app.event.emit(this[k]._id, 'onStateInactive', this[k]._id, onStop)}, this[k]._id);
+        app.event.on(this._id, 'onPageStop', (page)=>{app.event.emit(this[k]._id, 'onStateStop', this[k]._id)}, this[k]._id);
       }
     });
 
@@ -156,10 +150,10 @@ export default class Page extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (!this.props.app.utils.shallowEqual(this.props, nextProps)) return true;
-    for(let k of this._getStateKeys()){
-      if(!this.props.app.utils.is(this.props.context[k], nextProps.context[k])) return true;
-    }
+    if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query'])) return true;
+    // if (!this.props.app.utils.shallowEqual(this.props.views, nextProps.views)) return true;
+    // if (!this.props.app.utils.shallowEqual(this.props.embeds, nextProps.embeds)) return true;
+    for(let k of this._getStateKeys()) if(this.props.context[k]!==nextProps.context[k]) return true;
     return false;
   }
 

@@ -18,12 +18,14 @@ export default class Utils {
 
   pathSet(data, path, val) {
     path = this._checkPath(path); if(!path) return false;
+    /* eslint-disable no-eval*/
     try{ eval(`data${path}=val`) } catch(e) { return false }
     return true;
   }
 
   pathGet(data, path) {
     path = this._checkPath(path); if(!path) return false;
+    /* eslint-disable no-eval*/
     try{ return eval(`data${path}`) } catch(e) { return }
   }
 
@@ -84,37 +86,20 @@ export default class Utils {
     return obj;
   }
 
-
-  is(x, y) {
-    if (x === y) {
-      //排除 +0 == -0
-      return x !== 0 || y !== 0 || 1 / x === 1 / y;
-    } else {
-      return x !== x && y !== y;
-    }
-  }
-
-  shallowEqual(objA, objB) {
-    if (this.is(objA, objB)) {
-      return true;
-    }
-  
-    if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
+  // compare
+  // --------------------------
+  shallowEqual(objA, objB, checkEqualProps=[]) {
+    if (objA===objB) return true;
+    if (typeof objA!=='object' || objA===null || typeof objB!=='object' || objB===null) return false;
+    let keysA = Object.keys(objA);
+    let keysB = Object.keys(objB);
+    if (keysA.length!==keysB.length) return false;
+    
+    for(let key of keysA) if( !objB.hasOwnProperty(key) || 
+      (checkEqualProps.includes(key)?!this.shallowEqual(objA[key], objB[key]):objA[key]!==objB[key])
+    ){
+      console.log("shallowEqual: ",key);
       return false;
-    }
-  
-    var keysA = Object.keys(objA);
-    var keysB = Object.keys(objB);
-  
-    if (keysA.length !== keysB.length) {
-      return false;
-    }
-  
-    for (var i = 0; i < keysA.length; i++) {
-      if (keysA[i]==='context') continue;
-      if (!hasOwnProperty.call(objB, keysA[i]) || !this.is(objA[keysA[i]], objB[keysA[i]])) {
-        return false;
-      }
     }
   
     return true;

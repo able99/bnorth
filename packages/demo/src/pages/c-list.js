@@ -7,14 +7,15 @@ import BackTop from '@bnorth/components/lib/BackTop';
 
 
 let Component = aprops=>{
-  let { page, stateData, stateList, stateListExt } = aprops;
-// console.log(stateListExt);
+  let { app, page, stateData, stateList, stateListExt } = aprops;
+  app.log.debug('page: c-list',stateData,stateList,stateListExt);
+
   return (
     <View>
       <Panel main>
         <Panel.PullRefresh 
           bc-height-full bc-scrollable-y- 
-          onLoad={()=>page.fetch(null, true)}
+          onLoad={()=>page.stateList.fetch(null)}
           isLoading={stateListExt.fetching} >
           <List>
             {stateList.length?<List.Item part='header'>header</List.Item>:null}
@@ -30,7 +31,7 @@ let Component = aprops=>{
           <InfiniteScroll
             disabled={!stateList.length||(stateList.length%stateData.pageSize)}
             isLoading={stateListExt.fetching}  
-            onLoading={()=>page.fetch(null)}  />
+            onLoading={()=>page.stateList.fetch(null, true)}  />
         </Panel.PullRefresh>
       </Panel>
     </View>
@@ -47,24 +48,24 @@ Component.controller = (app,page)=>({
   },
 
   stateList: {
-    state: app.Request, 
+    state: {
+      constructor: app.Request, 
+      fetch: (data, more)=>{
+        let stateData = page.stateData.data();
+        page.stateData.update({pageStart: !more?0:(stateData.pageStart+stateData.pageSize),...data})
+          .then(()=>app.Request.prototype.fetch.apply(page.stateList, [{append: more}]))
+      },
+    },
     initialization: [], fetchOnStart: true, trackState: true, 
     data: ()=>page.stateData.data(),
     request: ({data, append}, request)=>{
       data = data();
-      console.log(data);
       return new Promise((resolve, reject)=>{
         setTimeout(()=>{
           resolve({ data: Array.from({length:data.pageStart<120?20:8},(v,k)=>k+data.pageStart) });
         }, 2000);
       });
     },
-  },
-
-  fetch: (data, refresh)=>{
-    let stateData = page.stateData.data();
-    page.stateData.update({pageStart: refresh?0:(stateData.pageStart+stateData.pageSize),...data})
-      .then(()=>page.stateList.fetch({append: !refresh}))
   },
 })
 

@@ -9,8 +9,6 @@ exports.default = void 0;
 
 require("core-js/modules/es6.array.find-index");
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
-
 require("core-js/modules/es6.string.starts-with");
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
@@ -158,15 +156,17 @@ function () {
         } else if (k.startsWith('on')) {
           app.event.on(app._id, k, v, _id);
         } else if (k.startsWith('state')) {
-          var _ref3 = v || {},
-              _ref3$state = _ref3.state,
-              state = _ref3$state === void 0 ? app.State : _ref3$state,
-              stateOptions = (0, _objectWithoutProperties2.default)(_ref3, ["state"]);
+          plugin[k] = app.State.createState(app, v, k, _id);
 
-          var _idState = stateOptions._id || app.State.genStateId(k, _id);
+          if (!plugin[k]) {
+            app.render.panic(v, {
+              title: 'no state'
+            });
+            return;
+          }
 
-          stateOptions._id = _idState;
-          plugin[k] = new state(app, stateOptions);
+          if (typeof v === 'string') return;
+          var _idState = plugin[k]._id;
           app.event.on(_id, 'onPluginMount', function (app) {
             app.event.emit(_idState, 'onStateStart', _idState, false);
           }, _idState);

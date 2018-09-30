@@ -54,8 +54,7 @@ let Modal = aprops=>{
             {children}
           </Modal._Body>
           <Modal._Footer 
-            footerButtonProps={footerButtonProps} 
-            footButtonGetStyle={footButtonGetStyle} footButtonGetClassName={footButtonGetClassName} footButtonGetProps={footButtonGetProps}
+            itemProps={footerButtonProps} itemGetStyle={footButtonGetStyle} itemGetClassName={footButtonGetClassName} itemGetProps={footButtonGetProps}
             role={role} handleAction={handleAction} {...footerProps} />
         </Component>
       )}
@@ -171,7 +170,7 @@ Modal._Footer =  aprops=>{
     role, handleAction,
     footerButtons=Modal._footerButtons[aprops.role]||[],
     itemProps={}, itemGetClassName=Modal._Footer.itemGetClassName, itemGetStyle=Modal._Footer.itemGetStyle, itemGetProps=Modal._Footer.itemGetProps,
-    component:Component=Button.Group, className, children, ...props 
+    component:Component=Button.Group, componentItem=Button, className, children, ...props 
   } = genCommonProps(aprops);
   if(!footerButtons.length) return null;
 
@@ -184,7 +183,7 @@ Modal._Footer =  aprops=>{
       type="justify" 
       containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={cxm(classStr, className)} {...props}>
-      {footerButtons.map((v,i)=><Component.Item key={i}>{v}</Component.Item>)}
+      {footerButtons.map((v,i)=><componentItem key={i}>{v}</componentItem>)}
     </Component>
   );
 }

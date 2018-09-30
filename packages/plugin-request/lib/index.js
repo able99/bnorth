@@ -26,12 +26,11 @@ var getClass = function getClass(app) {
     function (_app$State) {
       (0, _inherits2.default)(Request, _app$State);
 
-      function Request(app) {
+      function Request(app, _id, options) {
         var _this;
 
-        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         (0, _classCallCheck2.default)(this, Request);
-        _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Request).call(this, app, options));
+        _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Request).call(this, app, _id, options));
         _this.fetched = false;
         app.event.on(_this._id, 'onStateStart', function (page) {
           _this.options.fetchOnStart && _this.fetch();

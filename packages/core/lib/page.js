@@ -15,13 +15,13 @@ require("core-js/modules/es6.object.keys");
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+
 require("core-js/modules/es7.symbol.async-iterator");
 
 require("core-js/modules/es6.symbol");
 
 require("core-js/modules/es6.regexp.split");
-
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 require("core-js/modules/es6.string.starts-with");
 
@@ -132,39 +132,34 @@ function (_React$Component) {
             v = _ref2[1];
 
         if (k.startsWith('state') || k.startsWith('_state')) {
-          // state
-          if (typeof v === 'string') {
-            var state = app.State.get(v);
-            state ? _this3[k] = state : app.render.panic(v, {
+          _this3[k] = app.State.createState(app, v, k, _this3._id);
+
+          if (!_this3[k]) {
+            app.render.panic(v, {
               title: 'no state'
             });
-          } else {
-            var _ref3 = v || {},
-                _ref3$state = _ref3.state,
-                _state = _ref3$state === void 0 ? app.State : _ref3$state,
-                stateOptions = (0, _objectWithoutProperties2.default)(_ref3, ["state"]);
-
-            stateOptions._id = stateOptions._id || app.State.genStateId(k, _this3._id);
-            _this3[k] = new _state(app, stateOptions);
-            app.event.on(_this3._id, 'onPageStart', function (page, active) {
-              app.event.emit(_this3[k]._id, 'onStateStart', _this3[k]._id, active);
-            }, _this3[k]._id);
-            app.event.on(_this3._id, 'onPageActive', function (page, onStart) {
-              app.event.emit(_this3[k]._id, 'onStateActive', _this3[k]._id, onStart);
-            }, _this3[k]._id);
-            app.event.on(_this3._id, 'onPageInactive', function (page, onStop) {
-              app.event.emit(_this3[k]._id, 'onStateInactive', _this3[k]._id, onStop);
-            }, _this3[k]._id);
-            app.event.on(_this3._id, 'onPageStop', function (page) {
-              app.event.emit(_this3[k]._id, 'onStateStop', _this3[k]._id);
-            }, _this3[k]._id);
+            return;
           }
+
+          if (typeof v === 'string') return;
+          app.event.on(_this3._id, 'onPageStart', function (page, active) {
+            app.event.emit(_this3[k]._id, 'onStateStart', _this3[k]._id, active);
+          }, _this3[k]._id);
+          app.event.on(_this3._id, 'onPageActive', function (page, onStart) {
+            app.event.emit(_this3[k]._id, 'onStateActive', _this3[k]._id, onStart);
+          }, _this3[k]._id);
+          app.event.on(_this3._id, 'onPageInactive', function (page, onStop) {
+            app.event.emit(_this3[k]._id, 'onStateInactive', _this3[k]._id, onStop);
+          }, _this3[k]._id);
+          app.event.on(_this3._id, 'onPageStop', function (page) {
+            app.event.emit(_this3[k]._id, 'onStateStop', _this3[k]._id);
+          }, _this3[k]._id);
         }
       });
-      Object.entries(controllerObj).forEach(function (_ref4) {
-        var _ref5 = (0, _slicedToArray2.default)(_ref4, 2),
-            k = _ref5[0],
-            v = _ref5[1];
+      Object.entries(controllerObj).forEach(function (_ref3) {
+        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+            k = _ref4[0],
+            v = _ref4[1];
 
         if (k.startsWith('state') || k.startsWith('_state')) {// state
         } else if (k === 'onPageAdd' || k === 'onPageRemove') {
@@ -192,16 +187,16 @@ function (_React$Component) {
   }, {
     key: "_getStateKeys",
     value: function _getStateKeys() {
-      return Object.entries(this).filter(function (_ref6) {
-        var _ref7 = (0, _slicedToArray2.default)(_ref6, 2),
-            k = _ref7[0],
-            v = _ref7[1];
+      return Object.entries(this).filter(function (_ref5) {
+        var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
+            k = _ref6[0],
+            v = _ref6[1];
 
         return k.startsWith('_state') || k.startsWith('state') && k !== 'state';
-      }).map(function (_ref8) {
-        var _ref9 = (0, _slicedToArray2.default)(_ref8, 2),
-            k = _ref9[0],
-            v = _ref9[1];
+      }).map(function (_ref7) {
+        var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
+            k = _ref8[0],
+            v = _ref8[1];
 
         return v._id;
       });
@@ -210,16 +205,16 @@ function (_React$Component) {
     key: "_getStateObjs",
     value: function _getStateObjs() {
       var ret = {};
-      Object.entries(this).filter(function (_ref10) {
-        var _ref11 = (0, _slicedToArray2.default)(_ref10, 2),
-            k = _ref11[0],
-            v = _ref11[1];
+      Object.entries(this).filter(function (_ref9) {
+        var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
+            k = _ref10[0],
+            v = _ref10[1];
 
         return k.startsWith('_state') || k.startsWith('state') && k !== 'state';
-      }).forEach(function (_ref12) {
-        var _ref13 = (0, _slicedToArray2.default)(_ref12, 2),
-            k = _ref13[0],
-            v = _ref13[1];
+      }).forEach(function (_ref11) {
+        var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
+            k = _ref12[0],
+            v = _ref12[1];
 
         ret[k] = v.data();
         var extData = v.extData();
@@ -282,7 +277,9 @@ function (_React$Component) {
   }, {
     key: "shouldComponentUpdate",
     value: function shouldComponentUpdate(nextProps, nextState) {
-      if (!this.props.app.utils.shallowEqual(this.props, nextProps)) return true;
+      if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query'])) return true; // if (!this.props.app.utils.shallowEqual(this.props.views, nextProps.views)) return true;
+      // if (!this.props.app.utils.shallowEqual(this.props.embeds, nextProps.embeds)) return true;
+
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -290,7 +287,7 @@ function (_React$Component) {
       try {
         for (var _iterator = this._getStateKeys()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var k = _step.value;
-          if (!this.props.app.utils.is(this.props.context[k], nextProps.context[k])) return true;
+          if (this.props.context[k] !== nextProps.context[k]) return true;
         }
       } catch (err) {
         _didIteratorError = true;

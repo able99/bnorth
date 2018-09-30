@@ -21,6 +21,12 @@ require("core-js/modules/es7.object.entries");
 
 require("core-js/modules/web.dom.iterable");
 
+require("core-js/modules/es6.object.assign");
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -47,37 +53,57 @@ function () {
     key: "getState",
     value: function getState(stateId, ownerId) {
       return State.get(this.genStateId(stateId, ownerId));
+    }
+  }, {
+    key: "createState",
+    value: function createState(app, aoptions, sid, ownerId) {
+      if (typeof aoptions === 'string') {
+        return app.State.get(aoptions);
+      }
+
+      var _ref = aoptions || {
+        state: app.State
+      },
+          state = _ref.state,
+          options = (0, _objectWithoutProperties2.default)(_ref, ["state"]);
+
+      var _id = options._id || State.genStateId(sid, ownerId);
+
+      var _ref2 = (0, _typeof2.default)(state) === 'object' ? state : {
+        constructor: state
+      },
+          _ref2$constructor = _ref2.constructor,
+          constructor = _ref2$constructor === void 0 ? app.State : _ref2$constructor,
+          props = (0, _objectWithoutProperties2.default)(_ref2, ["constructor"]);
+
+      if (State.states[_id]) {
+        app.log.error('state _id dup:', _id);
+
+        State.states[_id].destructor();
+      }
+
+      return State.states[_id] = Object.assign(new constructor(app, _id, options), props);
     } // constructor
     // ---------------
 
   }]);
 
-  function State(app) {
+  function State(app, _id) {
     var _this = this;
 
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     (0, _classCallCheck2.default)(this, State);
-    app.log.info('state create', options._id);
-
-    if (State.states[options._id]) {
-      app.log.error('state _id dup:', options._id);
-      return State.states[options._id];
-    }
-
-    State.states[options._id] = this;
+    app.log.info('state constructor', _id);
     this.app = app;
-    this._id = options._id;
+    this._id = _id;
     this.options = options;
     if (this.options.initialization === undefined) this.options.initialization = {};
-    Object.entries(this.options).forEach(function (_ref) {
-      var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-          k = _ref2[0],
-          v = _ref2[1];
+    Object.entries(this.options).forEach(function (_ref3) {
+      var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+          k = _ref4[0],
+          v = _ref4[1];
 
-      if (k.indexOf('onState') === 0) {
-        _this.app.event.on(_this._id, k, v, _this._id);
-      } else {//this[k] = v;
-      }
+      return k.indexOf('onState') === 0 && _this.app.event.on(_this._id, k, v, _this._id);
     });
     this.app.event.on(this._id, 'onStateStop', function () {
       _this.destructor();

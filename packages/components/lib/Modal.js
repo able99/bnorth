@@ -85,10 +85,10 @@ var Modal = function Modal(aprops) {
   }, headerProps)), _react.default.createElement(Modal._Body, (0, _extends2.default)({
     role: role
   }, bodyProps), children), _react.default.createElement(Modal._Footer, (0, _extends2.default)({
-    footerButtonProps: footerButtonProps,
-    footButtonGetStyle: footButtonGetStyle,
-    footButtonGetClassName: footButtonGetClassName,
-    footButtonGetProps: footButtonGetProps,
+    itemProps: footerButtonProps,
+    itemGetStyle: footButtonGetStyle,
+    itemGetClassName: footButtonGetClassName,
+    itemGetProps: footButtonGetProps,
     role: role,
     handleAction: handleAction
   }, footerProps))));
@@ -234,9 +234,11 @@ Modal._Footer = function (aprops) {
       itemGetProps = _genCommonProps8$item4 === void 0 ? Modal._Footer.itemGetProps : _genCommonProps8$item4,
       _genCommonProps8$comp = _genCommonProps8.component,
       Component = _genCommonProps8$comp === void 0 ? _Button.default.Group : _genCommonProps8$comp,
+      _genCommonProps8$comp2 = _genCommonProps8.componentItem,
+      componentItem = _genCommonProps8$comp2 === void 0 ? _Button.default : _genCommonProps8$comp2,
       className = _genCommonProps8.className,
       children = _genCommonProps8.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps8, ["role", "handleAction", "footerButtons", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps8, ["role", "handleAction", "footerButtons", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "componentItem", "className", "children"]);
 
   if (!footerButtons.length) return null;
   var classStr = 'border-set-top-';
@@ -250,7 +252,7 @@ Modal._Footer = function (aprops) {
     itemGetProps: itemGetProps,
     className: (0, _props.cxm)(classStr, className)
   }, props), footerButtons.map(function (v, i) {
-    return _react.default.createElement(Component.Item, {
+    return _react.default.createElement("componentItem", {
       key: i
     }, v);
   }));
