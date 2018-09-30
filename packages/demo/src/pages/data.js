@@ -67,7 +67,7 @@ let Controller = app=>({
   stateEvent: { },
   onStateUpdated_stateEvent: (data, prevData)=>{app.notice.show(`${JSON.stringify(prevData)}->${JSON.stringify(data)}`)},
 
-  stateNetwork: {state: app.Request, fetchOnStart: true,},
+  stateNetwork: {state: app.Request, append: false, fetchOnStart: true,},
 
   stateValidate: {state: app.Validate, initialization: {a: 1}, rules: {a: 'required'} },
 });

@@ -32,7 +32,7 @@ export default class State {
       if(k.indexOf('onState')===0){
         this.app.event.on(this._id, k, v, this._id)
       }else{
-        this[k] = v;
+        //this[k] = v;
       }
     })
     
@@ -46,40 +46,42 @@ export default class State {
     if(this._id!==true && this.options.removeOnStop!==false) delete State.states[this._id];
   }
 
+  // clean
+  // -------------------
   clear() {
     this.app.log.info('state clear');
     return this.app.context.clear(this._id);
   }
 
-  data() {
-    return this.app.context.data(this._id, this.options.initialization, this.options.deepCopy);
-  }
+  // state
+  // -------------------
+  stateData() { return this.app.utils.objectCopy(this.app.context.data(this._id, {})) }
+  stateUpdate(data) { this.app.context.update(this._id, data) }
+  stateSet(data) { this.app.context.set(this._id, data) }
+  stateDelete(did) { this.app.context.delete(this._id, did) }
 
-  dataExt() {}
+  // data
+  // -------------------
+  data() {
+    return this.app.utils.objectCopy(this.stateData().data||this.options.initialization, this.options.deepCopy)
+  }
 
   get(path='') {
     let data = this.data()
     return this.app.utils.pathGet(data, path);
   }
 
-  async update(data, options, isRealData) {
+  async update(data, options) {
     this.app.log.info('state update', data, options);
 
     options = this.app.utils.getOptions(this.options, options);
     let prevData = this.data();
-    let nextData = isRealData?{...prevData,...data}:this.app.utils.objectUpdate(prevData, data, options.append);
+    let nextData = this.app.utils.objectUpdate(prevData, data, options.append);
 
-    let ret = await this.app.event.emitSync(this._id, 'onStateUpdating', nextData, prevData, data, options); 
-    nextData = ret||nextData;
-
-    this.app.context.set(this._id, nextData);
+    nextData = await this.app.event.emitSync(this._id, 'onStateUpdating', nextData, prevData, data, options) || nextData; 
+    this.app.context.update(this._id, {data:nextData});
     this.app.event.emit(this._id, 'onStateUpdated', nextData, prevData, data, options);
-    return true;
-  }
-
-  async delete(_did) {
-    let data = this.app.utils.objectDelete(this.data(), _did);
-    return await this.update(data, {}, true);
+    return nextData;
   }
   
   async set(path='', val, input) {
@@ -87,4 +89,13 @@ export default class State {
     if(!this.app.utils.pathSet(data, path, val)) return false;
     return await this.update(data, {path, input});
   }
+
+  async delete(_did) {
+    let data = this.app.utils.objectDelete(this.data(), _did);
+    return await this.update(data, {}, true);
+  }
+
+  // ext
+  // -------------------
+  extData() {}
 }

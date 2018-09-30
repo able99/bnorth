@@ -13,8 +13,6 @@ require("regenerator-runtime/runtime");
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 require("core-js/modules/es6.array.iterator");
@@ -78,8 +76,7 @@ function () {
 
       if (k.indexOf('onState') === 0) {
         _this.app.event.on(_this._id, k, v, _this._id);
-      } else {
-        _this[k] = v;
+      } else {//this[k] = v;
       }
     });
     this.app.event.on(this._id, 'onStateStop', function () {
@@ -94,21 +91,44 @@ function () {
       this.app.event.off(this._id);
       if (this.options.cleanOnStop !== false) this.clear();
       if (this._id !== true && this.options.removeOnStop !== false) delete State.states[this._id];
-    }
+    } // clean
+    // -------------------
+
   }, {
     key: "clear",
     value: function clear() {
       this.app.log.info('state clear');
       return this.app.context.clear(this._id);
+    } // state
+    // -------------------
+
+  }, {
+    key: "stateData",
+    value: function stateData() {
+      return this.app.utils.objectCopy(this.app.context.data(this._id, {}));
     }
+  }, {
+    key: "stateUpdate",
+    value: function stateUpdate(data) {
+      this.app.context.update(this._id, data);
+    }
+  }, {
+    key: "stateSet",
+    value: function stateSet(data) {
+      this.app.context.set(this._id, data);
+    }
+  }, {
+    key: "stateDelete",
+    value: function stateDelete(did) {
+      this.app.context.delete(this._id, did);
+    } // data
+    // -------------------
+
   }, {
     key: "data",
     value: function data() {
-      return this.app.context.data(this._id, this.options.initialization, this.options.deepCopy);
+      return this.app.utils.objectCopy(this.stateData().data || this.options.initialization, this.options.deepCopy);
     }
-  }, {
-    key: "dataExt",
-    value: function dataExt() {}
   }, {
     key: "get",
     value: function get() {
@@ -117,20 +137,12 @@ function () {
       return this.app.utils.pathGet(data, path);
     }
   }, {
-    key: "_update",
-    value: function _update(data, init) {
-      this.app.log.info('state _update', data, init);
-      var nextData = init ? data : (0, _objectSpread2.default)({}, this.data(), data);
-      this.app.context.set(this._id, nextData);
-      return true;
-    }
-  }, {
     key: "update",
     value: function () {
-      var _update2 = (0, _asyncToGenerator2.default)(
+      var _update = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
-      _regenerator.default.mark(function _callee(data, options, isRealData) {
-        var prevData, nextData, ret;
+      _regenerator.default.mark(function _callee(data, options) {
+        var prevData, nextData;
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -138,18 +150,29 @@ function () {
                 this.app.log.info('state update', data, options);
                 options = this.app.utils.getOptions(this.options, options);
                 prevData = this.data();
-                nextData = isRealData ? (0, _objectSpread2.default)({}, prevData, data) : this.app.utils.objectUpdate(prevData, data, options.append);
+                nextData = this.app.utils.objectUpdate(prevData, data, options.append);
                 _context.next = 6;
                 return this.app.event.emitSync(this._id, 'onStateUpdating', nextData, prevData, data, options);
 
               case 6:
-                ret = _context.sent;
-                nextData = ret || nextData;
-                this.app.context.set(this._id, nextData);
-                this.app.event.emit(this._id, 'onStateUpdated', nextData, prevData, data, options);
-                return _context.abrupt("return", true);
+                _context.t0 = _context.sent;
 
-              case 11:
+                if (_context.t0) {
+                  _context.next = 9;
+                  break;
+                }
+
+                _context.t0 = nextData;
+
+              case 9:
+                nextData = _context.t0;
+                this.app.context.update(this._id, {
+                  data: nextData
+                });
+                this.app.event.emit(this._id, 'onStateUpdated', nextData, prevData, data, options);
+                return _context.abrupt("return", nextData);
+
+              case 13:
               case "end":
                 return _context.stop();
             }
@@ -157,38 +180,8 @@ function () {
         }, _callee, this);
       }));
 
-      return function update(_x, _x2, _x3) {
-        return _update2.apply(this, arguments);
-      };
-    }()
-  }, {
-    key: "delete",
-    value: function () {
-      var _delete2 = (0, _asyncToGenerator2.default)(
-      /*#__PURE__*/
-      _regenerator.default.mark(function _callee2(_did) {
-        var data;
-        return _regenerator.default.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                data = this.app.utils.objectDelete(this.data(), _did);
-                _context2.next = 3;
-                return this.update(data, {}, true);
-
-              case 3:
-                return _context2.abrupt("return", _context2.sent);
-
-              case 4:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      return function _delete(_x4) {
-        return _delete2.apply(this, arguments);
+      return function update(_x, _x2) {
+        return _update.apply(this, arguments);
       };
     }()
   }, {
@@ -196,39 +189,69 @@ function () {
     value: function () {
       var _set = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
-      _regenerator.default.mark(function _callee3() {
+      _regenerator.default.mark(function _callee2() {
         var path,
             val,
             input,
             data,
-            _args3 = arguments;
-        return _regenerator.default.wrap(function _callee3$(_context3) {
+            _args2 = arguments;
+        return _regenerator.default.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                path = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : '';
-                val = _args3.length > 1 ? _args3[1] : undefined;
-                input = _args3.length > 2 ? _args3[2] : undefined;
+                path = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : '';
+                val = _args2.length > 1 ? _args2[1] : undefined;
+                input = _args2.length > 2 ? _args2[2] : undefined;
                 data = this.data();
 
                 if (this.app.utils.pathSet(data, path, val)) {
-                  _context3.next = 6;
+                  _context2.next = 6;
                   break;
                 }
 
-                return _context3.abrupt("return", false);
+                return _context2.abrupt("return", false);
 
               case 6:
-                _context3.next = 8;
+                _context2.next = 8;
                 return this.update(data, {
                   path: path,
                   input: input
                 });
 
               case 8:
-                return _context3.abrupt("return", _context3.sent);
+                return _context2.abrupt("return", _context2.sent);
 
               case 9:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      return function set() {
+        return _set.apply(this, arguments);
+      };
+    }()
+  }, {
+    key: "delete",
+    value: function () {
+      var _delete2 = (0, _asyncToGenerator2.default)(
+      /*#__PURE__*/
+      _regenerator.default.mark(function _callee3(_did) {
+        var data;
+        return _regenerator.default.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                data = this.app.utils.objectDelete(this.data(), _did);
+                _context3.next = 3;
+                return this.update(data, {}, true);
+
+              case 3:
+                return _context3.abrupt("return", _context3.sent);
+
+              case 4:
               case "end":
                 return _context3.stop();
             }
@@ -236,10 +259,15 @@ function () {
         }, _callee3, this);
       }));
 
-      return function set() {
-        return _set.apply(this, arguments);
+      return function _delete(_x3) {
+        return _delete2.apply(this, arguments);
       };
-    }()
+    }() // ext
+    // -------------------
+
+  }, {
+    key: "extData",
+    value: function extData() {}
   }]);
   return State;
 }();

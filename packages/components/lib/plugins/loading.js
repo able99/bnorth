@@ -72,6 +72,7 @@ var _default = {
             timeout = _ref2$options$timeout === void 0 ? 10000 : _ref2$options$timeout,
             options = (0, _objectWithoutProperties2.default)(_ref2$options, ["timeout"]),
             props = (0, _objectWithoutProperties2.default)(_ref2, ["options"]);
+        console.log(1111111111111111);
 
         if (app.loading._timerClose) {
           clearTimeout(app.loading._timerClose);

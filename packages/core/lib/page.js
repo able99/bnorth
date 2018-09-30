@@ -222,8 +222,8 @@ function (_React$Component) {
             v = _ref13[1];
 
         ret[k] = v.data();
-        var dataExt = v.dataExt();
-        if (dataExt) ret["".concat(k, "Ext")] = dataExt;
+        var extData = v.extData();
+        if (extData) ret["".concat(k, "Ext")] = extData;
       });
       return ret;
     } // page life circle

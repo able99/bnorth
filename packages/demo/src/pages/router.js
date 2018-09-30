@@ -12,17 +12,17 @@ export default props=>{
       <Panel main>
         <NavBar>
           <NavBar.Item icon="left" iconProps={{nameDefault: '<'}} onClick={()=>app.router.back()} />
-          <NavBar.Title>Plugins</NavBar.Title>
+          <NavBar.Title>Router</NavBar.Title>
         </NavBar>
-        <List>
+        <List bc-margin-bottom->
           <List.Item title="dynamic" onClick={()=>app.router.push('dynamic')} />
         </List>
-        <List className="margin-top">
+        <List bc-margin-bottom->
           <List.Item title="require:param1" after="p1" onClick={()=>app.router.push(['require_param', 'p1'])} />
           <List.Item title="require:param1" after="p1, p2" onClick={()=>app.router.push(['require_param', 'p1', 'p2'])} />
           <List.Item title="require:param1" after="none" onClick={()=>app.router.push('require_param')} />
         </List>
-        <List className="margin-top">
+        <List bc-margin-bottom->
           <List.Item title="option_param:param1?" after="p1" onClick={()=>app.router.push(['option_param', 'p1'])} />
           <List.Item title="option_param:param1?" after="p1, p2" onClick={()=>app.router.push(['option_param', 'p1', 'p2'])} />
           <List.Item title="option_param:param1?" after="none" onClick={()=>app.router.push('option_param')} />

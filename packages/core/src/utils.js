@@ -43,19 +43,19 @@ export default class Utils {
 
   // object op
   // --------------------------
-  objectCopy(obj, deep) {
+  objectCopy(obj, deep) { // :TODO depp copy
     if(!obj) return obj;
     return Array.isArray(obj)?[...obj]:(typeof obj==='object'?{...obj}:obj);
   }
 
   objectUpdate(obj, data, append) {
     if(Array.isArray(data)) {
-      data = [...(append?obj:[]),...data];
+      data = [...(append&&obj?obj:[]),...data];
     }else if(typeof data==='object'){
       if(typeof append==='string'){
         let appendObj = this.app.utils.pathGet(obj, append);
         let appendData = this.app.utils.pathGet(data, append);
-        let appends = this.app.utiles.objectUpdate(appendObj, appendData, true);
+        let appends = this.app.utils.objectUpdate(appendObj, appendData, true);
         data = {...obj, ...data};
         this.app.utils.pathSet(data, append, appends)
       }else if(append===true||append===undefined){

@@ -102,6 +102,7 @@ function () {
   }, {
     key: "objectCopy",
     value: function objectCopy(obj, deep) {
+      // :TODO depp copy
       if (!obj) return obj;
       return Array.isArray(obj) ? (0, _toConsumableArray2.default)(obj) : (0, _typeof2.default)(obj) === 'object' ? (0, _objectSpread2.default)({}, obj) : obj;
     }
@@ -109,12 +110,12 @@ function () {
     key: "objectUpdate",
     value: function objectUpdate(obj, data, append) {
       if (Array.isArray(data)) {
-        data = (0, _toConsumableArray2.default)(append ? obj : []).concat((0, _toConsumableArray2.default)(data));
+        data = (0, _toConsumableArray2.default)(append && obj ? obj : []).concat((0, _toConsumableArray2.default)(data));
       } else if ((0, _typeof2.default)(data) === 'object') {
         if (typeof append === 'string') {
           var appendObj = this.app.utils.pathGet(obj, append);
           var appendData = this.app.utils.pathGet(data, append);
-          var appends = this.app.utiles.objectUpdate(appendObj, appendData, true);
+          var appends = this.app.utils.objectUpdate(appendObj, appendData, true);
           data = (0, _objectSpread2.default)({}, obj, data);
           this.app.utils.pathSet(data, append, appends);
         } else if (append === true || append === undefined) {

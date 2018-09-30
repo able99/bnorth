@@ -12,37 +12,41 @@ import Loader from './Loader';
 import ScrollSpy from './ScrollSpy';
 
 
-let InfiniteScroll = (aprops)=>{
-  let { 
-    disabled, isLoading, onLoading, 
-    componentLoader:ComponentLoader=Loader, loaderProps,
-    componentTitle:ComponentTitle=Panel, titleProps,
-    component:Component=Panel, children, className, ...props 
-  } = genCommonProps(aprops);
-  if(disabled) return null;
+class InfiniteScroll extends React.Component{
+  handleScrollPosChange(target, event) {
+    let { isLoading, onLoading } = this.props;
+    if(isLoading||!onLoading) return;
 
-  let classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center padding-a-';
+    let distance = Math.abs(target.scrollTop+target.clientHeight-target.scrollHeight);
+    
+    if(distance<35){
+      !this.trigger&&onLoading();
+      this.trigger = true;
+    }else {
+      this.trigger = false;
+    }
+  }
+
+  render() {
+    let { 
+      disabled, isLoading, onLoading, 
+      componentLoader:ComponentLoader=Loader, loaderProps,
+      componentTitle:ComponentTitle=Panel, titleProps,
+      component:Component=Panel, children, className, ...props 
+    } = genCommonProps(this.props);
+    if(disabled) return null;
   
-  return (
-    <React.Fragment>
-      <ScrollSpy onScrollPositionChange={(target, event)=>InfiniteScroll._handleScrollPosChange(target, event, aprops)} />
-      <Component className={cxm(classStr, className)} {...props}>
-        {children?children:<ComponentLoader {...loaderProps} />}
-        {children?children:<ComponentTitle {...titleProps} />}
-      </Component>
-    </React.Fragment>
-  );
-}
-
-let triggerTimer;
-
-InfiniteScroll._handleScrollPosChange = (target, event, {isLoading, onLoading})=>{
-  if(isLoading||!onLoading||triggerTimer) return;
-  let distance = Math.abs(target.scrollTop+target.clientHeight-target.scrollHeight);
-  
-  if(distance<35) {
-    triggerTimer = setTimeout(()=>{triggerTimer=null}, 100);
-    onLoading();
+    let classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center padding-a-';
+    
+    return (
+      <React.Fragment>
+        <ScrollSpy onScrollPositionChange={this.handleScrollPosChange.bind(this)} />
+        <Component className={cxm(classStr, className)} {...props}>
+          {children?children:<ComponentLoader {...loaderProps} />}
+          {children?children:<ComponentTitle {...titleProps} />}
+        </Component>
+      </React.Fragment>
+    );
   }
 }
 

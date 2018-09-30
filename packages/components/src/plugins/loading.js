@@ -37,6 +37,7 @@ export default {
         }
       },
       show: ({options:{timeout=10000, ...options}={}, ...props}={})=>{
+        console.log(1111111111111111);
         if(app.loading._timerClose) {
           clearTimeout(app.loading._timerClose);
           app.loading._timerClose = null;

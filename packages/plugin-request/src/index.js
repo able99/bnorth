@@ -1,8 +1,6 @@
 let getClass = (app, aoptions={})=>class Request extends app.State {
   constructor(app, options={}) {
     super(app, options);
-    options._initialization = options.initialization;
-    options.initialization = {};
     this.fetched = false;
     
     app.event.on(this._id, 'onStateStart', (page)=>{this.options.fetchOnStart&&this.fetch()}, this._id);
@@ -14,54 +12,39 @@ let getClass = (app, aoptions={})=>class Request extends app.State {
     mask && this.app.render.mask(fetching);
     (!loading&&!mask) && !noLoadingMask && (!isSubmit?this.app.render.loading(fetching):this.app.render.mask(fetching));
 
-    if(isSubmit) return;
-    // console.log(1111, this.dataExt(true))
-    // super.update({fetching: fetching}, {append: true},true);
-    // console.log(2222, this.dataExt(true))
-    let a = this.dataExt(true);
-    console.log(11111111,a);
-    a.fetching=fetching;
-    this.app.context.set(this._id, a);
-    a = this.dataExt(true);
-    console.log(2222222,a);
+    if(isSubmit||!fetching) return;
+    this.stateUpdate({fetching});
   }
 
   _requestSuccess(result, {append, isSubmit}){
     this.fetched = true;
 
     if(isSubmit) return;
-    super.update(
-      { fetching: false, ...result, }, 
-      { append: typeof(append)==='string'?(`.data[${append}]`):(append?'.data':append), }, 
-      this.dataExt(true),
-    );
+    let data = result.data;
+    delete result.data;
+    result.fetching = false;
+    this.stateUpdate(result);
+    this.update(data, {append});
   };
 
   _requestError(error, {isSubmit}) {
     this.app.render.error(error);
+
     if(isSubmit) return;
-    super.update({fetching: false, error});
+    this.stateUpdate({fetching: false, error});
   }
 
   _requestWork(options={}) {
     if(options.once&&this.fetched) { this.app.log.info('plugin once'); return }
     let fetch = options.request||aoptions.request;
     if(!fetch) throw new Error('plugin request error: no request');
-
     this._requestFetching(true, options);
 
     return fetch(options, this)
-      .then(result=>{
+      .then((result={})=>{
         this._requestFetching(false, options);
-        if(!result) return;
-
         if(options.onSuccess&&options.onSuccess(result.data, result, options)) return;
-        /*let ret =*/ this.app.event.emitSync(this, 'onStateWillUpdate', result.data, result, options);
-        // if(ret) result = ret;
-        // if(ret===false) return;
-  
         this._requestSuccess(result, options);
-        this.app.event.emitSync(this, 'onStateDidUpdate', result.data, result, options);
         return result;
       })
       .catch(error=>{
@@ -82,17 +65,13 @@ let getClass = (app, aoptions={})=>class Request extends app.State {
     return this._requestWork(this.app.utils.getOptions(this.options, options, {isSubmit: true}));
   }
 
-  update(data, onlyData=true) {
-    return super.update(onlyData?{data}:data);
-  }
-
   data() {
-    let data = super.data();
-    return (!data.error && data.data)?data.data:(this.options._initialization!==undefined?this.options._initialization:{});
+    let data = super.stateData();
+    return (!data.error && data.data)?data.data:(this.options.initialization||{});
   }
 
-  dataExt(force) {
-    if(force||this.options.trackState) return super.data();
+  extData() {
+    if(this.options.trackState) return super.stateData();
   }
 }
 

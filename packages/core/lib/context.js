@@ -108,17 +108,17 @@ function () {
       this.app.Page = this.consumerHoc(this.app.Page);
     }
   }, {
-    key: "update",
-    value: function update(_id, data, cb) {
-      var state = this.provider.data();
-      state[_id] = this.app.utils.objectUpdate(state[_id], data);
-      return this.provider.update(state, cb);
-    }
-  }, {
     key: "clear",
     value: function clear(_id, cb) {
       var state = this.provider.data();
       delete state[_id];
+      return this.provider.update(state, cb);
+    }
+  }, {
+    key: "update",
+    value: function update(_id, data, cb) {
+      var state = this.provider.data();
+      state[_id] = this.app.utils.objectUpdate(state[_id], data);
       return this.provider.update(state, cb);
     }
   }, {
@@ -129,8 +129,8 @@ function () {
       return this.provider.update(state, cb);
     }
   }, {
-    key: "del",
-    value: function del(_id, _did, cb) {
+    key: "delete",
+    value: function _delete(_id, _did, cb) {
       var state = this.provider.data();
       state[_id] = this.app.utils.objectDelete(state[_id], _did);
       return this.provider.update(state, cb);

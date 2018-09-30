@@ -111,8 +111,8 @@ export default class Page extends React.Component {
     .filter(([k,v])=>k.startsWith('_state')||(k.startsWith('state')&&k!=='state'))
     .forEach(([k,v])=>{
       ret[k] = v.data();
-      let dataExt = v.dataExt();
-      if(dataExt) ret[`${k}Ext`] = dataExt;
+      let extData = v.extData();
+      if(extData) ret[`${k}Ext`] = extData;
     });
 
     return ret;

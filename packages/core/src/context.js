@@ -53,15 +53,15 @@ export default class Context {
     this.app.Page = this.consumerHoc(this.app.Page);
   }
 
-  update(_id, data, cb) {
-    let state = this.provider.data();
-    state[_id] = this.app.utils.objectUpdate(state[_id], data);
-    return this.provider.update(state, cb);
-  }
-
   clear(_id, cb) {
     let state = this.provider.data();
     delete state[_id];
+    return this.provider.update(state, cb);
+  }
+
+  update(_id, data, cb) {
+    let state = this.provider.data();
+    state[_id] = this.app.utils.objectUpdate(state[_id], data);
     return this.provider.update(state, cb);
   }
 
@@ -71,7 +71,7 @@ export default class Context {
     return this.provider.update(state, cb);
   }
 
-  del(_id, _did, cb) {
+  delete(_id, _did, cb) {
     let state = this.provider.data();
     state[_id] = this.app.utils.objectDelete(state[_id], _did);
     return this.provider.update(state, cb);

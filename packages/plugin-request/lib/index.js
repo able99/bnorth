@@ -7,8 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -34,8 +32,6 @@ var getClass = function getClass(app) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         (0, _classCallCheck2.default)(this, Request);
         _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Request).call(this, app, options));
-        options._initialization = options.initialization;
-        options.initialization = {};
         _this.fetched = false;
         app.event.on(_this._id, 'onStateStart', function (page) {
           _this.options.fetchOnStart && _this.fetch();
@@ -57,16 +53,10 @@ var getClass = function getClass(app) {
           loading && this.app.render.loading(fetching);
           mask && this.app.render.mask(fetching);
           !loading && !mask && !noLoadingMask && (!isSubmit ? this.app.render.loading(fetching) : this.app.render.mask(fetching));
-          if (isSubmit) return; // console.log(1111, this.dataExt(true))
-          // super.update({fetching: fetching}, {append: true},true);
-          // console.log(2222, this.dataExt(true))
-
-          var a = this.dataExt(true);
-          console.log(11111111, a);
-          a.fetching = fetching;
-          this.app.context.set(this._id, a);
-          a = this.dataExt(true);
-          console.log(2222222, a);
+          if (isSubmit || !fetching) return;
+          this.stateUpdate({
+            fetching: fetching
+          });
         }
       }, {
         key: "_requestSuccess",
@@ -75,11 +65,13 @@ var getClass = function getClass(app) {
               isSubmit = _ref2.isSubmit;
           this.fetched = true;
           if (isSubmit) return;
-          (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "update", this).call(this, (0, _objectSpread2.default)({
-            fetching: false
-          }, result), {
-            append: typeof append === 'string' ? ".data[".concat(append, "]") : append ? '.data' : append
-          }, this.dataExt(true));
+          var data = result.data;
+          delete result.data;
+          result.fetching = false;
+          this.stateUpdate(result);
+          this.update(data, {
+            append: append
+          });
         }
       }, {
         key: "_requestError",
@@ -87,7 +79,7 @@ var getClass = function getClass(app) {
           var isSubmit = _ref3.isSubmit;
           this.app.render.error(error);
           if (isSubmit) return;
-          (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "update", this).call(this, {
+          this.stateUpdate({
             fetching: false,
             error: error
           });
@@ -109,20 +101,14 @@ var getClass = function getClass(app) {
 
           this._requestFetching(true, options);
 
-          return fetch(options, this).then(function (result) {
+          return fetch(options, this).then(function () {
+            var result = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
             _this2._requestFetching(false, options);
 
-            if (!result) return;
             if (options.onSuccess && options.onSuccess(result.data, result, options)) return;
-            /*let ret =*/
-
-            _this2.app.event.emitSync(_this2, 'onStateWillUpdate', result.data, result, options); // if(ret) result = ret;
-            // if(ret===false) return;
-
 
             _this2._requestSuccess(result, options);
-
-            _this2.app.event.emitSync(_this2, 'onStateDidUpdate', result.data, result, options);
 
             return result;
           }).catch(function (error) {
@@ -149,23 +135,15 @@ var getClass = function getClass(app) {
           }));
         }
       }, {
-        key: "update",
-        value: function update(data) {
-          var onlyData = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-          return (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "update", this).call(this, onlyData ? {
-            data: data
-          } : data);
-        }
-      }, {
         key: "data",
         value: function data() {
-          var data = (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "data", this).call(this);
-          return !data.error && data.data ? data.data : this.options._initialization !== undefined ? this.options._initialization : {};
+          var data = (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "stateData", this).call(this);
+          return !data.error && data.data ? data.data : this.options.initialization || {};
         }
       }, {
-        key: "dataExt",
-        value: function dataExt(force) {
-          if (force || this.options.trackState) return (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "data", this).call(this);
+        key: "extData",
+        value: function extData() {
+          if (this.options.trackState) return (0, _get2.default)((0, _getPrototypeOf2.default)(Request.prototype), "stateData", this).call(this);
         }
       }]);
       return Request;
