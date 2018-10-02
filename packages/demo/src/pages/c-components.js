@@ -68,8 +68,12 @@ let Component = aprops=>{
         <Group title="Loader" {...groupProps}>
           <Group.Prop>
             <Prop 
-              title="progress" sub="Loader" 
+              title="progress" sub="Loader"
               option={{type: 'range', min: 0, max: 100}} 
+              state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop 
+              title="timeout" sub="Loader" 
+              option={['10s','250ms']} 
               state={page.stateComponentProps} stateData={stateComponentProps}/>
           </Group.Prop>
           <Group.Item title="circle progress">

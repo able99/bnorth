@@ -41,7 +41,7 @@ let PropSel = aprops=>{
 
     componnet = (
       <input 
-        className="width-full"
+        className="width-full" style={{height: 30}}
         onChange={e=>{
           if(!sub) return state.update({[title]: e.target.value});
           let data = stateData[sub]||{};

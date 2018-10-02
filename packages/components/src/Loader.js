@@ -7,11 +7,12 @@
 
 import React from 'react';
 import { genCommonProps, cxm } from './utils/props';
+import { transiton } from '@bnorth/rich.css/lib/styles/animation';
 
  
 let Loader = aprops=>{
   let {
-    type='circle', 
+    type='circle', timeout=aprops.isProgress?'250ms':'2s',
     'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, ...props
   } = genCommonProps(aprops);
 
@@ -22,12 +23,12 @@ let Loader = aprops=>{
   if(bSize) classSet.push('text-size-'+(bSize===true?'':bSize));
   if(bTheme) classSet.push('text-color-'+(bTheme===true?'':bTheme));
 
-  return <Component classSet={classSet} {...props}/>
+  return <Component timeout={timeout} classSet={classSet} {...props}/>
 }
 
 Loader._line = aprops=>{
   let {
-    isProgress, progress=0, timeout='2s', color="currentColor", colorReverse='lightgray',
+    isProgress, progress=0, timeout, color="currentColor", colorReverse='lightgray',
     classSet, className, children, ...props
   } = genCommonProps(aprops);
 
@@ -39,7 +40,7 @@ Loader._line = aprops=>{
         x1="0" y1="2" x2="100" y2="2" strokeWidth="5" stroke={colorReverse} fill="none" />
       <line 
         x1="0" y1="2" x2="100" y2="2" strokeWidth="5" stroke={color} fill="none" 
-        className={isProgress?"transition-set-":null}
+        style={isProgress?transiton(timeout):null}
         strokeDasharray={isProgress?`${progress},100`:'10,100'}>
         {!isProgress?<animate attributeName="stroke-dashoffset" values="0;-90;0" dur={timeout} repeatCount="indefinite" />:null}
       </line>
@@ -63,7 +64,7 @@ Loader._circle = aprops=>{
       <circle 
         cx="50" cy="50" r="40" strokeWidth="20" stroke={color} fill="none" 
         transform="matrix(0,-1,1,0,0,100)" 
-        className={isProgress?"transition-set-":null}
+        style={isProgress?transiton(timeout):null}
         strokeDasharray={isProgress?`${2.51*(progress||0)},251`:"50,251"}>
         {!isProgress?<animate attributeName="stroke-dashoffset" from="0" to="-251" dur={timeout} repeatCount="indefinite" />:null}
       </circle>

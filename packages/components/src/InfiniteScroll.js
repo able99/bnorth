@@ -20,7 +20,7 @@ class InfiniteScroll extends React.Component{
     let distance = Math.abs(target.scrollTop+target.clientHeight-target.scrollHeight);
     
     if(distance<35){
-      !this.trigger&&onLoading();
+      !this.trigger&&Promise.resolve().then(onLoading());
       this.trigger = true;
     }else {
       this.trigger = false;

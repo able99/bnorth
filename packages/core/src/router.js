@@ -52,7 +52,7 @@ class RouterComponent extends React.Component {
     if(route.loader){
       route.loader(app).then(v=>{
         Object.assign(route, v, {loader: null});
-        this._handleRouterUpdate();
+        this.forceUpdate();
       })
       return <Router.PageLoading key={_id} />;
     }else if(typeof route.component==='function'){

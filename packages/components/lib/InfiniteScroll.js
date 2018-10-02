@@ -11,6 +11,8 @@ var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends")
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
+require("core-js/modules/es6.promise");
+
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -57,7 +59,7 @@ function (_React$Component) {
       var distance = Math.abs(target.scrollTop + target.clientHeight - target.scrollHeight);
 
       if (distance < 35) {
-        !this.trigger && onLoading();
+        !this.trigger && Promise.resolve().then(onLoading());
         this.trigger = true;
       } else {
         this.trigger = false;

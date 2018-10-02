@@ -15,6 +15,8 @@ var _react = _interopRequireDefault(require("react"));
 
 var _props = require("./utils/props");
 
+var _animation = require("@bnorth/rich.css/lib/styles/animation");
+
 /**
  * @overview bnorth solution
  * @copyright (c) 2016 able99
@@ -25,10 +27,12 @@ var Loader = function Loader(aprops) {
   var _genCommonProps = (0, _props.genCommonProps)(aprops),
       _genCommonProps$type = _genCommonProps.type,
       type = _genCommonProps$type === void 0 ? 'circle' : _genCommonProps$type,
+      _genCommonProps$timeo = _genCommonProps.timeout,
+      timeout = _genCommonProps$timeo === void 0 ? aprops.isProgress ? '250ms' : '2s' : _genCommonProps$timeo,
       bTheme = _genCommonProps['b-theme'],
       bStyle = _genCommonProps['b-style'],
       bSize = _genCommonProps['b-size'],
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["type", 'b-theme', 'b-style', 'b-size']);
+      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["type", "timeout", 'b-theme', 'b-style', 'b-size']);
 
   var Component = Loader['_' + type];
   if (!Component) return null;
@@ -36,6 +40,7 @@ var Loader = function Loader(aprops) {
   if (bSize) classSet.push('text-size-' + (bSize === true ? '' : bSize));
   if (bTheme) classSet.push('text-color-' + (bTheme === true ? '' : bTheme));
   return _react.default.createElement(Component, (0, _extends2.default)({
+    timeout: timeout,
     classSet: classSet
   }, props));
 };
@@ -45,8 +50,7 @@ Loader._line = function (aprops) {
       isProgress = _genCommonProps2.isProgress,
       _genCommonProps2$prog = _genCommonProps2.progress,
       progress = _genCommonProps2$prog === void 0 ? 0 : _genCommonProps2$prog,
-      _genCommonProps2$time = _genCommonProps2.timeout,
-      timeout = _genCommonProps2$time === void 0 ? '2s' : _genCommonProps2$time,
+      timeout = _genCommonProps2.timeout,
       _genCommonProps2$colo = _genCommonProps2.color,
       color = _genCommonProps2$colo === void 0 ? "currentColor" : _genCommonProps2$colo,
       _genCommonProps2$colo2 = _genCommonProps2.colorReverse,
@@ -77,7 +81,7 @@ Loader._line = function (aprops) {
     strokeWidth: "5",
     stroke: color,
     fill: "none",
-    className: isProgress ? "transition-set-" : null,
+    style: isProgress ? (0, _animation.transiton)(timeout) : null,
     strokeDasharray: isProgress ? "".concat(progress, ",100") : '10,100'
   }, !isProgress ? _react.default.createElement("animate", {
     attributeName: "stroke-dashoffset",
@@ -121,7 +125,7 @@ Loader._circle = function (aprops) {
     stroke: color,
     fill: "none",
     transform: "matrix(0,-1,1,0,0,100)",
-    className: isProgress ? "transition-set-" : null,
+    style: isProgress ? (0, _animation.transiton)(timeout) : null,
     strokeDasharray: isProgress ? "".concat(2.51 * (progress || 0), ",251") : "50,251"
   }, !isProgress ? _react.default.createElement("animate", {
     attributeName: "stroke-dashoffset",

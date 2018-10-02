@@ -170,7 +170,7 @@ function (_React$Component) {
             loader: null
           });
 
-          _this2._handleRouterUpdate();
+          _this2.forceUpdate();
         });
         return _react.default.createElement(Router.PageLoading, {
           key: _id

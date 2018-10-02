@@ -51,10 +51,8 @@ let Component = aprops=>{
             onClick={()=>app.loading.show({'b-theme':'alert'})} />
           <List.Item 
             title="reset" 
-            onClick={()=>app.loading.reset()} />
-          <List.Item 
-            title="full" 
-            onClick={()=>app.loading.full()} />
+            after="set to 60"
+            onClick={()=>app.loading.reset(60)} />
           <List.Item 
             title="close" 
             onClick={()=>app.loading.close()} />

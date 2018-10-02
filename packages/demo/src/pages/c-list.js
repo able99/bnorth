@@ -63,7 +63,7 @@ Component.controller = (app,page)=>({
       return new Promise((resolve, reject)=>{
         setTimeout(()=>{
           resolve({ data: Array.from({length:data.pageStart<120?20:8},(v,k)=>k+data.pageStart) });
-        }, 2000);
+        }, append?3000:1000);
       });
     },
   },
