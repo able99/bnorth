@@ -27,9 +27,9 @@ var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/de
 
 var _react = _interopRequireDefault(require("react"));
 
-var _dom = require("./utils/dom");
+var _props = _interopRequireDefault(require("./utils/props"));
 
-var _props = require("./utils/props");
+var _dom = require("./utils/dom");
 
 var _ScrollSpy = _interopRequireDefault(require("./ScrollSpy"));
 
@@ -105,18 +105,18 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _genCommonProps = (0, _props.genCommonProps)(this.props),
-          onClick = _genCommonProps.onClick,
-          triggerFunc = _genCommonProps.triggerFunc,
-          offset = _genCommonProps.offset,
-          _genCommonProps$iconP = _genCommonProps.iconProps,
-          iconProps = _genCommonProps$iconP === void 0 ? {} : _genCommonProps$iconP,
-          _genCommonProps$scrol = _genCommonProps.scrollSpyProps,
-          scrollSpyProps = _genCommonProps$scrol === void 0 ? {} : _genCommonProps$scrol,
-          _genCommonProps$compo = _genCommonProps.component,
-          Component = _genCommonProps$compo === void 0 ? _Fab.default : _genCommonProps$compo,
-          children = _genCommonProps.children,
-          props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["onClick", "triggerFunc", "offset", "iconProps", "scrollSpyProps", "component", "children"]);
+      var _parseProps = (0, _props.default)(this.props),
+          onClick = _parseProps.onClick,
+          triggerFunc = _parseProps.triggerFunc,
+          offset = _parseProps.offset,
+          _parseProps$iconProps = _parseProps.iconProps,
+          iconProps = _parseProps$iconProps === void 0 ? {} : _parseProps$iconProps,
+          _parseProps$scrollSpy = _parseProps.scrollSpyProps,
+          scrollSpyProps = _parseProps$scrollSpy === void 0 ? {} : _parseProps$scrollSpy,
+          _parseProps$component = _parseProps.component,
+          Component = _parseProps$component === void 0 ? _Fab.default : _parseProps$component,
+          children = _parseProps.children,
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["onClick", "triggerFunc", "offset", "iconProps", "scrollSpyProps", "component", "children"]);
 
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_ScrollSpy.default, (0, _extends2.default)({
         onScrollPositionChange: this._handleScroll.bind(this)

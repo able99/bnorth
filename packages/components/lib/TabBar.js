@@ -13,7 +13,9 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel.Container"));
 
@@ -26,27 +28,27 @@ require("./Panel.Icon");
  * @license MIT
  */
 var TabBar = function TabBar(aprops) {
-  var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      colorUnselected = _genCommonProps.colorUnselected,
-      colorSelectedOnTheme = _genCommonProps.colorSelectedOnTheme,
-      colorUnselectedOnTheme = _genCommonProps.colorUnselectedOnTheme,
-      _genCommonProps$type = _genCommonProps.type,
-      type = _genCommonProps$type === void 0 ? "justify" : _genCommonProps$type,
-      _genCommonProps$itemC = _genCommonProps.itemComponent,
-      itemComponent = _genCommonProps$itemC === void 0 ? _Panel.default.Icon : _genCommonProps$itemC,
-      _genCommonProps$itemP = _genCommonProps.itemProps,
-      itemProps = _genCommonProps$itemP === void 0 ? {} : _genCommonProps$itemP,
-      _genCommonProps$itemG = _genCommonProps.itemGetClassName,
-      itemGetClassName = _genCommonProps$itemG === void 0 ? TabBar.itemGetClassName : _genCommonProps$itemG,
-      _genCommonProps$itemG2 = _genCommonProps.itemGetStyle,
-      itemGetStyle = _genCommonProps$itemG2 === void 0 ? TabBar.itemGetStyle : _genCommonProps$itemG2,
-      _genCommonProps$itemG3 = _genCommonProps.itemGetProps,
-      itemGetProps = _genCommonProps$itemG3 === void 0 ? TabBar.itemGetProps : _genCommonProps$itemG3,
-      _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? _Panel.default.Container : _genCommonProps$compo,
-      className = _genCommonProps.className,
-      children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["colorUnselected", "colorSelectedOnTheme", "colorUnselectedOnTheme", "type", "itemComponent", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
+  var _parseProps = (0, _props.default)(aprops),
+      colorUnselected = _parseProps.colorUnselected,
+      colorSelectedOnTheme = _parseProps.colorSelectedOnTheme,
+      colorUnselectedOnTheme = _parseProps.colorUnselectedOnTheme,
+      _parseProps$type = _parseProps.type,
+      type = _parseProps$type === void 0 ? "justify" : _parseProps$type,
+      _parseProps$itemCompo = _parseProps.itemComponent,
+      itemComponent = _parseProps$itemCompo === void 0 ? _Panel.default.Icon : _parseProps$itemCompo,
+      _parseProps$itemProps = _parseProps.itemProps,
+      itemProps = _parseProps$itemProps === void 0 ? {} : _parseProps$itemProps,
+      _parseProps$itemGetCl = _parseProps.itemGetClassName,
+      itemGetClassName = _parseProps$itemGetCl === void 0 ? TabBar.itemGetClassName : _parseProps$itemGetCl,
+      _parseProps$itemGetSt = _parseProps.itemGetStyle,
+      itemGetStyle = _parseProps$itemGetSt === void 0 ? TabBar.itemGetStyle : _parseProps$itemGetSt,
+      _parseProps$itemGetPr = _parseProps.itemGetProps,
+      itemGetProps = _parseProps$itemGetPr === void 0 ? TabBar.itemGetProps : _parseProps$itemGetPr,
+      _parseProps$component = _parseProps.component,
+      Component = _parseProps$component === void 0 ? _Panel.default.Container : _parseProps$component,
+      className = _parseProps.className,
+      children = _parseProps.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["colorUnselected", "colorSelectedOnTheme", "colorUnselectedOnTheme", "type", "itemComponent", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
 
   var classStr = 'width-full padding-top-sm padding-bottom-xs border-set-top-border';
   itemProps.iconPosition = 'top';
@@ -61,7 +63,7 @@ var TabBar = function TabBar(aprops) {
     itemGetClassName: itemGetClassName,
     itemGetStyle: itemGetStyle,
     itemGetProps: itemGetProps,
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props), children);
 };
 

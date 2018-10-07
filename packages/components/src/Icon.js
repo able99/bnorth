@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import Panel from './Panel';
 
 
@@ -14,7 +15,7 @@ let Icon = aprops=>{
   let {
     name, nameDefault, src, char, 
     component:Component=Panel, componentPanel, className, style, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
   
   let classStr = 'display-inline width-1em height-1em';
   let classSet = [];
@@ -42,7 +43,7 @@ let Icon = aprops=>{
     return null;
   }
 
-  return <Component component={componentPanel} style={{...styleSet, ...style}} className={cxm(classStr, classSet, className)} {...props} />
+  return <Component component={componentPanel} style={{...styleSet, ...style}} className={classes(classStr, classSet, className)} {...props} />
 }
 
 

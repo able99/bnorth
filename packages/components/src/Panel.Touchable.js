@@ -6,10 +6,9 @@
  */
 
 import React from 'react';
-import { domFindNode, domIsTouch } from './utils/dom';
-import Panel from './Panel';
 import Hammer from 'hammerjs';
-export { Hammer }
+import { domIsTouch, domFindNode } from './utils/dom';
+import Panel from './Panel';
 
 
 Hammer.defaults.inputClass = domIsTouch?Hammer.TouchInput:Hammer.TouchMouseInput;

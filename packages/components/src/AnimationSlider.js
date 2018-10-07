@@ -8,7 +8,8 @@
 
 import React from 'react';
 import { transiton, transform } from '@bnorth/rich.css/lib/styles/animation'; 
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import Panel from './Panel';
 
 
@@ -17,7 +18,7 @@ class AnimationSlider extends React.Component {
     let {
       countToShow=1, index, timeout=300, innerProps,
       component:Component=Panel, className, children, ...props
-    } = genCommonProps(this.props);
+    } = parseProps(this.props);
 
     children = React.Children.toArray(children);
     let items = React.Children.toArray(children)
@@ -28,7 +29,7 @@ class AnimationSlider extends React.Component {
     let classStr = 'overflow-a-hidden position-relative';
 
     return (
-      <Component className={cxm(classStr, className)} {...props}>
+      <Component className={classes(classStr, className)} {...props}>
         <AnimationSlider._Inner countToShow={countToShow} index={index} timeout={timeout} {...innerProps}>{items}</AnimationSlider._Inner>
         {children}
       </Component>
@@ -40,7 +41,7 @@ AnimationSlider._Inner = aprops=>{
   let {
     countToShow, index, timeout,
     component:Component=Panel, className, style, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   children = React.Children.toArray(children);
 
@@ -52,18 +53,18 @@ AnimationSlider._Inner = aprops=>{
     ...style,
   }
 
-  return <Component className={cxm(classStr, className)} style={styleSet} {...props}>{children}</Component>;
+  return <Component className={classes(classStr, className)} style={styleSet} {...props}>{children}</Component>;
 }
 
 AnimationSlider.Item = aprops=>{
   let {
     i, timeout, countToShow, index,
     component:Component=Panel, className,...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'overflow-a-hidden flex-sub-flex-extend';
 
-  return <Component className={cxm(classStr, className)} {...props} />;
+  return <Component className={classes(classStr, className)} {...props} />;
 }
 
 

@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import Panel from './Panel';
 import Icon from './Icon';
 
@@ -44,7 +45,7 @@ Field._Container = aprops=>{
   let classSet = inline?'flex-display-inline':'flex-display-block';
 
   return (
-    <Component component={componentPanel} className={cxm(classStr, classSet, className)} {...props}>
+    <Component component={componentPanel} className={classes(classStr, classSet, className)} {...props}>
       {before?<Field._Container._Content {...beforeProps}>{before}</Field._Container._Content>:null}
       {children}
       {after?<Field._Container._Content {...afterProps}>{after}</Field._Container._Content>:null}
@@ -59,7 +60,7 @@ Field._Container._Content = aprops=>{
 
   let classStr = 'flex-sub-flex-none';
 
-  return <Component className={cxm(classStr, className)} {...props} />;
+  return <Component className={classes(classStr, className)} {...props} />;
 }
 
 
@@ -68,7 +69,7 @@ Field._Normal = aprops=>{
     type, value,
     onPressEnter, onKeyPress,
     component:Component=Panel, componentPanel="input", className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none- border-none-a-';
 
@@ -91,7 +92,7 @@ Field._Normal = aprops=>{
     <Component component={componentPanel}
       onKeyPress={handleKeyPress}
       type={type} value={value}
-      className={cxm(classStr, className)} {...props}>
+      className={classes(classStr, className)} {...props}>
       {children}
     </Component>
   );
@@ -103,12 +104,12 @@ Field._Static = aprops=>{
   let {
     type, value,
     component:Component=Panel, componentPanel="span", className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'line-height-1 vertical-align-middle';
 
   return (
-    <Component component={componentPanel} className={cxm(classStr, className)} {...props}>
+    <Component component={componentPanel} className={classes(classStr, className)} {...props}>
       {value||<pre className="margin-a-0 padding-a-0"> </pre>}
     </Component>
   );
@@ -117,11 +118,11 @@ Field._Static = aprops=>{
 Field._HiddenInput = aprops=>{
   let {
     component:Component='input', className, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'visibility-hide display-none';
 
-  return <Component className={cxm(classStr, className)} {...props} />;
+  return <Component className={classes(classStr, className)} {...props} />;
   
 }
 
@@ -130,12 +131,12 @@ Field._Switch = aprops=>{
     type, value, defaultValue, domValue, onClick, 
     Content, labelProps, inputProps, innerProps,
     component:Component=Panel, componentPanel='label', className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'switch-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none- flex-sub-flex-extend';
 
   return (
-    <Component component={componentPanel} onClick={(e)=>{e.stopPropagation();onClick&&onClick(e)}} className={cxm(classStr, className)} {...labelProps}>
+    <Component component={componentPanel} onClick={(e)=>{e.stopPropagation();onClick&&onClick(e)}} className={classes(classStr, className)} {...labelProps}>
       <Field._HiddenInput type={type} checked={value} defaultChecked={defaultValue} value={domValue} {...inputProps} />
       <Field._Switch._Inner {...innerProps}>
         <Field._Switch._Content component={Content} {...props} type={type} isOn>X</Field._Switch._Content>
@@ -148,23 +149,23 @@ Field._Switch = aprops=>{
 Field._Switch._Inner = aprops=>{
   let {
     component:Component=Panel, componentPanel='span', className, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'status- position-relative';
 
-  return <Component component={componentPanel} className={cxm(classStr, className)} {...props} />;
+  return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
 }
 
 Field._Switch._Content = aprops=>{
   let {
     isOn,
     component:Component=Panel, className, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'position-relative';
   let classSet = [isOn?'on-':'off-'];
 
-  return <Component inline className={cxm(classStr, classSet, className)} {...props} isOn={isOn} />;
+  return <Component inline className={classes(classStr, classSet, className)} {...props} isOn={isOn} />;
 }
 
 
@@ -196,7 +197,7 @@ Field._SwitchContentSwitch = aprops=>{
   let classStr = 'border-radius-rounded line-height-0';
 
   return (
-    <Component b-style="hollow" className={cxm(classStr, className)}>
+    <Component b-style="hollow" className={classes(classStr, className)}>
       <Field._SwitchContentSwitch.Item {...props} isPositive />
       <Field._SwitchContentSwitch.Item {...props} />
     </Component>
@@ -210,7 +211,7 @@ Field._SwitchContentSwitch.Item = aprops=>{
 
   let classStr = 'border-radius-rounded width-1em height-1em';
 
-  return <Component {...props} inline b-style="solid" b-theme={isPositive?(isOn?bTheme:'white'):(isOn?'white':'component')} className={cxm(classStr, className)}  />
+  return <Component {...props} inline b-style="solid" b-theme={isPositive?(isOn?bTheme:'white'):(isOn?'white':'component')} className={classes(classStr, className)}  />
 }
 Field._Types.switch = aprops=>{
   return <Field._Switch Content={Field._SwitchContentSwitch} {...aprops} type="checkbox" />
@@ -220,12 +221,12 @@ Field._Types.file = aprops=>{
   let {
     type, value, inputProps,
     component:Component=Panel, componentPanel="label", className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'line-height-1 vertical-align-middle';
 
   return (
-    <Component component={componentPanel} className={cxm(classStr, className)} {...props}>
+    <Component component={componentPanel} className={classes(classStr, className)} {...props}>
       <Field._HiddenInput type={type} value={value} {...inputProps} />
       {children}
     </Component>

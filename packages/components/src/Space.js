@@ -7,7 +7,7 @@
 
 
 import React from 'react';
-import { genCommonProps } from './utils/props';
+import parseProps from './utils/props';
 import Panel from './Panel';
 
 
@@ -15,7 +15,7 @@ let Spacing = (aprops)=>{
   let {
     count=1, stacked,
     component:Component=Panel, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   return (
     <Component inline {...props}>

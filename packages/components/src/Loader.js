@@ -6,15 +6,16 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
 import { transiton } from '@bnorth/rich.css/lib/styles/animation';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 
  
 let Loader = aprops=>{
   let {
     type='circle', timeout=aprops.isProgress?'250ms':'2s',
     'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let Component = Loader['_'+type];
   if(!Component) return null;
@@ -30,12 +31,12 @@ Loader._line = aprops=>{
   let {
     isProgress, progress=0, timeout, color="currentColor", colorReverse='lightgray',
     classSet, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'width-full height-1em';
 
   return (
-    <svg preserveAspectRatio="none" viewBox="0 0 100 5" className={cxm(classStr, classSet, className)} {...props}>
+    <svg preserveAspectRatio="none" viewBox="0 0 100 5" className={classes(classStr, classSet, className)} {...props}>
       <line 
         x1="0" y1="2" x2="100" y2="2" strokeWidth="5" stroke={colorReverse} fill="none" />
       <line 
@@ -53,12 +54,12 @@ Loader._circle = aprops=>{
   let {
     isProgress, progress, timeout='2s', color="currentColor", colorReverse='lightgray',
     classSet, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'width-1em height-1em';
 
   return (
-    <svg viewBox="0 0 100 100"  className={cxm(classStr, classSet, className)} {...props}>
+    <svg viewBox="0 0 100 100"  className={classes(classStr, classSet, className)} {...props}>
       <circle 
         cx="50" cy="50" r="40" strokeWidth="20" stroke={colorReverse} fill="none" />
       <circle 

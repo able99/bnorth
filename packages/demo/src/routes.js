@@ -27,6 +27,7 @@ export default {
   },
   'c_components': require('./pages/c-components').default,
   'c_list': require('./pages/c-list').default,
+  'search:keyword:pageid': require('./pages/search').default,
   'c_props': require('./pages/c-props').default,
   'c_plugins': require('./pages/c-plugins').default,
 

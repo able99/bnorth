@@ -13,35 +13,37 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
+
+var _AnimationFade = _interopRequireDefault(require("./AnimationFade"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _Loader = _interopRequireDefault(require("./Loader"));
 
-var _AnimationFade = _interopRequireDefault(require("./AnimationFade"));
-
 var _default = function _default(aprops) {
-  var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      _genCommonProps$mask = _genCommonProps.mask,
-      mask = _genCommonProps$mask === void 0 ? true : _genCommonProps$mask,
-      _genCommonProps$hasLo = _genCommonProps.hasLoader,
-      hasLoader = _genCommonProps$hasLo === void 0 ? true : _genCommonProps$hasLo,
-      _genCommonProps$compo = _genCommonProps.componentLoad,
-      ComponnetLoader = _genCommonProps$compo === void 0 ? _Loader.default : _genCommonProps$compo,
-      loaderProps = _genCommonProps.loaderProps,
-      title = _genCommonProps.title,
-      _genCommonProps$compo2 = _genCommonProps.componnetTitle,
-      ComponentTitle = _genCommonProps$compo2 === void 0 ? _Panel.default : _genCommonProps$compo2,
-      titleProps = _genCommonProps.titleProps,
-      _genCommonProps$trans = _genCommonProps.transition,
-      Transition = _genCommonProps$trans === void 0 ? _AnimationFade.default : _genCommonProps$trans,
-      transitionProps = _genCommonProps.transitionProps,
-      onTransitionFinished = _genCommonProps.onTransitionFinished,
-      _genCommonProps$compo3 = _genCommonProps.component,
-      component = _genCommonProps$compo3 === void 0 ? _Panel.default : _genCommonProps$compo3,
-      className = _genCommonProps.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["mask", "hasLoader", "componentLoad", "loaderProps", "title", "componnetTitle", "titleProps", "transition", "transitionProps", "onTransitionFinished", "component", "className"]);
+  var _parseProps = (0, _props.default)(aprops),
+      _parseProps$mask = _parseProps.mask,
+      mask = _parseProps$mask === void 0 ? true : _parseProps$mask,
+      _parseProps$hasLoader = _parseProps.hasLoader,
+      hasLoader = _parseProps$hasLoader === void 0 ? true : _parseProps$hasLoader,
+      _parseProps$component = _parseProps.componentLoad,
+      ComponnetLoader = _parseProps$component === void 0 ? _Loader.default : _parseProps$component,
+      loaderProps = _parseProps.loaderProps,
+      title = _parseProps.title,
+      _parseProps$componnet = _parseProps.componnetTitle,
+      ComponentTitle = _parseProps$componnet === void 0 ? _Panel.default : _parseProps$componnet,
+      titleProps = _parseProps.titleProps,
+      _parseProps$transitio = _parseProps.transition,
+      Transition = _parseProps$transitio === void 0 ? _AnimationFade.default : _parseProps$transitio,
+      transitionProps = _parseProps.transitionProps,
+      onTransitionFinished = _parseProps.onTransitionFinished,
+      _parseProps$component2 = _parseProps.component,
+      component = _parseProps$component2 === void 0 ? _Panel.default : _parseProps$component2,
+      className = _parseProps.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["mask", "hasLoader", "componentLoad", "loaderProps", "title", "componnetTitle", "titleProps", "transition", "transitionProps", "onTransitionFinished", "component", "className"]);
 
   var classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-a-hidden flex-display-block flex-direction-v flex-justify-center flex-align-center';
   return _react.default.createElement(Transition, (0, _extends2.default)({
@@ -50,7 +52,7 @@ var _default = function _default(aprops) {
     component: component,
     transitionProps: transitionProps,
     onTransitionFinished: onTransitionFinished,
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props), hasLoader ? _react.default.createElement(ComponnetLoader, loaderProps) : null, title ? _react.default.createElement(ComponentTitle, (0, _extends2.default)({}, titleProps, {
     children: title
   })) : null);

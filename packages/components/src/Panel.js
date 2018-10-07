@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 
 
 let Panel = aprops=>{
@@ -14,7 +15,7 @@ let Panel = aprops=>{
     main, inline, selected, 
     colorOnTheme='white', colorOnHollow='white',
     component:Component='div', className, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'position-relative';
 
@@ -65,7 +66,7 @@ let Panel = aprops=>{
     if(bTheme) classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
   }
 
-  return <Component className={cxm(classStr, classSet, className)} {...props} />
+  return <Component className={classes(classStr, classSet, className)} {...props} />
 }
 
 

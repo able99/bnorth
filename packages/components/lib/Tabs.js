@@ -27,7 +27,9 @@ var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/de
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel.Container"));
 
@@ -69,26 +71,26 @@ function (_React$Component) {
   (0, _createClass2.default)(Tabs, [{
     key: "render",
     value: function render() {
-      var _genCommonProps = (0, _props.genCommonProps)(this.props),
-          onAction = _genCommonProps.onAction,
-          _genCommonProps$selec = _genCommonProps.selectedKey,
-          selectedKey = _genCommonProps$selec === void 0 ? this.state && this.state.selectedKey : _genCommonProps$selec,
-          _genCommonProps$defau = _genCommonProps.defaultSelectedKey,
-          defaultSelectedKey = _genCommonProps$defau === void 0 ? 0 : _genCommonProps$defau,
-          navProps = _genCommonProps.navProps,
-          containerProps = _genCommonProps.containerProps,
-          _genCommonProps$compo = _genCommonProps.component,
-          Component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
-          className = _genCommonProps.className,
-          children = _genCommonProps.children,
-          props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["onAction", "selectedKey", "defaultSelectedKey", "navProps", "containerProps", "component", "className", "children"]);
+      var _parseProps = (0, _props.default)(this.props),
+          onAction = _parseProps.onAction,
+          _parseProps$selectedK = _parseProps.selectedKey,
+          selectedKey = _parseProps$selectedK === void 0 ? this.state && this.state.selectedKey : _parseProps$selectedK,
+          _parseProps$defaultSe = _parseProps.defaultSelectedKey,
+          defaultSelectedKey = _parseProps$defaultSe === void 0 ? 0 : _parseProps$defaultSe,
+          navProps = _parseProps.navProps,
+          containerProps = _parseProps.containerProps,
+          _parseProps$component = _parseProps.component,
+          Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+          className = _parseProps.className,
+          children = _parseProps.children,
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["onAction", "selectedKey", "defaultSelectedKey", "navProps", "containerProps", "component", "className", "children"]);
 
       children = _react.default.Children.toArray(children).filter(function (v) {
         return v;
       });
       var classStr = 'flex-display-block flex-direction-v flex-align-stretch';
       return _react.default.createElement(Component, (0, _extends2.default)({
-        className: (0, _props.cxm)(classStr, className)
+        className: (0, _classes.default)(classStr, className)
       }, props), _react.default.createElement(Tabs.Nav, (0, _extends2.default)({
         onAction: this.handleAction,
         selectedKey: selectedKey,
@@ -104,26 +106,26 @@ function (_React$Component) {
 }(_react.default.Component);
 
 Tabs.Nav = function (aprops) {
-  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
-      onAction = _genCommonProps2.onAction,
-      selectedKey = _genCommonProps2.selectedKey,
-      defaultSelectedKey = _genCommonProps2.defaultSelectedKey,
-      _genCommonProps2$item = _genCommonProps2.itemProps,
-      itemProps = _genCommonProps2$item === void 0 ? {} : _genCommonProps2$item,
-      _genCommonProps2$item2 = _genCommonProps2.itemGetClassName,
-      itemGetClassName = _genCommonProps2$item2 === void 0 ? Tabs.Nav.itemGetClassName : _genCommonProps2$item2,
-      _genCommonProps2$item3 = _genCommonProps2.itemGetStyle,
-      itemGetStyle = _genCommonProps2$item3 === void 0 ? Tabs.Nav.itemGetStyle : _genCommonProps2$item3,
-      _genCommonProps2$item4 = _genCommonProps2.itemGetProps,
-      itemGetProps = _genCommonProps2$item4 === void 0 ? Tabs.Nav.itemGetProps : _genCommonProps2$item4,
-      _genCommonProps2$comp = _genCommonProps2.component,
-      Component = _genCommonProps2$comp === void 0 ? _Button.default.Group : _genCommonProps2$comp,
-      className = _genCommonProps2.className,
-      children = _genCommonProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["onAction", "selectedKey", "defaultSelectedKey", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
+  var _parseProps2 = (0, _props.default)(aprops),
+      onAction = _parseProps2.onAction,
+      selectedKey = _parseProps2.selectedKey,
+      defaultSelectedKey = _parseProps2.defaultSelectedKey,
+      _parseProps2$itemProp = _parseProps2.itemProps,
+      itemProps = _parseProps2$itemProp === void 0 ? {} : _parseProps2$itemProp,
+      _parseProps2$itemGetC = _parseProps2.itemGetClassName,
+      itemGetClassName = _parseProps2$itemGetC === void 0 ? Tabs.Nav.itemGetClassName : _parseProps2$itemGetC,
+      _parseProps2$itemGetS = _parseProps2.itemGetStyle,
+      itemGetStyle = _parseProps2$itemGetS === void 0 ? Tabs.Nav.itemGetStyle : _parseProps2$itemGetS,
+      _parseProps2$itemGetP = _parseProps2.itemGetProps,
+      itemGetProps = _parseProps2$itemGetP === void 0 ? Tabs.Nav.itemGetProps : _parseProps2$itemGetP,
+      _parseProps2$componen = _parseProps2.component,
+      Component = _parseProps2$componen === void 0 ? _Button.default.Group : _parseProps2$componen,
+      className = _parseProps2.className,
+      children = _parseProps2.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["onAction", "selectedKey", "defaultSelectedKey", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
 
   var classStr = 'flex-sub-flex-none';
-  itemProps.className = (0, _props.cxm)('text-truncate', itemProps.className);
+  itemProps.className = (0, _classes.default)('text-truncate', itemProps.className);
   itemProps['b-style'] = itemProps['b-style'] || 'underline';
   return _react.default.createElement(Component, (0, _extends2.default)({
     separator: true,
@@ -133,7 +135,7 @@ Tabs.Nav = function (aprops) {
     itemGetClassName: itemGetClassName,
     itemGetStyle: itemGetStyle,
     itemGetProps: itemGetProps,
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props), children);
 };
 
@@ -157,25 +159,25 @@ Tabs.Nav.itemGetProps = function (i, length) {
 };
 
 Tabs.Container = function (aprops) {
-  var _genCommonProps3 = (0, _props.genCommonProps)(aprops),
-      onAction = _genCommonProps3.onAction,
-      selectedKey = _genCommonProps3.selectedKey,
-      defaultSelectedKey = _genCommonProps3.defaultSelectedKey,
-      _genCommonProps3$type = _genCommonProps3.type,
-      type = _genCommonProps3$type === void 0 ? 'single' : _genCommonProps3$type,
-      itemProps = _genCommonProps3.itemProps,
-      itemComponent = _genCommonProps3.itemComponent,
-      _genCommonProps3$item = _genCommonProps3.itemGetClassName,
-      itemGetClassName = _genCommonProps3$item === void 0 ? Tabs.Container.itemGetClassName : _genCommonProps3$item,
-      _genCommonProps3$item2 = _genCommonProps3.itemGetStyle,
-      itemGetStyle = _genCommonProps3$item2 === void 0 ? Tabs.Container.itemGetStyle : _genCommonProps3$item2,
-      _genCommonProps3$item3 = _genCommonProps3.itemGetProps,
-      itemGetProps = _genCommonProps3$item3 === void 0 ? Tabs.Container.itemGetProps : _genCommonProps3$item3,
-      _genCommonProps3$comp = _genCommonProps3.component,
-      Component = _genCommonProps3$comp === void 0 ? _Panel.default.Container : _genCommonProps3$comp,
-      className = _genCommonProps3.className,
-      children = _genCommonProps3.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["onAction", "selectedKey", "defaultSelectedKey", "type", "itemProps", "itemComponent", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
+  var _parseProps3 = (0, _props.default)(aprops),
+      onAction = _parseProps3.onAction,
+      selectedKey = _parseProps3.selectedKey,
+      defaultSelectedKey = _parseProps3.defaultSelectedKey,
+      _parseProps3$type = _parseProps3.type,
+      type = _parseProps3$type === void 0 ? 'single' : _parseProps3$type,
+      itemProps = _parseProps3.itemProps,
+      itemComponent = _parseProps3.itemComponent,
+      _parseProps3$itemGetC = _parseProps3.itemGetClassName,
+      itemGetClassName = _parseProps3$itemGetC === void 0 ? Tabs.Container.itemGetClassName : _parseProps3$itemGetC,
+      _parseProps3$itemGetS = _parseProps3.itemGetStyle,
+      itemGetStyle = _parseProps3$itemGetS === void 0 ? Tabs.Container.itemGetStyle : _parseProps3$itemGetS,
+      _parseProps3$itemGetP = _parseProps3.itemGetProps,
+      itemGetProps = _parseProps3$itemGetP === void 0 ? Tabs.Container.itemGetProps : _parseProps3$itemGetP,
+      _parseProps3$componen = _parseProps3.component,
+      Component = _parseProps3$componen === void 0 ? _Panel.default.Container : _parseProps3$componen,
+      className = _parseProps3.className,
+      children = _parseProps3.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["onAction", "selectedKey", "defaultSelectedKey", "type", "itemProps", "itemComponent", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
 
   var classStr = 'flex-sub-flex-extend';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -186,7 +188,7 @@ Tabs.Container = function (aprops) {
     itemGetClassName: itemGetClassName,
     itemGetStyle: itemGetStyle,
     itemGetProps: itemGetProps,
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props), children);
 };
 

@@ -9,7 +9,8 @@
 import React from 'react';
 import Transition from 'react-transition-group/Transition';
 import { transiton } from '@bnorth/rich.css/lib/styles/animation'; 
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import { chainedFuncs } from './utils/dom';
 import { domGetDimensionValue, domTriggerBrowserReflow, domGetScrollDimensionValue } from './utils/dom';
 
@@ -46,7 +47,7 @@ let Collapse = (aprops)=>{
     in:isIn=true, timeout=100, onTransitionFinished, transitionProps={},
     onEnter, onEntering, onEntered, onExit, onExiting, onExited,
     ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   return (
     <Transition 
@@ -66,7 +67,7 @@ Collapse._Component = aprops=>{
   let {
     isIn, timeout, animationState,
     component:Component='div', style, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classSet = {
     'overflow-a-hidden': true,
@@ -79,7 +80,7 @@ Collapse._Component = aprops=>{
   };
 
   return (
-    <Component style={styleSet} className={cxm(classSet,className)} {...props}>
+    <Component style={styleSet} className={classes(classSet,className)} {...props}>
       {children}
     </Component>
   )

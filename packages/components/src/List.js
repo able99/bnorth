@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import Panel from './Panel';
 import Icon from './Icon';
 
@@ -16,7 +17,7 @@ let List = aprops=>{
     separatorInset, innerProps={},
     itemProps={},
     component:Component='ul', 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
   children = React.Children.toArray(children).filter(v=>v);
 
   let headers = children.filter(v=>v.props.part==='header');
@@ -31,12 +32,12 @@ let List = aprops=>{
           first={i===0} last={i===a.length-1}
           {...itemProps} />
       ))}
-      <List._Inner separatorInset {...innerProps}>
+      <List._Inner separatorInset={separatorInset} {...innerProps}>
         {items.map((v,i,a)=>(
           <List.Item 
             key={v.key} {...v.props} 
             part='item' first={i===0} last={i===a.length-1}
-            separatorInset
+            separatorInset={separatorInset}
             {...itemProps} />
         ))}
       </List._Inner>
@@ -54,14 +55,14 @@ List._Inner = aprops=>{
   let {
     separatorInset,
     component:Component=Panel, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'bg-color-white';
   let classSet = {
     [`padding-left-${separatorInset&&separatorInset!==true?('-'+separatorInset):''}`]: separatorInset,
   }
 
-  return <Component className={cxm(classStr, classSet, className)} {...props}>{children}</Component>
+  return <Component className={classes(classStr, classSet, className)} {...props}>{children}</Component>
 }
 
 List.Item = aprops=>{
@@ -70,7 +71,7 @@ List.Item = aprops=>{
     colorActiveOnTheme='white',
     media, mediaProps, mainProps, title, titleProps, subTitle, subTitleProps, desc, descProps, after, afterProps, arrow, arrowProps, arrowIconProps, autoArrow=true, 
     component:Component='li', className, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'flex-display-block flex-align-stretch padding-a-';
 
@@ -92,7 +93,7 @@ List.Item = aprops=>{
   }
 
   return (
-    <Component className={cxm(classStr, classSet, className)} onClick={onClick} {...props}>
+    <Component className={classes(classStr, classSet, className)} onClick={onClick} {...props}>
       {media?(<List.Item._Media {...mediaProps}>{media}</List.Item._Media>):null}
       <List.Item._Main {...mainProps}>
         {title?(<List.Item._Title {...titleProps}>{title}</List.Item._Title>):null}
@@ -109,27 +110,27 @@ List.Item = aprops=>{
 List.Item._Media = aprops=>{
   let {
     component:Component=Panel, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'flex-sub-align-center flex-sub-flex-none';
 
-  return <Component className={cxm(classStr, className)} {...props}>{children}</Component>;
+  return <Component className={classes(classStr, className)} {...props}>{children}</Component>;
 }
 
 List.Item._Main = aprops=>{
   let {
     component:Component=Panel, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'width-full flex-sub-flex-extend flex-sub-align-center';
   
-  return <Component className={cxm(classStr, className)} {...props}>{children}</Component>;
+  return <Component className={classes(classStr, className)} {...props}>{children}</Component>;
 }
 
 List.Item._Title = aprops=>{
   let {
     component:Component=Panel, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   return <Component {...props}>{children}</Component>;
 }
@@ -137,7 +138,7 @@ List.Item._Title = aprops=>{
 List.Item._SubTitle = aprops=>{
   let {
     component:Component=Panel, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   return <Component {...props}>{children}</Component>;
 }
@@ -145,7 +146,7 @@ List.Item._SubTitle = aprops=>{
 List.Item._Desc = aprops=>{
   let {
     component:Component=Panel, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   return <Component {...props}>{children}</Component>;
 }
@@ -153,23 +154,23 @@ List.Item._Desc = aprops=>{
 List.Item._After = aprops=>{
   let {
     component:Component=Panel, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'flex-sub-align-center';
   
-  return <Component b-theme="light" className={cxm(classStr, className)} {...props}>{children}</Component>;
+  return <Component b-theme="light" className={classes(classStr, className)} {...props}>{children}</Component>;
 }
 
 List.Item._Arrow = aprops=>{
   let {
     arrowIconProps,
     component:Component=Panel, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'flex-sub-align-center flex-sub-flex-none line-height-0';
   
   return (
-    <Component b-theme="light" className={cxm(classStr, className)} {...props}>
+    <Component b-theme="light" className={classes(classStr, className)} {...props}>
       {!children||children===true?<Icon name='right' nameDefault='>' {...arrowIconProps}/>:children}
     </Component>
   )

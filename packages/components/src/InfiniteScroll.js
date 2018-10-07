@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import Panel from './Panel';
 import Loader from './Loader';
 import ScrollSpy from './ScrollSpy';
@@ -33,7 +34,7 @@ class InfiniteScroll extends React.Component{
       componentLoader:ComponentLoader=Loader, loaderProps,
       componentTitle:ComponentTitle=Panel, titleProps,
       component:Component=Panel, children, className, ...props 
-    } = genCommonProps(this.props);
+    } = parseProps(this.props);
     if(disabled) return null;
   
     let classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center padding-a-';
@@ -41,7 +42,7 @@ class InfiniteScroll extends React.Component{
     return (
       <React.Fragment>
         <ScrollSpy onScrollPositionChange={this.handleScrollPosChange.bind(this)} />
-        <Component className={cxm(classStr, className)} {...props}>
+        <Component className={classes(classStr, className)} {...props}>
           {children?children:<ComponentLoader {...loaderProps} />}
           {children?children:<ComponentTitle {...titleProps} />}
         </Component>

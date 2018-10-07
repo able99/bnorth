@@ -15,7 +15,9 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -26,14 +28,14 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @license MIT
  */
 _Panel.default.AspectRatio = function (aprops) {
-  var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      ratio = _genCommonProps.ratio,
-      aspectRatioProps = _genCommonProps.aspectRatioProps,
-      _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
-      style = _genCommonProps.style,
-      children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["ratio", "aspectRatioProps", "component", "style", "children"]);
+  var _parseProps = (0, _props.default)(aprops),
+      ratio = _parseProps.ratio,
+      aspectRatioProps = _parseProps.aspectRatioProps,
+      _parseProps$component = _parseProps.component,
+      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+      style = _parseProps.style,
+      children = _parseProps.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["ratio", "aspectRatioProps", "component", "style", "children"]);
 
   var styleSet = ratio ? {
     paddingBottom: "".concat(ratio * 100, "%")
@@ -46,17 +48,17 @@ _Panel.default.AspectRatio = function (aprops) {
 };
 
 _Panel.default.AspectRatio._Inner = function (aprops) {
-  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
-      ratio = _genCommonProps2.ratio,
-      aspectRatioProps = _genCommonProps2.aspectRatioProps,
-      _genCommonProps2$comp = _genCommonProps2.component,
-      Component = _genCommonProps2$comp === void 0 ? 'div' : _genCommonProps2$comp,
-      className = _genCommonProps2.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["ratio", "aspectRatioProps", "component", "className"]);
+  var _parseProps2 = (0, _props.default)(aprops),
+      ratio = _parseProps2.ratio,
+      aspectRatioProps = _parseProps2.aspectRatioProps,
+      _parseProps2$componen = _parseProps2.component,
+      Component = _parseProps2$componen === void 0 ? 'div' : _parseProps2$componen,
+      className = _parseProps2.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["ratio", "aspectRatioProps", "component", "className"]);
 
   var classStr = 'position-absolute offset-left-start offset-top-start square-full';
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props));
 };
 

@@ -31,15 +31,14 @@ export default class Page extends React.Component {
   // controller
   // ---------------------------
   action(func, name) {
-    let { app } = this.props.app;
     if(!name) name = `_${++this._actionNum}`
     let ret = (...args)=>{
       try{
-        app.log.info('page action', this.name, name);
+        this.app.log.info('page action', this.name, name);
         return func.apply(this, args);
       }catch(e){
-        app.log.error('page action', name, e);
-        app.render.panic(e, {title:`action(${name}) error`});
+        this.app.log.error('page action', name, e);
+        this.app.render.panic(e, {title:`action(${name}) error`});
       }
     }
     if(name) this[`action${name}`] = ret;

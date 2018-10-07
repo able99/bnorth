@@ -13,7 +13,9 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -26,27 +28,27 @@ var _Icon = _interopRequireDefault(require("./Icon"));
  * @license MIT
  */
 _Panel.default.Icon = function (aprops) {
-  var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      titleProps = _genCommonProps.titleProps,
-      _genCommonProps$iconP = _genCommonProps.iconPosition,
-      iconPosition = _genCommonProps$iconP === void 0 ? 'left' : _genCommonProps$iconP,
-      selected = _genCommonProps.selected,
-      icon = _genCommonProps.icon,
-      iconSelected = _genCommonProps.iconSelected,
-      src = _genCommonProps.src,
-      srcSelected = _genCommonProps.srcSelected,
-      iconProps = _genCommonProps.iconProps,
-      _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
-      className = _genCommonProps.className,
-      children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["titleProps", "iconPosition", "selected", "icon", "iconSelected", "src", "srcSelected", "iconProps", "component", "className", "children"]);
+  var _parseProps = (0, _props.default)(aprops),
+      titleProps = _parseProps.titleProps,
+      _parseProps$iconPosit = _parseProps.iconPosition,
+      iconPosition = _parseProps$iconPosit === void 0 ? 'left' : _parseProps$iconPosit,
+      selected = _parseProps.selected,
+      icon = _parseProps.icon,
+      iconSelected = _parseProps.iconSelected,
+      src = _parseProps.src,
+      srcSelected = _parseProps.srcSelected,
+      iconProps = _parseProps.iconProps,
+      _parseProps$component = _parseProps.component,
+      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+      className = _parseProps.className,
+      children = _parseProps.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["titleProps", "iconPosition", "selected", "icon", "iconSelected", "src", "srcSelected", "iconProps", "component", "className", "children"]);
 
   var classStr = 'flex-display-block flex-justify-center flex-align-center';
   var classSet = [];
   if (iconPosition === 'top' || iconPosition === 'bottom') classSet.push('flex-direction-v');
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cxm)(classStr, classSet, className)
+    className: (0, _classes.default)(classStr, classSet, className)
   }, props), iconPosition === 'right' || iconPosition === 'bottom' ? _react.default.createElement(_Panel.default.Icon._Title, (0, _extends2.default)({
     iconPosition: iconPosition
   }, titleProps), children) : null, _react.default.createElement(_Panel.default.Icon._Icon, (0, _extends2.default)({
@@ -61,15 +63,15 @@ _Panel.default.Icon = function (aprops) {
 };
 
 _Panel.default.Icon._Icon = function (aprops) {
-  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
-      selected = _genCommonProps2.selected,
-      icon = _genCommonProps2.icon,
-      iconSelected = _genCommonProps2.iconSelected,
-      src = _genCommonProps2.src,
-      srcSelected = _genCommonProps2.srcSelected,
-      _genCommonProps2$comp = _genCommonProps2.component,
-      Component = _genCommonProps2$comp === void 0 ? _Icon.default : _genCommonProps2$comp,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["selected", "icon", "iconSelected", "src", "srcSelected", "component"]);
+  var _parseProps2 = (0, _props.default)(aprops),
+      selected = _parseProps2.selected,
+      icon = _parseProps2.icon,
+      iconSelected = _parseProps2.iconSelected,
+      src = _parseProps2.src,
+      srcSelected = _parseProps2.srcSelected,
+      _parseProps2$componen = _parseProps2.component,
+      Component = _parseProps2$componen === void 0 ? _Icon.default : _parseProps2$componen,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["selected", "icon", "iconSelected", "src", "srcSelected", "component"]);
 
   return icon || src ? _react.default.createElement(Component, (0, _extends2.default)({
     name: selected && iconSelected ? iconSelected : icon,
@@ -78,19 +80,19 @@ _Panel.default.Icon._Icon = function (aprops) {
 };
 
 _Panel.default.Icon._Title = function (aprops) {
-  var _genCommonProps3 = (0, _props.genCommonProps)(aprops),
-      iconPosition = _genCommonProps3.iconPosition,
-      _genCommonProps3$comp = _genCommonProps3.component,
-      Component = _genCommonProps3$comp === void 0 ? _Panel.default : _genCommonProps3$comp,
-      className = _genCommonProps3.className,
-      children = _genCommonProps3.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["iconPosition", "component", "className", "children"]);
+  var _parseProps3 = (0, _props.default)(aprops),
+      iconPosition = _parseProps3.iconPosition,
+      _parseProps3$componen = _parseProps3.component,
+      Component = _parseProps3$componen === void 0 ? _Panel.default : _parseProps3$componen,
+      className = _parseProps3.className,
+      children = _parseProps3.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["iconPosition", "component", "className", "children"]);
 
   var classStr = 'text-truncate position-relative';
   var classSet = [];
   if (iconPosition === 'top' || iconPosition === 'bottom') classSet.push('text-align-center');
   return children ? _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props), children) : null;
 };
 

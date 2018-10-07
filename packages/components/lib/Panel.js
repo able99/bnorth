@@ -13,7 +13,9 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 /**
  * @overview bnorth solution
@@ -22,21 +24,21 @@ var _props = require("./utils/props");
  * @license MIT
  */
 var Panel = function Panel(aprops) {
-  var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      main = _genCommonProps.main,
-      inline = _genCommonProps.inline,
-      selected = _genCommonProps.selected,
-      _genCommonProps$color = _genCommonProps.colorOnTheme,
-      colorOnTheme = _genCommonProps$color === void 0 ? 'white' : _genCommonProps$color,
-      _genCommonProps$color2 = _genCommonProps.colorOnHollow,
-      colorOnHollow = _genCommonProps$color2 === void 0 ? 'white' : _genCommonProps$color2,
-      _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? 'div' : _genCommonProps$compo,
-      className = _genCommonProps.className,
-      bTheme = _genCommonProps['b-theme'],
-      bStyle = _genCommonProps['b-style'],
-      bSize = _genCommonProps['b-size'],
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["main", "inline", "selected", "colorOnTheme", "colorOnHollow", "component", "className", 'b-theme', 'b-style', 'b-size']);
+  var _parseProps = (0, _props.default)(aprops),
+      main = _parseProps.main,
+      inline = _parseProps.inline,
+      selected = _parseProps.selected,
+      _parseProps$colorOnTh = _parseProps.colorOnTheme,
+      colorOnTheme = _parseProps$colorOnTh === void 0 ? 'white' : _parseProps$colorOnTh,
+      _parseProps$colorOnHo = _parseProps.colorOnHollow,
+      colorOnHollow = _parseProps$colorOnHo === void 0 ? 'white' : _parseProps$colorOnHo,
+      _parseProps$component = _parseProps.component,
+      Component = _parseProps$component === void 0 ? 'div' : _parseProps$component,
+      className = _parseProps.className,
+      bTheme = _parseProps['b-theme'],
+      bStyle = _parseProps['b-style'],
+      bSize = _parseProps['b-size'],
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["main", "inline", "selected", "colorOnTheme", "colorOnHollow", "component", "className", 'b-theme', 'b-style', 'b-size']);
 
   var classStr = 'position-relative';
   var classSet = {
@@ -90,7 +92,7 @@ var Panel = function Panel(aprops) {
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cxm)(classStr, classSet, className)
+    className: (0, _classes.default)(classStr, classSet, className)
   }, props));
 };
 

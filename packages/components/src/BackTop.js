@@ -7,8 +7,8 @@
 
  
 import React from 'react';
+import parseProps from './utils/props';
 import { domOffset } from './utils/dom';
-import { genCommonProps } from './utils/props';
 import ScrollSpy from './ScrollSpy';
 import Fab from './Fab';
 import Icon from './Icon';
@@ -56,7 +56,7 @@ export default class BackTop extends React.Component {
       onClick, triggerFunc, offset,
       iconProps={}, scrollSpyProps={},
       component:Component=Fab, children, ...props
-    } = genCommonProps(this.props);
+    } = parseProps(this.props);
 
 
     return (

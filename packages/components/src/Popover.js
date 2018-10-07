@@ -7,8 +7,9 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import { domIsTouch, domOffset, chainedFuncs, domFindContainer } from './utils/dom';
-import { genCommonProps, cxm } from './utils/props';
 import Panel from './Panel';
 import Backdrop from './Backdrop';
 
@@ -38,7 +39,7 @@ class Popover extends React.Component {
       overlay, overlayProps, mask, maskProps,
       calcPosition=Popover.calcPosition, placement, container,
       component:Component=Panel, children, ...props
-    } = genCommonProps(this.props);
+    } = parseProps(this.props);
     const { show, offsetOverlay, offsetTarget } = this.state;
 
 
@@ -155,13 +156,13 @@ Popover.Overlay = class extends React.Component {
     let {
       calcPosition, offsetTarget, offsetOverlay, placement,
       component:Component=Panel, style, className, ...props
-    } = genCommonProps(this.props);
+    } = parseProps(this.props);
 
     let classStr = 'position-absolute bg-color-white border-set-a-';
     let styleSet = {boxSizing: 'content-box'};
     let [classSetPosition, styleSetPosition] = offsetOverlay?calcPosition(offsetTarget,offsetOverlay, ...((placement&&placement.split('-'))||[])) : [{'visibility-hidden':true},{}];
 
-    return <Component onMouseMove={e=>e.stopPropagation()} style={{...styleSet,...styleSetPosition,...style}} className={cxm(classStr, classSetPosition, className)} {...props} />
+    return <Component onMouseMove={e=>e.stopPropagation()} style={{...styleSet,...styleSetPosition,...style}} className={classes(classStr, classSetPosition, className)} {...props} />
   }
 }
 

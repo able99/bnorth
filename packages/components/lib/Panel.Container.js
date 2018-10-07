@@ -27,7 +27,9 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -53,7 +55,7 @@ function getSubComponentProps(i, length, containerProps) {
   var subGetProps = arguments.length > 7 ? arguments[7] : undefined;
   return (0, _objectSpread2.default)({
     style: (0, _objectSpread2.default)({}, subGetStyle && subGetStyle(i, length, containerProps, props, subProps) || {}, subPropsStyle, styletyle),
-    className: (0, _props.cxm)(subGetClassName && subGetClassName(i, length, containerProps, props, subProps), subPropsClassName, className)
+    className: (0, _classes.default)(subGetClassName && subGetClassName(i, length, containerProps, props, subProps), subPropsClassName, className)
   }, subGetProps && subGetProps(i, length, containerProps, props, subProps) || {}, subProps, props);
 }
 
@@ -70,19 +72,19 @@ function (_React$Component) {
   (0, _createClass2.default)(Container, [{
     key: "render",
     value: function render() {
-      var _genCommonProps = (0, _props.genCommonProps)(this.props),
-          type = _genCommonProps.type,
-          containerProps = _genCommonProps.containerProps,
-          itemComponent = _genCommonProps.itemComponent,
-          itemProps = _genCommonProps.itemProps,
-          itemGetProps = _genCommonProps.itemGetProps,
-          itemGetClassName = _genCommonProps.itemGetClassName,
-          itemGetStyle = _genCommonProps.itemGetStyle,
-          _genCommonProps$compo = _genCommonProps.component,
-          Component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
-          className = _genCommonProps.className,
-          children = _genCommonProps.children,
-          props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["type", "containerProps", "itemComponent", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className", "children"]);
+      var _parseProps = (0, _props.default)(this.props),
+          type = _parseProps.type,
+          containerProps = _parseProps.containerProps,
+          itemComponent = _parseProps.itemComponent,
+          itemProps = _parseProps.itemProps,
+          itemGetProps = _parseProps.itemGetProps,
+          itemGetClassName = _parseProps.itemGetClassName,
+          itemGetStyle = _parseProps.itemGetStyle,
+          _parseProps$component = _parseProps.component,
+          Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+          className = _parseProps.className,
+          children = _parseProps.children,
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["type", "containerProps", "itemComponent", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className", "children"]);
 
       var classStr = 'position-relative overflow-a-hidden';
       var ai = 0;
@@ -107,7 +109,7 @@ function (_React$Component) {
       } else {}
 
       return _react.default.createElement(Component, (0, _extends2.default)({
-        className: (0, _props.cxm)(classStr, className)
+        className: (0, _classes.default)(classStr, className)
       }, props), children);
     }
   }]);
@@ -115,16 +117,16 @@ function (_React$Component) {
 }(_react.default.Component);
 
 Container.Item = function (aprops) {
-  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
-      type = _genCommonProps2.type,
-      itemProps = _genCommonProps2.itemProps,
-      itemGetProps = _genCommonProps2.itemGetProps,
-      itemGetClassName = _genCommonProps2.itemGetClassName,
-      itemGetStyle = _genCommonProps2.itemGetStyle,
-      _genCommonProps2$comp = _genCommonProps2.component,
-      Component = _genCommonProps2$comp === void 0 ? _Panel.default : _genCommonProps2$comp,
-      className = _genCommonProps2.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["type", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className"]);
+  var _parseProps2 = (0, _props.default)(aprops),
+      type = _parseProps2.type,
+      itemProps = _parseProps2.itemProps,
+      itemGetProps = _parseProps2.itemGetProps,
+      itemGetClassName = _parseProps2.itemGetClassName,
+      itemGetStyle = _parseProps2.itemGetStyle,
+      _parseProps2$componen = _parseProps2.component,
+      Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
+      className = _parseProps2.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["type", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className"]);
 
   var classStr = '';
 
@@ -135,7 +137,7 @@ Container.Item = function (aprops) {
   } else {}
 
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props));
 };
 

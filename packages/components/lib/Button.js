@@ -15,7 +15,9 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel.Container"));
 
@@ -26,42 +28,42 @@ var _Panel = _interopRequireDefault(require("./Panel.Container"));
  * @license MIT
  */
 var Button = function Button(aprops) {
-  var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
-      _genCommonProps$panel = _genCommonProps.panelComponent,
-      panelComponent = _genCommonProps$panel === void 0 ? 'button' : _genCommonProps$panel,
-      className = _genCommonProps.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["component", "panelComponent", "className"]);
+  var _parseProps = (0, _props.default)(aprops),
+      _parseProps$component = _parseProps.component,
+      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+      _parseProps$panelComp = _parseProps.panelComponent,
+      panelComponent = _parseProps$panelComp === void 0 ? 'button' : _parseProps$panelComp,
+      className = _parseProps.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["component", "panelComponent", "className"]);
 
   var classStr = 'outline-none- appearance-none- font-smoothing-antialiased- transition-set- vertical-align-middle position-relative line-height-1 cursor-pointer text-align-center padding-a-';
   return _react.default.createElement(Component, (0, _extends2.default)({
     "b-style": "solid",
     component: panelComponent,
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props));
 };
 
 Button.Group = function (aprops) {
-  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
-      stacked = _genCommonProps2.stacked,
-      justify = _genCommonProps2.justify,
-      separator = _genCommonProps2.separator,
-      _genCommonProps2$sepa = _genCommonProps2.separatorProps,
-      separatorProps = _genCommonProps2$sepa === void 0 ? {} : _genCommonProps2$sepa,
-      _genCommonProps2$item = _genCommonProps2.itemComponent,
-      itemComponent = _genCommonProps2$item === void 0 ? Button : _genCommonProps2$item,
-      itemProps = _genCommonProps2.itemProps,
-      _genCommonProps2$item2 = _genCommonProps2.itemGetClassName,
-      itemGetClassName = _genCommonProps2$item2 === void 0 ? Button.Group.itemGetClassName : _genCommonProps2$item2,
-      _genCommonProps2$item3 = _genCommonProps2.itemGetStyle,
-      itemGetStyle = _genCommonProps2$item3 === void 0 ? Button.Group.itemGetStyle : _genCommonProps2$item3,
-      _genCommonProps2$item4 = _genCommonProps2.itemGetProps,
-      itemGetProps = _genCommonProps2$item4 === void 0 ? Button.Group.itemGetProps : _genCommonProps2$item4,
-      _genCommonProps2$comp = _genCommonProps2.component,
-      Component = _genCommonProps2$comp === void 0 ? _Panel.default.Container : _genCommonProps2$comp,
-      children = _genCommonProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["stacked", "justify", "separator", "separatorProps", "itemComponent", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "children"]);
+  var _parseProps2 = (0, _props.default)(aprops),
+      stacked = _parseProps2.stacked,
+      justify = _parseProps2.justify,
+      separator = _parseProps2.separator,
+      _parseProps2$separato = _parseProps2.separatorProps,
+      separatorProps = _parseProps2$separato === void 0 ? {} : _parseProps2$separato,
+      _parseProps2$itemComp = _parseProps2.itemComponent,
+      itemComponent = _parseProps2$itemComp === void 0 ? Button : _parseProps2$itemComp,
+      itemProps = _parseProps2.itemProps,
+      _parseProps2$itemGetC = _parseProps2.itemGetClassName,
+      itemGetClassName = _parseProps2$itemGetC === void 0 ? Button.Group.itemGetClassName : _parseProps2$itemGetC,
+      _parseProps2$itemGetS = _parseProps2.itemGetStyle,
+      itemGetStyle = _parseProps2$itemGetS === void 0 ? Button.Group.itemGetStyle : _parseProps2$itemGetS,
+      _parseProps2$itemGetP = _parseProps2.itemGetProps,
+      itemGetProps = _parseProps2$itemGetP === void 0 ? Button.Group.itemGetProps : _parseProps2$itemGetP,
+      _parseProps2$componen = _parseProps2.component,
+      Component = _parseProps2$componen === void 0 ? _Panel.default.Container : _parseProps2$componen,
+      children = _parseProps2.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["stacked", "justify", "separator", "separatorProps", "itemComponent", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "children"]);
 
   children = _react.default.Children.toArray(children).filter(function (v) {
     return v;
@@ -102,12 +104,12 @@ Button.Group.itemGetClassName = function (i, length) {
 };
 
 Button.Group.Separator = function (aprops) {
-  var _genCommonProps3 = (0, _props.genCommonProps)(aprops),
-      _genCommonProps3$comp = _genCommonProps3.component,
-      Component = _genCommonProps3$comp === void 0 ? _Panel.default : _genCommonProps3$comp,
-      className = _genCommonProps3.className,
-      style = _genCommonProps3.style,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["component", "className", "style"]);
+  var _parseProps3 = (0, _props.default)(aprops),
+      _parseProps3$componen = _parseProps3.component,
+      Component = _parseProps3$componen === void 0 ? _Panel.default : _parseProps3$componen,
+      className = _parseProps3.className,
+      style = _parseProps3.style,
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["component", "className", "style"]);
 
   var classStr = 'flex-sub-flex-none bg-color-border margin-v-xl';
   var styleSet = {};
@@ -117,7 +119,7 @@ Button.Group.Separator = function (aprops) {
     "b-style": "solid",
     "b-theme": "border",
     style: (0, _objectSpread2.default)({}, styleSet, style),
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props), "\xA0");
 };
 

@@ -5,15 +5,15 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.cx = cx;
-exports.cxm = cxm;
-exports.mergeClassName = mergeClassName;
-exports.genCommonProps = genCommonProps;
+exports.addFunctions = addFunctions;
+exports.default = parseProps;
 exports.functions = void 0;
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
+require("core-js/modules/es6.string.starts-with");
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
@@ -25,50 +25,18 @@ require("core-js/modules/web.dom.iterable");
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
-require("core-js/modules/es6.string.starts-with");
+require("core-js/modules/es6.object.assign");
 
-require("core-js/modules/es6.array.find");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-require("core-js/modules/es6.regexp.split");
-
-var _classnames = _interopRequireDefault(require("classnames"));
-
-var _flex = require("@bnorth/rich.css/lib/styles/flex");
-
-var _animation = require("@bnorth/rich.css/lib/styles/animation");
-
-var functions = {
-  styleFlexSubGrow: _flex.styleFlexSubGrow,
-  styleFlexSubShrink: _flex.styleFlexSubShrink,
-  styleFlexSubBasis: _flex.styleFlexSubBasis,
-  styleFlexSubOrder: _flex.styleFlexSubOrder,
-  transform: _animation.transform
-};
+var functions = {};
 exports.functions = functions;
 
-function cx() {
-  return _classnames.default.apply(void 0, arguments);
+function addFunctions(args) {
+  return Object.assign(functions, args);
 }
 
-;
-
-function cxm() {
-  return mergeClassName(cx.apply(void 0, arguments));
-}
-
-function mergeClassName(className) {
-  var classNames = className.split(/\s/);
-  return classNames.filter(function (v, i, a) {
-    var key = v.substr(0, v.lastIndexOf('-'));
-    return !a.slice(i + 1).find(function (vv) {
-      if (key === 'border-none' && vv.startsWith('border-')) return true;
-      if (key === 'border-' && vv.startsWith('border-none-')) return true;
-      return vv.startsWith(key);
-    });
-  }).join(' ');
-}
-
-function genCommonProps(aprops) {
+function parseProps(aprops) {
   var _ref = aprops || {},
       active = _ref.active,
       selected = _ref.selected,
@@ -105,7 +73,7 @@ function genCommonProps(aprops) {
   if (selected) classSet['selected'] = true;
   if (disabled) classSet['disabled'] = true;
   return (0, _objectSpread2.default)({}, props, {
-    className: cx(classSet, className),
+    className: (0, _classes.default)(classSet, className),
     style: (0, _objectSpread2.default)({}, styleSet, style),
     selected: selected,
     active: active,

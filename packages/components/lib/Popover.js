@@ -33,9 +33,11 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
 
-var _dom = require("./utils/dom");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-var _props = require("./utils/props");
+var _props = _interopRequireDefault(require("./utils/props"));
+
+var _dom = require("./utils/dom");
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -92,23 +94,23 @@ function (_React$Component) {
     value: function render() {
       var _this3 = this;
 
-      var _genCommonProps = (0, _props.genCommonProps)(this.props),
-          defaultIsShow = _genCommonProps.defaultIsShow,
-          trigger = _genCommonProps.trigger,
-          onClick = _genCommonProps.onClick,
-          onMouseOver = _genCommonProps.onMouseOver,
-          overlay = _genCommonProps.overlay,
-          overlayProps = _genCommonProps.overlayProps,
-          mask = _genCommonProps.mask,
-          maskProps = _genCommonProps.maskProps,
-          _genCommonProps$calcP = _genCommonProps.calcPosition,
-          calcPosition = _genCommonProps$calcP === void 0 ? Popover.calcPosition : _genCommonProps$calcP,
-          placement = _genCommonProps.placement,
-          container = _genCommonProps.container,
-          _genCommonProps$compo = _genCommonProps.component,
-          Component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
-          children = _genCommonProps.children,
-          props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["defaultIsShow", "trigger", "onClick", "onMouseOver", "overlay", "overlayProps", "mask", "maskProps", "calcPosition", "placement", "container", "component", "children"]);
+      var _parseProps = (0, _props.default)(this.props),
+          defaultIsShow = _parseProps.defaultIsShow,
+          trigger = _parseProps.trigger,
+          onClick = _parseProps.onClick,
+          onMouseOver = _parseProps.onMouseOver,
+          overlay = _parseProps.overlay,
+          overlayProps = _parseProps.overlayProps,
+          mask = _parseProps.mask,
+          maskProps = _parseProps.maskProps,
+          _parseProps$calcPosit = _parseProps.calcPosition,
+          calcPosition = _parseProps$calcPosit === void 0 ? Popover.calcPosition : _parseProps$calcPosit,
+          placement = _parseProps.placement,
+          container = _parseProps.container,
+          _parseProps$component = _parseProps.component,
+          Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+          children = _parseProps.children,
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["defaultIsShow", "trigger", "onClick", "onMouseOver", "overlay", "overlayProps", "mask", "maskProps", "calcPosition", "placement", "container", "component", "children"]);
 
       var _this$state = this.state,
           show = _this$state.show,
@@ -248,16 +250,16 @@ function (_React$Component2) {
   (0, _createClass2.default)(_class, [{
     key: "render",
     value: function render() {
-      var _genCommonProps2 = (0, _props.genCommonProps)(this.props),
-          calcPosition = _genCommonProps2.calcPosition,
-          offsetTarget = _genCommonProps2.offsetTarget,
-          offsetOverlay = _genCommonProps2.offsetOverlay,
-          placement = _genCommonProps2.placement,
-          _genCommonProps2$comp = _genCommonProps2.component,
-          Component = _genCommonProps2$comp === void 0 ? _Panel.default : _genCommonProps2$comp,
-          style = _genCommonProps2.style,
-          className = _genCommonProps2.className,
-          props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["calcPosition", "offsetTarget", "offsetOverlay", "placement", "component", "style", "className"]);
+      var _parseProps2 = (0, _props.default)(this.props),
+          calcPosition = _parseProps2.calcPosition,
+          offsetTarget = _parseProps2.offsetTarget,
+          offsetOverlay = _parseProps2.offsetOverlay,
+          placement = _parseProps2.placement,
+          _parseProps2$componen = _parseProps2.component,
+          Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
+          style = _parseProps2.style,
+          className = _parseProps2.className,
+          props = (0, _objectWithoutProperties2.default)(_parseProps2, ["calcPosition", "offsetTarget", "offsetOverlay", "placement", "component", "style", "className"]);
 
       var classStr = 'position-absolute bg-color-white border-set-a-';
       var styleSet = {
@@ -276,7 +278,7 @@ function (_React$Component2) {
           return e.stopPropagation();
         },
         style: (0, _objectSpread2.default)({}, styleSet, styleSetPosition, style),
-        className: (0, _props.cxm)(classStr, classSetPosition, className)
+        className: (0, _classes.default)(classStr, classSetPosition, className)
       }, props));
     }
   }]);

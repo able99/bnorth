@@ -6,6 +6,8 @@ import icoSvg from '../res/default.ico.svg';
 let iconMap = {
   'left': 'keyboard_arrow_left',
   'right': 'keyboard_arrow_right', 
+  'up': 'keyboard_arrow_up',
+  'down': 'keyboard_arrow_down', 
   'backTop': 'vertical_align_top', 
 }
 

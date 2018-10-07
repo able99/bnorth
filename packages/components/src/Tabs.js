@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import Panel from './Panel.Container';
 import Button from './Button';
 
@@ -22,14 +23,14 @@ class Tabs extends React.Component {
       onAction, selectedKey=this.state&&this.state.selectedKey, defaultSelectedKey=0, 
       navProps, containerProps, 
       component:Component=Panel, className, children, ...props
-    } = genCommonProps(this.props);
+    } = parseProps(this.props);
 
     children = React.Children.toArray(children).filter(v=>v);
 
     let classStr = 'flex-display-block flex-direction-v flex-align-stretch';
 
     return (
-      <Component className={cxm(classStr, className)} {...props}>
+      <Component className={classes(classStr, className)} {...props}>
         <Tabs.Nav onAction={this.handleAction} selectedKey={selectedKey} defaultSelectedKey={defaultSelectedKey} {...navProps}>
           {children}
         </Tabs.Nav>
@@ -47,18 +48,18 @@ Tabs.Nav = aprops=>{
     onAction, selectedKey, defaultSelectedKey,
     itemProps={}, itemGetClassName=Tabs.Nav.itemGetClassName, itemGetStyle=Tabs.Nav.itemGetStyle, itemGetProps=Tabs.Nav.itemGetProps,
     component:Component=Button.Group, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'flex-sub-flex-none';
 
-  itemProps.className = cxm('text-truncate', itemProps.className);
+  itemProps.className = classes('text-truncate', itemProps.className);
   itemProps['b-style'] = itemProps['b-style']||'underline';
 
   return (
     <Component
       separator justify 
       containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
-      className={cxm(classStr, className)} {...props}>
+      className={classes(classStr, className)} {...props}>
       {children}
     </Component>
   )
@@ -78,14 +79,14 @@ Tabs.Container = aprops=>{
     onAction, selectedKey, defaultSelectedKey,
     type='single', itemProps, itemComponent, itemGetClassName=Tabs.Container.itemGetClassName, itemGetStyle=Tabs.Container.itemGetStyle, itemGetProps=Tabs.Container.itemGetProps,
     component:Component=Panel.Container, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'flex-sub-flex-extend';
 
   return (
     <Component 
       type={type} containerProps={aprops} itemComponent={itemComponent} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
-      className={cxm(classStr, className)} {...props}>
+      className={classes(classStr, className)} {...props}>
       {children}
     </Component>
   )

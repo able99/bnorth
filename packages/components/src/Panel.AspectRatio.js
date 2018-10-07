@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import Panel from './Panel';
 
 
@@ -14,7 +15,7 @@ Panel.AspectRatio = aprops=>{
   let {
     ratio, aspectRatioProps,
     component:Component=Panel, style, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
   
   let styleSet = ratio?{paddingBottom: `${ratio*100}%`}:{};
 
@@ -29,11 +30,11 @@ Panel.AspectRatio._Inner = aprops=>{
   let {
     ratio, aspectRatioProps,
     component:Component='div', className, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'position-absolute offset-left-start offset-top-start square-full';
 
-  return <Component className={cxm(classStr, className)} {...props} />
+  return <Component className={classes(classStr, className)} {...props} />
 }
 
 

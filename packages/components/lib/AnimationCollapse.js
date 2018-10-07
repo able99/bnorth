@@ -19,7 +19,9 @@ var _Transition = _interopRequireDefault(require("react-transition-group/Transit
 
 var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _dom = require("./utils/dom");
 
@@ -71,21 +73,21 @@ function handleExiting(aprops, elem) {
 }
 
 var Collapse = function Collapse(aprops) {
-  var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      _genCommonProps$in = _genCommonProps.in,
-      isIn = _genCommonProps$in === void 0 ? true : _genCommonProps$in,
-      _genCommonProps$timeo = _genCommonProps.timeout,
-      timeout = _genCommonProps$timeo === void 0 ? 100 : _genCommonProps$timeo,
-      onTransitionFinished = _genCommonProps.onTransitionFinished,
-      _genCommonProps$trans = _genCommonProps.transitionProps,
-      transitionProps = _genCommonProps$trans === void 0 ? {} : _genCommonProps$trans,
-      onEnter = _genCommonProps.onEnter,
-      onEntering = _genCommonProps.onEntering,
-      onEntered = _genCommonProps.onEntered,
-      onExit = _genCommonProps.onExit,
-      onExiting = _genCommonProps.onExiting,
-      onExited = _genCommonProps.onExited,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["in", "timeout", "onTransitionFinished", "transitionProps", "onEnter", "onEntering", "onEntered", "onExit", "onExiting", "onExited"]);
+  var _parseProps = (0, _props.default)(aprops),
+      _parseProps$in = _parseProps.in,
+      isIn = _parseProps$in === void 0 ? true : _parseProps$in,
+      _parseProps$timeout = _parseProps.timeout,
+      timeout = _parseProps$timeout === void 0 ? 100 : _parseProps$timeout,
+      onTransitionFinished = _parseProps.onTransitionFinished,
+      _parseProps$transitio = _parseProps.transitionProps,
+      transitionProps = _parseProps$transitio === void 0 ? {} : _parseProps$transitio,
+      onEnter = _parseProps.onEnter,
+      onEntering = _parseProps.onEntering,
+      onEntered = _parseProps.onEntered,
+      onExit = _parseProps.onExit,
+      onExiting = _parseProps.onExiting,
+      onExited = _parseProps.onExited,
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["in", "timeout", "onTransitionFinished", "transitionProps", "onEnter", "onEntering", "onEntered", "onExit", "onExiting", "onExited"]);
 
   return _react.default.createElement(_Transition.default, (0, _extends2.default)({
     appear: true
@@ -109,16 +111,16 @@ var Collapse = function Collapse(aprops) {
 };
 
 Collapse._Component = function (aprops) {
-  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
-      isIn = _genCommonProps2.isIn,
-      timeout = _genCommonProps2.timeout,
-      animationState = _genCommonProps2.animationState,
-      _genCommonProps2$comp = _genCommonProps2.component,
-      Component = _genCommonProps2$comp === void 0 ? 'div' : _genCommonProps2$comp,
-      style = _genCommonProps2.style,
-      className = _genCommonProps2.className,
-      children = _genCommonProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["isIn", "timeout", "animationState", "component", "style", "className", "children"]);
+  var _parseProps2 = (0, _props.default)(aprops),
+      isIn = _parseProps2.isIn,
+      timeout = _parseProps2.timeout,
+      animationState = _parseProps2.animationState,
+      _parseProps2$componen = _parseProps2.component,
+      Component = _parseProps2$componen === void 0 ? 'div' : _parseProps2$componen,
+      style = _parseProps2.style,
+      className = _parseProps2.className,
+      children = _parseProps2.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isIn", "timeout", "animationState", "component", "style", "className", "children"]);
 
   var classSet = {
     'overflow-a-hidden': true,
@@ -129,7 +131,7 @@ Collapse._Component = function (aprops) {
   }));
   return _react.default.createElement(Component, (0, _extends2.default)({
     style: styleSet,
-    className: (0, _props.cxm)(classSet, className)
+    className: (0, _classes.default)(classSet, className)
   }, props), children);
 };
 

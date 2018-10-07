@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import AnimationCollapse from './AnimationCollapse';
 import Panel from './Panel';
 import Button from './Button';
@@ -18,14 +19,14 @@ let Notification = (aprops)=>{
     titleProps, hasClose, closeProps, iconProps, onDoClose, 
     transition:Transition=AnimationCollapse, transitionProps, onTransitionFinished,
     component=Panel, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'flex-display-block flex-align-center padding-a- position-absolute offset-top-start offset-left-top width-full';
   
   return (
     <Transition 
       component={component} transitionProps={transitionProps} onTransitionFinished={onTransitionFinished} 
-      b-style="solid" b-theme="mask" className={cxm(classStr, className)} {...props}>
+      b-style="solid" b-theme="mask" className={classes(classStr, className)} {...props}>
       <Notification._Title title={children} {...titleProps} />
       {hasClose?<Notification._Close hasClose={hasClose} onDoClose={onDoClose} {...closeProps} />:null}
     </Transition>
@@ -36,12 +37,12 @@ Notification._Title = aprops=>{
   let {
     title, 
     component:Component=Panel, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'text-weight- text-size-lg flex-sub-flex-extend';
 
   return (
-    <Component className={cxm(classStr, className)} {...props}>
+    <Component className={classes(classStr, className)} {...props}>
       {title}{children}
     </Component>
   );
@@ -51,12 +52,12 @@ Notification._Close = aprops=>{
   let {
     hasClose, onDoClose, iconProps,
     component:Component=Button, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'padding-h-sm padding-v-0 flex-sub-flex-none';
 
   return hasClose!==true?hasClose:(
-    <Component b-style="plain" b-theme="white" onClick={onDoClose} className={cxm(classStr, className)} {...props}>
+    <Component b-style="plain" b-theme="white" onClick={onDoClose} className={classes(classStr, className)} {...props}>
       <Icon name="close" nameDefault="x" {...iconProps} />
       {children}
     </Component>

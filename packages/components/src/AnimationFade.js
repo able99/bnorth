@@ -8,7 +8,8 @@
 import React from 'react';
 import Transition from 'react-transition-group/Transition';
 import { transiton } from '@bnorth/rich.css/lib/styles/animation'; 
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import { chainedFuncs } from './utils/dom';
 
 
@@ -16,7 +17,7 @@ let Fade = aprops=>{
   let {
     in:isIn=true, timeout=100, onTransitionFinished, transitionProps={},
     ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   return (
     <Transition 
@@ -31,7 +32,7 @@ Fade._Component = aprops=>{
   let {
     isIn, timeout, animationState,
     component:Component='div', style, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classSet = `opacity-${(animationState==='entered')?'100':'0'}`;
 
@@ -41,7 +42,7 @@ Fade._Component = aprops=>{
   };
 
   return (
-    <Component style={styleSet} className={cxm(classSet,className)} {...props}>
+    <Component style={styleSet} className={classes(classSet,className)} {...props}>
       {children}
     </Component>
   )

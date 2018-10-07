@@ -6,18 +6,19 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes';
+import parseProps from './utils/props';
 import Panel from './Panel.Container';
 
 
 let Button = aprops=>{
   let {
     component:Component=Panel, panelComponent='button', className, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'outline-none- appearance-none- font-smoothing-antialiased- transition-set- vertical-align-middle position-relative line-height-1 cursor-pointer text-align-center padding-a-';
   
-  return <Component b-style="solid" component={panelComponent} className={cxm(classStr, className)} {...props} />;
+  return <Component b-style="solid" component={panelComponent} className={classes(classStr, className)} {...props} />;
 }
 
 
@@ -27,7 +28,7 @@ Button.Group = aprops=>{
     separatorProps={},
     itemComponent=Button, itemProps, itemGetClassName=Button.Group.itemGetClassName, itemGetStyle=Button.Group.itemGetStyle, itemGetProps=Button.Group.itemGetProps,
     component:Component=Panel.Container, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   children = React.Children.toArray(children)
     .filter(v=>v)
@@ -60,13 +61,13 @@ Button.Group.itemGetClassName=(i, length, {stacked, justify}={})=>{
 Button.Group.Separator = aprops=>{
   let { 
     component:Component=Panel, className, style, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'flex-sub-flex-none bg-color-border margin-v-xl';
   let styleSet = {};
   styleSet.width = 1;
 
-  return <Component inline b-style='solid' b-theme='border' style={{...styleSet, ...style}} className={cxm(classStr,className)} {...props}>&nbsp;</Component>;
+  return <Component inline b-style='solid' b-theme='border' style={{...styleSet, ...style}} className={classes(classStr,className)} {...props}>&nbsp;</Component>;
 }
 
 

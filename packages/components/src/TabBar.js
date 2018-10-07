@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import Panel from './Panel.Container';
 import './Panel.Icon';
 
@@ -16,7 +17,7 @@ let TabBar = aprops=>{
     colorUnselected, colorSelectedOnTheme, colorUnselectedOnTheme,
     type="justify", itemComponent=Panel.Icon, itemProps={}, itemGetClassName=TabBar.itemGetClassName, itemGetStyle=TabBar.itemGetStyle, itemGetProps=TabBar.itemGetProps,
     component:Component=Panel.Container, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'width-full padding-top-sm padding-bottom-xs border-set-top-border';
 
@@ -26,7 +27,7 @@ let TabBar = aprops=>{
   return (
     <Component 
       type={type} containerProps={aprops} itemComponent={itemComponent} itemProps={itemProps} itemGetClassName={itemGetClassName}  itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
-      className={cxm(classStr, className)} {...props}>
+      className={classes(classStr, className)} {...props}>
       {children}
     </Component>
   );

@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import Panel from './Panel.Touchable';
 import Loader from './Loader';
 
@@ -38,7 +39,7 @@ Panel.PullRefresh = class PullRefresh extends React.Component {
     let {
       isLoading, onLoad, triggerOffset, refreshProps, loaderProps, 
       children, ...props
-    } = genCommonProps(this.props);
+    } = parseProps(this.props);
 
     return (
       <Panel.Touchable 
@@ -58,7 +59,7 @@ Panel.PullRefresh._Loader = aprops=>{
   let {
     isLoading, offset, triggerOffset, title, loader, loaderProps={},
     component:Component=Panel, className, style, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'overflow-a-hidden transition-property-height flex-display-block flex-direction-v flex-justify-center flex-align-center';
 
@@ -67,7 +68,7 @@ Panel.PullRefresh._Loader = aprops=>{
   if(isLoading) styleSet.height = triggerOffset;
 
   return (
-    <Component className={cxm(classStr, className)} style={{...styleSet, ...style}} {...props}>
+    <Component className={classes(classStr, className)} style={{...styleSet, ...style}} {...props}>
       {!children&&loader?loader:null}
       {!children&&!loader?<Loader isProgress={!isLoading} progress={offset*100/triggerOffset} {...loaderProps}/>:null}
       {!children&&title?title:null}

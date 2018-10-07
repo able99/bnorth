@@ -27,7 +27,9 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -38,18 +40,18 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @license MIT
  */
 var Icon = function Icon(aprops) {
-  var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      name = _genCommonProps.name,
-      nameDefault = _genCommonProps.nameDefault,
-      src = _genCommonProps.src,
-      char = _genCommonProps.char,
-      _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
-      componentPanel = _genCommonProps.componentPanel,
-      className = _genCommonProps.className,
-      style = _genCommonProps.style,
-      children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["name", "nameDefault", "src", "char", "component", "componentPanel", "className", "style", "children"]);
+  var _parseProps = (0, _props.default)(aprops),
+      name = _parseProps.name,
+      nameDefault = _parseProps.nameDefault,
+      src = _parseProps.src,
+      char = _parseProps.char,
+      _parseProps$component = _parseProps.component,
+      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+      componentPanel = _parseProps.componentPanel,
+      className = _parseProps.className,
+      style = _parseProps.style,
+      children = _parseProps.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["name", "nameDefault", "src", "char", "component", "componentPanel", "className", "style", "children"]);
 
   var classStr = 'display-inline width-1em height-1em';
   var classSet = [];
@@ -86,7 +88,7 @@ var Icon = function Icon(aprops) {
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
     style: (0, _objectSpread2.default)({}, styleSet, style),
-    className: (0, _props.cxm)(classStr, classSet, className)
+    className: (0, _classes.default)(classStr, classSet, className)
   }, props));
 };
 

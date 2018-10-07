@@ -13,7 +13,9 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _AnimationCollapse = _interopRequireDefault(require("./AnimationCollapse"));
 
@@ -30,21 +32,21 @@ var _Icon = _interopRequireDefault(require("./Icon"));
  * @license MIT
  */
 var Notification = function Notification(aprops) {
-  var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      titleProps = _genCommonProps.titleProps,
-      hasClose = _genCommonProps.hasClose,
-      closeProps = _genCommonProps.closeProps,
-      iconProps = _genCommonProps.iconProps,
-      onDoClose = _genCommonProps.onDoClose,
-      _genCommonProps$trans = _genCommonProps.transition,
-      Transition = _genCommonProps$trans === void 0 ? _AnimationCollapse.default : _genCommonProps$trans,
-      transitionProps = _genCommonProps.transitionProps,
-      onTransitionFinished = _genCommonProps.onTransitionFinished,
-      _genCommonProps$compo = _genCommonProps.component,
-      component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
-      className = _genCommonProps.className,
-      children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["titleProps", "hasClose", "closeProps", "iconProps", "onDoClose", "transition", "transitionProps", "onTransitionFinished", "component", "className", "children"]);
+  var _parseProps = (0, _props.default)(aprops),
+      titleProps = _parseProps.titleProps,
+      hasClose = _parseProps.hasClose,
+      closeProps = _parseProps.closeProps,
+      iconProps = _parseProps.iconProps,
+      onDoClose = _parseProps.onDoClose,
+      _parseProps$transitio = _parseProps.transition,
+      Transition = _parseProps$transitio === void 0 ? _AnimationCollapse.default : _parseProps$transitio,
+      transitionProps = _parseProps.transitionProps,
+      onTransitionFinished = _parseProps.onTransitionFinished,
+      _parseProps$component = _parseProps.component,
+      component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+      className = _parseProps.className,
+      children = _parseProps.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["titleProps", "hasClose", "closeProps", "iconProps", "onDoClose", "transition", "transitionProps", "onTransitionFinished", "component", "className", "children"]);
 
   var classStr = 'flex-display-block flex-align-center padding-a- position-absolute offset-top-start offset-left-top width-full';
   return _react.default.createElement(Transition, (0, _extends2.default)({
@@ -53,7 +55,7 @@ var Notification = function Notification(aprops) {
     onTransitionFinished: onTransitionFinished,
     "b-style": "solid",
     "b-theme": "mask",
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props), _react.default.createElement(Notification._Title, (0, _extends2.default)({
     title: children
   }, titleProps)), hasClose ? _react.default.createElement(Notification._Close, (0, _extends2.default)({
@@ -63,37 +65,37 @@ var Notification = function Notification(aprops) {
 };
 
 Notification._Title = function (aprops) {
-  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
-      title = _genCommonProps2.title,
-      _genCommonProps2$comp = _genCommonProps2.component,
-      Component = _genCommonProps2$comp === void 0 ? _Panel.default : _genCommonProps2$comp,
-      className = _genCommonProps2.className,
-      children = _genCommonProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["title", "component", "className", "children"]);
+  var _parseProps2 = (0, _props.default)(aprops),
+      title = _parseProps2.title,
+      _parseProps2$componen = _parseProps2.component,
+      Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
+      className = _parseProps2.className,
+      children = _parseProps2.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["title", "component", "className", "children"]);
 
   var classStr = 'text-weight- text-size-lg flex-sub-flex-extend';
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props), title, children);
 };
 
 Notification._Close = function (aprops) {
-  var _genCommonProps3 = (0, _props.genCommonProps)(aprops),
-      hasClose = _genCommonProps3.hasClose,
-      onDoClose = _genCommonProps3.onDoClose,
-      iconProps = _genCommonProps3.iconProps,
-      _genCommonProps3$comp = _genCommonProps3.component,
-      Component = _genCommonProps3$comp === void 0 ? _Button.default : _genCommonProps3$comp,
-      className = _genCommonProps3.className,
-      children = _genCommonProps3.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["hasClose", "onDoClose", "iconProps", "component", "className", "children"]);
+  var _parseProps3 = (0, _props.default)(aprops),
+      hasClose = _parseProps3.hasClose,
+      onDoClose = _parseProps3.onDoClose,
+      iconProps = _parseProps3.iconProps,
+      _parseProps3$componen = _parseProps3.component,
+      Component = _parseProps3$componen === void 0 ? _Button.default : _parseProps3$componen,
+      className = _parseProps3.className,
+      children = _parseProps3.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["hasClose", "onDoClose", "iconProps", "component", "className", "children"]);
 
   var classStr = 'padding-h-sm padding-v-0 flex-sub-flex-none';
   return hasClose !== true ? hasClose : _react.default.createElement(Component, (0, _extends2.default)({
     "b-style": "plain",
     "b-theme": "white",
     onClick: onDoClose,
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props), _react.default.createElement(_Icon.default, (0, _extends2.default)({
     name: "close",
     nameDefault: "x"

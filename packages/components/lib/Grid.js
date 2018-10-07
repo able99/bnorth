@@ -6,13 +6,14 @@
 //  */
 // import React from 'react';
 // import { styleFlexSubBasis } from '@bnorth/rich.css/lib/styles/flex'
-// import { genCommonProps, cxm } from './utils/props';
+// import classes from '@bnorth/rich.css/lib/classes'; 
+// import parseProps from './utils/props';
 // import Panel from './Panel';
 // let Grid = aprops=>{
 //   let {
 //     border, avg, align, justify, wrap=avg?'nowrap':'wrap', total=12, 
 //     component:Component=Panel, className, children, ...props
-//   } = genCommonProps(aprops);
+//   } = parseProps(aprops);
 //   let classStr = 'position-relative overflow-a-hidden backface-hidden flex-display-block';
 //   let classSet = {
 //     [`flex-wrap-${wrap}`]: wrap,
@@ -34,7 +35,7 @@
 //   let {
 //     i, count, cols, offset, shrink, total=12, border, avg, 
 //     component: Component = 'div', style, className, cTheme, cStyle, cSize, children, ...props
-//   } = genCommonProps(aprops);
+//   } = parseProps(aprops);
 //   let classSet = {
 //     'padding': !hascx(className, 'padding'),
 //     'flex-sub-flex-extend': avg,

@@ -27,7 +27,9 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _AnimationSlider = _interopRequireDefault(require("./AnimationSlider"));
 
@@ -161,26 +163,26 @@ function (_React$Component) {
     value: function render() {
       var _this3 = this;
 
-      var _genCommonProps = (0, _props.genCommonProps)(this.props),
-          defaultIndex = _genCommonProps.defaultIndex,
-          _genCommonProps$contr = _genCommonProps.controller,
-          controller = _genCommonProps$contr === void 0 ? true : _genCommonProps$contr,
-          _genCommonProps$pager = _genCommonProps.pager,
-          pager = _genCommonProps$pager === void 0 ? true : _genCommonProps$pager,
-          interval = _genCommonProps.interval,
-          timeout = _genCommonProps.timeout,
-          autoPlay = _genCommonProps.autoPlay,
-          loop = _genCommonProps.loop,
-          pauseOnHover = _genCommonProps.pauseOnHover,
-          pagerItemProps = _genCommonProps.pagerItemProps,
-          controllerPrevProps = _genCommonProps.controllerPrevProps,
-          controllerNextProps = _genCommonProps.controllerNextProps,
-          _genCommonProps$compo = _genCommonProps.component,
-          Component = _genCommonProps$compo === void 0 ? _Panel.default.Touchable : _genCommonProps$compo,
-          _genCommonProps$compo2 = _genCommonProps.componentAnimation,
-          componentAnimation = _genCommonProps$compo2 === void 0 ? _AnimationSlider.default : _genCommonProps$compo2,
-          children = _genCommonProps.children,
-          props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["defaultIndex", "controller", "pager", "interval", "timeout", "autoPlay", "loop", "pauseOnHover", "pagerItemProps", "controllerPrevProps", "controllerNextProps", "component", "componentAnimation", "children"]);
+      var _parseProps = (0, _props.default)(this.props),
+          defaultIndex = _parseProps.defaultIndex,
+          _parseProps$controlle = _parseProps.controller,
+          controller = _parseProps$controlle === void 0 ? true : _parseProps$controlle,
+          _parseProps$pager = _parseProps.pager,
+          pager = _parseProps$pager === void 0 ? true : _parseProps$pager,
+          interval = _parseProps.interval,
+          timeout = _parseProps.timeout,
+          autoPlay = _parseProps.autoPlay,
+          loop = _parseProps.loop,
+          pauseOnHover = _parseProps.pauseOnHover,
+          pagerItemProps = _parseProps.pagerItemProps,
+          controllerPrevProps = _parseProps.controllerPrevProps,
+          controllerNextProps = _parseProps.controllerNextProps,
+          _parseProps$component = _parseProps.component,
+          Component = _parseProps$component === void 0 ? _Panel.default.Touchable : _parseProps$component,
+          _parseProps$component2 = _parseProps.componentAnimation,
+          componentAnimation = _parseProps$component2 === void 0 ? _AnimationSlider.default : _parseProps$component2,
+          children = _parseProps.children,
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["defaultIndex", "controller", "pager", "interval", "timeout", "autoPlay", "loop", "pauseOnHover", "pagerItemProps", "controllerPrevProps", "controllerNextProps", "component", "componentAnimation", "children"]);
 
       var index = this.state.index;
       children = _react.default.Children.toArray(children);
@@ -224,44 +226,44 @@ function (_React$Component) {
 }(_react.default.Component);
 
 Carousel.Controller = function (aprops) {
-  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
-      isForward = _genCommonProps2.isForward,
-      _genCommonProps2$name = _genCommonProps2.name,
-      name = _genCommonProps2$name === void 0 ? aprops.isForward ? 'right' : 'left' : _genCommonProps2$name,
-      _genCommonProps2$name2 = _genCommonProps2.nameDefault,
-      nameDefault = _genCommonProps2$name2 === void 0 ? isForward ? '>' : '<' : _genCommonProps2$name2,
-      _genCommonProps2$comp = _genCommonProps2.component,
-      Component = _genCommonProps2$comp === void 0 ? _Icon.default : _genCommonProps2$comp,
-      className = _genCommonProps2.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["isForward", "name", "nameDefault", "component", "className"]);
+  var _parseProps2 = (0, _props.default)(aprops),
+      isForward = _parseProps2.isForward,
+      _parseProps2$name = _parseProps2.name,
+      name = _parseProps2$name === void 0 ? aprops.isForward ? 'right' : 'left' : _parseProps2$name,
+      _parseProps2$nameDefa = _parseProps2.nameDefault,
+      nameDefault = _parseProps2$nameDefa === void 0 ? isForward ? '>' : '<' : _parseProps2$nameDefa,
+      _parseProps2$componen = _parseProps2.component,
+      Component = _parseProps2$componen === void 0 ? _Icon.default : _parseProps2$componen,
+      className = _parseProps2.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isForward", "name", "nameDefault", "component", "className"]);
 
   var classStr = 'bg-color-mask position-absolute text-color-white cursor-pointer margin-h-xxs offset-top-center translate-center-y text-weight-border';
   var classSet = ["offset-".concat(isForward ? 'right' : 'left', "-start")];
   return _react.default.createElement(Component, (0, _extends2.default)({
     "b-size": "xl",
-    className: (0, _props.cxm)(classStr, classSet, className),
+    className: (0, _classes.default)(classStr, classSet, className),
     name: name,
     nameDefault: nameDefault
   }, props));
 };
 
 Carousel.Pager = function (aprops) {
-  var _genCommonProps3 = (0, _props.genCommonProps)(aprops),
-      count = _genCommonProps3.count,
-      index = _genCommonProps3.index,
-      onClick = _genCommonProps3.onClick,
-      itemProps = _genCommonProps3.itemProps,
-      _genCommonProps3$comp = _genCommonProps3.component,
-      Component = _genCommonProps3$comp === void 0 ? _Panel.default : _genCommonProps3$comp,
-      _genCommonProps3$comp2 = _genCommonProps3.componnetPanel,
-      componnetPanel = _genCommonProps3$comp2 === void 0 ? 'ol' : _genCommonProps3$comp2,
-      className = _genCommonProps3.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps3, ["count", "index", "onClick", "itemProps", "component", "componnetPanel", "className"]);
+  var _parseProps3 = (0, _props.default)(aprops),
+      count = _parseProps3.count,
+      index = _parseProps3.index,
+      onClick = _parseProps3.onClick,
+      itemProps = _parseProps3.itemProps,
+      _parseProps3$componen = _parseProps3.component,
+      Component = _parseProps3$componen === void 0 ? _Panel.default : _parseProps3$componen,
+      _parseProps3$componne = _parseProps3.componnetPanel,
+      componnetPanel = _parseProps3$componne === void 0 ? 'ol' : _parseProps3$componne,
+      className = _parseProps3.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["count", "index", "onClick", "itemProps", "component", "componnetPanel", "className"]);
 
   var classStr = 'position-absolute flex-display-block flex-justify-center flex-align-center bg-color-overlay padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componnetPanel,
-    className: (0, _props.cxm)(classStr, className)
+    className: (0, _classes.default)(classStr, className)
   }, props), Array.from({
     length: count
   }, function (v, k) {
@@ -278,17 +280,17 @@ Carousel.Pager = function (aprops) {
 };
 
 Carousel.Pager.Item = function (aprops) {
-  var _genCommonProps4 = (0, _props.genCommonProps)(aprops),
-      count = _genCommonProps4.count,
-      index = _genCommonProps4.index,
-      i = _genCommonProps4.i,
-      _onClick = _genCommonProps4.onClick,
-      _genCommonProps4$comp = _genCommonProps4.component,
-      Component = _genCommonProps4$comp === void 0 ? _Panel.default : _genCommonProps4$comp,
-      _genCommonProps4$comp2 = _genCommonProps4.componnetPanel,
-      componnetPanel = _genCommonProps4$comp2 === void 0 ? 'li' : _genCommonProps4$comp2,
-      className = _genCommonProps4.className,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps4, ["count", "index", "i", "onClick", "component", "componnetPanel", "className"]);
+  var _parseProps4 = (0, _props.default)(aprops),
+      count = _parseProps4.count,
+      index = _parseProps4.index,
+      i = _parseProps4.i,
+      _onClick = _parseProps4.onClick,
+      _parseProps4$componen = _parseProps4.component,
+      Component = _parseProps4$componen === void 0 ? _Panel.default : _parseProps4$componen,
+      _parseProps4$componne = _parseProps4.componnetPanel,
+      componnetPanel = _parseProps4$componne === void 0 ? 'li' : _parseProps4$componne,
+      className = _parseProps4.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps4, ["count", "index", "i", "onClick", "component", "componnetPanel", "className"]);
 
   var classStr = 'cursor-pointer width-0em5 height-0em5 border-radius-rounded border-set-a-white';
   var classSet = {
@@ -301,7 +303,7 @@ Carousel.Pager.Item = function (aprops) {
       return _onClick && _onClick(i);
     },
     component: componnetPanel,
-    className: (0, _props.cxm)(classStr, classSet, className)
+    className: (0, _classes.default)(classStr, classSet, className)
   }, props));
 };
 

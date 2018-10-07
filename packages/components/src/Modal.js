@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import AnimationFade from './AnimationFade';
 import Backdrop from './Backdrop';
 import Button from './Button';
@@ -21,7 +22,7 @@ let Modal = aprops=>{
     bodyProps, 
     footerProps, footerButtonProps, footButtonGetStyle, footButtonGetClassName, footButtonGetProps,
     component:Component="div", style, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
   children = typeof(children)==='function'?children(this):children;
   
   let classStr = 'position-relative backface-hidden overflow-a-hidden bg-color-white';
@@ -43,7 +44,7 @@ let Modal = aprops=>{
       {role==='document'?children:(
         <Component 
           onClick={e=>e.stopPropagation()} 
-          style={styleSet} className={cxm(classStr, classSet, className)} 
+          style={styleSet} className={classes(classStr, classSet, className)} 
           {...props}>
           <Modal._Header 
             title={title} titleProps={titleProps} 
@@ -67,7 +68,7 @@ Modal._Container = aprops=>{
     role, handleAction, 
     mask=true, transition:Transition=AnimationFade, in:isIn, onTransitionFinished, 
     component=Backdrop, className, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classSet = {
     'flex-display-block': role!=='document',
@@ -79,7 +80,7 @@ Modal._Container = aprops=>{
     <Transition
       onClick={()=>handleAction&&handleAction()}
       in={isIn} onTransitionFinished={onTransitionFinished} component={component} mask={mask} 
-      className={cxm(classSet, className)} {...props}>
+      className={classes(classSet, className)} {...props}>
       {children}
     </Transition>
   );
@@ -90,12 +91,12 @@ Modal._Header = aprops=>{
     handleAction,
     title, titleProps, hasTitleClose, titleCloseProps, titleCloseIconProps,
     component:Component='div', className, ...props 
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'width-full padding-a- border-set-bottom- flex-display-block flex-justify-between flex-align-center';
   
   return (title||hasTitleClose?(
-    <Component className={cxm(classStr, className)} {...props}>
+    <Component className={classes(classStr, className)} {...props}>
       <Modal._HeaderTitle hasTitleClose={hasTitleClose} {...titleProps}>{title}</Modal._HeaderTitle>
       {!hasTitleClose?null:(
         <Modal._HeaderTitleClose 
@@ -112,7 +113,7 @@ Modal._HeaderTitle = aprops=>{
   let { 
     hasTitleClose,
     component:Component='div', className, children, ...props 
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
   
   let classStr = 'flex-sub-flex-grow text-weight-bold text-size-lg';
   let classSet = {
@@ -120,7 +121,7 @@ Modal._HeaderTitle = aprops=>{
   };  
 
   return (
-    <Component className={cxm(classStr, classSet, className)} {...props}>{children}</Component>
+    <Component className={classes(classStr, classSet, className)} {...props}>{children}</Component>
   );
 }
 
@@ -129,7 +130,7 @@ Modal._HeaderTitleClose = aprops=>{
     handleAction, 
     titleCloseIconProps,
     component:Component=Button, className, children, ...props 
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'padding-h-sm padding-v-0';
   
@@ -137,7 +138,7 @@ Modal._HeaderTitleClose = aprops=>{
     <Component
       b-style="plain"
       onClick={()=>handleAction&&handleAction()} 
-      className={cxm(classStr, className)}
+      className={classes(classStr, className)}
       {...props}>
       {children===true?<Modal._HeaderTitleCloseIcon {...titleCloseIconProps} />:children}
     </Component>
@@ -148,7 +149,7 @@ Modal._HeaderTitleCloseIcon = aprops=>{
   let { 
     title,
     component:Component=Icon, ...props 
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   return <Component name="close" nameDefault="x" {...props} />
 }
@@ -156,13 +157,13 @@ Modal._HeaderTitleCloseIcon = aprops=>{
 Modal._Body = aprops=>{
   let { 
     component:Component='div', className, children, ...props 
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
   children = typeof(children)==='function'?children(this):children;
   if(!children) return null;
 
   let classStr = 'padding-a-';
   
-  return <Component className={cxm(classStr, className)} {...props}>{children}</Component>;
+  return <Component className={classes(classStr, className)} {...props}>{children}</Component>;
 }
 
 Modal._Footer =  aprops=>{
@@ -171,18 +172,18 @@ Modal._Footer =  aprops=>{
     footerButtons=Modal._footerButtons[aprops.role]||[],
     itemProps={}, itemGetClassName=Modal._Footer.itemGetClassName, itemGetStyle=Modal._Footer.itemGetStyle, itemGetProps=Modal._Footer.itemGetProps,
     component:Component=Button.Group, componentItem=Button, className, children, ...props 
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
   if(!footerButtons.length) return null;
 
   let classStr = 'border-set-top-';
 
-  itemProps.className = cxm(itemProps.className, 'border-set-left-');
+  itemProps.className = classes(itemProps.className, 'border-set-left-');
   
   return (
     <Component 
       type="justify" 
       containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
-      className={cxm(classStr, className)} {...props}>
+      className={classes(classStr, className)} {...props}>
       {footerButtons.map((v,i)=><componentItem key={i}>{v}</componentItem>)}
     </Component>
   );

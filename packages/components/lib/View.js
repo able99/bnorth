@@ -17,7 +17,9 @@ var _react = _interopRequireDefault(require("react"));
 
 var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -28,16 +30,16 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @license MIT
  */
 var View = function View(aprops) {
-  var _genCommonProps = (0, _props.genCommonProps)(aprops),
-      landscape = _genCommonProps.landscape,
-      _genCommonProps$conta = _genCommonProps.container,
-      container = _genCommonProps$conta === void 0 ? window : _genCommonProps$conta,
-      _genCommonProps$compo = _genCommonProps.component,
-      Component = _genCommonProps$compo === void 0 ? _Panel.default : _genCommonProps$compo,
-      className = _genCommonProps.className,
-      style = _genCommonProps.style,
-      children = _genCommonProps.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["landscape", "container", "component", "className", "style", "children"]);
+  var _parseProps = (0, _props.default)(aprops),
+      landscape = _parseProps.landscape,
+      _parseProps$container = _parseProps.container,
+      container = _parseProps$container === void 0 ? window : _parseProps$container,
+      _parseProps$component = _parseProps.component,
+      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+      className = _parseProps.className,
+      style = _parseProps.style,
+      children = _parseProps.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["landscape", "container", "component", "className", "style", "children"]);
 
   var classStr = 'position-relative offset-a-start square-full overflow-a-hidden flex-display-block flex-direction-v';
   var styleSet = {};
@@ -54,7 +56,7 @@ var View = function View(aprops) {
   return _react.default.createElement(Component, (0, _extends2.default)({
     "bc-bg-color": "view",
     style: (0, _objectSpread2.default)({}, styleSet, style),
-    className: (0, _props.cxm)(classStr, className),
+    className: (0, _classes.default)(classStr, className),
     "data-container": true
   }, props), children);
 };

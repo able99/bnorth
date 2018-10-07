@@ -86,12 +86,11 @@ function (_React$Component) {
     value: function action(func, name) {
       var _this2 = this;
 
-      var app = this.props.app.app;
       if (!name) name = "_".concat(++this._actionNum);
 
       var ret = function ret() {
         try {
-          app.log.info('page action', _this2.name, name);
+          _this2.app.log.info('page action', _this2.name, name);
 
           for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
@@ -99,8 +98,9 @@ function (_React$Component) {
 
           return func.apply(_this2, args);
         } catch (e) {
-          app.log.error('page action', name, e);
-          app.render.panic(e, {
+          _this2.app.log.error('page action', name, e);
+
+          _this2.app.render.panic(e, {
             title: "action(".concat(name, ") error")
           });
         }

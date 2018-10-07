@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import Panel from './Panel';
 
 
@@ -22,7 +23,7 @@ function getSubComponentProps(
       ...subPropsStyle, 
       ...styletyle,
     },
-    className: cxm(
+    className: classes(
       subGetClassName&&subGetClassName(i, length, containerProps, props, subProps),
       subPropsClassName,
       className,
@@ -39,7 +40,7 @@ class Container extends React.Component {
     let {
       type, containerProps, itemComponent, itemProps, itemGetProps, itemGetClassName, itemGetStyle,
       component:Component=Panel, className, children, ...props
-    } = genCommonProps(this.props);
+    } = parseProps(this.props);
 
     let classStr = 'position-relative overflow-a-hidden';
 
@@ -61,7 +62,7 @@ class Container extends React.Component {
     }
 
     return (
-      <Component className={cxm(classStr, className)} {...props}>
+      <Component className={classes(classStr, className)} {...props}>
         {children}
       </Component>
     )
@@ -73,7 +74,7 @@ Container.Item = aprops=>{
     type, 
     itemProps, itemGetProps, itemGetClassName, itemGetStyle,
     component:Component=Panel, className, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
   let classStr = '';
 
   if(type==='single'){
@@ -84,7 +85,7 @@ Container.Item = aprops=>{
 
   }
 
-  return <Component className={cxm(classStr, className)} {...props} />
+  return <Component className={classes(classStr, className)} {...props} />
 }
 
 

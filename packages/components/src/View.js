@@ -7,7 +7,8 @@
 
 import React from 'react';
 import { transform } from '@bnorth/rich.css/lib/styles/animation'
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import Panel from './Panel';
 
 
@@ -15,7 +16,7 @@ let View = aprops=>{
   let {
     landscape, container=window,
     component:Component=Panel, className, style, children, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'position-relative offset-a-start square-full overflow-a-hidden flex-display-block flex-direction-v';
   let styleSet = {};
@@ -28,7 +29,7 @@ let View = aprops=>{
   }}
   
   return (
-    <Component bc-bg-color="view" style={{...styleSet, ...style}} className={cxm(classStr, className)} data-container {...props}>
+    <Component bc-bg-color="view" style={{...styleSet, ...style}} className={classes(classStr, className)} data-container {...props}>
       {children}
     </Component>
   );

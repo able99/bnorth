@@ -6,7 +6,8 @@
  */
 
 import React from 'react';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import AnimationSlider from './AnimationSlider';
 import Panel from './Panel.Touchable';
 import Icon from './Icon';
@@ -81,7 +82,7 @@ class Carousel extends React.Component {
       defaultIndex, controller=true, pager=true, interval, timeout, autoPlay, loop, pauseOnHover,
       pagerItemProps, controllerPrevProps, controllerNextProps,
       component:Component=Panel.Touchable, componentAnimation=AnimationSlider, children, ...props
-    } = genCommonProps(this.props);
+    } = parseProps(this.props);
     let { index } = this.state;
     children = React.Children.toArray(children);
 
@@ -103,24 +104,24 @@ Carousel.Controller = aprops=>{
   let {
     isForward, name=aprops.isForward?'right':'left', nameDefault=isForward?'>':'<',
     component:Component=Icon, className, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'bg-color-mask position-absolute text-color-white cursor-pointer margin-h-xxs offset-top-center translate-center-y text-weight-border';
   let classSet = [`offset-${isForward?'right':'left'}-start`];
 
-  return <Component b-size="xl" className={cxm(classStr, classSet, className)} name={name} nameDefault={nameDefault} {...props} />
+  return <Component b-size="xl" className={classes(classStr, classSet, className)} name={name} nameDefault={nameDefault} {...props} />
 }
 
 Carousel.Pager = aprops=>{
   let {
     count, index, onClick, itemProps,
     component:Component=Panel, componnetPanel='ol', className, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'position-absolute flex-display-block flex-justify-center flex-align-center bg-color-overlay padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
   
   return (
-    <Component component={componnetPanel} className={cxm(classStr, className)} {...props}>
+    <Component component={componnetPanel} className={classes(classStr, className)} {...props}>
       {Array
         .from({length:count},(v,k)=>k)
         .map(v=><Carousel.Pager.Item key={v} onClick={onClick} count={count} index={index} i={v} {...itemProps}/>)
@@ -133,7 +134,7 @@ Carousel.Pager.Item = aprops=>{
   let {
     count, index, i, onClick,
     component:Component=Panel, componnetPanel='li', className, ...props
-  } = genCommonProps(aprops);
+  } = parseProps(aprops);
 
   let classStr = 'cursor-pointer width-0em5 height-0em5 border-radius-rounded border-set-a-white';
   let classSet = {
@@ -142,7 +143,7 @@ Carousel.Pager.Item = aprops=>{
     'margin-left-xxs': i>0,
   };
 
-  return <Component onClick={e=>onClick&&onClick(i)} component={componnetPanel} className={cxm(classStr, classSet, className)} {...props} />;
+  return <Component onClick={e=>onClick&&onClick(i)} component={componnetPanel} className={classes(classStr, classSet, className)} {...props} />;
 }
 
 Carousel.Item = AnimationSlider.Item;

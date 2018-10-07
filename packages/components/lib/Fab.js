@@ -27,7 +27,9 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _dom = require("./utils/dom");
 
@@ -60,21 +62,21 @@ function (_React$Component) {
     value: function render() {
       var _this = this;
 
-      var _genCommonProps = (0, _props.genCommonProps)(this.props),
-          _genCommonProps$x = _genCommonProps.x,
-          x = _genCommonProps$x === void 0 ? 8 : _genCommonProps$x,
-          _genCommonProps$y = _genCommonProps.y,
-          y = _genCommonProps$y === void 0 ? 8 : _genCommonProps$y,
-          _genCommonProps$h = _genCommonProps.h,
-          h = _genCommonProps$h === void 0 ? 'end' : _genCommonProps$h,
-          _genCommonProps$v = _genCommonProps.v,
-          v = _genCommonProps$v === void 0 ? 'end' : _genCommonProps$v,
-          container = _genCommonProps.container,
-          _genCommonProps$compo = _genCommonProps.component,
-          Component = _genCommonProps$compo === void 0 ? _Button.default : _genCommonProps$compo,
-          className = _genCommonProps.className,
-          style = _genCommonProps.style,
-          props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["x", "y", "h", "v", "container", "component", "className", "style"]);
+      var _parseProps = (0, _props.default)(this.props),
+          _parseProps$x = _parseProps.x,
+          x = _parseProps$x === void 0 ? 8 : _parseProps$x,
+          _parseProps$y = _parseProps.y,
+          y = _parseProps$y === void 0 ? 8 : _parseProps$y,
+          _parseProps$h = _parseProps.h,
+          h = _parseProps$h === void 0 ? 'end' : _parseProps$h,
+          _parseProps$v = _parseProps.v,
+          v = _parseProps$v === void 0 ? 'end' : _parseProps$v,
+          container = _parseProps.container,
+          _parseProps$component = _parseProps.component,
+          Component = _parseProps$component === void 0 ? _Button.default : _parseProps$component,
+          className = _parseProps.className,
+          style = _parseProps.style,
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["x", "y", "h", "v", "container", "component", "className", "style"]);
 
       if ((container === true || typeof container === 'string') && !this.container) {
         return _react.default.createElement("span", {
@@ -103,7 +105,7 @@ function (_React$Component) {
       if (v === 'end') styleSet['bottom'] = y;
 
       var component = _react.default.createElement(Component, (0, _extends2.default)({
-        className: (0, _props.cxm)(classStr, classSet, className),
+        className: (0, _classes.default)(classStr, classSet, className),
         style: (0, _objectSpread2.default)({}, styleSet, style)
       }, props));
 

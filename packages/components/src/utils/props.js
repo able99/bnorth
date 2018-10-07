@@ -1,33 +1,13 @@
-import classnames from 'classnames';
-import { styleFlexSubGrow, styleFlexSubShrink, styleFlexSubBasis, styleFlexSubOrder } from '@bnorth/rich.css/lib/styles/flex'
-import { transform } from '@bnorth/rich.css/lib/styles/animation'
+import classes from '@bnorth/rich.css/lib/classes'; 
 
 
-export let functions = {
-  styleFlexSubGrow, styleFlexSubShrink, styleFlexSubBasis, styleFlexSubOrder,
-  transform,
+export let functions = {};
+
+export function addFunctions(args) {
+  return Object.assign(functions, args);
 }
 
-export function cx(...args) {
-  return classnames(...args);
-};
-
-export function cxm(...args) {
-  return mergeClassName(cx(...args));
-}
-
-export function mergeClassName(className) {
-  let classNames = className.split(/\s/);
-  return classNames
-    .filter((v,i,a)=>{let key=v.substr(0, v.lastIndexOf('-')); return !a.slice(i+1).find(vv=>{
-      if(key==='border-none'&&vv.startsWith('border-')) return true;
-      if(key==='border-'&&vv.startsWith('border-none-')) return true;
-      return vv.startsWith(key);
-    })})
-    .join(' ');
-}
-
-export function genCommonProps(aprops) {
+export default function parseProps(aprops) {
   let {
     active, selected, disabled,
     className, style, refWrap, ...props
@@ -57,7 +37,7 @@ export function genCommonProps(aprops) {
   
   return {
     ...props,
-    className: cx(classSet, className),
+    className: classes(classSet, className),
     style: {...styleSet, ...style},
     selected, active, disabled,
     ref: refWrap,

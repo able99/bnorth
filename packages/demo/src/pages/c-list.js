@@ -4,6 +4,10 @@ import Panel from '@bnorth/components/lib/Panel.PullRefresh'
 import List from '@bnorth/components/lib/List'
 import InfiniteScroll from '@bnorth/components/lib/InfiniteScroll';
 import BackTop from '@bnorth/components/lib/BackTop';
+import Field from '@bnorth/components/lib/Field';
+import Popover from '@bnorth/components/lib/Popover';
+import Button from '@bnorth/components/lib/Button';
+import Icon from '@bnorth/components/lib/Icon';
 
 
 let Component = aprops=>{
@@ -12,12 +16,50 @@ let Component = aprops=>{
 
   return (
     <View>
-      <Panel main>
+        <Field 
+          containerProps={{className: 'padding-a- border-set-bottom-'}}
+          className="padding-a- border-set-a- border-radius- bg-color-white bg-none-- border-none-a--"
+          value={stateData.keyword||'input search keyword'}
+          onClick={e=>app.router.push(['search', stateData.keyword||'', page._id])}
+          before=" " />
+
+        <Panel className="border-set-bottom- bg-color-white flex-display-block flex-align-center">
+          <Popover 
+            component={Button}
+            b-style="plain"
+            className="flex-sub-flex-extend"
+            overlay={
+              <List>
+                {types.map(v=>(
+                  <List.Item 
+                    onClick={()=>page.stateList.fetch({type: v})}
+                    title={v} />
+                ))}
+              </List>
+            }
+            placement="bottom-auto-full">
+            {stateData.type||'All types'}
+          </Popover>
+          <Button b-style="plain" className="flex-sub-flex-extend" onClick={()=>{
+            if(!stateData.order) page.stateList.fetch({order: 'asc'});
+            if(stateData.order==='asc') page.stateList.fetch({order: 'desc'});
+            if(stateData.order==='desc') page.stateList.fetch({order: ''});
+          }}>
+            <div className="flex-display-block flex-justify-center flex-align-center">
+              <span>order</span>
+              <span className="flex-display-inline flex-direction-v">
+                <Icon name="up" b-size="xs" b-theme={stateData.order==='asc'&&'primary'} />
+                <Icon name="down" b-size="xs" b-theme={stateData.order==='desc'&&'primary'} />
+              </span>
+            </div>
+          </Button>
+        </Panel>
+
         <Panel.PullRefresh 
           bc-height-full bc-scrollable-y- 
           onLoad={()=>page.stateList.fetch(null)}
           isLoading={stateListExt.fetching} >
-          <List>
+          <List separatorInset>
             {stateList.length?<List.Item part='header'>header</List.Item>:null}
             {stateList.map(i=>(
               <List.Item name="aaa"
@@ -33,7 +75,6 @@ let Component = aprops=>{
             isLoading={stateListExt.fetching}  
             onLoading={()=>page.stateList.fetch(null, true)}  />
         </Panel.PullRefresh>
-      </Panel>
     </View>
   );
 };
@@ -43,7 +84,9 @@ Component.controller = (app,page)=>({
     initialization: {
       pageStart: 0,
       pageSize: 20,
-      keyword: '',
+      order: '',
+      type: '',
+      keyword: page.props.route.params.keyword,
     }
   },
 
@@ -61,13 +104,23 @@ Component.controller = (app,page)=>({
     request: ({data, append}, request)=>{
       data = data();
       return new Promise((resolve, reject)=>{
-        setTimeout(()=>{
-          resolve({ data: Array.from({length:data.pageStart<120?20:8},(v,k)=>k+data.pageStart) });
-        }, append?3000:1000);
+        let result = listData;
+        if(data.order==='desc') result = Array.from(listData).reverse();
+        result = result
+          .filter(v=>!data.keyword?true:v.includes(data.keyword))
+          .slice(data.pageStart, data.pageStart+data.pageSize)
+          .map(v=>(data.type?data.type:'')+v)
+        setTimeout(()=>resolve({ data: result}), append?1500:1000);
       });
     },
   },
+
+  onPageSearchKeyword: keyword=>{
+    page.stateList.fetch({keyword, order: '', type: ''});
+  }
 })
 
+let listData = Array.from({length: 168}, (v,i)=>String(i).padStart(3,'0'));
+let types = ['A','B','C'];
 
 export default Component;

@@ -27,7 +27,9 @@ var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/de
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = require("./utils/props");
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel.Touchable"));
 
@@ -75,14 +77,14 @@ function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var _genCommonProps = (0, _props.genCommonProps)(this.props),
-          isLoading = _genCommonProps.isLoading,
-          onLoad = _genCommonProps.onLoad,
-          triggerOffset = _genCommonProps.triggerOffset,
-          refreshProps = _genCommonProps.refreshProps,
-          loaderProps = _genCommonProps.loaderProps,
-          children = _genCommonProps.children,
-          props = (0, _objectWithoutProperties2.default)(_genCommonProps, ["isLoading", "onLoad", "triggerOffset", "refreshProps", "loaderProps", "children"]);
+      var _parseProps = (0, _props.default)(this.props),
+          isLoading = _parseProps.isLoading,
+          onLoad = _parseProps.onLoad,
+          triggerOffset = _parseProps.triggerOffset,
+          refreshProps = _parseProps.refreshProps,
+          loaderProps = _parseProps.loaderProps,
+          children = _parseProps.children,
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["isLoading", "onLoad", "triggerOffset", "refreshProps", "loaderProps", "children"]);
 
       return _react.default.createElement(_Panel.default.Touchable, (0, _extends2.default)({
         direction: "vertical",
@@ -107,20 +109,20 @@ function (_React$Component) {
 }), _temp);
 
 _Panel.default.PullRefresh._Loader = function (aprops) {
-  var _genCommonProps2 = (0, _props.genCommonProps)(aprops),
-      isLoading = _genCommonProps2.isLoading,
-      offset = _genCommonProps2.offset,
-      triggerOffset = _genCommonProps2.triggerOffset,
-      title = _genCommonProps2.title,
-      loader = _genCommonProps2.loader,
-      _genCommonProps2$load = _genCommonProps2.loaderProps,
-      loaderProps = _genCommonProps2$load === void 0 ? {} : _genCommonProps2$load,
-      _genCommonProps2$comp = _genCommonProps2.component,
-      Component = _genCommonProps2$comp === void 0 ? _Panel.default : _genCommonProps2$comp,
-      className = _genCommonProps2.className,
-      style = _genCommonProps2.style,
-      children = _genCommonProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_genCommonProps2, ["isLoading", "offset", "triggerOffset", "title", "loader", "loaderProps", "component", "className", "style", "children"]);
+  var _parseProps2 = (0, _props.default)(aprops),
+      isLoading = _parseProps2.isLoading,
+      offset = _parseProps2.offset,
+      triggerOffset = _parseProps2.triggerOffset,
+      title = _parseProps2.title,
+      loader = _parseProps2.loader,
+      _parseProps2$loaderPr = _parseProps2.loaderProps,
+      loaderProps = _parseProps2$loaderPr === void 0 ? {} : _parseProps2$loaderPr,
+      _parseProps2$componen = _parseProps2.component,
+      Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
+      className = _parseProps2.className,
+      style = _parseProps2.style,
+      children = _parseProps2.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isLoading", "offset", "triggerOffset", "title", "loader", "loaderProps", "component", "className", "style", "children"]);
 
   var classStr = 'overflow-a-hidden transition-property-height flex-display-block flex-direction-v flex-justify-center flex-align-center';
   var styleSet = {
@@ -129,7 +131,7 @@ _Panel.default.PullRefresh._Loader = function (aprops) {
   if (offset > 0) styleSet.height = offset;
   if (isLoading) styleSet.height = triggerOffset;
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _props.cxm)(classStr, className),
+    className: (0, _classes.default)(classStr, className),
     style: (0, _objectSpread2.default)({}, styleSet, style)
   }, props), !children && loader ? loader : null, !children && !loader ? _react.default.createElement(_Loader.default, (0, _extends2.default)({
     isProgress: !isLoading,

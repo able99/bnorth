@@ -5,12 +5,6 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "Hammer", {
-  enumerable: true,
-  get: function get() {
-    return _hammerjs.default;
-  }
-});
 exports.default = void 0;
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -35,11 +29,11 @@ require("core-js/modules/web.dom.iterable");
 
 var _react = _interopRequireDefault(require("react"));
 
+var _hammerjs = _interopRequireDefault(require("hammerjs"));
+
 var _dom = require("./utils/dom");
 
 var _Panel = _interopRequireDefault(require("./Panel"));
-
-var _hammerjs = _interopRequireDefault(require("hammerjs"));
 
 /**
  * @overview bnorth solution

@@ -7,7 +7,8 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { genCommonProps, cxm } from './utils/props';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import parseProps from './utils/props';
 import { domFindContainer } from './utils/dom';
 import Button from './Button';
 
@@ -22,7 +23,7 @@ export default class Fab extends React.Component{
     let {
       x=8, y=8, h='end', v='end', container,
       component:Component=Button, className, style, ...props
-    } = genCommonProps(this.props);
+    } = parseProps(this.props);
 
     if((container===true||typeof container==='string')&&!this.container) {
       return <span ref={e=>e&&this.handleRef(e)} style={{fontSize:0}} />;
@@ -45,7 +46,7 @@ export default class Fab extends React.Component{
     if(v==='center') styleSet['top'] = '50%';
     if(v==='end') styleSet['bottom'] = y;
 
-    let component = <Component className={cxm(classStr, classSet, className)} style={{...styleSet, ...style}} {...props} />;
+    let component = <Component className={classes(classStr, classSet, className)} style={{...styleSet, ...style}} {...props} />;
     return this.container||container?ReactDOM.createPortal(component, this.container||container):component;
   }
 }
