@@ -29,7 +29,7 @@ Group.Item = aprops=>{
 
   return (
     <React.Fragment>
-      <div className="text-weight-bolder border-set-bottom-">{title}</div>
+      <div className="text-weight-bolder margin-bottom- border-set-bottom-">{title}</div>
       {children}
     </React.Fragment>
   )

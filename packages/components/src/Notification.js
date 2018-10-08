@@ -58,7 +58,7 @@ Notification._Close = aprops=>{
 
   return hasClose!==true?hasClose:(
     <Component b-style="plain" b-theme="white" onClick={onDoClose} className={classes(classStr, className)} {...props}>
-      <Icon name="close" nameDefault="x" {...iconProps} />
+      <Icon name="close" defaultName="x" {...iconProps} />
       {children}
     </Component>
   );

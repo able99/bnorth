@@ -13,9 +13,9 @@ import Panel from './Panel';
 
 let Icon = aprops=>{
   let {
-    name, nameDefault, src, char, 
+    name, defaultName, src, char, 
     component:Component=Panel, componentPanel, className, style, children, ...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, Icon.props);
   
   let classStr = 'display-inline width-1em height-1em';
   let classSet = [];
@@ -23,7 +23,7 @@ let Icon = aprops=>{
 
   if(name) name = Icon._maps[name]||name;
   if(name&&!Icon._names.includes(name)) {
-    char = nameDefault||name;
+    char = defaultName||name;
     name = undefined;
   }
 

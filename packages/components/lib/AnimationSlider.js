@@ -63,9 +63,10 @@ function (_React$Component) {
           innerProps = _parseProps.innerProps,
           _parseProps$component = _parseProps.component,
           Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+          componentPanel = _parseProps.componentPanel,
           className = _parseProps.className,
           children = _parseProps.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["countToShow", "index", "timeout", "innerProps", "component", "className", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["countToShow", "index", "timeout", "innerProps", "component", "componentPanel", "className", "children"]);
 
       children = _react.default.Children.toArray(children);
 
@@ -86,6 +87,7 @@ function (_React$Component) {
       });
       var classStr = 'overflow-a-hidden position-relative';
       return _react.default.createElement(Component, (0, _extends2.default)({
+        component: componentPanel,
         className: (0, _classes.default)(classStr, className)
       }, props), _react.default.createElement(AnimationSlider._Inner, (0, _extends2.default)({
         countToShow: countToShow,
@@ -128,11 +130,13 @@ AnimationSlider.Item = function (aprops) {
       index = _parseProps3.index,
       _parseProps3$componen = _parseProps3.component,
       Component = _parseProps3$componen === void 0 ? _Panel.default : _parseProps3$componen,
+      componentPanel = _parseProps3.componentPanel,
       className = _parseProps3.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["i", "timeout", "countToShow", "index", "component", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["i", "timeout", "countToShow", "index", "component", "componentPanel", "className"]);
 
   var classStr = 'overflow-a-hidden flex-sub-flex-extend';
   return _react.default.createElement(Component, (0, _extends2.default)({
+    component: componentPanel,
     className: (0, _classes.default)(classStr, className)
   }, props));
 };

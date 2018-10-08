@@ -249,7 +249,7 @@ List.Item._Arrow = function (aprops) {
     className: (0, _classes.default)(classStr, className)
   }, props), !children || children === true ? _react.default.createElement(_Icon.default, (0, _extends2.default)({
     name: "right",
-    nameDefault: ">"
+    defaultName: ">"
   }, arrowIconProps)) : children);
 };
 

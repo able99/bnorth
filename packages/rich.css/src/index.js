@@ -15,5 +15,5 @@ import text from './gens/text';
 export { setCssConfig, getCssConfig } from './gen'; 
 
 export default function index() {
-  gen('richcss', base, background, border, text, position, flex, display, spacing, size, cursor, control, icon);
+  gen('richcss', base, background, border, text, position, display, flex, spacing, size, cursor, control, icon);
 }

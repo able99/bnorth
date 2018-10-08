@@ -124,7 +124,7 @@ function (_React$Component) {
         onClick: this._handleClick.bind(this)
       }, props), children ? children : _react.default.createElement(_Icon.default, (0, _extends2.default)({
         name: "backTop",
-        nameDefault: "^"
+        defaultName: "^"
       }, iconProps))) : null);
     }
   }]);

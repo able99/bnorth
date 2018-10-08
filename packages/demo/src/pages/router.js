@@ -11,7 +11,7 @@ export default props=>{
     <View>
       <Panel main>
         <NavBar>
-          <NavBar.Item icon="left" iconProps={{nameDefault: '<'}} onClick={()=>app.router.back()} />
+          <NavBar.Item icon="left" iconProps={{defaultName: '<'}} onClick={()=>app.router.back()} />
           <NavBar.Title>Router</NavBar.Title>
         </NavBar>
         <List bc-margin-bottom->

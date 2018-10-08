@@ -64,7 +64,7 @@ export default class BackTop extends React.Component {
         <ScrollSpy onScrollPositionChange={this._handleScroll.bind(this)} {...scrollSpyProps} />
         {this.state.isShow?(
           <Component onClick={this._handleClick.bind(this)} {...props} >
-            {children?children:<Icon name="backTop" nameDefault="^" {...iconProps} />}
+            {children?children:<Icon name="backTop" defaultName="^" {...iconProps} />}
           </Component>
         ):null}
       </React.Fragment>

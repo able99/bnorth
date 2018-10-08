@@ -5,7 +5,6 @@
  * @license MIT
  */
 
-
 import React from 'react';
 import { transiton, transform } from '@bnorth/rich.css/lib/styles/animation'; 
 import classes from '@bnorth/rich.css/lib/classes'; 
@@ -16,8 +15,9 @@ import Panel from './Panel';
 class AnimationSlider extends React.Component {
   render() {
     let {
-      countToShow=1, index, timeout=300, innerProps,
-      component:Component=Panel, className, children, ...props
+      countToShow=1, index, timeout=300, 
+      innerProps,
+      component:Component=Panel, componentPanel, className, children, ...props
     } = parseProps(this.props);
 
     children = React.Children.toArray(children);
@@ -29,8 +29,10 @@ class AnimationSlider extends React.Component {
     let classStr = 'overflow-a-hidden position-relative';
 
     return (
-      <Component className={classes(classStr, className)} {...props}>
-        <AnimationSlider._Inner countToShow={countToShow} index={index} timeout={timeout} {...innerProps}>{items}</AnimationSlider._Inner>
+      <Component component={componentPanel} className={classes(classStr, className)} {...props}>
+        <AnimationSlider._Inner countToShow={countToShow} index={index} timeout={timeout} {...innerProps}>
+          {items}
+        </AnimationSlider._Inner>
         {children}
       </Component>
     )
@@ -59,12 +61,12 @@ AnimationSlider._Inner = aprops=>{
 AnimationSlider.Item = aprops=>{
   let {
     i, timeout, countToShow, index,
-    component:Component=Panel, className,...props
+    component:Component=Panel, componentPanel, className,...props
   } = parseProps(aprops);
 
   let classStr = 'overflow-a-hidden flex-sub-flex-extend';
 
-  return <Component className={classes(classStr, className)} {...props} />;
+  return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
 }
 
 

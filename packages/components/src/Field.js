@@ -22,13 +22,12 @@ let Field = aprops=>{
   let ComponentField = Field._Types[type||'text'];
   if(!ComponentField) return null;
 
-  ComponentField = <ComponentField b-style={before||after} bc-flex-sub-flex-extend={(before||after)&&true} type={type} value={value} {...props} />;
+  ComponentField = <ComponentField b-style={(before||after)&&'plain'} bc-flex-sub-flex-extend={Boolean(before||after)} type={type} value={value} {...props} />;
   if(!before&&!after) return ComponentField;
 
   return (
     <Field._Container 
-      before={before} after={after} label={label} 
-      beforeProps={beforeProps} afterProps={afterProps} 
+      before={before} after={after} label={label} beforeProps={beforeProps} afterProps={afterProps} 
       {...containerProps}>
       {ComponentField}
     </Field._Container>
@@ -39,7 +38,7 @@ Field._Container = aprops=>{
   let { 
     inline, before, after, label, beforeProps, afterProps,
     component:Component=Panel, componentPanel=label&&'label', className, children, ...props
-  } = aprops;
+  } = parseProps(aprops, Field._Container.props);
 
   let classStr = 'flex-align-center';
   let classSet = inline?'flex-display-inline':'flex-display-block';
@@ -55,12 +54,12 @@ Field._Container = aprops=>{
 
 Field._Container._Content = aprops=>{
   let { 
-    component:Component=Panel, className, ...props
-  } = aprops;
+    component:Component=Panel, componentPanel, className, ...props
+  } = parseProps(aprops, Field._Container._Content.props);
 
   let classStr = 'flex-sub-flex-none';
 
-  return <Component className={classes(classStr, className)} {...props} />;
+  return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
 }
 
 
@@ -69,9 +68,10 @@ Field._Normal = aprops=>{
     type, value,
     onPressEnter, onKeyPress,
     component:Component=Panel, componentPanel="input", className, children, ...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, Field._Normal.props);
 
-  let classStr = 'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none- border-none-a-';
+  let classStr = 'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle';
+  let classSet = aprops['b-style']?'':'bg-none- border-none-a-';
 
   let handleKeyPress = e=>{
     if(onPressEnter&&e.charCode===13){
@@ -92,7 +92,7 @@ Field._Normal = aprops=>{
     <Component component={componentPanel}
       onKeyPress={handleKeyPress}
       type={type} value={value}
-      className={classes(classStr, className)} {...props}>
+      className={classes(classStr, classSet, className)} {...props}>
       {children}
     </Component>
   );
@@ -178,11 +178,11 @@ Field._Types.static = Field._Static;
 
 Field._SwitchContentCheckRadio = aprops=>{
   let {
-    type, isOn, name=aprops.isOn?'check':' ', nameDefault=aprops.isOn?'X':' ', 
+    type, isOn, name=aprops.isOn?'check':' ', defaultName=aprops.isOn?'X':' ', 
     component:Component=Icon, ...props
   } = aprops;
 
-  return <Component bc-border-radius-rounded={!Boolean(type==='checkbox')} type={type}  name={name} nameDefault={nameDefault} {...props} b-style="hollow" />;
+  return <Component bc-border-radius-rounded={!Boolean(type==='checkbox')} type={type}  name={name} defaultName={defaultName} {...props} b-style="hollow" />;
 }
 Field._Types.checkbox = aprops=>{
   return <Field._Switch Content={Field._SwitchContentCheckRadio} {...aprops} />

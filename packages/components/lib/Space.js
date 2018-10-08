@@ -9,6 +9,8 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+require("core-js/modules/es6.number.constructor");
+
 require("core-js/modules/es6.array.fill");
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
@@ -26,7 +28,7 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @license MIT
  */
 var Spacing = function Spacing(aprops) {
-  var _parseProps = (0, _props.default)(aprops),
+  var _parseProps = (0, _props.default)(aprops, Spacing.props),
       _parseProps$count = _parseProps.count,
       count = _parseProps$count === void 0 ? 1 : _parseProps$count,
       stacked = _parseProps.stacked,
@@ -39,7 +41,7 @@ var Spacing = function Spacing(aprops) {
     inline: true
   }, props), _react.default.createElement("pre", {
     className: "margin-a-0 padding-a-0"
-  }, Array(count).fill(stacked ? '\n' : ' ')), children);
+  }, Array(Number(count)).fill(stacked ? '\n' : ' ')), children);
 };
 
 var _default = Spacing;

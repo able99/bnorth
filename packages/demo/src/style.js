@@ -13,6 +13,9 @@ let iconMap = {
 
 export default function(app) {
   genCss();
+
   Icon.appendSvgIcons(icoSvg);
   Icon.appendMap(iconMap);
+
+  // Icon.props = {'b-theme': 'alert'};
 }

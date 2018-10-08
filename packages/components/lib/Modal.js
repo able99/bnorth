@@ -200,7 +200,7 @@ Modal._HeaderTitleCloseIcon = function (aprops) {
 
   return _react.default.createElement(Component, (0, _extends2.default)({
     name: "close",
-    nameDefault: "x"
+    defaultName: "x"
   }, props));
 };
 

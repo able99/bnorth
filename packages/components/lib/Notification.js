@@ -98,7 +98,7 @@ Notification._Close = function (aprops) {
     className: (0, _classes.default)(classStr, className)
   }, props), _react.default.createElement(_Icon.default, (0, _extends2.default)({
     name: "close",
-    nameDefault: "x"
+    defaultName: "x"
   }, iconProps)), children);
 };
 

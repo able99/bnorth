@@ -47,8 +47,8 @@ var Field = function Field(aprops) {
   var ComponentField = Field._Types[type || 'text'];
   if (!ComponentField) return null;
   ComponentField = _react.default.createElement(ComponentField, (0, _extends2.default)({
-    "b-style": before || after,
-    "bc-flex-sub-flex-extend": (before || after) && true,
+    "b-style": (before || after) && 'plain',
+    "bc-flex-sub-flex-extend": Boolean(before || after),
     type: type,
     value: value
   }, props));
@@ -63,19 +63,21 @@ var Field = function Field(aprops) {
 };
 
 Field._Container = function (aprops) {
-  var inline = aprops.inline,
-      before = aprops.before,
-      after = aprops.after,
-      label = aprops.label,
-      beforeProps = aprops.beforeProps,
-      afterProps = aprops.afterProps,
-      _aprops$component = aprops.component,
-      Component = _aprops$component === void 0 ? _Panel.default : _aprops$component,
-      _aprops$componentPane = aprops.componentPanel,
-      componentPanel = _aprops$componentPane === void 0 ? label && 'label' : _aprops$componentPane,
-      className = aprops.className,
-      children = aprops.children,
-      props = (0, _objectWithoutProperties2.default)(aprops, ["inline", "before", "after", "label", "beforeProps", "afterProps", "component", "componentPanel", "className", "children"]);
+  var _parseProps = (0, _props.default)(aprops, Field._Container.props),
+      inline = _parseProps.inline,
+      before = _parseProps.before,
+      after = _parseProps.after,
+      label = _parseProps.label,
+      beforeProps = _parseProps.beforeProps,
+      afterProps = _parseProps.afterProps,
+      _parseProps$component = _parseProps.component,
+      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+      _parseProps$component2 = _parseProps.componentPanel,
+      componentPanel = _parseProps$component2 === void 0 ? label && 'label' : _parseProps$component2,
+      className = _parseProps.className,
+      children = _parseProps.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["inline", "before", "after", "label", "beforeProps", "afterProps", "component", "componentPanel", "className", "children"]);
+
   var classStr = 'flex-align-center';
   var classSet = inline ? 'flex-display-inline' : 'flex-display-block';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -85,31 +87,36 @@ Field._Container = function (aprops) {
 };
 
 Field._Container._Content = function (aprops) {
-  var _aprops$component2 = aprops.component,
-      Component = _aprops$component2 === void 0 ? _Panel.default : _aprops$component2,
-      className = aprops.className,
-      props = (0, _objectWithoutProperties2.default)(aprops, ["component", "className"]);
+  var _parseProps2 = (0, _props.default)(aprops, Field._Container._Content.props),
+      _parseProps2$componen = _parseProps2.component,
+      Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
+      componentPanel = _parseProps2.componentPanel,
+      className = _parseProps2.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["component", "componentPanel", "className"]);
+
   var classStr = 'flex-sub-flex-none';
   return _react.default.createElement(Component, (0, _extends2.default)({
+    component: componentPanel,
     className: (0, _classes.default)(classStr, className)
   }, props));
 };
 
 Field._Normal = function (aprops) {
-  var _parseProps = (0, _props.default)(aprops),
-      type = _parseProps.type,
-      value = _parseProps.value,
-      onPressEnter = _parseProps.onPressEnter,
-      onKeyPress = _parseProps.onKeyPress,
-      _parseProps$component = _parseProps.component,
-      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
-      _parseProps$component2 = _parseProps.componentPanel,
-      componentPanel = _parseProps$component2 === void 0 ? "input" : _parseProps$component2,
-      className = _parseProps.className,
-      children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["type", "value", "onPressEnter", "onKeyPress", "component", "componentPanel", "className", "children"]);
+  var _parseProps3 = (0, _props.default)(aprops, Field._Normal.props),
+      type = _parseProps3.type,
+      value = _parseProps3.value,
+      onPressEnter = _parseProps3.onPressEnter,
+      onKeyPress = _parseProps3.onKeyPress,
+      _parseProps3$componen = _parseProps3.component,
+      Component = _parseProps3$componen === void 0 ? _Panel.default : _parseProps3$componen,
+      _parseProps3$componen2 = _parseProps3.componentPanel,
+      componentPanel = _parseProps3$componen2 === void 0 ? "input" : _parseProps3$componen2,
+      className = _parseProps3.className,
+      children = _parseProps3.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["type", "value", "onPressEnter", "onKeyPress", "component", "componentPanel", "className", "children"]);
 
-  var classStr = 'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none- border-none-a-';
+  var classStr = 'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle';
+  var classSet = aprops['b-style'] ? '' : 'bg-none- border-none-a-';
 
   var handleKeyPress = function handleKeyPress(e) {
     if (onPressEnter && e.charCode === 13) {
@@ -131,23 +138,23 @@ Field._Normal = function (aprops) {
     onKeyPress: handleKeyPress,
     type: type,
     value: value,
-    className: (0, _classes.default)(classStr, className)
+    className: (0, _classes.default)(classStr, classSet, className)
   }, props), children);
 };
 
 Field._Normal._maps = ['progress', 'select', 'textarea'];
 
 Field._Static = function (aprops) {
-  var _parseProps2 = (0, _props.default)(aprops),
-      type = _parseProps2.type,
-      value = _parseProps2.value,
-      _parseProps2$componen = _parseProps2.component,
-      Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
-      _parseProps2$componen2 = _parseProps2.componentPanel,
-      componentPanel = _parseProps2$componen2 === void 0 ? "span" : _parseProps2$componen2,
-      className = _parseProps2.className,
-      children = _parseProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["type", "value", "component", "componentPanel", "className", "children"]);
+  var _parseProps4 = (0, _props.default)(aprops),
+      type = _parseProps4.type,
+      value = _parseProps4.value,
+      _parseProps4$componen = _parseProps4.component,
+      Component = _parseProps4$componen === void 0 ? _Panel.default : _parseProps4$componen,
+      _parseProps4$componen2 = _parseProps4.componentPanel,
+      componentPanel = _parseProps4$componen2 === void 0 ? "span" : _parseProps4$componen2,
+      className = _parseProps4.className,
+      children = _parseProps4.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps4, ["type", "value", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'line-height-1 vertical-align-middle';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -159,11 +166,11 @@ Field._Static = function (aprops) {
 };
 
 Field._HiddenInput = function (aprops) {
-  var _parseProps3 = (0, _props.default)(aprops),
-      _parseProps3$componen = _parseProps3.component,
-      Component = _parseProps3$componen === void 0 ? 'input' : _parseProps3$componen,
-      className = _parseProps3.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["component", "className"]);
+  var _parseProps5 = (0, _props.default)(aprops),
+      _parseProps5$componen = _parseProps5.component,
+      Component = _parseProps5$componen === void 0 ? 'input' : _parseProps5$componen,
+      className = _parseProps5.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps5, ["component", "className"]);
 
   var classStr = 'visibility-hide display-none';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -172,23 +179,23 @@ Field._HiddenInput = function (aprops) {
 };
 
 Field._Switch = function (aprops) {
-  var _parseProps4 = (0, _props.default)(aprops),
-      type = _parseProps4.type,
-      value = _parseProps4.value,
-      defaultValue = _parseProps4.defaultValue,
-      domValue = _parseProps4.domValue,
-      _onClick = _parseProps4.onClick,
-      Content = _parseProps4.Content,
-      labelProps = _parseProps4.labelProps,
-      inputProps = _parseProps4.inputProps,
-      innerProps = _parseProps4.innerProps,
-      _parseProps4$componen = _parseProps4.component,
-      Component = _parseProps4$componen === void 0 ? _Panel.default : _parseProps4$componen,
-      _parseProps4$componen2 = _parseProps4.componentPanel,
-      componentPanel = _parseProps4$componen2 === void 0 ? 'label' : _parseProps4$componen2,
-      className = _parseProps4.className,
-      children = _parseProps4.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps4, ["type", "value", "defaultValue", "domValue", "onClick", "Content", "labelProps", "inputProps", "innerProps", "component", "componentPanel", "className", "children"]);
+  var _parseProps6 = (0, _props.default)(aprops),
+      type = _parseProps6.type,
+      value = _parseProps6.value,
+      defaultValue = _parseProps6.defaultValue,
+      domValue = _parseProps6.domValue,
+      _onClick = _parseProps6.onClick,
+      Content = _parseProps6.Content,
+      labelProps = _parseProps6.labelProps,
+      inputProps = _parseProps6.inputProps,
+      innerProps = _parseProps6.innerProps,
+      _parseProps6$componen = _parseProps6.component,
+      Component = _parseProps6$componen === void 0 ? _Panel.default : _parseProps6$componen,
+      _parseProps6$componen2 = _parseProps6.componentPanel,
+      componentPanel = _parseProps6$componen2 === void 0 ? 'label' : _parseProps6$componen2,
+      className = _parseProps6.className,
+      children = _parseProps6.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps6, ["type", "value", "defaultValue", "domValue", "onClick", "Content", "labelProps", "inputProps", "innerProps", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'switch-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none- flex-sub-flex-extend';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -216,13 +223,13 @@ Field._Switch = function (aprops) {
 };
 
 Field._Switch._Inner = function (aprops) {
-  var _parseProps5 = (0, _props.default)(aprops),
-      _parseProps5$componen = _parseProps5.component,
-      Component = _parseProps5$componen === void 0 ? _Panel.default : _parseProps5$componen,
-      _parseProps5$componen2 = _parseProps5.componentPanel,
-      componentPanel = _parseProps5$componen2 === void 0 ? 'span' : _parseProps5$componen2,
-      className = _parseProps5.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps5, ["component", "componentPanel", "className"]);
+  var _parseProps7 = (0, _props.default)(aprops),
+      _parseProps7$componen = _parseProps7.component,
+      Component = _parseProps7$componen === void 0 ? _Panel.default : _parseProps7$componen,
+      _parseProps7$componen2 = _parseProps7.componentPanel,
+      componentPanel = _parseProps7$componen2 === void 0 ? 'span' : _parseProps7$componen2,
+      className = _parseProps7.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps7, ["component", "componentPanel", "className"]);
 
   var classStr = 'status- position-relative';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -232,12 +239,12 @@ Field._Switch._Inner = function (aprops) {
 };
 
 Field._Switch._Content = function (aprops) {
-  var _parseProps6 = (0, _props.default)(aprops),
-      isOn = _parseProps6.isOn,
-      _parseProps6$componen = _parseProps6.component,
-      Component = _parseProps6$componen === void 0 ? _Panel.default : _parseProps6$componen,
-      className = _parseProps6.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps6, ["isOn", "component", "className"]);
+  var _parseProps8 = (0, _props.default)(aprops),
+      isOn = _parseProps8.isOn,
+      _parseProps8$componen = _parseProps8.component,
+      Component = _parseProps8$componen === void 0 ? _Panel.default : _parseProps8$componen,
+      className = _parseProps8.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps8, ["isOn", "component", "className"]);
 
   var classStr = 'position-relative';
   var classSet = [isOn ? 'on-' : 'off-'];
@@ -261,16 +268,16 @@ Field._SwitchContentCheckRadio = function (aprops) {
       isOn = aprops.isOn,
       _aprops$name = aprops.name,
       name = _aprops$name === void 0 ? aprops.isOn ? 'check' : ' ' : _aprops$name,
-      _aprops$nameDefault = aprops.nameDefault,
-      nameDefault = _aprops$nameDefault === void 0 ? aprops.isOn ? 'X' : ' ' : _aprops$nameDefault,
-      _aprops$component3 = aprops.component,
-      Component = _aprops$component3 === void 0 ? _Icon.default : _aprops$component3,
-      props = (0, _objectWithoutProperties2.default)(aprops, ["type", "isOn", "name", "nameDefault", "component"]);
+      _aprops$defaultName = aprops.defaultName,
+      defaultName = _aprops$defaultName === void 0 ? aprops.isOn ? 'X' : ' ' : _aprops$defaultName,
+      _aprops$component = aprops.component,
+      Component = _aprops$component === void 0 ? _Icon.default : _aprops$component,
+      props = (0, _objectWithoutProperties2.default)(aprops, ["type", "isOn", "name", "defaultName", "component"]);
   return _react.default.createElement(Component, (0, _extends2.default)({
     "bc-border-radius-rounded": !Boolean(type === 'checkbox'),
     type: type,
     name: name,
-    nameDefault: nameDefault
+    defaultName: defaultName
   }, props, {
     "b-style": "hollow"
   }));
@@ -285,8 +292,8 @@ Field._Types.checkbox = function (aprops) {
 Field._Types.radio = Field._Types.checkbox;
 
 Field._SwitchContentSwitch = function (aprops) {
-  var _aprops$component4 = aprops.component,
-      Component = _aprops$component4 === void 0 ? _Panel.default : _aprops$component4,
+  var _aprops$component2 = aprops.component,
+      Component = _aprops$component2 === void 0 ? _Panel.default : _aprops$component2,
       className = aprops.className,
       children = aprops.children,
       props = (0, _objectWithoutProperties2.default)(aprops, ["component", "className", "children"]);
@@ -302,8 +309,8 @@ Field._SwitchContentSwitch = function (aprops) {
 Field._SwitchContentSwitch.Item = function (aprops) {
   var isOn = aprops.isOn,
       isPositive = aprops.isPositive,
-      _aprops$component5 = aprops.component,
-      Component = _aprops$component5 === void 0 ? _Panel.default : _aprops$component5,
+      _aprops$component3 = aprops.component,
+      Component = _aprops$component3 === void 0 ? _Panel.default : _aprops$component3,
       _aprops$bTheme = aprops['b-theme'],
       bTheme = _aprops$bTheme === void 0 ? 'component' : _aprops$bTheme,
       className = aprops.className,
@@ -327,17 +334,17 @@ Field._Types.switch = function (aprops) {
 };
 
 Field._Types.file = function (aprops) {
-  var _parseProps7 = (0, _props.default)(aprops),
-      type = _parseProps7.type,
-      value = _parseProps7.value,
-      inputProps = _parseProps7.inputProps,
-      _parseProps7$componen = _parseProps7.component,
-      Component = _parseProps7$componen === void 0 ? _Panel.default : _parseProps7$componen,
-      _parseProps7$componen2 = _parseProps7.componentPanel,
-      componentPanel = _parseProps7$componen2 === void 0 ? "label" : _parseProps7$componen2,
-      className = _parseProps7.className,
-      children = _parseProps7.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps7, ["type", "value", "inputProps", "component", "componentPanel", "className", "children"]);
+  var _parseProps9 = (0, _props.default)(aprops),
+      type = _parseProps9.type,
+      value = _parseProps9.value,
+      inputProps = _parseProps9.inputProps,
+      _parseProps9$componen = _parseProps9.component,
+      Component = _parseProps9$componen === void 0 ? _Panel.default : _parseProps9$componen,
+      _parseProps9$componen2 = _parseProps9.componentPanel,
+      componentPanel = _parseProps9$componen2 === void 0 ? "label" : _parseProps9$componen2,
+      className = _parseProps9.className,
+      children = _parseProps9.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps9, ["type", "value", "inputProps", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'line-height-1 vertical-align-middle';
   return _react.default.createElement(Component, (0, _extends2.default)({

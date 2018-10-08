@@ -25,6 +25,8 @@ var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/ge
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _react = _interopRequireDefault(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
@@ -54,8 +56,7 @@ function (_React$Component) {
     (0, _classCallCheck2.default)(this, Carousel);
     _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Carousel).call(this, props));
     _this.state = {
-      index: props.defaultIndex || 0,
-      isForward: undefined
+      selected: props.defaultSelected
     };
     return _this;
   }
@@ -63,194 +64,188 @@ function (_React$Component) {
   (0, _createClass2.default)(Carousel, [{
     key: "prev",
     value: function prev() {
-      var index = this.state.index - 1;
+      var selected = this.state.selected - 1;
       this.setState({
-        isForward: false,
-        index: index >= 0 ? index : _react.default.Children.toArray(this.props.children).filter(function (v) {
+        selected: selected >= 0 ? selected : _react.default.Children.toArray(this.props.children).filter(function (v) {
           return v;
         }).length - 1
       });
-      this.goNext();
+
+      this._goNext();
     }
   }, {
     key: "next",
     value: function next() {
       this.setState({
-        isForward: true,
-        index: (this.state.index + 1) % _react.default.Children.toArray(this.props.children).filter(function (v) {
+        selected: (this.state.selected + 1) % _react.default.Children.toArray(this.props.children).filter(function (v) {
           return v;
         }).length
       });
-      this.goNext();
+
+      this._goNext();
     }
   }, {
     key: "pause",
     value: function pause() {
       this._isPaused = true;
 
-      if (this._timeout) {
-        clearTimeout(this._timeout);
-        this._timeout = undefined;
-      }
+      this._clearTimeoutNext();
     }
   }, {
     key: "play",
     value: function play() {
       this._isPaused = false;
-      this.goNext();
+
+      this._goNext();
     }
   }, {
-    key: "goNext",
-    value: function goNext() {
+    key: "_goNext",
+    value: function _goNext() {
       var _this2 = this;
 
       var _this$props = this.props,
-          _this$props$autoPlay = _this$props.autoPlay,
-          autoPlay = _this$props$autoPlay === void 0 ? true : _this$props$autoPlay,
-          _this$props$interval = _this$props.interval,
-          interval = _this$props$interval === void 0 ? 4000 : _this$props$interval;
+          autoPlay = _this$props.autoPlay,
+          interval = _this$props.interval;
 
-      if (this._timeout) {
-        clearTimeout(this._timeout);
-        this._timeout = undefined;
-      }
+      this._clearTimeoutNext();
 
-      if (autoPlay && !this._isPaused && interval) this._timeout = setTimeout(function () {
+      if (autoPlay && !this._isPaused && interval) this._timeoutNext = setTimeout(function () {
         return _this2.next();
       }, interval);
     }
   }, {
-    key: "handleFocus",
-    value: function handleFocus() {
-      var pauseOnHover = this.props.pauseOnHover;
-
-      if (pauseOnHover) {
-        this.pause();
-        this.setState({
-          mouseOver: true
-        });
+    key: "_clearTimeoutNext",
+    value: function _clearTimeoutNext() {
+      if (this._timeoutNext) {
+        clearTimeout(this._timeoutNext);
+        this._timeoutNext = undefined;
       }
     }
   }, {
-    key: "handleBlur",
-    value: function handleBlur() {
-      if (this._isPaused) {
-        this.play();
-        this.setState({
-          mouseOver: false
-        });
-      }
+    key: "_handleFocus",
+    value: function _handleFocus() {
+      if (this.props.pauseOnHover) this.pause();
+    }
+  }, {
+    key: "_handleBlur",
+    value: function _handleBlur() {
+      if (this._isPaused) this.play();
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this$props$autoPlay2 = this.props.autoPlay,
-          autoPlay = _this$props$autoPlay2 === void 0 ? true : _this$props$autoPlay2;
-      autoPlay && this.goNext();
+      this.props.autoPlay && this._goNext();
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
-      if (prevProps.interval !== this.props.interval) this.goNext();
+      if (prevProps.interval !== this.props.interval || prevProps.autoPlay !== this.props.autoPlay) this._goNext();
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      clearTimeout(this._timeout);
+      this._clearTimeoutNext();
     }
   }, {
     key: "render",
     value: function render() {
       var _this3 = this;
 
-      var _parseProps = (0, _props.default)(this.props),
-          defaultIndex = _parseProps.defaultIndex,
-          _parseProps$controlle = _parseProps.controller,
-          controller = _parseProps$controlle === void 0 ? true : _parseProps$controlle,
-          _parseProps$pager = _parseProps.pager,
-          pager = _parseProps$pager === void 0 ? true : _parseProps$pager,
+      var _parseProps = (0, _props.default)(this.props, Carousel.props),
+          defaultSelected = _parseProps.defaultSelected,
+          Controller = _parseProps.controller,
+          Pager = _parseProps.pager,
           interval = _parseProps.interval,
           timeout = _parseProps.timeout,
           autoPlay = _parseProps.autoPlay,
-          loop = _parseProps.loop,
           pauseOnHover = _parseProps.pauseOnHover,
           pagerItemProps = _parseProps.pagerItemProps,
           controllerPrevProps = _parseProps.controllerPrevProps,
           controllerNextProps = _parseProps.controllerNextProps,
           _parseProps$component = _parseProps.component,
           Component = _parseProps$component === void 0 ? _Panel.default.Touchable : _parseProps$component,
-          _parseProps$component2 = _parseProps.componentAnimation,
-          componentAnimation = _parseProps$component2 === void 0 ? _AnimationSlider.default : _parseProps$component2,
+          _parseProps$component2 = _parseProps.componentPanel,
+          componentPanel = _parseProps$component2 === void 0 ? _AnimationSlider.default : _parseProps$component2,
           children = _parseProps.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["defaultIndex", "controller", "pager", "interval", "timeout", "autoPlay", "loop", "pauseOnHover", "pagerItemProps", "controllerPrevProps", "controllerNextProps", "component", "componentAnimation", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["defaultSelected", "controller", "pager", "interval", "timeout", "autoPlay", "pauseOnHover", "pagerItemProps", "controllerPrevProps", "controllerNextProps", "component", "componentPanel", "children"]);
 
-      var index = this.state.index;
+      var selected = this.state.selected;
       children = _react.default.Children.toArray(children);
+      if (Controller === true) Controller = Carousel._Controller;
+      if (Pager === true) Pager = Carousel._Pager;
       return _react.default.createElement(Component, (0, _extends2.default)({
-        component: componentAnimation,
-        index: index,
+        component: componentPanel,
+        index: selected,
         onSwipeLeft: function onSwipeLeft(e) {
           return _this3.next();
         },
         onSwipeRight: function onSwipeRight(e) {
           return _this3.prev();
         },
-        onFocus: function onFocus(e) {
-          return _this3.handleFocus();
+        onMouseOver: function onMouseOver(e) {
+          return _this3._handleFocus();
         },
-        onBlur: function onBlur(e) {
-          return _this3.handleBlur();
+        onMouseOut: function onMouseOut(e) {
+          return _this3._handleBlur();
         }
-      }, props), controller ? _react.default.createElement(Carousel.Controller, (0, _extends2.default)({
+      }, props), Controller ? _react.default.createElement(Controller, (0, _extends2.default)({
         onClick: function onClick(e) {
           return _this3.prev();
         }
-      }, controllerPrevProps)) : null, controller ? _react.default.createElement(Carousel.Controller, (0, _extends2.default)({
+      }, controllerPrevProps)) : null, Controller ? _react.default.createElement(Controller, (0, _extends2.default)({
         onClick: function onClick(e) {
           return _this3.next();
         }
       }, controllerNextProps, {
         isForward: true
-      })) : null, pager ? _react.default.createElement(Carousel.Pager, (0, _extends2.default)({
+      })) : null, Pager ? _react.default.createElement(Pager, (0, _extends2.default)({
         onClick: function onClick(e) {
           return _this3.setState({
-            index: e
+            selected: e
           });
         },
         count: children.length,
-        index: Math.round(index)
+        selected: Math.round(selected)
       }, pagerItemProps)) : null, children);
     }
   }]);
   return Carousel;
 }(_react.default.Component);
 
-Carousel.Controller = function (aprops) {
-  var _parseProps2 = (0, _props.default)(aprops),
+(0, _defineProperty2.default)(Carousel, "defaultProps", {
+  defaultSelected: 0,
+  controller: true,
+  pager: true,
+  interval: 4000,
+  autoPlay: true
+});
+
+Carousel._Controller = function (aprops) {
+  var _parseProps2 = (0, _props.default)(aprops, Carousel._Controller.props),
       isForward = _parseProps2.isForward,
       _parseProps2$name = _parseProps2.name,
       name = _parseProps2$name === void 0 ? aprops.isForward ? 'right' : 'left' : _parseProps2$name,
-      _parseProps2$nameDefa = _parseProps2.nameDefault,
-      nameDefault = _parseProps2$nameDefa === void 0 ? isForward ? '>' : '<' : _parseProps2$nameDefa,
+      _parseProps2$defaultN = _parseProps2.defaultName,
+      defaultName = _parseProps2$defaultN === void 0 ? isForward ? '>' : '<' : _parseProps2$defaultN,
       _parseProps2$componen = _parseProps2.component,
       Component = _parseProps2$componen === void 0 ? _Icon.default : _parseProps2$componen,
       className = _parseProps2.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isForward", "name", "nameDefault", "component", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isForward", "name", "defaultName", "component", "className"]);
 
   var classStr = 'bg-color-mask position-absolute text-color-white cursor-pointer margin-h-xxs offset-top-center translate-center-y text-weight-border';
   var classSet = ["offset-".concat(isForward ? 'right' : 'left', "-start")];
   return _react.default.createElement(Component, (0, _extends2.default)({
     "b-size": "xl",
-    className: (0, _classes.default)(classStr, classSet, className),
     name: name,
-    nameDefault: nameDefault
+    defaultName: defaultName,
+    className: (0, _classes.default)(classStr, classSet, className)
   }, props));
 };
 
-Carousel.Pager = function (aprops) {
-  var _parseProps3 = (0, _props.default)(aprops),
+Carousel._Pager = function (aprops) {
+  var _parseProps3 = (0, _props.default)(aprops, Carousel._Pager.props),
       count = _parseProps3.count,
-      index = _parseProps3.index,
+      selected = _parseProps3.selected,
       onClick = _parseProps3.onClick,
       itemProps = _parseProps3.itemProps,
       _parseProps3$componen = _parseProps3.component,
@@ -258,7 +253,7 @@ Carousel.Pager = function (aprops) {
       _parseProps3$componne = _parseProps3.componnetPanel,
       componnetPanel = _parseProps3$componne === void 0 ? 'ol' : _parseProps3$componne,
       className = _parseProps3.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["count", "index", "onClick", "itemProps", "component", "componnetPanel", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["count", "selected", "onClick", "itemProps", "component", "componnetPanel", "className"]);
 
   var classStr = 'position-absolute flex-display-block flex-justify-center flex-align-center bg-color-overlay padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -269,20 +264,20 @@ Carousel.Pager = function (aprops) {
   }, function (v, k) {
     return k;
   }).map(function (v) {
-    return _react.default.createElement(Carousel.Pager.Item, (0, _extends2.default)({
+    return _react.default.createElement(Carousel._Pager._Item, (0, _extends2.default)({
       key: v,
       onClick: onClick,
       count: count,
-      index: index,
+      selected: selected,
       i: v
     }, itemProps));
   }));
 };
 
-Carousel.Pager.Item = function (aprops) {
-  var _parseProps4 = (0, _props.default)(aprops),
+Carousel._Pager._Item = function (aprops) {
+  var _parseProps4 = (0, _props.default)(aprops, Carousel._Pager._Item.props),
       count = _parseProps4.count,
-      index = _parseProps4.index,
+      selected = _parseProps4.selected,
       i = _parseProps4.i,
       _onClick = _parseProps4.onClick,
       _parseProps4$componen = _parseProps4.component,
@@ -290,19 +285,19 @@ Carousel.Pager.Item = function (aprops) {
       _parseProps4$componne = _parseProps4.componnetPanel,
       componnetPanel = _parseProps4$componne === void 0 ? 'li' : _parseProps4$componne,
       className = _parseProps4.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps4, ["count", "index", "i", "onClick", "component", "componnetPanel", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps4, ["count", "selected", "i", "onClick", "component", "componnetPanel", "className"]);
 
   var classStr = 'cursor-pointer width-0em5 height-0em5 border-radius-rounded border-set-a-white';
   var classSet = {
-    'bg-color-white': i === index,
-    'bg-color-component': i === index,
+    'bg-color-white': i === selected,
+    'bg-color-component': i === selected,
     'margin-left-xxs': i > 0
   };
   return _react.default.createElement(Component, (0, _extends2.default)({
+    component: componnetPanel,
     onClick: function onClick(e) {
       return _onClick && _onClick(i);
     },
-    component: componnetPanel,
     className: (0, _classes.default)(classStr, classSet, className)
   }, props));
 };

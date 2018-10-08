@@ -48,5 +48,5 @@ var _spacing = _interopRequireDefault(require("./gens/spacing"));
 var _text = _interopRequireDefault(require("./gens/text"));
 
 function index() {
-  (0, _gen.default)('richcss', _base.default, _background.default, _border.default, _text.default, _position.default, _flex.default, _display.default, _spacing.default, _size.default, _cursor.default, _control.default, _icon.default);
+  (0, _gen.default)('richcss', _base.default, _background.default, _border.default, _text.default, _position.default, _display.default, _flex.default, _spacing.default, _size.default, _cursor.default, _control.default, _icon.default);
 }

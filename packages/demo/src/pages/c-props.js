@@ -5,12 +5,16 @@ import Prop from '../components/props'
 
 
 let proplist = {
-  'b-style': ['solid', 'hollow', 'plain', 'border', 'underline'],
+  'b-style': ['solid', 'hollow', 'plain', 'underline'],
   'b-theme': ['primary', 'alert', 'success'],
   'b-size': ['xs', 'sm', 'lg', 'xl'],
   'selected': undefined,
   'active': undefined,
   'disabled': undefined,
+  'bc-margin-a': ['0', 'xs', 'sm', 'lg', 'xl'],
+  'bc-padding-a': ['0', 'xs', 'sm', 'lg', 'xl'],
+  'bc-border-radius': ['2', '5', '10', 'rounded'],
+  'bc-border-set-a-': undefined,
 }
 
 let Component = aprops=>{

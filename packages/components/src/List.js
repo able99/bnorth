@@ -171,7 +171,7 @@ List.Item._Arrow = aprops=>{
   
   return (
     <Component b-theme="light" className={classes(classStr, className)} {...props}>
-      {!children||children===true?<Icon name='right' nameDefault='>' {...arrowIconProps}/>:children}
+      {!children||children===true?<Icon name='right' defaultName='>' {...arrowIconProps}/>:children}
     </Component>
   )
 }

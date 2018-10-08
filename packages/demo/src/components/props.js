@@ -29,10 +29,10 @@ let PropSel = aprops=>{
           onChange={e=>{
             if(!sub) return e.target.checked?state.update({[title]: true}):state.delete(title);
             let data = stateData[sub]||{};
-            e.target.checked?(data[title]=true):(delete data[title]);
+            e.target.checked?(data[title]=true):(data[title]=false);
             state.update({[sub]: data});
           }}
-          checked={sub?(stateData[sub]&&stateData[sub][title]):stateData[title]}
+          checked={sub?Boolean(stateData[sub]&&stateData[sub][title]):Boolean(stateData[title])}
           type='checkbox' />
       </label>
     )

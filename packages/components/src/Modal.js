@@ -151,7 +151,7 @@ Modal._HeaderTitleCloseIcon = aprops=>{
     component:Component=Icon, ...props 
   } = parseProps(aprops);
 
-  return <Component name="close" nameDefault="x" {...props} />
+  return <Component name="close" defaultName="x" {...props} />
 }
 
 Modal._Body = aprops=>{

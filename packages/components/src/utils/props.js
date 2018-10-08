@@ -7,11 +7,11 @@ export function addFunctions(args) {
   return Object.assign(functions, args);
 }
 
-export default function parseProps(aprops) {
+export default function parseProps(aprops, aaprops) {
   let {
     active, selected, disabled,
     className, style, refWrap, ...props
-  } = aprops||{};
+  } = {...aaprops, ...aprops};
   let classSet = {};
   let styleSet = {};
 

@@ -17,7 +17,7 @@ export default props=>{
   return (
     <View>
       <NavBar>
-        <NavBar.Item icon="left" iconProps={{nameDefault: '<'}} onClick={()=>app.router.back()} />
+        <NavBar.Item icon="left" iconProps={{defaultName: '<'}} onClick={()=>app.router.back()} />
         <NavBar.Title>Components</NavBar.Title>
       </NavBar>
       <Panel main>

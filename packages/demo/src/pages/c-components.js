@@ -23,21 +23,33 @@ let Component = aprops=>{
   return (
     <View bc-bg-color-white>
       <Panel main>
-        <Group title="Popover" {...groupProps}>
+        <Panel bc-padding-a- bc-bg-color="view">gadget</Panel>
+
+        <Group title="Button" {...groupProps}>
           <Group.Prop>
-            <Prop 
-              title="placement" sub="Popover" 
-              option={['bottom-auto-full','right-auto-center']} 
-              state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="justify" sub="Button.Group" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="separator" sub="Button.Group" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="stacked" sub="Button.Group" state={page.stateComponentProps} stateData={stateComponentProps}/>
           </Group.Prop>
-          <Popover inline {...stateCommonProps} overlay={<div>123<br/>123<br/>123<br/></div>} container {...stateComponentProps.Popover}>popover</Popover>
+          <Group.Item title="button">
+            <Button {...stateCommonProps}>button</Button>
+          </Group.Item>
+          <Group.Item title="button group">
+            <Button.Group {...stateComponentProps['Button.Group']} {...stateCommonProps}>
+              <Button >button1</Button>
+              <Button >button2</Button>
+              <Button >button3</Button>
+            </Button.Group>
+          </Group.Item>
         </Group>
+
         <Group title="Field" {...groupProps}>
           <Group.Item title="text">
             <Field {...stateCommonProps} type="text" />
           </Group.Item>
           <Group.Item title="static">
             <Field {...stateCommonProps} type="static" />
+            <Field {...stateCommonProps} type="static" value="value" />
           </Group.Item>
           <Group.Item title="textarea">
             <Field {...stateCommonProps} type="textarea" />
@@ -55,16 +67,61 @@ let Component = aprops=>{
             <Field {...stateCommonProps} type="file">open</Field>
           </Group.Item>
           <Group.Item title="before after">
-            <Field {...stateCommonProps} before="b" after="a" />
+            <Field containerProps={stateCommonProps} before="b" after="a" />
           </Group.Item>
         </Group>
+
+        <Group title="Icon" {...groupProps}>
+          <Group.Item title="svg">
+            <Icon {...stateCommonProps} name="star" />
+          </Group.Item>
+          <Group.Item title="img">
+            <Icon {...stateCommonProps} src={img} />
+          </Group.Item>
+          <Group.Item title="char">
+            <Icon {...stateCommonProps} char='B' />
+          </Group.Item>
+        </Group>
+
+        <Group title="Space" {...groupProps}>
+          <Prop 
+            title="count" sub="Space"
+            option={{type: 'range', min: 1, max: 5}} 
+            state={page.stateComponentProps} stateData={stateComponentProps}/>
+          <Group.Item title="space">
+            <Space count={1} {...stateCommonProps} {...stateComponentProps.Space} />
+          </Group.Item>
+          <Group.Item title="wrap">
+            <Space count={1} stacked {...stateCommonProps} {...stateComponentProps.Space} />
+          </Group.Item>
+        </Group>
+
         <Group title="Carousel" {...groupProps}>
-          <Carousel>
-            <Carousel.Item component={Panel.AspectRatio} onClick={()=>alert(1)} ratio={0.2} bc-bg-color-primary>1</Carousel.Item>
-            <Carousel.Item component={Panel.AspectRatio} ratio={0.2} bc-bg-color-alert>2</Carousel.Item>
-            <Carousel.Item component={Panel.AspectRatio} ratio={0.2} bc-bg-color-success>3</Carousel.Item>
+          <Prop 
+            title="controller" sub="Carousel"
+            state={page.stateComponentProps} stateData={stateComponentProps} />
+          <Prop 
+            title="pager" sub="Carousel"
+            state={page.stateComponentProps} stateData={stateComponentProps} />
+          <Prop 
+            title="autoPlay" sub="Carousel"
+            state={page.stateComponentProps} stateData={stateComponentProps} />
+          <Prop 
+            title="pauseOnHover" sub="Carousel"
+            state={page.stateComponentProps} stateData={stateComponentProps} />
+          <Carousel {...stateComponentProps.Carousel}>
+            {Array.from(Array(5), (v,i)=>i).map(v=>(
+              <Carousel.Item 
+                component={Panel.AspectRatio} 
+                ratio={0.1} style={{background: `rgb(${v*10+50},${v*10+50},${v*10+50}`}} bc-text-align-center bc-text-color-white
+                onClick={()=>alert(v)}
+                key={v} >
+                {v}
+              </Carousel.Item>
+            ))}
           </Carousel>
         </Group>
+
         <Group title="Loader" {...groupProps}>
           <Group.Prop>
             <Prop 
@@ -90,26 +147,8 @@ let Component = aprops=>{
           </Group.Item>
         </Group>
 
-        <Group title="Icon" {...groupProps}>
-          <Group.Item title="svg">
-            <Icon {...stateCommonProps} name="star" />
-          </Group.Item>
-          <Group.Item title="img">
-            <Icon {...stateCommonProps} src={img} />
-          </Group.Item>
-          <Group.Item title="char">
-            <Icon {...stateCommonProps} char='B' />
-          </Group.Item>
-        </Group>
 
-        <Group title="Fab" {...groupProps}>
-          <Group.Prop>
-            <Prop title="h" option={['start','center','end']} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
-            <Prop title="v" option={['start','center','end']} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
-            <Prop title="container" option={[true]} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
-          </Group.Prop>
-          <Fab {...stateComponentProps.Fab}>Fab1</Fab>
-        </Group>
+        <Panel bc-padding-a- bc-bg-color="view">layout</Panel>
 
         <Group title="Panel" {...groupProps}>
           <Group.Item title="Panel">
@@ -117,15 +156,6 @@ let Component = aprops=>{
           </Group.Item>
           <Group.Item title="Panel.AspectRatio">
             <Panel.AspectRatio ratio={0.5}>w/h=0.5</Panel.AspectRatio>
-          </Group.Item>
-        </Group>
-
-        <Group title="Space" {...groupProps}>
-          <Group.Item title="space">
-            <Space count={2} {...stateCommonProps} />
-          </Group.Item>
-          <Group.Item title="wrap">
-            <Space count={2} stacked {...stateCommonProps} />
           </Group.Item>
         </Group>
 
@@ -137,22 +167,35 @@ let Component = aprops=>{
           </Tabs>
         </Group>
 
-        <Group title="Button" {...groupProps}>
+        <Group title="TabBar" {...groupProps}>
+        </Group>
+
+        <Group title="NavBar" {...groupProps}>
+        </Group>
+
+        <Group title="List" {...groupProps}>
+        </Group>
+
+
+        <Panel bc-padding-a- bc-bg-color="view">popup</Panel>
+        
+        <Group title="Popover" {...groupProps}>
           <Group.Prop>
-            <Prop title="justify" sub="Button.Group" state={page.stateComponentProps} stateData={stateComponentProps}/>
-            <Prop title="separator" sub="Button.Group" state={page.stateComponentProps} stateData={stateComponentProps}/>
-            <Prop title="stacked" sub="Button.Group" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop 
+              title="placement" sub="Popover" 
+              option={['bottom-auto-full','right-auto-center']} 
+              state={page.stateComponentProps} stateData={stateComponentProps}/>
           </Group.Prop>
-          <Group.Item title="button">
-            <Button {...stateCommonProps}>button</Button>
-          </Group.Item>
-          <Group.Item title="button group">
-            <Button.Group {...stateComponentProps['Button.Group']} {...stateCommonProps}>
-              <Button bc-border-set-a->button1</Button>
-              <Button bc-border-set-a->button2</Button>
-              <Button bc-border-set-a->button3</Button>
-            </Button.Group>
-          </Group.Item>
+          <Popover inline {...stateCommonProps} overlay={<div>123<br/>123<br/>123<br/></div>} container {...stateComponentProps.Popover}>popover</Popover>
+        </Group>
+
+        <Group title="Fab" {...groupProps}>
+          <Group.Prop>
+            <Prop title="h" option={['start','center','end']} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="v" option={['start','center','end']} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="container" option={[true]} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <Fab {...stateComponentProps.Fab}>Fab1</Fab>
         </Group>
       </Panel>
     </View>

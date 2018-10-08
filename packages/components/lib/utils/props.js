@@ -11,8 +11,6 @@ exports.functions = void 0;
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 require("core-js/modules/es6.string.starts-with");
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
@@ -22,6 +20,8 @@ require("core-js/modules/es6.array.iterator");
 require("core-js/modules/es7.object.entries");
 
 require("core-js/modules/web.dom.iterable");
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
@@ -36,22 +36,22 @@ function addFunctions(args) {
   return Object.assign(functions, args);
 }
 
-function parseProps(aprops) {
-  var _ref = aprops || {},
-      active = _ref.active,
-      selected = _ref.selected,
-      disabled = _ref.disabled,
-      className = _ref.className,
-      style = _ref.style,
-      refWrap = _ref.refWrap,
-      props = (0, _objectWithoutProperties2.default)(_ref, ["active", "selected", "disabled", "className", "style", "refWrap"]);
+function parseProps(aprops, aaprops) {
+  var _aaprops$aprops = (0, _objectSpread2.default)({}, aaprops, aprops),
+      active = _aaprops$aprops.active,
+      selected = _aaprops$aprops.selected,
+      disabled = _aaprops$aprops.disabled,
+      className = _aaprops$aprops.className,
+      style = _aaprops$aprops.style,
+      refWrap = _aaprops$aprops.refWrap,
+      props = (0, _objectWithoutProperties2.default)(_aaprops$aprops, ["active", "selected", "disabled", "className", "style", "refWrap"]);
 
   var classSet = {};
   var styleSet = {};
-  Object.entries(props).forEach(function (_ref2) {
-    var _ref3 = (0, _slicedToArray2.default)(_ref2, 2),
-        k = _ref3[0],
-        v = _ref3[1];
+  Object.entries(props).forEach(function (_ref) {
+    var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+        k = _ref2[0],
+        v = _ref2[1];
 
     if (k.startsWith('bs-')) {
       var name = k.slice(3);

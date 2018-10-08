@@ -40,9 +40,9 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @license MIT
  */
 var Icon = function Icon(aprops) {
-  var _parseProps = (0, _props.default)(aprops),
+  var _parseProps = (0, _props.default)(aprops, Icon.props),
       name = _parseProps.name,
-      nameDefault = _parseProps.nameDefault,
+      defaultName = _parseProps.defaultName,
       src = _parseProps.src,
       char = _parseProps.char,
       _parseProps$component = _parseProps.component,
@@ -51,7 +51,7 @@ var Icon = function Icon(aprops) {
       className = _parseProps.className,
       style = _parseProps.style,
       children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["name", "nameDefault", "src", "char", "component", "componentPanel", "className", "style", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["name", "defaultName", "src", "char", "component", "componentPanel", "className", "style", "children"]);
 
   var classStr = 'display-inline width-1em height-1em';
   var classSet = [];
@@ -59,7 +59,7 @@ var Icon = function Icon(aprops) {
   if (name) name = Icon._maps[name] || name;
 
   if (name && !Icon._names.includes(name)) {
-    char = nameDefault || name;
+    char = defaultName || name;
     name = undefined;
   }
 
