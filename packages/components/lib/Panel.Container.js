@@ -91,7 +91,8 @@ function (_React$Component) {
       children = _react.default.Children.toArray(children).filter(function (v) {
         return v;
       }).map(function (v, i, a) {
-        if ((0, _typeof2.default)(v) !== 'object' || v.type !== Container.Item) return v;
+        // if(typeof v !== 'object' || v.type!==Container.Item) return v;
+        if ((0, _typeof2.default)(v) !== 'object' || v.props.notItem) return v;
         var itemObj = getSubComponentProps(ai++, a.length, containerProps, v.props, itemProps, itemGetClassName, itemGetStyle, itemGetProps);
         return _react.default.createElement(Container.Item, (0, _extends2.default)({
           key: v.key || a,

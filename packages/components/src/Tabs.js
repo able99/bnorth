@@ -13,42 +13,47 @@ import Button from './Button';
 
 
 class Tabs extends React.Component {
-  handleAction = i=>{
-    this.setState({selectedKey: i});
+  constructor(props){
+    super(props);
+    this.state = {selected: props.defaultSelected||0};
+  }
+
+  _handleAction = i=>{
+    this.setState({selected: i});
     this.props.onAction&&this.props.onAction(i);
   }
 
   render() {
     let {
-      onAction, selectedKey=this.state&&this.state.selectedKey, defaultSelectedKey=0, 
+      onAction, selected=this.state.selected, defaultSelected, 
       navProps, containerProps, 
-      component:Component=Panel, className, children, ...props
-    } = parseProps(this.props);
+      component:Component=Panel, componentPanel, className, children, ...props
+    } = parseProps(this.props, Tabs.props);
 
     children = React.Children.toArray(children).filter(v=>v);
 
     let classStr = 'flex-display-block flex-direction-v flex-align-stretch';
 
     return (
-      <Component className={classes(classStr, className)} {...props}>
-        <Tabs.Nav onAction={this.handleAction} selectedKey={selectedKey} defaultSelectedKey={defaultSelectedKey} {...navProps}>
+      <Component component={componentPanel} className={classes(classStr, className)} {...props}>
+        <Tabs._Nav onAction={this._handleAction} selected={selected} {...navProps}>
           {children}
-        </Tabs.Nav>
-        <Tabs.Container onAction={this.handleAction} selectedKey={selectedKey} defaultSelectedKey={defaultSelectedKey} {...containerProps}>
+        </Tabs._Nav>
+        <Tabs._Container onAction={this._handleAction} selected={selected} {...containerProps}>
           {children}
-        </Tabs.Container>
+        </Tabs._Container>
       </Component>
     );
   }
 }
 
 
-Tabs.Nav = aprops=>{
+Tabs._Nav = aprops=>{
   let {
-    onAction, selectedKey, defaultSelectedKey,
-    itemProps={}, itemGetClassName=Tabs.Nav.itemGetClassName, itemGetStyle=Tabs.Nav.itemGetStyle, itemGetProps=Tabs.Nav.itemGetProps,
-    component:Component=Button.Group, className, children, ...props
-  } = parseProps(aprops);
+    onAction, selected,
+    itemProps={}, itemGetClassName=Tabs._Nav._itemGetClassName, itemGetStyle=Tabs._Nav._itemGetStyle, itemGetProps=Tabs._Nav._itemGetProps,
+    component:Component=Button.Group, componentPanel, className, children, ...props
+  } = parseProps(aprops, Tabs._Nav.props);
 
   let classStr = 'flex-sub-flex-none';
 
@@ -57,6 +62,7 @@ Tabs.Nav = aprops=>{
 
   return (
     <Component
+      component={componentPanel}
       separator justify 
       containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={classes(classStr, className)} {...props}>
@@ -65,26 +71,26 @@ Tabs.Nav = aprops=>{
   )
 }
 
-Tabs.Nav.itemGetProps = (i, length, {onClick, onAction, selectedKey, defaultSelectedKey}={}, {eventKey}={})=>{
+Tabs._Nav._itemGetProps = (i, length, {onAction, selected}={}, props)=>{
   return {
-    key: eventKey||i, 
-    selected: selectedKey===undefined||selectedKey===null?i===defaultSelectedKey:selectedKey===i,
-    onClick:e=>!(onAction&&onAction(i, eventKey))&&(onClick&&onClick(e)),
+    selected: selected===i,
+    onClick:e=>!(onAction&&onAction(i, props))&&(props.onClick&&props.onClick(e)),
   }
 }
 
 
-Tabs.Container = aprops=>{
+Tabs._Container = aprops=>{
   let {
-    onAction, selectedKey, defaultSelectedKey,
-    type='single', itemProps, itemComponent, itemGetClassName=Tabs.Container.itemGetClassName, itemGetStyle=Tabs.Container.itemGetStyle, itemGetProps=Tabs.Container.itemGetProps,
-    component:Component=Panel.Container, className, children, ...props
-  } = parseProps(aprops);
+    onAction, selected,
+    type='single', itemProps, itemComponent, itemGetClassName=Tabs._Container._itemGetClassName, itemGetStyle=Tabs._Container._itemGetStyle, itemGetProps=Tabs._Container._itemGetProps,
+    component:Component=Panel.Container, componentPanel, className, children, ...props
+  } = parseProps(aprops, Tabs._Container.props);
 
   let classStr = 'flex-sub-flex-extend';
 
   return (
     <Component 
+      component={componentPanel}
       type={type} containerProps={aprops} itemComponent={itemComponent} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={classes(classStr, className)} {...props}>
       {children}
@@ -92,10 +98,9 @@ Tabs.Container = aprops=>{
   )
 }
 
-Tabs.Container.itemGetProps = (i, length, {selectedKey, defaultSelectedKey}={}, {eventKey}={}, subProps)=>{
+Tabs._Container._itemGetProps = (i, length, {selected}={})=>{
   return {
-    key: eventKey||i, 
-    selected: selectedKey===undefined||selectedKey===null?i===defaultSelectedKey:selectedKey===i,
+    selected: selected===i,
   }
 }
 

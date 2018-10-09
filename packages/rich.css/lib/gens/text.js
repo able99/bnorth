@@ -18,8 +18,6 @@ exports.genFamily = genFamily;
 exports.genTruncate = genTruncate;
 exports.default = gen;
 
-require("core-js/modules/es6.number.constructor");
-
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
@@ -245,27 +243,24 @@ function genTruncate(_ref23) {
   var ret = {};
   var func = 'truncate';
   var selector = "".concat(baseSelector, "-").concat(func);
+  ret[(0, _utils.getSelector)(selector, '-')] = {
+    'overflow': 'hidden',
+    'text-overflow': 'ellipsis',
+    'white-space': 'nowrap'
+  };
   (textTruncateSet || []).forEach(function (v) {
-    if (Number(v) === 1) {
-      ret[(0, _utils.getSelector)(selector, '-')] = {
-        'overflow': 'hidden',
-        'text-overflow': 'ellipsis',
-        'white-space': 'nowrap'
-      };
-    } else {
-      ret[(0, _utils.getSelector)(selector, v)] = {
-        'overflow': 'hidden',
-        'text-overflow': 'ellipsis',
-        'display': '-webkit-box',
-        '-webkit-box-orient': 'vertical',
-        '-webkit-line-clamp': v,
-        'line-height': lineHeightSizeBase,
-        'max-height': (lineHeightSizeBase * v).toFixed(1) + 'em'
-      };
-      ret[(0, _utils.getSelector)(selector, v, 'placeholder')] = (0, _objectSpread2.default)({}, ret[(0, _utils.getSelector)(selector, v)], {
-        'min-height': ret[(0, _utils.getSelector)(selector, v)]['max-height']
-      });
-    }
+    ret[(0, _utils.getSelector)(selector, v)] = {
+      'overflow': 'hidden',
+      'text-overflow': 'ellipsis',
+      'display': '-webkit-box',
+      '-webkit-box-orient': 'vertical',
+      '-webkit-line-clamp': v,
+      'line-height': lineHeightSizeBase,
+      'max-height': (lineHeightSizeBase * v).toFixed(1) + 'em'
+    };
+    ret[(0, _utils.getSelector)(selector, v, 'placeholder')] = (0, _objectSpread2.default)({}, ret[(0, _utils.getSelector)(selector, v)], {
+      'min-height': ret[(0, _utils.getSelector)(selector, v)]['max-height']
+    });
   });
   return ret;
 }

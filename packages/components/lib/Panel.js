@@ -9,6 +9,8 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
@@ -35,10 +37,11 @@ var Panel = function Panel(aprops) {
       _parseProps$component = _parseProps.component,
       Component = _parseProps$component === void 0 ? 'div' : _parseProps$component,
       className = _parseProps.className,
+      style = _parseProps.style,
       bTheme = _parseProps['b-theme'],
       bStyle = _parseProps['b-style'],
       bSize = _parseProps['b-size'],
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["main", "inline", "selected", "colorOnTheme", "colorOnHollow", "component", "className", 'b-theme', 'b-style', 'b-size']);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["main", "inline", "selected", "colorOnTheme", "colorOnHollow", "component", "className", "style", 'b-theme', 'b-style', 'b-size']);
 
   var classStr = 'position-relative';
   var classSet = {
@@ -46,6 +49,7 @@ var Panel = function Panel(aprops) {
     'flex-sub-flex-extend': main,
     'display-inlineblock': inline
   };
+  var styleSet = {};
   if (bSize) classSet['text-size-' + (bSize === 'true' ? '' : bSize)] = true;
 
   if (bStyle === 'solid') {
@@ -81,7 +85,9 @@ var Panel = function Panel(aprops) {
       classSet['border-set-bottom-' + (bTheme === 'true' ? '' : bTheme)] = true;
       classSet['border-width-bottom-2'] = true;
     } else {
-      classSet['border-none-bottom-'] = true;
+      classSet['border-set-bottom-'] = true;
+      classSet['border-width-bottom-2'] = true;
+      styleSet['borderColor'] = 'transparent';
     }
   } else if (bStyle === 'plain') {
     classSet['border-none-a-'] = true;
@@ -92,7 +98,8 @@ var Panel = function Panel(aprops) {
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _classes.default)(classStr, classSet, className)
+    className: (0, _classes.default)(classStr, classSet, className),
+    style: (0, _objectSpread2.default)({}, styleSet, style)
   }, props));
 };
 

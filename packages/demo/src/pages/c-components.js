@@ -1,4 +1,7 @@
 import React from 'react';
+import Group from '../components/group'
+import Prop from '../components/props'
+import img from '../../res/aboutme.svg';
 import View from '@bnorth/components/lib/View'
 import Panel from '@bnorth/components/lib/Panel.AspectRatio'
 import '@bnorth/components/lib/Panel.Container'
@@ -6,18 +9,18 @@ import Button from '@bnorth/components/lib/Button'
 import Icon from '@bnorth/components/lib/Icon'
 import Space from '@bnorth/components/lib/Space'
 import Fab from '@bnorth/components/lib/Fab'
-import Tabs from '@bnorth/components/lib/Tabs'
 import Loader from '@bnorth/components/lib/Loader'
 import Carousel from '@bnorth/components/lib/Carousel'
 import Field from '@bnorth/components/lib/Field'
 import Popover from '@bnorth/components/lib/Popover'
-import Group from '../components/group'
-import Prop from '../components/props'
-import img from '../../res/aboutme.svg';
+import Tabs from '@bnorth/components/lib/Tabs'
+import TabBar from '@bnorth/components/lib/TabBar'
+import NavBar from '@bnorth/components/lib/NavBar'
+import List from '@bnorth/components/lib/List'
 
 
 let Component = aprops=>{
-  let { app, page, stateComponentSwitchs,  stateCommonProps, stateComponentProps } = aprops;
+  let { app, page, stateData, stateComponentSwitchs,  stateCommonProps, stateComponentProps } = aprops;
   let groupProps = { app, page, stateComponentSwitchs, stateCommonProps, stateComponentProps };
 
   return (
@@ -160,7 +163,7 @@ let Component = aprops=>{
         </Group>
 
         <Group title="Tabs" {...groupProps}>
-          <Tabs navProps={{itemProps:{'b-theme': 'alert'}}}>
+          <Tabs {...stateCommonProps}>
             <Tabs.Item title="title1">tabs1</Tabs.Item>
             <Tabs.Item title="title2">tabs2</Tabs.Item>
             <Tabs.Item title="title3">tabs3</Tabs.Item>
@@ -168,12 +171,50 @@ let Component = aprops=>{
         </Group>
 
         <Group title="TabBar" {...groupProps}>
+          <Group.Prop>
+            <Prop 
+              title="commonPropsToItem" sub="TabBar"
+              state={page.stateData} stateData={stateData}/>
+          </Group.Prop>
+          <TabBar {...(!(stateData.TabBar&&stateData.TabBar.commonPropsToItem)?stateCommonProps:{})}>
+            {[['left','<'],['right','>'],['up','^'],['down','|']].map(([name, defaultName],i)=>(
+              <TabBar.Item 
+                key={name}
+                icon={name} iconProps={{defaultName}} 
+                {...(stateData.TabBar&&stateData.TabBar.commonPropsToItem?stateCommonProps:{})} 
+                selected={i===0}>
+                {name}
+              </TabBar.Item >
+            ))}
+          </TabBar>
         </Group>
 
         <Group title="NavBar" {...groupProps}>
+          <NavBar {...stateCommonProps}>
+            <NavBar.Item icon="left" iconProps={{defaultName: '<'}}>back</NavBar.Item>
+            <NavBar.Title>NavBar.Title</NavBar.Title>
+          </NavBar>
         </Group>
 
         <Group title="List" {...groupProps}>
+          <Group.Prop>
+            <Prop 
+              title="separatorInset" sub="List"
+              state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop 
+              title="commonPropsToItem" sub="List"
+              state={page.stateData} stateData={stateData}/>
+          </Group.Prop>
+          <List {...(!(stateData.List&&stateData.List.commonPropsToItem)?stateCommonProps:{})}>
+            <List.Item part='header'>header</List.Item>
+            {Array.from(Array(3), (v,i)=>i).map(i=>(
+              <List.Item
+                title={'title'+i} media={'media'+i} subTitle={'subTitle'+i} desc={'desc'+i} after={'after'+i} 
+                onClick={()=>alert(i)} 
+                key={i} {...(stateData.List&&stateData.List.commonPropsToItem?stateCommonProps:{})}/>
+            ))}
+            <List.Item part='footer'>footer</List.Item>
+          </List>
         </Group>
 
 

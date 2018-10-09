@@ -73,7 +73,8 @@ Button.Group = function (aprops) {
   }).reduce(function (v1, v2, i, a) {
     if (!separator || stacked) return a;
     if (i > 0) v1.push(_react.default.createElement(Button.Group._Separator, (0, _extends2.default)({
-      key: 'sep' + i
+      key: 'sep' + i,
+      notItem: true
     }, separatorProps)));
     v1.push(v2);
     return v1;
@@ -111,8 +112,9 @@ Button.Group._Separator = function (aprops) {
       _parseProps3$componen = _parseProps3.component,
       Component = _parseProps3$componen === void 0 ? _Panel.default : _parseProps3$componen,
       panelComponent = _parseProps3.panelComponent,
+      notItem = _parseProps3.notItem,
       className = _parseProps3.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["component", "panelComponent", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["component", "panelComponent", "notItem", "className"]);
 
   var classStr = 'flex-sub-flex-none flex-display-inline flex-align-center flex-justify-center';
   return _react.default.createElement(Component, (0, _extends2.default)({

@@ -12,46 +12,44 @@ import Panel from './Panel.Icon';
 
 
 let NavBar = aprops=>{
-  if(NavBar.hidden) return null;
   let {
-    statusbarOverlay=NavBar.statusbarOverlay, 
-    component:Component=Panel, componentPanel='nav', className, style, children, ...props
-  } = parseProps(aprops);
+    statusbarOverlay, hidden, 
+    component:Component=Panel, componentPanel='nav', className, style, ...props
+  } = parseProps(aprops, NavBar.props);
+  
+  if(hidden) return null;
 
   let classStr = 'flex-display-block flex-justify-around flex-align-center width-full padding-v-sm border-set-bottom-';
-
   let styleSet = {};
   if(statusbarOverlay) styleSet.paddingTop = statusbarOverlay===true?20:statusbarOverlay;
 
-  return <Component component={componentPanel} className={classes(classStr, className)} style={{...styleSet, ...style}} {...props}>{children}</Component>
+  return <Component component={componentPanel} className={classes(classStr, className)} style={{...styleSet, ...style}} {...props} />;
 }
 
-let NavBarTitle = aprops=>{
+NavBar.Title = aprops=>{
   let {
-    component:Component=Panel, className, children, ...props
-  } = parseProps(aprops);
+    component:Component=Panel, componentPanel, className, children, ...props
+  } = parseProps(aprops, NavBar.Title.props);
 
   let classStr = 'text-align-center flex-sub-flex-extend text-weight-bold text-size-xl';
 
   return (
     <React.Fragment>
-      <Component inline className={classes(classStr, className, 'position-absolute')} {...props}>{children}</Component>
-      <Component inline className={classes(classStr, className, 'visibility-hide')} {...props}>0</Component>
+      <Component component={componentPanel} inline className={classes(classStr, className, 'position-absolute')} {...props}>{children}</Component>
+      <Component component={componentPanel} inline className={classes(classStr, className, 'visibility-hide')} {...props}>0</Component>
     </React.Fragment>
   );
 }
 
-let NavBarItem = (aprops)=>{
+NavBar.Item = aprops=>{
   let {
-    component:Component=Panel.Icon, className, children, ...props
-  } = parseProps(aprops);
+    component:Component=Panel.Icon, componentPanel, className, ...props
+  } = parseProps(aprops, NavBar.Item.props);
 
-  let classStr = 'padding-h-sm cursor-pointer line-height-0 status';
+  let classStr = 'padding-h-sm flex-sub-flex-none cursor-pointer status-';
 
-  return <Component className={classes(classStr, className)} {...props}>{children}</Component>;
+  return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
 }
 
 
-NavBar.Title = NavBarTitle;
-NavBar.Item = NavBarItem;
 export default NavBar;

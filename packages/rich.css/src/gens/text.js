@@ -143,27 +143,25 @@ export function genTruncate({textTruncateSet, lineHeightSizeBase}) {
   let func = 'truncate'
   let selector = `${baseSelector}-${func}`;
 
+  ret[getSelector(selector, '-')] = {
+    'overflow': 'hidden',
+    'text-overflow': 'ellipsis',
+    'white-space': 'nowrap',
+  };
+
   (textTruncateSet||[]).forEach(v=>{
-    if(Number(v)===1){
-      ret[getSelector(selector, '-')] = {
-        'overflow': 'hidden',
-        'text-overflow': 'ellipsis',
-        'white-space': 'nowrap',
-      }
-    }else{
-      ret[getSelector(selector, v)] = {
-        'overflow': 'hidden',
-        'text-overflow': 'ellipsis',
-        'display': '-webkit-box',
-        '-webkit-box-orient': 'vertical',
-        '-webkit-line-clamp': v,
-        'line-height': lineHeightSizeBase,
-        'max-height': (lineHeightSizeBase*v).toFixed(1)+'em',
-      }
-      ret[getSelector(selector, v, 'placeholder')] = {
-        ...ret[getSelector(selector, v)],
-        'min-height': ret[getSelector(selector, v)]['max-height'],
-      }
+    ret[getSelector(selector, v)] = {
+      'overflow': 'hidden',
+      'text-overflow': 'ellipsis',
+      'display': '-webkit-box',
+      '-webkit-box-orient': 'vertical',
+      '-webkit-line-clamp': v,
+      'line-height': lineHeightSizeBase,
+      'max-height': (lineHeightSizeBase*v).toFixed(1)+'em',
+    }
+    ret[getSelector(selector, v, 'placeholder')] = {
+      ...ret[getSelector(selector, v)],
+      'min-height': ret[getSelector(selector, v)]['max-height'],
     }
   })
 

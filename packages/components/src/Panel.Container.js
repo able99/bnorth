@@ -48,7 +48,8 @@ class Container extends React.Component {
     children = React.Children.toArray(children)
       .filter(v=>v)
       .map((v,i,a)=>{
-        if(typeof v !== 'object' || v.type!==Container.Item) return v;
+        // if(typeof v !== 'object' || v.type!==Container.Item) return v;
+        if(typeof v !== 'object' || v.props.notItem) return v;
         let itemObj = getSubComponentProps(ai++, a.length, containerProps, v.props, itemProps, itemGetClassName, itemGetStyle, itemGetProps);
         return <Container.Item key={v.key||a} type={type} component={itemComponent} {...itemObj} />;
       })

@@ -14,28 +14,27 @@ import Icon from './Icon';
 
 let List = aprops=>{
   let {
-    separatorInset, innerProps={},
-    itemProps={},
-    component:Component='ul', 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
-  } = parseProps(aprops);
-  children = React.Children.toArray(children).filter(v=>v);
+    separatorInset, innerProps={}, headerProps, footerProps, itemProps,
+    component:Component=Panel, componentPanel, children, ...props
+  } = parseProps(aprops, List.props);
 
+  children = React.Children.toArray(children).filter(v=>v);
   let headers = children.filter(v=>v.props.part==='header');
   let footers = children.filter(v=>v.props.part==='footer');
   let items = children.filter(v=>v.props.part==='item'||!v.props.part);
 
   return (
-    <Component {...props}>
+    <Component component={componentPanel} {...props}>
       {headers.map((v,i,a)=>(
         <List.Item 
-          key={v.key} {...v.props} 
+          key={v.key||`header${i}`} {...v.props} 
           first={i===0} last={i===a.length-1}
-          {...itemProps} />
+          {...headerProps} />
       ))}
       <List._Inner separatorInset={separatorInset} {...innerProps}>
         {items.map((v,i,a)=>(
           <List.Item 
-            key={v.key} {...v.props} 
+            key={v.key||i} {...v.props} 
             part='item' first={i===0} last={i===a.length-1}
             separatorInset={separatorInset}
             {...itemProps} />
@@ -43,9 +42,9 @@ let List = aprops=>{
       </List._Inner>
       {footers.map((v,i,a)=>(
         <List.Item 
-          key={v.key} {...v.props} 
+          key={v.key||`footer${i}`} {...v.props} 
           first={i===0} last={i===a.length-1}
-          {...itemProps} />
+          {...footerProps} />
       ))}
     </Component>
   );
@@ -54,46 +53,36 @@ let List = aprops=>{
 List._Inner = aprops=>{
   let {
     separatorInset,
-    component:Component=Panel, className, children, ...props
-  } = parseProps(aprops);
+    component:Component=Panel, componentPanel, className, children, ...props
+  } = parseProps(aprops, List._Inner.props);
 
-  let classStr = 'bg-color-white';
   let classSet = {
+    'bg-color-white': true,
     [`padding-left-${separatorInset&&separatorInset!==true?('-'+separatorInset):''}`]: separatorInset,
   }
 
-  return <Component className={classes(classStr, classSet, className)} {...props}>{children}</Component>
+  return <Component component={componentPanel} className={classes(classSet, className)} {...props}>{children}</Component>
 }
 
 List.Item = aprops=>{
   let {
     first, last, part, separatorInset, onClick, 
-    colorActiveOnTheme='white',
-    media, mediaProps, mainProps, title, titleProps, subTitle, subTitleProps, desc, descProps, after, afterProps, arrow, arrowProps, arrowIconProps, autoArrow=true, 
-    component:Component='li', className, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, children, ...props
-  } = parseProps(aprops);
+    media, mediaProps, mainProps, title, titleProps, subTitle, subTitleProps, desc, descProps, after, afterProps, arrow, arrowProps, autoArrow=true, 
+    component:Component=Panel, componentPanel, className, children, ...props
+  } = parseProps(aprops, List.Item.props);
 
   let classStr = 'flex-display-block flex-align-stretch padding-a-';
 
   let classSet = {
     'status-': Boolean(onClick),
     'padding-left-0': separatorInset,
-    'cursor-pointer': aprops.onClick||arrow,
+    'cursor-pointer': onClick||arrow,
     'border-set-bottom-': (part==='item'&&!last)||(part==='header'&&(last||!first)),
     'border-set-top-': (part==='footer'&&(first||!last)),
   };
-  if(bSize) classSet['text-size-'+(bSize===true?'':bSize)] = true;
-  if(bStyle==='solid'&&bTheme) {
-    classSet['bg-color-'+(bTheme===true?'':bTheme)] = true;
-    classSet['text-color-'+colorActiveOnTheme] = true;
-  }else if(bStyle==='solid'&&!bTheme) {
-    classSet['bg-color-component'] = true;
-  }else {
-    if(bTheme) classSet['text-color-'+(bTheme===true?'':bTheme)] = true;
-  }
 
   return (
-    <Component className={classes(classStr, classSet, className)} onClick={onClick} {...props}>
+    <Component component={componentPanel} className={classes(classStr, classSet, className)} onClick={onClick} {...props}>
       {media?(<List.Item._Media {...mediaProps}>{media}</List.Item._Media>):null}
       <List.Item._Main {...mainProps}>
         {title?(<List.Item._Title {...titleProps}>{title}</List.Item._Title>):null}
@@ -102,78 +91,73 @@ List.Item = aprops=>{
         {children}
       </List.Item._Main>
       {after?(<List.Item._After {...afterProps}>{after}</List.Item._After>):null}
-      {arrow||(autoArrow&&aprops.onClick)?(<List.Item._Arrow arrowIconProps={arrowIconProps} {...afterProps}>{arrow}</List.Item._Arrow>):null}
+      {arrow||(autoArrow&&onClick)?(<List.Item._Arrow {...arrowProps}>{arrow}</List.Item._Arrow>):null}
     </Component>
   );
 }
 
 List.Item._Media = aprops=>{
   let {
-    component:Component=Panel, className, children, ...props
-  } = parseProps(aprops);
+    component:Component=Panel, componentPanel, className, ...props
+  } = parseProps(aprops, List.Item._Media.porps);
 
   let classStr = 'flex-sub-align-center flex-sub-flex-none';
 
-  return <Component className={classes(classStr, className)} {...props}>{children}</Component>;
+  return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
 }
 
 List.Item._Main = aprops=>{
   let {
-    component:Component=Panel, className, children, ...props
-  } = parseProps(aprops);
+    component:Component=Panel, componentPanel, className, ...props
+  } = parseProps(aprops, List.Item._Main.props);
 
   let classStr = 'width-full flex-sub-flex-extend flex-sub-align-center';
   
-  return <Component className={classes(classStr, className)} {...props}>{children}</Component>;
+  return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
 }
 
 List.Item._Title = aprops=>{
   let {
-    component:Component=Panel, children, ...props
-  } = parseProps(aprops);
+    component:Component=Panel, componentPanel, ...props
+  } = parseProps(aprops, List.Item._Title.props);
 
-  return <Component {...props}>{children}</Component>;
+  return <Component component={componentPanel} {...props} />;
 }
 
 List.Item._SubTitle = aprops=>{
   let {
-    component:Component=Panel, children, ...props
-  } = parseProps(aprops);
+    component:Component=Panel, componentPanel, ...props
+  } = parseProps(aprops, List.Item._SubTitle.props);
 
-  return <Component {...props}>{children}</Component>;
+  return <Component component={componentPanel} {...props} />;
 }
 
 List.Item._Desc = aprops=>{
   let {
-    component:Component=Panel, children, ...props
-  } = parseProps(aprops);
+    component:Component=Panel, componentPanel, ...props
+  } = parseProps(aprops, List.Item._Desc.props);
 
-  return <Component {...props}>{children}</Component>;
+  return <Component component={componentPanel} b-theme="light" {...props} />;
 }
 
 List.Item._After = aprops=>{
   let {
-    component:Component=Panel, className, children, ...props
+    component:Component=Panel, componentPanel, className, ...props
   } = parseProps(aprops);
 
   let classStr = 'flex-sub-align-center';
   
-  return <Component b-theme="light" className={classes(classStr, className)} {...props}>{children}</Component>;
+  return <Component component={componentPanel} b-theme="light" className={classes(classStr, className)} {...props} />;
 }
 
 List.Item._Arrow = aprops=>{
   let {
-    arrowIconProps,
-    component:Component=Panel, className, children, ...props
+    component:Component=Panel, componentPanel=Icon, className, ...props
   } = parseProps(aprops);
 
-  let classStr = 'flex-sub-align-center flex-sub-flex-none line-height-0';
+  let classStr = 'flex-sub-align-center flex-sub-flex-none';
   
-  return (
-    <Component b-theme="light" className={classes(classStr, className)} {...props}>
-      {!children||children===true?<Icon name='right' defaultName='>' {...arrowIconProps}/>:children}
-    </Component>
-  )
+  return <Component component={componentPanel} b-theme="light" name='right' defaultName='>' className={classes(classStr, className)} {...props} />;
 }
 
 

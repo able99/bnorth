@@ -14,16 +14,17 @@ let Panel = aprops=>{
   let {
     main, inline, selected, 
     colorOnTheme='white', colorOnHollow='white',
-    component:Component='div', className, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, ...props
+    component:Component='div', className, style, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, ...props
   } = parseProps(aprops);
 
   let classStr = 'position-relative';
-
   let classSet = {
     'scrollable-a-': main,
     'flex-sub-flex-extend': main,
     'display-inlineblock': inline,
   }
+  let styleSet = {};
+
   if(bSize) classSet['text-size-'+(bSize==='true'?'':bSize)] = true;
   if(bStyle==='solid') {
     if(bTheme) {
@@ -56,7 +57,9 @@ let Panel = aprops=>{
       classSet['border-set-bottom-'+(bTheme==='true'?'':bTheme)] = true;
       classSet['border-width-bottom-2'] = true;
     }else{
-      classSet['border-none-bottom-'] = true;
+      classSet['border-set-bottom-'] = true;
+      classSet['border-width-bottom-2'] = true;
+      styleSet['borderColor'] = 'transparent';
     }
   }else if(bStyle==='plain') {
     classSet['border-none-a-'] = true;
@@ -66,7 +69,7 @@ let Panel = aprops=>{
     if(bTheme) classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
   }
 
-  return <Component className={classes(classStr, classSet, className)} {...props} />
+  return <Component className={classes(classStr, classSet, className)} style={{...styleSet, ...style}} {...props} />
 }
 
 

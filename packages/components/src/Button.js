@@ -40,7 +40,7 @@ Button.Group = aprops=>{
     .map((v,i)=><Component.Item key={v.key||i} {...v.props} />)
     .reduce((v1,v2,i,a)=>{
       if(!separator||stacked) return a;
-      if(i>0)v1.push(<Button.Group._Separator key={'sep'+i} {...separatorProps} />)
+      if(i>0)v1.push(<Button.Group._Separator key={'sep'+i} notItem {...separatorProps} />)
       v1.push(v2);
       return v1;
     },[])
@@ -68,7 +68,7 @@ Button.Group._itemGetClassName=(i, length, {separator, stacked, justify}={})=>{
 
 Button.Group._Separator = aprops=>{
   let { 
-    component:Component=Panel, panelComponent, className, ...props
+    component:Component=Panel, panelComponent, notItem, className, ...props
   } = parseProps(aprops, Button.Group._Separator.props);
 
   let classStr = 'flex-sub-flex-none flex-display-inline flex-align-center flex-justify-center';

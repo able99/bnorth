@@ -7,6 +7,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
@@ -28,7 +30,7 @@ require("./Panel.Icon");
  * @license MIT
  */
 var TabBar = function TabBar(aprops) {
-  var _parseProps = (0, _props.default)(aprops),
+  var _parseProps = (0, _props.default)(aprops, TabBar.props),
       colorUnselected = _parseProps.colorUnselected,
       colorSelectedOnTheme = _parseProps.colorSelectedOnTheme,
       colorUnselectedOnTheme = _parseProps.colorUnselectedOnTheme,
@@ -36,26 +38,22 @@ var TabBar = function TabBar(aprops) {
       type = _parseProps$type === void 0 ? "justify" : _parseProps$type,
       _parseProps$itemCompo = _parseProps.itemComponent,
       itemComponent = _parseProps$itemCompo === void 0 ? _Panel.default.Icon : _parseProps$itemCompo,
-      _parseProps$itemProps = _parseProps.itemProps,
-      itemProps = _parseProps$itemProps === void 0 ? {} : _parseProps$itemProps,
+      itemProps = _parseProps.itemProps,
       _parseProps$itemGetCl = _parseProps.itemGetClassName,
-      itemGetClassName = _parseProps$itemGetCl === void 0 ? TabBar.itemGetClassName : _parseProps$itemGetCl,
+      itemGetClassName = _parseProps$itemGetCl === void 0 ? TabBar._itemGetClassName : _parseProps$itemGetCl,
       _parseProps$itemGetSt = _parseProps.itemGetStyle,
-      itemGetStyle = _parseProps$itemGetSt === void 0 ? TabBar.itemGetStyle : _parseProps$itemGetSt,
+      itemGetStyle = _parseProps$itemGetSt === void 0 ? TabBar._itemGetStyle : _parseProps$itemGetSt,
       _parseProps$itemGetPr = _parseProps.itemGetProps,
-      itemGetProps = _parseProps$itemGetPr === void 0 ? TabBar.itemGetProps : _parseProps$itemGetPr,
+      itemGetProps = _parseProps$itemGetPr === void 0 ? TabBar._itemGetProps : _parseProps$itemGetPr,
       _parseProps$component = _parseProps.component,
       Component = _parseProps$component === void 0 ? _Panel.default.Container : _parseProps$component,
+      componentPanel = _parseProps.componentPanel,
       className = _parseProps.className,
-      children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["colorUnselected", "colorSelectedOnTheme", "colorUnselectedOnTheme", "type", "itemComponent", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["colorUnselected", "colorSelectedOnTheme", "colorUnselectedOnTheme", "type", "itemComponent", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "componentPanel", "className"]);
 
   var classStr = 'width-full padding-top-sm padding-bottom-xs border-set-top-border';
-  itemProps.iconPosition = 'top';
-  children = _react.default.Children.toArray(children).filter(function (v) {
-    return v;
-  });
   return _react.default.createElement(Component, (0, _extends2.default)({
+    component: componentPanel,
     type: type,
     containerProps: aprops,
     itemComponent: itemComponent,
@@ -64,22 +62,22 @@ var TabBar = function TabBar(aprops) {
     itemGetStyle: itemGetStyle,
     itemGetProps: itemGetProps,
     className: (0, _classes.default)(classStr, className)
-  }, props), children);
+  }, props));
 };
 
-TabBar.itemGetProps = function (i, length) {
-  var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
-      bStyle = _ref['b-style'],
-      bTheme = _ref['b-theme'],
-      _ref$colorUnselected = _ref.colorUnselected,
-      colorUnselected = _ref$colorUnselected === void 0 ? 'disable' : _ref$colorUnselected,
-      _ref$colorSelectedOnT = _ref.colorSelectedOnTheme,
-      colorSelectedOnTheme = _ref$colorSelectedOnT === void 0 ? 'white' : _ref$colorSelectedOnT,
-      _ref$colorUnselectedO = _ref.colorUnselectedOnTheme,
-      colorUnselectedOnTheme = _ref$colorUnselectedO === void 0 ? 'disable' : _ref$colorUnselectedO;
+TabBar._itemGetProps = function (i, length, containerProps) {
+  var _ref = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
+      selected = _ref.selected;
 
-  var _ref2 = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
-      selected = _ref2.selected;
+  var _TabBar$props$contain = (0, _objectSpread2.default)({}, TabBar.props, containerProps),
+      bStyle = _TabBar$props$contain['b-style'],
+      bTheme = _TabBar$props$contain['b-theme'],
+      _TabBar$props$contain2 = _TabBar$props$contain.colorUnselected,
+      colorUnselected = _TabBar$props$contain2 === void 0 ? 'disable' : _TabBar$props$contain2,
+      _TabBar$props$contain3 = _TabBar$props$contain.colorSelectedOnTheme,
+      colorSelectedOnTheme = _TabBar$props$contain3 === void 0 ? 'white' : _TabBar$props$contain3,
+      _TabBar$props$contain4 = _TabBar$props$contain.colorUnselectedOnTheme,
+      colorUnselectedOnTheme = _TabBar$props$contain4 === void 0 ? 'disable' : _TabBar$props$contain4;
 
   var theme;
 
@@ -100,7 +98,9 @@ TabBar.itemGetProps = function (i, length) {
   }
 
   return {
+    iconPosition: 'top',
     'bc-cursor-pointer': true,
+    'bc-status-': true,
     'b-theme': theme
   };
 };

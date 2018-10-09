@@ -15,29 +15,23 @@ import './Panel.Icon';
 let TabBar = aprops=>{
   let {
     colorUnselected, colorSelectedOnTheme, colorUnselectedOnTheme,
-    type="justify", itemComponent=Panel.Icon, itemProps={}, itemGetClassName=TabBar.itemGetClassName, itemGetStyle=TabBar.itemGetStyle, itemGetProps=TabBar.itemGetProps,
-    component:Component=Panel.Container, className, children, ...props
-  } = parseProps(aprops);
+    type="justify", itemComponent=Panel.Icon, itemProps, itemGetClassName=TabBar._itemGetClassName, itemGetStyle=TabBar._itemGetStyle, itemGetProps=TabBar._itemGetProps,
+    component:Component=Panel.Container, componentPanel, className, ...props
+  } = parseProps(aprops, TabBar.props);
 
   let classStr = 'width-full padding-top-sm padding-bottom-xs border-set-top-border';
 
-  itemProps.iconPosition = 'top';
-  children = React.Children.toArray(children).filter(v=>v);
-
   return (
     <Component 
+      component={componentPanel}
       type={type} containerProps={aprops} itemComponent={itemComponent} itemProps={itemProps} itemGetClassName={itemGetClassName}  itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
-      className={classes(classStr, className)} {...props}>
-      {children}
-    </Component>
+      className={classes(classStr, className)} {...props} />
   );
 }
 
-TabBar.itemGetProps = (
-  i, length, 
-  {'b-style':bStyle, 'b-theme':bTheme, colorUnselected='disable', colorSelectedOnTheme='white', colorUnselectedOnTheme='disable'}={}, 
-  {selected}={}
-)=>{
+TabBar._itemGetProps = (i, length, containerProps, {selected}={})=>{
+  let {'b-style':bStyle, 'b-theme':bTheme, colorUnselected='disable', colorSelectedOnTheme='white', colorUnselectedOnTheme='disable'} = {...TabBar.props,...containerProps};
+  
   let theme;
 
   if(bStyle==='solid') {
@@ -57,7 +51,9 @@ TabBar.itemGetProps = (
   }
   
   return {
+    iconPosition: 'top',
     'bc-cursor-pointer': true,
+    'bc-status-': true,
     'b-theme': theme,
   }
 }
