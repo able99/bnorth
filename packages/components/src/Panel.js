@@ -12,16 +12,17 @@ import parseProps from './utils/props';
 
 let Panel = aprops=>{
   let {
-    main, inline, selected, 
+    main, inline, selected, status,
     colorOnTheme='white', colorOnHollow='white',
     component:Component='div', className, style, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, ...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, Panel.props);
 
   let classStr = 'position-relative';
   let classSet = {
     'scrollable-a-': main,
     'flex-sub-flex-extend': main,
     'display-inlineblock': inline,
+    'status-': status,
   }
   let styleSet = {};
 

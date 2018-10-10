@@ -2,7 +2,7 @@ import React from 'react';
 import View from '@bnorth/components/lib/View'
 import Panel from '@bnorth/components/lib/Panel.PullRefresh'
 import List from '@bnorth/components/lib/List'
-import InfiniteScroll from '@bnorth/components/lib/InfiniteScroll';
+import Dropload from '@bnorth/components/lib/Dropload';
 import BackTop from '@bnorth/components/lib/BackTop';
 import Field from '@bnorth/components/lib/Field';
 import Popover from '@bnorth/components/lib/Popover';
@@ -12,7 +12,7 @@ import Icon from '@bnorth/components/lib/Icon';
 
 let Component = aprops=>{
   let { app, page, stateData, stateList, stateListExt } = aprops;
-  app.log.debug('page: c-list',stateData,stateList,stateListExt);
+  // app.log.debug('page: c-list',stateData,stateList,stateListExt);
 
   return (
     <View>
@@ -60,20 +60,23 @@ let Component = aprops=>{
           onLoad={()=>page.stateList.fetch(null)}
           isLoading={stateListExt.fetching} >
           <List separatorInset>
-            {stateList.length?<List.Item part='header'>header</List.Item>:null}
-            {stateList.map(i=>(
-              <List.Item name="aaa"
-                title={'title'+i} media={'media'+i} subTitle={'subTitle'+i} desc={'desc'+i} after={'after'+i} 
-                onClick={()=>alert(i)} 
+            {stateList.map(({type, data, num:i})=>(
+              <List.Item
+                mediaProps={{className: 'bg-color-view', style:{width: 40, height: 40}}}
+                media
+                titleProps={{className: 'text-truncate-1'}}
+                title={'title-'+data+'-abcdefghijklmnopqrstuvwxyz'}  
+                desc={type||'any type'} 
+                after={(i/10).toFixed(2)} 
+                onClick={()=>alert(data)} 
                 key={i}/>
             ))}
-            {stateList.length?<List.Item part='footer'>footer</List.Item>:null}
           </List>
           <BackTop container />
-          <InfiniteScroll
+          <Dropload
             disabled={!stateList.length||(stateList.length%stateData.pageSize)}
             isLoading={stateListExt.fetching}  
-            onLoading={()=>page.stateList.fetch(null, true)}  />
+            onLoad={()=>page.stateList.fetch(null, true)} />
         </Panel.PullRefresh>
     </View>
   );
@@ -109,7 +112,7 @@ Component.controller = (app,page)=>({
         result = result
           .filter(v=>!data.keyword?true:v.includes(data.keyword))
           .slice(data.pageStart, data.pageStart+data.pageSize)
-          .map(v=>(data.type?data.type:'')+v)
+          .map(v=>({type: data.type, data: v, num: Number(v)}))
         setTimeout(()=>resolve({ data: result}), append?1500:1000);
       });
     },
@@ -122,5 +125,6 @@ Component.controller = (app,page)=>({
 
 let listData = Array.from({length: 168}, (v,i)=>String(i).padStart(3,'0'));
 let types = ['A','B','C'];
+
 
 export default Component;

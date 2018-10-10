@@ -156,7 +156,7 @@ List.Item._Media = function (aprops) {
       className = _parseProps4.className,
       props = (0, _objectWithoutProperties2.default)(_parseProps4, ["component", "componentPanel", "className"]);
 
-  var classStr = 'flex-sub-align-center flex-sub-flex-none';
+  var classStr = 'flex-sub-align-center flex-sub-flex-none margin-right-';
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
     className: (0, _classes.default)(classStr, className)
@@ -223,7 +223,7 @@ List.Item._After = function (aprops) {
       className = _parseProps9.className,
       props = (0, _objectWithoutProperties2.default)(_parseProps9, ["component", "componentPanel", "className"]);
 
-  var classStr = 'flex-sub-align-center';
+  var classStr = 'flex-sub-align-center margin-left-';
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
     "b-theme": "light",

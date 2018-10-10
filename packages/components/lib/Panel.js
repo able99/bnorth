@@ -26,10 +26,11 @@ var _props = _interopRequireDefault(require("./utils/props"));
  * @license MIT
  */
 var Panel = function Panel(aprops) {
-  var _parseProps = (0, _props.default)(aprops),
+  var _parseProps = (0, _props.default)(aprops, Panel.props),
       main = _parseProps.main,
       inline = _parseProps.inline,
       selected = _parseProps.selected,
+      status = _parseProps.status,
       _parseProps$colorOnTh = _parseProps.colorOnTheme,
       colorOnTheme = _parseProps$colorOnTh === void 0 ? 'white' : _parseProps$colorOnTh,
       _parseProps$colorOnHo = _parseProps.colorOnHollow,
@@ -41,13 +42,14 @@ var Panel = function Panel(aprops) {
       bTheme = _parseProps['b-theme'],
       bStyle = _parseProps['b-style'],
       bSize = _parseProps['b-size'],
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["main", "inline", "selected", "colorOnTheme", "colorOnHollow", "component", "className", "style", 'b-theme', 'b-style', 'b-size']);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["main", "inline", "selected", "status", "colorOnTheme", "colorOnHollow", "component", "className", "style", 'b-theme', 'b-style', 'b-size']);
 
   var classStr = 'position-relative';
   var classSet = {
     'scrollable-a-': main,
     'flex-sub-flex-extend': main,
-    'display-inlineblock': inline
+    'display-inlineblock': inline,
+    'status-': status
   };
   var styleSet = {};
   if (bSize) classSet['text-size-' + (bSize === 'true' ? '' : bSize)] = true;

@@ -35,32 +35,27 @@ function (_React$Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.container = (0, _dom.domFindScrollContainer)(this, this.props.container, this.props.horizontal);
-      this.scrollEventListener = (0, _dom.listen)(this.container, 'scroll', this._handleScrollPositionChange.bind(this), true);
-      this.resizeEventListener = (0, _dom.listen)(window, 'resize', this._handleScrollPositionChange.bind(this), true);
+      this.offScrollListener = (0, _dom.listen)(this.container, 'scroll', this._handlePosChange.bind(this), true);
+      this.offResizeListener = (0, _dom.listen)(window, 'resize', this._handlePosChange.bind(this), true);
 
-      this._handleScrollPositionChange();
-    }
-  }, {
-    key: "componentDidUpdate",
-    value: function componentDidUpdate() {
-      this._handleScrollPositionChange();
+      this._handlePosChange();
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      this.scrollEventListener && this.scrollEventListener();
-      this.resizeEventListener && this.resizeEventListener();
+      this.offScrollListener && this.offScrollListener();
+      this.offResizeListener && this.offResizeListener();
     }
   }, {
-    key: "_handleScrollPositionChange",
-    value: function _handleScrollPositionChange() {
-      var onScrollPositionChange = this.props.onScrollPositionChange;
-
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      onScrollPositionChange && onScrollPositionChange.apply(void 0, [this.container].concat(args));
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      this._handlePosChange();
+    }
+  }, {
+    key: "_handlePosChange",
+    value: function _handlePosChange(event) {
+      var onPosChange = this.props.onPosChange;
+      onPosChange && onPosChange(event, this.container);
     }
   }, {
     key: "render",

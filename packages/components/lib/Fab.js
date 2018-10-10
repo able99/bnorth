@@ -80,7 +80,7 @@ function (_React$Component) {
         });
       }
 
-      var classStr = 'position-absolute';
+      var classStr = 'position-absolute margin-a-';
       var classSet = {
         'translate-center-x': h === 'center' && v !== 'center',
         'translate-center-y': h !== 'center' && v === 'center',

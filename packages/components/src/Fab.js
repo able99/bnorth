@@ -28,7 +28,7 @@ export default class Fab extends React.Component{
       return <span ref={e=>e&&this._handleRef(e)} style={{fontSize:0}} />;
     }
     
-    let classStr = 'position-absolute';
+    let classStr = 'position-absolute margin-a-';
 
     let classSet = {
       'translate-center-x': h==='center'&&v!=='center',

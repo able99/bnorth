@@ -135,7 +135,9 @@ function updateHammer(hammer, props) {
       k = handlerToEvent[k];
       if (!k) return;
       hammer.off(k);
-      hammer.on(k, v && v.bind(null, hammer.element));
+      hammer.on(k, v && function (e) {
+        return v(e, hammer.element);
+      });
     }
   });
 }

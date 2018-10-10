@@ -98,7 +98,7 @@ TabBar._itemGetProps = function (i, length, containerProps) {
   }
 
   return {
-    iconPosition: 'top',
+    position: 'top',
     'bc-cursor-pointer': true,
     'bc-status-': true,
     'b-theme': theme

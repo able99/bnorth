@@ -158,7 +158,10 @@ let Component = aprops=>{
             <Panel {...stateCommonProps}>Panel</Panel>
           </Group.Item>
           <Group.Item title="Panel.AspectRatio">
-            <Panel.AspectRatio ratio={0.5}>w/h=0.5</Panel.AspectRatio>
+            <Panel.AspectRatio bc-bg-color-primary ratio={0.5}>w/h=0.5</Panel.AspectRatio>
+          </Group.Item>
+          <Group.Item title="Panel.Container Panel.Loader Panel.Icon Panel.PullRefresh Panle.Touchable">
+            use by many components, no demo here
           </Group.Item>
         </Group>
 
@@ -237,6 +240,11 @@ let Component = aprops=>{
             <Prop title="container" option={[true]} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
           </Group.Prop>
           <Fab {...stateComponentProps.Fab}>Fab1</Fab>
+        </Group>
+
+        <Panel bc-padding-a- bc-bg-color="view">list</Panel>
+        <Group title="List, PullRefresh, Backtop, InfiniteScroll, ScrollSpy" {...groupProps}>
+          <Button onClick={()=>app.router.replace('/components:c_list')}>got to demo</Button>
         </Group>
       </Panel>
     </View>

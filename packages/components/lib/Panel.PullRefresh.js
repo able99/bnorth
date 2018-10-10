@@ -33,7 +33,7 @@ var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel.Touchable"));
 
-var _Loader = _interopRequireDefault(require("./Loader"));
+require("./Panel.Loader");
 
 var _class, _temp;
 
@@ -53,7 +53,7 @@ function (_React$Component) {
 
   (0, _createClass2.default)(PullRefresh, [{
     key: "handleMove",
-    value: function handleMove(target, event) {
+    value: function handleMove(event, target) {
       if (target.scrollTop > 0) return;
       this.setState({
         offset: Math.max(event.deltaY, 0)
@@ -62,7 +62,7 @@ function (_React$Component) {
     }
   }, {
     key: "handleEnd",
-    value: function handleEnd(target, event) {
+    value: function handleEnd(event, target) {
       var _this$props = this.props,
           triggerOffset = _this$props.triggerOffset,
           onLoad = _this$props.onLoad;
@@ -77,14 +77,14 @@ function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var _parseProps = (0, _props.default)(this.props),
+      var _parseProps = (0, _props.default)(this.props, _Panel.default.PullRefresh.porps),
           isLoading = _parseProps.isLoading,
           onLoad = _parseProps.onLoad,
           triggerOffset = _parseProps.triggerOffset,
-          refreshProps = _parseProps.refreshProps,
           loaderProps = _parseProps.loaderProps,
+          titleLoading = _parseProps.titleLoading,
           children = _parseProps.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["isLoading", "onLoad", "triggerOffset", "refreshProps", "loaderProps", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["isLoading", "onLoad", "triggerOffset", "loaderProps", "titleLoading", "children"]);
 
       return _react.default.createElement(_Panel.default.Touchable, (0, _extends2.default)({
         direction: "vertical",
@@ -98,9 +98,8 @@ function (_React$Component) {
       }, props), _react.default.createElement(PullRefresh._Loader, (0, _extends2.default)({
         isLoading: isLoading,
         offset: this.state.offset,
-        triggerOffset: triggerOffset,
-        loaderProps: loaderProps
-      }, refreshProps)), children);
+        triggerOffset: triggerOffset
+      }, loaderProps), titleLoading), children);
     }
   }]);
   return PullRefresh;
@@ -109,37 +108,32 @@ function (_React$Component) {
 }), _temp);
 
 _Panel.default.PullRefresh._Loader = function (aprops) {
-  var _parseProps2 = (0, _props.default)(aprops),
+  var _parseProps2 = (0, _props.default)(aprops, _Panel.default.PullRefresh._Loader.props),
       isLoading = _parseProps2.isLoading,
       offset = _parseProps2.offset,
       triggerOffset = _parseProps2.triggerOffset,
-      title = _parseProps2.title,
-      loader = _parseProps2.loader,
-      _parseProps2$loaderPr = _parseProps2.loaderProps,
-      loaderProps = _parseProps2$loaderPr === void 0 ? {} : _parseProps2$loaderPr,
       _parseProps2$componen = _parseProps2.component,
-      Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
+      Component = _parseProps2$componen === void 0 ? _Panel.default.Loader : _parseProps2$componen,
+      componentPanel = _parseProps2.componentPanel,
       className = _parseProps2.className,
       style = _parseProps2.style,
-      children = _parseProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isLoading", "offset", "triggerOffset", "title", "loader", "loaderProps", "component", "className", "style", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isLoading", "offset", "triggerOffset", "component", "componentPanel", "className", "style"]);
 
-  var classStr = 'overflow-a-hidden transition-property-height flex-display-block flex-direction-v flex-justify-center flex-align-center';
+  var classStr = 'overflow-a-hidden transition-property-height';
   var styleSet = {
     height: 0
   };
   if (offset > 0) styleSet.height = offset;
   if (isLoading) styleSet.height = triggerOffset;
   return _react.default.createElement(Component, (0, _extends2.default)({
+    component: componentPanel,
+    position: "top",
+    isProgress: !isLoading,
+    progress: offset * 100 / triggerOffset,
     className: (0, _classes.default)(classStr, className),
     style: (0, _objectSpread2.default)({}, styleSet, style)
-  }, props), !children && loader ? loader : null, !children && !loader ? _react.default.createElement(_Loader.default, (0, _extends2.default)({
-    isProgress: !isLoading,
-    progress: offset * 100 / triggerOffset
-  }, loaderProps)) : null, !children && title ? title : null, children);
+  }, props));
 };
 
-var _default = _Panel.default; // : TODO
-// pc pull trigger onClick
-
+var _default = _Panel.default;
 exports.default = _default;

@@ -6,24 +6,24 @@ export default class ScrollSpy extends React.Component {
   componentDidMount() {
     this.container = domFindScrollContainer(this, this.props.container, this.props.horizontal);
 
-    this.scrollEventListener = listen( this.container, 'scroll', this._handleScrollPositionChange.bind(this), true);
-    this.resizeEventListener = listen( window, 'resize', this._handleScrollPositionChange.bind(this), true);
+    this.offScrollListener = listen( this.container, 'scroll', this._handlePosChange.bind(this), true);
+    this.offResizeListener = listen( window, 'resize', this._handlePosChange.bind(this), true);
 
-    this._handleScrollPositionChange();
-  }
-
-  componentDidUpdate() {
-    this._handleScrollPositionChange();
+    this._handlePosChange();
   }
 
   componentWillUnmount() {
-    this.scrollEventListener&&this.scrollEventListener();
-    this.resizeEventListener&&this.resizeEventListener();
+    this.offScrollListener&&this.offScrollListener();
+    this.offResizeListener&&this.offResizeListener();
   }
 
-  _handleScrollPositionChange(...args) {
-    const { onScrollPositionChange } = this.props;
-    onScrollPositionChange&&onScrollPositionChange(this.container, ...args);
+  componentDidUpdate() {
+    this._handlePosChange();
+  }
+
+  _handlePosChange(event) {
+    const { onPosChange } = this.props;
+    onPosChange&&onPosChange(event, this.container);
   }
 
   render() {

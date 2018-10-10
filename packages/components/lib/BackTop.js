@@ -23,13 +23,11 @@ var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/ge
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _react = _interopRequireDefault(require("react"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
-
 var _dom = require("./utils/dom");
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 var _ScrollSpy = _interopRequireDefault(require("./ScrollSpy"));
 
@@ -87,27 +85,23 @@ function (_React$Component) {
       });
     }
   }, {
-    key: "_handleClick",
-    value: function _handleClick() {
-      var onClick = this.props.onClick;
-      if (onClick && onClick.apply(void 0, arguments)) return;
-      return this.scrollToTop();
-    }
-  }, {
-    key: "_handleScroll",
-    value: function _handleScroll(container, event) {
-      this.container = container;
+    key: "_handlePosChange",
+    value: function _handlePosChange(event, el) {
+      this.container = el;
       var _this$props = this.props,
-          triggerFunc = _this$props.triggerFunc,
+          _this$props$trigger = _this$props.trigger,
+          trigger = _this$props$trigger === void 0 ? BackTop._trigger : _this$props$trigger,
           offset = _this$props.offset;
-      triggerFunc(offset, container) ? this.show() : this.hide();
+      trigger(offset, this.container) ? this.show() : this.hide();
     }
   }, {
     key: "render",
     value: function render() {
-      var _parseProps = (0, _props.default)(this.props),
+      var _this2 = this;
+
+      var _parseProps = (0, _props.default)(this.props, BackTop.props),
           onClick = _parseProps.onClick,
-          triggerFunc = _parseProps.triggerFunc,
+          trigger = _parseProps.trigger,
           offset = _parseProps.offset,
           _parseProps$iconProps = _parseProps.iconProps,
           iconProps = _parseProps$iconProps === void 0 ? {} : _parseProps$iconProps,
@@ -116,12 +110,14 @@ function (_React$Component) {
           _parseProps$component = _parseProps.component,
           Component = _parseProps$component === void 0 ? _Fab.default : _parseProps$component,
           children = _parseProps.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["onClick", "triggerFunc", "offset", "iconProps", "scrollSpyProps", "component", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["onClick", "trigger", "offset", "iconProps", "scrollSpyProps", "component", "children"]);
 
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_ScrollSpy.default, (0, _extends2.default)({
-        onScrollPositionChange: this._handleScroll.bind(this)
+        onPosChange: this._handlePosChange.bind(this)
       }, scrollSpyProps)), this.state.isShow ? _react.default.createElement(Component, (0, _extends2.default)({
-        onClick: this._handleClick.bind(this)
+        onClick: (0, _dom.chainedFuncs)(function () {
+          return _this2.scrollToTop();
+        }, onClick)
       }, props), children ? children : _react.default.createElement(_Icon.default, (0, _extends2.default)({
         name: "backTop",
         defaultName: "^"
@@ -132,14 +128,13 @@ function (_React$Component) {
 }(_react.default.Component);
 
 exports.default = BackTop;
-(0, _defineProperty2.default)(BackTop, "defaultProps", {
-  triggerFunc: function triggerFunc(value, container) {
-    if (!value) {
-      return container.scrollTop >= (container ? (0, _dom.domOffset)(container).height : 0);
-    } else if (!isNaN(value)) {
-      return container.scrollTop >= value;
-    } else if (typeof value === 'string' && value.test(/\d*%/)) {
-      return container.scrollTop >= (container ? (0, _dom.domOffset)(container).height * Number(value.slice(0, -1)) / 100 : 0);
-    }
+
+BackTop._trigger = function (value, container) {
+  if (!value) {
+    return container.scrollTop >= (container ? (0, _dom.domOffset)(container).height : 0);
+  } else if (!isNaN(value)) {
+    return container.scrollTop >= value;
+  } else if (typeof value === 'string' && value.test(/\d*%/)) {
+    return container.scrollTop >= (container ? (0, _dom.domOffset)(container).height * Number(value.slice(0, -1)) / 100 : 0);
   }
-});
+};

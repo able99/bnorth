@@ -101,7 +101,7 @@ List.Item._Media = aprops=>{
     component:Component=Panel, componentPanel, className, ...props
   } = parseProps(aprops, List.Item._Media.porps);
 
-  let classStr = 'flex-sub-align-center flex-sub-flex-none';
+  let classStr = 'flex-sub-align-center flex-sub-flex-none margin-right-';
 
   return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
 }
@@ -145,7 +145,7 @@ List.Item._After = aprops=>{
     component:Component=Panel, componentPanel, className, ...props
   } = parseProps(aprops);
 
-  let classStr = 'flex-sub-align-center';
+  let classStr = 'flex-sub-align-center margin-left-';
   
   return <Component component={componentPanel} b-theme="light" className={classes(classStr, className)} {...props} />;
 }

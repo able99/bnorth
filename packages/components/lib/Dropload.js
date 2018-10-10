@@ -29,11 +29,9 @@ var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
 var _props = _interopRequireDefault(require("./utils/props"));
 
-var _Panel = _interopRequireDefault(require("./Panel"));
-
-var _Loader = _interopRequireDefault(require("./Loader"));
-
 var _ScrollSpy = _interopRequireDefault(require("./ScrollSpy"));
+
+var _Panel = _interopRequireDefault(require("./Panel.Loader"));
 
 /**
  * @overview bnorth solution
@@ -41,27 +39,29 @@ var _ScrollSpy = _interopRequireDefault(require("./ScrollSpy"));
  * @author able99 (8846755@qq.com)
  * @license MIT
  */
-var InfiniteScroll =
+var Dropload =
 /*#__PURE__*/
 function (_React$Component) {
-  (0, _inherits2.default)(InfiniteScroll, _React$Component);
+  (0, _inherits2.default)(Dropload, _React$Component);
 
-  function InfiniteScroll() {
-    (0, _classCallCheck2.default)(this, InfiniteScroll);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(InfiniteScroll).apply(this, arguments));
+  function Dropload() {
+    (0, _classCallCheck2.default)(this, Dropload);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Dropload).apply(this, arguments));
   }
 
-  (0, _createClass2.default)(InfiniteScroll, [{
-    key: "handleScrollPosChange",
-    value: function handleScrollPosChange(target, event) {
+  (0, _createClass2.default)(Dropload, [{
+    key: "_handlePosChange",
+    value: function _handlePosChange(event, target) {
       var _this$props = this.props,
           isLoading = _this$props.isLoading,
-          onLoading = _this$props.onLoading;
-      if (isLoading || !onLoading) return;
+          onLoad = _this$props.onLoad;
+      if (isLoading || !onLoad) return;
       var distance = Math.abs(target.scrollTop + target.clientHeight - target.scrollHeight);
 
       if (distance < 35) {
-        !this.trigger && Promise.resolve().then(onLoading());
+        !this.trigger && Promise.resolve().then(function () {
+          return onLoad();
+        });
         this.trigger = true;
       } else {
         this.trigger = false;
@@ -70,33 +70,30 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _parseProps = (0, _props.default)(this.props),
+      var _parseProps = (0, _props.default)(this.props, Dropload.props),
           disabled = _parseProps.disabled,
           isLoading = _parseProps.isLoading,
-          onLoading = _parseProps.onLoading,
-          _parseProps$component = _parseProps.componentLoader,
-          ComponentLoader = _parseProps$component === void 0 ? _Loader.default : _parseProps$component,
-          loaderProps = _parseProps.loaderProps,
-          _parseProps$component2 = _parseProps.componentTitle,
-          ComponentTitle = _parseProps$component2 === void 0 ? _Panel.default : _parseProps$component2,
-          titleProps = _parseProps.titleProps,
-          _parseProps$component3 = _parseProps.component,
-          Component = _parseProps$component3 === void 0 ? _Panel.default : _parseProps$component3,
-          children = _parseProps.children,
+          onLoad = _parseProps.onLoad,
+          _parseProps$component = _parseProps.component,
+          Component = _parseProps$component === void 0 ? _Panel.default.Loader : _parseProps$component,
+          componentPanel = _parseProps.componentPanel,
           className = _parseProps.className,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["disabled", "isLoading", "onLoading", "componentLoader", "loaderProps", "componentTitle", "titleProps", "component", "children", "className"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["disabled", "isLoading", "onLoad", "component", "componentPanel", "className"]);
 
       if (disabled) return null;
-      var classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center padding-a-';
+      var classStr = 'padding-a-';
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_ScrollSpy.default, {
-        onScrollPositionChange: this.handleScrollPosChange.bind(this)
+        onPosChange: this._handlePosChange.bind(this)
       }), _react.default.createElement(Component, (0, _extends2.default)({
+        component: componentPanel,
+        position: "top",
+        isProgress: !isLoading,
         className: (0, _classes.default)(classStr, className)
-      }, props), children ? children : _react.default.createElement(ComponentLoader, loaderProps), children ? children : _react.default.createElement(ComponentTitle, titleProps)));
+      }, props)));
     }
   }]);
-  return InfiniteScroll;
+  return Dropload;
 }(_react.default.Component);
 
-var _default = InfiniteScroll;
+var _default = Dropload;
 exports.default = _default;
