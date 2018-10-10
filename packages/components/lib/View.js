@@ -33,35 +33,34 @@ var View = function View(aprops) {
   var _parseProps = (0, _props.default)(aprops),
       landscape = _parseProps.landscape,
       _parseProps$container = _parseProps.container,
-      container = _parseProps$container === void 0 ? window : _parseProps$container,
+      container = _parseProps$container === void 0 ? document.body : _parseProps$container,
       _parseProps$component = _parseProps.component,
       Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+      componentPanel = _parseProps.componentPanel,
       className = _parseProps.className,
       style = _parseProps.style,
       children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["landscape", "container", "component", "className", "style", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["landscape", "container", "component", "componentPanel", "className", "style", "children"]);
 
-  var classStr = 'position-relative offset-a-start square-full overflow-a-hidden flex-display-block flex-direction-v';
+  var classStr = 'position-relative offset-a-start square-full overflow-a-hidden flex-display-block flex-direction-v bg-color-view';
   var styleSet = {};
 
-  if (landscape && container.innerHeight > container.innerWidth) {
+  if (landscape && container.clientHeight > container.clientWidth) {
     styleSet = (0, _objectSpread2.default)({
-      width: container.innerHeight,
-      height: container.innerWidth,
-      top: (container.innerHeight - container.innerWidth) / 2,
-      left: (container.innerWidth - container.innerHeight) / 2
+      width: container.clientHeight,
+      height: container.clientWidth,
+      top: (container.clientHeight - container.clientWidth) / 2,
+      left: (container.clientWidth - container.clientHeight) / 2
     }, (0, _animation.transform)('rotate', '90deg'));
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
-    "bc-bg-color": "view",
+    component: componentPanel,
+    "data-container": true,
     style: (0, _objectSpread2.default)({}, styleSet, style),
-    className: (0, _classes.default)(classStr, className),
-    "data-container": true
+    className: (0, _classes.default)(classStr, className)
   }, props), children);
 };
 
-var _default = View; // :TODO
-// container
-
+var _default = View;
 exports.default = _default;

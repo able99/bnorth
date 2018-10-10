@@ -14,22 +14,24 @@ import Panel from './Panel';
 
 let View = aprops=>{
   let {
-    landscape, container=window,
-    component:Component=Panel, className, style, children, ...props
+    landscape, container=document.body,
+    component:Component=Panel, componentPanel, className, style, children, ...props
   } = parseProps(aprops);
 
-  let classStr = 'position-relative offset-a-start square-full overflow-a-hidden flex-display-block flex-direction-v';
+  let classStr = 'position-relative offset-a-start square-full overflow-a-hidden flex-display-block flex-direction-v bg-color-view';
   let styleSet = {};
-  if(landscape && container.innerHeight>container.innerWidth) { styleSet = {
-    width: container.innerHeight,
-    height: container.innerWidth,
-    top: (container.innerHeight - container.innerWidth) / 2,
-    left: (container.innerWidth - container.innerHeight) / 2,
+  if(landscape && container.clientHeight>container.clientWidth) { styleSet = {
+    width: container.clientHeight,
+    height: container.clientWidth,
+    top: (container.clientHeight - container.clientWidth) / 2,
+    left: (container.clientWidth - container.clientHeight) / 2,
     ...transform('rotate', '90deg'),
   }}
   
   return (
-    <Component bc-bg-color="view" style={{...styleSet, ...style}} className={classes(classStr, className)} data-container {...props}>
+    <Component 
+      component={componentPanel} 
+      data-container style={{...styleSet, ...style}} className={classes(classStr, className)} {...props}>
       {children}
     </Component>
   );
@@ -37,6 +39,3 @@ let View = aprops=>{
 
 
 export default View;
-
-// :TODO
-// container

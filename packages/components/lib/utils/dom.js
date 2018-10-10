@@ -20,6 +20,7 @@ var _exportNames = {
   domFindNode: true,
   domFindContainer: true,
   domFindScrollContainer: true,
+  domCreatePortal: true,
   domOffset: true,
   domGetDimensionValue: true,
   domGetScrollDimensionValue: true,
@@ -30,6 +31,7 @@ exports.domTriggerBrowserReflow = domTriggerBrowserReflow;
 exports.domFindNode = domFindNode;
 exports.domFindContainer = domFindContainer;
 exports.domFindScrollContainer = domFindScrollContainer;
+exports.domCreatePortal = domCreatePortal;
 exports.domOffset = domOffset;
 exports.domGetDimensionValue = domGetDimensionValue;
 exports.domGetScrollDimensionValue = domGetScrollDimensionValue;
@@ -41,6 +43,8 @@ var _reactDom = _interopRequireDefault(require("react-dom"));
 var _style = _interopRequireDefault(require("dom-helpers/style"));
 
 var _offset = _interopRequireDefault(require("dom-helpers/query/offset"));
+
+var _position = _interopRequireDefault(require("dom-helpers/query/position"));
 
 var _events = require("dom-helpers/events/");
 
@@ -101,7 +105,7 @@ function domFindContainer(node, container) {
 
   while (el = el.parentElement) {
     if (el === document.body) return el;
-    if (el.getAttribute('data-container-page')) return el;
+    if (el.getAttribute('data-page')) return el;
     if (container === true && el.getAttribute('data-container') === 'true') return el;
     if (container && el.getAttribute('data-container') === container) return el;
   }
@@ -122,12 +126,19 @@ function domFindScrollContainer(node, container, horizontal) {
   }
 
   return document.body;
+} // dom portal
+// -------------------
+
+
+function domCreatePortal(component, container) {
+  return _reactDom.default.createPortal(component, container || document.body);
 } // dom offset
 // -------------------
 
 
-function domOffset(node) {
-  return (0, _offset.default)(domFindNode(node));
+function domOffset(node, container) {
+  node = domFindNode(node);
+  return container ? (0, _position.default)(node, container) : (0, _offset.default)(node);
 }
 
 function domGetDimensionValue(elem) {

@@ -9,8 +9,6 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -24,8 +22,6 @@ var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/ge
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
 var _react = _interopRequireDefault(require("react"));
-
-var _reactDom = _interopRequireDefault(require("react-dom"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
@@ -52,8 +48,8 @@ function (_React$Component) {
   }
 
   (0, _createClass2.default)(Fab, [{
-    key: "handleRef",
-    value: function handleRef(e) {
+    key: "_handleRef",
+    value: function _handleRef(e) {
       this.container = (0, _dom.domFindContainer)(e, this.props.container);
       this.forceUpdate();
     }
@@ -62,11 +58,7 @@ function (_React$Component) {
     value: function render() {
       var _this = this;
 
-      var _parseProps = (0, _props.default)(this.props),
-          _parseProps$x = _parseProps.x,
-          x = _parseProps$x === void 0 ? 8 : _parseProps$x,
-          _parseProps$y = _parseProps.y,
-          y = _parseProps$y === void 0 ? 8 : _parseProps$y,
+      var _parseProps = (0, _props.default)(this.props, Fab.props),
           _parseProps$h = _parseProps.h,
           h = _parseProps$h === void 0 ? 'end' : _parseProps$h,
           _parseProps$v = _parseProps.v,
@@ -75,13 +67,12 @@ function (_React$Component) {
           _parseProps$component = _parseProps.component,
           Component = _parseProps$component === void 0 ? _Button.default : _parseProps$component,
           className = _parseProps.className,
-          style = _parseProps.style,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["x", "y", "h", "v", "container", "component", "className", "style"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["h", "v", "container", "component", "className"]);
 
       if ((container === true || typeof container === 'string') && !this.container) {
         return _react.default.createElement("span", {
           ref: function ref(e) {
-            return e && _this.handleRef(e);
+            return e && _this._handleRef(e);
           },
           style: {
             fontSize: 0
@@ -91,25 +82,22 @@ function (_React$Component) {
 
       var classStr = 'position-absolute';
       var classSet = {
-        'translate-center-x': h === 'center',
-        'translate-center-y': v === 'center',
-        'offset-center-x': h === 'center',
-        'offset-center-y': v === 'center'
+        'translate-center-x': h === 'center' && v !== 'center',
+        'translate-center-y': h !== 'center' && v === 'center',
+        'translate-center-a': h === 'center' && v === 'center',
+        'offset-left-center': h === 'center',
+        'offset-top-center': v === 'center',
+        'offset-left-start': h === 'start',
+        'offset-right-start': h === 'end',
+        'offset-top-start': v === 'start',
+        'offset-bottom-start': v === 'end'
       };
-      var styleSet = {};
-      if (h === 'start') styleSet['left'] = x;
-      if (h === 'center') styleSet['left'] = '50%';
-      if (h === 'end') styleSet['right'] = x;
-      if (v === 'start') styleSet['top'] = y;
-      if (v === 'center') styleSet['top'] = '50%';
-      if (v === 'end') styleSet['bottom'] = y;
 
       var component = _react.default.createElement(Component, (0, _extends2.default)({
-        className: (0, _classes.default)(classStr, classSet, className),
-        style: (0, _objectSpread2.default)({}, styleSet, style)
+        className: (0, _classes.default)(classStr, classSet, className)
       }, props));
 
-      return this.container || container ? _reactDom.default.createPortal(component, this.container || container) : component;
+      return this.container ? (0, _dom.domCreatePortal)(component, this.container) : component;
     }
   }]);
   return Fab;

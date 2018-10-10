@@ -5,7 +5,6 @@
  * @license MIT
  */
 
-
 import React from 'react';
 import Transition from 'react-transition-group/Transition';
 import { transiton } from '@bnorth/rich.css/lib/styles/animation'; 

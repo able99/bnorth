@@ -10,7 +10,7 @@ let Group = aprops=>{
   let switchOn = stateComponentSwitchs.includes(title);
 
   return (
-    <div className="padding-a-xs" {...props}>
+    <div className="padding-a-xs position-relative" {...props}>
       <div 
         onClick={()=>{
           switchOn?page.stateComponentSwitchs.delete(title):page.stateComponentSwitchs.update([title], {append: true})}

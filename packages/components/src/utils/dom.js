@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 import css from 'dom-helpers/style';
 import offset from 'dom-helpers/query/offset';
+import position from 'dom-helpers/query/position';
 
 
 const MARGINS = {
@@ -51,7 +52,7 @@ export function domFindContainer(node, container) {
 
   while((el=el.parentElement)) {
     if(el===document.body) return el;
-    if(el.getAttribute('data-container-page')) return el;
+    if(el.getAttribute('data-page')) return el;
     if(container===true&&el.getAttribute('data-container')==='true') return el;
     if(container&&el.getAttribute('data-container')===container) return el;
   }
@@ -75,10 +76,17 @@ export function domFindScrollContainer(node, container, horizontal) {
   return document.body;
 }
 
+// dom portal
+// -------------------
+export function domCreatePortal(component, container) {
+  return ReactDOM.createPortal(component, container||document.body)
+}
+
 // dom offset
 // -------------------
-export function domOffset(node) {
-  return offset(domFindNode(node));
+export function domOffset(node, container) {
+  node = domFindNode(node);
+  return container?position(node, container):offset(node);
 }
 
 export function domGetDimensionValue(elem, dimension="height") {
