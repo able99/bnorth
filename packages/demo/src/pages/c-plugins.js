@@ -35,7 +35,7 @@ let Component = aprops=>{
           <List.Item 
             title="content" 
             after="dismiss after 3s"
-            onClick={()=>{app.mask.show({title: 'waiting'});setTimeout(()=>app.mask.close(),3000)}} />
+            onClick={()=>{app.mask.show({loaderProps:{children: 'waiting'}});setTimeout(()=>app.mask.close(),3000)}} />
           <List.Item 
             title="theme" 
             onClick={()=>app.mask.show({cTheme: 'alert', mask: false})} />
@@ -66,6 +66,9 @@ let Component = aprops=>{
           <List.Item 
             title="title" 
             onClick={()=>app.modal.show('modal', {title: 'title'})} />
+          <List.Item 
+            title="theme" 
+            onClick={()=>app.modal.show('modal', {title: 'title', 'b-theme': 'primary'})} />
           <List.Item 
             title="title and close button" 
             onClick={()=>app.modal.show('modal', {title: 'title', hasTitleClose: true})} />

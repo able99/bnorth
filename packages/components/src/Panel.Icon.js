@@ -44,7 +44,6 @@ Panel.Icon._Title = aprops=>{
   } = parseProps(aprops, Panel.Icon._Title.porps);
 
   let classStr = 'text-truncate position-relative';
-  let classSet = (position==='top'||position==='bottom')?'text-align-center':'';
 
   return <Component component={componentPanel} className={classes(classStr, className)} {...props} />
 }

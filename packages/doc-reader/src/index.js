@@ -17,7 +17,7 @@ let app = new App({
 })
 
 app.plugins.add(require('@bnorth/plugin-network').default);
-app.plugins.add(require('@bnorth/plugin-request').default);
+app.plugins.add(require('@bnorth/plugin-request').default, {request: app.network.fetch.bind(app.network)});
 
 
 app.start();

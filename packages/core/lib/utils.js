@@ -166,7 +166,7 @@ function () {
         var key = keysA[_i];
 
         if (!objB.hasOwnProperty(key) || (checkEqualProps.includes(key) ? !this.shallowEqual(objA[key], objB[key]) : objA[key] !== objB[key])) {
-          console.log("shallowEqual: ", key);
+          // console.log("shallowEqual: ",key);
           return false;
         }
       }

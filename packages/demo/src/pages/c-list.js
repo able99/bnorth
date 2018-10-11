@@ -19,9 +19,10 @@ let Component = aprops=>{
         <Field 
           containerProps={{className: 'padding-a- border-set-bottom-'}}
           className="padding-a- border-set-a- border-radius- bg-color-white bg-none-- border-none-a--"
+          type="static"
           value={stateData.keyword||'input search keyword'}
-          onClick={e=>app.router.push(['search', stateData.keyword||'', page._id])}
-          before=" " />
+          onClick={e=>app.router.push(['search', stateData.keyword, page._id])}
+          before />
 
         <Panel className="border-set-bottom- bg-color-white flex-display-block flex-align-center">
           <Popover 
@@ -30,11 +31,7 @@ let Component = aprops=>{
             className="flex-sub-flex-extend"
             overlay={
               <List>
-                {types.map(v=>(
-                  <List.Item 
-                    onClick={()=>page.stateList.fetch({type: v})}
-                    title={v} />
-                ))}
+                {types.map(v=><List.Item onClick={()=>page.stateList.fetch({type: v})} title={v} key={v} />)}
               </List>
             }
             placement="bottom-auto-full">
@@ -89,7 +86,7 @@ Component.controller = (app,page)=>({
       pageSize: 20,
       order: '',
       type: '',
-      keyword: page.props.route.params.keyword,
+      keyword: page.props.route.params.keyword||'',
     }
   },
 

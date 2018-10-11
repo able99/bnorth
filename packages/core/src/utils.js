@@ -98,7 +98,7 @@ export default class Utils {
     for(let key of keysA) if( !objB.hasOwnProperty(key) || 
       (checkEqualProps.includes(key)?!this.shallowEqual(objA[key], objB[key]):objA[key]!==objB[key])
     ){
-      console.log("shallowEqual: ",key);
+      // console.log("shallowEqual: ",key);
       return false;
     }
   

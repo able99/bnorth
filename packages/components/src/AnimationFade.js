@@ -9,11 +9,11 @@ import React from 'react';
 import Transition from 'react-transition-group/Transition';
 import { transiton } from '@bnorth/rich.css/lib/styles/animation'; 
 import classes from '@bnorth/rich.css/lib/classes'; 
-import parseProps from './utils/props';
 import { chainedFuncs } from './utils/dom';
+import parseProps from './utils/props';
 
 
-let Fade = aprops=>{
+let AnimationFade = aprops=>{
   let {
     in:isIn=true, timeout=100, onTransitionFinished, transitionProps={},
     ...props
@@ -23,15 +23,15 @@ let Fade = aprops=>{
     <Transition 
       appear={true} {...transitionProps} in={isIn} timeout={timeout} 
       onExited={chainedFuncs(transitionProps.onExited,onTransitionFinished)}>
-      {state=><Fade._Component isIn={isIn} timeout={timeout} {...props} animationState={state} />}
+      {state=><AnimationFade._Component isIn={isIn} timeout={timeout} {...props} animationState={state} />}
     </Transition>
   );
 }
 
-Fade._Component = aprops=>{
+AnimationFade._Component = aprops=>{
   let {
     isIn, timeout, animationState,
-    component:Component='div', style, className, children, ...props
+    component:Component='div', componentPanel, style, className, children, ...props
   } = parseProps(aprops);
 
   let classSet = `opacity-${(animationState==='entered')?'100':'0'}`;
@@ -49,4 +49,4 @@ Fade._Component = aprops=>{
 }
 
 
-export default Fade;
+export default AnimationFade;

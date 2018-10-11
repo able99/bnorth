@@ -35,7 +35,7 @@ class Popover extends React.Component {
   render() {
     const {
       defaultIsShow, trigger, onClick, onMouseOver,
-      overlay, overlayProps, mask, maskProps,
+      overlay, overlayProps, mask=false, maskProps,
       calcPosition=Popover.calcPosition, placement, container,
       component:Component=Panel, componentPanel, children, ...props
     } = parseProps(this.props, Popover.props);
@@ -52,7 +52,7 @@ class Popover extends React.Component {
       onClick: triggerByTouch?()=>this.hide():null,
       onMouseMove: triggerByHover?e=>{
         let x = e.pageX; let y = e.pageY;
-        let toffset = domOffset(domFindContainer(this, this.container));
+        let toffset = this.state.offsetTarget||{};
         if(!(toffset.left <= x && x <= toffset.left+toffset.width && toffset.top <= y && y <= toffset.top+toffset.height)) this.hide();
       }:null,
     };

@@ -36,13 +36,21 @@ function () {
   }, {
     key: "_log",
     value: function _log(type) {
-      var _console;
+      if (!console || type < Log.levels[this.level]) return;
 
       for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
         args[_key2 - 1] = arguments[_key2];
       }
 
-      type >= Log.levels[this.level] && (_console = console).log.apply(_console, args);
+      if (type === 5 && console.error) {
+        var _console;
+
+        (_console = console).error.apply(_console, args);
+      } else {
+        var _console2;
+
+        (_console2 = console).log.apply(_console2, args);
+      }
     }
   }, {
     key: "verbose",

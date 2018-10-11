@@ -5,57 +5,92 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.Mask = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
-var _react = _interopRequireDefault(require("react"));
-
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
 var _props = _interopRequireDefault(require("./utils/props"));
 
-var _AnimationFade = _interopRequireDefault(require("./AnimationFade"));
+var _react = _interopRequireDefault(require("react"));
 
-var _Panel = _interopRequireDefault(require("./Panel"));
+var _Panel = _interopRequireDefault(require("./Panel.Loader"));
 
-var _Loader = _interopRequireDefault(require("./Loader"));
+var _Backdrop = _interopRequireDefault(require("./Backdrop"));
 
-var _default = function _default(aprops) {
-  var _parseProps = (0, _props.default)(aprops),
+var Mask = function Mask(aprops) {
+  var _parseProps = (0, _props.default)(aprops, Mask.props),
+      loaderProps = _parseProps.loaderProps,
       _parseProps$mask = _parseProps.mask,
       mask = _parseProps$mask === void 0 ? true : _parseProps$mask,
-      _parseProps$hasLoader = _parseProps.hasLoader,
-      hasLoader = _parseProps$hasLoader === void 0 ? true : _parseProps$hasLoader,
-      _parseProps$component = _parseProps.componentLoad,
-      ComponnetLoader = _parseProps$component === void 0 ? _Loader.default : _parseProps$component,
-      loaderProps = _parseProps.loaderProps,
-      title = _parseProps.title,
-      _parseProps$componnet = _parseProps.componnetTitle,
-      ComponentTitle = _parseProps$componnet === void 0 ? _Panel.default : _parseProps$componnet,
-      titleProps = _parseProps.titleProps,
-      _parseProps$transitio = _parseProps.transition,
-      Transition = _parseProps$transitio === void 0 ? _AnimationFade.default : _parseProps$transitio,
-      transitionProps = _parseProps.transitionProps,
-      onTransitionFinished = _parseProps.onTransitionFinished,
-      _parseProps$component2 = _parseProps.component,
-      component = _parseProps$component2 === void 0 ? _Panel.default : _parseProps$component2,
+      _parseProps$component = _parseProps.component,
+      Component = _parseProps$component === void 0 ? _Backdrop.default : _parseProps$component,
       className = _parseProps.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["mask", "hasLoader", "componentLoad", "loaderProps", "title", "componnetTitle", "titleProps", "transition", "transitionProps", "onTransitionFinished", "component", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["loaderProps", "mask", "component", "className"]);
 
-  var classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-a-hidden flex-display-block flex-direction-v flex-justify-center flex-align-center';
-  return _react.default.createElement(Transition, (0, _extends2.default)({
-    "b-style": "solid",
-    "b-theme": mask === true ? 'mask' : mask,
-    component: component,
-    transitionProps: transitionProps,
-    onTransitionFinished: onTransitionFinished,
+  var classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center text-color-white';
+  return _react.default.createElement(Component, (0, _extends2.default)({
+    mask: mask,
     className: (0, _classes.default)(classStr, className)
-  }, props), hasLoader ? _react.default.createElement(ComponnetLoader, loaderProps) : null, title ? _react.default.createElement(ComponentTitle, (0, _extends2.default)({}, titleProps, {
-    children: title
-  })) : null);
+  }, props), _react.default.createElement(_Panel.default.Loader, (0, _extends2.default)({
+    position: "top"
+  }, loaderProps)));
 };
 
+exports.Mask = Mask;
+var _default = {
+  // plugin 
+  // --------------------------------
+  _id: 'mask',
+  onPluginMount: function onPluginMount(app) {
+    app.mask = {
+      show: function show() {
+        var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+            _ref$options = _ref.options,
+            options = _ref$options === void 0 ? {} : _ref$options,
+            props = (0, _objectWithoutProperties2.default)(_ref, ["options"]);
+
+        var _id = app.mask._id || app.router.getViewId(options);
+
+        options._id = _id;
+        options.isModal = true;
+        return app.mask._id = app.router.addView(_react.default.createElement(Mask, null), props, options);
+      },
+      close: function close() {
+        var _ref2 = app.router.getView(app.mask._id) || {},
+            content = _ref2.content,
+            _ref2$props = _ref2.props,
+            props = _ref2$props === void 0 ? {} : _ref2$props,
+            _ref2$options = _ref2.options,
+            options = _ref2$options === void 0 ? {} : _ref2$options;
+
+        if (!content) {
+          app.mask._id = undefined;
+          return;
+        }
+
+        props.in = false;
+
+        props.onTransitionFinished = function () {
+          app.router.removeView(app.mask._id);
+          app.mask._id = undefined;
+        };
+
+        return app.router.addView(content, props, options);
+      }
+    };
+    app.mask._oldMask = app.render.mask;
+
+    app.render.mask = function (show, options) {
+      return show ? app.mask.show(options) : app.mask.close();
+    };
+  },
+  onPluginUnmount: function onPluginUnmount(app) {
+    app.render.mask = app.mask._oldMask;
+    delete app.mask;
+  }
+};
 exports.default = _default;

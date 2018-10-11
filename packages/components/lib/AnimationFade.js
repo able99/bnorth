@@ -21,9 +21,9 @@ var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
-
 var _dom = require("./utils/dom");
+
+var _props = _interopRequireDefault(require("./utils/props"));
 
 /**
  * @overview bnorth solution
@@ -31,7 +31,7 @@ var _dom = require("./utils/dom");
  * @author able99 (8846755@qq.com)
  * @license MIT
  */
-var Fade = function Fade(aprops) {
+var AnimationFade = function AnimationFade(aprops) {
   var _parseProps = (0, _props.default)(aprops),
       _parseProps$in = _parseProps.in,
       isIn = _parseProps$in === void 0 ? true : _parseProps$in,
@@ -49,7 +49,7 @@ var Fade = function Fade(aprops) {
     timeout: timeout,
     onExited: (0, _dom.chainedFuncs)(transitionProps.onExited, onTransitionFinished)
   }), function (state) {
-    return _react.default.createElement(Fade._Component, (0, _extends2.default)({
+    return _react.default.createElement(AnimationFade._Component, (0, _extends2.default)({
       isIn: isIn,
       timeout: timeout
     }, props, {
@@ -58,17 +58,18 @@ var Fade = function Fade(aprops) {
   });
 };
 
-Fade._Component = function (aprops) {
+AnimationFade._Component = function (aprops) {
   var _parseProps2 = (0, _props.default)(aprops),
       isIn = _parseProps2.isIn,
       timeout = _parseProps2.timeout,
       animationState = _parseProps2.animationState,
       _parseProps2$componen = _parseProps2.component,
       Component = _parseProps2$componen === void 0 ? 'div' : _parseProps2$componen,
+      componentPanel = _parseProps2.componentPanel,
       style = _parseProps2.style,
       className = _parseProps2.className,
       children = _parseProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isIn", "timeout", "animationState", "component", "style", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isIn", "timeout", "animationState", "component", "componentPanel", "style", "className", "children"]);
 
   var classSet = "opacity-".concat(animationState === 'entered' ? '100' : '0');
   var styleSet = (0, _objectSpread2.default)({}, style, (0, _animation.transiton)("".concat(timeout, "ms"), {
@@ -80,5 +81,5 @@ Fade._Component = function (aprops) {
   }, props), children);
 };
 
-var _default = Fade;
+var _default = AnimationFade;
 exports.default = _default;

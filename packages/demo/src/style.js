@@ -1,7 +1,7 @@
 import '@bnorth/rich.css/css/normalize.css';
 import genCss from '@bnorth/rich.css';
 import Icon from '@bnorth/components/lib/Icon';
-// import TabBar from '@bnorth/components/lib/TabBar';
+import {Loading} from '@bnorth/components/lib/loading';
 import icoSvg from '../res/default.ico.svg';
 
 let iconMap = {
@@ -18,6 +18,5 @@ export default function(app) {
   Icon.appendSvgIcons(icoSvg);
   Icon.appendMap(iconMap);
 
-  // Icon.props = {'b-theme': 'alert'};
-  // TabBar.props = {colorUnselectedOnTheme: 'normal'} 
+  Loading.props = {style:{top: 45-3}}
 }

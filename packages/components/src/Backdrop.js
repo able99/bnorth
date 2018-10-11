@@ -1,20 +1,28 @@
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import parseProps from './utils/props';
+import AnimationFade from './AnimationFade';
 import Panel from './Panel';
 
 
-export default (aprops) => {
-  let {
-    mask,
-    component:Component=Panel, className, ...props
-  } = parseProps(aprops);
+let Backdrop = aprops=>{
+  let { 
+    mask=true, 
+    transition:Transition=AnimationFade, in:isIn, transitionProps, onTransitionFinished,
+    component=Panel, componentPanel, className, children, ...props 
+  } = parseProps(aprops, Backdrop.props);
 
   let classStr = 'position-absolute square-full offset-left-start offset-top-start overflow-a-hidden';
+  let classSet = mask?`bg-color-${mask===true?'mask':mask}`:'';
 
-  let classSet = {
-    ['bg-color-'+(mask===true?'mask':mask)]: mask,
-  };
-
-  return <Component className={classes(classStr,classSet,className)} {...props} />
+  return (
+    <Transition 
+      in={isIn} transitionProps={transitionProps} onTransitionFinished={onTransitionFinished} 
+      component={component} componentPanel={componentPanel} className={classes(classStr, classSet, className)} {...props}>
+      {children}
+    </Transition>
+  );
 }
+
+
+export default Backdrop;

@@ -37,14 +37,14 @@ function addFunctions(args) {
 }
 
 function parseProps(aprops, aaprops) {
-  var _aaprops$aprops = (0, _objectSpread2.default)({}, aaprops, aprops),
-      active = _aaprops$aprops.active,
-      selected = _aaprops$aprops.selected,
-      disabled = _aaprops$aprops.disabled,
-      className = _aaprops$aprops.className,
-      style = _aaprops$aprops.style,
-      refWrap = _aaprops$aprops.refWrap,
-      props = (0, _objectWithoutProperties2.default)(_aaprops$aprops, ["active", "selected", "disabled", "className", "style", "refWrap"]);
+  var _aprops = (0, _objectSpread2.default)({}, typeof aaprops === 'function' ? aaprops(aprops) : aaprops, aprops),
+      active = _aprops.active,
+      selected = _aprops.selected,
+      disabled = _aprops.disabled,
+      className = _aprops.className,
+      style = _aprops.style,
+      refWrap = _aprops.refWrap,
+      props = (0, _objectWithoutProperties2.default)(_aprops, ["active", "selected", "disabled", "className", "style", "refWrap"]);
 
   var classSet = {};
   var styleSet = {};

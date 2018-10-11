@@ -11,7 +11,7 @@ export default function parseProps(aprops, aaprops) {
   let {
     active, selected, disabled,
     className, style, refWrap, ...props
-  } = {...aaprops, ...aprops};
+  } = {...(typeof aaprops==='function'?aaprops(aprops):aaprops), ...aprops};
   let classSet = {};
   let styleSet = {};
 

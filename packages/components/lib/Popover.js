@@ -102,7 +102,8 @@ function (_React$Component) {
           onMouseOver = _parseProps.onMouseOver,
           overlay = _parseProps.overlay,
           overlayProps = _parseProps.overlayProps,
-          mask = _parseProps.mask,
+          _parseProps$mask = _parseProps.mask,
+          mask = _parseProps$mask === void 0 ? false : _parseProps$mask,
           maskProps = _parseProps.maskProps,
           _parseProps$calcPosit = _parseProps.calcPosition,
           calcPosition = _parseProps$calcPosit === void 0 ? Popover.calcPosition : _parseProps$calcPosit,
@@ -135,7 +136,7 @@ function (_React$Component) {
         onMouseMove: triggerByHover ? function (e) {
           var x = e.pageX;
           var y = e.pageY;
-          var toffset = (0, _dom.domOffset)((0, _dom.domFindContainer)(_this3, _this3.container));
+          var toffset = _this3.state.offsetTarget || {};
           if (!(toffset.left <= x && x <= toffset.left + toffset.width && toffset.top <= y && y <= toffset.top + toffset.height)) _this3.hide();
         } : null
       };

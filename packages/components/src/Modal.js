@@ -1,64 +1,60 @@
-/**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
- */
-
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import parseProps from './utils/props';
-import AnimationFade from './AnimationFade';
 import Backdrop from './Backdrop';
+import Panel from './Panel';
 import Button from './Button';
 import Icon from './Icon';
 
 
 let Modal = aprops=>{
   let {
-    role, handleAction, in:isIn=true, onTransitionFinished,
+    role, handleAction, 
+    in:isIn=true, onTransitionFinished,
     containerProps, 
-    headerProps, title, titleProps, hasTitleClose, titleCloseProps, titleCloseIconProps,
+    title, titleProps, hasTitleClose, titleCloseProps, titleCloseIconProps, headerProps, 
     bodyProps, 
-    footerProps, footerButtonProps, footButtonGetStyle, footButtonGetClassName, footButtonGetProps,
-    component:Component="div", style, className, children, ...props
-  } = parseProps(aprops);
-  children = typeof(children)==='function'?children(this):children;
-  
-  let classStr = 'position-relative backface-hidden overflow-a-hidden bg-color-white';
+    footerProps, 
+    component:Component=Panel, style, className, children, ...props
+  } = parseProps(aprops, Modal.props);
 
+  children = typeof(children)==='function'?children(this):children;
+  let classStr = 'position-relative backface-hidden overflow-a-hidden bg-color-white';
   let classSet = {
     'square-full': role==='popup',
     'border-radius-': role!=='popup'&&role!=='document',
   };
-
   let styleSet = {
     width: role!=='popup'?'80%':undefined,
     ...style||{},
   };
+
+  let component = role==='document'?children:(
+    <Component 
+      onClick={e=>e.stopPropagation()} 
+      style={styleSet} className={classes(classStr, classSet, className)} {...props}>
+      <Modal._Header 
+        role={role} handleAction={handleAction} 
+        title={title} titleProps={titleProps} 
+        hasTitleClose={hasTitleClose} titleCloseProps={titleCloseProps} titleCloseIconProps={titleCloseIconProps}
+        {...headerProps} />
+      <Modal._Body 
+        role={role} handleAction={handleAction} 
+        {...bodyProps}>
+        {children}
+      </Modal._Body>
+      <Modal._Footer 
+        role={role} handleAction={handleAction}
+        {...footerProps} />
+    </Component>
+  )
   
   return (
     <Modal._Container 
-      handleAction={handleAction} in={isIn} onTransitionFinished={onTransitionFinished}
-      role={role} {...containerProps}>
-      {role==='document'?children:(
-        <Component 
-          onClick={e=>e.stopPropagation()} 
-          style={styleSet} className={classes(classStr, classSet, className)} 
-          {...props}>
-          <Modal._Header 
-            title={title} titleProps={titleProps} 
-            hasTitleClose={hasTitleClose} titleCloseProps={titleCloseProps} titleCloseIconProps={titleCloseIconProps}
-            role={role} handleAction={handleAction} {...headerProps} />
-          <Modal._Body 
-            role={role} {...bodyProps}>
-            {children}
-          </Modal._Body>
-          <Modal._Footer 
-            itemProps={footerButtonProps} itemGetStyle={footButtonGetStyle} itemGetClassName={footButtonGetClassName} itemGetProps={footButtonGetProps}
-            role={role} handleAction={handleAction} {...footerProps} />
-        </Component>
-      )}
+      role={role} handleAction={handleAction} 
+      in={isIn} onTransitionFinished={onTransitionFinished} 
+      {...containerProps}>
+      {component}
     </Modal._Container>
   )
 }
@@ -66,8 +62,8 @@ let Modal = aprops=>{
 Modal._Container = aprops=>{
   let { 
     role, handleAction, 
-    mask=true, transition:Transition=AnimationFade, in:isIn, onTransitionFinished, 
-    component=Backdrop, className, children, ...props
+    transition, 
+    component:Component=Backdrop, className, ...props
   } = parseProps(aprops);
 
   let classSet = {
@@ -77,60 +73,54 @@ Modal._Container = aprops=>{
   }
 
   return (
-    <Transition
+    <Component
       onClick={()=>handleAction&&handleAction()}
-      in={isIn} onTransitionFinished={onTransitionFinished} component={component} mask={mask} 
-      className={classes(classSet, className)} {...props}>
-      {children}
-    </Transition>
+      className={classes(classSet, className)} {...props} />
   );
 }
 
 Modal._Header = aprops=>{
   let { 
-    handleAction,
+    role, handleAction,
     title, titleProps, hasTitleClose, titleCloseProps, titleCloseIconProps,
-    component:Component='div', className, ...props 
-  } = parseProps(aprops);
+    component:Component=Panel, className, ...props 
+  } = parseProps(aprops, Modal._Header.props);
+  if(!title&&!hasTitleClose) return null;
 
   let classStr = 'width-full padding-a- border-set-bottom- flex-display-block flex-justify-between flex-align-center';
   
-  return (title||hasTitleClose?(
+  return (
     <Component className={classes(classStr, className)} {...props}>
-      <Modal._HeaderTitle hasTitleClose={hasTitleClose} {...titleProps}>{title}</Modal._HeaderTitle>
+      <Modal._Header._Title hasTitleClose={hasTitleClose} {...titleProps}>{title}</Modal._Header._Title>
       {!hasTitleClose?null:(
-        <Modal._HeaderTitleClose 
+        <Modal._Header._TitleClose 
           handleAction={handleAction} 
           titleCloseIconProps={titleCloseIconProps} {...titleCloseProps}>
           {hasTitleClose} 
-        </Modal._HeaderTitleClose >
+        </Modal._Header._TitleClose>
       )}
     </Component>
-  ):null);
-}
-
-Modal._HeaderTitle = aprops=>{
-  let { 
-    hasTitleClose,
-    component:Component='div', className, children, ...props 
-  } = parseProps(aprops);
-  
-  let classStr = 'flex-sub-flex-grow text-weight-bold text-size-lg';
-  let classSet = {
-    'text-align-center': !hasTitleClose,
-  };  
-
-  return (
-    <Component className={classes(classStr, classSet, className)} {...props}>{children}</Component>
   );
 }
 
-Modal._HeaderTitleClose = aprops=>{
+Modal._Header._Title = aprops=>{
+  let { 
+    hasTitleClose,
+    component:Component=Panel, className, ...props 
+  } = parseProps(aprops, Modal._Header._Title.props);
+  
+  let classStr = 'flex-sub-flex-grow text-weight-bold text-size-lg';
+  let classSet = { 'text-align-center': !hasTitleClose };  
+
+  return <Component className={classes(classStr, classSet, className)} {...props} />; 
+}
+
+Modal._Header._TitleClose = aprops=>{
   let { 
     handleAction, 
     titleCloseIconProps,
     component:Component=Button, className, children, ...props 
-  } = parseProps(aprops);
+  } = parseProps(aprops, Modal._Header._TitleClose.props);
 
   let classStr = 'padding-h-sm padding-v-0';
   
@@ -140,27 +130,27 @@ Modal._HeaderTitleClose = aprops=>{
       onClick={()=>handleAction&&handleAction()} 
       className={classes(classStr, className)}
       {...props}>
-      {children===true?<Modal._HeaderTitleCloseIcon {...titleCloseIconProps} />:children}
+      {children===true?<Modal._Header._TitleClose._Icon {...titleCloseIconProps} />:children}
     </Component>
   );
 }
 
-Modal._HeaderTitleCloseIcon = aprops=>{
+Modal._Header._TitleClose._Icon = aprops=>{
   let { 
-    title,
     component:Component=Icon, ...props 
-  } = parseProps(aprops);
+  } = parseProps(aprops, Modal._Header._TitleClose._Icon.props);
 
   return <Component name="close" defaultName="x" {...props} />
 }
 
 Modal._Body = aprops=>{
   let { 
-    component:Component='div', className, children, ...props 
-  } = parseProps(aprops);
+    role, handleAction,
+    component:Component=Panel, className, children, ...props 
+  } = parseProps(aprops, Modal._Body.props);
+
   children = typeof(children)==='function'?children(this):children;
   if(!children) return null;
-
   let classStr = 'padding-a-';
   
   return <Component className={classes(classStr, className)} {...props}>{children}</Component>;
@@ -169,37 +159,107 @@ Modal._Body = aprops=>{
 Modal._Footer =  aprops=>{
   let { 
     role, handleAction,
-    footerButtons=Modal._footerButtons[aprops.role]||[],
-    itemProps={}, itemGetClassName=Modal._Footer.itemGetClassName, itemGetStyle=Modal._Footer.itemGetStyle, itemGetProps=Modal._Footer.itemGetProps,
+    buttons=Modal._Footer._buttons[aprops.role]||[],
+    itemProps, itemGetClassName=Modal._Footer._itemGetClassName, itemGetStyle=Modal._Footer._itemGetStyle, itemGetProps=Modal._Footer._itemGetProps,
     component:Component=Button.Group, componentItem=Button, className, children, ...props 
-  } = parseProps(aprops);
-  if(!footerButtons.length) return null;
+  } = parseProps(aprops, Modal._Footer.props);
+  if(!buttons.length) return null;
 
   let classStr = 'border-set-top-';
-
-  itemProps.className = classes(itemProps.className, 'border-set-left-');
   
   return (
     <Component 
       type="justify" 
       containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={classes(classStr, className)} {...props}>
-      {footerButtons.map((v,i)=><componentItem key={i}>{v}</componentItem>)}
+      {buttons.map((v,i)=><componentItem key={i}>{v}</componentItem>)}
     </Component>
   );
 }
 
-Modal._Footer.itemGetProps=(i, length, {handleAction}={}, subPropsEach, subProps)=>{
+Modal._Footer._itemGetProps=(i, length, {handleAction}={}, subPropsEach, subProps)=>{
   return {
-    'b-style': 'plain',
+    'bc-bg-none-': true,
+    'bc-border-none-top-': true,
     onClick: ()=>handleAction&&handleAction(i),
   };
 }
 
-Modal._footerButtons = {
+Modal._Footer._buttons = {
   alert: ['确定'], 
   prompt: ['取消','确定'],
 }
 
 
-export default Modal;
+export default {
+  pluginName: 'modal',
+  pluginDependence: [],
+
+  onPluginMount(app) {
+    app.modal = {
+      _createContent: (_id, Content, state)=>(typeof Content==='function'?app.context.consumerHoc(()=>{
+        return (
+          <Content 
+            modalId={_id}
+            modalClose={()=>app.modal.close(_id)}
+            modalStateData={state&&state.data()} 
+            modalStateDataExt={state&&state.extData()} 
+            modalState={state} />
+        )
+      }):Content),
+
+      show: (Content, { onAction, options={}, state, ...props}={})=>{
+        if(!Content) return;
+
+        let _id = app.router.getViewId(options);
+        state = state&&app.State.createState(app, state===true?undefined:state, 'state', _id);
+
+        options._id = _id;
+        options.isModal = true; 
+        options.onAdd = _id=>app.keyboard.on(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id));
+        options.onRemove = _id=>app.keyboard.off(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id));
+        props.in = true;
+        props.handleAction = index=>(!onAction || onAction( index, state, ()=>app.modal.close(_id), _id)!==false) && app.modal.close(_id);
+        props.children = app.modal._createContent(_id, Content, state);
+
+        return app.router.addView(<Modal /> , props, options);
+      },
+
+      update: (_id, Content, { options={}, state, ...props}={})=>{
+        if(!_id) return;
+        let {content, prevProps={}, options:prevOptions={}} = app.router.getView(_id)||{};
+        if(!content) return;
+
+        props = {
+          ...prevProps,
+          ...props,
+          children: app.modal._createContent(_id, Content, state),
+        }
+        options = {
+          ...prevOptions,
+          ...options,
+        }
+
+        return app.router.addView(content, props, options);
+      },
+      
+      close: _id=>{
+        if(!_id) return;
+        let {content, props, options} = app.router.getView(_id)||{};
+        if(!content) return;
+
+        props.in = false;
+        props.onTransitionFinished = ()=>{
+          app.router.removeView(_id);
+          app.context.clear(_id);
+        }
+
+        return app.router.addView(content, props, options);
+      },
+    };
+  },
+
+  onPluginUnmount(app) {
+    delete app.modal;
+  },
+}

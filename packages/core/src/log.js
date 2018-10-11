@@ -10,7 +10,13 @@ export default class Log {
   }
 
   _log(type, ...args) {
-    type>=Log.levels[this.level] && console.log(...args);
+    if(!console||type<Log.levels[this.level]) return;
+    
+    if(type===5&&console.error) {
+      console.error(...args);
+    }else{
+      console.log(...args);
+    }
   }
 
   verbose(...args) { return this._log(1, ...args) }

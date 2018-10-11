@@ -72,7 +72,6 @@ _Panel.default.Icon._Title = function (aprops) {
       props = (0, _objectWithoutProperties2.default)(_parseProps2, ["position", "component", "componentPanel", "className"]);
 
   var classStr = 'text-truncate position-relative';
-  var classSet = position === 'top' || position === 'bottom' ? 'text-align-center' : '';
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
     className: (0, _classes.default)(classStr, className)

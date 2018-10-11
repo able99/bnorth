@@ -43,9 +43,8 @@ Panel.Loader._Title = aprops=>{
   } = parseProps(aprops, Panel.Loader._Title.props);
 
   let classStr = 'text-truncate position-relative';
-  let classSet = (position==='top'||position==='bottom')?'text-align-center':'';
 
-  return <Component component={componentPanel} className={classes(classStr, classSet, className)} {...props} />;
+  return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
 }
 
 
