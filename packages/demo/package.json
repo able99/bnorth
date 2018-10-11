@@ -32,6 +32,11 @@
     "@bnorth/plugin-network": "*",
     "@bnorth/plugin-request": "*",
     "@bnorth/plugin-validate": "*",
+    "@bnorth/plugin-base64": "*",
+    "@bnorth/plugin-md5": "*",
+    "@bnorth/plugin-format": "*",
+    "@bnorth/plugin-storage": "*",
+    "@bnorth/plugin-browser": "*",
     "@bnorth/rich.css": "*"
   },
   "devDependencies": {
