@@ -23,3 +23,5 @@ const bnorthDemo = require('bnorth-demo');
 1. AnimationNone
 1. popover hover trigger cannot close when click and click trigger close is wrong
 1. pluign valdate refine
+1. tabs title props is wrong
+1. item should not use container.item, must wrap for component common props

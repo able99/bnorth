@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-import React from 'react';
+import React, { cloneElement } from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import parseProps from './utils/props';
 import Panel from './Panel.Container';
@@ -37,10 +37,10 @@ class Tabs extends React.Component {
     return (
       <Component component={componentPanel} className={classes(classStr, className)} {...props}>
         <Tabs._Nav onAction={this._handleAction} selected={selected} {...navProps}>
-          {children}
+          {children.map(v=>cloneElement(v, {}, v.props.title))}
         </Tabs._Nav>
         <Tabs._Container onAction={this._handleAction} selected={selected} {...containerProps}>
-          {children}
+          {children.map(v=>cloneElement(v, {title: undefined}))}
         </Tabs._Container>
       </Component>
     );
@@ -66,7 +66,7 @@ Tabs._Nav = aprops=>{
       separator justify 
       containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={classes(classStr, className)} {...props}>
-      {children}
+      {children.map(v=><Button>{v.props.title}</Button>)}
     </Component>
   )
 }

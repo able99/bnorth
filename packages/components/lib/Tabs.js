@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -25,7 +27,7 @@ var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/hel
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
@@ -91,10 +93,16 @@ function (_React$Component) {
       }, props), _react.default.createElement(Tabs._Nav, (0, _extends2.default)({
         onAction: this._handleAction,
         selected: selected
-      }, navProps), children), _react.default.createElement(Tabs._Container, (0, _extends2.default)({
+      }, navProps), children.map(function (v) {
+        return (0, _react.cloneElement)(v, {}, v.props.title);
+      })), _react.default.createElement(Tabs._Container, (0, _extends2.default)({
         onAction: this._handleAction,
         selected: selected
-      }, containerProps), children));
+      }, containerProps), children.map(function (v) {
+        return (0, _react.cloneElement)(v, {
+          title: undefined
+        });
+      })));
     }
   }]);
   return Tabs;
@@ -132,7 +140,9 @@ Tabs._Nav = function (aprops) {
     itemGetStyle: itemGetStyle,
     itemGetProps: itemGetProps,
     className: (0, _classes.default)(classStr, className)
-  }, props), children);
+  }, props), children.map(function (v) {
+    return _react.default.createElement(_Button.default, null, v.props.title);
+  }));
 };
 
 Tabs._Nav._itemGetProps = function (i, length) {

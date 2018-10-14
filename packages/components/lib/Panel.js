@@ -78,12 +78,12 @@ var Panel = function Panel(aprops) {
     }
   } else if (bStyle === 'underline') {
     classSet['bg-none-'] = true;
-    if (bTheme) classSet['text-color-' + (bTheme === 'true' ? '' : bTheme)] = true;
     classSet['border-none-top-'] = true;
     classSet['border-none-left-'] = true;
     classSet['border-none-right-'] = true;
 
     if (selected) {
+      if (bTheme) classSet['text-color-' + (bTheme === 'true' ? '' : bTheme)] = true;
       classSet['border-set-bottom-' + (bTheme === 'true' ? '' : bTheme)] = true;
       classSet['border-width-bottom-2'] = true;
     } else {

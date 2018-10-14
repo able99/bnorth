@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-import React from 'react';
+import React ,{ cloneElement } from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import parseProps from './utils/props';
 import Panel from './Panel';
@@ -32,13 +32,15 @@ let List = aprops=>{
           {...headerProps} />
       ))}
       <List._Inner separatorInset={separatorInset} {...innerProps}>
-        {items.map((v,i,a)=>(
-          <List.Item 
-            key={v.key||i} {...v.props} 
-            part='item' first={i===0} last={i===a.length-1}
-            separatorInset={separatorInset}
-            {...itemProps} />
-        ))}
+        {items.map((v,i,a)=>cloneElement(v, {
+          key: v.key||i,
+          ...v.props,
+          part: 'item', 
+          first: i===0, 
+          last: i===a.length-1,
+          separatorInset,
+          ...itemProps
+        }))}
       </List._Inner>
       {footers.map((v,i,a)=>(
         <List.Item 
@@ -83,15 +85,15 @@ List.Item = aprops=>{
 
   return (
     <Component component={componentPanel} className={classes(classStr, classSet, className)} onClick={onClick} {...props}>
-      {media?(<List.Item._Media {...mediaProps}>{media}</List.Item._Media>):null}
+      {media?(<List.Item._Media {...mediaProps}>{media===true?undefined:media}</List.Item._Media>):null}
       <List.Item._Main {...mainProps}>
-        {title?(<List.Item._Title {...titleProps}>{title}</List.Item._Title>):null}
-        {subTitle?(<List.Item._SubTitle {...subTitleProps}>{subTitle}</List.Item._SubTitle>):null}
-        {desc?(<List.Item._Desc {...descProps}>{desc}</List.Item._Desc>):null}
+        {title?(<List.Item._Title {...titleProps}>{title===true?undefined:title}</List.Item._Title>):null}
+        {subTitle?(<List.Item._SubTitle {...subTitleProps}>{subTitle===true?undefined:subTitle}</List.Item._SubTitle>):null}
+        {desc?(<List.Item._Desc {...descProps}>{desc===true?undefined:desc}</List.Item._Desc>):null}
         {children}
       </List.Item._Main>
-      {after?(<List.Item._After {...afterProps}>{after}</List.Item._After>):null}
-      {arrow||(autoArrow&&onClick)?(<List.Item._Arrow {...arrowProps}>{arrow}</List.Item._Arrow>):null}
+      {after?(<List.Item._After {...afterProps}>{after===true?undefined:after}</List.Item._After>):null}
+      {arrow||(autoArrow&&onClick)?(<List.Item._Arrow {...arrowProps}>{arrow===true?undefined:arrow}</List.Item._Arrow>):null}
     </Component>
   );
 }

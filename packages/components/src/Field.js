@@ -86,6 +86,8 @@ Field._Normal = aprops=>{
   if(Field._Normal._maps.includes(type)) {
     componentPanel = type;
     type=null;
+  }else{
+    children = undefined;
   }
 
   return (
@@ -118,7 +120,7 @@ Field._Static = aprops=>{
 Field._HiddenInput = aprops=>{
   let {
     component:Component='input', className, ...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, Field._HiddenInput.props);
 
   let classStr = 'visibility-hide display-none';
 
@@ -131,7 +133,7 @@ Field._Switch = aprops=>{
     type, value, defaultValue, domValue, onClick, 
     Content, labelProps, inputProps, innerProps,
     component:Component=Panel, componentPanel='label', className, children, ...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, Field._Switch.props);
 
   let classStr = 'switch-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none- flex-sub-flex-extend';
 
@@ -149,7 +151,7 @@ Field._Switch = aprops=>{
 Field._Switch._Inner = aprops=>{
   let {
     component:Component=Panel, componentPanel='span', className, ...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, Field._Switch._Inner.props);
 
   let classStr = 'status- position-relative';
 
@@ -160,7 +162,7 @@ Field._Switch._Content = aprops=>{
   let {
     isOn,
     component:Component=Panel, className, ...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, Field._Switch._Content.props);
 
   let classStr = 'position-relative';
   let classSet = [isOn?'on-':'off-'];
@@ -179,20 +181,30 @@ Field._Types.static = Field._Static;
 Field._SwitchContentCheckRadio = aprops=>{
   let {
     type, isOn, name=aprops.isOn?'check':' ', defaultName=aprops.isOn?'X':' ', 
-    component:Component=Icon, ...props
-  } = aprops;
+    component:Component=Icon, 'b-theme':bTheme, 'b-style':bStyle, ...props
+  } = parseProps(aprops, Field._SwitchContentCheckRadio.props);
 
-  return <Component bc-border-radius-rounded={!Boolean(type==='checkbox')} type={type}  name={name} defaultName={defaultName} {...props} b-style="hollow" />;
+  if(!bStyle) bStyle = 'hollow';
+  if(!isOn) {
+    bTheme = undefined;
+    bStyle = 'hollow';
+  }
+
+  return <Component bc-border-radius-rounded={!Boolean(type==='checkbox')} type={type}  name={name} defaultName={defaultName} b-style={bStyle} b-theme={bTheme} {...props} />;
 }
 Field._Types.checkbox = aprops=>{
+  aprops = parseProps(aprops, Field._Types.checkbox.props);
   return <Field._Switch Content={Field._SwitchContentCheckRadio} {...aprops} />
 };
-Field._Types.radio = Field._Types.checkbox;
+Field._Types.radio = aprops=>{
+  aprops = parseProps(aprops, Field._Types.radio.props);
+  return <Field._Switch Content={Field._SwitchContentCheckRadio} {...aprops} />
+};
 
 Field._SwitchContentSwitch = aprops=>{
   let {
     component:Component=Panel, className, children, ...props
-  } = aprops;
+  } = parseProps(aprops, Field._SwitchContentSwitch.props);
 
   let classStr = 'border-radius-rounded line-height-0';
 
@@ -207,13 +219,14 @@ Field._SwitchContentSwitch.Item = aprops=>{
   let {
     isOn, isPositive, 
     component:Component=Panel, 'b-theme':bTheme='component', className, children, ...props
-  } = aprops;
+  } = parseProps(aprops, Field._SwitchContentSwitch.Item.props);
 
   let classStr = 'border-radius-rounded width-1em height-1em';
 
   return <Component {...props} inline b-style="solid" b-theme={isPositive?(isOn?bTheme:'white'):(isOn?'white':'component')} className={classes(classStr, className)}  />
 }
 Field._Types.switch = aprops=>{
+  aprops = parseProps(aprops, Field._Types.switch.props);
   return <Field._Switch Content={Field._SwitchContentSwitch} {...aprops} type="checkbox" />
 };
 
@@ -221,7 +234,7 @@ Field._Types.file = aprops=>{
   let {
     type, value, inputProps,
     component:Component=Panel, componentPanel="label", className, children, ...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, Field._Types.file.props);
 
   let classStr = 'line-height-1 vertical-align-middle';
 

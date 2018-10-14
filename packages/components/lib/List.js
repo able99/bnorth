@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -9,11 +11,13 @@ exports.default = void 0;
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
@@ -67,10 +71,10 @@ var List = function List(aprops) {
   }), _react.default.createElement(List._Inner, (0, _extends2.default)({
     separatorInset: separatorInset
   }, innerProps), items.map(function (v, i, a) {
-    return _react.default.createElement(List.Item, (0, _extends2.default)({
+    return (0, _react.cloneElement)(v, (0, _objectSpread2.default)({
       key: v.key || i
     }, v.props, {
-      part: "item",
+      part: 'item',
       first: i === 0,
       last: i === a.length - 1,
       separatorInset: separatorInset
@@ -145,7 +149,7 @@ List.Item = function (aprops) {
     component: componentPanel,
     className: (0, _classes.default)(classStr, classSet, className),
     onClick: onClick
-  }, props), media ? _react.default.createElement(List.Item._Media, mediaProps, media) : null, _react.default.createElement(List.Item._Main, mainProps, title ? _react.default.createElement(List.Item._Title, titleProps, title) : null, subTitle ? _react.default.createElement(List.Item._SubTitle, subTitleProps, subTitle) : null, desc ? _react.default.createElement(List.Item._Desc, descProps, desc) : null, children), after ? _react.default.createElement(List.Item._After, afterProps, after) : null, arrow || autoArrow && onClick ? _react.default.createElement(List.Item._Arrow, arrowProps, arrow) : null);
+  }, props), media ? _react.default.createElement(List.Item._Media, mediaProps, media === true ? undefined : media) : null, _react.default.createElement(List.Item._Main, mainProps, title ? _react.default.createElement(List.Item._Title, titleProps, title === true ? undefined : title) : null, subTitle ? _react.default.createElement(List.Item._SubTitle, subTitleProps, subTitle === true ? undefined : subTitle) : null, desc ? _react.default.createElement(List.Item._Desc, descProps, desc === true ? undefined : desc) : null, children), after ? _react.default.createElement(List.Item._After, afterProps, after === true ? undefined : after) : null, arrow || autoArrow && onClick ? _react.default.createElement(List.Item._Arrow, arrowProps, arrow === true ? undefined : arrow) : null);
 };
 
 List.Item._Media = function (aprops) {
