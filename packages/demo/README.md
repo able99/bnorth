@@ -16,7 +16,6 @@ const bnorthDemo = require('bnorth-demo');
 1. pullrefresh mistakenly trigger onclick when pull on pc
 1. refine trigger backtop, pullrefresh, 
 1. popover hover trigger cannot close when click and click trigger close is wrong
-1. refine colorOnTheme, tabs unselect nav button can use light theme
 1. implement grid
 1. refine AnimationXXX components and implement AnimationNone
 1. state dup error

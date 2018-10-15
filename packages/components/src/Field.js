@@ -19,7 +19,7 @@ let Field = aprops=>{
     ...props
   } = aprops;
 
-  let ComponentField = Field._Types[type||'text'];
+  let ComponentField = Field._Types[type||'text']||Field._Normal;
   if(!ComponentField) return null;
 
   ComponentField = <ComponentField b-style={(before||after)&&'plain'} bc-flex-sub-flex-extend={Boolean(before||after)} type={type} value={value} {...props} />;

@@ -23,7 +23,7 @@ export default props=>{
       <Panel main>
         {children[route.params.tab||'c_components']}
       </Panel>
-      <TabBar b-style='solid' b-theme='primary'>
+      <TabBar itemProps={{'b-theme':'primary', 'b-style':'solid'}}>
         {items.map(v=>(
           <TabBar.Item 
             onClick={()=>app.router.replace(['/components', v.key])}

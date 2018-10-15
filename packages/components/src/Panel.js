@@ -13,9 +13,12 @@ import parseProps from './utils/props';
 let Panel = aprops=>{
   let {
     main, inline, selected, status,
-    colorOnTheme='white', colorOnHollow='white',
+    hasBg, hasSelection,
+    textThemeOnBg='white', bgThemeOnHollow='white', textThemeOnBgSelected='white', textThemeOnBgUnselected='disable', textThemeUnselected='disable', 
     component:Component='div', className, style, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, ...props
   } = parseProps(aprops, Panel.props);
+  if(hasBg===undefined) hasBg = bStyle==='solid'&&bTheme;
+  if(hasSelection===undefined) hasSelection = bStyle==='underline';
 
   let classStr = 'position-relative';
   let classSet = {
@@ -26,48 +29,34 @@ let Panel = aprops=>{
   }
   let styleSet = {};
 
-  if(bSize) classSet['text-size-'+(bSize==='true'?'':bSize)] = true;
+  let textTheme;
+  if(hasSelection) textTheme = hasBg?(selected?textThemeOnBgSelected:textThemeOnBgUnselected):(selected?(bTheme||false):textThemeUnselected);
+  if(!hasSelection) textTheme = hasBg?textThemeOnBg:bTheme;
+  textTheme = textTheme?(textTheme===true?'':textTheme):false; 
+  classSet['text-color-'+textTheme] = textTheme!==false;
+
+  classSet['text-size-'+(bSize==='true'?'':bSize)] = bSize;
+
   if(bStyle==='solid') {
-    if(bTheme) {
-      classSet['bg-color-'+(bTheme==='true'?'':bTheme)] = true;
-      classSet['border-set-a-'+(bTheme==='true'?'':bTheme)] = true;
-      classSet['text-color-'+(colorOnTheme==='true'?'':colorOnTheme)] = true;
-    }else{
-      classSet['bg-color-component'] = true;
-      classSet['border-set-a-component'] = true;
-    }
+    let theme = bTheme?(bTheme===true?'':bTheme):(bTheme===false?false:'component');
+    classSet['bg-color-'+theme] = theme!==false;
+    classSet['border-set-a-'+theme] = theme!==false;
   }else if(bStyle==='hollow') {
-    if(bTheme) {
-      classSet['border-set-a-'+(bTheme==='true'?'':bTheme)] = true;
-      classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
-    }else{
-      classSet['border-set-a-'] = true;
-      if(colorOnHollow===false) {
-        classSet['bg-none-'] = true;
-      }else {
-        classSet['bg-color-'+(colorOnHollow===true?'':colorOnHollow)] = true;
-      }
-    }
+    let theme = bTheme?(bTheme===true?'':bTheme):(bTheme===false?false:'');
+    classSet['border-set-a-'+theme] = theme!==false;
+    classSet[bgThemeOnHollow===false?'bg-none-':('bg-color-'+(bgThemeOnHollow===true?'':bgThemeOnHollow))] = true;
   }else if(bStyle==='underline') {
+    let theme = bTheme?(bTheme===true?'':bTheme):(bTheme===false?false:'');
     classSet['bg-none-'] = true;
     classSet['border-none-top-'] = true;
     classSet['border-none-left-'] = true;
     classSet['border-none-right-'] = true;
-    if(selected) {
-      if(bTheme) classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
-      classSet['border-set-bottom-'+(bTheme==='true'?'':bTheme)] = true;
-      classSet['border-width-bottom-2'] = true;
-    }else{
-      classSet['border-set-bottom-'] = true;
-      classSet['border-width-bottom-2'] = true;
-      styleSet['borderColor'] = 'transparent';
-    }
+    classSet['border-width-bottom-2'] = true;
+    classSet['border-set-bottom-'+theme] = theme!==false;
+    if(!selected) styleSet['borderColor'] = 'transparent';
   }else if(bStyle==='plain') {
     classSet['border-none-a-'] = true;
     classSet['bg-none-'] = true;
-    if(bTheme) classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
-  }else {
-    if(bTheme) classSet['text-color-'+(bTheme==='true'?'':bTheme)] = true;
   }
 
   return <Component className={classes(classStr, classSet, className)} style={{...styleSet, ...style}} {...props} />

@@ -56,6 +56,7 @@ _Panel.default.Icon = function (aprops) {
   }, iconProps)) : null;
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
+    selected: selected,
     className: (0, _classes.default)(classStr, classSet, className)
   }, props), position === 'right' || position === 'bottom' ? ctitle : null, cicon, position === 'left' || position === 'top' ? ctitle : null);
 };

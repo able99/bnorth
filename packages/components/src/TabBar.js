@@ -14,12 +14,11 @@ import './Panel.Icon';
 
 let TabBar = aprops=>{
   let {
-    colorUnselected, colorSelectedOnTheme, colorUnselectedOnTheme,
     type="justify", itemProps, itemGetClassName=TabBar._itemGetClassName, itemGetStyle=TabBar._itemGetStyle, itemGetProps=TabBar._itemGetProps,
     component:Component=Panel.Container, componentPanel, className, ...props
   } = parseProps(aprops, TabBar.props);
 
-  let classStr = 'width-full padding-top-sm padding-bottom-xs border-set-top-border';
+  let classStr = 'width-full border-set-top-border';
 
   return (
     <Component 
@@ -29,41 +28,14 @@ let TabBar = aprops=>{
   );
 }
 
-TabBar._itemGetProps = (i, length, containerProps, {selected}={})=>{
-  let {'b-style':bStyle, 'b-theme':bTheme, colorUnselected='disable', colorSelectedOnTheme='white', colorUnselectedOnTheme='disable'} = {...TabBar.props,...containerProps};
-  
-  let theme;
-
-  if(bStyle==='solid') {
-    if(bTheme){
-      if(selected&&colorSelectedOnTheme) theme = colorSelectedOnTheme;
-      if(!selected&&colorUnselectedOnTheme) theme = colorUnselectedOnTheme;
-    }else{
-      if(!selected&&colorUnselected) theme = colorUnselected;
-    }
-  }else {
-    if(bTheme){
-      if(selected) theme = bTheme;
-      if(!selected&&colorUnselectedOnTheme) theme = colorUnselectedOnTheme;
-    }else{
-      if(!selected) theme = colorUnselected;
-    }
-  }
-  
-  return {
-    position: 'top',
-    'bc-cursor-pointer': true,
-    'bc-status-': true,
-    'b-theme': theme,
-  }
-}
-
 TabBar.Item = aprops=>{
   let {
-    component:Component=Panel.Icon, ...props
+    component:Component=Panel.Icon, className, ...props
   } = parseProps(aprops, TabBar.Item.props);
 
-  return <Component {...props} />;
+  let classStr = 'padding-top-sm padding-bottom-xs cursor-pointer status- transition-set-';
+
+  return <Component position="top" hasSelection className={classes(classStr, className)} {...props} />;
 }
 
 export default TabBar;

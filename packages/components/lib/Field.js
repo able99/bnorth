@@ -44,7 +44,7 @@ var Field = function Field(aprops) {
       beforeProps = aprops.beforeProps,
       afterProps = aprops.afterProps,
       props = (0, _objectWithoutProperties2.default)(aprops, ["type", "value", "containerProps", "before", "after", "label", "beforeProps", "afterProps"]);
-  var ComponentField = Field._Types[type || 'text'];
+  var ComponentField = Field._Types[type || 'text'] || Field._Normal;
   if (!ComponentField) return null;
   ComponentField = _react.default.createElement(ComponentField, (0, _extends2.default)({
     "b-style": (before || after) && 'plain',

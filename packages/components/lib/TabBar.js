@@ -7,8 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
@@ -31,9 +29,6 @@ require("./Panel.Icon");
  */
 var TabBar = function TabBar(aprops) {
   var _parseProps = (0, _props.default)(aprops, TabBar.props),
-      colorUnselected = _parseProps.colorUnselected,
-      colorSelectedOnTheme = _parseProps.colorSelectedOnTheme,
-      colorUnselectedOnTheme = _parseProps.colorUnselectedOnTheme,
       _parseProps$type = _parseProps.type,
       type = _parseProps$type === void 0 ? "justify" : _parseProps$type,
       itemProps = _parseProps.itemProps,
@@ -47,9 +42,9 @@ var TabBar = function TabBar(aprops) {
       Component = _parseProps$component === void 0 ? _Panel.default.Container : _parseProps$component,
       componentPanel = _parseProps.componentPanel,
       className = _parseProps.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["colorUnselected", "colorSelectedOnTheme", "colorUnselectedOnTheme", "type", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "componentPanel", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["type", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "componentPanel", "className"]);
 
-  var classStr = 'width-full padding-top-sm padding-bottom-xs border-set-top-border';
+  var classStr = 'width-full border-set-top-border';
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
     type: type,
@@ -62,53 +57,19 @@ var TabBar = function TabBar(aprops) {
   }, props));
 };
 
-TabBar._itemGetProps = function (i, length, containerProps) {
-  var _ref = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
-      selected = _ref.selected;
-
-  var _TabBar$props$contain = (0, _objectSpread2.default)({}, TabBar.props, containerProps),
-      bStyle = _TabBar$props$contain['b-style'],
-      bTheme = _TabBar$props$contain['b-theme'],
-      _TabBar$props$contain2 = _TabBar$props$contain.colorUnselected,
-      colorUnselected = _TabBar$props$contain2 === void 0 ? 'disable' : _TabBar$props$contain2,
-      _TabBar$props$contain3 = _TabBar$props$contain.colorSelectedOnTheme,
-      colorSelectedOnTheme = _TabBar$props$contain3 === void 0 ? 'white' : _TabBar$props$contain3,
-      _TabBar$props$contain4 = _TabBar$props$contain.colorUnselectedOnTheme,
-      colorUnselectedOnTheme = _TabBar$props$contain4 === void 0 ? 'disable' : _TabBar$props$contain4;
-
-  var theme;
-
-  if (bStyle === 'solid') {
-    if (bTheme) {
-      if (selected && colorSelectedOnTheme) theme = colorSelectedOnTheme;
-      if (!selected && colorUnselectedOnTheme) theme = colorUnselectedOnTheme;
-    } else {
-      if (!selected && colorUnselected) theme = colorUnselected;
-    }
-  } else {
-    if (bTheme) {
-      if (selected) theme = bTheme;
-      if (!selected && colorUnselectedOnTheme) theme = colorUnselectedOnTheme;
-    } else {
-      if (!selected) theme = colorUnselected;
-    }
-  }
-
-  return {
-    position: 'top',
-    'bc-cursor-pointer': true,
-    'bc-status-': true,
-    'b-theme': theme
-  };
-};
-
 TabBar.Item = function (aprops) {
   var _parseProps2 = (0, _props.default)(aprops, TabBar.Item.props),
       _parseProps2$componen = _parseProps2.component,
       Component = _parseProps2$componen === void 0 ? _Panel.default.Icon : _parseProps2$componen,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["component"]);
+      className = _parseProps2.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["component", "className"]);
 
-  return _react.default.createElement(Component, props);
+  var classStr = 'padding-top-sm padding-bottom-xs cursor-pointer status- transition-set-';
+  return _react.default.createElement(Component, (0, _extends2.default)({
+    position: "top",
+    hasSelection: true,
+    className: (0, _classes.default)(classStr, className)
+  }, props));
 };
 
 var _default = TabBar;

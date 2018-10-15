@@ -27,7 +27,10 @@ Panel.Icon = aprops=>{
   let cicon = position?<Panel.Icon._Icon name={selected&&iconSelected?iconSelected:icon} src={selected&&srcSelected?srcSelected:src} {...iconProps} />:null;
 
   return (
-    <Component component={componentPanel} className={classes(classStr, classSet, className)} {...props}>
+    <Component 
+      component={componentPanel} 
+      selected={selected}
+      className={classes(classStr, classSet, className)} {...props}>
       {position==='right'||position==='bottom'?ctitle:null}
       {cicon}
       {position==='left'||position==='top'?ctitle:null}

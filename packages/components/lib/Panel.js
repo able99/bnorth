@@ -31,10 +31,18 @@ var Panel = function Panel(aprops) {
       inline = _parseProps.inline,
       selected = _parseProps.selected,
       status = _parseProps.status,
-      _parseProps$colorOnTh = _parseProps.colorOnTheme,
-      colorOnTheme = _parseProps$colorOnTh === void 0 ? 'white' : _parseProps$colorOnTh,
-      _parseProps$colorOnHo = _parseProps.colorOnHollow,
-      colorOnHollow = _parseProps$colorOnHo === void 0 ? 'white' : _parseProps$colorOnHo,
+      hasBg = _parseProps.hasBg,
+      hasSelection = _parseProps.hasSelection,
+      _parseProps$textTheme = _parseProps.textThemeOnBg,
+      textThemeOnBg = _parseProps$textTheme === void 0 ? 'white' : _parseProps$textTheme,
+      _parseProps$bgThemeOn = _parseProps.bgThemeOnHollow,
+      bgThemeOnHollow = _parseProps$bgThemeOn === void 0 ? 'white' : _parseProps$bgThemeOn,
+      _parseProps$textTheme2 = _parseProps.textThemeOnBgSelected,
+      textThemeOnBgSelected = _parseProps$textTheme2 === void 0 ? 'white' : _parseProps$textTheme2,
+      _parseProps$textTheme3 = _parseProps.textThemeOnBgUnselected,
+      textThemeOnBgUnselected = _parseProps$textTheme3 === void 0 ? 'disable' : _parseProps$textTheme3,
+      _parseProps$textTheme4 = _parseProps.textThemeUnselected,
+      textThemeUnselected = _parseProps$textTheme4 === void 0 ? 'disable' : _parseProps$textTheme4,
       _parseProps$component = _parseProps.component,
       Component = _parseProps$component === void 0 ? 'div' : _parseProps$component,
       className = _parseProps.className,
@@ -42,8 +50,10 @@ var Panel = function Panel(aprops) {
       bTheme = _parseProps['b-theme'],
       bStyle = _parseProps['b-style'],
       bSize = _parseProps['b-size'],
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["main", "inline", "selected", "status", "colorOnTheme", "colorOnHollow", "component", "className", "style", 'b-theme', 'b-style', 'b-size']);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["main", "inline", "selected", "status", "hasBg", "hasSelection", "textThemeOnBg", "bgThemeOnHollow", "textThemeOnBgSelected", "textThemeOnBgUnselected", "textThemeUnselected", "component", "className", "style", 'b-theme', 'b-style', 'b-size']);
 
+  if (hasBg === undefined) hasBg = bStyle === 'solid' && bTheme;
+  if (hasSelection === undefined) hasSelection = bStyle === 'underline';
   var classStr = 'position-relative';
   var classSet = {
     'scrollable-a-': main,
@@ -52,51 +62,35 @@ var Panel = function Panel(aprops) {
     'status-': status
   };
   var styleSet = {};
-  if (bSize) classSet['text-size-' + (bSize === 'true' ? '' : bSize)] = true;
+  var textTheme;
+  if (hasSelection) textTheme = hasBg ? selected ? textThemeOnBgSelected : textThemeOnBgUnselected : selected ? bTheme || false : textThemeUnselected;
+  if (!hasSelection) textTheme = hasBg ? textThemeOnBg : bTheme;
+  textTheme = textTheme ? textTheme === true ? '' : textTheme : false;
+  classSet['text-color-' + textTheme] = textTheme !== false;
+  classSet['text-size-' + (bSize === 'true' ? '' : bSize)] = bSize;
 
   if (bStyle === 'solid') {
-    if (bTheme) {
-      classSet['bg-color-' + (bTheme === 'true' ? '' : bTheme)] = true;
-      classSet['border-set-a-' + (bTheme === 'true' ? '' : bTheme)] = true;
-      classSet['text-color-' + (colorOnTheme === 'true' ? '' : colorOnTheme)] = true;
-    } else {
-      classSet['bg-color-component'] = true;
-      classSet['border-set-a-component'] = true;
-    }
+    var theme = bTheme ? bTheme === true ? '' : bTheme : bTheme === false ? false : 'component';
+    classSet['bg-color-' + theme] = theme !== false;
+    classSet['border-set-a-' + theme] = theme !== false;
   } else if (bStyle === 'hollow') {
-    if (bTheme) {
-      classSet['border-set-a-' + (bTheme === 'true' ? '' : bTheme)] = true;
-      classSet['text-color-' + (bTheme === 'true' ? '' : bTheme)] = true;
-    } else {
-      classSet['border-set-a-'] = true;
+    var _theme = bTheme ? bTheme === true ? '' : bTheme : bTheme === false ? false : '';
 
-      if (colorOnHollow === false) {
-        classSet['bg-none-'] = true;
-      } else {
-        classSet['bg-color-' + (colorOnHollow === true ? '' : colorOnHollow)] = true;
-      }
-    }
+    classSet['border-set-a-' + _theme] = _theme !== false;
+    classSet[bgThemeOnHollow === false ? 'bg-none-' : 'bg-color-' + (bgThemeOnHollow === true ? '' : bgThemeOnHollow)] = true;
   } else if (bStyle === 'underline') {
+    var _theme2 = bTheme ? bTheme === true ? '' : bTheme : bTheme === false ? false : '';
+
     classSet['bg-none-'] = true;
     classSet['border-none-top-'] = true;
     classSet['border-none-left-'] = true;
     classSet['border-none-right-'] = true;
-
-    if (selected) {
-      if (bTheme) classSet['text-color-' + (bTheme === 'true' ? '' : bTheme)] = true;
-      classSet['border-set-bottom-' + (bTheme === 'true' ? '' : bTheme)] = true;
-      classSet['border-width-bottom-2'] = true;
-    } else {
-      classSet['border-set-bottom-'] = true;
-      classSet['border-width-bottom-2'] = true;
-      styleSet['borderColor'] = 'transparent';
-    }
+    classSet['border-width-bottom-2'] = true;
+    classSet['border-set-bottom-' + _theme2] = _theme2 !== false;
+    if (!selected) styleSet['borderColor'] = 'transparent';
   } else if (bStyle === 'plain') {
     classSet['border-none-a-'] = true;
     classSet['bg-none-'] = true;
-    if (bTheme) classSet['text-color-' + (bTheme === 'true' ? '' : bTheme)] = true;
-  } else {
-    if (bTheme) classSet['text-color-' + (bTheme === 'true' ? '' : bTheme)] = true;
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
