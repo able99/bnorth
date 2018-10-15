@@ -20,6 +20,7 @@ let PageInfo = props=>{
 
 export default {
   '/': require('./pages/home').default,
+  '/test': require('./test').default,
 
   'components:tab?': {
     component: require('./pages/components').default,

@@ -102,7 +102,7 @@ export default {
     app.notice._oldNotice = app.render.notice;
     app.notice._oldErrorNotice = app.render.errorNotice;
     app.render.notice = (message, options)=>app.notice.show(message, options);
-    app.render.error = (message, options={})=>app.notice.show(message, {...options, cTheme: options.cTheme||'alert'});
+    app.render.error = (message, options={})=>app.notice.show(message, {...options, 'b-theme': options['b-theme']||'alert'});
   },
 
   onPluginUnmount(app) {

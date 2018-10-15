@@ -7,6 +7,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -166,7 +168,9 @@ var _default = function _default(app, options) {
       state: Request
     },
     request: function request(options) {
-      return app.request.stateRequest._request(options, false);
+      return app.request.stateRequest.fetch((0, _objectSpread2.default)({
+        isSubmit: true
+      }, options));
     }
   };
 };

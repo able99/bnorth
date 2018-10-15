@@ -5,45 +5,47 @@
  * @license MIT
  */
 
-import React from 'react';
+import React, { cloneElement } from 'react';
 import { transiton, transform } from '@bnorth/rich.css/lib/styles/animation'; 
 import classes from '@bnorth/rich.css/lib/classes'; 
 import parseProps from './utils/props';
 import Panel from './Panel';
 
 
-class AnimationSlider extends React.Component {
-  render() {
-    let {
-      countToShow=1, index, timeout=300, 
-      innerProps,
-      component:Component=Panel, componentPanel, className, children, ...props
-    } = parseProps(this.props);
+let AnimationSlider = aprops=>{
+  let {
+    countToShow=1, index, timeout=300, 
+    innerProps, itemProps, 
+    content,
+    component:Component=Panel, componentPanel, className, children, ...props
+  } = parseProps(aprops, AnimationSlider.props);
 
-    children = React.Children.toArray(children);
-    let items = React.Children.toArray(children)
-      .filter(v=>typeof(v)==='object'&&v.type===AnimationSlider.Item)
-      .map((v,i)=><AnimationSlider.Item key={v.key||i} countToShow={countToShow} index={index} timeout={timeout} i={i} {...v.props}/>);
-    children = children.filter(v=>typeof(v)!=='object'||v.type!==AnimationSlider.Item);
+  children = React.Children.toArray(children).filter(v=>v).map((v,i)=>cloneElement(v, {
+    countToShow, 
+    index, 
+    timeout, 
+    i,
+    ...itemProps,
+    ...v.props,
+  }));
 
-    let classStr = 'overflow-a-hidden position-relative';
+  let classStr = 'overflow-a-hidden position-relative';
 
-    return (
-      <Component component={componentPanel} className={classes(classStr, className)} {...props}>
-        <AnimationSlider._Inner countToShow={countToShow} index={index} timeout={timeout} {...innerProps}>
-          {items}
-        </AnimationSlider._Inner>
+  return (
+    <Component component={componentPanel} className={classes(classStr, className)} {...props}>
+      <AnimationSlider._Inner countToShow={countToShow} index={index} timeout={timeout} {...innerProps}>
         {children}
-      </Component>
-    )
-  }
+      </AnimationSlider._Inner>
+      {content}
+    </Component>
+  )
 }
 
 AnimationSlider._Inner = aprops=>{
   let {
     countToShow, index, timeout,
     component:Component=Panel, className, style, children, ...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, AnimationSlider._Inner.props);
 
   children = React.Children.toArray(children);
 
@@ -62,7 +64,7 @@ AnimationSlider.Item = aprops=>{
   let {
     i, timeout, countToShow, index,
     component:Component=Panel, componentPanel, className,...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, AnimationSlider.Item.props);
 
   let classStr = 'overflow-a-hidden flex-sub-flex-extend';
 

@@ -124,28 +124,28 @@
   -oz-transition-timing-function: linear;
 }
 
-.transition-timing-function-ease-in {
+.transition-timing-function-easein {
   transition-timing-function: ease-in;
   -moz-transition-timing-function: ease-in;
   -ms-transition-timing-function: ease-in;
   -oz-transition-timing-function: ease-in;
 }
 
-.transition-timing-function-ease-out {
+.transition-timing-function-easeout {
   transition-timing-function: ease-out;
   -moz-transition-timing-function: ease-out;
   -ms-transition-timing-function: ease-out;
   -oz-transition-timing-function: ease-out;
 }
 
-.transition-timing-function-ease-in-out {
+.transition-timing-function-easeinout {
   transition-timing-function: ease-in-out;
   -moz-transition-timing-function: ease-in-out;
   -ms-transition-timing-function: ease-in-out;
   -oz-transition-timing-function: ease-in-out;
 }
 
-.transition-timing-function-cubic-bezier {
+.transition-timing-function-cubicbezier {
   transition-timing-function: cubic-bezier;
   -moz-transition-timing-function: cubic-bezier;
   -ms-transition-timing-function: cubic-bezier;
@@ -187,7 +187,7 @@
   -oz-animation-direction: alternate;
 }
 
-.animation-direction-alternate-reverse {
+.animation-direction-alternatereverse {
   animation-direction: alternate-reverse;
   -moz-animation-direction: alternate-reverse;
   -ms-animation-direction: alternate-reverse;

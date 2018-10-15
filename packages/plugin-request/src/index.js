@@ -93,7 +93,7 @@ export default (app, options)=>{
     },
 
     stateRequest: { state: Request },
-    request: options=>app.request.stateRequest._request(options, false),
+    request: options=>app.request.stateRequest.fetch({isSubmit: true, ...options}),
   }
 }
 

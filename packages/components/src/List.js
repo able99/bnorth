@@ -14,42 +14,50 @@ import Icon from './Icon';
 
 let List = aprops=>{
   let {
-    separatorInset, innerProps={}, headerProps, footerProps, itemProps,
+    separatorInset, header, footer, 
+    innerProps, headerProps, footerProps, itemProps,
     component:Component=Panel, componentPanel, children, ...props
   } = parseProps(aprops, List.props);
 
-  children = React.Children.toArray(children).filter(v=>v);
-  let headers = children.filter(v=>v.props.part==='header');
-  let footers = children.filter(v=>v.props.part==='footer');
-  let items = children.filter(v=>v.props.part==='item'||!v.props.part);
+  children = React.Children.toArray(children).filter(v=>v).map((v,i,a)=>cloneElement(v, {
+    key: v.key||i,
+    ...v.props,
+    part: 'item', 
+    first: i===0, 
+    last: i===a.length-1,
+    separatorInset,
+    ...itemProps
+  }));
 
   return (
     <Component component={componentPanel} {...props}>
-      {headers.map((v,i,a)=>(
-        <List.Item 
-          key={v.key||`header${i}`} {...v.props} 
-          first={i===0} last={i===a.length-1}
-          {...headerProps} />
-      ))}
+      {header?<List._Header {...headerProps}>{header}</List._Header>:null}
       <List._Inner separatorInset={separatorInset} {...innerProps}>
-        {items.map((v,i,a)=>cloneElement(v, {
-          key: v.key||i,
-          ...v.props,
-          part: 'item', 
-          first: i===0, 
-          last: i===a.length-1,
-          separatorInset,
-          ...itemProps
-        }))}
+        {children}
       </List._Inner>
-      {footers.map((v,i,a)=>(
-        <List.Item 
-          key={v.key||`footer${i}`} {...v.props} 
-          first={i===0} last={i===a.length-1}
-          {...footerProps} />
-      ))}
+      {footer?<List._Footer {...footerProps}>{footer}</List._Footer>:null}
     </Component>
   );
+}
+
+List._Header = aprops=>{
+  let {
+    component:Component=Panel, componentPanel, className, ...props
+  } = parseProps(aprops, List._Header.props);
+
+  let classStr = 'border-set-bottom- padding-a-';
+
+  return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
+}
+
+List._Footer = aprops=>{
+  let {
+    component:Component=Panel, componentPanel, className, ...props
+  } = parseProps(aprops, List._Footer.props);
+
+  let classStr = 'border-set-top- padding-a-';
+
+  return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
 }
 
 List._Inner = aprops=>{
@@ -68,7 +76,7 @@ List._Inner = aprops=>{
 
 List.Item = aprops=>{
   let {
-    first, last, part, separatorInset, onClick, 
+    first, last, separatorInset, onClick, 
     media, mediaProps, mainProps, title, titleProps, subTitle, subTitleProps, desc, descProps, after, afterProps, arrow, arrowProps, autoArrow=true, 
     component:Component=Panel, componentPanel, className, children, ...props
   } = parseProps(aprops, List.Item.props);
@@ -79,8 +87,7 @@ List.Item = aprops=>{
     'status-': Boolean(onClick),
     'padding-left-0': separatorInset,
     'cursor-pointer': onClick||arrow,
-    'border-set-bottom-': (part==='item'&&!last)||(part==='header'&&(last||!first)),
-    'border-set-top-': (part==='footer'&&(first||!last)),
+    'border-set-bottom-': !last,
   };
 
   return (

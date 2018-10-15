@@ -33,16 +33,16 @@ var _compatibleAnimation = _interopRequireDefault(require("../compatibles/compat
 var TimingFunctions = {
   'ease': true,
   'linear': true,
-  'ease-in': true,
-  'ease-out': true,
-  'ease-in-out': true,
-  'cubic-bezier': true
+  'easein': 'ease-in',
+  'easeout': 'ease-out',
+  'easeinout': 'ease-in-out',
+  'cubicbezier': 'cubic-bezier'
 };
 var Directions = {
   'normal': true,
   'reverse': true,
   'alternate': true,
-  'alternate-reverse': true
+  'alternatereverse': 'alternate-reverse'
 };
 var PlayStates = {
   'running': true,

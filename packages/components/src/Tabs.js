@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-import React, { cloneElement } from 'react';
+import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import parseProps from './utils/props';
 import Panel from './Panel.Container';
@@ -37,10 +37,10 @@ class Tabs extends React.Component {
     return (
       <Component component={componentPanel} className={classes(classStr, className)} {...props}>
         <Tabs._Nav onAction={this._handleAction} selected={selected} {...navProps}>
-          {children.map(v=>cloneElement(v, {}, v.props.title))}
+          {children}
         </Tabs._Nav>
         <Tabs._Container onAction={this._handleAction} selected={selected} {...containerProps}>
-          {children.map(v=>cloneElement(v, {title: undefined}))}
+          {children}
         </Tabs._Container>
       </Component>
     );
@@ -66,7 +66,7 @@ Tabs._Nav = aprops=>{
       separator justify 
       containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={classes(classStr, className)} {...props}>
-      {children.map(v=><Button>{v.props.title}</Button>)}
+      {children.map((v,i)=><Component.Item key={v.key||i}>{v.props.title}</Component.Item>)}
     </Component>
   )
 }
@@ -81,8 +81,9 @@ Tabs._Nav._itemGetProps = (i, length, {onAction, selected}={}, props)=>{
 
 Tabs._Container = aprops=>{
   let {
-    onAction, selected,
-    type='single', itemProps, itemComponent, itemGetClassName=Tabs._Container._itemGetClassName, itemGetStyle=Tabs._Container._itemGetStyle, itemGetProps=Tabs._Container._itemGetProps,
+    onAction, 
+    type='single', 
+    itemProps, itemGetClassName=Tabs._Container._itemGetClassName, itemGetStyle=Tabs._Container._itemGetStyle, itemGetProps=Tabs._Container._itemGetProps,
     component:Component=Panel.Container, componentPanel, className, children, ...props
   } = parseProps(aprops, Tabs._Container.props);
 
@@ -91,12 +92,20 @@ Tabs._Container = aprops=>{
   return (
     <Component 
       component={componentPanel}
-      type={type} containerProps={aprops} itemComponent={itemComponent} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
+      type={type} containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={classes(classStr, className)} {...props}>
-      {children}
+      {children.map((v,i)=><Tabs._Container._Item key={v.key||i} {...v.props} />)}
     </Component>
   )
 }
+
+Tabs._Container._Item = aprops=>{
+  let { 
+    title, 
+    component:Component=Panel, ...props} = aprops;
+
+  return <Component {...props} />;
+};
 
 Tabs._Container._itemGetProps = (i, length, {selected}={})=>{
   return {
@@ -105,5 +114,5 @@ Tabs._Container._itemGetProps = (i, length, {selected}={})=>{
 }
 
 
-Tabs.Item = Panel.Container.Item;
+Tabs.Item = Tabs._Container._Item;
 export default Tabs;

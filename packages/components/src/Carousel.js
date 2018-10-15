@@ -84,20 +84,25 @@ class Carousel extends React.Component {
       pagerItemProps, controllerPrevProps, controllerNextProps,
       component:Component=Panel.Touchable, componentPanel=AnimationSlider, children, ...props
     } = parseProps(this.props, Carousel.props);
-
     let { selected } = this.state;
     children = React.Children.toArray(children);
     if(Controller===true) Controller = Carousel._Controller;
     if(Pager===true) Pager = Carousel._Pager;
 
+    let content = (
+      <React.Fragment>
+        {Controller?<Controller onClick={e=>this.prev()} {...controllerPrevProps}/>:null}
+        {Controller?<Controller onClick={e=>this.next()} {...controllerNextProps} isForward/>:null}
+        {Pager?<Pager onClick={e=>this.setState({selected: e})} count={children.length} selected={Math.round(selected)} {...pagerItemProps} />:null}
+      </React.Fragment>
+    );
+
     return (
       <Component
         component={componentPanel}  
         index={selected} onSwipeLeft={e=>this.next()} onSwipeRight={e=>this.prev()} onMouseOver={e=>this._handleFocus()} onMouseOut={e=>this._handleBlur()}
+        content={content}
         {...props}>
-        {Controller?<Controller onClick={e=>this.prev()} {...controllerPrevProps}/>:null}
-        {Controller?<Controller onClick={e=>this.next()} {...controllerNextProps} isForward/>:null}
-        {Pager?<Pager onClick={e=>this.setState({selected: e})} count={children.length} selected={Math.round(selected)} {...pagerItemProps} />:null}
         {children}
       </Component>
     );

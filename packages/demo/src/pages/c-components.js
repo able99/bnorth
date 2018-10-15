@@ -116,7 +116,7 @@ let Component = aprops=>{
             {Array.from(Array(5), (v,i)=>i).map(v=>(
               <Carousel.Item 
                 component={Panel.AspectRatio} 
-                ratio={0.1} style={{background: `rgb(${v*10+50},${v*10+50},${v*10+50}`}} bc-text-align-center bc-text-color-white
+                ratio={0.1} bs-background={`rgb(${v*10+50},${v*10+50},${v*10+50}`} bc-text-align-center bc-text-color-white
                 onClick={()=>alert(v)}
                 key={v} >
                 {v}
@@ -208,15 +208,15 @@ let Component = aprops=>{
               title="commonPropsToItem" sub="List"
               state={page.stateData} stateData={stateData}/>
           </Group.Prop>
-          <List {...(!(stateData.List&&stateData.List.commonPropsToItem)?stateCommonProps:{})}>
-            <List.Item part='header'>header</List.Item>
+          <List 
+            header="header" footer="footer"  
+            {...(!(stateData.List&&stateData.List.commonPropsToItem)?stateCommonProps:{})}>
             {Array.from(Array(3), (v,i)=>i).map(i=>(
               <List.Item
                 title={'title'+i} media={'media'+i} subTitle={'subTitle'+i} desc={'desc'+i} after={'after'+i} 
                 onClick={()=>alert(i)} 
                 key={i} {...(stateData.List&&stateData.List.commonPropsToItem?stateCommonProps:{})}/>
             ))}
-            <List.Item part='footer'>footer</List.Item>
           </List>
         </Group>
 

@@ -40,7 +40,7 @@ var Decorations = {
   '-': 'none',
   'underline': true,
   'overline': true,
-  'line-through': true,
+  'linethrough': 'line-through',
   'blink': true,
   'inherit': true
 };
@@ -60,7 +60,7 @@ var VerticalAligns = {
   'text-top': true,
   'middle': true,
   'bottom': true,
-  'text-bottom': true,
+  'textbottom': 'text-bottom',
   'inherit': true
 };
 var WhiteSpaces = {
@@ -69,8 +69,8 @@ var WhiteSpaces = {
   'inherit': true,
   'pre': true,
   'nowrap': true,
-  'pre-wrap': true,
-  'pre-line': true
+  'prewrap': 'pre-wrap',
+  'preline': 'pre-line'
 };
 var baseSelector = 'text';
 var baseStyleSelector = 'font';

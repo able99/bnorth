@@ -31,13 +31,12 @@ Button.Group = aprops=>{
   let {
     stacked, justify, separator, 
     separatorProps={},
-    itemComponent=Button, itemProps, itemGetClassName=Button.Group._itemGetClassName, itemGetStyle=Button.Group._itemGetStyle, itemGetProps=Button.Group._itemGetProps,
+    itemProps, itemGetClassName=Button.Group._itemGetClassName, itemGetStyle=Button.Group._itemGetStyle, itemGetProps=Button.Group._itemGetProps,
     component:Component=Panel.Container, panelComponent, children, ...props
   } = parseProps(aprops, Button.Group.props);
 
   children = React.Children.toArray(children)
     .filter(v=>v)
-    .map((v,i)=><Component.Item key={v.key||i} {...v.props} />)
     .reduce((v1,v2,i,a)=>{
       if(!separator||stacked) return a;
       if(i>0)v1.push(<Button.Group._Separator key={'sep'+i} notItem {...separatorProps} />)
@@ -47,8 +46,9 @@ Button.Group = aprops=>{
 
   return (
     <Component 
-      component={panelComponent} type={justify?"justify":""} containerProps={aprops} 
-      itemComponent={itemComponent} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
+      component={panelComponent} 
+      type={justify?"justify":""} containerProps={aprops} 
+      itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       {...props}>
       {children}
     </Component>
@@ -82,6 +82,8 @@ Button.Group._Separator = aprops=>{
     </Component>
   );
 }
+
+Button.Group.Item = Button;
 
 
 export default Button;

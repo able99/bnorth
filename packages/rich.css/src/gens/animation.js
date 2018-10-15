@@ -5,17 +5,17 @@ import compatibleAnimation from '../compatibles/compatibleAnimation';
 const TimingFunctions = {
   'ease': true,
   'linear': true,
-  'ease-in': true,
-  'ease-out': true,
-  'ease-in-out': true,
-  'cubic-bezier': true,
+  'easein': 'ease-in',
+  'easeout': 'ease-out',
+  'easeinout': 'ease-in-out',
+  'cubicbezier': 'cubic-bezier',
 }
 
 const Directions = {
   'normal': true,
   'reverse': true,
   'alternate': true,
-  'alternate-reverse': true,
+  'alternatereverse': 'alternate-reverse',
 }
 
 const PlayStates = {

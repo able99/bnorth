@@ -169,7 +169,7 @@ var _default = {
     app.render.error = function (message) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       return app.notice.show(message, (0, _objectSpread2.default)({}, options, {
-        cTheme: options.cTheme || 'alert'
+        'b-theme': options['b-theme'] || 'alert'
       }));
     };
   },

@@ -36,8 +36,6 @@ var TabBar = function TabBar(aprops) {
       colorUnselectedOnTheme = _parseProps.colorUnselectedOnTheme,
       _parseProps$type = _parseProps.type,
       type = _parseProps$type === void 0 ? "justify" : _parseProps$type,
-      _parseProps$itemCompo = _parseProps.itemComponent,
-      itemComponent = _parseProps$itemCompo === void 0 ? _Panel.default.Icon : _parseProps$itemCompo,
       itemProps = _parseProps.itemProps,
       _parseProps$itemGetCl = _parseProps.itemGetClassName,
       itemGetClassName = _parseProps$itemGetCl === void 0 ? TabBar._itemGetClassName : _parseProps$itemGetCl,
@@ -49,14 +47,13 @@ var TabBar = function TabBar(aprops) {
       Component = _parseProps$component === void 0 ? _Panel.default.Container : _parseProps$component,
       componentPanel = _parseProps.componentPanel,
       className = _parseProps.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["colorUnselected", "colorSelectedOnTheme", "colorUnselectedOnTheme", "type", "itemComponent", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "componentPanel", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["colorUnselected", "colorSelectedOnTheme", "colorUnselectedOnTheme", "type", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "componentPanel", "className"]);
 
   var classStr = 'width-full padding-top-sm padding-bottom-xs border-set-top-border';
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
     type: type,
     containerProps: aprops,
-    itemComponent: itemComponent,
     itemProps: itemProps,
     itemGetClassName: itemGetClassName,
     itemGetStyle: itemGetStyle,
@@ -105,6 +102,14 @@ TabBar._itemGetProps = function (i, length, containerProps) {
   };
 };
 
-TabBar.Item = _Panel.default.Container.Item;
+TabBar.Item = function (aprops) {
+  var _parseProps2 = (0, _props.default)(aprops, TabBar.Item.props),
+      _parseProps2$componen = _parseProps2.component,
+      Component = _parseProps2$componen === void 0 ? _Panel.default.Icon : _parseProps2$componen,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["component"]);
+
+  return _react.default.createElement(Component, props);
+};
+
 var _default = TabBar;
 exports.default = _default;

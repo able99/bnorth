@@ -56,6 +56,7 @@ function classes() {
     } else if (Array.isArray(arg) && arg.length) {
       ret.push(classes.apply(void 0, (0, _toConsumableArray2.default)(arg)));
     } else if (type === 'object') {
+      /* eslint-disable no-loop-func */
       Object.entries(arg).filter(function (_ref) {
         var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
             k = _ref2[0],

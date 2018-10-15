@@ -173,22 +173,8 @@ function (_React$Component) {
       children = _react.default.Children.toArray(children);
       if (Controller === true) Controller = Carousel._Controller;
       if (Pager === true) Pager = Carousel._Pager;
-      return _react.default.createElement(Component, (0, _extends2.default)({
-        component: componentPanel,
-        index: selected,
-        onSwipeLeft: function onSwipeLeft(e) {
-          return _this3.next();
-        },
-        onSwipeRight: function onSwipeRight(e) {
-          return _this3.prev();
-        },
-        onMouseOver: function onMouseOver(e) {
-          return _this3._handleFocus();
-        },
-        onMouseOut: function onMouseOut(e) {
-          return _this3._handleBlur();
-        }
-      }, props), Controller ? _react.default.createElement(Controller, (0, _extends2.default)({
+
+      var content = _react.default.createElement(_react.default.Fragment, null, Controller ? _react.default.createElement(Controller, (0, _extends2.default)({
         onClick: function onClick(e) {
           return _this3.prev();
         }
@@ -206,7 +192,25 @@ function (_React$Component) {
         },
         count: children.length,
         selected: Math.round(selected)
-      }, pagerItemProps)) : null, children);
+      }, pagerItemProps)) : null);
+
+      return _react.default.createElement(Component, (0, _extends2.default)({
+        component: componentPanel,
+        index: selected,
+        onSwipeLeft: function onSwipeLeft(e) {
+          return _this3.next();
+        },
+        onSwipeRight: function onSwipeRight(e) {
+          return _this3.prev();
+        },
+        onMouseOver: function onMouseOver(e) {
+          return _this3._handleFocus();
+        },
+        onMouseOut: function onMouseOut(e) {
+          return _this3._handleBlur();
+        },
+        content: content
+      }, props), children);
     }
   }]);
   return Carousel;

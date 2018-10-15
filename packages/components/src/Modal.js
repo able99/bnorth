@@ -161,7 +161,7 @@ Modal._Footer =  aprops=>{
     role, handleAction,
     buttons=Modal._Footer._buttons[aprops.role]||[],
     itemProps, itemGetClassName=Modal._Footer._itemGetClassName, itemGetStyle=Modal._Footer._itemGetStyle, itemGetProps=Modal._Footer._itemGetProps,
-    component:Component=Button.Group, componentItem=Button, className, children, ...props 
+    component:Component=Button.Group, className, children, ...props 
   } = parseProps(aprops, Modal._Footer.props);
   if(!buttons.length) return null;
 
@@ -172,7 +172,7 @@ Modal._Footer =  aprops=>{
       type="justify" 
       containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={classes(classStr, className)} {...props}>
-      {buttons.map((v,i)=><componentItem key={i}>{v}</componentItem>)}
+      {buttons.map((v,i)=><Button.Group.Item key={i}>{v}</Button.Group.Item>)}
     </Component>
   );
 }

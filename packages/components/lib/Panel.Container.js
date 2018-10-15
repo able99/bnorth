@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -25,7 +27,7 @@ var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/obje
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
@@ -39,24 +41,24 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @author able99 (8846755@qq.com)
  * @license MIT
  */
-function getSubComponentProps(i, length, containerProps) {
-  var _ref = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
+function getSubComponentProps(index, size, componentClassName, componentStyle, containerProps) {
+  var _ref = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {},
       className = _ref.className,
-      styletyle = _ref.styletyle,
-      props = (0, _objectWithoutProperties2.default)(_ref, ["className", "styletyle"]);
+      style = _ref.style,
+      componentProps = (0, _objectWithoutProperties2.default)(_ref, ["className", "style"]);
 
-  var _ref2 = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {},
-      subPropsClassName = _ref2.className,
-      subPropsStyle = _ref2.style,
-      subProps = (0, _objectWithoutProperties2.default)(_ref2, ["className", "style"]);
+  var _ref2 = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {},
+      itemClassName = _ref2.className,
+      itemStyle = _ref2.style,
+      itemProps = (0, _objectWithoutProperties2.default)(_ref2, ["className", "style"]);
 
-  var subGetClassName = arguments.length > 5 ? arguments[5] : undefined;
-  var subGetStyle = arguments.length > 6 ? arguments[6] : undefined;
-  var subGetProps = arguments.length > 7 ? arguments[7] : undefined;
+  var itemGetClassName = arguments.length > 7 ? arguments[7] : undefined;
+  var itemGetStyle = arguments.length > 8 ? arguments[8] : undefined;
+  var itemGetProps = arguments.length > 9 ? arguments[9] : undefined;
   return (0, _objectSpread2.default)({
-    style: (0, _objectSpread2.default)({}, subGetStyle && subGetStyle(i, length, containerProps, props, subProps) || {}, subPropsStyle, styletyle),
-    className: (0, _classes.default)(subGetClassName && subGetClassName(i, length, containerProps, props, subProps), subPropsClassName, className)
-  }, subGetProps && subGetProps(i, length, containerProps, props, subProps) || {}, subProps, props);
+    style: (0, _objectSpread2.default)({}, componentStyle, itemGetStyle && itemGetStyle(index, size, containerProps, componentProps, itemProps) || {}, itemStyle, style),
+    className: (0, _classes.default)(componentClassName, itemGetClassName && itemGetClassName(index, size, containerProps, componentProps, itemProps), itemClassName, className)
+  }, itemGetProps && itemGetProps(index, size, containerProps, componentProps, itemProps) || {}, itemProps, componentProps);
 }
 
 var Container =
@@ -72,10 +74,9 @@ function (_React$Component) {
   (0, _createClass2.default)(Container, [{
     key: "render",
     value: function render() {
-      var _parseProps = (0, _props.default)(this.props),
+      var _parseProps = (0, _props.default)(this.props, _Panel.default.Container.props),
           type = _parseProps.type,
           containerProps = _parseProps.containerProps,
-          itemComponent = _parseProps.itemComponent,
           itemProps = _parseProps.itemProps,
           itemGetProps = _parseProps.itemGetProps,
           itemGetClassName = _parseProps.itemGetClassName,
@@ -84,30 +85,32 @@ function (_React$Component) {
           Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
           className = _parseProps.className,
           children = _parseProps.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["type", "containerProps", "itemComponent", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["type", "containerProps", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className", "children"]);
 
       var classStr = 'position-relative overflow-a-hidden';
       var ai = 0;
       children = _react.default.Children.toArray(children).filter(function (v) {
         return v;
       }).map(function (v, i, a) {
-        // if(typeof v !== 'object' || v.type!==Container.Item) return v;
         if ((0, _typeof2.default)(v) !== 'object' || v.props.notItem) return v;
-        var itemObj = getSubComponentProps(ai++, a.length, containerProps, v.props, itemProps, itemGetClassName, itemGetStyle, itemGetProps);
-        return _react.default.createElement(Container.Item, (0, _extends2.default)({
+        return _react.default.createElement(Container.Item, {
           key: v.key || a,
           type: type,
-          component: itemComponent
-        }, itemObj));
+          index: ai++,
+          size: a.length,
+          containerProps: containerProps,
+          componentProps: v.props,
+          itemProps: itemProps,
+          itemGetClassName: itemGetClassName,
+          itemGetStyle: itemGetStyle,
+          itemGetProps: itemGetProps
+        }, v);
       });
 
-      if (type === 'single') {
-        children = children.filter(function (v) {
-          return v.props.selected;
-        });
+      if (type === 'single') {// children = children.filter(v=>v.props.selected);
       } else if (type === 'justify') {
         classStr += ' flex-display-block flex-justify-around flex-align-stretch';
-      } else {}
+      }
 
       return _react.default.createElement(Component, (0, _extends2.default)({
         className: (0, _classes.default)(classStr, className)
@@ -118,16 +121,17 @@ function (_React$Component) {
 }(_react.default.Component);
 
 Container.Item = function (aprops) {
-  var _parseProps2 = (0, _props.default)(aprops),
+  var _parseProps2 = (0, _props.default)(aprops, _Panel.default.Container.Item.props),
       type = _parseProps2.type,
+      index = _parseProps2.index,
+      size = _parseProps2.size,
+      containerProps = _parseProps2.containerProps,
+      componentProps = _parseProps2.componentProps,
       itemProps = _parseProps2.itemProps,
       itemGetProps = _parseProps2.itemGetProps,
       itemGetClassName = _parseProps2.itemGetClassName,
       itemGetStyle = _parseProps2.itemGetStyle,
-      _parseProps2$componen = _parseProps2.component,
-      Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
-      className = _parseProps2.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["type", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className"]);
+      children = _parseProps2.children;
 
   var classStr = '';
 
@@ -135,11 +139,11 @@ Container.Item = function (aprops) {
     classStr += ' position-relative offset-a-start square-full overflow-a-hidden';
   } else if (type === 'justify') {
     classStr += ' flex-sub-flex-extend';
-  } else {}
+  }
 
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _classes.default)(classStr, className)
-  }, props));
+  var itemObj = getSubComponentProps(index, size, classStr, null, containerProps, componentProps, itemProps, itemGetClassName, itemGetStyle, itemGetProps);
+  if (type === 'single' && !itemObj.selected) return null;
+  return (0, _react.cloneElement)(children, (0, _objectSpread2.default)({}, itemObj));
 };
 
 _Panel.default.Container = Container;

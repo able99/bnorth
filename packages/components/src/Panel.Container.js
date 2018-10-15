@@ -5,32 +5,36 @@
  * @license MIT
  */
 
-import React from 'react';
+import React, { cloneElement } from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import parseProps from './utils/props';
 import Panel from './Panel';
 
 
 function getSubComponentProps(
-  i, length, containerProps, 
-  {className, styletyle, ...props}={}, 
-  {className:subPropsClassName, style:subPropsStyle, ...subProps}={},
-  subGetClassName, subGetStyle, subGetProps
+  index, size, 
+  componentClassName, componentStyle,
+  containerProps, 
+  {className, style, ...componentProps}={}, 
+  {className:itemClassName, style:itemStyle, ...itemProps}={},
+  itemGetClassName, itemGetStyle, itemGetProps
 ){
   return {
     style: {
-      ...((subGetStyle&&subGetStyle(i, length, containerProps, props, subProps))||{}), 
-      ...subPropsStyle, 
-      ...styletyle,
+      ...componentStyle,
+      ...((itemGetStyle&&itemGetStyle(index, size, containerProps, componentProps, itemProps))||{}), 
+      ...itemStyle, 
+      ...style,
     },
     className: classes(
-      subGetClassName&&subGetClassName(i, length, containerProps, props, subProps),
-      subPropsClassName,
+      componentClassName,
+      itemGetClassName&&itemGetClassName(index, size, containerProps, componentProps, itemProps),
+      itemClassName,
       className,
     ),
-    ...((subGetProps&&subGetProps(i, length, containerProps, props, subProps))||{}),
-    ...subProps,
-    ...props,
+    ...((itemGetProps&&itemGetProps(index, size, containerProps, componentProps, itemProps))||{}),
+    ...itemProps,
+    ...componentProps,
   };
 }
 
@@ -38,9 +42,9 @@ function getSubComponentProps(
 class Container extends React.Component {
   render() {
     let {
-      type, containerProps, itemComponent, itemProps, itemGetProps, itemGetClassName, itemGetStyle,
+      type, containerProps, itemProps, itemGetProps, itemGetClassName, itemGetStyle,
       component:Component=Panel, className, children, ...props
-    } = parseProps(this.props);
+    } = parseProps(this.props, Panel.Container.props);
 
     let classStr = 'position-relative overflow-a-hidden';
 
@@ -48,20 +52,22 @@ class Container extends React.Component {
     children = React.Children.toArray(children)
       .filter(v=>v)
       .map((v,i,a)=>{
-        // if(typeof v !== 'object' || v.type!==Container.Item) return v;
         if(typeof v !== 'object' || v.props.notItem) return v;
-        let itemObj = getSubComponentProps(ai++, a.length, containerProps, v.props, itemProps, itemGetClassName, itemGetStyle, itemGetProps);
-        return <Container.Item key={v.key||a} type={type} component={itemComponent} {...itemObj} />;
+        return (
+          <Container.Item 
+            key={v.key||a} type={type} index={ai++} size={a.length}
+            containerProps={containerProps} componentProps={v.props} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps} >
+            {v}
+          </Container.Item>
+        );
       })
 
     if(type==='single'){
-      children = children.filter(v=>v.props.selected);
+      // children = children.filter(v=>v.props.selected);
     }else if(type==='justify'){
       classStr += ' flex-display-block flex-justify-around flex-align-stretch';
-    }else {
-
     }
-
+    
     return (
       <Component className={classes(classStr, className)} {...props}>
         {children}
@@ -72,21 +78,28 @@ class Container extends React.Component {
 
 Container.Item = aprops=>{
   let {
-    type, 
-    itemProps, itemGetProps, itemGetClassName, itemGetStyle,
-    component:Component=Panel, className, ...props
-  } = parseProps(aprops);
+    type, index, size, 
+    containerProps, componentProps, itemProps, itemGetProps, itemGetClassName, itemGetStyle,
+    children
+  } = parseProps(aprops, Panel.Container.Item.props);
+  
   let classStr = '';
-
   if(type==='single'){
     classStr += ' position-relative offset-a-start square-full overflow-a-hidden';
   }else if(type==='justify'){
     classStr += ' flex-sub-flex-extend';
-  }else {
-
   }
 
-  return <Component className={classes(classStr, className)} {...props} />
+  let itemObj = getSubComponentProps(
+    index, size, 
+    classStr, null,
+    containerProps, componentProps, itemProps, 
+    itemGetClassName, itemGetStyle, itemGetProps
+  );
+
+  if(type==='single'&&!itemObj.selected) return null;
+  
+  return cloneElement(children, {...itemObj});
 }
 
 

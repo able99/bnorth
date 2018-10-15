@@ -22,6 +22,7 @@ export default function classes(...args) {
     }else if(Array.isArray(arg) && arg.length) {
       ret.push(classes(...arg));
     }else if(type==='object'){
+      /* eslint-disable no-loop-func */
       Object.entries(arg).filter(([k,v])=>v).forEach(([k,v])=>ret.push(k));
     }
   }

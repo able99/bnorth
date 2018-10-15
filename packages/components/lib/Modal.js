@@ -221,11 +221,9 @@ Modal._Footer = function (aprops) {
       itemGetProps = _parseProps8$itemGetP === void 0 ? Modal._Footer._itemGetProps : _parseProps8$itemGetP,
       _parseProps8$componen = _parseProps8.component,
       Component = _parseProps8$componen === void 0 ? _Button.default.Group : _parseProps8$componen,
-      _parseProps8$componen2 = _parseProps8.componentItem,
-      componentItem = _parseProps8$componen2 === void 0 ? _Button.default : _parseProps8$componen2,
       className = _parseProps8.className,
       children = _parseProps8.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps8, ["role", "handleAction", "buttons", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "componentItem", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps8, ["role", "handleAction", "buttons", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
 
   if (!buttons.length) return null;
   var classStr = 'border-set-top-';
@@ -238,7 +236,7 @@ Modal._Footer = function (aprops) {
     itemGetProps: itemGetProps,
     className: (0, _classes.default)(classStr, className)
   }, props), buttons.map(function (v, i) {
-    return _react.default.createElement("componentItem", {
+    return _react.default.createElement(_Button.default.Group.Item, {
       key: i
     }, v);
   }));

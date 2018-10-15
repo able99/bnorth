@@ -49,8 +49,6 @@ Button.Group = function (aprops) {
       separator = _parseProps2.separator,
       _parseProps2$separato = _parseProps2.separatorProps,
       separatorProps = _parseProps2$separato === void 0 ? {} : _parseProps2$separato,
-      _parseProps2$itemComp = _parseProps2.itemComponent,
-      itemComponent = _parseProps2$itemComp === void 0 ? Button : _parseProps2$itemComp,
       itemProps = _parseProps2.itemProps,
       _parseProps2$itemGetC = _parseProps2.itemGetClassName,
       itemGetClassName = _parseProps2$itemGetC === void 0 ? Button.Group._itemGetClassName : _parseProps2$itemGetC,
@@ -62,14 +60,10 @@ Button.Group = function (aprops) {
       Component = _parseProps2$componen === void 0 ? _Panel.default.Container : _parseProps2$componen,
       panelComponent = _parseProps2.panelComponent,
       children = _parseProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["stacked", "justify", "separator", "separatorProps", "itemComponent", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "panelComponent", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["stacked", "justify", "separator", "separatorProps", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "panelComponent", "children"]);
 
   children = _react.default.Children.toArray(children).filter(function (v) {
     return v;
-  }).map(function (v, i) {
-    return _react.default.createElement(Component.Item, (0, _extends2.default)({
-      key: v.key || i
-    }, v.props));
   }).reduce(function (v1, v2, i, a) {
     if (!separator || stacked) return a;
     if (i > 0) v1.push(_react.default.createElement(Button.Group._Separator, (0, _extends2.default)({
@@ -83,7 +77,6 @@ Button.Group = function (aprops) {
     component: panelComponent,
     type: justify ? "justify" : "",
     containerProps: aprops,
-    itemComponent: itemComponent,
     itemProps: itemProps,
     itemGetClassName: itemGetClassName,
     itemGetStyle: itemGetStyle,
@@ -126,5 +119,6 @@ Button.Group._Separator = function (aprops) {
   }, props), _react.default.createElement("span", null, "|"));
 };
 
+Button.Group.Item = Button;
 var _default = Button;
 exports.default = _default;

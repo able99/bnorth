@@ -15,7 +15,7 @@ import './Panel.Icon';
 let TabBar = aprops=>{
   let {
     colorUnselected, colorSelectedOnTheme, colorUnselectedOnTheme,
-    type="justify", itemComponent=Panel.Icon, itemProps, itemGetClassName=TabBar._itemGetClassName, itemGetStyle=TabBar._itemGetStyle, itemGetProps=TabBar._itemGetProps,
+    type="justify", itemProps, itemGetClassName=TabBar._itemGetClassName, itemGetStyle=TabBar._itemGetStyle, itemGetProps=TabBar._itemGetProps,
     component:Component=Panel.Container, componentPanel, className, ...props
   } = parseProps(aprops, TabBar.props);
 
@@ -24,7 +24,7 @@ let TabBar = aprops=>{
   return (
     <Component 
       component={componentPanel}
-      type={type} containerProps={aprops} itemComponent={itemComponent} itemProps={itemProps} itemGetClassName={itemGetClassName}  itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
+      type={type} containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName}  itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={classes(classStr, className)} {...props} />
   );
 }
@@ -58,6 +58,12 @@ TabBar._itemGetProps = (i, length, containerProps, {selected}={})=>{
   }
 }
 
+TabBar.Item = aprops=>{
+  let {
+    component:Component=Panel.Icon, ...props
+  } = parseProps(aprops, TabBar.Item.props);
 
-TabBar.Item = Panel.Container.Item;
+  return <Component {...props} />;
+}
+
 export default TabBar;

@@ -1,7 +1,5 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -27,7 +25,7 @@ var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/hel
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
@@ -93,16 +91,10 @@ function (_React$Component) {
       }, props), _react.default.createElement(Tabs._Nav, (0, _extends2.default)({
         onAction: this._handleAction,
         selected: selected
-      }, navProps), children.map(function (v) {
-        return (0, _react.cloneElement)(v, {}, v.props.title);
-      })), _react.default.createElement(Tabs._Container, (0, _extends2.default)({
+      }, navProps), children), _react.default.createElement(Tabs._Container, (0, _extends2.default)({
         onAction: this._handleAction,
         selected: selected
-      }, containerProps), children.map(function (v) {
-        return (0, _react.cloneElement)(v, {
-          title: undefined
-        });
-      })));
+      }, containerProps), children));
     }
   }]);
   return Tabs;
@@ -140,8 +132,10 @@ Tabs._Nav = function (aprops) {
     itemGetStyle: itemGetStyle,
     itemGetProps: itemGetProps,
     className: (0, _classes.default)(classStr, className)
-  }, props), children.map(function (v) {
-    return _react.default.createElement(_Button.default, null, v.props.title);
+  }, props), children.map(function (v, i) {
+    return _react.default.createElement(Component.Item, {
+      key: v.key || i
+    }, v.props.title);
   }));
 };
 
@@ -162,11 +156,9 @@ Tabs._Nav._itemGetProps = function (i, length) {
 Tabs._Container = function (aprops) {
   var _parseProps3 = (0, _props.default)(aprops, Tabs._Container.props),
       onAction = _parseProps3.onAction,
-      selected = _parseProps3.selected,
       _parseProps3$type = _parseProps3.type,
       type = _parseProps3$type === void 0 ? 'single' : _parseProps3$type,
       itemProps = _parseProps3.itemProps,
-      itemComponent = _parseProps3.itemComponent,
       _parseProps3$itemGetC = _parseProps3.itemGetClassName,
       itemGetClassName = _parseProps3$itemGetC === void 0 ? Tabs._Container._itemGetClassName : _parseProps3$itemGetC,
       _parseProps3$itemGetS = _parseProps3.itemGetStyle,
@@ -178,20 +170,31 @@ Tabs._Container = function (aprops) {
       componentPanel = _parseProps3.componentPanel,
       className = _parseProps3.className,
       children = _parseProps3.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["onAction", "selected", "type", "itemProps", "itemComponent", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "componentPanel", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["onAction", "type", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'flex-sub-flex-extend';
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
     type: type,
     containerProps: aprops,
-    itemComponent: itemComponent,
     itemProps: itemProps,
     itemGetClassName: itemGetClassName,
     itemGetStyle: itemGetStyle,
     itemGetProps: itemGetProps,
     className: (0, _classes.default)(classStr, className)
-  }, props), children);
+  }, props), children.map(function (v, i) {
+    return _react.default.createElement(Tabs._Container._Item, (0, _extends2.default)({
+      key: v.key || i
+    }, v.props));
+  }));
+};
+
+Tabs._Container._Item = function (aprops) {
+  var title = aprops.title,
+      _aprops$component = aprops.component,
+      Component = _aprops$component === void 0 ? _Panel.default : _aprops$component,
+      props = (0, _objectWithoutProperties2.default)(aprops, ["title", "component"]);
+  return _react.default.createElement(Component, props);
 };
 
 Tabs._Container._itemGetProps = function (i, length) {
@@ -203,6 +206,6 @@ Tabs._Container._itemGetProps = function (i, length) {
   };
 };
 
-Tabs.Item = _Panel.default.Container.Item;
+Tabs.Item = Tabs._Container._Item;
 var _default = Tabs;
 exports.default = _default;

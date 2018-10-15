@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -7,25 +9,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
@@ -41,66 +31,46 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @author able99 (8846755@qq.com)
  * @license MIT
  */
-var AnimationSlider =
-/*#__PURE__*/
-function (_React$Component) {
-  (0, _inherits2.default)(AnimationSlider, _React$Component);
+var AnimationSlider = function AnimationSlider(aprops) {
+  var _parseProps = (0, _props.default)(aprops, AnimationSlider.props),
+      _parseProps$countToSh = _parseProps.countToShow,
+      countToShow = _parseProps$countToSh === void 0 ? 1 : _parseProps$countToSh,
+      index = _parseProps.index,
+      _parseProps$timeout = _parseProps.timeout,
+      timeout = _parseProps$timeout === void 0 ? 300 : _parseProps$timeout,
+      innerProps = _parseProps.innerProps,
+      itemProps = _parseProps.itemProps,
+      content = _parseProps.content,
+      _parseProps$component = _parseProps.component,
+      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+      componentPanel = _parseProps.componentPanel,
+      className = _parseProps.className,
+      children = _parseProps.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["countToShow", "index", "timeout", "innerProps", "itemProps", "content", "component", "componentPanel", "className", "children"]);
 
-  function AnimationSlider() {
-    (0, _classCallCheck2.default)(this, AnimationSlider);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(AnimationSlider).apply(this, arguments));
-  }
-
-  (0, _createClass2.default)(AnimationSlider, [{
-    key: "render",
-    value: function render() {
-      var _parseProps = (0, _props.default)(this.props),
-          _parseProps$countToSh = _parseProps.countToShow,
-          countToShow = _parseProps$countToSh === void 0 ? 1 : _parseProps$countToSh,
-          index = _parseProps.index,
-          _parseProps$timeout = _parseProps.timeout,
-          timeout = _parseProps$timeout === void 0 ? 300 : _parseProps$timeout,
-          innerProps = _parseProps.innerProps,
-          _parseProps$component = _parseProps.component,
-          Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
-          componentPanel = _parseProps.componentPanel,
-          className = _parseProps.className,
-          children = _parseProps.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["countToShow", "index", "timeout", "innerProps", "component", "componentPanel", "className", "children"]);
-
-      children = _react.default.Children.toArray(children);
-
-      var items = _react.default.Children.toArray(children).filter(function (v) {
-        return (0, _typeof2.default)(v) === 'object' && v.type === AnimationSlider.Item;
-      }).map(function (v, i) {
-        return _react.default.createElement(AnimationSlider.Item, (0, _extends2.default)({
-          key: v.key || i,
-          countToShow: countToShow,
-          index: index,
-          timeout: timeout,
-          i: i
-        }, v.props));
-      });
-
-      children = children.filter(function (v) {
-        return (0, _typeof2.default)(v) !== 'object' || v.type !== AnimationSlider.Item;
-      });
-      var classStr = 'overflow-a-hidden position-relative';
-      return _react.default.createElement(Component, (0, _extends2.default)({
-        component: componentPanel,
-        className: (0, _classes.default)(classStr, className)
-      }, props), _react.default.createElement(AnimationSlider._Inner, (0, _extends2.default)({
-        countToShow: countToShow,
-        index: index,
-        timeout: timeout
-      }, innerProps), items), children);
-    }
-  }]);
-  return AnimationSlider;
-}(_react.default.Component);
+  children = _react.default.Children.toArray(children).filter(function (v) {
+    return v;
+  }).map(function (v, i) {
+    return (0, _react.cloneElement)(v, (0, _objectSpread2.default)({
+      countToShow: countToShow,
+      index: index,
+      timeout: timeout,
+      i: i
+    }, itemProps, v.props));
+  });
+  var classStr = 'overflow-a-hidden position-relative';
+  return _react.default.createElement(Component, (0, _extends2.default)({
+    component: componentPanel,
+    className: (0, _classes.default)(classStr, className)
+  }, props), _react.default.createElement(AnimationSlider._Inner, (0, _extends2.default)({
+    countToShow: countToShow,
+    index: index,
+    timeout: timeout
+  }, innerProps), children), content);
+};
 
 AnimationSlider._Inner = function (aprops) {
-  var _parseProps2 = (0, _props.default)(aprops),
+  var _parseProps2 = (0, _props.default)(aprops, AnimationSlider._Inner.props),
       countToShow = _parseProps2.countToShow,
       index = _parseProps2.index,
       timeout = _parseProps2.timeout,
@@ -123,7 +93,7 @@ AnimationSlider._Inner = function (aprops) {
 };
 
 AnimationSlider.Item = function (aprops) {
-  var _parseProps3 = (0, _props.default)(aprops),
+  var _parseProps3 = (0, _props.default)(aprops, AnimationSlider.Item.props),
       i = _parseProps3.i,
       timeout = _parseProps3.timeout,
       countToShow = _parseProps3.countToShow,
