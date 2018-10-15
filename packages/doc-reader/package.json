@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "doc-reader",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "doc reader",
   "keywords": [
     "bnorth",
@@ -28,12 +28,12 @@
     "url": "https://github.com/able99/bnorth/issues"
   },
   "dependencies": {
-    "@bnorth/components": "^3.1.0",
+    "@bnorth/components": "^3.1.1",
     "@bnorth/core": "^3.1.0",
     "@bnorth/plugin-network": "^3.1.0",
-    "@bnorth/plugin-request": "^3.1.0",
+    "@bnorth/plugin-request": "^3.1.1",
     "@bnorth/plugin-validate": "^3.1.0",
-    "@bnorth/rich.css": "^3.1.0",
+    "@bnorth/rich.css": "^3.1.1",
     "react-markdown": "^3.6.0"
   },
   "devDependencies": {
