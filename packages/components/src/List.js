@@ -152,7 +152,7 @@ List.Item._Desc = aprops=>{
 List.Item._After = aprops=>{
   let {
     component:Component=Panel, componentPanel, className, ...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, List.Item._After.props);
 
   let classStr = 'flex-sub-align-center margin-left-';
   
@@ -162,7 +162,7 @@ List.Item._After = aprops=>{
 List.Item._Arrow = aprops=>{
   let {
     component:Component=Panel, componentPanel=Icon, className, ...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, List.Item._Arrow.props);
 
   let classStr = 'flex-sub-align-center flex-sub-flex-none';
   

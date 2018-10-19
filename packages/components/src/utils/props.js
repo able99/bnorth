@@ -17,17 +17,17 @@ export default function parseProps(aprops, aaprops) {
 
   Object.entries(props).forEach(([k,v])=>{
     if(k.startsWith('bs-')){
-      let name = k.slice(3);
+      delete props[k]; if(!v) return; let name = k.slice(3);
+
       styleSet[name] = v;
-      delete props[k];
     }else if(k.startsWith('bc-')){
-      let name = k.slice(3);
+      delete props[k]; if(!v) return; let name = k.slice(3); 
+
       classSet[name+(v===true?'':('-'+v))] = true;
-      delete props[k];
     }else if(k.startsWith('bf-')){
-      let name = k.slice(3);
-      if(functions[name]) styleSet = {...styleSet, ...(functions[name](...(Array.isArray(v)?v:[v])))}
-      delete props[k];
+      delete props[k]; if(!v) return; let name = k.slice(3); name = functions[name]; if(!name) return;
+      
+      Object.assign(styleSet, Array.isArray(v)?name(...v):name(v));
     }
   })
   

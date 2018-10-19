@@ -48,7 +48,6 @@ var getClass = function getClass(app) {
         value: function _requestFetching(fetching, _ref) {
           var loading = _ref.loading,
               mask = _ref.mask,
-              noNotice = _ref.noNotice,
               noLoadingMask = _ref.noLoadingMask,
               isSubmit = _ref.isSubmit;
           loading && this.app.render.loading(fetching);
@@ -77,8 +76,9 @@ var getClass = function getClass(app) {
       }, {
         key: "_requestError",
         value: function _requestError(error, _ref3) {
-          var isSubmit = _ref3.isSubmit;
-          this.app.render.error(error);
+          var noNotice = _ref3.noNotice,
+              isSubmit = _ref3.isSubmit;
+          !noNotice && this.app.render.error(error);
           if (isSubmit) return;
           this.stateUpdate({
             fetching: false,

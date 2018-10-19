@@ -32,13 +32,13 @@ function () {
     value: function fetch(options, request) {
       var app = this.app;
       options = app.utils.getOptions(this.options, options);
-      return (0, _axios.default)((0, _objectSpread2.default)({
+      options = (0, _objectSpread2.default)({
         url: options.apiUrl + options.url,
         baseURL: options.baseUrl,
         method: options.getRequestMethod(app),
-        headers: (0, _objectSpread2.default)({}, options.getRequestHeaders(app), {
+        headers: (0, _objectSpread2.default)({
           "Content-Type": options.getRequestContentType(app)
-        }),
+        }, options.getRequestHeaders(app)),
         params: options.getRequestParams(app),
         timeout: options.timeout,
         responseType: options.responseType,
@@ -46,7 +46,8 @@ function () {
         cancelToken: options.getCancelCB && new _axios.default.CancelToken(function (cancel) {
           return options.getCancelCB(cancel);
         })
-      }, options.options || {})).then(function (result) {
+      }, options.options);
+      return (0, _axios.default)(options).then(function (result) {
         result = options.getResponseData(app, result);
         return options.handleResponse(app, result);
       }, function (error) {
@@ -58,11 +59,29 @@ function () {
 }();
 
 Network.Options = {
-  baseUrl: window.location.protocol + "//" + window.location.hostname + (window.location.port === 80 || window.location.port === 443 || window.location.port === "" ? "" : ":" + window.location.port) + "/",
+  baseUrl: window.location.orgin + window.location.pathname,
   apiUrl: '',
   url: '',
   // timeout: 1000*60,
   // responseType: '',
+  getRequestHeaders: function getRequestHeaders(app) {
+    return this.headers || {};
+  },
+  getRequestParams: function getRequestParams(app) {
+    return this.params || {};
+  },
+  getRequestContentType: function getRequestContentType(app) {
+    return this.contentType;
+  },
+  getRequestMethod: function getRequestMethod(app) {
+    return this.method || (!this.isSubmit ? 'GET' : 'POST');
+  },
+  getRequestData: function getRequestData(app) {
+    return (typeof this.data === 'function' ? this.data() : this.data) || {};
+  },
+  getResponseData: function getResponseData(app, data) {
+    return data;
+  },
   handleStatusError: function handleStatusError(app, data) {
     switch (data && data.response && data.response.status) {
       case 401:
@@ -77,24 +96,6 @@ Network.Options = {
     return Promise.reject(data);
   },
   handleResponse: function handleResponse(app, data) {
-    return data;
-  },
-  getRequestHeaders: function getRequestHeaders(app, data) {
-    return this.headers || {};
-  },
-  getRequestParams: function getRequestParams(app, data) {
-    return this.params || {};
-  },
-  getRequestContentType: function getRequestContentType(app, data) {
-    return this.contentType;
-  },
-  getRequestMethod: function getRequestMethod(app, data) {
-    return this.method || (!this.isSubmit ? 'GET' : 'POST');
-  },
-  getRequestData: function getRequestData(app, data) {
-    return (typeof this.data === 'function' ? this.data() : this.data) || {};
-  },
-  getResponseData: function getResponseData(app, data) {
     return data;
   }
 };

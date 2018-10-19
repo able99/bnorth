@@ -784,8 +784,8 @@ function () {
     // ----------------------------------------
 
   }, {
-    key: "_getLocation",
-    value: function _getLocation() {
+    key: "getLocationInfo",
+    value: function getLocationInfo() {
       var passQuery;
       var query = {};
 
@@ -838,6 +838,16 @@ function () {
       };
     }
   }, {
+    key: "getUrlPath",
+    value: function getUrlPath() {
+      return this.history.createHref(this.getLocationInfo.apply(this, arguments));
+    }
+  }, {
+    key: "getUrl",
+    value: function getUrl() {
+      return window.location.origin + window.location.pathname + window.location.search + this.getUrlPath.apply(this, arguments);
+    }
+  }, {
     key: "block",
     value: function block(blockInfo) {
       this.app.log.info('router block', blockInfo);
@@ -861,7 +871,7 @@ function () {
       }
 
       this.app.log.info('router push', args);
-      this.history.push(this._getLocation.apply(this, args));
+      this.history.push(this.getLocationInfo.apply(this, args));
       return true;
     }
   }, {
@@ -872,7 +882,7 @@ function () {
       }
 
       this.app.log.info('router replace', args);
-      this.history.replace(this._getLocation.apply(this, args));
+      this.history.replace(this.getLocationInfo.apply(this, args));
       return true;
     }
   }, {

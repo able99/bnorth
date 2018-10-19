@@ -7,7 +7,7 @@ let getClass = (app, aoptions={})=>class Request extends app.State {
     app.event.on(this._id, 'onStateActive', (page, onStart)=>{this.options.fetchOnActive&&(!onStart)&&this.fetch()}, this._id);
   }
 
-  _requestFetching(fetching, {loading, mask, noNotice, noLoadingMask, isSubmit}) {
+  _requestFetching(fetching, {loading, mask, noLoadingMask, isSubmit}) {
     loading && this.app.render.loading(fetching);
     mask && this.app.render.mask(fetching);
     (!loading&&!mask) && !noLoadingMask && (!isSubmit?this.app.render.loading(fetching):this.app.render.mask(fetching));
@@ -27,8 +27,8 @@ let getClass = (app, aoptions={})=>class Request extends app.State {
     this.update(data, {append});
   };
 
-  _requestError(error, {isSubmit}) {
-    this.app.render.error(error);
+  _requestError(error, {noNotice, isSubmit}) {
+    !noNotice&&this.app.render.error(error);
 
     if(isSubmit) return;
     this.stateUpdate({fetching: false, error});

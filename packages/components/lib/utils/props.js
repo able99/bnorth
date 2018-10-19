@@ -54,19 +54,26 @@ function parseProps(aprops, aaprops) {
         v = _ref2[1];
 
     if (k.startsWith('bs-')) {
+      delete props[k];
+      if (!v) return;
       var name = k.slice(3);
       styleSet[name] = v;
-      delete props[k];
     } else if (k.startsWith('bc-')) {
+      delete props[k];
+      if (!v) return;
+
       var _name = k.slice(3);
 
       classSet[_name + (v === true ? '' : '-' + v)] = true;
-      delete props[k];
     } else if (k.startsWith('bf-')) {
+      delete props[k];
+      if (!v) return;
+
       var _name2 = k.slice(3);
 
-      if (functions[_name2]) styleSet = (0, _objectSpread2.default)({}, styleSet, functions[_name2].apply(functions, (0, _toConsumableArray2.default)(Array.isArray(v) ? v : [v])));
-      delete props[k];
+      _name2 = functions[_name2];
+      if (!_name2) return;
+      Object.assign(styleSet, Array.isArray(v) ? _name2.apply(void 0, (0, _toConsumableArray2.default)(v)) : _name2(v));
     }
   });
   if (active) classSet['active'] = true;

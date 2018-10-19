@@ -389,7 +389,7 @@ export default class Router {
 
   // router navigator
   // ----------------------------------------
-  _getLocation(...args) {
+  getLocationInfo(...args) {
     let passQuery;
     let query = {};
     let pathnames = this._pathinfos.map(v=>v.path);
@@ -423,8 +423,15 @@ export default class Router {
       search: '?'+Object.entries(passQuery?{...this.history.location.query, ...query}:query).map(([k,v])=>k+'='+v).reduce((v1,v2)=>v1+'&'+v2,''),
     };
   }
-  
 
+  getUrlPath(...args) {
+    return this.history.createHref(this.getLocationInfo(...args));
+  }
+
+  getUrl(...args) {
+    return window.location.origin+window.location.pathname+window.location.search+this.getUrlPath(...args);
+  }
+  
   block(blockInfo) {
     this.app.log.info('router block', blockInfo);
     this._blockLocation = this.history.location;
@@ -441,13 +448,13 @@ export default class Router {
 
   push(...args) {
     this.app.log.info('router push', args);
-    this.history.push(this._getLocation(...args));
+    this.history.push(this.getLocationInfo(...args));
     return true;
   }
 
   replace(...args) {
     this.app.log.info('router replace', args);
-    this.history.replace(this._getLocation(...args));
+    this.history.replace(this.getLocationInfo(...args));
     return true;
   }
 

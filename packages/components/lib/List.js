@@ -226,7 +226,7 @@ List.Item._Desc = function (aprops) {
 };
 
 List.Item._After = function (aprops) {
-  var _parseProps11 = (0, _props.default)(aprops),
+  var _parseProps11 = (0, _props.default)(aprops, List.Item._After.props),
       _parseProps11$compone = _parseProps11.component,
       Component = _parseProps11$compone === void 0 ? _Panel.default : _parseProps11$compone,
       componentPanel = _parseProps11.componentPanel,
@@ -242,7 +242,7 @@ List.Item._After = function (aprops) {
 };
 
 List.Item._Arrow = function (aprops) {
-  var _parseProps12 = (0, _props.default)(aprops),
+  var _parseProps12 = (0, _props.default)(aprops, List.Item._Arrow.props),
       _parseProps12$compone = _parseProps12.component,
       Component = _parseProps12$compone === void 0 ? _Panel.default : _parseProps12$compone,
       _parseProps12$compone2 = _parseProps12.componentPanel,
