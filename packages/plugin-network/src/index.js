@@ -11,7 +11,7 @@ class Network {
   fetch(options, request){
     let app = this.app;
     options = app.utils.getOptions(this.options, options);
-    options = {
+    let params = {
       url: options.apiUrl + options.url,
       baseURL: options.baseUrl,
       method: options.getRequestMethod(app),
@@ -24,7 +24,7 @@ class Network {
       ...options.options,
     };
 
-    return axios(options)
+    return axios(params)
       .then(result=>{
         result = options.getResponseData(app, result);
         return options.handleResponse(app, result);

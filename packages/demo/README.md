@@ -18,7 +18,7 @@ const bnorthDemo = require('bnorth-demo');
 1. popover hover trigger cannot close when click and click trigger close is wrong
 1. implement grid
 1. refine AnimationXXX components and implement AnimationNone
-1. state dup error
+1. - state dup error
 1. memory leak
 1. pluign valdate refine
 1. remove this._genRouteMethod('/error');

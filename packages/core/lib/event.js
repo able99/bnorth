@@ -7,8 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-require("core-js/modules/es6.promise");
-
 require("core-js/modules/es6.array.find-index");
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
@@ -221,9 +219,9 @@ function () {
         args[_key2 - 2] = arguments[_key2];
       }
 
-      return Promise.resolve().then(function () {
+      return setTimeout(function () {
         return _this3._trigger.apply(_this3, [targetId, eventName].concat(args));
-      });
+      }); // return Promise.resolve().then(()=>this._trigger(targetId, eventName, ...args));
     }
   }, {
     key: "emitSync",

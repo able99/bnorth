@@ -32,7 +32,7 @@ function () {
     value: function fetch(options, request) {
       var app = this.app;
       options = app.utils.getOptions(this.options, options);
-      options = (0, _objectSpread2.default)({
+      var params = (0, _objectSpread2.default)({
         url: options.apiUrl + options.url,
         baseURL: options.baseUrl,
         method: options.getRequestMethod(app),
@@ -47,7 +47,7 @@ function () {
           return options.getCancelCB(cancel);
         })
       }, options.options);
-      return (0, _axios.default)(options).then(function (result) {
+      return (0, _axios.default)(params).then(function (result) {
         result = options.getResponseData(app, result);
         return options.handleResponse(app, result);
       }, function (error) {

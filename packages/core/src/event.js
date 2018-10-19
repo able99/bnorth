@@ -51,7 +51,8 @@ export default class Event {
   }
 
   emit(targetId, eventName, ...args) {
-    return Promise.resolve().then(()=>this._trigger(targetId, eventName, ...args));
+    return setTimeout(()=>this._trigger(targetId, eventName, ...args))
+    // return Promise.resolve().then(()=>this._trigger(targetId, eventName, ...args));
   }
 
   async emitSync(targetId, eventName, ...args) {
