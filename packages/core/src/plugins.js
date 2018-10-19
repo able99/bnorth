@@ -66,7 +66,7 @@ export default class Plugins {
       }
     })
 
-    app.event.emitSync(_id, 'onPluginMount', app, plugin);
+    app.event.emit(_id, 'onPluginMount', app, plugin);
     app.event.emit(app._id, 'onPluginAdd', plugin);
   }
 
@@ -76,10 +76,9 @@ export default class Plugins {
     if(index<0) return;
     let plugin = this._plugins[index];
 
-    this.app.event.emitSync(plugin._id._id, 'onPluginUnmount', this.app, plugin);
+    this.app.event.emit(plugin._id._id, 'onPluginUnmount', this.app, plugin);
     this.app.event.off(_id);
     this._plugins.splice(index,1);
-
-    this.app.event.emitSync(this.app._id, 'onPluginRemove', _id);
+    this.app.event.emit(this.app._id, 'onPluginRemove', _id);
   }
 }

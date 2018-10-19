@@ -112,7 +112,7 @@ function () {
 
                 v = _step.value;
                 _context.next = 11;
-                return this.event.emitSync(this._id, v, this);
+                return this.event.emit(this._id, v, this);
 
               case 11:
                 this.event.delete(v, this._id);

@@ -118,18 +118,18 @@ export default class Page extends React.Component {
     app.log.info('page did mount', _id);
 
     this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this.handleKeyEvent(e));
-    app.event.emitSync(app._id, 'onPageAdd', _id, this);
-    app.event.emitSync(this._id, 'onPageStart', this, active);
-    active && app.event.emitSync(this._id, 'onPageActive', this, true);
+    app.event.emit(app._id, 'onPageAdd', _id, this);
+    app.event.emit(this._id, 'onPageStart', this, active);
+    active && app.event.emit(this._id, 'onPageActive', this, true);
   }
 
   componentWillUnmount() {
     let { app, _id } = this.props;
     app.log.info('page will unmount', _id);
 
-    app.event.emitSync(this._id, 'onPageInactive', this, true);
-    app.event.emitSync(this._id,'onPageStop', this);
-    app.event.emitSync(app._id, 'onPageRemove', _id, this);
+    app.event.emit(this._id, 'onPageInactive', this, true);
+    app.event.emit(this._id,'onPageStop', this);
+    app.event.emit(app._id, 'onPageRemove', _id, this);
     this._offKeyEvent && this._offKeyEvent();
     app.event.off(_id);
   }
@@ -138,7 +138,7 @@ export default class Page extends React.Component {
     let { app, route:{active} } = this.props;
 
     if(prevProps.route.active !== active) {
-      app.event.emitSync(this._id, active?'onPageActive':'onPageInactive', this, false);
+      app.event.emit(this._id, active?'onPageActive':'onPageInactive', this, false);
     }
   }
 

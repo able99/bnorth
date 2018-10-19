@@ -261,7 +261,7 @@ export default class Router {
 
 
     for(let pathinfo of pathinfos) {
-      let blockInfo = await this.app.event.emitSync(this.app._id, 'onRouteMatch', pathinfo, location);
+      let blockInfo = await this.app.event.emit(this.app._id, 'onRouteMatch', pathinfo, location);
       if(blockInfo) return this.block(blockInfo);
     }
     this._focusId = focusId;

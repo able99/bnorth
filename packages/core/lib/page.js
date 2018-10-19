@@ -237,9 +237,9 @@ function (_React$Component) {
       this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
         return _this4.handleKeyEvent(e);
       });
-      app.event.emitSync(app._id, 'onPageAdd', _id, this);
-      app.event.emitSync(this._id, 'onPageStart', this, active);
-      active && app.event.emitSync(this._id, 'onPageActive', this, true);
+      app.event.emit(app._id, 'onPageAdd', _id, this);
+      app.event.emit(this._id, 'onPageStart', this, active);
+      active && app.event.emit(this._id, 'onPageActive', this, true);
     }
   }, {
     key: "componentWillUnmount",
@@ -248,9 +248,9 @@ function (_React$Component) {
           app = _this$props3.app,
           _id = _this$props3._id;
       app.log.info('page will unmount', _id);
-      app.event.emitSync(this._id, 'onPageInactive', this, true);
-      app.event.emitSync(this._id, 'onPageStop', this);
-      app.event.emitSync(app._id, 'onPageRemove', _id, this);
+      app.event.emit(this._id, 'onPageInactive', this, true);
+      app.event.emit(this._id, 'onPageStop', this);
+      app.event.emit(app._id, 'onPageRemove', _id, this);
       this._offKeyEvent && this._offKeyEvent();
       app.event.off(_id);
     }
@@ -262,7 +262,7 @@ function (_React$Component) {
           active = _this$props4.route.active;
 
       if (prevProps.route.active !== active) {
-        app.event.emitSync(this._id, active ? 'onPageActive' : 'onPageInactive', this, false);
+        app.event.emit(this._id, active ? 'onPageActive' : 'onPageInactive', this, false);
       }
     }
   }, {

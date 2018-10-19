@@ -17,15 +17,6 @@ export default class Event {
     return ()=>this.off(callback);
   }
 
-  async _trigger(targetId, eventName, ...args) {
-    let name = this._getTargetEventName(targetId, eventName);
-
-    for (let {callback, once} of (this._listener[name]||[])) {
-      let ret = await callback(...args);
-      if(once) this.off(callback);
-      if(ret) return ret;
-    }
-  }
 
   on(targetId, eventName, callback, ownerId) {
     return this._addListener(targetId, eventName, callback, ownerId, false);
@@ -50,12 +41,23 @@ export default class Event {
     delete this._listener[name];
   }
 
-  emit(targetId, eventName, ...args) {
-    return setTimeout(()=>this._trigger(targetId, eventName, ...args))
-    // return Promise.resolve().then(()=>this._trigger(targetId, eventName, ...args));
+
+  emitSync(targetId, eventName, ...args) {
+    let name = this._getTargetEventName(targetId, eventName);
+
+    [...this._listener[name]||[]].forEach(({callback, once})=>{
+      callback(...args);
+      if(once) this.off(callback);
+    })
   }
 
-  async emitSync(targetId, eventName, ...args) {
-    return await this._trigger(targetId, eventName, ...args);
+  async emit(targetId, eventName, ...args) {
+    let name = this._getTargetEventName(targetId, eventName);
+
+    for (let {callback, once} of [...this._listener[name]||[]]) {
+      let ret = await callback(...args);
+      if(once) this.off(callback);
+      if(ret) return ret;
+    }
   }
 }

@@ -54,7 +54,7 @@ export default class App {
     this.log.info('app start');
     try{
       for (let v of this._startEvents) {
-        await this.event.emitSync(this._id, v, this);
+        await this.event.emit(this._id, v, this);
         this.event.delete(v, this._id);
       }
     }catch(e){

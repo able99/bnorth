@@ -178,7 +178,7 @@ function () {
                 prevData = this.data();
                 nextData = this.app.utils.objectUpdate(prevData, data, options.append);
                 _context.next = 6;
-                return this.app.event.emitSync(this._id, 'onStateUpdating', nextData, prevData, data, options);
+                return this.app.event.emit(this._id, 'onStateUpdating', nextData, prevData, data, options);
 
               case 6:
                 _context.t0 = _context.sent;

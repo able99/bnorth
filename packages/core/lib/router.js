@@ -518,7 +518,7 @@ function () {
 
                 pathinfo = _step.value;
                 _context.next = 33;
-                return this.app.event.emitSync(this.app._id, 'onRouteMatch', pathinfo, location);
+                return this.app.event.emit(this.app._id, 'onRouteMatch', pathinfo, location);
 
               case 33:
                 blockInfo = _context.sent;

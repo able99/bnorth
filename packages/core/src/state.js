@@ -86,7 +86,7 @@ export default class State {
     let prevData = this.data();
     let nextData = this.app.utils.objectUpdate(prevData, data, options.append);
 
-    nextData = await this.app.event.emitSync(this._id, 'onStateUpdating', nextData, prevData, data, options) || nextData; 
+    nextData = await this.app.event.emit(this._id, 'onStateUpdating', nextData, prevData, data, options) || nextData; 
     this.app.context.update(this._id, {data:nextData});
     this.app.event.emit(this._id, 'onStateUpdated', nextData, prevData, data, options);
     return nextData;
