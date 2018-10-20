@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "bnorth-demo",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "bnorth demo",
   "keywords": [
     "bnorth",
@@ -27,14 +27,14 @@
     "url": "https://github.com/able99/bnorth/issues"
   },
   "dependencies": {
-    "@bnorth/components": "^3.1.2",
-    "@bnorth/core": "^3.1.0",
+    "@bnorth/components": "^3.1.3",
+    "@bnorth/core": "^3.1.3",
     "@bnorth/plugin-base64": "^3.1.0",
     "@bnorth/plugin-browser": "^3.1.0",
     "@bnorth/plugin-format": "^3.1.0",
     "@bnorth/plugin-md5": "^3.1.0",
-    "@bnorth/plugin-network": "^3.1.0",
-    "@bnorth/plugin-request": "^3.1.2",
+    "@bnorth/plugin-network": "^3.1.3",
+    "@bnorth/plugin-request": "^3.1.3",
     "@bnorth/plugin-storage": "^3.1.0",
     "@bnorth/plugin-validate": "^3.1.0",
     "@bnorth/rich.css": "^3.1.2"

@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/core",
-  "version": "3.1.0",
+  "version": "3.1.3",
   "description": "A react based JS framework that covers the functions of scaffolding, routing, data flow and so on. It uses a plug-in mechanism, powerful and easy to extend",
   "keywords": [
     "bnorth",
