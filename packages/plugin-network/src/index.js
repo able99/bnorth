@@ -35,7 +35,7 @@ class Network {
 }
 
 Network.Options = {
-  baseUrl: window.location.orgin+window.location.pathname,
+  baseUrl: window.location.origin+window.location.pathname,
   apiUrl: '',
   url: '',
   // timeout: 1000*60,
