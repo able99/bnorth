@@ -6,7 +6,7 @@ let config = {
   config: {
     bail: false,
     devtool: false,
-    outputPath: './www',
+    outputPath: './dist',
     outputFilename: '[name].[hash:8].js',
     outputPublicPath: './',
     outputChunkFilename: '[name].[chunkhash:8].async.js',
@@ -22,7 +22,10 @@ let config = {
       env: {},
       parserOptions: {},
       rules: {},
-    }
+    },
+    webParams: {
+
+    },
   },
 
   config_development: {

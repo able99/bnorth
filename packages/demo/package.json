@@ -1,7 +1,8 @@
 {
   "private": true,
-  "name": "bnorth-demo",
+  "name": "bnorthdemo",
   "version": "3.1.3",
+  "icon": "../res/logo.png",
   "description": "bnorth demo",
   "keywords": [
     "bnorth",
@@ -21,7 +22,7 @@
   "scripts": {
     "start": "bnorth-build server",
     "build": "bnorth-build build",
-    "bnorth": "bnorth-cli"
+    "bcordova": "bnorth-cordova"
   },
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"
@@ -40,7 +41,8 @@
     "@bnorth/rich.css": "^3.1.2"
   },
   "devDependencies": {
-    "@bnorth/build": "^3.1.0"
+    "@bnorth/build": "^3.1.0",
+    "@bnorth/cordova": "*"
   },
   "bnorth": {
     "outputPath": "../../docs/demo/"

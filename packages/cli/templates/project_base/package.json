@@ -2,17 +2,19 @@
   "name": "bnorth",
   "version": "1.0.0",
   "description": "bnorth app",
+  "icon": "../res/logo.png",
   "main": "index.js",
   "scripts": {
     "start": "bnorth-build server",
     "build": "bnorth-build build",
-    "bnorth": "bnorth-build",
-    "bnorth-cli": "bnorth-cli"
+    "bcordova": "bnorth-cordova"
   },
   "keywords": ["react", "bnorth"],
   "author": "able99 (8846755@qq.com)",
   "license": "MIT",
   "bnorth": {},
-  "bnorth-dev": {},
-  "bnorth-prod": {}
+  "bnorth_development": {},
+  "bnorth_production": {},
+  "bnorthAppBuildParams": {},
+  "bnorthAppPreferences": {}
 }

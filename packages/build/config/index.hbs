@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset=<%= htmlWebpackPlugin.options.charset%> />
+
+    <% _.each(htmlWebpackPlugin.options.metaNames, function(v,k){ %>
+      <meta name="<%= k %>" content="<%= v %>" /> 
+    <% }) %>
+
+    <% _.each(htmlWebpackPlugin.options.metaHttpEquiv, function(v,k){ %>
+      <meta http-equiv="<%= k %>" content="<%= v %>" /> 
+    <% }) %>
+
+    <title><%= htmlWebpackPlugin.options.title %></title>
+
+    <% if(htmlWebpackPlugin.options.icon){ %>
+      <link rel="shortcut icon" href="<%= htmlWebpackPlugin.options.outputPublicPath+htmlWebpackPlugin.options.icon %>" /> 
+    <% } %>
+
+    <% _.each(htmlWebpackPlugin.options.cssFiles, function(v){ %> 
+      <link rel="stylesheet" href="<%= htmlWebpackPlugin.options.outputPublicPath+v %>" /> 
+    <% }) %>
+
+    <% _.each(htmlWebpackPlugin.options.heads, function(v){ %> 
+      <%= v %> >
+    <% }) %>
+
+    <% _.each(htmlWebpackPlugin.options.headExts, function(v){ %> 
+      <%= v %> >
+    <% }) %>
+
+    <script>
+      var _bnorhtEnv = <%= JSON.stringify(htmlWebpackPlugin.options.env||{}) %>
+      var _bnorhtVersion = <%= JSON.stringify(htmlWebpackPlugin.options.version||{}) %>
+      var _bnorhtWebParams = <%= JSON.stringify(htmlWebpackPlugin.options.webParams||{}) %>
+    </script>
+  </head>
+  <body>
+    <% _.each(htmlWebpackPlugin.options.rootBefore, function(v){ %> 
+      <%= v %>
+    <% }) %>
+
+    <div 
+      id="root" 
+      <% _.each(htmlWebpackPlugin.options.rootAttr, function(v,k){ %>
+        <%= k %>="<%= v %>" >
+      <% }) %>
+
+      <% _.each(htmlWebpackPlugin.options.rootChildren, function(v){ %> 
+        <%= v %>
+      <% }) %>
+
+      <% _.each(htmlWebpackPlugin.options.rootChildrenExt, function(v){ %> 
+        <%= v %>
+      <% }) %>
+    </div>
+
+    <% _.each(htmlWebpackPlugin.options.rootAfter, function(v){ %> 
+      <%= v %>
+    <% }) %>
+  </body>
+</html>

@@ -33,7 +33,7 @@ function getRules() {
   // url
   rules.push({
     exclude: [
-      /\.(html|ejs)$/,
+      /\.(html|hbs)$/,
       /\.(js|jsx)$/,
       /\.(css|less|scss)$/,
       /\.json$/,
@@ -104,6 +104,9 @@ function getRules() {
 function getPlugins() {
   let {
     extractCss,
+    html,
+    webParams,
+    outputPublicPath,
   } = getBnorthConfig();
 
   let {
@@ -112,7 +115,7 @@ function getPlugins() {
     define,
     appSrc,
     appPublic,
-    appNodeModules,
+    appPackage,
   } = getEnv();
 
   let {
@@ -136,8 +139,37 @@ function getPlugins() {
 
   // html
   ret.push(new HtmlWebpackPlugin({
-    template: join(existsSync(join(appSrc, 'index.ejs'))?appSrc:__dirname, 'index.ejs'),
+    template: join(existsSync(join(appSrc, 'index.hbs'))?appSrc:__dirname, 'index.hbs'),
     inject: true,
+    outputPublicPath,
+    charset: 'utf-8',
+    title: appPackage.displayNameWeb||appPackage.displayName||appPackage.name,
+    icon: appPackage.iconWeb||appPackage.icon,
+    metaNames: {
+      'viewport': 'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no',
+      'format-detection': 'telephone=no',
+      'msapplication-tap-highlight': 'no',
+    },
+    metaHttpEquiv: {
+      'X-UA-Compatible': 'IE=11',
+    },
+    heads: [],
+    headExts: [],
+    jsFiles: [],
+    cssFiles: [],
+    env,
+    version: appPackage.version,
+    webParams,
+    rootBefore: [],
+    rootAfter: [],
+    rootAttr: {
+      'style': 'position: absolute;width: 100%;height: 100%;top:0;right:0;bottom:0;left:0;',
+    },
+    rootChildren: [
+      '<div style="margin-top:48px;text-align:center">...</div>'
+    ],
+    rootChildrenExt: [],
+    ...html,
   }));
 
   // pubic

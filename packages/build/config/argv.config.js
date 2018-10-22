@@ -25,7 +25,7 @@ function initArgv(type) {
       break;
     
   }
-  
+
   return cache;
 }
 

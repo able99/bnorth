@@ -44,7 +44,7 @@ function initEnv({cwd, env}={}) {
 
   process.env.NODE_ENV = env;
   process.env.NODE_PATH = (process.env.NODE_PATH?(process.env.NODE_PATH+':'):'')+cache.ownNodeModules;
- 
+
   return cache;
 }
 

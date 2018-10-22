@@ -43,6 +43,7 @@ export default props=>{
       <Panel bc-margin-a-xxl bc-text-color-light bc-border-set-top- bc-padding-top- bc-text-size-sm>
         <Panel bc-text-align-center><big><strong>bnorth solution</strong></big></Panel>
         <Panel bc-text-align-center>able99 xwan</Panel>
+        <Panel bc-text-align-center>Ver:{window._bnorhtVersion}</Panel>
         <Panel bc-text-align-center><Icon name="copyright" />2018</Panel>
       </Panel>
     </View>
