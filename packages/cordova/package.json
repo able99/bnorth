@@ -19,6 +19,10 @@
     "bin",
     "templates"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public" 
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/able99/bnorth.git"
@@ -34,5 +38,6 @@
     "cross-spawn": "^6.0.5",
     "fs-extra": "^7.0.0",
     "xml2js": "^0.4.19"
-  }
+  },
+  "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
 }
