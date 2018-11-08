@@ -48,7 +48,7 @@ export default function gen(config) {
   Object.entries(colors).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, kk)] = getStyleSet(baseSelector, vv, { ext: func })))
 
   func = 'style';
-  Object.entries(Styles).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, kk)] = getStyleSet(baseSelector, vv===true?kk:vv, { ext: func, })))
+  Object.entries(Styles).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, kk)] = getStyleSet(baseSelector, vv, { key: kk, ext: func, })))
 
   func = 'width';
   Object.entries(widthSizes).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, kk.trim())] = getStyleSet(baseSelector, vv, { ext: func })))
@@ -70,7 +70,7 @@ export default function gen(config) {
   func = 'style';
   Object.entries(Dimentions).forEach(([k,v])=>{
     Object.entries(Styles).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, k, kk)] = getStyleSet(baseSelector, vv, {
-      mapKey: k, mapVal: v, ext: func,
+      mapKey: k, mapVal: v, ext: func, key: kk,
     })))
   })
 

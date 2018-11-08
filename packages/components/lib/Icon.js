@@ -29,6 +29,8 @@ var _react = _interopRequireDefault(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
+var _animation = require("@bnorth/rich.css/lib/styles/animation");
+
 var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
@@ -45,17 +47,20 @@ var Icon = function Icon(aprops) {
       defaultName = _parseProps.defaultName,
       src = _parseProps.src,
       char = _parseProps.char,
+      shape = _parseProps.shape,
+      rotate = _parseProps.rotate,
       _parseProps$component = _parseProps.component,
       Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
       componentPanel = _parseProps.componentPanel,
       className = _parseProps.className,
       style = _parseProps.style,
       children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["name", "defaultName", "src", "char", "component", "componentPanel", "className", "style", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["name", "defaultName", "src", "char", "shape", "rotate", "component", "componentPanel", "className", "style", "children"]);
 
-  var classStr = 'display-inline width-1em height-1em';
-  var classSet = [];
-  var styleSet = {};
+  var classStr = 'display-inline';
+  var classSet = ['width-1em', 'height-1em'];
+  var styleSet = rotate ? (0, _animation.transform)('rotate', String(rotate) + 'deg') : {};
+  if (shape) shape = Icon._shapes[shape];
   if (name) name = Icon._maps[name] || name;
 
   if (name && !Icon._names.includes(name)) {
@@ -65,11 +70,9 @@ var Icon = function Icon(aprops) {
 
   if (name) {
     if (!componentPanel) componentPanel = 'svg';
-    styleSet = {
-      strokeWidth: 0,
-      stroke: 'currentColor',
-      fill: 'currentColor'
-    };
+    styleSet.strokeWidth = 0;
+    styleSet.stroke = 'currentColor';
+    styleSet.fill = 'currentColor';
     props.dangerouslySetInnerHTML = {
       __html: "<use xlink:href=\"#".concat(name, "\"></use>")
     };
@@ -77,12 +80,23 @@ var Icon = function Icon(aprops) {
     if (!componentPanel) componentPanel = 'img';
     props.src = src;
     props.alt = '';
+  } else if (shape) {
+    if (!componentPanel) componentPanel = 'svg';
+    styleSet.strokeWidth = 0;
+    styleSet.stroke = 'currentColor';
+    styleSet.fill = 'currentColor';
+    props.preserveAspectRatio = "none";
+    props.viewBox = "0 0 100 100";
+    props.children = typeof shape === 'function' ? shape() : _react.default.createElement("path", {
+      d: shape
+    });
   } else if (char) {
     if (!componentPanel) componentPanel = 'span';
     classSet.push('display-inlineblock text-align-center line-height-1em');
     props.children = char[0];
   } else {
-    return null;
+    classSet = [];
+    props.children = children;
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -116,5 +130,8 @@ Icon.appendMap = function (val, name) {
   }
 };
 
+Icon._shapes = {
+  triangle: 'M50 10 L90 90 L10 90 Z'
+};
 var _default = Icon;
 exports.default = _default;

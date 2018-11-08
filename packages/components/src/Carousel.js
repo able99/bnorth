@@ -81,7 +81,7 @@ class Carousel extends React.Component {
   render() {
     let {
       defaultSelected, controller:Controller, pager:Pager, interval, timeout, autoPlay, pauseOnHover,
-      pagerItemProps, controllerPrevProps, controllerNextProps,
+      pagerProps, controllerPrevProps, controllerNextProps,
       component:Component=Panel.Touchable, componentPanel=AnimationSlider, children, ...props
     } = parseProps(this.props, Carousel.props);
     let { selected } = this.state;
@@ -93,7 +93,7 @@ class Carousel extends React.Component {
       <React.Fragment>
         {Controller?<Controller onClick={e=>this.prev()} {...controllerPrevProps}/>:null}
         {Controller?<Controller onClick={e=>this.next()} {...controllerNextProps} isForward/>:null}
-        {Pager?<Pager onClick={e=>this.setState({selected: e})} count={children.length} selected={Math.round(selected)} {...pagerItemProps} />:null}
+        {Pager?<Pager onClick={e=>this.setState({selected: e})} count={children.length} selected={Math.round(selected)} {...pagerProps} />:null}
       </React.Fragment>
     );
 
@@ -111,26 +111,29 @@ class Carousel extends React.Component {
 
 Carousel._Controller = aprops=>{
   let {
-    isForward, name=aprops.isForward?'right':'left', defaultName=isForward?'>':'<',
+    isForward, name=aprops.isForward?'right':'left', defaultName=isForward?'>':'<', mask,
     component:Component=Icon, className, ...props
   } = parseProps(aprops, Carousel._Controller.props);
 
-  let classStr = 'bg-color-mask position-absolute text-color-white cursor-pointer margin-h-xxs offset-top-center translate-center-y text-weight-border';
+  let classStr = 'position-absolute text-color-white cursor-pointer margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border';
   let classSet = [`offset-${isForward?'right':'left'}-start`];
+  if(mask) classSet.push('bg-color-'+(mask===true?'overlay':mask));
 
   return <Component b-size="xl" name={name} defaultName={defaultName} className={classes(classStr, classSet, className)} {...props} />
 }
 
 Carousel._Pager = aprops=>{
   let {
-    count, selected, onClick, itemProps,
+    count, selected, onClick, itemProps, mask,
     component:Component=Panel, componnetPanel='ol', className, ...props
   } = parseProps(aprops, Carousel._Pager.props);
 
-  let classStr = 'position-absolute flex-display-block flex-justify-center flex-align-center bg-color-overlay padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
+  let classStr = 'position-absolute flex-display-block flex-justify-center flex-align-center padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
+  let classSet = [];
+  if(mask) classSet.push('bg-color-'+(mask===true?'overlay':mask));
   
   return (
-    <Component component={componnetPanel} className={classes(classStr, className)} {...props}>
+    <Component component={componnetPanel} className={classes(classStr, classSet, className)} {...props}>
       {Array.from({length:count},(v,k)=>k).map(v=>(
         <Carousel._Pager._Item key={v} onClick={onClick} count={count} selected={selected} i={v} {...itemProps} />
       ))}

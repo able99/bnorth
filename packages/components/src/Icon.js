@@ -7,20 +7,23 @@
 
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
+import { transform } from '@bnorth/rich.css/lib/styles/animation'
 import parseProps from './utils/props';
 import Panel from './Panel';
 
 
 let Icon = aprops=>{
   let {
-    name, defaultName, src, char, 
+    name, defaultName, src, char, shape, 
+    rotate,
     component:Component=Panel, componentPanel, className, style, children, ...props
   } = parseProps(aprops, Icon.props);
   
-  let classStr = 'display-inline width-1em height-1em';
-  let classSet = [];
-  let styleSet = {};
+  let classStr = 'display-inline';
+  let classSet = ['width-1em', 'height-1em'];
+  let styleSet = rotate?transform('rotate', String(rotate)+'deg'):{};
 
+  if(shape) shape = Icon._shapes[shape];
   if(name) name = Icon._maps[name]||name;
   if(name&&!Icon._names.includes(name)) {
     char = defaultName||name;
@@ -29,18 +32,29 @@ let Icon = aprops=>{
 
   if(name) {
     if(!componentPanel) componentPanel = 'svg';
-    styleSet = {strokeWidth: 0,stroke: 'currentColor',fill: 'currentColor'};
+    styleSet.strokeWidth = 0;
+    styleSet.stroke = 'currentColor';
+    styleSet.fill='currentColor';
     props.dangerouslySetInnerHTML = {__html: `<use xlink:href="#${name}"></use>`};
   }else if(src) {
     if(!componentPanel) componentPanel = 'img';
     props.src = src;
     props.alt = '';
+  }else if(shape) {
+    if(!componentPanel) componentPanel = 'svg';
+    styleSet.strokeWidth = 0;
+    styleSet.stroke = 'currentColor';
+    styleSet.fill='currentColor';
+    props.preserveAspectRatio = "none";
+    props.viewBox = "0 0 100 100";
+    props.children = typeof shape==='function'?shape():<path d={shape} />;
   }else if(char) {
     if(!componentPanel) componentPanel = 'span';
     classSet.push('display-inlineblock text-align-center line-height-1em');
     props.children = char[0];
   }else {
-    return null;
+    classSet = [];
+    props.children = children;
   }
 
   return <Component component={componentPanel} style={{...styleSet, ...style}} className={classes(classStr, classSet, className)} {...props} />
@@ -66,6 +80,10 @@ Icon.appendMap = function(val, name) {
     Icon._maps[name] = val;
   }
 }
+
+Icon._shapes = {
+  triangle: 'M50 10 L90 90 L10 90 Z',
+};
 
 
 export default Icon;

@@ -23,3 +23,11 @@ const bnorthDemo = require('bnorth-demo');
 1. pluign valdate refine
 1. remove this._genRouteMethod('/error');
 1. user loginRsult should not user result.data  
+1. htmlwebpack charset wrong
+1. error info can not block render
+1. popover click will trigger close, and trigger not support function to close popover by mannual
+
+## FEATURE
+1. browser plugin setTitle onPageResume 
+1. config
+1. border-none-a- should split to border-none-x-

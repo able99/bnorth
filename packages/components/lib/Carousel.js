@@ -159,7 +159,7 @@ function (_React$Component) {
           timeout = _parseProps.timeout,
           autoPlay = _parseProps.autoPlay,
           pauseOnHover = _parseProps.pauseOnHover,
-          pagerItemProps = _parseProps.pagerItemProps,
+          pagerProps = _parseProps.pagerProps,
           controllerPrevProps = _parseProps.controllerPrevProps,
           controllerNextProps = _parseProps.controllerNextProps,
           _parseProps$component = _parseProps.component,
@@ -167,7 +167,7 @@ function (_React$Component) {
           _parseProps$component2 = _parseProps.componentPanel,
           componentPanel = _parseProps$component2 === void 0 ? _AnimationSlider.default : _parseProps$component2,
           children = _parseProps.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["defaultSelected", "controller", "pager", "interval", "timeout", "autoPlay", "pauseOnHover", "pagerItemProps", "controllerPrevProps", "controllerNextProps", "component", "componentPanel", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["defaultSelected", "controller", "pager", "interval", "timeout", "autoPlay", "pauseOnHover", "pagerProps", "controllerPrevProps", "controllerNextProps", "component", "componentPanel", "children"]);
 
       var selected = this.state.selected;
       children = _react.default.Children.toArray(children);
@@ -192,7 +192,7 @@ function (_React$Component) {
         },
         count: children.length,
         selected: Math.round(selected)
-      }, pagerItemProps)) : null);
+      }, pagerProps)) : null);
 
       return _react.default.createElement(Component, (0, _extends2.default)({
         component: componentPanel,
@@ -231,13 +231,15 @@ Carousel._Controller = function (aprops) {
       name = _parseProps2$name === void 0 ? aprops.isForward ? 'right' : 'left' : _parseProps2$name,
       _parseProps2$defaultN = _parseProps2.defaultName,
       defaultName = _parseProps2$defaultN === void 0 ? isForward ? '>' : '<' : _parseProps2$defaultN,
+      mask = _parseProps2.mask,
       _parseProps2$componen = _parseProps2.component,
       Component = _parseProps2$componen === void 0 ? _Icon.default : _parseProps2$componen,
       className = _parseProps2.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isForward", "name", "defaultName", "component", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isForward", "name", "defaultName", "mask", "component", "className"]);
 
-  var classStr = 'bg-color-mask position-absolute text-color-white cursor-pointer margin-h-xxs offset-top-center translate-center-y text-weight-border';
+  var classStr = 'position-absolute text-color-white cursor-pointer margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border';
   var classSet = ["offset-".concat(isForward ? 'right' : 'left', "-start")];
+  if (mask) classSet.push('bg-color-' + (mask === true ? 'overlay' : mask));
   return _react.default.createElement(Component, (0, _extends2.default)({
     "b-size": "xl",
     name: name,
@@ -252,17 +254,20 @@ Carousel._Pager = function (aprops) {
       selected = _parseProps3.selected,
       onClick = _parseProps3.onClick,
       itemProps = _parseProps3.itemProps,
+      mask = _parseProps3.mask,
       _parseProps3$componen = _parseProps3.component,
       Component = _parseProps3$componen === void 0 ? _Panel.default : _parseProps3$componen,
       _parseProps3$componne = _parseProps3.componnetPanel,
       componnetPanel = _parseProps3$componne === void 0 ? 'ol' : _parseProps3$componne,
       className = _parseProps3.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["count", "selected", "onClick", "itemProps", "component", "componnetPanel", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["count", "selected", "onClick", "itemProps", "mask", "component", "componnetPanel", "className"]);
 
-  var classStr = 'position-absolute flex-display-block flex-justify-center flex-align-center bg-color-overlay padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
+  var classStr = 'position-absolute flex-display-block flex-justify-center flex-align-center padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
+  var classSet = [];
+  if (mask) classSet.push('bg-color-' + (mask === true ? 'overlay' : mask));
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componnetPanel,
-    className: (0, _classes.default)(classStr, className)
+    className: (0, _classes.default)(classStr, classSet, className)
   }, props), Array.from({
     length: count
   }, function (v, k) {

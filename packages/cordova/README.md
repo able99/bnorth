@@ -184,6 +184,12 @@ cordova-plugin-adam-imagepicker
 
 cordova-plugin-yc-navigator
 
+### GeoLocation 
+
+cordova-plugin-baidu-geolocation-c
+cordova-plugin-baidumaplocation
+https://github.com/ETENG-OSP/cordova-plugin-baidu-geolocation.git
+
 ### Custom Statusbar
 
 cordova-plugin-statusbar

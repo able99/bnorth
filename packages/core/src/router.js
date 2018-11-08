@@ -169,6 +169,7 @@ export default class Router {
     let errorInfo = null;
     let focusId = undefined;
     let activeId = undefined;
+    let passQuery = false;
 
     /* pathname parse*/
     while(pos<pathname.length-1) {
@@ -390,7 +391,6 @@ export default class Router {
   // router navigator
   // ----------------------------------------
   getLocationInfo(...args) {
-    let passQuery;
     let query = {};
     let pathnames = this._pathinfos.map(v=>v.path);
 
@@ -410,8 +410,7 @@ export default class Router {
       if(Array.isArray(arg)) {
         addPath(arg.map((v,i)=>i?encodeURIComponent(v):v).join(':'));
       }else if(typeof arg==='object') {
-        if(arg.query) query = {...query, ...arg.query}
-        if(arg.passQuery!==undefined) passQuery = arg.passQuery;
+        query = {...query, ...arg}
       }else {
         addPath(String(arg));
       }
@@ -420,7 +419,7 @@ export default class Router {
     //pathname, search, hash, key, state
     return {
       pathname: pathnames.map((v,i,a)=>i===0&&v==='/'&&a.length>1?'':v).join('/'),
-      search: '?'+Object.entries(passQuery?{...this.history.location.query, ...query}:query).map(([k,v])=>k+'='+v).reduce((v1,v2)=>v1+'&'+v2,''),
+      search: '?'+Object.entries(this.passQuery?{...this.history.location.query, ...query}:query).map(([k,v])=>k+'='+v).reduce((v1,v2)=>v1+(v1?'&':'')+v2,''),
     };
   }
 

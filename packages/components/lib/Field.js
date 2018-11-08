@@ -187,6 +187,7 @@ Field._Switch = function (aprops) {
       defaultValue = _parseProps6.defaultValue,
       domValue = _parseProps6.domValue,
       _onClick = _parseProps6.onClick,
+      onChange = _parseProps6.onChange,
       Content = _parseProps6.Content,
       labelProps = _parseProps6.labelProps,
       inputProps = _parseProps6.inputProps,
@@ -197,7 +198,7 @@ Field._Switch = function (aprops) {
       componentPanel = _parseProps6$componen2 === void 0 ? 'label' : _parseProps6$componen2,
       className = _parseProps6.className,
       children = _parseProps6.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps6, ["type", "value", "defaultValue", "domValue", "onClick", "Content", "labelProps", "inputProps", "innerProps", "component", "componentPanel", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps6, ["type", "value", "defaultValue", "domValue", "onClick", "onChange", "Content", "labelProps", "inputProps", "innerProps", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'switch-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none- flex-sub-flex-extend';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -211,7 +212,8 @@ Field._Switch = function (aprops) {
     type: type,
     checked: value,
     defaultChecked: defaultValue,
-    value: domValue
+    value: domValue,
+    onChange: onChange
   }, inputProps)), _react.default.createElement(Field._Switch._Inner, innerProps, _react.default.createElement(Field._Switch._Content, (0, _extends2.default)({
     component: Content
   }, props, {

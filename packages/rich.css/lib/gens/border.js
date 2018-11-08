@@ -83,7 +83,8 @@ function gen(config) {
         kk = _ref6[0],
         vv = _ref6[1];
 
-    return ret[(0, _utils.getSelector)(baseSelector, func, kk)] = (0, _utils.getStyleSet)(baseSelector, vv === true ? kk : vv, {
+    return ret[(0, _utils.getSelector)(baseSelector, func, kk)] = (0, _utils.getStyleSet)(baseSelector, vv, {
+      key: kk,
       ext: func
     });
   });
@@ -146,7 +147,8 @@ function gen(config) {
       return ret[(0, _utils.getSelector)(baseSelector, func, k, kk)] = (0, _utils.getStyleSet)(baseSelector, vv, {
         mapKey: k,
         mapVal: v,
-        ext: func
+        ext: func,
+        key: kk
       });
     });
   });

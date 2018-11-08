@@ -31,7 +31,7 @@ function backgroundImage(image) {
   if (!repeatX && !repeatY) ret["backgroundRepeat"] = repeat;
   if (repeatX) ret["backgroundRepeatX"] = repeatX;
   if (repeatY) ret["backgroundRepeatY"] = repeatY;
-  if (positionX && !positionY) ret["backgroundPosition"] = position || 'center';
+  if (!positionX && !positionY) ret["backgroundPosition"] = position || 'center';
   if (positionX) ret["backgroundPositionX"] = positionX;
   if (positionY) ret["backgroundPositionY"] = positionY;
   if (!sizeW && !sizeH) ret["backgroundSize"] = size;

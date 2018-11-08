@@ -29,7 +29,7 @@ var _react = _interopRequireDefault(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
+var _props2 = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel.Container"));
 
@@ -46,20 +46,20 @@ var Tabs =
 function (_React$Component) {
   (0, _inherits2.default)(Tabs, _React$Component);
 
-  function Tabs(props) {
+  function Tabs(_props) {
     var _this;
 
     (0, _classCallCheck2.default)(this, Tabs);
-    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Tabs).call(this, props));
-    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "_handleAction", function (i) {
+    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Tabs).call(this, _props));
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "_handleAction", function (i, event, props) {
       _this.setState({
         selected: i
       });
 
-      _this.props.onAction && _this.props.onAction(i);
+      _this.props.onAction && _this.props.onAction(i, event, props);
     });
     _this.state = {
-      selected: props.defaultSelected || 0
+      selected: _props.defaultSelected || 0
     };
     return _this;
   }
@@ -67,7 +67,7 @@ function (_React$Component) {
   (0, _createClass2.default)(Tabs, [{
     key: "render",
     value: function render() {
-      var _parseProps = (0, _props.default)(this.props, Tabs.props),
+      var _parseProps = (0, _props2.default)(this.props, Tabs.props),
           onAction = _parseProps.onAction,
           _parseProps$selected = _parseProps.selected,
           selected = _parseProps$selected === void 0 ? this.state.selected : _parseProps$selected,
@@ -101,7 +101,7 @@ function (_React$Component) {
 }(_react.default.Component);
 
 Tabs._Nav = function (aprops) {
-  var _parseProps2 = (0, _props.default)(aprops, Tabs._Nav.props),
+  var _parseProps2 = (0, _props2.default)(aprops, Tabs._Nav.props),
       onAction = _parseProps2.onAction,
       selected = _parseProps2.selected,
       _parseProps2$itemProp = _parseProps2.itemProps,
@@ -134,27 +134,17 @@ Tabs._Nav = function (aprops) {
     className: (0, _classes.default)(classStr, className)
   }, props), children.map(function (v, i) {
     return _react.default.createElement(Component.Item, {
-      key: v.key || i
+      key: v.key || i,
+      selected: selected === i,
+      onClick: function onClick(e) {
+        return !(onAction && onAction(i, v.props.event, v.props)) && props.onClick && props.onClick(e);
+      }
     }, v.props.title);
   }));
 };
 
-Tabs._Nav._itemGetProps = function (i, length) {
-  var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
-      onAction = _ref.onAction,
-      selected = _ref.selected;
-
-  var props = arguments.length > 3 ? arguments[3] : undefined;
-  return {
-    selected: selected === i,
-    onClick: function onClick(e) {
-      return !(onAction && onAction(i, props)) && props.onClick && props.onClick(e);
-    }
-  };
-};
-
 Tabs._Container = function (aprops) {
-  var _parseProps3 = (0, _props.default)(aprops, Tabs._Container.props),
+  var _parseProps3 = (0, _props2.default)(aprops, Tabs._Container.props),
       onAction = _parseProps3.onAction,
       _parseProps3$type = _parseProps3.type,
       type = _parseProps3$type === void 0 ? 'single' : _parseProps3$type,
@@ -191,15 +181,16 @@ Tabs._Container = function (aprops) {
 
 Tabs._Container._Item = function (aprops) {
   var title = aprops.title,
+      event = aprops.event,
       _aprops$component = aprops.component,
       Component = _aprops$component === void 0 ? _Panel.default : _aprops$component,
-      props = (0, _objectWithoutProperties2.default)(aprops, ["title", "component"]);
+      props = (0, _objectWithoutProperties2.default)(aprops, ["title", "event", "component"]);
   return _react.default.createElement(Component, props);
 };
 
 Tabs._Container._itemGetProps = function (i, length) {
-  var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
-      selected = _ref2.selected;
+  var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+      selected = _ref.selected;
 
   return {
     selected: selected === i

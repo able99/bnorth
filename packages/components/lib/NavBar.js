@@ -52,15 +52,20 @@ var NavBar = function NavBar(aprops) {
 
 NavBar.Title = function (aprops) {
   var _parseProps2 = (0, _props.default)(aprops, NavBar.Title.props),
+      isFullOrCenter = _parseProps2.isFullOrCenter,
       _parseProps2$componen = _parseProps2.component,
       Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
       componentPanel = _parseProps2.componentPanel,
       className = _parseProps2.className,
       children = _parseProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["component", "componentPanel", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isFullOrCenter", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'text-align-center flex-sub-flex-extend text-weight-bold text-size-xl';
-  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(Component, (0, _extends2.default)({
+  return isFullOrCenter ? _react.default.createElement(Component, (0, _extends2.default)({
+    component: componentPanel,
+    inline: true,
+    className: (0, _classes.default)(classStr, className)
+  }, props), children) : _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
     inline: true,
     className: (0, _classes.default)(classStr, className, 'position-absolute')

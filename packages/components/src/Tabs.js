@@ -18,9 +18,9 @@ class Tabs extends React.Component {
     this.state = {selected: props.defaultSelected||0};
   }
 
-  _handleAction = i=>{
+  _handleAction = (i,event,props)=>{
     this.setState({selected: i});
-    this.props.onAction&&this.props.onAction(i);
+    this.props.onAction&&this.props.onAction(i, event, props);
   }
 
   render() {
@@ -66,18 +66,16 @@ Tabs._Nav = aprops=>{
       separator justify 
       containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={classes(classStr, className)} {...props}>
-      {children.map((v,i)=><Component.Item key={v.key||i}>{v.props.title}</Component.Item>)}
+      {children.map((v,i)=>(
+        <Component.Item 
+          key={v.key||i} selected={selected===i}
+          onClick={e=>!(onAction&&onAction(i, v.props.event, v.props))&&(props.onClick&&props.onClick(e))}>
+          {v.props.title}
+        </Component.Item>
+      ))}
     </Component>
   )
 }
-
-Tabs._Nav._itemGetProps = (i, length, {onAction, selected}={}, props)=>{
-  return {
-    selected: selected===i,
-    onClick:e=>!(onAction&&onAction(i, props))&&(props.onClick&&props.onClick(e)),
-  }
-}
-
 
 Tabs._Container = aprops=>{
   let {
@@ -101,7 +99,7 @@ Tabs._Container = aprops=>{
 
 Tabs._Container._Item = aprops=>{
   let { 
-    title, 
+    title, event,
     component:Component=Panel, ...props} = aprops;
 
   return <Component {...props} />;

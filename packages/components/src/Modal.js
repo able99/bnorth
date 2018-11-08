@@ -7,7 +7,7 @@ import Button from './Button';
 import Icon from './Icon';
 
 
-let Modal = aprops=>{
+export let Modal = aprops=>{
   let {
     role, handleAction, 
     in:isIn=true, onTransitionFinished,

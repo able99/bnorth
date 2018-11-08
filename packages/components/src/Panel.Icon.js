@@ -15,7 +15,7 @@ import Icon from './Icon';
 Panel.Icon = aprops=>{
   let {
     position='left', selected, 
-    icon, iconSelected, src, srcSelected, 
+    icon, iconSelected, src, srcSelected, shape, shapeSelected, char, charSelected,
     iconProps, titleProps, 
     component:Component=Panel, componentPanel, className, children, ...props
   } = parseProps(aprops, Panel.Icon.props);
@@ -24,7 +24,14 @@ Panel.Icon = aprops=>{
   let classSet = (position==='top'||position==='bottom')?'flex-direction-v':'';
 
   let ctitle = children?<Panel.Icon._Title position={position} {...titleProps}>{children}</Panel.Icon._Title>:null;
-  let cicon = position?<Panel.Icon._Icon name={selected&&iconSelected?iconSelected:icon} src={selected&&srcSelected?srcSelected:src} {...iconProps} />:null;
+  let cicon = position?(
+    <Panel.Icon._Icon 
+      name={selected&&iconSelected?iconSelected:icon} 
+      src={selected&&srcSelected?srcSelected:src} 
+      shape={selected&&shapeSelected?shapeSelected:shape} 
+      char={selected&&charSelected?charSelected:char} 
+      {...iconProps} />
+  ):null;
 
   return (
     <Component 

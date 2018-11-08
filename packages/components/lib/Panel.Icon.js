@@ -36,6 +36,10 @@ _Panel.default.Icon = function (aprops) {
       iconSelected = _parseProps.iconSelected,
       src = _parseProps.src,
       srcSelected = _parseProps.srcSelected,
+      shape = _parseProps.shape,
+      shapeSelected = _parseProps.shapeSelected,
+      char = _parseProps.char,
+      charSelected = _parseProps.charSelected,
       iconProps = _parseProps.iconProps,
       titleProps = _parseProps.titleProps,
       _parseProps$component = _parseProps.component,
@@ -43,7 +47,7 @@ _Panel.default.Icon = function (aprops) {
       componentPanel = _parseProps.componentPanel,
       className = _parseProps.className,
       children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["position", "selected", "icon", "iconSelected", "src", "srcSelected", "iconProps", "titleProps", "component", "componentPanel", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["position", "selected", "icon", "iconSelected", "src", "srcSelected", "shape", "shapeSelected", "char", "charSelected", "iconProps", "titleProps", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'flex-display-block flex-justify-center flex-align-center';
   var classSet = position === 'top' || position === 'bottom' ? 'flex-direction-v' : '';
@@ -52,7 +56,9 @@ _Panel.default.Icon = function (aprops) {
   }, titleProps), children) : null;
   var cicon = position ? _react.default.createElement(_Panel.default.Icon._Icon, (0, _extends2.default)({
     name: selected && iconSelected ? iconSelected : icon,
-    src: selected && srcSelected ? srcSelected : src
+    src: selected && srcSelected ? srcSelected : src,
+    shape: selected && shapeSelected ? shapeSelected : shape,
+    char: selected && charSelected ? charSelected : char
   }, iconProps)) : null;
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,

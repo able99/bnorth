@@ -859,23 +859,23 @@
 }
 
 .border-style-a-solid {
-  border-style: undefined;
+  border-style: solid;
 }
 
 .border-style-a-none {
-  border-style: undefined;
+  border-style: none;
 }
 
 .border-style-a-dotted {
-  border-style: undefined;
+  border-style: dotted;
 }
 
 .border-style-a-dashed {
-  border-style: undefined;
+  border-style: dashed;
 }
 
 .border-style-a-inherit {
-  border-style: undefined;
+  border-style: inherit;
 }
 
 .border-style-h {
@@ -884,28 +884,28 @@
 }
 
 .border-style-h-solid {
-  border-left-style: undefined;
-  border-right-style: undefined;
+  border-left-style: solid;
+  border-right-style: solid;
 }
 
 .border-style-h-none {
-  border-left-style: undefined;
-  border-right-style: undefined;
+  border-left-style: none;
+  border-right-style: none;
 }
 
 .border-style-h-dotted {
-  border-left-style: undefined;
-  border-right-style: undefined;
+  border-left-style: dotted;
+  border-right-style: dotted;
 }
 
 .border-style-h-dashed {
-  border-left-style: undefined;
-  border-right-style: undefined;
+  border-left-style: dashed;
+  border-right-style: dashed;
 }
 
 .border-style-h-inherit {
-  border-left-style: undefined;
-  border-right-style: undefined;
+  border-left-style: inherit;
+  border-right-style: inherit;
 }
 
 .border-style-v {
@@ -914,28 +914,28 @@
 }
 
 .border-style-v-solid {
-  border-top-style: undefined;
-  border-bottom-style: undefined;
+  border-top-style: solid;
+  border-bottom-style: solid;
 }
 
 .border-style-v-none {
-  border-top-style: undefined;
-  border-bottom-style: undefined;
+  border-top-style: none;
+  border-bottom-style: none;
 }
 
 .border-style-v-dotted {
-  border-top-style: undefined;
-  border-bottom-style: undefined;
+  border-top-style: dotted;
+  border-bottom-style: dotted;
 }
 
 .border-style-v-dashed {
-  border-top-style: undefined;
-  border-bottom-style: undefined;
+  border-top-style: dashed;
+  border-bottom-style: dashed;
 }
 
 .border-style-v-inherit {
-  border-top-style: undefined;
-  border-bottom-style: undefined;
+  border-top-style: inherit;
+  border-bottom-style: inherit;
 }
 
 .border-style-left {
@@ -943,23 +943,23 @@
 }
 
 .border-style-left-solid {
-  border-left-style: undefined;
+  border-left-style: solid;
 }
 
 .border-style-left-none {
-  border-left-style: undefined;
+  border-left-style: none;
 }
 
 .border-style-left-dotted {
-  border-left-style: undefined;
+  border-left-style: dotted;
 }
 
 .border-style-left-dashed {
-  border-left-style: undefined;
+  border-left-style: dashed;
 }
 
 .border-style-left-inherit {
-  border-left-style: undefined;
+  border-left-style: inherit;
 }
 
 .border-style-right {
@@ -967,23 +967,23 @@
 }
 
 .border-style-right-solid {
-  border-right-style: undefined;
+  border-right-style: solid;
 }
 
 .border-style-right-none {
-  border-right-style: undefined;
+  border-right-style: none;
 }
 
 .border-style-right-dotted {
-  border-right-style: undefined;
+  border-right-style: dotted;
 }
 
 .border-style-right-dashed {
-  border-right-style: undefined;
+  border-right-style: dashed;
 }
 
 .border-style-right-inherit {
-  border-right-style: undefined;
+  border-right-style: inherit;
 }
 
 .border-style-top {
@@ -991,23 +991,23 @@
 }
 
 .border-style-top-solid {
-  border-top-style: undefined;
+  border-top-style: solid;
 }
 
 .border-style-top-none {
-  border-top-style: undefined;
+  border-top-style: none;
 }
 
 .border-style-top-dotted {
-  border-top-style: undefined;
+  border-top-style: dotted;
 }
 
 .border-style-top-dashed {
-  border-top-style: undefined;
+  border-top-style: dashed;
 }
 
 .border-style-top-inherit {
-  border-top-style: undefined;
+  border-top-style: inherit;
 }
 
 .border-style-bottom {
@@ -1015,23 +1015,23 @@
 }
 
 .border-style-bottom-solid {
-  border-bottom-style: undefined;
+  border-bottom-style: solid;
 }
 
 .border-style-bottom-none {
-  border-bottom-style: undefined;
+  border-bottom-style: none;
 }
 
 .border-style-bottom-dotted {
-  border-bottom-style: undefined;
+  border-bottom-style: dotted;
 }
 
 .border-style-bottom-dashed {
-  border-bottom-style: undefined;
+  border-bottom-style: dashed;
 }
 
 .border-style-bottom-inherit {
-  border-bottom-style: undefined;
+  border-bottom-style: inherit;
 }
 
 .border-width-a-1 {

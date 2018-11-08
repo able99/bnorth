@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = exports.Modal = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
@@ -89,6 +89,8 @@ var Modal = function Modal(aprops) {
     onTransitionFinished: onTransitionFinished
   }, containerProps), component);
 };
+
+exports.Modal = Modal;
 
 Modal._Container = function (aprops) {
   var _parseProps2 = (0, _props.default)(aprops),

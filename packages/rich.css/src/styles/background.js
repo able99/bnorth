@@ -13,7 +13,7 @@ export function backgroundImage(image, {
     if(repeatY) ret["backgroundRepeatY"] = repeatY;
     
 
-    if(positionX&&!positionY) ret["backgroundPosition"] = position||'center';
+    if(!positionX&&!positionY) ret["backgroundPosition"] = position||'center';
     if(positionX) ret["backgroundPositionX"] = positionX;
     if(positionY) ret["backgroundPositionY"] = positionY;
     

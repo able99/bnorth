@@ -55,7 +55,10 @@ let Panel = aprops=>{
     classSet['border-set-bottom-'+theme] = theme!==false;
     if(!selected) styleSet['borderColor'] = 'transparent';
   }else if(bStyle==='plain') {
-    classSet['border-none-a-'] = true;
+    classSet['border-none-top-'] = true;
+    classSet['border-none-bottom-'] = true;
+    classSet['border-none-left-'] = true;
+    classSet['border-none-right-'] = true;
     classSet['bg-none-'] = true;
   }
 

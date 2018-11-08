@@ -28,17 +28,20 @@ let NavBar = aprops=>{
 
 NavBar.Title = aprops=>{
   let {
+    isFullOrCenter,
     component:Component=Panel, componentPanel, className, children, ...props
   } = parseProps(aprops, NavBar.Title.props);
 
   let classStr = 'text-align-center flex-sub-flex-extend text-weight-bold text-size-xl';
 
-  return (
+  return isFullOrCenter?(
+    <Component component={componentPanel} inline className={classes(classStr, className)} {...props}>{children}</Component>
+  ):(
     <React.Fragment>
       <Component component={componentPanel} inline className={classes(classStr, className, 'position-absolute')} {...props}>{children}</Component>
       <Component component={componentPanel} inline className={classes(classStr, className, 'visibility-hide')} {...props}>0</Component>
     </React.Fragment>
-  );
+  )
 }
 
 NavBar.Item = aprops=>{

@@ -130,7 +130,7 @@ Field._HiddenInput = aprops=>{
 
 Field._Switch = aprops=>{
   let {
-    type, value, defaultValue, domValue, onClick, 
+    type, value, defaultValue, domValue, onClick, onChange, 
     Content, labelProps, inputProps, innerProps,
     component:Component=Panel, componentPanel='label', className, children, ...props
   } = parseProps(aprops, Field._Switch.props);
@@ -139,7 +139,7 @@ Field._Switch = aprops=>{
 
   return (
     <Component component={componentPanel} onClick={(e)=>{e.stopPropagation();onClick&&onClick(e)}} className={classes(classStr, className)} {...labelProps}>
-      <Field._HiddenInput type={type} checked={value} defaultChecked={defaultValue} value={domValue} {...inputProps} />
+      <Field._HiddenInput type={type} checked={value} defaultChecked={defaultValue} value={domValue} onChange={onChange} {...inputProps} />
       <Field._Switch._Inner {...innerProps}>
         <Field._Switch._Content component={Content} {...props} type={type} isOn>X</Field._Switch._Content>
         <Field._Switch._Content component={Content} {...props} type={type} >-</Field._Switch._Content>

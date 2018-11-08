@@ -89,7 +89,10 @@ var Panel = function Panel(aprops) {
     classSet['border-set-bottom-' + _theme2] = _theme2 !== false;
     if (!selected) styleSet['borderColor'] = 'transparent';
   } else if (bStyle === 'plain') {
-    classSet['border-none-a-'] = true;
+    classSet['border-none-top-'] = true;
+    classSet['border-none-bottom-'] = true;
+    classSet['border-none-left-'] = true;
+    classSet['border-none-right-'] = true;
     classSet['bg-none-'] = true;
   }
 

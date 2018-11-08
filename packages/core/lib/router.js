@@ -339,7 +339,7 @@ function () {
       _regenerator.default.mark(function _callee(location) {
         var _this6 = this;
 
-        var pathname, spe, paramSpe, subPageSpe, paramOptional, errorTag, pageSign, pos, pathinfos, errorInfo, focusId, activeId, index, sub, fullPath, viewItems, focusViewItem, activePageItem, pageFocusViewItem, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, pathinfo, blockInfo;
+        var pathname, spe, paramSpe, subPageSpe, paramOptional, errorTag, pageSign, pos, pathinfos, errorInfo, focusId, activeId, passQuery, index, sub, fullPath, viewItems, focusViewItem, activePageItem, pageFocusViewItem, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, pathinfo, blockInfo;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -365,6 +365,7 @@ function () {
                 errorInfo = null;
                 focusId = undefined;
                 activeId = undefined;
+                passQuery = false;
                 /* pathname parse*/
 
                 while (pos < pathname.length - 1) {
@@ -507,69 +508,69 @@ function () {
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context.prev = 27;
+                _context.prev = 28;
                 _iterator = pathinfos[Symbol.iterator]();
 
-              case 29:
+              case 30:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 39;
+                  _context.next = 40;
                   break;
                 }
 
                 pathinfo = _step.value;
-                _context.next = 33;
+                _context.next = 34;
                 return this.app.event.emit(this.app._id, 'onRouteMatch', pathinfo, location);
 
-              case 33:
+              case 34:
                 blockInfo = _context.sent;
 
                 if (!blockInfo) {
-                  _context.next = 36;
+                  _context.next = 37;
                   break;
                 }
 
                 return _context.abrupt("return", this.block(blockInfo));
 
-              case 36:
+              case 37:
                 _iteratorNormalCompletion = true;
-                _context.next = 29;
+                _context.next = 30;
                 break;
 
-              case 39:
-                _context.next = 45;
+              case 40:
+                _context.next = 46;
                 break;
 
-              case 41:
-                _context.prev = 41;
-                _context.t0 = _context["catch"](27);
+              case 42:
+                _context.prev = 42;
+                _context.t0 = _context["catch"](28);
                 _didIteratorError = true;
                 _iteratorError = _context.t0;
 
-              case 45:
-                _context.prev = 45;
+              case 46:
                 _context.prev = 46;
+                _context.prev = 47;
 
                 if (!_iteratorNormalCompletion && _iterator.return != null) {
                   _iterator.return();
                 }
 
-              case 48:
-                _context.prev = 48;
+              case 49:
+                _context.prev = 49;
 
                 if (!_didIteratorError) {
-                  _context.next = 51;
+                  _context.next = 52;
                   break;
                 }
 
                 throw _iteratorError;
 
-              case 51:
-                return _context.finish(48);
-
               case 52:
-                return _context.finish(45);
+                return _context.finish(49);
 
               case 53:
+                return _context.finish(46);
+
+              case 54:
                 this._focusId = focusId;
                 this._activeId = activeId;
                 this._pathinfos = pathinfos;
@@ -577,12 +578,12 @@ function () {
 
                 this._updateRender();
 
-              case 58:
+              case 59:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[27, 41, 45, 53], [46,, 48, 52]]);
+        }, _callee, this, [[28, 42, 46, 54], [47,, 49, 53]]);
       }));
 
       return function _updatePathInfos(_x) {
@@ -786,7 +787,6 @@ function () {
   }, {
     key: "getLocationInfo",
     value: function getLocationInfo() {
-      var passQuery;
       var query = {};
 
       var pathnames = this._pathinfos.map(function (v) {
@@ -815,8 +815,7 @@ function () {
             return i ? encodeURIComponent(v) : v;
           }).join(':'));
         } else if ((0, _typeof2.default)(arg) === 'object') {
-          if (arg.query) query = (0, _objectSpread2.default)({}, query, arg.query);
-          if (arg.passQuery !== undefined) passQuery = arg.passQuery;
+          query = (0, _objectSpread2.default)({}, query, arg);
         } else {
           addPath(String(arg));
         }
@@ -826,14 +825,14 @@ function () {
         pathname: pathnames.map(function (v, i, a) {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
-        search: '?' + Object.entries(passQuery ? (0, _objectSpread2.default)({}, this.history.location.query, query) : query).map(function (_ref11) {
+        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this.history.location.query, query) : query).map(function (_ref11) {
           var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
               k = _ref12[0],
               v = _ref12[1];
 
           return k + '=' + v;
         }).reduce(function (v1, v2) {
-          return v1 + '&' + v2;
+          return v1 + (v1 ? '&' : '') + v2;
         }, '')
       };
     }

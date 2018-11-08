@@ -57,11 +57,12 @@ Button.Group = aprops=>{
 
 Button.Group._itemGetClassName=(i, length, {separator, stacked, justify}={})=>{
   return {
-    'border-none-right-': !stacked&&!(i>=length-1),
-    'border-none-bottom-': stacked&&!(i>=length-1),
+    'border-none-right-': separator||(!stacked&&!(i>=length-1)),
+    'border-none-bottom-': separator||(stacked&&!(i>=length-1)),
     'flex-sub-flex-extend': justify,
     'width-full': stacked,
-    'border-none-a-': separator,
+    'border-none-top-': separator,
+    'border-none-left-': separator,
     'bg-none-': separator,
   };
 }
