@@ -70,7 +70,7 @@ Field._Normal = aprops=>{
     component:Component=Panel, componentPanel="input", className, children, ...props
   } = parseProps(aprops, Field._Normal.props);
 
-  let classStr = 'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle';
+  let classStr = 'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle';
   let classSet = aprops['b-style']?'':'bg-none- border-none-a-';
 
   let handleKeyPress = e=>{

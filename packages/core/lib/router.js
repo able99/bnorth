@@ -160,7 +160,9 @@ function (_React$Component) {
           active: embed ? _idParent === activeId : _id === activeId,
           embed: embed
         }),
-        views: viewItems,
+        views: viewItems.map(function (v) {
+          return _this2._renderView(v);
+        }),
         embeds: embedsPage
       };
 
@@ -405,7 +407,7 @@ function () {
                     embeds: {},
                     paramObj: {},
                     query: location.query,
-                    viewInfos: _this6.getPageViews(_id)
+                    viewItems: _this6.getPageViews(_id)
                   };
                   fullPath = ret.fullPath;
 
@@ -449,7 +451,7 @@ function () {
                       embeds: {},
                       paramObj: ret.paramObj,
                       query: ret.query,
-                      viewInfos: _this6.getPageViews(_idEmbed)
+                      viewItems: _this6.getPageViews(_idEmbed)
                     };
 
                     var _this6$getRoute3 = _this6.getRoute(retEmbed.name),

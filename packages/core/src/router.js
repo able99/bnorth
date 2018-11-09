@@ -46,7 +46,7 @@ class RouterComponent extends React.Component {
     let props = { 
       app, key: _id, _id, 
       route: { ...route,routeName,  _idParent, params: paramObj, query, active: embed?_idParent===activeId:_id===activeId, embed }, 
-      views: viewItems, embeds: embedsPage,
+      views: viewItems.map(v=>this._renderView(v)), embeds: embedsPage,
     };
 
     if(route.loader){
@@ -200,7 +200,7 @@ export default class Router {
       let ret = { 
         name: vs[0], params: vs.slice(1), path: v, fullPath: aFullPath, 
         _id, _idParent: pageSign+fullPath, 
-        embeds: {}, paramObj: {}, query: location.query, viewInfos: this.getPageViews(_id),
+        embeds: {}, paramObj: {}, query: location.query, viewItems: this.getPageViews(_id),
       };
       fullPath = ret.fullPath;
 
@@ -220,7 +220,7 @@ export default class Router {
         let retEmbed = { 
           name: vv, params: ret.params, path: ret.path, fullPath: ret.fullPath, 
           _id: _idEmbed, _idParent: ret._id, 
-          embed: true, embeds: {}, paramObj: ret.paramObj, query: ret.query, viewInfos: this.getPageViews(_idEmbed),
+          embed: true, embeds: {}, paramObj: ret.paramObj, query: ret.query, viewItems: this.getPageViews(_idEmbed),
         };
 
         let [routeNameEmbed, routeEmbed] = this.getRoute(retEmbed.name);

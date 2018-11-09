@@ -277,9 +277,9 @@ function (_React$Component) {
   }, {
     key: "shouldComponentUpdate",
     value: function shouldComponentUpdate(nextProps, nextState) {
-      if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query'])) return true; // if (!this.props.app.utils.shallowEqual(this.props.views, nextProps.views)) return true;
-      // if (!this.props.app.utils.shallowEqual(this.props.embeds, nextProps.embeds)) return true;
-
+      if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query'])) return true;
+      if (!this.props.app.utils.shallowEqual(this.props.views, nextProps.views)) return true;
+      if (!this.props.app.utils.shallowEqual(this.props.embeds, nextProps.embeds)) return true;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;

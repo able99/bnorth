@@ -111,16 +111,16 @@ class User {
   // --------------------------
   pushLogin(confirm) {
     if(!this.app.router.pushLogin) return;
-    return confirm?this.toLoginConfirm(()=>this.app.router.pushLogin()):this.app.router.pushLogin();
+    return confirm?this.toLoginConfirm(()=>this.app.router.pushLogin(), confirm):this.app.router.pushLogin();
   }
 
   replaceLogin(confirm) {
     if(!this.app.router.replaceLogin) return;
-    return confirm?this.toLoginConfirm(()=>this.app.router.replaceLogin()):this.app.router.replaceLogin();
+    return confirm?this.toLoginConfirm(()=>this.app.router.replaceLogin(), confirm):this.app.router.replaceLogin();
   }
 
-  toLoginConfirm(confirm, cb) {
-    cb();
+  toLoginConfirm(cb, confirm) {
+    cb&&cb();
   }
 }
 

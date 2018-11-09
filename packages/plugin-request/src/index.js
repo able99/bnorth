@@ -35,6 +35,7 @@ let getClass = (app, aoptions={})=>class Request extends app.State {
   }
 
   _requestWork(options={}) {
+    if(options.checkFetch&&!options.checkFetch(options)) { return }
     if(options.once&&this.fetched) { this.app.log.info('plugin once'); return }
     let fetch = options.request||aoptions.request;
     if(!fetch) throw new Error('plugin request error: no request');

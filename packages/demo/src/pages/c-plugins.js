@@ -5,7 +5,7 @@ import List from '@bnorth/components/lib/List'
 
 
 let Component = aprops=>{
-  let { app } = aprops;
+  let { app,page } = aprops;
 
   return (
     <View>
@@ -62,7 +62,7 @@ let Component = aprops=>{
           <List.Item part="header">modal</List.Item>
           <List.Item 
             title="normal" 
-            onClick={()=>app.modal.show('modal')} />
+            onClick={()=>app.modal.show('modal', {options:{_idPage:page._id}})} />
           <List.Item 
             title="title" 
             onClick={()=>app.modal.show('modal', {title: 'title'})} />

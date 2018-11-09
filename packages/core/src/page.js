@@ -150,8 +150,8 @@ export default class Page extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query'])) return true;
-    // if (!this.props.app.utils.shallowEqual(this.props.views, nextProps.views)) return true;
-    // if (!this.props.app.utils.shallowEqual(this.props.embeds, nextProps.embeds)) return true;
+    if (!this.props.app.utils.shallowEqual(this.props.views, nextProps.views)) return true;
+    if (!this.props.app.utils.shallowEqual(this.props.embeds, nextProps.embeds)) return true;
     for(let k of this._getStateKeys()) if(this.props.context[k]!==nextProps.context[k]) return true;
     return false;
   }

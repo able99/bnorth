@@ -92,6 +92,10 @@ var getClass = function getClass(app) {
 
           var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
+          if (options.checkFetch && !options.checkFetch(options)) {
+            return;
+          }
+
           if (options.once && this.fetched) {
             this.app.log.info('plugin once');
             return;

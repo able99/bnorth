@@ -64,7 +64,7 @@ Loader._circle = aprops=>{
         cx="50" cy="50" r="40" strokeWidth="20" stroke={colorReverse} fill="none" />
       <circle 
         cx="50" cy="50" r="40" strokeWidth="20" stroke={color} fill="none" 
-        transform="matrix(0,-1,1,0,0,100)" 
+        transform="rotate(-90,50,50)" 
         style={isProgress?transiton(timeout):null}
         strokeDasharray={isProgress?`${2.51*(progress||0)},251`:"50,251"}>
         {!isProgress?<animate attributeName="stroke-dashoffset" from="0" to="-251" dur={timeout} repeatCount="indefinite" />:null}
