@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/plugin-base64",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "description": "bnorth plugin for base64",
   "keywords": [
     "bnorth",
@@ -32,7 +32,7 @@
     "hi-base64": "^0.2.1"
   },
   "devDependencies": {
-    "@bnorth/build": "^3.1.4"
+    "@bnorth/build": "^3.1.5"
   },
   "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
 }

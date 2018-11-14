@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/rich.css",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "description": "all in one css way, or dynamic css way",
   "keywords": [
     "css",
@@ -41,7 +41,7 @@
     "normalize.css": "^8.0.0"
   },
   "devDependencies": {
-    "@bnorth/build": "^3.1.4"
+    "@bnorth/build": "^3.1.5"
   },
   "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
 }
