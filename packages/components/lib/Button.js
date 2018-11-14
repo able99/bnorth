@@ -91,12 +91,12 @@ Button.Group._itemGetClassName = function (i, length) {
       justify = _ref.justify;
 
   return {
-    'border-none-right-': separator || !stacked && !(i >= length - 1),
-    'border-none-bottom-': separator || stacked && !(i >= length - 1),
+    'border-none-right-': stacked || i >= length - 1,
+    'border-none-bottom-': !stacked || i >= length - 1,
     'flex-sub-flex-extend': justify,
     'width-full': stacked,
-    'border-none-top-': separator,
-    'border-none-left-': separator,
+    'border-none-top-': true,
+    'border-none-left-': true,
     'bg-none-': separator
   };
 };

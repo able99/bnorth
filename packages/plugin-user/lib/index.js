@@ -175,7 +175,7 @@ function () {
       if (!this.app.router.pushLogin) return;
       return confirm ? this.toLoginConfirm(function () {
         return _this3.app.router.pushLogin();
-      }) : this.app.router.pushLogin();
+      }, confirm) : this.app.router.pushLogin();
     }
   }, {
     key: "replaceLogin",
@@ -185,12 +185,12 @@ function () {
       if (!this.app.router.replaceLogin) return;
       return confirm ? this.toLoginConfirm(function () {
         return _this4.app.router.replaceLogin();
-      }) : this.app.router.replaceLogin();
+      }, confirm) : this.app.router.replaceLogin();
     }
   }, {
     key: "toLoginConfirm",
-    value: function toLoginConfirm(confirm, cb) {
-      cb();
+    value: function toLoginConfirm(cb, confirm) {
+      cb && cb();
     }
   }]);
   return User;

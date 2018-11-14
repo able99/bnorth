@@ -36,7 +36,7 @@ class RouterComponent extends React.Component {
 
   _renderPage({
     _id, _idParent, 
-    paramObj, query, embed, viewItems, embeds,
+    paramObj, query, state, embed, viewItems, embeds,
     routeName, route, 
   }, activeId, focusId){
     let { app } = this.props;
@@ -45,7 +45,7 @@ class RouterComponent extends React.Component {
 
     let props = { 
       app, key: _id, _id, 
-      route: { ...route,routeName,  _idParent, params: paramObj, query, active: embed?_idParent===activeId:_id===activeId, embed }, 
+      route: { ...route,routeName,  _idParent, params: paramObj, query, state, active: embed?_idParent===activeId:_id===activeId, embed }, 
       views: viewItems.map(v=>this._renderView(v)), embeds: embedsPage,
     };
 
@@ -101,6 +101,9 @@ export default class Router {
     this._blockLocation = undefined;
     this._viewIdNum = 0;
     this._historyStackCount = 0;
+    this.passQuery = false;
+    this.passState = false;
+    this.passParams = false;
 
     this.app.event.on(this.app._id, 'onPageAdd', (_id, page)=>{page&&this._addPage(_id, page)}, this._id);
     this.app.event.on(this.app._id, 'onPageRemove', (_id, page)=>{page&&this._removePage(_id)}, this._id);
@@ -124,6 +127,7 @@ export default class Router {
   _initHistory() {
     let handleLocationChange = (location, action)=>{
       this.app.log.info('router location', location);
+      this._errorInfo = null;
       this._updateQuerys(location);
       this._updateStack(action, location);
       this._updatePathInfos(location);
@@ -166,10 +170,9 @@ export default class Router {
     let pageSign = '#';
     let pos = 0;
     let pathinfos = [];
-    let errorInfo = null;
     let focusId = undefined;
     let activeId = undefined;
-    let passQuery = false;
+    
 
     /* pathname parse*/
     while(pos<pathname.length-1) {
@@ -192,6 +195,7 @@ export default class Router {
 
     /* route */
     let fullPath = '';
+    let paramObj = {};
     pathinfos = pathinfos.map((v,i,r)=>{
       let vs = v.split(paramSpe);
 
@@ -200,19 +204,19 @@ export default class Router {
       let ret = { 
         name: vs[0], params: vs.slice(1), path: v, fullPath: aFullPath, 
         _id, _idParent: pageSign+fullPath, 
-        embeds: {}, paramObj: {}, query: location.query, viewItems: this.getPageViews(_id),
+        embeds: {}, paramObj: this.passParams?{...paramObj}:{}, query: location.query, state: location.state, viewItems: this.getPageViews(_id),
       };
       fullPath = ret.fullPath;
 
       let [routeName, route] = this.getRoute(ret.name);
       if(ret.name===errorTag) {
         ret.errorPage = true;
-        !errorInfo&&(errorInfo=ret);
+        !this._errorInfo&&(this._errorInfo=ret);
         return undefined;
       }else{
         ret.routeName = routeName;
         ret.route = route;
-        if(!ret.routeName||!ret.route) { ret.errorRoute = 'no route'; !errorInfo&&(errorInfo=ret); return ret }
+        if(!ret.routeName||!ret.route) { ret.errorRoute = 'no route'; !this._errorInfo&&(this._errorInfo=ret); return ret }
       }
 
       (Array.isArray(route.embeds)?route.embeds.map(vv=>[vv,vv]):Object.entries(route.embeds||{})).forEach(([kk,vv])=>{
@@ -220,13 +224,13 @@ export default class Router {
         let retEmbed = { 
           name: vv, params: ret.params, path: ret.path, fullPath: ret.fullPath, 
           _id: _idEmbed, _idParent: ret._id, 
-          embed: true, embeds: {}, paramObj: ret.paramObj, query: ret.query, viewItems: this.getPageViews(_idEmbed),
+          embed: true, embeds: {}, paramObj: ret.paramObj, query: ret.query, state: ret.state, viewItems: this.getPageViews(_idEmbed),
         };
 
         let [routeNameEmbed, routeEmbed] = this.getRoute(retEmbed.name);
         retEmbed.routeName = routeNameEmbed;
         retEmbed.route = routeEmbed;
-        if(!retEmbed.routeName||!retEmbed.route) {retEmbed.errorRoute = 'no route';!errorInfo&&(errorInfo=ret)} 
+        if(!retEmbed.routeName||!retEmbed.route) {retEmbed.errorRoute = 'no route';!this._errorInfo&&(this._errorInfo=ret)} 
 
         ret.embeds[kk] = retEmbed;
       });
@@ -234,11 +238,12 @@ export default class Router {
       let routeParams = routeName.split(paramSpe).slice(1);
       if(routeParams.filter(vv=>!vv.endsWith(paramOptional)).length>ret.params.length) { 
         ret.errorRoute = 'miss require param'; 
-        !errorInfo&&(errorInfo=ret);
+        !this._errorInfo&&(this._errorInfo=ret);
       }else{
         ret.params.forEach((vv,ii)=>{
           let name = routeParams[ii]?(routeParams[ii].endsWith(paramOptional)?routeParams[ii].slice(0,-1):routeParams[ii]):ii;
           ret.paramObj[name] = decodeURIComponent(vv);
+          if(this.passParams) paramObj[name] = ret.paramObj[name];
         })
       }
 
@@ -268,7 +273,6 @@ export default class Router {
     this._focusId = focusId;
     this._activeId = activeId;
     this._pathinfos = pathinfos;
-    this._errorInfo = errorInfo;
     this._updateRender();
   }
 
@@ -392,6 +396,7 @@ export default class Router {
   // ----------------------------------------
   getLocationInfo(...args) {
     let query = {};
+    let state = {};
     let pathnames = this._pathinfos.map(v=>v.path);
 
     let addPath = path=>{
@@ -410,7 +415,8 @@ export default class Router {
       if(Array.isArray(arg)) {
         addPath(arg.map((v,i)=>i?encodeURIComponent(v):v).join(':'));
       }else if(typeof arg==='object') {
-        query = {...query, ...arg}
+        if(!arg._state) query = {...query, ...arg}
+        if(arg._state) { delete arg._state; state = {...state, ...arg} }
       }else {
         addPath(String(arg));
       }
@@ -418,6 +424,7 @@ export default class Router {
 
     //pathname, search, hash, key, state
     return {
+      state:this.passState?{...this.history.location.state, ...state}:state,
       pathname: pathnames.map((v,i,a)=>i===0&&v==='/'&&a.length>1?'':v).join('/'),
       search: '?'+Object.entries(this.passQuery?{...this.history.location.query, ...query}:query).map(([k,v])=>k+'='+v).reduce((v1,v2)=>v1+(v1?'&':'')+v2,''),
     };
@@ -464,6 +471,7 @@ export default class Router {
   }
 
   refresh() {
+    this._errorInfo = null;
     this._updatePathInfos(this.history.location);
     return true;
   }

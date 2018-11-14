@@ -130,7 +130,7 @@ Field._HiddenInput = aprops=>{
 
 Field._Switch = aprops=>{
   let {
-    type, value, defaultValue, domValue, onClick, onChange, 
+    type, value, defaultValue, domValue, disabled, onClick, onChange, 
     Content, labelProps, inputProps, innerProps,
     component:Component=Panel, componentPanel='label', className, children, ...props
   } = parseProps(aprops, Field._Switch.props);
@@ -139,10 +139,10 @@ Field._Switch = aprops=>{
 
   return (
     <Component component={componentPanel} onClick={(e)=>{e.stopPropagation();onClick&&onClick(e)}} className={classes(classStr, className)} {...labelProps}>
-      <Field._HiddenInput type={type} checked={value} defaultChecked={defaultValue} value={domValue} onChange={onChange} {...inputProps} />
+      <Field._HiddenInput type={type} checked={value} defaultChecked={defaultValue} value={domValue} disabled={disabled} onChange={onChange} {...inputProps} />
       <Field._Switch._Inner {...innerProps}>
-        <Field._Switch._Content component={Content} {...props} type={type} isOn>X</Field._Switch._Content>
-        <Field._Switch._Content component={Content} {...props} type={type} >-</Field._Switch._Content>
+        <Field._Switch._Content component={Content} {...props} type={type} disabled={disabled} isOn>X</Field._Switch._Content>
+        <Field._Switch._Content component={Content} {...props} type={type} disabled={disabled}>-</Field._Switch._Content>
       </Field._Switch._Inner>
     </Component>
   );
@@ -180,7 +180,7 @@ Field._Types.static = Field._Static;
 
 Field._SwitchContentCheckRadio = aprops=>{
   let {
-    type, isOn, name=aprops.isOn?'check':' ', defaultName=aprops.isOn?'X':' ', 
+    type, isOn, disabled, name=aprops.isOn?'check':' ', defaultName=aprops.isOn?'X':' ', 
     component:Component=Icon, 'b-theme':bTheme, 'b-style':bStyle, ...props
   } = parseProps(aprops, Field._SwitchContentCheckRadio.props);
 
@@ -190,7 +190,7 @@ Field._SwitchContentCheckRadio = aprops=>{
     bStyle = 'hollow';
   }
 
-  return <Component bc-border-radius-rounded={!Boolean(type==='checkbox')} type={type}  name={name} defaultName={defaultName} b-style={bStyle} b-theme={bTheme} {...props} />;
+  return <Component bc-border-radius-rounded={!Boolean(type==='checkbox')} type={type}  name={name} defaultName={defaultName} b-style={bStyle} b-theme={bTheme} bc-bg-color-component={disabled} {...props} />;
 }
 Field._Types.checkbox = aprops=>{
   aprops = parseProps(aprops, Field._Types.checkbox.props);
@@ -232,15 +232,15 @@ Field._Types.switch = aprops=>{
 
 Field._Types.file = aprops=>{
   let {
-    type, value, inputProps,
+    type, value, inputProps, disabled, onClick, onChange, 
     component:Component=Panel, componentPanel="label", className, children, ...props
   } = parseProps(aprops, Field._Types.file.props);
 
   let classStr = 'line-height-1 vertical-align-middle';
 
   return (
-    <Component component={componentPanel} className={classes(classStr, className)} {...props}>
-      <Field._HiddenInput type={type} value={value} {...inputProps} />
+    <Component component={componentPanel} className={classes(classStr, className)} disabled={disabled} {...props}>
+      <Field._HiddenInput type={type} value={value} disabled={disabled} onClick={onClick} onChange={onChange} {...inputProps} />
       {children}
     </Component>
   );

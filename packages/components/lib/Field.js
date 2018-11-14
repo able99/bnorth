@@ -115,7 +115,7 @@ Field._Normal = function (aprops) {
       children = _parseProps3.children,
       props = (0, _objectWithoutProperties2.default)(_parseProps3, ["type", "value", "onPressEnter", "onKeyPress", "component", "componentPanel", "className", "children"]);
 
-  var classStr = 'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle';
+  var classStr = 'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle';
   var classSet = aprops['b-style'] ? '' : 'bg-none- border-none-a-';
 
   var handleKeyPress = function handleKeyPress(e) {
@@ -186,6 +186,7 @@ Field._Switch = function (aprops) {
       value = _parseProps6.value,
       defaultValue = _parseProps6.defaultValue,
       domValue = _parseProps6.domValue,
+      disabled = _parseProps6.disabled,
       _onClick = _parseProps6.onClick,
       onChange = _parseProps6.onChange,
       Content = _parseProps6.Content,
@@ -198,7 +199,7 @@ Field._Switch = function (aprops) {
       componentPanel = _parseProps6$componen2 === void 0 ? 'label' : _parseProps6$componen2,
       className = _parseProps6.className,
       children = _parseProps6.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps6, ["type", "value", "defaultValue", "domValue", "onClick", "onChange", "Content", "labelProps", "inputProps", "innerProps", "component", "componentPanel", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps6, ["type", "value", "defaultValue", "domValue", "disabled", "onClick", "onChange", "Content", "labelProps", "inputProps", "innerProps", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'switch-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none- flex-sub-flex-extend';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -213,16 +214,19 @@ Field._Switch = function (aprops) {
     checked: value,
     defaultChecked: defaultValue,
     value: domValue,
+    disabled: disabled,
     onChange: onChange
   }, inputProps)), _react.default.createElement(Field._Switch._Inner, innerProps, _react.default.createElement(Field._Switch._Content, (0, _extends2.default)({
     component: Content
   }, props, {
     type: type,
+    disabled: disabled,
     isOn: true
   }), "X"), _react.default.createElement(Field._Switch._Content, (0, _extends2.default)({
     component: Content
   }, props, {
-    type: type
+    type: type,
+    disabled: disabled
   }), "-")));
 };
 
@@ -271,6 +275,7 @@ Field._SwitchContentCheckRadio = function (aprops) {
   var _parseProps9 = (0, _props.default)(aprops, Field._SwitchContentCheckRadio.props),
       type = _parseProps9.type,
       isOn = _parseProps9.isOn,
+      disabled = _parseProps9.disabled,
       _parseProps9$name = _parseProps9.name,
       name = _parseProps9$name === void 0 ? aprops.isOn ? 'check' : ' ' : _parseProps9$name,
       _parseProps9$defaultN = _parseProps9.defaultName,
@@ -279,7 +284,7 @@ Field._SwitchContentCheckRadio = function (aprops) {
       Component = _parseProps9$componen === void 0 ? _Icon.default : _parseProps9$componen,
       bTheme = _parseProps9['b-theme'],
       bStyle = _parseProps9['b-style'],
-      props = (0, _objectWithoutProperties2.default)(_parseProps9, ["type", "isOn", "name", "defaultName", "component", 'b-theme', 'b-style']);
+      props = (0, _objectWithoutProperties2.default)(_parseProps9, ["type", "isOn", "disabled", "name", "defaultName", "component", 'b-theme', 'b-style']);
 
   if (!bStyle) bStyle = 'hollow';
 
@@ -294,7 +299,8 @@ Field._SwitchContentCheckRadio = function (aprops) {
     name: name,
     defaultName: defaultName,
     "b-style": bStyle,
-    "b-theme": bTheme
+    "b-theme": bTheme,
+    "bc-bg-color-component": disabled
   }, props));
 };
 
@@ -364,21 +370,28 @@ Field._Types.file = function (aprops) {
       type = _parseProps12.type,
       value = _parseProps12.value,
       inputProps = _parseProps12.inputProps,
+      disabled = _parseProps12.disabled,
+      onClick = _parseProps12.onClick,
+      onChange = _parseProps12.onChange,
       _parseProps12$compone = _parseProps12.component,
       Component = _parseProps12$compone === void 0 ? _Panel.default : _parseProps12$compone,
       _parseProps12$compone2 = _parseProps12.componentPanel,
       componentPanel = _parseProps12$compone2 === void 0 ? "label" : _parseProps12$compone2,
       className = _parseProps12.className,
       children = _parseProps12.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps12, ["type", "value", "inputProps", "component", "componentPanel", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps12, ["type", "value", "inputProps", "disabled", "onClick", "onChange", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'line-height-1 vertical-align-middle';
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
-    className: (0, _classes.default)(classStr, className)
+    className: (0, _classes.default)(classStr, className),
+    disabled: disabled
   }, props), _react.default.createElement(Field._HiddenInput, (0, _extends2.default)({
     type: type,
-    value: value
+    value: value,
+    disabled: disabled,
+    onClick: onClick,
+    onChange: onChange
   }, inputProps)), children);
 };
 

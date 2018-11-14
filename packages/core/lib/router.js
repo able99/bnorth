@@ -134,6 +134,7 @@ function (_React$Component) {
           _idParent = _ref._idParent,
           paramObj = _ref.paramObj,
           query = _ref.query,
+          state = _ref.state,
           embed = _ref.embed,
           viewItems = _ref.viewItems,
           embeds = _ref.embeds,
@@ -157,6 +158,7 @@ function (_React$Component) {
           _idParent: _idParent,
           params: paramObj,
           query: query,
+          state: state,
           active: embed ? _idParent === activeId : _id === activeId,
           embed: embed
         }),
@@ -255,6 +257,9 @@ function () {
     this._blockLocation = undefined;
     this._viewIdNum = 0;
     this._historyStackCount = 0;
+    this.passQuery = false;
+    this.passState = false;
+    this.passParams = false;
     this.app.event.on(this.app._id, 'onPageAdd', function (_id, page) {
       page && _this4._addPage(_id, page);
     }, this._id);
@@ -294,6 +299,8 @@ function () {
 
       var handleLocationChange = function handleLocationChange(location, action) {
         _this5.app.log.info('router location', location);
+
+        _this5._errorInfo = null;
 
         _this5._updateQuerys(location);
 
@@ -341,7 +348,7 @@ function () {
       _regenerator.default.mark(function _callee(location) {
         var _this6 = this;
 
-        var pathname, spe, paramSpe, subPageSpe, paramOptional, errorTag, pageSign, pos, pathinfos, errorInfo, focusId, activeId, passQuery, index, sub, fullPath, viewItems, focusViewItem, activePageItem, pageFocusViewItem, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, pathinfo, blockInfo;
+        var pathname, spe, paramSpe, subPageSpe, paramOptional, errorTag, pageSign, pos, pathinfos, focusId, activeId, index, sub, fullPath, paramObj, viewItems, focusViewItem, activePageItem, pageFocusViewItem, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, pathinfo, blockInfo;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -364,10 +371,8 @@ function () {
                 pageSign = '#';
                 pos = 0;
                 pathinfos = [];
-                errorInfo = null;
                 focusId = undefined;
                 activeId = undefined;
-                passQuery = false;
                 /* pathname parse*/
 
                 while (pos < pathname.length - 1) {
@@ -391,6 +396,7 @@ function () {
                 /* route */
 
                 fullPath = '';
+                paramObj = {};
                 pathinfos = pathinfos.map(function (v, i, r) {
                   var vs = v.split(paramSpe);
                   var aFullPath = (0, _path.join)(fullPath, v);
@@ -405,8 +411,9 @@ function () {
                     _id: _id,
                     _idParent: pageSign + fullPath,
                     embeds: {},
-                    paramObj: {},
+                    paramObj: _this6.passParams ? (0, _objectSpread2.default)({}, paramObj) : {},
                     query: location.query,
+                    state: location.state,
                     viewItems: _this6.getPageViews(_id)
                   };
                   fullPath = ret.fullPath;
@@ -418,7 +425,7 @@ function () {
 
                   if (ret.name === errorTag) {
                     ret.errorPage = true;
-                    !errorInfo && (errorInfo = ret);
+                    !_this6._errorInfo && (_this6._errorInfo = ret);
                     return undefined;
                   } else {
                     ret.routeName = routeName;
@@ -426,7 +433,7 @@ function () {
 
                     if (!ret.routeName || !ret.route) {
                       ret.errorRoute = 'no route';
-                      !errorInfo && (errorInfo = ret);
+                      !_this6._errorInfo && (_this6._errorInfo = ret);
                       return ret;
                     }
                   }
@@ -451,6 +458,7 @@ function () {
                       embeds: {},
                       paramObj: ret.paramObj,
                       query: ret.query,
+                      state: ret.state,
                       viewItems: _this6.getPageViews(_idEmbed)
                     };
 
@@ -464,7 +472,7 @@ function () {
 
                     if (!retEmbed.routeName || !retEmbed.route) {
                       retEmbed.errorRoute = 'no route';
-                      !errorInfo && (errorInfo = ret);
+                      !_this6._errorInfo && (_this6._errorInfo = ret);
                     }
 
                     ret.embeds[kk] = retEmbed;
@@ -475,11 +483,12 @@ function () {
                     return !vv.endsWith(paramOptional);
                   }).length > ret.params.length) {
                     ret.errorRoute = 'miss require param';
-                    !errorInfo && (errorInfo = ret);
+                    !_this6._errorInfo && (_this6._errorInfo = ret);
                   } else {
                     ret.params.forEach(function (vv, ii) {
                       var name = routeParams[ii] ? routeParams[ii].endsWith(paramOptional) ? routeParams[ii].slice(0, -1) : routeParams[ii] : ii;
                       ret.paramObj[name] = decodeURIComponent(vv);
+                      if (_this6.passParams) paramObj[name] = ret.paramObj[name];
                     });
                   }
 
@@ -510,82 +519,81 @@ function () {
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context.prev = 28;
+                _context.prev = 27;
                 _iterator = pathinfos[Symbol.iterator]();
 
-              case 30:
+              case 29:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 40;
+                  _context.next = 39;
                   break;
                 }
 
                 pathinfo = _step.value;
-                _context.next = 34;
+                _context.next = 33;
                 return this.app.event.emit(this.app._id, 'onRouteMatch', pathinfo, location);
 
-              case 34:
+              case 33:
                 blockInfo = _context.sent;
 
                 if (!blockInfo) {
-                  _context.next = 37;
+                  _context.next = 36;
                   break;
                 }
 
                 return _context.abrupt("return", this.block(blockInfo));
 
-              case 37:
+              case 36:
                 _iteratorNormalCompletion = true;
-                _context.next = 30;
+                _context.next = 29;
                 break;
 
-              case 40:
-                _context.next = 46;
+              case 39:
+                _context.next = 45;
                 break;
 
-              case 42:
-                _context.prev = 42;
-                _context.t0 = _context["catch"](28);
+              case 41:
+                _context.prev = 41;
+                _context.t0 = _context["catch"](27);
                 _didIteratorError = true;
                 _iteratorError = _context.t0;
 
-              case 46:
+              case 45:
+                _context.prev = 45;
                 _context.prev = 46;
-                _context.prev = 47;
 
                 if (!_iteratorNormalCompletion && _iterator.return != null) {
                   _iterator.return();
                 }
 
-              case 49:
-                _context.prev = 49;
+              case 48:
+                _context.prev = 48;
 
                 if (!_didIteratorError) {
-                  _context.next = 52;
+                  _context.next = 51;
                   break;
                 }
 
                 throw _iteratorError;
 
+              case 51:
+                return _context.finish(48);
+
               case 52:
-                return _context.finish(49);
+                return _context.finish(45);
 
               case 53:
-                return _context.finish(46);
-
-              case 54:
                 this._focusId = focusId;
                 this._activeId = activeId;
                 this._pathinfos = pathinfos;
-                this._errorInfo = errorInfo;
 
                 this._updateRender();
 
-              case 59:
+              case 57:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[28, 42, 46, 54], [47,, 49, 53]]);
+        }, _callee, this, [[27, 41, 45, 53], [46,, 48, 52]]);
       }));
 
       return function _updatePathInfos(_x) {
@@ -790,6 +798,7 @@ function () {
     key: "getLocationInfo",
     value: function getLocationInfo() {
       var query = {};
+      var state = {};
 
       var pathnames = this._pathinfos.map(function (v) {
         return v.path;
@@ -817,13 +826,19 @@ function () {
             return i ? encodeURIComponent(v) : v;
           }).join(':'));
         } else if ((0, _typeof2.default)(arg) === 'object') {
-          query = (0, _objectSpread2.default)({}, query, arg);
+          if (!arg._state) query = (0, _objectSpread2.default)({}, query, arg);
+
+          if (arg._state) {
+            delete arg._state;
+            state = (0, _objectSpread2.default)({}, state, arg);
+          }
         } else {
           addPath(String(arg));
         }
       }); //pathname, search, hash, key, state
 
       return {
+        state: this.passState ? (0, _objectSpread2.default)({}, this.history.location.state, state) : state,
         pathname: pathnames.map(function (v, i, a) {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
@@ -897,6 +912,8 @@ function () {
   }, {
     key: "refresh",
     value: function refresh() {
+      this._errorInfo = null;
+
       this._updatePathInfos(this.history.location);
 
       return true;

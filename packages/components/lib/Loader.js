@@ -126,7 +126,7 @@ Loader._circle = function (aprops) {
     strokeWidth: "20",
     stroke: color,
     fill: "none",
-    transform: "matrix(0,-1,1,0,0,100)",
+    transform: "rotate(-90,50,50)",
     style: isProgress ? (0, _animation.transiton)(timeout) : null,
     strokeDasharray: isProgress ? "".concat(2.51 * (progress || 0), ",251") : "50,251"
   }, !isProgress ? _react.default.createElement("animate", {

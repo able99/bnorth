@@ -27,6 +27,10 @@ export default props=>{
           <List.Item title="option_param:param1?" after="p1, p2" onClick={()=>app.router.push(['option_param', 'p1', 'p2'])} />
           <List.Item title="option_param:param1?" after="none" onClick={()=>app.router.push('option_param')} />
         </List>
+        <List bc-margin-bottom->
+          <List.Item title="query" after="{a:'q1'}" onClick={()=>app.router.push(['option_param'], {a:'q1'})} />
+          <List.Item title="state" after="{_state: true, a:'s1'}" onClick={()=>app.router.push(['option_param'], {_state: true, a:'s1'})} />
+        </List>
       </Panel>
     </View>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 
 
 let PageInfo = props=>{
-  let { name, route:{params, query, parentName}={} } = props;
+  let { app, name, route:{params, query, state, parentName}={} } = props;
 
   return (
     <div>
@@ -13,6 +13,9 @@ let PageInfo = props=>{
         <div>{JSON.stringify(params)}</div>
         <h4>query</h4>
         <div>{JSON.stringify(query)}</div>
+        <h4>state</h4>
+        <div>{JSON.stringify(state)}</div>
+        <button onClick={()=>app.router.push(['pageinfo', 'pp1'])}>push pageinfo pp1</button>
       </div>
     </div>
   )
@@ -35,6 +38,7 @@ export default {
   'router': require('./pages/router').default,
   'require_param:param1': PageInfo,
   'option_param:param1?': PageInfo,
+  'pageinfo:subparam1?': PageInfo,
   'dynamic': {
     loader: ()=>{
       return new Promise((resolve)=>setTimeout(()=>{
