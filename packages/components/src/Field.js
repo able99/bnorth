@@ -135,7 +135,7 @@ Field._Switch = aprops=>{
     component:Component=Panel, componentPanel='label', className, children, ...props
   } = parseProps(aprops, Field._Switch.props);
 
-  let classStr = 'switch-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none- flex-sub-flex-extend';
+  let classStr = 'switch-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none-';
 
   return (
     <Component component={componentPanel} onClick={(e)=>{e.stopPropagation();onClick&&onClick(e)}} className={classes(classStr, className)} {...labelProps}>

@@ -155,7 +155,7 @@ export default class Router {
     location.query = {};
     location.search && location.search.slice(1).split('&').forEach(v=>{
       let vs = v.split('=');
-      location.query[vs[0]] = vs[1];
+      location.query[vs[0]] = decodeURIComponent(vs[1]);
     })
   }
 
@@ -389,7 +389,7 @@ export default class Router {
   }
 
   removePageViews(_id) {
-    this.getPageViews(_id).forEach(v=>this.removeView(v._id))
+    this.getPageViews(_id).forEach(v=>this.removeView(v.options._id))
   }
 
   // router navigator

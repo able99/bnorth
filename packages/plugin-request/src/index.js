@@ -13,7 +13,7 @@ let getClass = (app, aoptions={})=>class Request extends app.State {
     (!loading&&!mask) && !noLoadingMask && (!isSubmit?this.app.render.loading(fetching):this.app.render.mask(fetching));
 
     if(isSubmit||!fetching) return;
-    this.stateUpdate({fetching});
+    this.stateUpdate({fetching, error: null});
   }
 
   _requestSuccess(result, {append, isSubmit}){

@@ -200,11 +200,15 @@ cordova-plugin-qqsdk
 
 ### Wechat Sdk for Oath, Share
 
-cordova-plugin-wechat
+cordova-plugin-wechat https://github.com/xu-li/cordova-plugin-wechat
 
 ### Weibo Sdk for Oath, Share
 
 cordova-plugin-weibo
+
+### Alipay payment
+
+cordova-plugin-alipay-v2
 
 ### More Plugins
 

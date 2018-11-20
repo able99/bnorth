@@ -251,8 +251,7 @@ Modal._Footer._itemGetProps = function (i, length) {
   var subPropsEach = arguments.length > 3 ? arguments[3] : undefined;
   var subProps = arguments.length > 4 ? arguments[4] : undefined;
   return {
-    'bc-bg-none-': true,
-    'bc-border-none-top-': true,
+    'b-style': 'hollow',
     onClick: function onClick() {
       return handleAction && handleAction(i);
     }

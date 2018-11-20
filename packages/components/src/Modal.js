@@ -179,8 +179,8 @@ Modal._Footer =  aprops=>{
 
 Modal._Footer._itemGetProps=(i, length, {handleAction}={}, subPropsEach, subProps)=>{
   return {
+    'b-style': 'hollow',
     'bc-bg-none-': true,
-    'bc-border-none-top-': true,
     onClick: ()=>handleAction&&handleAction(i),
   };
 }

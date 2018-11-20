@@ -26,7 +26,7 @@ class Browser {
   _uaInit() {
     let ua = this.userAgent.toLowerCase();
     this.isMobile  = /(?:micromessenger|mobile|iphone|ipod|android|coolpad|mmp|smartphone|midp|wap|xoom|symbian|j2me|blackberry|windows phone|win ce)/.test(ua);
-    this.isiOS     = /(?:iphone)/.test(ua);
+    this.isiOS     = /iphone|ipad|ipod/.test(ua);
     this.isAndroid = /(?:android)/.test(ua);
     this.isWeChat  = /(?:micromessenger)/.test(ua);
     this.isAliPay  = /alipayclient/.test(ua);
@@ -39,7 +39,21 @@ class Browser {
   };
 
   set title(str){
-    return window.top.document.title = str;
+    window.top.document.title = str;
+
+    if(this.isiOS) {
+      let iframe = document.createElement('iframe');
+      iframe.style.visibility = 'hidden';
+      iframe.setAttribute('src', 'logo.png');
+      let iframeCallback = function() {
+        setTimeout(function() {
+          iframe.removeEventListener('load', iframeCallback);
+          document.body.removeChild(iframe);
+        }, 0);
+      };
+      iframe.addEventListener('load', iframeCallback);
+      document.body.appendChild(iframe);
+    }
   };
 
 

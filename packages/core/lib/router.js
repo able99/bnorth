@@ -789,7 +789,7 @@ function () {
       var _this9 = this;
 
       this.getPageViews(_id).forEach(function (v) {
-        return _this9.removeView(v._id);
+        return _this9.removeView(v.options._id);
       });
     } // router navigator
     // ----------------------------------------
