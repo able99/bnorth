@@ -2,20 +2,25 @@ import React from 'react';
 
 
 let PageInfo = props=>{
-  let { app, name, route:{params, query, state, parentName}={} } = props;
+  let { app, route:{name, _idParent, params, query, state, embed}={} } = props;
 
   return (
-    <div>
-      <h3>{name}</h3>
-      <p>parentName: {parentName}</p>
-      <div className="margin-top">
+    <div className="scrollable-y-">
+      <h3>{name}({embed?'embed page':'not embed page'})</h3>
+      <p>parentId: {_idParent}</p>
+      <div className="margin-top-">
         <h4>params</h4>
         <div>{JSON.stringify(params)}</div>
         <h4>query</h4>
-        <div>{JSON.stringify(query)}</div>
+        <div>{query?JSON.stringify(query):'no query'}</div>
         <h4>state</h4>
-        <div>{JSON.stringify(state)}</div>
-        <button onClick={()=>app.router.push(['pageinfo', 'pp1'])}>push pageinfo pp1</button>
+        <div>{state?JSON.stringify(state):'no state'}</div>
+      </div>
+      <div className="margin-top-">
+        <h4>navigator</h4>
+        <button className="padding-a-xxs margin-bottom-" onClick={()=>app.router.push(['pageinfo', 'pp1'])}>push pageinfo pp1</button>
+        <button className="padding-a-xxs margin-bottom-" onClick={()=>app.router.push('pageinfo', {query:{a:'qq1'}})}>push pageinfo query:|a:qq1</button>
+        <button className="padding-a-xxs margin-bottom-" onClick={()=>app.router.push('pageinfo', {state:{a:'ss1'}})}>push pageinfo state:|a:ss1</button>
       </div>
     </div>
   )

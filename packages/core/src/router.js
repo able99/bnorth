@@ -1,89 +1,24 @@
-import React, { cloneElement } from 'react';
+import React from 'react';
 import createHistory from 'history/createHashHistory';
 import { join } from 'path';
+import RouterComponent from './router.component.js'
+import PageLoading from './router.loading.js'
+import PageError from './router.error.js'
 
 
-let PageLoading = props=>{
-  return (
-    <div style={{padding: 8}}>loading...</div>
-  )
-}
+let spe = '/';
+let ParamSpe = ':';
+let SubPageSpe = '|';
+let ParamOptional = '?';
+let PageSign = '#';
 
-let PageError = props=>{
-  let { app, data } = props;
-  return ( 
-    <div style={{padding: 8}}> 
-      <div> 
-        <span>error</span> 
-        <button style={{padding: 4}} onClick={()=>app.router.refresh()}>[refresh]</button> 
-        <button style={{padding: 4}} onClick={()=>app.router.replaceRoot()}>[home]</button> 
-      </div> 
-      <h3>{data.errorRoute?data.errorRoute:data.params[1]}</h3> 
-      <hr/> 
-      <p>{app.utils.message2String(data.errorRoute?data.name:data.params[0])}</p> 
-    </div>
-  )
-}
-
-class RouterComponent extends React.Component {
-  componentDidMount() {
-    this.eventOffRouterUpdate = this.props.app.event.on(this.props.app._id, 'onRouterUpdate', ()=>this.forceUpdate());
-  }
-
-  componentWillUnmount() {
-    this.eventOffRouterUpdate();
-  }
-
-  _renderPage({
-    _id, _idParent, 
-    paramObj, query, state, embed, viewItems, embeds,
-    routeName, route, 
-  }, activeId, focusId){
-    let { app } = this.props;
-    let embedsPage = {};
-    Object.entries(embeds).map(([k,v])=>embedsPage[k]=this._renderPage(v, activeId, focusId));
-
-    let props = { 
-      app, key: _id, _id, 
-      route: { ...route,routeName,  _idParent, params: paramObj, query, state, active: embed?_idParent===activeId:_id===activeId, embed }, 
-      views: viewItems.map(v=>this._renderView(v)), embeds: embedsPage,
-    };
-
-    if(route.loader){
-      route.loader(app).then(v=>{
-        Object.assign(route, v, {loader: null});
-        this.forceUpdate();
-      })
-      return <Router.PageLoading key={_id} />;
-    }else if(typeof route.component==='function'){
-      return <app.Page {...props} />;
-    }else{
-      return <Router.PageError key={_id} app={app} data={{errorRoute: "wrong component"}} />
-    }
-  }
-
-  _renderView({content:Component, props, options:{_id, isContentComponent}}) {
-    let aprops = { ...isContentComponent?{}:Component.porps, ...props, key: _id };
-    return isContentComponent?<Component {...aprops} />:(typeof Component==='object'&&Component.type?cloneElement(Component, aprops):Component);
-  }
-
-  render() {
-    let {_pathinfos, _errorInfo, _activeId, _focusId} = this.props.app.router;
-    let viewItems = this.props.app.router.getNoPageViews().map(v=>({...v}));
-    
-    if(!_errorInfo) {
-      return (
-        <React.Fragment>
-          {_pathinfos.map(v=>this._renderPage(v, _activeId, _focusId))}
-          {viewItems.map(v=>this._renderView(v, _activeId, _focusId))}
-        </React.Fragment>
-      );
-    }else{
-      return <Router.PageError app={this.props.app} data={_errorInfo} />;
-    }
-  }
-}
-
+/**
+ * @class
+ * ***流程***
+ * 1. router 构建期间，监听app 启动事件，在onAppStartRouter 事件时，将RouterComponent 加入到app 根元素上；监听浏览器地址栏
+ * 1. 用户通过navigator 函数(push, relace, back 等)操作，解析locationinfo，触发浏览器地址栏改变
+ * 1. router 监听到地址栏变化后，解析url，产生pathinfos， 并发出render 事件, RouterComponnent
+ */
 
 export default class Router {
   // constructor
@@ -91,14 +26,20 @@ export default class Router {
   constructor(app) {
     this.app = app;
     this._id = app._id+'.router';
-    this._routes = {};
-    this._views = [];
-    this._pages = {};
-    this._pathinfos = [];
-    this._errorInfo = undefined;
+
+    this.RouterComponent = RouterComponent;
+    this.PageLoading = PageLoading;
+    this.PageError = PageError;
+
+    this._routes = {}; // config routes for app 
+    this._views = []; // current views on runtime
+    this._pages = {}; // current pages on runtime
+    this._pathinfos = []; // current location obj
     this._activeId = undefined;;
     this._focusId = undefined;
-    this._blockLocation = undefined;
+    this._states = {}; // current pathname state on runtime
+    this._error = undefined;
+    this._block = undefined;
     this._viewIdNum = 0;
     this._historyStackCount = 0;
     this.passQuery = false;
@@ -107,190 +48,69 @@ export default class Router {
 
     this.app.event.on(this.app._id, 'onPageAdd', (_id, page)=>{page&&this._addPage(_id, page)}, this._id);
     this.app.event.on(this.app._id, 'onPageRemove', (_id, page)=>{page&&this._removePage(_id)}, this._id);
-    this.app.event.on(this.app._id, 'onAppStartRouter', ()=>(this.app.render.component = <Router.RouterComponent app={this.app} />), this._id);
+    this.app.event.on(this.app._id, 'onAppStartRouter', ()=>(this.app.render.component = <this.RouterComponent app={this.app} />), this._id);
     this.app.event.on(this.app._id, 'onAppStartRender', ()=>{this._updateRender()}, this._id);
 
-    this._initHistory();
-    this._initRoute();
+    this.history = createHistory();
+    this.history.listen((location, action)=>this._handleLocationChange(location, action));
+    this._handleLocationChange(this.history.location, this.history.action);
   }
 
   destructor() {
     this.app.event.off(this._id);
   }
 
+  // render
+  // --------------------------------------
   _updateRender() {
     this.app.event.emit(this.app._id, 'onRouterUpdate');
   }
 
-  // route
+  // history
   // --------------------------------------
-  _initHistory() {
-    let handleLocationChange = (location, action)=>{
-      this.app.log.info('router location', location);
-      this._errorInfo = null;
-      this._updateQuerys(location);
-      this._updateStack(action, location);
-      this._updatePathInfos(location);
-    };
+  _handleLocationChange(location, action) {
+    this.app.log.info('router location', location);
+    this._clearError();
 
-    this.history = createHistory();
-    this.history.listen((location, action)=>handleLocationChange(location, action));
-    handleLocationChange(this.history.location, this.history.action);
-  }
+    Object.keys(this._states).filter(v=>!location.pathname.startsWith(v)).forEach(v=>{delete this._states[v]});
+    if(location.state) this._states[location.pathname] = location.state;
 
-  _updateStack(action, location) {
-    if(action==='PUSH') this._historyStackCount++;
-    if(action==='POP') this._historyStackCount = Math.max(--this._historyStackCount, 0);
-  }
-  
-  getStackCount() {
-    return this._historyStackCount;
-  }
-
-  isRootPath() {
-    return this.app.router._pathinfos[this.app.router._pathinfos.length-1].name==='/';
-  }
-
-  _updateQuerys(location) {
     location.query = {};
-    location.search && location.search.slice(1).split('&').forEach(v=>{
+    location.search = location.search.slice(1).trim();
+    location.search && location.search.split('&').forEach(v=>{
       let vs = v.split('=');
       location.query[vs[0]] = decodeURIComponent(vs[1]);
     })
-  }
 
-  async _updatePathInfos(location) {
-    if(!Object.keys(this.getRoutes()).length) return;
-    let pathname = location.pathname;
-    let spe = '/';
-    let paramSpe = ':';
-    let subPageSpe = '|';
-    let paramOptional = '?';
-    let errorTag = '/error';
-    let pageSign = '#';
+    if(action==='PUSH') this._historyStackCount++;
+    if(action==='POP') this._historyStackCount = Math.max(--this._historyStackCount, 0);
+
     let pos = 0;
-    let pathinfos = [];
-    let focusId = undefined;
-    let activeId = undefined;
-    
-
-    /* pathname parse*/
-    while(pos<pathname.length-1) {
-      let index = pathname.indexOf(spe, pos+1);
-      index = index>=0?index:pathname.length;
-      let sub = pathname.slice(pos+1, index);
-
-      if(pos===0&&(sub[0]===paramSpe||(spe+sub).startsWith(errorTag)||this.getRoute(spe+sub.split(paramSpe)[0]).length)) {
-        pathinfos.push(spe+sub);
+    let pathnames = [];
+    while(pos<location.pathname.length-1) {
+      let index = location.pathname.indexOf(spe, pos+1);
+      index = index>=0?index:location.pathname.length;
+      let sub = location.pathname.slice(pos+1, index);
+      if((pos===0&&sub[0]===ParamSpe)||(this.getRoute(spe+sub.split(ParamSpe)[0]).length)) {
+        pathnames.push(spe+sub);
       }else if(pos===0){
-        pathinfos.push(spe);
-        pathinfos.push(sub);
+        pathnames.push(spe);
+        pathnames.push(sub);
       }else {
-        pathinfos.push(sub);
+        pathnames.push(sub);
       }
-
       pos = index;
     }
-    if(!pathinfos.length) pathinfos.push(spe);
+    if(!pathnames.length) pathnames.push(spe);
+    location.pathnames = pathnames;
+    
+    this._updatePathInfos(location);
+  };
 
-    /* route */
-    let fullPath = '';
-    let paramObj = {};
-    pathinfos = pathinfos.map((v,i,r)=>{
-      let vs = v.split(paramSpe);
-
-      let aFullPath = join(fullPath, v);
-      let _id = pageSign+aFullPath;
-      let ret = { 
-        name: vs[0], params: vs.slice(1), path: v, fullPath: aFullPath, 
-        _id, _idParent: pageSign+fullPath, 
-        embeds: {}, paramObj: this.passParams?{...paramObj}:{}, query: location.query, state: location.state, viewItems: this.getPageViews(_id),
-      };
-      fullPath = ret.fullPath;
-
-      let [routeName, route] = this.getRoute(ret.name);
-      if(ret.name===errorTag) {
-        ret.errorPage = true;
-        !this._errorInfo&&(this._errorInfo=ret);
-        return undefined;
-      }else{
-        ret.routeName = routeName;
-        ret.route = route;
-        if(!ret.routeName||!ret.route) { ret.errorRoute = 'no route'; !this._errorInfo&&(this._errorInfo=ret); return ret }
-      }
-
-      (Array.isArray(route.embeds)?route.embeds.map(vv=>[vv,vv]):Object.entries(route.embeds||{})).forEach(([kk,vv])=>{
-        let _idEmbed = ret._id+subPageSpe+vv;
-        let retEmbed = { 
-          name: vv, params: ret.params, path: ret.path, fullPath: ret.fullPath, 
-          _id: _idEmbed, _idParent: ret._id, 
-          embed: true, embeds: {}, paramObj: ret.paramObj, query: ret.query, state: ret.state, viewItems: this.getPageViews(_idEmbed),
-        };
-
-        let [routeNameEmbed, routeEmbed] = this.getRoute(retEmbed.name);
-        retEmbed.routeName = routeNameEmbed;
-        retEmbed.route = routeEmbed;
-        if(!retEmbed.routeName||!retEmbed.route) {retEmbed.errorRoute = 'no route';!this._errorInfo&&(this._errorInfo=ret)} 
-
-        ret.embeds[kk] = retEmbed;
-      });
-
-      let routeParams = routeName.split(paramSpe).slice(1);
-      if(routeParams.filter(vv=>!vv.endsWith(paramOptional)).length>ret.params.length) { 
-        ret.errorRoute = 'miss require param'; 
-        !this._errorInfo&&(this._errorInfo=ret);
-      }else{
-        ret.params.forEach((vv,ii)=>{
-          let name = routeParams[ii]?(routeParams[ii].endsWith(paramOptional)?routeParams[ii].slice(0,-1):routeParams[ii]):ii;
-          ret.paramObj[name] = decodeURIComponent(vv);
-          if(this.passParams) paramObj[name] = ret.paramObj[name];
-        })
-      }
-
-      return ret;
-    });
-
-    /* active & focus */
-    let viewItems = this.getNoPageViews();
-    let focusViewItem = Array.from(viewItems).reverse().find(v=>v.options.isModal);
-    let activePageItem = pathinfos.slice(-1)[0];
-    if(focusViewItem) focusId = focusViewItem.options._id;
-    if(activePageItem) activeId = activePageItem._id;
-    if(activePageItem && !focusId){
-      let pageFocusViewItem = activePageItem.viewItems&&Array.from(activePageItem.viewItems).reverse().find(v=>v.options.isModal);
-      if(pageFocusViewItem) {
-        focusId = pageFocusViewItem.options.id;
-      }else{
-        focusId = activePageItem._id;
-      }
-    }
-
-
-    for(let pathinfo of pathinfos) {
-      let blockInfo = await this.app.event.emit(this.app._id, 'onRouteMatch', pathinfo, location);
-      if(blockInfo) return this.block(blockInfo);
-    }
-    this._focusId = focusId;
-    this._activeId = activeId;
-    this._pathinfos = pathinfos;
-    this._updateRender();
-  }
-
-  _initRoute() {
-    this._genRouteMethod('/');
-    this._genRouteMethod('/error');
-  }
-
-  _genRouteMethod(path) {
-    if(!path) return;
-    let name = path==='/'?'Root':this.app.utils.captilaze(path[0]==='/'?path.slice(1):path);
-    this['push'+name] = (...args)=>this.push([path, ...args]);
-    this['replace'+name] = (...args)=>this.replace([path, ...args]);
-  }
-
+  // route manager
+  // --------------------------------------
   setRoutes(routes) {
     this._routes = routes;
-    Object.keys(routes||{}).forEach(v=>v&&this._genRouteMethod(v.split(':')[0]));
     this._updatePathInfos(this.history.location);
   }
 
@@ -306,12 +126,117 @@ export default class Router {
   addRoute(name, route) {
     if(!name||!route) return;
     this._routes[name] = route;
-    this._genRouteMethod(name.split(':')[0]);
     this._updatePathInfos(this.history.location);
+  }
+
+  // router
+  // --------------------------------------
+  getStackCount() {
+    return this._historyStackCount;
+  }
+
+  isRootPath() {
+    return this.app.router._pathinfos[this.app.router._pathinfos.length-1].name==='/';
   }
 
   isFocus(_id) {
     return this._focusId === _id;
+  }
+
+  isActive(_id) {
+    return this._activeId === _id;
+  }
+
+  /* parse locationinfo to pathinfo */
+  async _updatePathInfos(location) {
+    if(!Object.keys(this.getRoutes()).length) return;
+
+    let fullPathName = '';
+    let _idParent; 
+    let params = {};
+    let pathinfos = [];
+    let focusId = undefined;
+    let activeId = undefined;
+
+    /* route */
+    for (let pathname of location.pathnames) {
+      fullPathName = join(fullPathName, pathname);
+      let [name, ...pathnameParams] = pathname.split(ParamSpe);
+      let _id = PageSign+fullPathName;
+      let pathinfo = { 
+        _id, _idParent, 
+        name, pathname, fullPathName, 
+        query: location.query, state: this._states[fullPathName], pathnameParams,
+        embeds: {}, viewItems: this.getPageViews(_id),
+      };
+
+      let [routeName, route] = this.getRoute(pathinfo.name);
+      if(!routeName||!route) return this.error(`route name:`+pathinfo.name, 'no route error');
+      pathinfo.routeName = routeName;
+      pathinfo.route = route;
+      pathinfo.routeParams = routeName.split(ParamSpe).slice(1);
+
+      pathinfo.params = this.passParams?{...params}:{};
+      pathinfo.routeParams.forEach((v,i)=>{
+        let optional = v.endsWith(ParamOptional);
+        if(optional) v = v.slice(0, -1);
+        if(!optional&&i>pathinfo.pathnameParams.length-1) return this.error(`params name: ${v}`, 'miss require param error');
+        pathinfo.params[v] = pathinfo.pathnameParams[i]?decodeURIComponent(pathinfo.pathnameParams[i]):null;
+        if(this.passParams) params[name] = pathinfo.params[v];  
+      })
+
+      for (let [k,v] of Array.isArray(route.embeds)?route.embeds.map(v=>[v,v]):Object.entries(route.embeds||{})) {
+        let embed = {...pathinfo};
+        embed._idParent = embed._id;
+        embed._id = embed._id + SubPageSpe+v;
+        embed.name = v;
+        embed.embed = true;
+        embed.embeds = {};
+        embed.viewItems = this.getPageViews(embed._id);
+        let [routeNameEmbed, routeEmbed] = this.getRoute(embed.name);
+        if(!routeNameEmbed||!routeEmbed) return this.error(`route name:`+embed.name, 'no route error');
+        embed.routeName = routeNameEmbed;
+        embed.route = routeEmbed;
+        pathinfo.embeds[k] = embed;
+      }
+      
+      _idParent = _id;
+      pathinfos.push(pathinfo);
+    }
+
+    /* active & focus */
+    let viewItems = this.getNoPageViews();
+    let focusViewItem = Array.from(viewItems).reverse().find(v=>v.options.isModal);
+    let activePageItem = pathinfos.slice(-1)[0];
+    if(focusViewItem) focusId = focusViewItem.options._id;
+    if(activePageItem) activeId = activePageItem._id;
+    if(activePageItem && !focusId){
+      let pageFocusViewItem = activePageItem.viewItems&&Array.from(activePageItem.viewItems).reverse().find(v=>v.options.isModal);
+      if(pageFocusViewItem) { focusId = pageFocusViewItem.options.id }else{ focusId = activePageItem._id }
+    }
+
+    /* block */
+    for(let pathinfo of pathinfos) {
+      let _block = await this.app.event.emit(this.app._id, 'onRouteMatch', pathinfo, location);
+      if(_block) return this.block(_block);
+    }
+
+    /* update */
+    this._focusId = focusId;
+    this._activeId = activeId;
+    this._pathinfos = pathinfos;
+    this._updateRender();
+  }
+
+  // error
+  // ---------------------------------------
+  error(message, title, data, _id) {
+    this._error = {message, title, _id};
+    this._updateRender();
+  }
+
+  _clearError() {
+    this._error = null;
   }
 
   // pages
@@ -396,33 +321,30 @@ export default class Router {
   // ----------------------------------------
   getLocationInfo(...args) {
     let query = {};
-    let state = {};
-    let pathnames = this._pathinfos.map(v=>v.path);
+    let state;
+    let pathnames = this._pathinfos.map(v=>v.pathname);
 
-    let addPath = path=>{
-      path.split('/').forEach(v=>{
-        if(v==='') {
-          pathnames = ['/'];
-        } else if(path==='..') {
-          pathnames = pathnames.slice(0, -1);
-        } else {
-          pathnames.push(v);
-        }
-      });
-    }
+    let addPath = path=>path.split('/').forEach(v=>{
+      if(v==='') {
+        pathnames = ['/'];
+      } else if(path==='..') {
+        pathnames = pathnames.slice(0, -1);
+      } else {
+        pathnames.push(v);
+      }
+    });
 
     args.forEach(arg=>{
       if(Array.isArray(arg)) {
         addPath(arg.map((v,i)=>i?encodeURIComponent(v):v).join(':'));
       }else if(typeof arg==='object') {
-        if(!arg._state) query = {...query, ...arg}
-        if(arg._state) { delete arg._state; state = {...state, ...arg} }
+        if(arg.query) query = arg.query;
+        if(arg.state) state = arg.state;
       }else {
         addPath(String(arg));
       }
     })
 
-    //pathname, search, hash, key, state
     return {
       state:this.passState?{...this.history.location.state, ...state}:state,
       pathname: pathnames.map((v,i,a)=>i===0&&v==='/'&&a.length>1?'':v).join('/'),
@@ -430,7 +352,7 @@ export default class Router {
     };
   }
 
-  getUrlPath(...args) {
+  getPathName(...args) {
     return this.history.createHref(this.getLocationInfo(...args));
   }
 
@@ -438,17 +360,17 @@ export default class Router {
     return window.location.origin+window.location.pathname+window.location.search+this.getUrlPath(...args);
   }
   
-  block(blockInfo) {
-    this.app.log.info('router block', blockInfo);
-    this._blockLocation = this.history.location;
-    if(typeof blockInfo==='function') blockInfo(this.app);
+  block(_block) {
+    this.app.log.info('router block', _block);
+    this._block = _block||this.history.location;
+    if(typeof _block==='function') this._block = _block(this.app);
     return true;
   }
 
   restore(location) {
     this.app.log.info('router restore', location);
-    location||this._blockLocation?this.history.replace(location||this._blockLocation):this.replaceRoot();
-    this._blockLocation = null;
+    location||this._block?this.history.replace(location||this._block):this.replaceRoot();
+    this._block = null;
     return true;
   }
 
@@ -471,18 +393,17 @@ export default class Router {
   }
 
   refresh() {
-    this._errorInfo = null;
+    this._clearError();
     this._updatePathInfos(this.history.location);
     return true;
   }
 
-  error(message, title, _id) {
-    this._errorInfo = {params: [message, title, _id]};
-    this._updateRender();
+  pushRoot(...args) {
+    this.push(['/', ...args]);
+  }
+
+  replaceRoot(...args) {
+    this.replace(['/', ...args]);
   }
 }
 
-
-Router.RouterComponent = RouterComponent;
-Router.PageLoading = PageLoading;
-Router.PageError = PageError;

@@ -1,7 +1,5 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -9,11 +7,19 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-require("core-js/modules/es6.array.find-index");
-
 require("core-js/modules/es6.regexp.replace");
 
+require("core-js/modules/es6.array.find-index");
+
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+require("core-js/modules/es6.string.ends-with");
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
+var _toArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toArray"));
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 require("core-js/modules/es7.symbol.async-iterator");
 
@@ -21,219 +27,58 @@ require("core-js/modules/es6.symbol");
 
 require("core-js/modules/es6.array.from");
 
-require("core-js/modules/es6.array.find");
-
-require("core-js/modules/es6.string.ends-with");
-
-require("core-js/modules/es6.string.starts-with");
-
-require("core-js/modules/es6.object.keys");
-
 require("regenerator-runtime/runtime");
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+require("core-js/modules/es6.function.name");
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+require("core-js/modules/es7.object.entries");
+
+require("core-js/modules/es6.array.find");
 
 require("core-js/modules/es6.regexp.split");
 
 require("core-js/modules/es6.regexp.search");
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
-
-require("core-js/modules/es6.object.assign");
-
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-require("core-js/modules/web.dom.iterable");
+require("core-js/modules/es6.string.starts-with");
 
 require("core-js/modules/es6.array.iterator");
 
-require("core-js/modules/es7.object.entries");
+require("core-js/modules/es6.object.keys");
+
+require("core-js/modules/web.dom.iterable");
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
-require("core-js/modules/es6.function.name");
-
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 
 var _createHashHistory = _interopRequireDefault(require("history/createHashHistory"));
 
 var _path = require("path");
 
-var PageLoading = function PageLoading(props) {
-  return _react.default.createElement("div", {
-    style: {
-      padding: 8
-    }
-  }, "loading...");
-};
+var _routerComponent = _interopRequireDefault(require("./router.component.js"));
 
-var PageError = function PageError(props) {
-  var app = props.app,
-      data = props.data;
-  return _react.default.createElement("div", {
-    style: {
-      padding: 8
-    }
-  }, _react.default.createElement("div", null, _react.default.createElement("span", null, "error"), _react.default.createElement("button", {
-    style: {
-      padding: 4
-    },
-    onClick: function onClick() {
-      return app.router.refresh();
-    }
-  }, "[refresh]"), _react.default.createElement("button", {
-    style: {
-      padding: 4
-    },
-    onClick: function onClick() {
-      return app.router.replaceRoot();
-    }
-  }, "[home]")), _react.default.createElement("h3", null, data.errorRoute ? data.errorRoute : data.params[1]), _react.default.createElement("hr", null), _react.default.createElement("p", null, app.utils.message2String(data.errorRoute ? data.name : data.params[0])));
-};
+var _routerLoading = _interopRequireDefault(require("./router.loading.js"));
 
-var RouterComponent =
-/*#__PURE__*/
-function (_React$Component) {
-  (0, _inherits2.default)(RouterComponent, _React$Component);
+var _routerError = _interopRequireDefault(require("./router.error.js"));
 
-  function RouterComponent() {
-    (0, _classCallCheck2.default)(this, RouterComponent);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(RouterComponent).apply(this, arguments));
-  }
-
-  (0, _createClass2.default)(RouterComponent, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this = this;
-
-      this.eventOffRouterUpdate = this.props.app.event.on(this.props.app._id, 'onRouterUpdate', function () {
-        return _this.forceUpdate();
-      });
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      this.eventOffRouterUpdate();
-    }
-  }, {
-    key: "_renderPage",
-    value: function _renderPage(_ref, activeId, focusId) {
-      var _this2 = this;
-
-      var _id = _ref._id,
-          _idParent = _ref._idParent,
-          paramObj = _ref.paramObj,
-          query = _ref.query,
-          state = _ref.state,
-          embed = _ref.embed,
-          viewItems = _ref.viewItems,
-          embeds = _ref.embeds,
-          routeName = _ref.routeName,
-          route = _ref.route;
-      var app = this.props.app;
-      var embedsPage = {};
-      Object.entries(embeds).map(function (_ref2) {
-        var _ref3 = (0, _slicedToArray2.default)(_ref2, 2),
-            k = _ref3[0],
-            v = _ref3[1];
-
-        return embedsPage[k] = _this2._renderPage(v, activeId, focusId);
-      });
-      var props = {
-        app: app,
-        key: _id,
-        _id: _id,
-        route: (0, _objectSpread2.default)({}, route, {
-          routeName: routeName,
-          _idParent: _idParent,
-          params: paramObj,
-          query: query,
-          state: state,
-          active: embed ? _idParent === activeId : _id === activeId,
-          embed: embed
-        }),
-        views: viewItems.map(function (v) {
-          return _this2._renderView(v);
-        }),
-        embeds: embedsPage
-      };
-
-      if (route.loader) {
-        route.loader(app).then(function (v) {
-          Object.assign(route, v, {
-            loader: null
-          });
-
-          _this2.forceUpdate();
-        });
-        return _react.default.createElement(Router.PageLoading, {
-          key: _id
-        });
-      } else if (typeof route.component === 'function') {
-        return _react.default.createElement(app.Page, props);
-      } else {
-        return _react.default.createElement(Router.PageError, {
-          key: _id,
-          app: app,
-          data: {
-            errorRoute: "wrong component"
-          }
-        });
-      }
-    }
-  }, {
-    key: "_renderView",
-    value: function _renderView(_ref4) {
-      var Component = _ref4.content,
-          props = _ref4.props,
-          _ref4$options = _ref4.options,
-          _id = _ref4$options._id,
-          isContentComponent = _ref4$options.isContentComponent;
-      var aprops = (0, _objectSpread2.default)({}, isContentComponent ? {} : Component.porps, props, {
-        key: _id
-      });
-      return isContentComponent ? _react.default.createElement(Component, aprops) : (0, _typeof2.default)(Component) === 'object' && Component.type ? (0, _react.cloneElement)(Component, aprops) : Component;
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this3 = this;
-
-      var _this$props$app$route = this.props.app.router,
-          _pathinfos = _this$props$app$route._pathinfos,
-          _errorInfo = _this$props$app$route._errorInfo,
-          _activeId = _this$props$app$route._activeId,
-          _focusId = _this$props$app$route._focusId;
-      var viewItems = this.props.app.router.getNoPageViews().map(function (v) {
-        return (0, _objectSpread2.default)({}, v);
-      });
-
-      if (!_errorInfo) {
-        return _react.default.createElement(_react.default.Fragment, null, _pathinfos.map(function (v) {
-          return _this3._renderPage(v, _activeId, _focusId);
-        }), viewItems.map(function (v) {
-          return _this3._renderView(v, _activeId, _focusId);
-        }));
-      } else {
-        return _react.default.createElement(Router.PageError, {
-          app: this.props.app,
-          data: _errorInfo
-        });
-      }
-    }
-  }]);
-  return RouterComponent;
-}(_react.default.Component);
+var spe = '/';
+var ParamSpe = ':';
+var SubPageSpe = '|';
+var ParamOptional = '?';
+var PageSign = '#';
+/**
+ * @class
+ * ***流程***
+ * 1. router 构建期间，监听app 启动事件，在onAppStartRouter 事件时，将RouterComponent 加入到app 根元素上；监听浏览器地址栏
+ * 1. 用户通过navigator 函数(push, relace, back 等)操作，解析locationinfo，触发浏览器地址栏改变
+ * 1. router 监听到地址栏变化后，解析url，产生pathinfos， 并发出render 事件, RouterComponnent
+ */
 
 var Router =
 /*#__PURE__*/
@@ -241,86 +86,156 @@ function () {
   // constructor
   // ----------------------------------------
   function Router(app) {
-    var _this4 = this;
+    var _this = this;
 
     (0, _classCallCheck2.default)(this, Router);
     this.app = app;
     this._id = app._id + '.router';
-    this._routes = {};
-    this._views = [];
-    this._pages = {};
-    this._pathinfos = [];
-    this._errorInfo = undefined;
+    this.RouterComponent = _routerComponent.default;
+    this.PageLoading = _routerLoading.default;
+    this.PageError = _routerError.default;
+    this._routes = {}; // config routes for app 
+
+    this._views = []; // current views on runtime
+
+    this._pages = {}; // current pages on runtime
+
+    this._pathinfos = []; // current location obj
+
     this._activeId = undefined;
     ;
     this._focusId = undefined;
-    this._blockLocation = undefined;
+    this._states = {}; // current pathname state on runtime
+
+    this._error = undefined;
+    this._block = undefined;
     this._viewIdNum = 0;
     this._historyStackCount = 0;
     this.passQuery = false;
     this.passState = false;
     this.passParams = false;
     this.app.event.on(this.app._id, 'onPageAdd', function (_id, page) {
-      page && _this4._addPage(_id, page);
+      page && _this._addPage(_id, page);
     }, this._id);
     this.app.event.on(this.app._id, 'onPageRemove', function (_id, page) {
-      page && _this4._removePage(_id);
+      page && _this._removePage(_id);
     }, this._id);
     this.app.event.on(this.app._id, 'onAppStartRouter', function () {
-      return _this4.app.render.component = _react.default.createElement(Router.RouterComponent, {
-        app: _this4.app
+      return _this.app.render.component = _react.default.createElement(_this.RouterComponent, {
+        app: _this.app
       });
     }, this._id);
     this.app.event.on(this.app._id, 'onAppStartRender', function () {
-      _this4._updateRender();
+      _this._updateRender();
     }, this._id);
+    this.history = (0, _createHashHistory.default)();
+    this.history.listen(function (location, action) {
+      return _this._handleLocationChange(location, action);
+    });
 
-    this._initHistory();
-
-    this._initRoute();
+    this._handleLocationChange(this.history.location, this.history.action);
   }
 
   (0, _createClass2.default)(Router, [{
     key: "destructor",
     value: function destructor() {
       this.app.event.off(this._id);
-    }
+    } // render
+    // --------------------------------------
+
   }, {
     key: "_updateRender",
     value: function _updateRender() {
       this.app.event.emit(this.app._id, 'onRouterUpdate');
-    } // route
+    } // history
     // --------------------------------------
 
   }, {
-    key: "_initHistory",
-    value: function _initHistory() {
-      var _this5 = this;
+    key: "_handleLocationChange",
+    value: function _handleLocationChange(location, action) {
+      var _this2 = this;
 
-      var handleLocationChange = function handleLocationChange(location, action) {
-        _this5.app.log.info('router location', location);
+      this.app.log.info('router location', location);
 
-        _this5._errorInfo = null;
+      this._clearError();
 
-        _this5._updateQuerys(location);
-
-        _this5._updateStack(action, location);
-
-        _this5._updatePathInfos(location);
-      };
-
-      this.history = (0, _createHashHistory.default)();
-      this.history.listen(function (location, action) {
-        return handleLocationChange(location, action);
+      Object.keys(this._states).filter(function (v) {
+        return !location.pathname.startsWith(v);
+      }).forEach(function (v) {
+        delete _this2._states[v];
       });
-      handleLocationChange(this.history.location, this.history.action);
-    }
-  }, {
-    key: "_updateStack",
-    value: function _updateStack(action, location) {
+      if (location.state) this._states[location.pathname] = location.state;
+      location.query = {};
+      location.search = location.search.slice(1).trim();
+      location.search && location.search.split('&').forEach(function (v) {
+        var vs = v.split('=');
+        location.query[vs[0]] = decodeURIComponent(vs[1]);
+      });
       if (action === 'PUSH') this._historyStackCount++;
       if (action === 'POP') this._historyStackCount = Math.max(--this._historyStackCount, 0);
+      var pos = 0;
+      var pathnames = [];
+
+      while (pos < location.pathname.length - 1) {
+        var index = location.pathname.indexOf(spe, pos + 1);
+        index = index >= 0 ? index : location.pathname.length;
+        var sub = location.pathname.slice(pos + 1, index);
+
+        if (pos === 0 && sub[0] === ParamSpe || this.getRoute(spe + sub.split(ParamSpe)[0]).length) {
+          pathnames.push(spe + sub);
+        } else if (pos === 0) {
+          pathnames.push(spe);
+          pathnames.push(sub);
+        } else {
+          pathnames.push(sub);
+        }
+
+        pos = index;
+      }
+
+      if (!pathnames.length) pathnames.push(spe);
+      location.pathnames = pathnames;
+
+      this._updatePathInfos(location);
     }
+  }, {
+    key: "setRoutes",
+    // route manager
+    // --------------------------------------
+    value: function setRoutes(routes) {
+      this._routes = routes;
+
+      this._updatePathInfos(this.history.location);
+    }
+  }, {
+    key: "getRoutes",
+    value: function getRoutes() {
+      return this._routes || {};
+    }
+  }, {
+    key: "getRoute",
+    value: function getRoute(name) {
+      var route = Object.entries(this._routes).find(function (_ref) {
+        var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+            k = _ref2[0],
+            v = _ref2[1];
+
+        return k.split(':')[0] === name;
+      });
+      return route ? [route[0], typeof route[1] === 'function' ? {
+        component: route[1]
+      } : route[1]] : [];
+    }
+  }, {
+    key: "addRoute",
+    value: function addRoute(name, route) {
+      if (!name || !route) return;
+      this._routes[name] = route;
+
+      this._updatePathInfos(this.history.location);
+    } // router
+    // --------------------------------------
+
   }, {
     key: "getStackCount",
     value: function getStackCount() {
@@ -332,23 +247,26 @@ function () {
       return this.app.router._pathinfos[this.app.router._pathinfos.length - 1].name === '/';
     }
   }, {
-    key: "_updateQuerys",
-    value: function _updateQuerys(location) {
-      location.query = {};
-      location.search && location.search.slice(1).split('&').forEach(function (v) {
-        var vs = v.split('=');
-        location.query[vs[0]] = vs[1];
-      });
+    key: "isFocus",
+    value: function isFocus(_id) {
+      return this._focusId === _id;
     }
+  }, {
+    key: "isActive",
+    value: function isActive(_id) {
+      return this._activeId === _id;
+    }
+    /* parse locationinfo to pathinfo */
+
   }, {
     key: "_updatePathInfos",
     value: function () {
       var _updatePathInfos2 = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
       _regenerator.default.mark(function _callee(location) {
-        var _this6 = this;
+        var _this3 = this;
 
-        var pathname, spe, paramSpe, subPageSpe, paramOptional, errorTag, pageSign, pos, pathinfos, focusId, activeId, index, sub, fullPath, paramObj, viewItems, focusViewItem, activePageItem, pageFocusViewItem, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, pathinfo, blockInfo;
+        var fullPathName, _idParent, params, pathinfos, focusId, activeId, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, viewItems, focusViewItem, activePageItem, pageFocusViewItem, _i, pathinfo, _block;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -362,140 +280,170 @@ function () {
                 return _context.abrupt("return");
 
               case 2:
-                pathname = location.pathname;
-                spe = '/';
-                paramSpe = ':';
-                subPageSpe = '|';
-                paramOptional = '?';
-                errorTag = '/error';
-                pageSign = '#';
-                pos = 0;
+                fullPathName = '';
+                params = {};
                 pathinfos = [];
                 focusId = undefined;
                 activeId = undefined;
-                /* pathname parse*/
-
-                while (pos < pathname.length - 1) {
-                  index = pathname.indexOf(spe, pos + 1);
-                  index = index >= 0 ? index : pathname.length;
-                  sub = pathname.slice(pos + 1, index);
-
-                  if (pos === 0 && (sub[0] === paramSpe || (spe + sub).startsWith(errorTag) || this.getRoute(spe + sub.split(paramSpe)[0]).length)) {
-                    pathinfos.push(spe + sub);
-                  } else if (pos === 0) {
-                    pathinfos.push(spe);
-                    pathinfos.push(sub);
-                  } else {
-                    pathinfos.push(sub);
-                  }
-
-                  pos = index;
-                }
-
-                if (!pathinfos.length) pathinfos.push(spe);
                 /* route */
 
-                fullPath = '';
-                paramObj = {};
-                pathinfos = pathinfos.map(function (v, i, r) {
-                  var vs = v.split(paramSpe);
-                  var aFullPath = (0, _path.join)(fullPath, v);
+                _iteratorNormalCompletion = true;
+                _didIteratorError = false;
+                _iteratorError = undefined;
+                _context.prev = 10;
 
-                  var _id = pageSign + aFullPath;
+                _loop = function _loop() {
+                  var pathname = _step.value;
+                  fullPathName = (0, _path.join)(fullPathName, pathname);
 
-                  var ret = {
-                    name: vs[0],
-                    params: vs.slice(1),
-                    path: v,
-                    fullPath: aFullPath,
+                  var _pathname$split = pathname.split(ParamSpe),
+                      _pathname$split2 = (0, _toArray2.default)(_pathname$split),
+                      name = _pathname$split2[0],
+                      pathnameParams = _pathname$split2.slice(1);
+
+                  var _id = PageSign + fullPathName;
+
+                  var pathinfo = {
                     _id: _id,
-                    _idParent: pageSign + fullPath,
-                    embeds: {},
-                    paramObj: _this6.passParams ? (0, _objectSpread2.default)({}, paramObj) : {},
+                    _idParent: _idParent,
+                    name: name,
+                    pathname: pathname,
+                    fullPathName: fullPathName,
                     query: location.query,
-                    state: location.state,
-                    viewItems: _this6.getPageViews(_id)
+                    state: _this3._states[fullPathName],
+                    pathnameParams: pathnameParams,
+                    embeds: {},
+                    viewItems: _this3.getPageViews(_id)
                   };
-                  fullPath = ret.fullPath;
 
-                  var _this6$getRoute = _this6.getRoute(ret.name),
-                      _this6$getRoute2 = (0, _slicedToArray2.default)(_this6$getRoute, 2),
-                      routeName = _this6$getRoute2[0],
-                      route = _this6$getRoute2[1];
+                  var _this3$getRoute = _this3.getRoute(pathinfo.name),
+                      _this3$getRoute2 = (0, _slicedToArray2.default)(_this3$getRoute, 2),
+                      routeName = _this3$getRoute2[0],
+                      route = _this3$getRoute2[1];
 
-                  if (ret.name === errorTag) {
-                    ret.errorPage = true;
-                    !_this6._errorInfo && (_this6._errorInfo = ret);
-                    return undefined;
-                  } else {
-                    ret.routeName = routeName;
-                    ret.route = route;
-
-                    if (!ret.routeName || !ret.route) {
-                      ret.errorRoute = 'no route';
-                      !_this6._errorInfo && (_this6._errorInfo = ret);
-                      return ret;
-                    }
-                  }
-
-                  (Array.isArray(route.embeds) ? route.embeds.map(function (vv) {
-                    return [vv, vv];
-                  }) : Object.entries(route.embeds || {})).forEach(function (_ref5) {
-                    var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
-                        kk = _ref6[0],
-                        vv = _ref6[1];
-
-                    var _idEmbed = ret._id + subPageSpe + vv;
-
-                    var retEmbed = {
-                      name: vv,
-                      params: ret.params,
-                      path: ret.path,
-                      fullPath: ret.fullPath,
-                      _id: _idEmbed,
-                      _idParent: ret._id,
-                      embed: true,
-                      embeds: {},
-                      paramObj: ret.paramObj,
-                      query: ret.query,
-                      state: ret.state,
-                      viewItems: _this6.getPageViews(_idEmbed)
-                    };
-
-                    var _this6$getRoute3 = _this6.getRoute(retEmbed.name),
-                        _this6$getRoute4 = (0, _slicedToArray2.default)(_this6$getRoute3, 2),
-                        routeNameEmbed = _this6$getRoute4[0],
-                        routeEmbed = _this6$getRoute4[1];
-
-                    retEmbed.routeName = routeNameEmbed;
-                    retEmbed.route = routeEmbed;
-
-                    if (!retEmbed.routeName || !retEmbed.route) {
-                      retEmbed.errorRoute = 'no route';
-                      !_this6._errorInfo && (_this6._errorInfo = ret);
-                    }
-
-                    ret.embeds[kk] = retEmbed;
+                  if (!routeName || !route) return {
+                    v: _this3.error("route name:" + pathinfo.name, 'no route error')
+                  };
+                  pathinfo.routeName = routeName;
+                  pathinfo.route = route;
+                  pathinfo.routeParams = routeName.split(ParamSpe).slice(1);
+                  pathinfo.params = _this3.passParams ? (0, _objectSpread2.default)({}, params) : {};
+                  pathinfo.routeParams.forEach(function (v, i) {
+                    var optional = v.endsWith(ParamOptional);
+                    if (optional) v = v.slice(0, -1);
+                    if (!optional && i > pathinfo.pathnameParams.length - 1) return _this3.error("params name: ".concat(v), 'miss require param error');
+                    pathinfo.params[v] = pathinfo.pathnameParams[i] ? decodeURIComponent(pathinfo.pathnameParams[i]) : null;
+                    if (_this3.passParams) params[name] = pathinfo.params[v];
                   });
-                  var routeParams = routeName.split(paramSpe).slice(1);
+                  var _iteratorNormalCompletion2 = true;
+                  var _didIteratorError2 = false;
+                  var _iteratorError2 = undefined;
 
-                  if (routeParams.filter(function (vv) {
-                    return !vv.endsWith(paramOptional);
-                  }).length > ret.params.length) {
-                    ret.errorRoute = 'miss require param';
-                    !_this6._errorInfo && (_this6._errorInfo = ret);
-                  } else {
-                    ret.params.forEach(function (vv, ii) {
-                      var name = routeParams[ii] ? routeParams[ii].endsWith(paramOptional) ? routeParams[ii].slice(0, -1) : routeParams[ii] : ii;
-                      ret.paramObj[name] = decodeURIComponent(vv);
-                      if (_this6.passParams) paramObj[name] = ret.paramObj[name];
-                    });
+                  try {
+                    for (var _iterator2 = (Array.isArray(route.embeds) ? route.embeds.map(function (v) {
+                      return [v, v];
+                    }) : Object.entries(route.embeds || {}))[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                      var _step2$value = (0, _slicedToArray2.default)(_step2.value, 2),
+                          k = _step2$value[0],
+                          v = _step2$value[1];
+
+                      var embed = (0, _objectSpread2.default)({}, pathinfo);
+                      embed._idParent = embed._id;
+                      embed._id = embed._id + SubPageSpe + v;
+                      embed.name = v;
+                      embed.embed = true;
+                      embed.embeds = {};
+                      embed.viewItems = _this3.getPageViews(embed._id);
+
+                      var _this3$getRoute3 = _this3.getRoute(embed.name),
+                          _this3$getRoute4 = (0, _slicedToArray2.default)(_this3$getRoute3, 2),
+                          routeNameEmbed = _this3$getRoute4[0],
+                          routeEmbed = _this3$getRoute4[1];
+
+                      if (!routeNameEmbed || !routeEmbed) return {
+                        v: _this3.error("route name:" + embed.name, 'no route error')
+                      };
+                      embed.routeName = routeNameEmbed;
+                      embed.route = routeEmbed;
+                      pathinfo.embeds[k] = embed;
+                    }
+                  } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                  } finally {
+                    try {
+                      if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+                        _iterator2.return();
+                      }
+                    } finally {
+                      if (_didIteratorError2) {
+                        throw _iteratorError2;
+                      }
+                    }
                   }
 
-                  return ret;
-                });
-                /* active & focus */
+                  _idParent = _id;
+                  pathinfos.push(pathinfo);
+                };
 
+                _iterator = location.pathnames[Symbol.iterator]();
+
+              case 13:
+                if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
+                  _context.next = 20;
+                  break;
+                }
+
+                _ret = _loop();
+
+                if (!((0, _typeof2.default)(_ret) === "object")) {
+                  _context.next = 17;
+                  break;
+                }
+
+                return _context.abrupt("return", _ret.v);
+
+              case 17:
+                _iteratorNormalCompletion = true;
+                _context.next = 13;
+                break;
+
+              case 20:
+                _context.next = 26;
+                break;
+
+              case 22:
+                _context.prev = 22;
+                _context.t0 = _context["catch"](10);
+                _didIteratorError = true;
+                _iteratorError = _context.t0;
+
+              case 26:
+                _context.prev = 26;
+                _context.prev = 27;
+
+                if (!_iteratorNormalCompletion && _iterator.return != null) {
+                  _iterator.return();
+                }
+
+              case 29:
+                _context.prev = 29;
+
+                if (!_didIteratorError) {
+                  _context.next = 32;
+                  break;
+                }
+
+                throw _iteratorError;
+
+              case 32:
+                return _context.finish(29);
+
+              case 33:
+                return _context.finish(26);
+
+              case 34:
+                /* active & focus */
                 viewItems = this.getNoPageViews();
                 focusViewItem = Array.from(viewItems).reverse().find(function (v) {
                   return v.options.isModal;
@@ -515,167 +463,73 @@ function () {
                     focusId = activePageItem._id;
                   }
                 }
+                /* block */
 
-                _iteratorNormalCompletion = true;
-                _didIteratorError = false;
-                _iteratorError = undefined;
-                _context.prev = 27;
-                _iterator = pathinfos[Symbol.iterator]();
 
-              case 29:
-                if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 39;
-                  break;
-                }
-
-                pathinfo = _step.value;
-                _context.next = 33;
-                return this.app.event.emit(this.app._id, 'onRouteMatch', pathinfo, location);
-
-              case 33:
-                blockInfo = _context.sent;
-
-                if (!blockInfo) {
-                  _context.next = 36;
-                  break;
-                }
-
-                return _context.abrupt("return", this.block(blockInfo));
-
-              case 36:
-                _iteratorNormalCompletion = true;
-                _context.next = 29;
-                break;
-
-              case 39:
-                _context.next = 45;
-                break;
+                _i = 0;
 
               case 41:
-                _context.prev = 41;
-                _context.t0 = _context["catch"](27);
-                _didIteratorError = true;
-                _iteratorError = _context.t0;
-
-              case 45:
-                _context.prev = 45;
-                _context.prev = 46;
-
-                if (!_iteratorNormalCompletion && _iterator.return != null) {
-                  _iterator.return();
-                }
-
-              case 48:
-                _context.prev = 48;
-
-                if (!_didIteratorError) {
+                if (!(_i < pathinfos.length)) {
                   _context.next = 51;
                   break;
                 }
 
-                throw _iteratorError;
+                pathinfo = pathinfos[_i];
+                _context.next = 45;
+                return this.app.event.emit(this.app._id, 'onRouteMatch', pathinfo, location);
+
+              case 45:
+                _block = _context.sent;
+
+                if (!_block) {
+                  _context.next = 48;
+                  break;
+                }
+
+                return _context.abrupt("return", this.block(_block));
+
+              case 48:
+                _i++;
+                _context.next = 41;
+                break;
 
               case 51:
-                return _context.finish(48);
-
-              case 52:
-                return _context.finish(45);
-
-              case 53:
+                /* update */
                 this._focusId = focusId;
                 this._activeId = activeId;
                 this._pathinfos = pathinfos;
 
                 this._updateRender();
 
-              case 57:
+              case 55:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[27, 41, 45, 53], [46,, 48, 52]]);
+        }, _callee, this, [[10, 22, 26, 34], [27,, 29, 33]]);
       }));
 
       return function _updatePathInfos(_x) {
         return _updatePathInfos2.apply(this, arguments);
       };
-    }()
+    }() // error
+    // ---------------------------------------
+
   }, {
-    key: "_initRoute",
-    value: function _initRoute() {
-      this._genRouteMethod('/');
-
-      this._genRouteMethod('/error');
-    }
-  }, {
-    key: "_genRouteMethod",
-    value: function _genRouteMethod(path) {
-      var _this7 = this;
-
-      if (!path) return;
-      var name = path === '/' ? 'Root' : this.app.utils.captilaze(path[0] === '/' ? path.slice(1) : path);
-
-      this['push' + name] = function () {
-        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-          args[_key] = arguments[_key];
-        }
-
-        return _this7.push([path].concat(args));
+    key: "error",
+    value: function error(message, title, data, _id) {
+      this._error = {
+        message: message,
+        title: title,
+        _id: _id
       };
 
-      this['replace' + name] = function () {
-        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-          args[_key2] = arguments[_key2];
-        }
-
-        return _this7.replace([path].concat(args));
-      };
+      this._updateRender();
     }
   }, {
-    key: "setRoutes",
-    value: function setRoutes(routes) {
-      var _this8 = this;
-
-      this._routes = routes;
-      Object.keys(routes || {}).forEach(function (v) {
-        return v && _this8._genRouteMethod(v.split(':')[0]);
-      });
-
-      this._updatePathInfos(this.history.location);
-    }
-  }, {
-    key: "getRoutes",
-    value: function getRoutes() {
-      return this._routes || {};
-    }
-  }, {
-    key: "getRoute",
-    value: function getRoute(name) {
-      var route = Object.entries(this._routes).find(function (_ref7) {
-        var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
-            k = _ref8[0],
-            v = _ref8[1];
-
-        return k.split(':')[0] === name;
-      });
-      return route ? [route[0], typeof route[1] === 'function' ? {
-        component: route[1]
-      } : route[1]] : [];
-    }
-  }, {
-    key: "addRoute",
-    value: function addRoute(name, route) {
-      if (!name || !route) return;
-      this._routes[name] = route;
-
-      this._genRouteMethod(name.split(':')[0]);
-
-      this._updatePathInfos(this.history.location);
-    }
-  }, {
-    key: "isFocus",
-    value: function isFocus(_id) {
-      return this._focusId === _id;
+    key: "_clearError",
+    value: function _clearError() {
+      this._error = null;
     } // pages
     // ---------------------------------------
 
@@ -770,26 +624,26 @@ function () {
   }, {
     key: "getNoPageViews",
     value: function getNoPageViews() {
-      return this._views.filter(function (_ref9) {
-        var options = _ref9.options;
+      return this._views.filter(function (_ref3) {
+        var options = _ref3.options;
         return !options._idPage;
       });
     }
   }, {
     key: "getPageViews",
     value: function getPageViews(_id) {
-      return this._views.filter(function (_ref10) {
-        var options = _ref10.options;
+      return this._views.filter(function (_ref4) {
+        var options = _ref4.options;
         return options._idPage === _id;
       });
     }
   }, {
     key: "removePageViews",
     value: function removePageViews(_id) {
-      var _this9 = this;
+      var _this4 = this;
 
       this.getPageViews(_id).forEach(function (v) {
-        return _this9.removeView(v.options._id);
+        return _this4.removeView(v.options._id);
       });
     } // router navigator
     // ----------------------------------------
@@ -798,14 +652,14 @@ function () {
     key: "getLocationInfo",
     value: function getLocationInfo() {
       var query = {};
-      var state = {};
+      var state;
 
       var pathnames = this._pathinfos.map(function (v) {
-        return v.path;
+        return v.pathname;
       });
 
       var addPath = function addPath(path) {
-        path.split('/').forEach(function (v) {
+        return path.split('/').forEach(function (v) {
           if (v === '') {
             pathnames = ['/'];
           } else if (path === '..') {
@@ -816,8 +670,8 @@ function () {
         });
       };
 
-      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
       }
 
       args.forEach(function (arg) {
@@ -826,26 +680,21 @@ function () {
             return i ? encodeURIComponent(v) : v;
           }).join(':'));
         } else if ((0, _typeof2.default)(arg) === 'object') {
-          if (!arg._state) query = (0, _objectSpread2.default)({}, query, arg);
-
-          if (arg._state) {
-            delete arg._state;
-            state = (0, _objectSpread2.default)({}, state, arg);
-          }
+          if (arg.query) query = arg.query;
+          if (arg.state) state = arg.state;
         } else {
           addPath(String(arg));
         }
-      }); //pathname, search, hash, key, state
-
+      });
       return {
         state: this.passState ? (0, _objectSpread2.default)({}, this.history.location.state, state) : state,
         pathname: pathnames.map(function (v, i, a) {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
-        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this.history.location.query, query) : query).map(function (_ref11) {
-          var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
-              k = _ref12[0],
-              v = _ref12[1];
+        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this.history.location.query, query) : query).map(function (_ref5) {
+          var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
+              k = _ref6[0],
+              v = _ref6[1];
 
           return k + '=' + v;
         }).reduce(function (v1, v2) {
@@ -854,8 +703,8 @@ function () {
       };
     }
   }, {
-    key: "getUrlPath",
-    value: function getUrlPath() {
+    key: "getPathName",
+    value: function getPathName() {
       return this.history.createHref(this.getLocationInfo.apply(this, arguments));
     }
   }, {
@@ -865,25 +714,25 @@ function () {
     }
   }, {
     key: "block",
-    value: function block(blockInfo) {
-      this.app.log.info('router block', blockInfo);
-      this._blockLocation = this.history.location;
-      if (typeof blockInfo === 'function') blockInfo(this.app);
+    value: function block(_block) {
+      this.app.log.info('router block', _block);
+      this._block = _block || this.history.location;
+      if (typeof _block === 'function') this._block = _block(this.app);
       return true;
     }
   }, {
     key: "restore",
     value: function restore(location) {
       this.app.log.info('router restore', location);
-      location || this._blockLocation ? this.history.replace(location || this._blockLocation) : this.replaceRoot();
-      this._blockLocation = null;
+      location || this._block ? this.history.replace(location || this._block) : this.replaceRoot();
+      this._block = null;
       return true;
     }
   }, {
     key: "push",
     value: function push() {
-      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
+      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
       }
 
       this.app.log.info('router push', args);
@@ -893,8 +742,8 @@ function () {
   }, {
     key: "replace",
     value: function replace() {
-      for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-        args[_key5] = arguments[_key5];
+      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
       }
 
       this.app.log.info('router replace', args);
@@ -912,26 +761,32 @@ function () {
   }, {
     key: "refresh",
     value: function refresh() {
-      this._errorInfo = null;
+      this._clearError();
 
       this._updatePathInfos(this.history.location);
 
       return true;
     }
   }, {
-    key: "error",
-    value: function error(message, title, _id) {
-      this._errorInfo = {
-        params: [message, title, _id]
-      };
+    key: "pushRoot",
+    value: function pushRoot() {
+      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
+      }
 
-      this._updateRender();
+      this.push(['/'].concat(args));
+    }
+  }, {
+    key: "replaceRoot",
+    value: function replaceRoot() {
+      for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+        args[_key5] = arguments[_key5];
+      }
+
+      this.replace(['/'].concat(args));
     }
   }]);
   return Router;
 }();
 
 exports.default = Router;
-Router.RouterComponent = RouterComponent;
-Router.PageLoading = PageLoading;
-Router.PageError = PageError;

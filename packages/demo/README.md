@@ -31,3 +31,4 @@ const bnorthDemo = require('bnorth-demo');
 1. browser plugin setTitle onPageResume 
 1. config
 1. border-none-a- should split to border-none-x-
+1. do not dom unactive page
