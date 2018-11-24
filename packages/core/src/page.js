@@ -121,6 +121,7 @@ export default class Page extends React.Component {
     app.event.emit(app._id, 'onPageAdd', _id, this);
     app.event.emit(this._id, 'onPageStart', this, active);
     active && app.event.emit(this._id, 'onPageActive', this, true);
+    active && app.event.emit(app._id, 'onActivePageChange', this._id);
   }
 
   componentWillUnmount() {
@@ -139,6 +140,7 @@ export default class Page extends React.Component {
 
     if(prevProps.route.active !== active) {
       app.event.emit(this._id, active?'onPageActive':'onPageInactive', this, false);
+      active && app.event.emit(app._id, 'onActivePageChange', this._id);
     }
   }
 

@@ -56,6 +56,7 @@ function () {
       this.isAndroid = /(?:android)/.test(ua);
       this.isWeChat = /(?:micromessenger)/.test(ua);
       this.isAliPay = /alipayclient/.test(ua);
+      this.isCordova = /(?:cordova)/.test(ua) || /(?:Crosswalk)/.test(ua);
     } //title
     //------------------------------
 
@@ -159,7 +160,7 @@ function () {
         return;
       }
 
-      document.cookie.match(/[^ =;]+(?=\=)/g).forEach(function (v) {
+      document.cookie.match(/[^ =;]+(?==)/g).forEach(function (v) {
         return _this.clearCookie(v);
       });
     } //jsload
@@ -203,7 +204,8 @@ function () {
 
       if (this.isiOS) {
         var iframe = document.createElement('iframe');
-        iframe.style.visibility = 'hidden'; // iframe.setAttribute('src', 'loading.png');
+        iframe.style.visibility = 'hidden';
+        iframe.setAttribute('src', 'logo.png');
 
         var iframeCallback = function iframeCallback() {
           setTimeout(function () {
@@ -241,16 +243,30 @@ function () {
   return Browser;
 }();
 
-var _default = {
-  _id: 'browser',
-  onPluginMount: function onPluginMount(app, plugin) {
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    app.Browser = Browser;
-    app.browser = new Browser(app, plugin._id, options);
-  },
-  onPluginUnmount: function onPluginUnmount(app) {
-    delete app.Browser;
-    delete app.browser;
-  }
+var _default = function _default(app) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  return {
+    _id: 'browser',
+    onPluginMount: function onPluginMount(app, plugin) {
+      app.Browser = Browser;
+      app.browser = new Browser(app, plugin._id, options);
+      if (options.defaultTitle) app.browser._defaultTitle = options.defaultTitle;
+
+      if (options.autoTitle) {
+        app.event.on(app._id, 'onActivePageChange', function (_idPage) {
+          if (!app.browser._defaultTitle) app.browser._defaultTitle = app.browser.title;
+          var page = app.router.getPage(_idPage);
+          if (page && page.props.route.title === false) return;
+          app.browser.title = page && page.props.route.title || app.browser._defaultTitle;
+        }, app.browser._id);
+      }
+    },
+    onPluginUnmount: function onPluginUnmount(app) {
+      app.event.off(app.browser._id);
+      delete app.Browser;
+      delete app.browser;
+    }
+  };
 };
+
 exports.default = _default;

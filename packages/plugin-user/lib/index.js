@@ -59,7 +59,35 @@ function () {
       var ret = this.app.storage && this.app.storage.remove(this.options.userKey);
       this.app.event.emit(this.app._id, 'onUserUpdate');
       return ret;
-    } // login
+    } // // info
+    // // --------------------------
+    // _infoNetwork(data, options) {
+    //   return this.app.request.request({
+    //     isSubmit: false,
+    //     data,
+    //     ...options,
+    //   });
+    // }
+    // _infoResult(result, data, options) {
+    //   let user = result&&result.data?{...this.data(), ...result.data}:result.data;
+    //   this.update(user);
+    // }
+    // info(data,options) {
+    //   options = this.app.utils.getOptions(this.options.info, options);
+    //   if(this._infoPrepare) [data, options] = this._infoPrepare(data, options);
+    //   return this._infoNetwork(data, options).then(result=>{
+    //     if(this._infoResultBefore) result = this._infoResultBefore(result, data, options);
+    //     if(result) {
+    //       this._infoResult(result, data, options);
+    //       if(this._infoResultAfter) result = this._infoResultAfter(result, data, options);
+    //       return result;
+    //     }else{
+    //       if(this._infoError) this._infoError(data, options);
+    //       return;
+    //     }
+    //   })
+    // }
+    // login
     // --------------------------
 
   }, {
@@ -67,7 +95,7 @@ function () {
     value: function _loginNetwork(data, options) {
       return this.app.request.request((0, _objectSpread2.default)({
         data: data
-      }, options, this.loginOptions), false);
+      }, options));
     }
   }, {
     key: "_loginResult",
@@ -84,8 +112,7 @@ function () {
     value: function login(data, options) {
       var _this = this;
 
-      options = this.app.utils.getOptions(this.options, options);
-      options = this.app.utils.getOptions(options, options.login);
+      options = this.app.utils.getOptions(this.options.login, options);
 
       if (this._loginPrepare) {
         var _this$_loginPrepare = this._loginPrepare(data, options);
@@ -119,7 +146,7 @@ function () {
     value: function _logoutNetwork(data, options) {
       this.app.request.request((0, _objectSpread2.default)({
         data: data
-      }, options, this.logoutOptions), false);
+      }, options));
       return Promise.resolve(true);
     }
   }, {
@@ -130,15 +157,14 @@ function () {
   }, {
     key: "_logoutNavigator",
     value: function _logoutNavigator(result, data, options) {
-      this.pushLogin();
+      this.options.logoutToHomeOrLogin ? this.app.router.pushRoot() : this.app.router.pushLogin();
     }
   }, {
     key: "logout",
     value: function logout(data, options) {
       var _this2 = this;
 
-      options = this.app.utils.getOptions(this.options, options);
-      options = this.app.utils.getOptions(options, options.logout);
+      options = this.app.utils.getOptions(this.options.logout, options);
 
       if (this._logoutPrepare) {
         var _this$_logoutPrepare = this._logoutPrepare(data, options);
@@ -172,9 +198,15 @@ function () {
     value: function pushLogin(confirm) {
       var _this3 = this;
 
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
       if (!this.app.router.pushLogin) return;
       return confirm ? this.toLoginConfirm(function () {
-        return _this3.app.router.pushLogin();
+        var _this3$app$router;
+
+        return (_this3$app$router = _this3.app.router).pushLogin.apply(_this3$app$router, args);
       }, confirm) : this.app.router.pushLogin();
     }
   }, {
@@ -182,15 +214,30 @@ function () {
     value: function replaceLogin(confirm) {
       var _this4 = this;
 
+      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
+
       if (!this.app.router.replaceLogin) return;
       return confirm ? this.toLoginConfirm(function () {
-        return _this4.app.router.replaceLogin();
+        var _this4$app$router;
+
+        return (_this4$app$router = _this4.app.router).replaceLogin.apply(_this4$app$router, args);
       }, confirm) : this.app.router.replaceLogin();
     }
   }, {
     key: "toLoginConfirm",
     value: function toLoginConfirm(cb, confirm) {
-      cb && cb();
+      if (confirm) {
+        this.app.modal && this.app.modal.show('是否登录？', {
+          role: 'prompt',
+          onAction: function onAction(index) {
+            index >= 1 && cb && cb();
+          }
+        });
+      } else {
+        cb && cb();
+      }
     }
   }]);
   return User;
@@ -198,6 +245,7 @@ function () {
 
 User.options = {
   userKey: 'bnorth-keys-user',
+  logoutToHomeOrLogin: true,
   info: {
     url: 'user',
     method: 'get'
@@ -218,7 +266,18 @@ var _default = function _default(app) {
     _dependencies: ['request', 'storage'],
     onPluginMount: function onPluginMount(app, plugin, options) {
       app.User = User;
-      app.user = new User(app, plugin._id, options);
+      app.user = new User(app, plugin._id, options); // app.UserState = class Request extends app.Request {
+      //   constructor(app, _id, options) {
+      //     super(app, _id, options);
+      //     app.event.on(app._id, 'onUserUpdate', user=>{this.update(user)}, this._id);
+      //   }
+      //   fetch(data, options) {
+      //     return this.app.user.info(data, options);
+      //   }
+      //   data() {
+      //     return this.app.user.data();
+      //   }
+      // }
     },
     onPluginUnmount: function onPluginUnmount(app) {
       delete app.User;
@@ -229,7 +288,7 @@ var _default = function _default(app) {
           route = _ref.route;
 
       if (route && route.checkLogin && !app.user.isLogin()) return function (app) {
-        return app.router.replaceLogin();
+        app.router.replaceLogin();
       };
     }
   };

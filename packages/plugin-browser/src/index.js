@@ -30,6 +30,7 @@ class Browser {
     this.isAndroid = /(?:android)/.test(ua);
     this.isWeChat  = /(?:micromessenger)/.test(ua);
     this.isAliPay  = /alipayclient/.test(ua);
+    this.isCordova = /(?:cordova)/.test(ua)||/(?:Crosswalk)/.test(ua);
   }
 
   //title
@@ -131,7 +132,7 @@ class Browser {
 
   // cookie
   //------------------------------
-  setCookie(cname, cvalue, exdays) {
+  setCookie(cname, cvalue, exdays=7) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*86400000));
     var expires = "expires="+d.toUTCString();
@@ -149,7 +150,7 @@ class Browser {
 
   clearCookie(name) { 
     if(name){ this.setCookie(name, "", -1); return }
-    document.cookie.match(/[^ =;]+(?=\=)/g).forEach(v=>this.clearCookie(v));
+    document.cookie.match(/[^ =;]+(?==)/g).forEach(v=>this.clearCookie(v));
   } 
 
   //jsload
@@ -170,16 +171,27 @@ class Browser {
 }
 
 
-export default {
+export default (app,options={})=>({
   _id: 'browser',
 
-  onPluginMount(app, plugin, options={}) {
+  onPluginMount(app, plugin) {
     app.Browser = Browser;
     app.browser = new Browser(app, plugin._id, options);
+
+    if(options.defaultTitle) app.browser._defaultTitle = options.defaultTitle;
+    if(options.autoTitle) {
+      app.event.on(app._id, 'onActivePageChange', _idPage=>{
+        if(!app.browser._defaultTitle) app.browser._defaultTitle = app.browser.title;
+        let page = app.router.getPage(_idPage);
+        if(page&&page.props.route.title===false) return;
+        app.browser.title = (page&&page.props.route.title)||app.browser._defaultTitle;
+      }, app.browser._id);
+    }
   },
 
   onPluginUnmount(app) {
+    app.event.off(app.browser._id);
     delete app.Browser;
     delete app.browser;
   },
-}
+})

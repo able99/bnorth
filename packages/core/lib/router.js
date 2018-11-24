@@ -7,8 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-require("core-js/modules/es6.regexp.replace");
-
 require("core-js/modules/es6.array.find-index");
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
@@ -33,11 +31,13 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 require("core-js/modules/es6.function.name");
 
+require("core-js/modules/es6.regexp.replace");
+
+require("core-js/modules/es6.array.find");
+
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 require("core-js/modules/es7.object.entries");
-
-require("core-js/modules/es6.array.find");
 
 require("core-js/modules/es6.regexp.split");
 
@@ -128,6 +128,12 @@ function () {
     this.app.event.on(this.app._id, 'onAppStartRender', function () {
       _this._updateRender();
     }, this._id);
+    this.app.event.on(this.app._id, 'onRouteErrorNoRoute', function (name) {
+      return _this.error("route name: ".concat(name), 'no route error');
+    }, this._id);
+    this.app.event.on(this.app._id, 'onRouteErrorNoParam', function (name) {
+      return _this.error("params name: ".concat(name), 'miss require param error');
+    }, this._id);
     this.history = (0, _createHashHistory.default)();
     this.history.listen(function (location, action) {
       return _this._handleLocationChange(location, action);
@@ -203,7 +209,16 @@ function () {
     // route manager
     // --------------------------------------
     value: function setRoutes(routes) {
+      var _this3 = this;
+
       this._routes = routes;
+      Object.entries(this._routes || {}).forEach(function (_ref) {
+        var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+            k = _ref2[0],
+            v = _ref2[1];
+
+        return v.for && _this3._addRouteNativator(k, v.for);
+      });
 
       this._updatePathInfos(this.history.location);
     }
@@ -215,10 +230,10 @@ function () {
   }, {
     key: "getRoute",
     value: function getRoute(name) {
-      var route = Object.entries(this._routes).find(function (_ref) {
-        var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-            k = _ref2[0],
-            v = _ref2[1];
+      var route = Object.entries(this._routes).find(function (_ref3) {
+        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+            k = _ref4[0],
+            v = _ref4[1];
 
         return k.split(':')[0] === name;
       });
@@ -231,8 +246,32 @@ function () {
     value: function addRoute(name, route) {
       if (!name || !route) return;
       this._routes[name] = route;
+      route.for && this._addRouteNativator(name, route.for);
 
       this._updatePathInfos(this.history.location);
+    }
+  }, {
+    key: "_addRouteNativator",
+    value: function _addRouteNativator(routeName, forName) {
+      var _this4 = this;
+
+      var name = routeName && routeName.split(ParamSpe[0]);
+
+      this["push".concat(forName)] = function () {
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        return _this4.push([name].concat(args));
+      };
+
+      this["replace".concat(forName)] = function () {
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
+
+        return _this4.replace([name].concat(args));
+      };
     } // router
     // --------------------------------------
 
@@ -264,7 +303,7 @@ function () {
       var _updatePathInfos2 = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
       _regenerator.default.mark(function _callee(location) {
-        var _this3 = this;
+        var _this5 = this;
 
         var fullPathName, _idParent, params, pathinfos, focusId, activeId, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, viewItems, focusViewItem, activePageItem, pageFocusViewItem, _i, pathinfo, _block;
 
@@ -310,30 +349,30 @@ function () {
                     pathname: pathname,
                     fullPathName: fullPathName,
                     query: location.query,
-                    state: _this3._states[fullPathName],
+                    state: _this5._states[fullPathName],
                     pathnameParams: pathnameParams,
                     embeds: {},
-                    viewItems: _this3.getPageViews(_id)
+                    viewItems: _this5.getPageViews(_id)
                   };
 
-                  var _this3$getRoute = _this3.getRoute(pathinfo.name),
-                      _this3$getRoute2 = (0, _slicedToArray2.default)(_this3$getRoute, 2),
-                      routeName = _this3$getRoute2[0],
-                      route = _this3$getRoute2[1];
+                  var _this5$getRoute = _this5.getRoute(pathinfo.name),
+                      _this5$getRoute2 = (0, _slicedToArray2.default)(_this5$getRoute, 2),
+                      routeName = _this5$getRoute2[0],
+                      route = _this5$getRoute2[1];
 
                   if (!routeName || !route) return {
-                    v: _this3.error("route name:" + pathinfo.name, 'no route error')
+                    v: _this5.app.event.emit(_this5.app._id, 'onRouteErrorNoRoute', pathinfo.name, pathinfo, location)
                   };
                   pathinfo.routeName = routeName;
                   pathinfo.route = route;
                   pathinfo.routeParams = routeName.split(ParamSpe).slice(1);
-                  pathinfo.params = _this3.passParams ? (0, _objectSpread2.default)({}, params) : {};
+                  pathinfo.params = _this5.passParams ? (0, _objectSpread2.default)({}, params) : {};
                   pathinfo.routeParams.forEach(function (v, i) {
                     var optional = v.endsWith(ParamOptional);
                     if (optional) v = v.slice(0, -1);
-                    if (!optional && i > pathinfo.pathnameParams.length - 1) return _this3.error("params name: ".concat(v), 'miss require param error');
+                    if (!optional && i > pathinfo.pathnameParams.length - 1) return _this5.app.event.emit(_this5.app._id, 'onRouteErrorNoParam', v, pathinfo, location);
                     pathinfo.params[v] = pathinfo.pathnameParams[i] ? decodeURIComponent(pathinfo.pathnameParams[i]) : null;
-                    if (_this3.passParams) params[name] = pathinfo.params[v];
+                    if (_this5.passParams) params[name] = pathinfo.params[v];
                   });
                   var _iteratorNormalCompletion2 = true;
                   var _didIteratorError2 = false;
@@ -353,15 +392,15 @@ function () {
                       embed.name = v;
                       embed.embed = true;
                       embed.embeds = {};
-                      embed.viewItems = _this3.getPageViews(embed._id);
+                      embed.viewItems = _this5.getPageViews(embed._id);
 
-                      var _this3$getRoute3 = _this3.getRoute(embed.name),
-                          _this3$getRoute4 = (0, _slicedToArray2.default)(_this3$getRoute3, 2),
-                          routeNameEmbed = _this3$getRoute4[0],
-                          routeEmbed = _this3$getRoute4[1];
+                      var _this5$getRoute3 = _this5.getRoute(embed.name),
+                          _this5$getRoute4 = (0, _slicedToArray2.default)(_this5$getRoute3, 2),
+                          routeNameEmbed = _this5$getRoute4[0],
+                          routeEmbed = _this5$getRoute4[1];
 
                       if (!routeNameEmbed || !routeEmbed) return {
-                        v: _this3.error("route name:" + embed.name, 'no route error')
+                        v: _this5.app.event.emit(_this5.app._id, 'onRouteErrorNoRoute', pathinfo.name, pathinfo, location)
                       };
                       embed.routeName = routeNameEmbed;
                       embed.route = routeEmbed;
@@ -624,26 +663,26 @@ function () {
   }, {
     key: "getNoPageViews",
     value: function getNoPageViews() {
-      return this._views.filter(function (_ref3) {
-        var options = _ref3.options;
+      return this._views.filter(function (_ref5) {
+        var options = _ref5.options;
         return !options._idPage;
       });
     }
   }, {
     key: "getPageViews",
     value: function getPageViews(_id) {
-      return this._views.filter(function (_ref4) {
-        var options = _ref4.options;
+      return this._views.filter(function (_ref6) {
+        var options = _ref6.options;
         return options._idPage === _id;
       });
     }
   }, {
     key: "removePageViews",
     value: function removePageViews(_id) {
-      var _this4 = this;
+      var _this6 = this;
 
       this.getPageViews(_id).forEach(function (v) {
-        return _this4.removeView(v.options._id);
+        return _this6.removeView(v.options._id);
       });
     } // router navigator
     // ----------------------------------------
@@ -670,8 +709,8 @@ function () {
         });
       };
 
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
+      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        args[_key3] = arguments[_key3];
       }
 
       args.forEach(function (arg) {
@@ -691,10 +730,10 @@ function () {
         pathname: pathnames.map(function (v, i, a) {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
-        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this.history.location.query, query) : query).map(function (_ref5) {
-          var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
-              k = _ref6[0],
-              v = _ref6[1];
+        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this.history.location.query, query) : query).map(function (_ref7) {
+          var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
+              k = _ref8[0],
+              v = _ref8[1];
 
           return k + '=' + v;
         }).reduce(function (v1, v2) {
@@ -716,8 +755,15 @@ function () {
     key: "block",
     value: function block(_block) {
       this.app.log.info('router block', _block);
-      this._block = _block || this.history.location;
-      if (typeof _block === 'function') this._block = _block(this.app);
+
+      if (typeof _block === 'function') {
+        this._block = this.history.location;
+        _block = _block(this.app);
+        this._block = _block || this._block;
+      } else {
+        this._block = _block || this.history.location;
+      }
+
       return true;
     }
   }, {
@@ -731,8 +777,8 @@ function () {
   }, {
     key: "push",
     value: function push() {
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
+      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+        args[_key4] = arguments[_key4];
       }
 
       this.app.log.info('router push', args);
@@ -742,8 +788,8 @@ function () {
   }, {
     key: "replace",
     value: function replace() {
-      for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-        args[_key3] = arguments[_key3];
+      for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+        args[_key5] = arguments[_key5];
       }
 
       this.app.log.info('router replace', args);
@@ -770,8 +816,8 @@ function () {
   }, {
     key: "pushRoot",
     value: function pushRoot() {
-      for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
-        args[_key4] = arguments[_key4];
+      for (var _len6 = arguments.length, args = new Array(_len6), _key6 = 0; _key6 < _len6; _key6++) {
+        args[_key6] = arguments[_key6];
       }
 
       this.push(['/'].concat(args));
@@ -779,8 +825,8 @@ function () {
   }, {
     key: "replaceRoot",
     value: function replaceRoot() {
-      for (var _len5 = arguments.length, args = new Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-        args[_key5] = arguments[_key5];
+      for (var _len7 = arguments.length, args = new Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
+        args[_key7] = arguments[_key7];
       }
 
       this.replace(['/'].concat(args));

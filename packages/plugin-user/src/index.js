@@ -32,14 +32,45 @@ class User {
     return ret;
   }
 
+  // // info
+  // // --------------------------
+  // _infoNetwork(data, options) {
+  //   return this.app.request.request({
+  //     isSubmit: false,
+  //     data,
+  //     ...options,
+  //   });
+  // }
+
+  // _infoResult(result, data, options) {
+  //   let user = result&&result.data?{...this.data(), ...result.data}:result.data;
+  //   this.update(user);
+  // }
+
+  // info(data,options) {
+  //   options = this.app.utils.getOptions(this.options.info, options);
+
+  //   if(this._infoPrepare) [data, options] = this._infoPrepare(data, options);
+  //   return this._infoNetwork(data, options).then(result=>{
+  //     if(this._infoResultBefore) result = this._infoResultBefore(result, data, options);
+  //     if(result) {
+  //       this._infoResult(result, data, options);
+  //       if(this._infoResultAfter) result = this._infoResultAfter(result, data, options);
+  //       return result;
+  //     }else{
+  //       if(this._infoError) this._infoError(data, options);
+  //       return;
+  //     }
+  //   })
+  // }
+
   // login
   // --------------------------
   _loginNetwork(data, options) {
     return this.app.request.request({
       data,
       ...options,
-      ...this.loginOptions,
-    }, false);
+    });
   }
 
   _loginResult(result, data, options) {
@@ -51,8 +82,7 @@ class User {
   }
 
   login(data,options) {
-    options = this.app.utils.getOptions(this.options, options);
-    options = this.app.utils.getOptions(options, options.login);
+    options = this.app.utils.getOptions(this.options.login, options);
 
     if(this._loginPrepare) [data, options] = this._loginPrepare(data, options);
     return this._loginNetwork(data, options).then(result=>{
@@ -75,8 +105,7 @@ class User {
     this.app.request.request({
       data,
       ...options,
-      ...this.logoutOptions,
-    }, false);
+    });
     return Promise.resolve(true);
   }
 
@@ -85,12 +114,11 @@ class User {
   }
 
   _logoutNavigator(result, data, options) {
-    this.pushLogin();
+    this.options.logoutToHomeOrLogin?this.app.router.pushRoot():this.app.router.pushLogin();
   }
 
   logout(data, options){
-    options = this.app.utils.getOptions(this.options, options);
-    options = this.app.utils.getOptions(options, options.logout);
+    options = this.app.utils.getOptions(this.options.logout, options);
 
     if(this._logoutPrepare) [data, options] = this._logoutPrepare(data, options);
     this._logoutNetwork(data, options).then(result=>{
@@ -109,24 +137,29 @@ class User {
 
   // navigator
   // --------------------------
-  pushLogin(confirm) {
+  pushLogin(confirm, ...args) {
     if(!this.app.router.pushLogin) return;
-    return confirm?this.toLoginConfirm(()=>this.app.router.pushLogin(), confirm):this.app.router.pushLogin();
+    return confirm?this.toLoginConfirm(()=>this.app.router.pushLogin(...args), confirm):this.app.router.pushLogin();
   }
 
-  replaceLogin(confirm) {
+  replaceLogin(confirm, ...args) {
     if(!this.app.router.replaceLogin) return;
-    return confirm?this.toLoginConfirm(()=>this.app.router.replaceLogin(), confirm):this.app.router.replaceLogin();
+    return confirm?this.toLoginConfirm(()=>this.app.router.replaceLogin(...args), confirm):this.app.router.replaceLogin();
   }
 
   toLoginConfirm(cb, confirm) {
-    cb&&cb();
+    if(confirm) {
+      this.app.modal&&this.app.modal.show('是否登录？', {role: 'prompt', onAction: index=>{index>=1&&cb&&cb()}})
+    }else{
+      cb&&cb();
+    }
   }
 }
 
 
 User.options = {
   userKey: 'bnorth-keys-user',
+  logoutToHomeOrLogin: true,
   info: {
     url: 'user',
     method: 'get',
@@ -149,6 +182,20 @@ export default app=>({
   onPluginMount(app, plugin, options) {
     app.User = User;
     app.user = new User(app, plugin._id, options);
+    // app.UserState = class Request extends app.Request {
+    //   constructor(app, _id, options) {
+    //     super(app, _id, options);
+    //     app.event.on(app._id, 'onUserUpdate', user=>{this.update(user)}, this._id);
+    //   }
+    
+    //   fetch(data, options) {
+    //     return this.app.user.info(data, options);
+    //   }
+      
+    //   data() {
+    //     return this.app.user.data();
+    //   }
+    // }
   },
 
   onPluginUnmount(app) {
@@ -157,7 +204,7 @@ export default app=>({
   },
 
   onRouteMatch({route}={}) {
-    if(route&&route.checkLogin&&!app.user.isLogin()) return app=>app.router.replaceLogin();
+    if(route&&route.checkLogin&&!app.user.isLogin()) return app=>{app.router.replaceLogin()};
   }
 })
 

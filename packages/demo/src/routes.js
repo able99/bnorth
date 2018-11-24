@@ -31,11 +31,12 @@ export default {
   '/test': require('./test').default,
 
   'components:tab?': {
+    title: false,
     component: require('./pages/components').default,
     embeds: ['c_components', 'c_list', 'c_props', 'c_plugins' ],
   },
-  'c_components': require('./pages/c-components').default,
-  'c_list': require('./pages/c-list').default,
+  'c_components': {component: require('./pages/c-components').default, title: 'components show'},
+  'c_list': {component: require('./pages/c-list').default, title: 'list show'},
   'search:keyword:pageid': require('./pages/search').default,
   'c_props': require('./pages/c-props').default,
   'c_plugins': require('./pages/c-plugins').default,

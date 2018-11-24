@@ -13,7 +13,7 @@ export default function(app) {
   app.plugins.add(require('@bnorth/plugin-format').default);
 
   app.plugins.add(require('@bnorth/plugin-storage').default);
-  app.plugins.add(require('@bnorth/plugin-browser').default);
+  app.plugins.add(require('@bnorth/plugin-browser').default, {autoTitle: true});
   // app.plugins.add(require('@bnorth/plugin-user').default);
   
 }

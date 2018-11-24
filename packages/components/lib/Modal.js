@@ -252,6 +252,7 @@ Modal._Footer._itemGetProps = function (i, length) {
   var subProps = arguments.length > 4 ? arguments[4] : undefined;
   return {
     'b-style': 'hollow',
+    'bc-bg-none-': true,
     onClick: function onClick() {
       return handleAction && handleAction(i);
     }

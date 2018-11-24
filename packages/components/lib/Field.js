@@ -201,7 +201,7 @@ Field._Switch = function (aprops) {
       children = _parseProps6.children,
       props = (0, _objectWithoutProperties2.default)(_parseProps6, ["type", "value", "defaultValue", "domValue", "disabled", "onClick", "onChange", "Content", "labelProps", "inputProps", "innerProps", "component", "componentPanel", "className", "children"]);
 
-  var classStr = 'switch-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none- flex-sub-flex-extend';
+  var classStr = 'switch-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none-';
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
     onClick: function onClick(e) {

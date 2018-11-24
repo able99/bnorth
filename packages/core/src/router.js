@@ -50,6 +50,8 @@ export default class Router {
     this.app.event.on(this.app._id, 'onPageRemove', (_id, page)=>{page&&this._removePage(_id)}, this._id);
     this.app.event.on(this.app._id, 'onAppStartRouter', ()=>(this.app.render.component = <this.RouterComponent app={this.app} />), this._id);
     this.app.event.on(this.app._id, 'onAppStartRender', ()=>{this._updateRender()}, this._id);
+    this.app.event.on(this.app._id, 'onRouteErrorNoRoute', name=>this.error(`route name: ${name}`, 'no route error'), this._id);
+    this.app.event.on(this.app._id, 'onRouteErrorNoParam', name=>this.error(`params name: ${name}`, 'miss require param error'), this._id);
 
     this.history = createHistory();
     this.history.listen((location, action)=>this._handleLocationChange(location, action));
@@ -111,6 +113,7 @@ export default class Router {
   // --------------------------------------
   setRoutes(routes) {
     this._routes = routes;
+    Object.entries(this._routes||{}).forEach(([k,v])=>v.for&&this._addRouteNativator(k, v.for));
     this._updatePathInfos(this.history.location);
   }
 
@@ -126,7 +129,14 @@ export default class Router {
   addRoute(name, route) {
     if(!name||!route) return;
     this._routes[name] = route;
+    route.for&&this._addRouteNativator(name, route.for);
     this._updatePathInfos(this.history.location);
+  }
+
+  _addRouteNativator(routeName, forName) {
+    let name = routeName&&routeName.split(ParamSpe[0]);
+    this[`push${forName}`] = (...args)=>this.push([name, ...args]);
+    this[`replace${forName}`] = (...args)=>this.replace([name, ...args]);
   }
 
   // router
@@ -171,7 +181,8 @@ export default class Router {
       };
 
       let [routeName, route] = this.getRoute(pathinfo.name);
-      if(!routeName||!route) return this.error(`route name:`+pathinfo.name, 'no route error');
+      if(!routeName||!route) return this.app.event.emit(this.app._id, 'onRouteErrorNoRoute', pathinfo.name, pathinfo, location);
+      
       pathinfo.routeName = routeName;
       pathinfo.route = route;
       pathinfo.routeParams = routeName.split(ParamSpe).slice(1);
@@ -180,7 +191,8 @@ export default class Router {
       pathinfo.routeParams.forEach((v,i)=>{
         let optional = v.endsWith(ParamOptional);
         if(optional) v = v.slice(0, -1);
-        if(!optional&&i>pathinfo.pathnameParams.length-1) return this.error(`params name: ${v}`, 'miss require param error');
+        if(!optional&&i>pathinfo.pathnameParams.length-1) return this.app.event.emit(this.app._id, 'onRouteErrorNoParam', v, pathinfo, location);
+        
         pathinfo.params[v] = pathinfo.pathnameParams[i]?decodeURIComponent(pathinfo.pathnameParams[i]):null;
         if(this.passParams) params[name] = pathinfo.params[v];  
       })
@@ -194,7 +206,8 @@ export default class Router {
         embed.embeds = {};
         embed.viewItems = this.getPageViews(embed._id);
         let [routeNameEmbed, routeEmbed] = this.getRoute(embed.name);
-        if(!routeNameEmbed||!routeEmbed) return this.error(`route name:`+embed.name, 'no route error');
+        if(!routeNameEmbed||!routeEmbed) return this.app.event.emit(this.app._id, 'onRouteErrorNoRoute', pathinfo.name, pathinfo, location);
+        
         embed.routeName = routeNameEmbed;
         embed.route = routeEmbed;
         pathinfo.embeds[k] = embed;
@@ -362,8 +375,13 @@ export default class Router {
   
   block(_block) {
     this.app.log.info('router block', _block);
-    this._block = _block||this.history.location;
-    if(typeof _block==='function') this._block = _block(this.app);
+    if(typeof _block==='function'){
+      this._block = this.history.location;
+      _block = _block(this.app);
+      this._block = _block||this._block;
+    }else{
+      this._block = _block||this.history.location;
+    }
     return true;
   }
 
