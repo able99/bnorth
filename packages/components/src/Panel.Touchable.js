@@ -69,7 +69,7 @@ function updateHammer(hammer, props) {
 			Object.entries(v||{}).forEach(([kk,vv])=>{
 				let recognizer = hammer.get(kk);
 				recognizer.set(vv);
-				if(recognizer.requireFailure) recognizer.requireFailure(vv.requireFailure);
+				if(vv.requireFailure) recognizer.requireFailure(vv.requireFailure);
 			})
 		}else if(k==='recognizeWith') { // recognizeWith
 			Object.entries(v||{}).forEach(([kk,vv])=>{
@@ -107,12 +107,13 @@ Panel.Touchable = class Touchable extends React.Component{
 	}
 
   render() {
-    let props = {};
-    Object.keys(this.props).forEach(v=>{
-			if (!privateProps[v]) props[v] = this.props[v];
+		let {component:Component=Panel, ...props} = this.props;
+		
+    Object.keys(props).forEach(v=>{
+			if(privateProps[v]) delete props[v];
 		});
 
-    return <Panel {...props} />
+    return <Component {...props} />
   }
 }
 
