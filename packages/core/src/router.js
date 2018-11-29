@@ -170,7 +170,7 @@ export default class Router {
 
     /* route */
     for (let pathname of location.pathnames) {
-      fullPathName = join(fullPathName, pathname);
+      fullPathName = join(fullPathName, decodeURIComponent(pathname));
       let [name, ...pathnameParams] = pathname.split(ParamSpe);
       let _id = PageSign+fullPathName;
       let pathinfo = { 

@@ -7,6 +7,7 @@
 
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
+import { domFindNode } from './utils/dom';
 import parseProps from './utils/props';
 import Panel from './Panel';
 import Icon from './Icon';
@@ -62,42 +63,60 @@ Field._Container._Content = aprops=>{
   return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
 }
 
+/**
+ * @compatible ime wrong on chrome and wrong cursor pos, cause by state controll input, it is ok on setState
+ */
+Field._Normal = class extends React.Component {
+  _updateValue() {
+    this.input.value = this.props.value;
+  }
 
-Field._Normal = aprops=>{
-  let {
-    type, value,
-    onPressEnter, onKeyPress,
-    component:Component=Panel, componentPanel="input", className, children, ...props
-  } = parseProps(aprops, Field._Normal.props);
+  componentDidMount() {
+    this.input = domFindNode(this);
+    this._updateValue();
+  }
+  
+  componentDidUpdate(prevProps, prevState) {
+    if(this.props.value !== prevProps.value) this._updateValue();
+  }
+  
+  render() { 
+    let {
+      type, value,
+      onPressEnter, onKeyPress, 
+      component:Component=Panel, componentPanel="input", className, children, ...props
+    } = parseProps(this.props, Field._Normal.props);
 
-  let classStr = 'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle';
-  let classSet = aprops['b-style']?'':'bg-none- border-none-a-';
+    let classStr = 'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle';
+    let classSet = this.props['b-style']?'':'bg-none- border-none-a-';
 
-  let handleKeyPress = e=>{
-    if(onPressEnter&&e.charCode===13){
-      e.stopPropagation();
-      e.preventDefault();
-      onPressEnter(e.target.value); 
-    }else{
-      onKeyPress&&onKeyPress(e);
+    let handleKeyPress = e=>{
+      if(onPressEnter&&e.charCode===13){
+        e.stopPropagation();
+        e.preventDefault();
+        onPressEnter(e.target.value); 
+      }else{
+        onKeyPress&&onKeyPress(e);
+      }
     }
-  }
 
-  if(Field._Normal._maps.includes(type)) {
-    componentPanel = type;
-    type=null;
-  }else{
-    children = undefined;
-  }
+    if(Field._Normal._maps.includes(type)) {
+      componentPanel = type;
+      type=null;
+    }else{
+      children = undefined;
+    }
 
-  return (
-    <Component component={componentPanel}
-      onKeyPress={handleKeyPress}
-      type={type} value={value}
-      className={classes(classStr, classSet, className)} {...props}>
-      {children}
-    </Component>
-  );
+    return (
+      <Component 
+        component={componentPanel}
+        onKeyPress={handleKeyPress}
+        type={type} 
+        className={classes(classStr, classSet, className)} {...props}>
+        {children}
+      </Component>
+    );
+  }
 }
 
 Field._Normal._maps = ['progress', 'select', 'textarea'];

@@ -7,6 +7,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -118,7 +120,7 @@ function updateHammer(hammer, props) {
 
         var recognizer = hammer.get(kk);
         recognizer.set(vv);
-        if (recognizer.requireFailure) recognizer.requireFailure(vv.requireFailure);
+        if (vv.requireFailure) recognizer.requireFailure(vv.requireFailure);
       });
     } else if (k === 'recognizeWith') {
       // recognizeWith
@@ -177,13 +179,14 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this = this;
-
-      var props = {};
-      Object.keys(this.props).forEach(function (v) {
-        if (!privateProps[v]) props[v] = _this.props[v];
+      var _this$props = this.props,
+          _this$props$component = _this$props.component,
+          Component = _this$props$component === void 0 ? _Panel.default : _this$props$component,
+          props = (0, _objectWithoutProperties2.default)(_this$props, ["component"]);
+      Object.keys(props).forEach(function (v) {
+        if (privateProps[v]) delete props[v];
       });
-      return _react.default.createElement(_Panel.default, props);
+      return _react.default.createElement(Component, props);
     }
   }]);
   return Touchable;

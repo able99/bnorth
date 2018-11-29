@@ -13,6 +13,16 @@ require("core-js/modules/es7.array.includes");
 
 require("core-js/modules/es6.string.includes");
 
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
@@ -20,6 +30,8 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 var _react = _interopRequireDefault(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _dom = require("./utils/dom");
 
 var _props = _interopRequireDefault(require("./utils/props"));
 
@@ -101,48 +113,79 @@ Field._Container._Content = function (aprops) {
   }, props));
 };
 
-Field._Normal = function (aprops) {
-  var _parseProps3 = (0, _props.default)(aprops, Field._Normal.props),
-      type = _parseProps3.type,
-      value = _parseProps3.value,
-      onPressEnter = _parseProps3.onPressEnter,
-      onKeyPress = _parseProps3.onKeyPress,
-      _parseProps3$componen = _parseProps3.component,
-      Component = _parseProps3$componen === void 0 ? _Panel.default : _parseProps3$componen,
-      _parseProps3$componen2 = _parseProps3.componentPanel,
-      componentPanel = _parseProps3$componen2 === void 0 ? "input" : _parseProps3$componen2,
-      className = _parseProps3.className,
-      children = _parseProps3.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["type", "value", "onPressEnter", "onKeyPress", "component", "componentPanel", "className", "children"]);
+Field._Normal =
+/*#__PURE__*/
+function (_React$Component) {
+  (0, _inherits2.default)(_class, _React$Component);
 
-  var classStr = 'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle';
-  var classSet = aprops['b-style'] ? '' : 'bg-none- border-none-a-';
-
-  var handleKeyPress = function handleKeyPress(e) {
-    if (onPressEnter && e.charCode === 13) {
-      e.stopPropagation();
-      e.preventDefault();
-      onPressEnter(e.target.value);
-    } else {
-      onKeyPress && onKeyPress(e);
-    }
-  };
-
-  if (Field._Normal._maps.includes(type)) {
-    componentPanel = type;
-    type = null;
-  } else {
-    children = undefined;
+  function _class() {
+    (0, _classCallCheck2.default)(this, _class);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(_class).apply(this, arguments));
   }
 
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    component: componentPanel,
-    onKeyPress: handleKeyPress,
-    type: type,
-    value: value,
-    className: (0, _classes.default)(classStr, classSet, className)
-  }, props), children);
-};
+  (0, _createClass2.default)(_class, [{
+    key: "_updateValue",
+    value: function _updateValue() {
+      this.input.value = this.props.value;
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.input = (0, _dom.domFindNode)(this);
+
+      this._updateValue();
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (this.props.value !== prevProps.value) this._updateValue();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _parseProps3 = (0, _props.default)(this.props, Field._Normal.props),
+          type = _parseProps3.type,
+          value = _parseProps3.value,
+          onPressEnter = _parseProps3.onPressEnter,
+          onKeyPress = _parseProps3.onKeyPress,
+          _parseProps3$componen = _parseProps3.component,
+          Component = _parseProps3$componen === void 0 ? _Panel.default : _parseProps3$componen,
+          _parseProps3$componen2 = _parseProps3.componentPanel,
+          componentPanel = _parseProps3$componen2 === void 0 ? "input" : _parseProps3$componen2,
+          className = _parseProps3.className,
+          children = _parseProps3.children,
+          props = (0, _objectWithoutProperties2.default)(_parseProps3, ["type", "value", "onPressEnter", "onKeyPress", "component", "componentPanel", "className", "children"]);
+
+      var classStr = 'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle';
+      var classSet = this.props['b-style'] ? '' : 'bg-none- border-none-a-';
+
+      var handleKeyPress = function handleKeyPress(e) {
+        if (onPressEnter && e.charCode === 13) {
+          e.stopPropagation();
+          e.preventDefault();
+          onPressEnter(e.target.value);
+        } else {
+          onKeyPress && onKeyPress(e);
+        }
+      };
+
+      if (Field._Normal._maps.includes(type)) {
+        componentPanel = type;
+        type = null;
+      } else {
+        children = undefined;
+      }
+
+      return _react.default.createElement(Component, (0, _extends2.default)({
+        component: componentPanel,
+        onKeyPress: handleKeyPress,
+        type: type,
+        className: (0, _classes.default)(classStr, classSet, className)
+      }, props), children);
+    }
+  }]);
+  return _class;
+}(_react.default.Component);
 
 Field._Normal._maps = ['progress', 'select', 'textarea'];
 

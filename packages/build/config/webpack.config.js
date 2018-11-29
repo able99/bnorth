@@ -163,7 +163,7 @@ function getPlugins() {
     rootBefore: [],
     rootAfter: [],
     rootAttr: {
-      'style': 'position: absolute;width: 100%;height: 100%;top:0;right:0;bottom:0;left:0;',
+      'style': 'position: fixed;width: 100%;height: 100%;top:0;right:0;bottom:0;left:0;',
     },
     rootChildren: [
       '<div style="margin-top:48px;text-align:center">...</div>'
