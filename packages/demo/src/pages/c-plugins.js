@@ -3,13 +3,53 @@ import View from '@bnorth/components/lib/View'
 import Panel from '@bnorth/components/lib/Panel.PullRefresh'
 import List from '@bnorth/components/lib/List'
 
+let length = 7;
+let data1 = [{id: -1, name: 'all'}];
+let data2 = [];
+let data3 = [];
+for(let i=0; i<=length; i++) {
+  data1.push({name: `${i}`});
+}
+for(let i=0; i<=length; i++) {
+  for(let j=0; j<=length; j++) {
+    data2.push({pid: `${i}`, name: `${i}${j}`});
+  }
+}
+for(let i=0; i<=length; i++) {
+  for(let j=0; j<=length; j++) {
+    for(let k=0; k<=length; k++) {
+      data3.push({pid: `${i}${j}`, name: `${i}${j}${k}`});
+    }
+  }
+}
+let data = [data1, data2, data3];
+
 
 let Component = aprops=>{
-  let { app,page } = aprops;
+  let { app,page,stateData } = aprops;
 
   return (
     <View>
       <Panel main>
+        <List bc-margin-bottom->
+          <List.Item part="header">picker</List.Item>
+          <List.Item 
+            title="show" 
+            after={JSON.stringify(stateData.picker)}
+            onClick={()=>app.picker.show(data, {index: stateData.picker, onConfirm: (e,e2)=>page.stateData.set('picker', e)})} />
+          <List.Item 
+            title="time" 
+            after={stateData.pickertime}
+            onClick={()=>app.picker.time(stateData.pickertime, {onConfirm: (e,e2)=>{page.stateData.set('pickertime', e)}})} />
+          <List.Item 
+            title="date" 
+            after={stateData.pickerdate}
+            onClick={()=>app.picker.date(stateData.pickerdate, {onConfirm: (e,e2)=>{
+              if(e>'2020-00-00') { app.notice.show('can not more then 2020');return false;}
+              page.stateData.set('pickerdate', e)
+            }})} />
+        </List>
+
         <List bc-margin-bottom->
           <List.Item part="header">notice</List.Item>
           <List.Item 

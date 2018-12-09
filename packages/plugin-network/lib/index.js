@@ -24,10 +24,16 @@ function () {
     (0, _classCallCheck2.default)(this, Network);
     this.app = app;
     this._id = _id;
+    this._axios = _axios.default;
     this.options = (0, _objectSpread2.default)({}, Network.Options, options);
   }
 
   (0, _createClass2.default)(Network, [{
+    key: "_fetch",
+    value: function _fetch(options) {
+      return this._axios(options);
+    }
+  }, {
     key: "fetch",
     value: function fetch(options, request) {
       var app = this.app;
@@ -43,11 +49,11 @@ function () {
         timeout: options.timeout,
         responseType: options.responseType,
         data: options.getRequestData(app),
-        cancelToken: options.getCancelCB && new _axios.default.CancelToken(function (cancel) {
+        cancelToken: options.getCancelCB && new this._axios.CancelToken(function (cancel) {
           return options.getCancelCB(cancel);
         })
       }, options.options);
-      return (0, _axios.default)(params).then(function (result) {
+      return this._fetch(params).then(function (result) {
         result = options.getResponseData(app, result);
         return options.handleResponse(app, result);
       }, function (error) {

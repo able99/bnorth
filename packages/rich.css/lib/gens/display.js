@@ -8,8 +8,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.genDisplay = genDisplay;
 exports.genVisibility = genVisibility;
 exports.genOpacity = genOpacity;
-exports.genOverflows = genOverflows;
 exports.genScrollable = genScrollable;
+exports.genOverflows = genOverflows;
 exports.genPointerEvents = genPointerEvents;
 exports.genFloat = genFloat;
 exports.default = gen;
@@ -96,6 +96,31 @@ function genOpacity() {
   return ret;
 }
 
+function genScrollable() {
+  var ret = {};
+  var selector = 'scrollable';
+  ret[(0, _utils.getSelector)(selector, 'a-')] = {
+    'max-width': '100%',
+    'max-height': '100%',
+    'overflow-x': 'auto',
+    'overflow-y': 'auto',
+    '-webkit-overflow-scrolling': 'touch'
+  };
+  ret[(0, _utils.getSelector)(selector, 'x-')] = {
+    'max-width': '100%',
+    'overflow-x': 'auto',
+    'overflow-y': 'hidden',
+    '-webkit-overflow-scrolling': 'touch'
+  };
+  ret[(0, _utils.getSelector)(selector, 'y-')] = {
+    'max-height': '100%',
+    'overflow-x': 'hidden',
+    'overflow-y': 'auto',
+    '-webkit-overflow-scrolling': 'touch'
+  };
+  return ret;
+}
+
 function genOverflows() {
   var ret = {};
   var selector = 'overflow';
@@ -114,29 +139,6 @@ function genOverflows() {
       key: k
     });
   });
-  return ret;
-}
-
-function genScrollable() {
-  var ret = {};
-  var selector = 'scrollable';
-  ret[(0, _utils.getSelector)(selector, 'a-')] = {
-    'max-width': '100%',
-    'max-height': '100%',
-    'overflow-x': 'hidden',
-    'overflow-y': 'auto',
-    '-webkit-overflow-scrolling': 'touch'
-  };
-  ret[(0, _utils.getSelector)(selector, 'x-')] = {
-    'max-width': '100%',
-    'overflow-x': 'hidden',
-    '-webkit-overflow-scrolling': 'touch'
-  };
-  ret[(0, _utils.getSelector)(selector, 'y-')] = {
-    'max-height': '100%',
-    'overflow-y': 'auto',
-    '-webkit-overflow-scrolling': 'touch'
-  };
   return ret;
 }
 
@@ -178,5 +180,5 @@ function genFloat() {
 }
 
 function gen(config) {
-  return (0, _objectSpread2.default)({}, genDisplay(config), genVisibility(config), genOpacity(config), genOverflows(config), genScrollable(config), genPointerEvents(config), genFloat(config));
+  return (0, _objectSpread2.default)({}, genDisplay(config), genVisibility(config), genOpacity(config), genScrollable(config), genOverflows(config), genPointerEvents(config), genFloat(config));
 }

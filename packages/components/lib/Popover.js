@@ -142,9 +142,7 @@ function (_React$Component) {
       };
       return _react.default.createElement(Component, (0, _extends2.default)({
         component: componentPanel
-      }, triggerProps, props), _react.default.Children.toArray(children).map(function (v) {
-        return typeof v === 'function' ? v(show, _this3.state, _this3.props) : v;
-      }), !show ? null : (0, _dom.domCreatePortal)(_react.default.createElement(_Backdrop.default, (0, _extends2.default)({
+      }, triggerProps, props), typeof children === 'function' ? children(show, this.state, this.props) : children, !show ? null : (0, _dom.domCreatePortal)(_react.default.createElement(_Backdrop.default, (0, _extends2.default)({
         mask: mask
       }, closeProps, maskProps), _react.default.createElement(Popover.Overlay, (0, _extends2.default)({
         calcPosition: calcPosition,
@@ -156,7 +154,7 @@ function (_React$Component) {
             offsetOverlay: (0, _dom.domOffset)(e, _this3.container)
           });
         }
-      }, overlayProps), overlay)), this.container));
+      }, overlayProps), typeof overlay === 'function' ? overlay(this) : overlay)), this.container));
     }
   }]);
   return Popover;

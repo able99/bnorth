@@ -34,7 +34,7 @@ AnimationFade._Component = aprops=>{
     component:Component='div', componentPanel, style, className, children, ...props
   } = parseProps(aprops);
 
-  let classSet = `opacity-${(animationState==='entered')?'100':'0'}`;
+  let classSet = `opacity-${(animationState==='entered')?'100':'5'}`;
 
   let styleSet = {
     ...style,

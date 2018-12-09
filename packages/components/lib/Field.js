@@ -112,6 +112,10 @@ Field._Container._Content = function (aprops) {
     className: (0, _classes.default)(classStr, className)
   }, props));
 };
+/**
+ * @compatible ime wrong on chrome and wrong cursor pos, cause by state controll input, it is ok on setState
+ */
+
 
 Field._Normal =
 /*#__PURE__*/

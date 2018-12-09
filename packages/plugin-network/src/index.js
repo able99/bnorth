@@ -5,7 +5,12 @@ class Network {
   constructor(app, _id, options) {
     this.app = app;
     this._id = _id;
+    this._axios = axios;
     this.options = {...Network.Options, ...options};
+  }
+
+  _fetch(options) {
+    return this._axios(options);
   }
 
   fetch(options, request){
@@ -20,11 +25,11 @@ class Network {
       timeout: options.timeout,
       responseType: options.responseType,
       data: options.getRequestData(app),
-      cancelToken: options.getCancelCB&&(new axios.CancelToken(cancel=>options.getCancelCB(cancel))),
+      cancelToken: options.getCancelCB&&(new this._axios.CancelToken(cancel=>options.getCancelCB(cancel))),
       ...options.options,
     };
 
-    return axios(params)
+    return this._fetch(params)
       .then(result=>{
         result = options.getResponseData(app, result);
         return options.handleResponse(app, result);

@@ -32,7 +32,7 @@ export function genTransitionProperty(config) {
   let sizes = getSizeSet('animationProperty', config);
   let func = 'property'
   let selector = `${baseSelectorTransition}-${func}`;
-  Object.entries(sizes).forEach(([k,v])=>(ret[getSelector(selector, k)] = compatibleAnimation(getStyleSet(selector, v))));
+  Object.entries(sizes).forEach(([k,v])=>(ret[getSelector(selector, k)] = compatibleAnimation(getStyleSet(selector, k))));
   return ret;
 }
 

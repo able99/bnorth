@@ -61,7 +61,7 @@ function genTransitionProperty(config) {
         k = _ref2[0],
         v = _ref2[1];
 
-    return ret[(0, _utils.getSelector)(selector, k)] = (0, _compatibleAnimation.default)((0, _utils.getStyleSet)(selector, v));
+    return ret[(0, _utils.getSelector)(selector, k)] = (0, _compatibleAnimation.default)((0, _utils.getStyleSet)(selector, k));
   });
   return ret;
 }

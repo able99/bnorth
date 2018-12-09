@@ -42,10 +42,10 @@ class Browser {
   set title(str){
     window.top.document.title = str;
 
-    if(this.isiOS) {
+    if(this.options.titleIframeSrc!==false&&this.isiOS) {
       let iframe = document.createElement('iframe');
       iframe.style.visibility = 'hidden';
-      iframe.setAttribute('src', 'logo.png');
+      iframe.setAttribute('src', this.options.titleIframeSrc);
       let iframeCallback = function() {
         setTimeout(function() {
           iframe.removeEventListener('load', iframeCallback);
@@ -178,6 +178,7 @@ export default (app,options={})=>({
     app.Browser = Browser;
     app.browser = new Browser(app, plugin._id, options);
 
+    if(options.titleIframeSrc!==false) options.titleIframeSrc = options.titleIframeSrc||'logo.png';
     if(options.defaultTitle) app.browser._defaultTitle = options.defaultTitle;
     if(options.autoTitle) {
       app.event.on(app._id, 'onActivePageChange', _idPage=>{

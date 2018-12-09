@@ -54,6 +54,31 @@ export function genOpacity() {
   return ret;
 }
 
+export function genScrollable() {
+  let ret = {};
+  let selector = 'scrollable';
+  ret[getSelector(selector, 'a-')] = {
+    'max-width': '100%',
+    'max-height': '100%',
+    'overflow-x': 'auto',
+    'overflow-y': 'auto',
+    '-webkit-overflow-scrolling': 'touch',
+  };
+  ret[getSelector(selector, 'x-')] = {
+    'max-width': '100%',
+    'overflow-x': 'auto',
+    'overflow-y': 'hidden',
+    '-webkit-overflow-scrolling': 'touch',
+  };
+  ret[getSelector(selector, 'y-')] = {
+    'max-height': '100%',
+    'overflow-x': 'hidden',
+    'overflow-y': 'auto',
+    '-webkit-overflow-scrolling': 'touch',
+  };
+  return ret;
+}
+
 export function genOverflows() {
   let ret = {};
   let selector = 'overflow';
@@ -62,29 +87,6 @@ export function genOverflows() {
     ret[getSelector(selector, 'x', k)] = getStyleSet(`${selector}-x`, v, { key: k });
     ret[getSelector(selector, 'y', k)] = getStyleSet(`${selector}-y`, v, { key: k });
   });
-  return ret;
-}
-
-export function genScrollable() {
-  let ret = {};
-  let selector = 'scrollable';
-  ret[getSelector(selector, 'a-')] = {
-    'max-width': '100%',
-    'max-height': '100%',
-    'overflow-x': 'hidden',
-    'overflow-y': 'auto',
-    '-webkit-overflow-scrolling': 'touch',
-  };
-  ret[getSelector(selector, 'x-')] = {
-    'max-width': '100%',
-    'overflow-x': 'hidden',
-    '-webkit-overflow-scrolling': 'touch',
-  };
-  ret[getSelector(selector, 'y-')] = {
-    'max-height': '100%',
-    'overflow-y': 'auto',
-    '-webkit-overflow-scrolling': 'touch',
-  };
   return ret;
 }
 
@@ -118,8 +120,8 @@ export default function gen(config) {
     ...genDisplay(config), 
     ...genVisibility(config),
     ...genOpacity(config),
-    ...genOverflows(config),
     ...genScrollable(config),
+    ...genOverflows(config),
     ...genPointerEvents(config),
     ...genFloat(config),
   };

@@ -71,7 +71,7 @@ AnimationFade._Component = function (aprops) {
       children = _parseProps2.children,
       props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isIn", "timeout", "animationState", "component", "componentPanel", "style", "className", "children"]);
 
-  var classSet = "opacity-".concat(animationState === 'entered' ? '100' : '0');
+  var classSet = "opacity-".concat(animationState === 'entered' ? '100' : '5');
   var styleSet = (0, _objectSpread2.default)({}, style, (0, _animation.transiton)("".concat(timeout, "ms"), {
     property: 'opacity'
   }));

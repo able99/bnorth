@@ -132,7 +132,8 @@ function () {
 
   }, {
     key: "setCookie",
-    value: function setCookie(cname, cvalue, exdays) {
+    value: function setCookie(cname, cvalue) {
+      var exdays = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 7;
       var d = new Date();
       d.setTime(d.getTime() + exdays * 86400000);
       var expires = "expires=" + d.toUTCString();
@@ -202,10 +203,10 @@ function () {
     set: function set(str) {
       window.top.document.title = str;
 
-      if (this.isiOS) {
+      if (this.options.titleIframeSrc !== false && this.isiOS) {
         var iframe = document.createElement('iframe');
         iframe.style.visibility = 'hidden';
-        iframe.setAttribute('src', 'logo.png');
+        iframe.setAttribute('src', this.options.titleIframeSrc);
 
         var iframeCallback = function iframeCallback() {
           setTimeout(function () {
@@ -250,6 +251,7 @@ var _default = function _default(app) {
     onPluginMount: function onPluginMount(app, plugin) {
       app.Browser = Browser;
       app.browser = new Browser(app, plugin._id, options);
+      if (options.titleIframeSrc !== false) options.titleIframeSrc = options.titleIframeSrc || 'logo.png';
       if (options.defaultTitle) app.browser._defaultTitle = options.defaultTitle;
 
       if (options.autoTitle) {

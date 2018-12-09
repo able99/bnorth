@@ -59,14 +59,14 @@ class Popover extends React.Component {
 
     return (
       <Component component={componentPanel} {...triggerProps} {...props}>
-        {React.Children.toArray(children).map(v=>typeof(v)==='function'?v(show, this.state, this.props):v)}
+        {typeof(children)==='function'?children(show, this.state, this.props):children}
         {!show?null:domCreatePortal((
           <Backdrop mask={mask} {...closeProps} {...maskProps}>
             <Popover.Overlay 
               calcPosition={calcPosition} placement={placement} offsetTarget={offsetTarget} offsetOverlay={offsetOverlay} 
               ref={e=>e&&(!offsetOverlay)&&this.setState({offsetOverlay:domOffset(e, this.container)})} 
               {...overlayProps}>
-              {overlay}
+              {typeof overlay==='function'?overlay(this):overlay}
             </Popover.Overlay>
           </Backdrop>
         ), this.container)}

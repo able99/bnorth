@@ -1,43 +1,43 @@
 .transition-property-none {
-  transition-property: NaNpx;
-  -moz-transition-property: NaNpx;
-  -ms-transition-property: NaNpx;
-  -oz-transition-property: NaNpx;
+  transition-property: none;
+  -moz-transition-property: none;
+  -ms-transition-property: none;
+  -oz-transition-property: none;
 }
 
 .transition-property-all {
-  transition-property: NaNpx;
-  -moz-transition-property: NaNpx;
-  -ms-transition-property: NaNpx;
-  -oz-transition-property: NaNpx;
+  transition-property: all;
+  -moz-transition-property: all;
+  -ms-transition-property: all;
+  -oz-transition-property: all;
 }
 
 .transition-property-transform {
-  transition-property: NaNpx;
-  -moz-transition-property: NaNpx;
-  -ms-transition-property: NaNpx;
-  -oz-transition-property: NaNpx;
+  transition-property: transform;
+  -moz-transition-property: transform;
+  -ms-transition-property: transform;
+  -oz-transition-property: transform;
 }
 
 .transition-property-width {
-  transition-property: NaNpx;
-  -moz-transition-property: NaNpx;
-  -ms-transition-property: NaNpx;
-  -oz-transition-property: NaNpx;
+  transition-property: width;
+  -moz-transition-property: width;
+  -ms-transition-property: width;
+  -oz-transition-property: width;
 }
 
 .transition-property-height {
-  transition-property: NaNpx;
-  -moz-transition-property: NaNpx;
-  -ms-transition-property: NaNpx;
-  -oz-transition-property: NaNpx;
+  transition-property: height;
+  -moz-transition-property: height;
+  -ms-transition-property: height;
+  -oz-transition-property: height;
 }
 
 .transition-property-opacity {
-  transition-property: NaNpx;
-  -moz-transition-property: NaNpx;
-  -ms-transition-property: NaNpx;
-  -oz-transition-property: NaNpx;
+  transition-property: opacity;
+  -moz-transition-property: opacity;
+  -ms-transition-property: opacity;
+  -oz-transition-property: opacity;
 }
 
 .transition-duration-500 {
