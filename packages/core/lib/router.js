@@ -333,7 +333,7 @@ function () {
 
                 _loop = function _loop() {
                   var pathname = _step.value;
-                  fullPathName = (0, _path.join)(fullPathName, pathname);
+                  fullPathName = (0, _path.join)(fullPathName, decodeURIComponent(pathname));
 
                   var _pathname$split = pathname.split(ParamSpe),
                       _pathname$split2 = (0, _toArray2.default)(_pathname$split),

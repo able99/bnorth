@@ -55,7 +55,8 @@ var getClass = function getClass(app) {
           !loading && !mask && !noLoadingMask && (!isSubmit ? this.app.render.loading(fetching) : this.app.render.mask(fetching));
           if (isSubmit || !fetching) return;
           this.stateUpdate({
-            fetching: fetching
+            fetching: fetching,
+            error: null
           });
         }
       }, {
