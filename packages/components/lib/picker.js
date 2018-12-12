@@ -252,7 +252,7 @@ function (_React$Component2) {
     key: "componentDidMount",
     value: function componentDidMount() {
       var el = (0, _dom.domFindNode)(this);
-      this.itemSize = el && el.children[0] && (0, _dom.domOffset)(el.children[0]).height;
+      this.itemSize = el && el.children[0] && el.children[0].children && (0, _dom.domOffset)(el.children[0].children[0]).height;
       this.props.onSize && this.props.onSize(this.itemSize);
     }
   }, {
@@ -261,6 +261,7 @@ function (_React$Component2) {
       this.setState({
         offset: event.deltaY
       });
+      event.preventDefault();
     }
   }, {
     key: "handleEnd",
@@ -276,6 +277,7 @@ function (_React$Component2) {
       this.setState({
         offset: 0
       });
+      event.preventDefault();
     }
   }, {
     key: "render",
@@ -292,14 +294,12 @@ function (_React$Component2) {
           Component = _parseProps3$componen === void 0 ? _Panel.default.Touchable : _parseProps3$componen,
           componentPanel = _parseProps3.componentPanel,
           className = _parseProps3.className,
-          style = _parseProps3.style,
-          props = (0, _objectWithoutProperties2.default)(_parseProps3, ["data", "index", "lineCount", "onSize", "component", "componentPanel", "className", "style"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps3, ["data", "index", "lineCount", "onSize", "component", "componentPanel", "className"]);
 
       var offset = this.state.offset;
       if (!data.length) data.push(' ');
       var translateY = "".concat(this.itemSize * (Math.floor(lineCount / 2) - index) + offset, "px");
-      var classStr = 'height-full flex-sub-flex-extend transition-set-';
-      var styleSet = (0, _objectSpread2.default)({}, (0, _animation.transform)('translateY', translateY), style);
+      var classStr = 'flex-sub-flex-extend transition-set- overflow-a-hidden';
       return _react.default.createElement(Component, (0, _extends2.default)({
         component: componentPanel,
         direction: "vertical",
@@ -311,14 +311,15 @@ function (_React$Component2) {
           return _this5.handleEnd(el, e);
         },
         "bs-height": this.itemSize * lineCount,
-        className: (0, _classes.default)(classStr, className),
-        style: styleSet
-      }, props), data.map(function (v, i) {
+        className: (0, _classes.default)(classStr, className)
+      }, props), _react.default.createElement(_Panel.default, {
+        style: (0, _animation.transform)('translateY', translateY)
+      }, data.map(function (v, i) {
         return _react.default.createElement(Picker._Item, {
           key: i,
           selected: i === index
         }, v);
-      }));
+      })));
     }
   }]);
   return _class;
@@ -427,13 +428,18 @@ var _default = {
       },
       date: function date(index) {
         var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+            year = _ref3.year,
+            _ref3$yearCount = _ref3.yearCount,
+            yearCount = _ref3$yearCount === void 0 ? 50 : _ref3$yearCount,
             onChange = _ref3.onChange,
             onConfirm = _ref3.onConfirm,
-            props = (0, _objectWithoutProperties2.default)(_ref3, ["onChange", "onConfirm"]);
+            props = (0, _objectWithoutProperties2.default)(_ref3, ["year", "yearCount", "onChange", "onConfirm"]);
 
+        var date = new Date();
+        year = year || date.getFullYear() - yearCount + 2;
         var data = [function () {
-          return Array.from(Array(100), function (v, i) {
-            return String(1950 + i).padStart(4, '0');
+          return Array.from(Array(yearCount), function (v, i) {
+            return String(year + i).padStart(4, '0');
           });
         }, function () {
           return Array.from(Array(12), function (v, i) {
@@ -449,12 +455,7 @@ var _default = {
             return String(i + 1).padStart(2, '0');
           });
         }];
-
-        if (!index) {
-          var date = new Date();
-          index = "".concat(date.getFullYear(), "-").concat(String(date.getMonth() + 1).padStart(2, '0'), "-").concat(String(date.getDate()).padStart(2, '0'));
-        }
-
+        if (!index) index = "".concat(date.getFullYear(), "-").concat(String(date.getMonth() + 1).padStart(2, '0'), "-").concat(String(date.getDate()).padStart(2, '0'));
         if (index && index.split('-').length === 3) props.index = index.split('-');
         if (onChange) props.onChange = function (e) {
           return onChange(e && "".concat(e[0], "-").concat(e[1], "-").concat(e[2]));

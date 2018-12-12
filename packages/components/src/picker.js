@@ -123,12 +123,13 @@ Picker._Col = class extends React.Component {
 
   componentDidMount() {
     let el = domFindNode(this);
-    this.itemSize = el&&el.children[0]&&domOffset(el.children[0]).height;
+    this.itemSize = el&&el.children[0]&&el.children[0].children&&domOffset(el.children[0].children[0]).height;
     this.props.onSize&&this.props.onSize(this.itemSize);
   }
 
   handleMove(event, target) {
     this.setState({offset: event.deltaY});
+    event.preventDefault();
   }
 
   handleEnd(event, target) {
@@ -138,29 +139,28 @@ Picker._Col = class extends React.Component {
     indexChange = Math.min(indexChange, data.length-1);
     if(indexChange!==index&&onChange) onChange(indexChange);
     this.setState({offset: 0});
+    event.preventDefault();
   }
 
   render() {
     const {
       data=[], index, lineCount, onSize,
-      component:Component=Panel.Touchable, componentPanel, className, style, ...props
+      component:Component=Panel.Touchable, componentPanel, className, ...props
     } = parseProps(this.props, Picker._Col.props);
     const { offset } = this.state;
     if(!data.length) data.push(' ');
 
     let translateY = `${(this.itemSize*(Math.floor(lineCount/2)-index))+offset}px`;
-    let classStr = 'height-full flex-sub-flex-extend transition-set-';
-    let styleSet = {
-      ...transform('translateY', translateY),
-      ...style,
-    }
+    let classStr = 'flex-sub-flex-extend transition-set- overflow-a-hidden';
 
     return (
       <Component component={componentPanel} 
         direction="vertical" onPan={this.handleMove.bind(this)} onPanCancel={(el,e)=>this.handleEnd(el,e)} onPanEnd={(el,e)=>this.handleEnd(el,e)}
         bs-height={this.itemSize*lineCount} 
-        className={classes(classStr, className)} style={styleSet} {...props}>
-        {data.map((v,i)=><Picker._Item key={i} selected={i===index}>{v}</Picker._Item>)}
+        className={classes(classStr, className)} {...props}>
+        <Panel style={transform('translateY', translateY)}>
+          {data.map((v,i)=><Picker._Item key={i} selected={i===index}>{v}</Picker._Item>)}
+        </Panel>
       </Component>
     );
   }
@@ -233,9 +233,11 @@ export default {
         app.picker.show(data, props);
       },
 
-      date: (index, {onChange, onConfirm, ...props}={})=>{
+      date: (index, {year, yearCount=50, onChange, onConfirm, ...props}={})=>{
+        let date = new Date(); 
+        year = year||(date.getFullYear()-yearCount+2);
         let data = [
-          ()=>Array.from(Array(100), (v,i)=>String(1950+i).padStart(4,'0')),
+          ()=>Array.from(Array(yearCount), (v,i)=>String(year+i).padStart(4,'0')),
           ()=>Array.from(Array(12), (v,i)=>String(i+1).padStart(2,'0')),
           (i, data, index)=>{
             let daycount = 31;
@@ -246,7 +248,8 @@ export default {
             return Array.from(Array(daycount), (v,i)=>String(i+1).padStart(2,'0'));
           },
         ]
-        if(!index) {let date = new Date(); index=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`}
+        
+        if(!index) index=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
         if(index && index.split('-').length===3) props.index = index.split('-');
         if(onChange) props.onChange = e=>onChange(e&&`${e[0]}-${e[1]}-${e[2]}`);
         if(onConfirm) props.onConfirm = e=>onConfirm(e&&`${e[0]}-${e[1]}-${e[2]}`);
