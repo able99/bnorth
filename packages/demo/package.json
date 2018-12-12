@@ -3,7 +3,7 @@
   "name": "bnorth-demo",
   "displayName": "bnorth",
   "id": "able99.bnorth.demo",
-  "version": "3.1.5",
+  "version": "3.1.6",
   "icon": "../res/logo.png",
   "description": "bnorth demo",
   "keywords": [
@@ -30,21 +30,21 @@
     "url": "https://github.com/able99/bnorth/issues"
   },
   "dependencies": {
-    "@bnorth/components": "^3.1.5",
-    "@bnorth/core": "^3.1.5",
-    "@bnorth/plugin-base64": "^3.1.5",
-    "@bnorth/plugin-browser": "^3.1.5",
-    "@bnorth/plugin-format": "^3.1.5",
-    "@bnorth/plugin-md5": "^3.1.5",
-    "@bnorth/plugin-network": "^3.1.5",
-    "@bnorth/plugin-request": "^3.1.5",
-    "@bnorth/plugin-storage": "^3.1.5",
-    "@bnorth/plugin-validate": "^3.1.5",
-    "@bnorth/rich.css": "^3.1.5"
+    "@bnorth/components": "^3.1.6",
+    "@bnorth/core": "^3.1.6",
+    "@bnorth/plugin-base64": "^3.1.6",
+    "@bnorth/plugin-browser": "^3.1.6",
+    "@bnorth/plugin-format": "^3.1.6",
+    "@bnorth/plugin-md5": "^3.1.6",
+    "@bnorth/plugin-network": "^3.1.6",
+    "@bnorth/plugin-request": "^3.1.6",
+    "@bnorth/plugin-storage": "^3.1.6",
+    "@bnorth/plugin-validate": "^3.1.6",
+    "@bnorth/rich.css": "^3.1.6"
   },
   "devDependencies": {
-    "@bnorth/build": "^3.1.5",
-    "@bnorth/cordova": "^3.1.5"
+    "@bnorth/build": "^3.1.6",
+    "@bnorth/cordova": "^3.1.6"
   },
   "bnorth": {
     "outputPath": "../../docs/demo/"

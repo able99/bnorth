@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/plugin-request",
-  "version": "3.1.5",
+  "version": "3.1.6",
   "description": "bnorth plugin for request",
   "keywords": [
     "bnorth",
@@ -29,7 +29,7 @@
     "url": "https://github.com/able99/bnorth/issues"
   },
   "devDependencies": {
-    "@bnorth/build": "^3.1.5"
+    "@bnorth/build": "^3.1.6"
   },
   "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
 }
