@@ -1,0 +1,6 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "plugins": ["plug.js"]
+}

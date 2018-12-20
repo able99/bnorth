@@ -10,7 +10,7 @@ let app = new App({
     },
     onAppStartConfig: ()=>{
       app.router.setRoutes({
-        '/:src?': require('./pages/home').default,
+        '/:name?': require('./pages/home').default,
       });
     },
   },
@@ -18,6 +18,26 @@ let app = new App({
 
 app.plugins.add(require('@bnorth/plugin-network').default);
 app.plugins.add(require('@bnorth/plugin-request').default, {request: app.network.fetch.bind(app.network)});
+app.plugins.add({
+  _id: 'docs',
+  stateDocs: {
+    state: app.Request, initialization: [], 
+    url: './docs.json',
+    onStateUpdating: data=>{
+      data.doclets&&data.doclets.unshift({
+        "kind": "module",
+        "name": "#global",
+        "longname": "module:#global",
+        "isGlobal": true,
+      });
+      return data;
+    }
+  },
+  onAppStarted: ()=>{
+    let plugin = app.plugins.getByName('docs');
+    plugin.stateDocs.fetch();
+  },
+});
 
 
 app.start();

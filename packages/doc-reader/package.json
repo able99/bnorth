@@ -1,8 +1,7 @@
 {
-  "private": true,
   "name": "doc-reader",
   "version": "3.1.6",
-  "description": "doc reader",
+  "description": "An API documentation generator for ES6 and React and CSS classes",
   "keywords": [
     "bnorth",
     "doc",
@@ -13,7 +12,7 @@
   "homepage": "https://github.com/able99",
   "license": "MIT",
   "publishConfig": {
-    "registry": "http://registry.cnpmjs.org/"
+    "registry": "https://registry.npmjs.org/"
   },
   "repository": {
     "type": "git",
@@ -24,22 +23,32 @@
     "build": "bnorth-build build",
     "bnorth": "bnorth-cli"
   },
+  "bin": {
+    "bnorth-doc": "./bin/cli.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "jsdoc"
+  ],
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"
   },
   "dependencies": {
+    "jsdoc": "^3.5.5",
+    "fs-extra": "^7.0.0"
+  },
+  "devDependencies": {
+    "react-markdown": "^3.6.0",
     "@bnorth/components": "^3.1.6",
     "@bnorth/core": "^3.1.6",
     "@bnorth/plugin-network": "^3.1.6",
     "@bnorth/plugin-request": "^3.1.6",
     "@bnorth/plugin-validate": "^3.1.6",
     "@bnorth/rich.css": "^3.1.6",
-    "react-markdown": "^3.6.0"
-  },
-  "devDependencies": {
     "@bnorth/build": "^3.1.6"
   },
   "bnorth": {
-    "outputPath": "../../docs/reader/"
+    "outputPath": "./dist"
   }
 }

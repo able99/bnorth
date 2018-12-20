@@ -1,53 +1,39 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import View from '@bnorth/components/lib/View';
 import Panel from '@bnorth/components/lib/Panel';
-import Menu from '../components/menu';
-import Md from '../components/md';
-import Json from '../components/json';
+import Menu from '../components/Menu'
+import Container from '../components/Container'
 
 
 let Component = props=>{
-  let { app, stateData, stateRaw } = props;
+  let { app, stateDocs:{package:packageObj, readme, doclets=[]}, route:{params:{name}} } = props;
+
   return (
-    <View bc-bg-color-white bc-padding-a->
+    <View bc-bg-color-white bc-padding-a- bc-flex-direction-h>
       <Panel main>
-        {stateData.type==='menu'?<Menu app={app} data={stateRaw}/>:null}
-        {stateData.type==='md'?<Md app={app} data={stateRaw}/>:null}
-        {stateData.type==='json'?<Json app={app} data={stateRaw}/>:null}
+        {name?<Container app={app} name={name} stateDocs={doclets} />:null}
+        {!name?(
+          <ReactMarkdown source={readme} />
+        ):null}
+        {!name&&packageObj?(
+          <Panel className="margin-a- padding-a- text-align-center" b-theme="light">
+            <Panel inline>
+              <Panel>{packageObj.name}</Panel>
+              <Panel>Ver:{packageObj.version}</Panel>
+              <Panel>auth{packageObj.auth}</Panel>
+            </Panel>
+          </Panel>
+        ):null}
       </Panel>
+      <Menu app={app} name={name} stateDocs={doclets} bs-width={250} bc-margin-left- />
     </View>
   )
 }
 
 Component.controller = (app,page)=>{
-  let { route:{params:{src}} } = page.props;
-  let url = '/bnorth/data/';
-  let type;
-
-  if(src&&src.endsWith('.md')) {
-    type = 'md';
-    url += src;
-  }else if(src&&src.endsWith('.json')) {
-    type = 'json';
-    url += src;
-  }else {
-    type = 'menu';
-    url += 'menu.json';
-  }
-  
   return {
-    stateData: {
-      initialization: {
-        type
-      },
-    },
-    stateRaw: {
-      initialization: '',
-      options: {responseType: 'text'},
-      fetchOnStart: true,
-      state: app.Request,
-      url,
-    }
+    stateDocs: app.plugins.getByName('docs').stateDocs._id,
   }
 }
 
