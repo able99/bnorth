@@ -21,13 +21,20 @@ var _Panel = _interopRequireDefault(require("./Panel.Loader"));
 
 var _Backdrop = _interopRequireDefault(require("./Backdrop"));
 
+/**
+ * 提供了蒙层组件和蒙层插件
+ * @module
+ */
+
+/**
+ * 蒙层组件
+ * @component
+ */
 var Mask = function Mask(aprops) {
   var _parseProps = (0, _props.default)(aprops, Mask.props),
       loaderProps = _parseProps.loaderProps,
-      _parseProps$mask = _parseProps.mask,
-      mask = _parseProps$mask === void 0 ? true : _parseProps$mask,
-      _parseProps$component = _parseProps.component,
-      Component = _parseProps$component === void 0 ? _Backdrop.default : _parseProps$component,
+      mask = _parseProps.mask,
+      Component = _parseProps.component,
       className = _parseProps.className,
       props = (0, _objectWithoutProperties2.default)(_parseProps, ["loaderProps", "mask", "component", "className"]);
 
@@ -41,12 +48,47 @@ var Mask = function Mask(aprops) {
 };
 
 exports.Mask = Mask;
-var _default = {
+Mask.defaultProps = {};
+/**
+ * 设置 蒙层中间的 loader 组件的参数
+ * @memberof module:mask.Mask
+ * @type {object}
+ */
+
+Mask.defaultProps.loaderProps = undefined;
+/**
+ * 设置 Backdrop 的 mask 属性
+ * @memberof module:mask.Mask
+ * @type {boolean}
+ */
+
+Mask.defaultProps.mask = true;
+/**
+ * 渲染为该组件
+ * @memberof module:mask.Mask
+ * @type {component|element}
+ */
+
+Mask.defaultProps.component = _Backdrop.default;
+/**
+ * 提供了对蒙层的显示和控制的能力，同时修改了 app.render.mask 的默认行为
+ * @plugin mask
+ * @exportdefault
+ */
+
+var mask = {
   // plugin 
   // --------------------------------
   _id: 'mask',
   onPluginMount: function onPluginMount(app) {
     app.mask = {
+      /**
+       * 显示蒙层
+       * @memberof module:mask.mask
+       * @mount app.mask.show
+       * @param {object?} options - 参数
+       * @returns {string} 弹出层 id
+       */
       show: function show() {
         var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
             _ref$options = _ref.options,
@@ -59,6 +101,12 @@ var _default = {
         options.isModal = true;
         return app.mask._id = app.router.addView(_react.default.createElement(Mask, null), props, options);
       },
+
+      /**
+       * 关闭蒙层
+       * @memberof module:mask.mask
+       * @mount app.mask.close
+       */
       close: function close() {
         var _ref2 = app.router.getView(app.mask._id) || {},
             content = _ref2.content,
@@ -93,4 +141,5 @@ var _default = {
     delete app.mask;
   }
 };
+var _default = mask;
 exports.default = _default;

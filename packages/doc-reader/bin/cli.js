@@ -27,14 +27,14 @@ console.log('!startin1 doc', 'srcPath='+srcPath, 'desPath='+desPath, existsSync(
 let packageObj;
 let readmeStr;
 let result = spawnSync('jsdoc', [srcPath, '-c', configPath, '-r', '-X']);
-if(existsSync(srcPackagePath)) packageObj = require(srcPackagePath);
+if(existsSync(srcPackagePath)) packageObj = JSON.parse(readFileSync(srcPackagePath).toString()||'{}');
 if(existsSync(srcReadmePath)) readmeStr = readFileSync(srcReadmePath).toString();
 copySync(templatePath, desPath);
 result.error&&console.log(result.error.toString());
 console.log(result.stderr.toString());
 
 let obj = JSON.parse(result.output.join('\n'));
-obj = obj.filter(v=>!v.undocumented);
+obj = obj.filter(v=>!v.undocumented&&v.kind!=='package');
 obj.forEach(v=>{
   delete v.comment;
   delete v.meta;

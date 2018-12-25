@@ -1,0 +1,1423 @@
+{
+  "package": {
+    "name": "@bnorth/core",
+    "version": "3.1.6",
+    "description": "A react based JS framework that covers the functions of scaffolding, routing, data flow and so on. It uses a plug-in mechanism, powerful and easy to extend",
+    "keywords": [
+      "bnorth",
+      "react"
+    ],
+    "author": "able99 <8846755@qq.com>",
+    "homepage": "https://github.com/able99",
+    "license": "MIT",
+    "main": "lib/index.js",
+    "files": [
+      "lib"
+    ],
+    "publishConfig": {
+      "registry": "https://registry.npmjs.org/"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/able99/bnorth.git"
+    },
+    "scripts": {
+      "start": "bnorth-build watch",
+      "build": "bnorth-build dev",
+      "doc": "npx bnorth-doc ./src/ ../../docs/core/"
+    },
+    "bugs": {
+      "url": "https://github.com/able99/bnorth/issues"
+    },
+    "dependencies": {
+      "history": "^4.7.2",
+      "react": "^16.3.2",
+      "react-dom": "^16.3.2"
+    },
+    "devDependencies": {
+      "@bnorth/build": "^3.1.6"
+    },
+    "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
+  },
+  "readme": "# core\n\nbnorth 解决方案的核心库，是一个基于事件驱动的，支持插件扩展的 mmvc 模型框架。\n\n## 起步\n\n```sh\nnpm install @bnorth/core\n```\n\n```js\nimport App from '@bnorth/core';\nlet app = new App();\napp.start();\n```\n\n## bnorth api 文档\n\n[Documents](//able99.github.io/bnorth/)\n\n## LICENSE\n\nMIT\n\n",
+  "doclets": [
+    {
+      "kind": "module",
+      "name": "app",
+      "longname": "module:app"
+    },
+    {
+      "description": "App 构建参数",
+      "scope": "global",
+      "kind": "typedef",
+      "name": "AppOptions",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "'^app'",
+          "description": "配置 app id",
+          "name": "id"
+        },
+        {
+          "type": {
+            "names": [
+              "class"
+            ]
+          },
+          "description": "替换默认的app utils 模块",
+          "name": "Utils"
+        },
+        {
+          "type": {
+            "names": [
+              "class"
+            ]
+          },
+          "description": "替换默认的app Event 模块",
+          "name": "Event"
+        },
+        {
+          "type": {
+            "names": [
+              "class"
+            ]
+          },
+          "description": "替换默认的app Plugins 模块",
+          "name": "Plugins"
+        },
+        {
+          "type": {
+            "names": [
+              "class"
+            ]
+          },
+          "description": "替换默认的app Keyboard 模块",
+          "name": "Keyboard"
+        },
+        {
+          "type": {
+            "names": [
+              "class"
+            ]
+          },
+          "description": "替换默认的app Context 模块",
+          "name": "Context"
+        },
+        {
+          "type": {
+            "names": [
+              "class"
+            ]
+          },
+          "description": "替换默认的app Router 模块",
+          "name": "Router"
+        },
+        {
+          "type": {
+            "names": [
+              "class"
+            ]
+          },
+          "description": "替换默认的app Render 模块",
+          "name": "Render"
+        },
+        {
+          "type": {
+            "names": [
+              "class"
+            ]
+          },
+          "description": "替换默认的app State 构造器",
+          "name": "State"
+        },
+        {
+          "type": {
+            "names": [
+              "class"
+            ]
+          },
+          "description": "替换默认的app Page 组件",
+          "name": "Page"
+        },
+        {
+          "type": {
+            "names": [
+              "Object"
+            ]
+          },
+          "description": "app plugin，是 app 的第一个 plugin",
+          "name": "plugin"
+        }
+      ],
+      "longname": "AppOptions"
+    },
+    {
+      "classdesc": "web 应用的主类，其他模块和插件的功能都会挂在在该的实例上。用户需要实例化，并调用 start 方法启动应用。\n\nstart 方法首先会加载各个模块，然后按照 _startEvents 顺序发出事件，各个模块和插件在事件驱动下运行。",
+      "exportdefault": true,
+      "scope": "static",
+      "examples": [
+        "```js\nimport App from '@bnorth/core';\nlet app = new App();\napp.start();\n```"
+      ],
+      "name": "App",
+      "longname": "module:app.App",
+      "kind": "class",
+      "memberof": "module:app",
+      "description": "应用构建函数，完成对参数的配置，模块的加载",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "AppOptions"
+            ]
+          },
+          "description": "配置参数",
+          "name": "options"
+        }
+      ]
+    },
+    {
+      "description": "启动事件列表，app.start 过程，将依次被触发，可以在调用 app.start 前修改，默认包括：\n\n1. onAppStarting：app 启动前触发\n1. onAppStartConfig：启动后首先进入配置阶段\n1. onAppStartRouter：路由初始化阶段事件\n1. onAppStartContext：数据管理器初始化阶段\n1. onAppStartHack：hack 阶段，一般在此期间，完成对 app 的个性化定制\n1. onAppStartRender：dom 描画初始化阶段，创建根组件\n1. onAppStarted：启动完成",
+      "type": {
+        "names": [
+          "Array.<string>"
+        ]
+      },
+      "name": "_startEvents",
+      "longname": "module:app.App#_startEvents",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:app.App#_id",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "app 参数",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "id",
+          "name": "id"
+        }
+      ],
+      "name": "options",
+      "longname": "module:app.App#options",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance",
+      "defaultvalue": "options"
+    },
+    {
+      "description": "State 数据状态的类",
+      "type": {
+        "names": [
+          "State"
+        ]
+      },
+      "name": "State",
+      "longname": "module:app.App#State",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Page 单个页面的组件",
+      "type": {
+        "names": [
+          "Page"
+        ]
+      },
+      "name": "Page",
+      "longname": "module:app.App#Page",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Utils 模块类，实现一些常用的工具函数",
+      "type": {
+        "names": [
+          "class"
+        ]
+      },
+      "name": "Utils",
+      "longname": "module:app.App#Utils",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Utils 的实例",
+      "type": {
+        "names": [
+          "module:utils.Utils"
+        ]
+      },
+      "name": "utils",
+      "longname": "module:app.App#utils",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Log 模块类，负责日志管理",
+      "type": {
+        "names": [
+          "class"
+        ]
+      },
+      "name": "Log",
+      "longname": "module:app.App#Log",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Log 的实例",
+      "type": {
+        "names": [
+          "Log"
+        ]
+      },
+      "name": "log",
+      "longname": "module:app.App#log",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Event 模块，负责事件的管理",
+      "type": {
+        "names": [
+          "class"
+        ]
+      },
+      "name": "Event",
+      "longname": "module:app.App#Event",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Event 的实例",
+      "type": {
+        "names": [
+          "Event"
+        ]
+      },
+      "name": "event",
+      "longname": "module:app.App#event",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Plugins 模块，负责插件的管理",
+      "type": {
+        "names": [
+          "class"
+        ]
+      },
+      "name": "Plugins",
+      "longname": "module:app.App#Plugins",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Plugins 的实例",
+      "type": {
+        "names": [
+          "Plugins"
+        ]
+      },
+      "name": "plugins",
+      "longname": "module:app.App#plugins",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Keyboard 模块，负责键盘事件的管理",
+      "type": {
+        "names": [
+          "class"
+        ]
+      },
+      "name": "Keyboard",
+      "longname": "module:app.App#Keyboard",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Keyboard 的实例",
+      "type": {
+        "names": [
+          "Keyboard"
+        ]
+      },
+      "name": "keyboard",
+      "longname": "module:app.App#keyboard",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Context 模块，负责数据流管理",
+      "type": {
+        "names": [
+          "class"
+        ]
+      },
+      "name": "Context",
+      "longname": "module:app.App#Context",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Context 的实例",
+      "type": {
+        "names": [
+          "Context"
+        ]
+      },
+      "name": "context",
+      "longname": "module:app.App#context",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Router 模块，负责页面管理",
+      "type": {
+        "names": [
+          "class"
+        ]
+      },
+      "name": "Router",
+      "longname": "module:app.App#Router",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Router 的实例",
+      "type": {
+        "names": [
+          "Router"
+        ]
+      },
+      "name": "router",
+      "longname": "module:app.App#router",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Render 模块，提供实际 dom 渲染功能",
+      "type": {
+        "names": [
+          "class"
+        ]
+      },
+      "name": "Render",
+      "longname": "module:app.App#Render",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "Render 的实例",
+      "type": {
+        "names": [
+          "Render"
+        ]
+      },
+      "name": "render",
+      "longname": "module:app.App#render",
+      "kind": "member",
+      "memberof": "module:app.App",
+      "scope": "instance"
+    },
+    {
+      "description": "将 App 实例设置到 window.app",
+      "scope": "global",
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "window.app",
+          "value": "window.app"
+        }
+      ],
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "window.app",
+      "longname": "app",
+      "kind": "member"
+    },
+    {
+      "description": "启动 app，根据配置，触发一系列的启动事件，最终完成应用启动",
+      "async": true,
+      "name": "start",
+      "longname": "module:app.App#start",
+      "kind": "function",
+      "memberof": "module:app.App",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "kind": "module",
+      "name": "event",
+      "longname": "module:event"
+    },
+    {
+      "classdesc": "App Event 模块，提供事件管理的功能",
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Event",
+      "longname": "module:event.Event",
+      "kind": "class",
+      "memberof": "module:event",
+      "description": "app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "moudle:app.App"
+            ]
+          },
+          "name": "app"
+        }
+      ]
+    },
+    {
+      "description": "向目标注册指定的事件处理函数",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "目标的 id，比如 app, app 的模块，插件，数据单元或者页面等",
+          "name": "targetId"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "事件的名称",
+          "name": "eventName"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "处理函数，参数由事件决定",
+          "name": "callback"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "nullable": true,
+          "description": "该事件处理函数的拥有者 id",
+          "name": "ownerId"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "返回无参数的函数，调用可取消注册"
+        }
+      ],
+      "name": "on",
+      "longname": "module:event.Event#on",
+      "kind": "function",
+      "memberof": "module:event.Event",
+      "scope": "instance"
+    },
+    {
+      "description": "通 on 函数，但是事件只触发一次，就会自动取消注册",
+      "name": "once",
+      "longname": "module:event.Event#once",
+      "kind": "function",
+      "memberof": "module:event.Event",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "取消事件的注册",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "注册时的事件处理函数或者事件处理函数的所有者 id",
+          "name": "item"
+        }
+      ],
+      "name": "off",
+      "longname": "module:event.Event#off",
+      "kind": "function",
+      "memberof": "module:event.Event",
+      "scope": "instance"
+    },
+    {
+      "description": "批量删除事件处理函数",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "目标 id",
+          "name": "targetId"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "nullable": true,
+          "description": "事件名称，如果事件名称为空，则清除目标 id 的全部事件",
+          "name": "eventName"
+        }
+      ],
+      "name": "delete",
+      "longname": "module:event.Event#delete",
+      "kind": "function",
+      "memberof": "module:event.Event",
+      "scope": "instance"
+    },
+    {
+      "description": "触发事件",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "目标 id",
+          "name": "targetId"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "事件名称",
+          "name": "eventName"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "variable": true,
+          "description": "事件的参数",
+          "name": "args"
+        }
+      ],
+      "name": "emitSync",
+      "longname": "module:event.Event#emitSync",
+      "kind": "function",
+      "memberof": "module:event.Event",
+      "scope": "instance"
+    },
+    {
+      "description": "触发事件，如果某一事件处理函数返回的非负值，则返回该值，并停止继续执行队列中其他事件处理函数",
+      "async": true,
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "目标 id",
+          "name": "targetId"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "事件名称",
+          "name": "eventName"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "variable": true,
+          "description": "事件的参数",
+          "name": "args"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "处理函数的返回值"
+        }
+      ],
+      "name": "emit",
+      "longname": "module:event.Event#emit",
+      "kind": "function",
+      "memberof": "module:event.Event",
+      "scope": "instance"
+    },
+    {
+      "kind": "module",
+      "name": "index",
+      "longname": "module:index"
+    },
+    {
+      "kind": "class",
+      "name": "App",
+      "exportdefault": true,
+      "scope": "static",
+      "see": [
+        "module:app.App"
+      ],
+      "longname": "module:index.App",
+      "memberof": "module:index"
+    },
+    {
+      "kind": "module",
+      "name": "state",
+      "longname": "module:state"
+    },
+    {
+      "classdesc": "数据管理器的数据管理单元",
+      "exportdefault": true,
+      "scope": "static",
+      "name": "State",
+      "longname": "module:state.State",
+      "kind": "class",
+      "memberof": "module:state",
+      "description": "不用于直接构造，而是在 page 的 controller 中，定义数据单元，由 page 构造",
+      "params": []
+    },
+    {
+      "description": "通过 state 的 完整 id 获取 state 实例",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "state 的 id",
+          "name": "_id"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "moudle:state.State"
+            ]
+          },
+          "description": "获取的 State 实例"
+        }
+      ],
+      "name": "get",
+      "longname": "module:state.State.get",
+      "kind": "function",
+      "memberof": "module:state.State",
+      "scope": "static"
+    },
+    {
+      "description": "通过 state id 及 其所在 页面或者插件的 id 获取 state 实例",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "state 的 id",
+          "name": "stateId"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "state 所有者 的 id",
+          "name": "ownerId"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "moudle:state.State"
+            ]
+          },
+          "description": "获取的 State 实例"
+        }
+      ],
+      "name": "getState",
+      "longname": "module:state.State.getState",
+      "kind": "function",
+      "memberof": "module:state.State",
+      "scope": "static"
+    },
+    {
+      "description": "读取数据单元中的数据",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "读取的数据"
+        }
+      ],
+      "name": "data",
+      "longname": "module:state.State#data",
+      "kind": "function",
+      "memberof": "module:state.State",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "读取数据单元中的扩展数据",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "读取的数据"
+        }
+      ],
+      "name": "extData",
+      "longname": "module:state.State#extData",
+      "kind": "function",
+      "memberof": "module:state.State",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "以 json path 方式读取数据单元中的数据",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "json path",
+          "name": "path"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "读取的数据"
+        }
+      ],
+      "name": "get",
+      "longname": "module:state.State#get",
+      "kind": "function",
+      "memberof": "module:state.State",
+      "scope": "instance"
+    },
+    {
+      "description": "更新数据单元的数据",
+      "async": true,
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "新数据",
+          "name": "data"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "更新参数，其中的 append 用于指定追加方式，参见 app.utils.objectUpdate 中对参数的说明",
+          "name": "options"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "更新后的数据"
+        }
+      ],
+      "name": "update",
+      "longname": "module:state.State#update",
+      "kind": "function",
+      "memberof": "module:state.State",
+      "scope": "instance"
+    },
+    {
+      "description": "以 json path 方式设置数据单元中的数据",
+      "async": true,
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "json path",
+          "name": "path"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "新的数据",
+          "name": "val"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否是输入中状态",
+          "name": "input"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "更新后的数据"
+        }
+      ],
+      "name": "set",
+      "longname": "module:state.State#set",
+      "kind": "function",
+      "memberof": "module:state.State",
+      "scope": "instance"
+    },
+    {
+      "description": "删除数据单元中的数据",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "删除的参数，参见 app.utils.objectDelete 中对参数的说明",
+          "name": "_did"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "更新后的数据"
+        }
+      ],
+      "name": "delete",
+      "longname": "module:state.State#delete",
+      "kind": "function",
+      "memberof": "module:state.State",
+      "scope": "instance",
+      "async": true
+    },
+    {
+      "description": "存放全部 state 的集合",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "name": "states",
+      "longname": "module:state.State.states",
+      "kind": "member",
+      "memberof": "module:state.State",
+      "scope": "static",
+      "defaultvalue": "{}"
+    },
+    {
+      "kind": "module",
+      "name": "utils",
+      "longname": "module:utils"
+    },
+    {
+      "classdesc": "App Utils 模块，提供一些工具函数",
+      "exportdefault": true,
+      "scope": "static",
+      "examples": [
+        "```js\napp.utils.captilaze('abc'); // 'Abc' \n```"
+      ],
+      "name": "Utils",
+      "longname": "module:utils.Utils",
+      "kind": "class",
+      "memberof": "module:utils",
+      "description": "app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "moudle:app.App"
+            ]
+          },
+          "name": "app"
+        }
+      ]
+    },
+    {
+      "description": "App 的实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:utils.Utils#app",
+      "kind": "member",
+      "memberof": "module:utils.Utils",
+      "scope": "instance",
+      "defaultvalue": "app"
+    },
+    {
+      "description": "组合由对象或者函数组成的参数集合",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object",
+              "function"
+            ]
+          },
+          "variable": true,
+          "description": "参数集合",
+          "name": "args"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "组合后的参数对象"
+        }
+      ],
+      "name": "getOptions",
+      "longname": "module:utils.Utils#getOptions",
+      "kind": "function",
+      "memberof": "module:utils.Utils",
+      "scope": "instance"
+    },
+    {
+      "description": "以 json path 的方式对对象进行赋值",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "nullable": false,
+          "description": "需要赋值的对象",
+          "name": "data"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "nullable": false,
+          "description": "json path",
+          "name": "path"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "需要设置的值",
+          "name": "val"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "赋值后的对象"
+        }
+      ],
+      "examples": [
+        "```js\nlet obj = {a: {b:1}}\napp.utils.pathSet(obj, '.a.b', 2);\n```"
+      ],
+      "name": "pathSet",
+      "longname": "module:utils.Utils#pathSet",
+      "kind": "function",
+      "memberof": "module:utils.Utils",
+      "scope": "instance"
+    },
+    {
+      "description": "以 json path 的方式读取对象中指定的数据",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "nullable": false,
+          "description": "需要读取的对象",
+          "name": "data"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "nullable": false,
+          "description": "json path",
+          "name": "path"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "读取的值"
+        }
+      ],
+      "name": "pathGet",
+      "longname": "module:utils.Utils#pathGet",
+      "kind": "function",
+      "memberof": "module:utils.Utils",
+      "scope": "instance"
+    },
+    {
+      "description": "将 error 实例，字符串，错误错误对象(需要包含 message 字段)，转换为字符串",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "Error",
+              "string",
+              "Object"
+            ]
+          },
+          "description": "错误数据",
+          "name": "message"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "stirng"
+            ]
+          },
+          "description": "错误信息"
+        }
+      ],
+      "name": "message2String",
+      "longname": "module:utils.Utils#message2String",
+      "kind": "function",
+      "memberof": "module:utils.Utils",
+      "scope": "instance"
+    },
+    {
+      "description": "对象复制或者深度复制",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "array",
+              "object"
+            ]
+          },
+          "description": "要复制的对象",
+          "name": "obj"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否深度复制，暂未实现",
+          "name": "deep"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "array",
+              "object"
+            ]
+          },
+          "description": "复制后的新对象"
+        }
+      ],
+      "name": "objectCopy",
+      "longname": "module:utils.Utils#objectCopy",
+      "kind": "function",
+      "memberof": "module:utils.Utils",
+      "scope": "instance"
+    },
+    {
+      "description": "用指定的追加方式进行数据连接",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "原数据",
+          "name": "obj"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "新数据",
+          "name": "data"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "追加方式，包括：\n\n1. 原对象是数组，\n    - append 为真，返回 追加新数据的新数组，\n    - append 不为真，返回新数据组成的新数组\n1. 原对象是对象，\n    - append 是字符串，用 json get 方式读取原数据和新数据，然后用 append 参数为 true，递归调用一次数据连接后，用json set 方式设置到由原数据和新数据合并的数据上\n    - append 为 true 或者没有设置，进行对象合并\n    - append 为其他值时，返回新数据组成的新数据\n1. 其他类型\n    - append 为真，原数据与新数据进行加号操作\n    - append 不为真，返回新数据",
+          "name": "append"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "连接后的数据"
+        }
+      ],
+      "name": "objectUpdate",
+      "longname": "module:utils.Utils#objectUpdate",
+      "kind": "function",
+      "memberof": "module:utils.Utils",
+      "scope": "instance"
+    },
+    {
+      "description": "删除对象中的指定数据，如果为数组，按序号删除，如果为对象，按 key 删除",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object",
+              "array"
+            ]
+          },
+          "description": "待处理的对象",
+          "name": "obj"
+        },
+        {
+          "type": {
+            "names": [
+              "string",
+              "number"
+            ]
+          },
+          "description": "key 值或者序号",
+          "name": "_id"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object",
+              "array"
+            ]
+          },
+          "description": "处理后的对象"
+        }
+      ],
+      "name": "objectDelete",
+      "longname": "module:utils.Utils#objectDelete",
+      "kind": "function",
+      "memberof": "module:utils.Utils",
+      "scope": "instance"
+    },
+    {
+      "description": "对两个对象进行浅层比较",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "对象1",
+          "name": "objA"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "对象2",
+          "name": "objB"
+        },
+        {
+          "type": {
+            "names": [
+              "Array.<string>"
+            ]
+          },
+          "description": "需要递归一次浅层比较的属性",
+          "name": "checkEqualProps"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否相等"
+        }
+      ],
+      "name": "shallowEqual",
+      "longname": "module:utils.Utils#shallowEqual",
+      "kind": "function",
+      "memberof": "module:utils.Utils",
+      "scope": "instance"
+    },
+    {
+      "description": "将字符串首字母大写",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "nullable": false,
+          "description": "要转换的字符串",
+          "name": "str"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "转换后的字符串"
+        }
+      ],
+      "name": "captilaze",
+      "longname": "module:utils.Utils#captilaze",
+      "kind": "function",
+      "memberof": "module:utils.Utils",
+      "scope": "instance"
+    }
+  ]
+}

@@ -6,7 +6,6 @@ export default class Page extends React.Component {
   // ---------------------------
   constructor(props) {
     super(props);
-    this.parseController();
   }
 
   get _id() { 
@@ -89,6 +88,9 @@ export default class Page extends React.Component {
         this[k] = v;
       }
     })
+
+    this._controllerBinded = true;
+    this.forceUpdate();
   }
 
   _getStateKeys() {
@@ -118,6 +120,7 @@ export default class Page extends React.Component {
     app.log.info('page did mount', _id);
 
     this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this.handleKeyEvent(e));
+    this.parseController();
     app.event.emit(app._id, 'onPageAdd', _id, this);
     app.event.emit(this._id, 'onPageStart', this, active);
     active && app.event.emit(this._id, 'onPageActive', this, true);
@@ -161,6 +164,7 @@ export default class Page extends React.Component {
   // page render
   // ---------------------------
   render() {
+    if(!this._controllerBinded) return null;
     let { context, app, _id, route, views, embeds, ...props } = this.props;
     app.log.info('page render', _id);
 

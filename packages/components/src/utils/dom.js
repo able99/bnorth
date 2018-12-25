@@ -1,3 +1,7 @@
+/**
+ * dom 操作工具集
+ * @module
+ */
 import ReactDOM from 'react-dom';
 import css from 'dom-helpers/style';
 import offset from 'dom-helpers/query/offset';
@@ -24,28 +28,39 @@ export function domTriggerBrowserReflow(node) {
 
 // env
 // -------------------
+/**
+ * 是否支持 touch
+ * @type {boolean}
+ */
 export const domIsTouch = 'ontouchstart' in document;
+/**
+ * 是否支持鼠标
+ * @type {boolean}
+ */
 export const domIsMouse = 'onmousedown' in document;
-export const domTouchEventNameMaps = domIsTouch 
-  ? {
-    down: 'touchstart',
-    move: 'touchmove',
-    up: 'touchend',
-    cancel: 'touchcancel',
-  } : domIsMouse ? {
-    down: 'mousedown',
-    move: 'mousemove',
-    up: 'mouseup',
-    cancel: 'mouseout',
-  } : {};
 
 
 // dom find
 // -------------------
+/**
+ * 返回组件对应的元素
+ * @param {element|component} - 组件
+ * @returns {element} 对应的元素
+ */
 export function domFindNode(node) {
   return ReactDOM.findDOMNode(node);
 }
 
+/**
+ * 查找组件或元素的 container，查找模式：
+ * 
+ * 1. 如果父元素为 body 则返回 body
+ * 1. 如果父元素是 page 则返回页面元素
+ * 1. 返回具有参数 container 指定的，具有 data-container 响应名称属性的元素
+ * @param {element|component} - 组件或元素
+ * @param {true|string} - 查找模式
+ * @returns {element} 所在的 container
+ */
 export function domFindContainer(node, container) {
   let el=domFindNode(node);
   if(!el) return document.body;
@@ -60,6 +75,13 @@ export function domFindContainer(node, container) {
   return document.body;
 }
 
+/**
+ * 查找组件或者元素的可滚动父元素
+ * @param {element|component} - 组件或元素
+ * @param {element|component} - 如果为真，直接作为结果返回
+ * @param {boolean} - 是否是横向滚动 
+ * @returns {element} 滚动父元素
+ */
 export function domFindScrollContainer(node, container, horizontal) {
   if (container) return ReactDOM.findDOMNode(container); 
   node = ReactDOM.findDOMNode(node);
@@ -78,12 +100,23 @@ export function domFindScrollContainer(node, container, horizontal) {
 
 // dom portal
 // -------------------
+/**
+ * 将组建以 portal 方式，render 到制定元素
+ * @param {component} - 将 render 的组件 
+ * @param {element} - render 到的元素
+ */
 export function domCreatePortal(component, container) {
   return ReactDOM.createPortal(component, container||document.body)
 }
 
 // dom offset
 // -------------------
+/**
+ * 返回组件或者元素的坐标和尺寸
+ * @param {component|element} - 目标元素或组件 
+ * @param {element} - 相对于该元素的相对坐标，为空时是相对于浏览器的绝对坐标 
+ * @returns {object} - x,y 坐标，width,height 尺寸
+ */
 export function domOffset(node, container) {
   node = domFindNode(node);
   return container?position(node, container):offset(node);
@@ -107,6 +140,11 @@ export function domGetScrollDimensionValue(elem, dimension="height") {
 
 // event
 // -------------------
+/**
+ * 将函数串联起来，返回一个函数，调用时将串行调用所包含的全部函数
+ * @param  {...function} 全部函数
+ * @returns {function} 串联后的函数 
+ */
 export function chainedFuncs(...funcs) {
   return funcs.filter(f=>f).reduce((acc, f) => {
     if (typeof f !== 'function') {

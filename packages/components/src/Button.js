@@ -1,19 +1,21 @@
 /**
- * bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
+ * 按钮和按钮组
+ * @module
  */
-
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes';
 import parseProps from './utils/props';
 import Panel from './Panel.Container';
 
 
+/**
+ * 按钮组件
+ * @component
+ * @exportdefault
+ */
 let Button = aprops=>{
   let {
-    component:Component=Panel, panelComponent='button', className, ...props
+    component:Component, panelComponent, className, ...props
   } = parseProps(aprops, Button.props);
 
   let classStr = 'outline-none- appearance-none- font-smoothing-antialiased- transition-set- vertical-align-middle position-relative line-height-1 cursor-pointer text-align-center padding-a-';
@@ -26,13 +28,31 @@ let Button = aprops=>{
   );
 }
 
+Button.defaultProps = {
+  /**
+   * 渲染为该组件
+   * @type {component|element}
+   * @default Panel
+   */
+  component: Panel, 
+  /**
+   * Panel 的渲染组件，仅当 component 设置为 Panel 时有效
+   * @type {component|element}
+   * @default 'button'
+   */
+  panelComponent: 'button',
+}
 
+/**
+ * 按钮组组件
+ * @component
+ */
 Button.Group = aprops=>{
   let {
     stacked, justify, separator, 
-    separatorProps={},
-    itemProps, itemGetClassName=Button.Group._itemGetClassName, itemGetStyle=Button.Group._itemGetStyle, itemGetProps=Button.Group._itemGetProps,
-    component:Component=Panel.Container, panelComponent, children, ...props
+    separatorProps,
+    itemProps, itemGetClassName, itemGetStyle, itemGetProps,
+    component:Component, panelComponent, children, ...props
   } = parseProps(aprops, Button.Group.props);
 
   children = React.Children.toArray(children)
@@ -55,6 +75,67 @@ Button.Group = aprops=>{
   )
 }
 
+Button.Group.defaultProps = {
+  /**
+   * 是否堆叠方式摆放按钮
+   * @type {boolean}
+   */
+  stacked: false, 
+  /**
+   * 是否平分展开按钮
+   * @type {boolean}
+   */
+  justify: false, 
+  /**
+   * 按钮之间是否有分隔条
+   * @type {boolean}
+   */
+  separator: false, 
+  /**
+   * 分隔条属性
+   * @type {object}
+   */
+  separatorProps: {},
+  /**
+   * 设置包含所有按钮的属性
+   * @type {object}
+   */
+  itemProps: undefined, 
+  /**
+   * 设置包含所有按钮的 class name 生成函数
+   * @type {function}
+   */
+  itemGetClassName: Button.Group._itemGetClassName, 
+  /**
+   * 设置包含所有按钮的样式生成函数
+   * @type {function}
+   * @default Button.Group._itemGetStyle
+   */
+  itemGetStyle: Button.Group._itemGetStyle, 
+  /**
+   * 设置包含所有按钮的属性生成函数
+   * @type {function}
+   * @default Button.Group._itemGetProps
+   */
+  itemGetProps: Button.Group._itemGetProps,
+  /**
+   * 渲染为该组件
+   * @type {component|element}
+   * @default Panel.Container
+   */
+  component: Panel.Container, 
+  /**
+   * Panel 的渲染组件，仅当 component 设置为 Panel 时有效
+   * @type {component|element}
+   */
+  panelComponent: undefined,
+}
+
+/**
+ * 按钮组默认的设置包含所有按钮的 class name 生成函数，该函数处理了边框和对堆叠，平分的属性的处理
+ * @component
+ * @private
+ */
 Button.Group._itemGetClassName=(i, length, {separator, stacked, justify}={})=>{
   return {
     'border-none-right-': stacked||(i>=length-1),
@@ -67,6 +148,11 @@ Button.Group._itemGetClassName=(i, length, {separator, stacked, justify}={})=>{
   };
 }
 
+/**
+ * 按钮组的分隔条组件
+ * @component
+ * @private
+ */
 Button.Group._Separator = aprops=>{
   let { 
     component:Component=Panel, panelComponent, notItem, className, ...props
@@ -84,6 +170,11 @@ Button.Group._Separator = aprops=>{
   );
 }
 
+/**
+ * 按钮组的条目
+ * @component
+ * @see module:Button.Button
+ */
 Button.Group.Item = Button;
 
 

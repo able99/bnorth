@@ -37,12 +37,6 @@ var _dom = require("./utils/dom");
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
-/**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
- */
 _hammerjs.default.defaults.inputClass = _dom.domIsTouch ? _hammerjs.default.TouchInput : _hammerjs.default.TouchMouseInput;
 _hammerjs.default.defaults.touchAction = 'pan-y'; // :TODO 
 

@@ -55,14 +55,8 @@ function (_React$Component) {
   // constructor
   // ---------------------------
   function Page(props) {
-    var _this;
-
     (0, _classCallCheck2.default)(this, Page);
-    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Page).call(this, props));
-
-    _this.parseController();
-
-    return _this;
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Page).call(this, props));
   }
 
   (0, _createClass2.default)(Page, [{
@@ -84,23 +78,23 @@ function (_React$Component) {
   }, {
     key: "action",
     value: function action(func, name) {
-      var _this2 = this;
+      var _this = this;
 
       if (!name) name = "_".concat(++this._actionNum);
 
       var ret = function ret() {
         try {
-          _this2.app.log.info('page action', _this2.name, name);
+          _this.app.log.info('page action', _this.name, name);
 
           for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
           }
 
-          return func.apply(_this2, args);
+          return func.apply(_this, args);
         } catch (e) {
-          _this2.app.log.error('page action', name, e);
+          _this.app.log.error('page action', name, e);
 
-          _this2.app.render.panic(e, {
+          _this.app.render.panic(e, {
             title: "action(".concat(name, ") error")
           });
         }
@@ -112,7 +106,7 @@ function (_React$Component) {
   }, {
     key: "parseController",
     value: function parseController() {
-      var _this3 = this;
+      var _this2 = this;
 
       var _this$props = this.props,
           app = _this$props.app,
@@ -132,9 +126,9 @@ function (_React$Component) {
             v = _ref2[1];
 
         if (k.startsWith('state') || k.startsWith('_state')) {
-          _this3[k] = app.State.createState(app, v, k, _this3._id);
+          _this2[k] = app.State.createState(app, v, k, _this2._id);
 
-          if (!_this3[k]) {
+          if (!_this2[k]) {
             app.render.panic(v, {
               title: 'no state'
             });
@@ -142,18 +136,18 @@ function (_React$Component) {
           }
 
           if (typeof v === 'string') return;
-          app.event.on(_this3._id, 'onPageStart', function (page, active) {
-            app.event.emit(_this3[k]._id, 'onStateStart', _this3[k]._id, active);
-          }, _this3[k]._id);
-          app.event.on(_this3._id, 'onPageActive', function (page, onStart) {
-            app.event.emit(_this3[k]._id, 'onStateActive', _this3[k]._id, onStart);
-          }, _this3[k]._id);
-          app.event.on(_this3._id, 'onPageInactive', function (page, onStop) {
-            app.event.emit(_this3[k]._id, 'onStateInactive', _this3[k]._id, onStop);
-          }, _this3[k]._id);
-          app.event.on(_this3._id, 'onPageStop', function (page) {
-            app.event.emit(_this3[k]._id, 'onStateStop', _this3[k]._id);
-          }, _this3[k]._id);
+          app.event.on(_this2._id, 'onPageStart', function (page, active) {
+            app.event.emit(_this2[k]._id, 'onStateStart', _this2[k]._id, active);
+          }, _this2[k]._id);
+          app.event.on(_this2._id, 'onPageActive', function (page, onStart) {
+            app.event.emit(_this2[k]._id, 'onStateActive', _this2[k]._id, onStart);
+          }, _this2[k]._id);
+          app.event.on(_this2._id, 'onPageInactive', function (page, onStop) {
+            app.event.emit(_this2[k]._id, 'onStateInactive', _this2[k]._id, onStop);
+          }, _this2[k]._id);
+          app.event.on(_this2._id, 'onPageStop', function (page) {
+            app.event.emit(_this2[k]._id, 'onStateStop', _this2[k]._id);
+          }, _this2[k]._id);
         }
       });
       Object.entries(controllerObj).forEach(function (_ref3) {
@@ -164,25 +158,27 @@ function (_React$Component) {
         if (k.startsWith('state') || k.startsWith('_state')) {// state
         } else if (k === 'onPageAdd' || k === 'onPageRemove') {
           // app event
-          app.event.on(app._id, k, v, _this3._id);
+          app.event.on(app._id, k, v, _this2._id);
         } else if (k.startsWith('onPage')) {
           // page event
-          app.event.on(_this3._id, k, v, _this3._id);
+          app.event.on(_this2._id, k, v, _this2._id);
         } else if (k.startsWith('onState')) {
           // page state event
           var stateEvents = k.split('_');
-          if (stateEvents[0] && _this3[stateEvents[1]]) app.event.on(_this3[stateEvents[1]]._id, stateEvents[0], v, _this3._id);
+          if (stateEvents[0] && _this2[stateEvents[1]]) app.event.on(_this2[stateEvents[1]]._id, stateEvents[0], v, _this2._id);
         } else if (k.startsWith('on')) {
           // app event
-          app.event.on(app._id, k, v, _this3._id);
+          app.event.on(app._id, k, v, _this2._id);
         } else if (k.startsWith('action')) {
           // action
-          _this3[k] = _this3.action(v, k.slice(6));
+          _this2[k] = _this2.action(v, k.slice(6));
         } else {
           // user props
-          _this3[k] = v;
+          _this2[k] = v;
         }
       });
+      this._controllerBinded = true;
+      this.forceUpdate();
     }
   }, {
     key: "_getStateKeys",
@@ -227,7 +223,7 @@ function (_React$Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this4 = this;
+      var _this3 = this;
 
       var _this$props2 = this.props,
           app = _this$props2.app,
@@ -235,8 +231,9 @@ function (_React$Component) {
           active = _this$props2.route.active;
       app.log.info('page did mount', _id);
       this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
-        return _this4.handleKeyEvent(e);
+        return _this3.handleKeyEvent(e);
       });
+      this.parseController();
       app.event.emit(app._id, 'onPageAdd', _id, this);
       app.event.emit(this._id, 'onPageStart', this, active);
       active && app.event.emit(this._id, 'onPageActive', this, true);
@@ -313,8 +310,9 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this5 = this;
+      var _this4 = this;
 
+      if (!this._controllerBinded) return null;
       var _this$props5 = this.props,
           context = _this$props5.context,
           app = _this$props5.app,
@@ -336,7 +334,7 @@ function (_React$Component) {
       }, this._getStateObjs());
       Object.keys(embeds).forEach(function (v) {
         embeds[v] = (0, _react.cloneElement)(embeds[v], (0, _objectSpread2.default)({}, v.props, {
-          frame: _this5.frame
+          frame: _this4.frame
         }));
       });
 
@@ -352,9 +350,9 @@ function (_React$Component) {
 
         var refFrame = function refFrame(e) {
           if (!e) return;
-          var update = !_this5.frame;
-          _this5.frame = e;
-          if (update) _this5.forceUpdate();
+          var update = !_this4.frame;
+          _this4.frame = e;
+          if (update) _this4.forceUpdate();
         };
 
         return _react.default.createElement("main", {

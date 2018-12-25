@@ -20,17 +20,19 @@ var _props = _interopRequireDefault(require("./utils/props"));
 var _Panel = _interopRequireDefault(require("./Panel.Container"));
 
 /**
- * bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
+ * 按钮和按钮组
+ * @module
+ */
+
+/**
+ * 按钮组件
+ * @component
+ * @exportdefault
  */
 var Button = function Button(aprops) {
   var _parseProps = (0, _props.default)(aprops, Button.props),
-      _parseProps$component = _parseProps.component,
-      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
-      _parseProps$panelComp = _parseProps.panelComponent,
-      panelComponent = _parseProps$panelComp === void 0 ? 'button' : _parseProps$panelComp,
+      Component = _parseProps.component,
+      panelComponent = _parseProps.panelComponent,
       className = _parseProps.className,
       props = (0, _objectWithoutProperties2.default)(_parseProps, ["component", "panelComponent", "className"]);
 
@@ -42,22 +44,38 @@ var Button = function Button(aprops) {
   }, props));
 };
 
+Button.defaultProps = {
+  /**
+   * 渲染为该组件
+   * @type {component|element}
+   * @default Panel
+   */
+  component: _Panel.default,
+
+  /**
+   * Panel 的渲染组件，仅当 component 设置为 Panel 时有效
+   * @type {component|element}
+   * @default 'button'
+   */
+  panelComponent: 'button'
+  /**
+   * 按钮组组件
+   * @component
+   */
+
+};
+
 Button.Group = function (aprops) {
   var _parseProps2 = (0, _props.default)(aprops, Button.Group.props),
       stacked = _parseProps2.stacked,
       justify = _parseProps2.justify,
       separator = _parseProps2.separator,
-      _parseProps2$separato = _parseProps2.separatorProps,
-      separatorProps = _parseProps2$separato === void 0 ? {} : _parseProps2$separato,
+      separatorProps = _parseProps2.separatorProps,
       itemProps = _parseProps2.itemProps,
-      _parseProps2$itemGetC = _parseProps2.itemGetClassName,
-      itemGetClassName = _parseProps2$itemGetC === void 0 ? Button.Group._itemGetClassName : _parseProps2$itemGetC,
-      _parseProps2$itemGetS = _parseProps2.itemGetStyle,
-      itemGetStyle = _parseProps2$itemGetS === void 0 ? Button.Group._itemGetStyle : _parseProps2$itemGetS,
-      _parseProps2$itemGetP = _parseProps2.itemGetProps,
-      itemGetProps = _parseProps2$itemGetP === void 0 ? Button.Group._itemGetProps : _parseProps2$itemGetP,
-      _parseProps2$componen = _parseProps2.component,
-      Component = _parseProps2$componen === void 0 ? _Panel.default.Container : _parseProps2$componen,
+      itemGetClassName = _parseProps2.itemGetClassName,
+      itemGetStyle = _parseProps2.itemGetStyle,
+      itemGetProps = _parseProps2.itemGetProps,
+      Component = _parseProps2.component,
       panelComponent = _parseProps2.panelComponent,
       children = _parseProps2.children,
       props = (0, _objectWithoutProperties2.default)(_parseProps2, ["stacked", "justify", "separator", "separatorProps", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "panelComponent", "children"]);
@@ -84,6 +102,77 @@ Button.Group = function (aprops) {
   }, props), children);
 };
 
+Button.Group.defaultProps = {
+  /**
+   * 是否堆叠方式摆放按钮
+   * @type {boolean}
+   */
+  stacked: false,
+
+  /**
+   * 是否平分展开按钮
+   * @type {boolean}
+   */
+  justify: false,
+
+  /**
+   * 按钮之间是否有分隔条
+   * @type {boolean}
+   */
+  separator: false,
+
+  /**
+   * 分隔条属性
+   * @type {object}
+   */
+  separatorProps: {},
+
+  /**
+   * 设置包含所有按钮的属性
+   * @type {object}
+   */
+  itemProps: undefined,
+
+  /**
+   * 设置包含所有按钮的 class name 生成函数
+   * @type {function}
+   */
+  itemGetClassName: Button.Group._itemGetClassName,
+
+  /**
+   * 设置包含所有按钮的样式生成函数
+   * @type {function}
+   * @default Button.Group._itemGetStyle
+   */
+  itemGetStyle: Button.Group._itemGetStyle,
+
+  /**
+   * 设置包含所有按钮的属性生成函数
+   * @type {function}
+   * @default Button.Group._itemGetProps
+   */
+  itemGetProps: Button.Group._itemGetProps,
+
+  /**
+   * 渲染为该组件
+   * @type {component|element}
+   * @default Panel.Container
+   */
+  component: _Panel.default.Container,
+
+  /**
+   * Panel 的渲染组件，仅当 component 设置为 Panel 时有效
+   * @type {component|element}
+   */
+  panelComponent: undefined
+  /**
+   * 按钮组默认的设置包含所有按钮的 class name 生成函数，该函数处理了边框和对堆叠，平分的属性的处理
+   * @component
+   * @private
+   */
+
+};
+
 Button.Group._itemGetClassName = function (i, length) {
   var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
       separator = _ref.separator,
@@ -100,6 +189,12 @@ Button.Group._itemGetClassName = function (i, length) {
     'bg-none-': separator
   };
 };
+/**
+ * 按钮组的分隔条组件
+ * @component
+ * @private
+ */
+
 
 Button.Group._Separator = function (aprops) {
   var _parseProps3 = (0, _props.default)(aprops, Button.Group._Separator.props),
@@ -119,6 +214,12 @@ Button.Group._Separator = function (aprops) {
     className: (0, _classes.default)(classStr, className)
   }, props), _react.default.createElement("span", null, "|"));
 };
+/**
+ * 按钮组的条目
+ * @component
+ * @see module:Button.Button
+ */
+
 
 Button.Group.Item = Button;
 var _default = Button;

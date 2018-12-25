@@ -1,0 +1,928 @@
+{
+  "package": {
+    "name": "@bnorth/rich.css",
+    "version": "3.1.6",
+    "description": "all in one css way, or dynamic css way",
+    "keywords": [
+      "css",
+      "animation",
+      "all in one css",
+      "dynamic css"
+    ],
+    "author": "hubn <8846755@qq.com>",
+    "homepage": "https://github.com/able99",
+    "license": "MIT",
+    "main": "lib/index.js",
+    "directories": {
+      "lib": "lib",
+      "test": "__tests__"
+    },
+    "files": [
+      "lib",
+      "css"
+    ],
+    "publishConfig": {
+      "registry": "https://registry.npmjs.org/"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/able99/bnorth.git"
+    },
+    "scripts": {
+      "build": "npm run clean && npm run build:js && npm run build:css",
+      "build:js": "bnorth-build dev",
+      "build:css": "bnorth-build run scripts/index.js",
+      "clean": "bnorth-build clean lib css",
+      "doc": "npx bnorth-doc ./src/ ../../docs/richcss/"
+    },
+    "bugs": {
+      "url": "https://github.com/able99/bnorth/issues"
+    },
+    "dependencies": {
+      "animate.css": "^3.7.0",
+      "normalize.css": "^8.0.0"
+    },
+    "devDependencies": {
+      "@bnorth/build": "^3.1.6"
+    },
+    "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
+  },
+  "readme": "# rich.css\n\n## 使用方法\n\n```sh\nnpm install --save @bnorth/rich.css\n```\n\n```jsx\nimport React from 'react';\nimport ReactDOM from 'react-dom';\nimport '@bnorth/rich.css/css/normalize.css';\nimport genCss from '@bnorth/rich.css';\nimport { getCssConfig, setCssConfig } from '@bnorth/rich.css/lib/gen';\n\nlet { textColors } = getCssConfig();\ntextColors.normal = '#222222';\nsetCssConfig({textColors});\ngenCss();\n\nReactDOM.render(\n  <div className=\"text-color-primary\">text</div>,\n  document.getElementById('root')\n);\n```\n\n## bnorth api 文档\n\n[Documents](//able99.github.io/bnorth/)\n\n## LICENSE\n\nMIT",
+  "doclets": [
+    {
+      "kind": "module",
+      "name": "classes",
+      "longname": "module:classes"
+    },
+    {
+      "description": "将多种形式的 css class name 进行按循序组合，同类型的 class name 后面会覆盖前面的。\n\n同类型指的是 class name 名称相同，参数不同。",
+      "exportdefault": true,
+      "scope": "static",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "variable": true,
+          "description": "class name 集合，可以为如下形式： \n1. boolean|function：设置覆盖函数或者关闭覆盖，默认为开启状态\n1. string：class name 字符串，多个用空格分隔\n1. number：class name 数值型\n1. object：class name 对象，key 为 name，val 为 boolean 型，决定是否有效\n1. array：class name 数组，数组元素可以为以上任意类型",
+          "name": "args"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "组合后的 class names"
+        }
+      ],
+      "examples": [
+        "```jsx\nimport classes from '@bnorth/rich.css/lib/classes';\n\nexport default props=>{\n  return <div className={classes('text-size-lg', {'text-color-primary': props.isMain})} />\n}\n```"
+      ],
+      "name": "classes",
+      "longname": "module:classes.classes",
+      "kind": "function",
+      "memberof": "module:classes"
+    },
+    {
+      "description": "颜色的名称与颜色值键值对",
+      "kind": "typedef",
+      "name": "GenConfigColor",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "examples": [
+        "```js\ntextColors: {\n  normal: '#383838',\n},\n```"
+      ],
+      "longname": "GenConfigColor",
+      "scope": "global"
+    },
+    {
+      "description": "键值对集合配置",
+      "kind": "typedef",
+      "name": "GenConfigSet",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "number"
+            ]
+          },
+          "description": "16,",
+          "name": "base"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "8,",
+          "name": "min"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "fontSizeMinCalc: 4,",
+          "name": "minCount"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "fontSizeMax: 24,",
+          "name": "max"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "fontSizeMaxCalc: 4,",
+          "name": "maxCount"
+        },
+        {
+          "type": {
+            "names": [
+              "Array.number",
+              "Array.<string>"
+            ]
+          },
+          "description": "-",
+          "name": "set"
+        }
+      ],
+      "examples": [
+        "```js\n```"
+      ],
+      "longname": "GenConfigSet",
+      "scope": "global"
+    },
+    {
+      "kind": "typedef",
+      "name": "GenConfig",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "设置 body 的默认样式",
+          "name": "body"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigColor"
+            ]
+          },
+          "description": "文字颜色集合",
+          "name": "textColors"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigColor"
+            ]
+          },
+          "description": "工具颜色集合",
+          "name": "utilColors"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigColor"
+            ]
+          },
+          "description": "主色调颜色集合",
+          "name": "mainColors"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigColor"
+            ]
+          },
+          "description": "透明颜色集合",
+          "name": "opacityColors"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "边框宽度集合",
+          "name": "borderWidth"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "边框圆角尺寸集合",
+          "name": "borderRadius"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "空隙尺寸集合",
+          "name": "spacing"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "字体尺寸结合",
+          "name": "fontSize"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "字体粗细度集合",
+          "name": "fontWeight"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "字体粗细度集合",
+          "name": "fontFamilys"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "行高集合集合",
+          "name": "lineHeight"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "动画时间集合",
+          "name": "animationTime"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "动画次数集合",
+          "name": "animationCount"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "动画属性集合",
+          "name": "animationProperty"
+        },
+        {
+          "type": {
+            "names": [
+              "string",
+              "number"
+            ]
+          },
+          "description": "disabled 状态的透明值",
+          "name": "stateOpacityDisabled"
+        },
+        {
+          "type": {
+            "names": [
+              "string",
+              "number"
+            ]
+          },
+          "description": "active 状态的透明值",
+          "name": "stateOpacityActive"
+        }
+      ],
+      "longname": "GenConfig",
+      "scope": "global"
+    },
+    {
+      "description": "class names 生成配置",
+      "exportdefault": true,
+      "scope": "global",
+      "type": {
+        "names": [
+          "GenConfig"
+        ]
+      },
+      "name": "genConfig",
+      "longname": "genConfig",
+      "kind": "member",
+      "defaultvalue": "{\"bodyBackground\":\"none\",\"textColors\":\"\",\"utilColors\":\"\",\"mainColors\":\"\",\"opacityColors\":\"\",\"borderWidthSizeSet\":\"\",\"borderRadiusSizeBase\":5,\"borderRadiusSizeSet\":\"\",\"spacingSizeBase\":10,\"spacingSizeMin\":4,\"spacingSizeMinCalc\":3,\"spacingSizeMax\":16,\"spacingSizeMaxCalc\":3,\"spacingSizeSet\":\"\",\"fontSizeBase\":16,\"fontSizeMin\":8,\"fontSizeMinCalc\":4,\"fontSizeMax\":24,\"fontSizeMaxCalc\":4,\"fontSizeSet\":\"\",\"fontWeightSizeBase\":\"normal\",\"fontWeightSizeSet\":\"\",\"textTruncateSet\":\"\",\"fontFamilys\":\"\",\"lineHeightSizeBase\":1.4,\"lineHeightSizeSet\":\"\",\"animationTimeSizeSet\":\"\",\"animationCountSizeSet\":\"\",\"animationPropertySizeSet\":\"\",\"stateOpacityDisabled\":0.5,\"stateOpacityActive\":0.8,\"iconFonts\":null,\"iconClassName\":\"icon-\"}",
+      "params": []
+    },
+    {
+      "kind": "module",
+      "name": "gen",
+      "longname": "module:gen"
+    },
+    {
+      "description": "读取配置",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "GenConfig"
+            ]
+          },
+          "description": "配置对象"
+        }
+      ],
+      "name": "getCssConfig",
+      "longname": "module:gen.getCssConfig",
+      "kind": "function",
+      "memberof": "module:gen",
+      "scope": "static"
+    },
+    {
+      "description": "修改配置",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "GenConfig"
+            ]
+          },
+          "description": "配置对象，只替换对象包含的属性",
+          "name": "config"
+        }
+      ],
+      "examples": [
+        "```js\nimport { getCssConfig, setCssConfig } from '@bnorth/rich.css/lib/gen';\nlet { textColors } = getCssConfig();\ntextColors.normal = '#222222';\nsetCssConfig({textColors});\n```"
+      ],
+      "name": "setCssConfig",
+      "longname": "module:gen.setCssConfig",
+      "kind": "function",
+      "memberof": "module:gen",
+      "scope": "static"
+    },
+    {
+      "description": "根据传入的 gen 函数集合，生成 css dom 对象，并写入 dom header",
+      "scope": "static",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "写入 header 的 id",
+          "name": "name",
+          "defaultvalue": "richcss"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "variable": true,
+          "description": "gen 函数集合",
+          "name": "gens"
+        }
+      ],
+      "examples": [
+        "```js\nimport cssGen from '@bnorth/rich.css/lib/gen';\nimport genText from '@bnorth/rich.css/lib/gens/text';\ncssGen('richcss', genText);\n```"
+      ],
+      "name": "gen",
+      "longname": "module:gen.gen",
+      "kind": "function",
+      "memberof": "module:gen"
+    },
+    {
+      "kind": "module",
+      "name": "gens/text",
+      "longname": "module:gens/text"
+    },
+    {
+      "description": "设置文本字体尺寸",
+      "name": "text-size-[size]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "font"
+            ]
+          },
+          "optional": true,
+          "description": "字体尺寸",
+          "name": "size"
+        }
+      ],
+      "examples": [
+        "```jsx\n<div className=\"text-size-lg\">\n```"
+      ],
+      "longname": "module:gens/text~text-size-[size]",
+      "scope": "inner",
+      "memberof": "module:gens/text"
+    },
+    {
+      "description": "设置文本字体粗度",
+      "name": "text-weight-[size]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "fontWeight"
+            ]
+          },
+          "optional": true,
+          "description": "字体粗度",
+          "name": "size"
+        }
+      ],
+      "longname": "module:gens/text~text-weight-[size]",
+      "scope": "inner",
+      "memberof": "module:gens/text"
+    },
+    {
+      "description": "生成 文字相关 class names",
+      "exportdefault": true,
+      "scope": "static",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "ClassNamesConfig"
+            ]
+          },
+          "description": "class names 生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "class names 中间对象，由 cssGen 调用"
+        }
+      ],
+      "name": "genFunctionText",
+      "longname": "module:gens/text.genFunctionText",
+      "kind": "function",
+      "memberof": "module:gens/text"
+    },
+    {
+      "kind": "module",
+      "name": "index",
+      "longname": "module:index"
+    },
+    {
+      "description": "生成全部 css class names\n\n执行后，将读取 css 配置对象，生成并写入 html header。修改 css 配置，需要在执行该函数前\n\n一般来说，在生成前，还需要引入标准化 css 文件，如果需要还需要引入自定义 css 文件等",
+      "exportdefault": true,
+      "scope": "static",
+      "examples": [
+        "```js\nimport '@bnorth/rich.css/css/normalize.css';\nimport './index.css';\nimport genCss from '@bnorth/rich.css';\n\nlet app = new App({\nplugin:{\n  onAppStarting: async ()=>{genCss()},\n})\napp.start();\n```"
+      ],
+      "name": "genCss",
+      "longname": "module:index.genCss",
+      "kind": "function",
+      "memberof": "module:index",
+      "params": []
+    },
+    {
+      "kind": "module",
+      "name": "styles/animation",
+      "longname": "module:styles/animation"
+    },
+    {
+      "description": "生成 transition 过度动画属性的 style inline 对象",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "'300ms'",
+          "description": "动画持续时间",
+          "name": "duration"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "optional": true,
+          "description": "动画参数对象\n\n1. property：规定应用过渡的 CSS 属性的名称，默认值为 `all`\n1. delay：规定过渡效果何时开始\n1. timeFunction： 规定过渡效果的时间曲线，参见 css transition-timing-function",
+          "name": "options"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "style inline object"
+        }
+      ],
+      "name": "transiton",
+      "longname": "module:styles/animation.transiton",
+      "kind": "function",
+      "memberof": "module:styles/animation",
+      "scope": "static"
+    },
+    {
+      "description": "生成 animation 帧动画属性的 style inline 对象",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "规定 @keyframes 动画的名称",
+          "name": "name"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "'1s'",
+          "description": "规定动画完成一个周期所花费的秒或毫秒",
+          "name": "duration"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "optional": true,
+          "description": "动画参数对象\n\n1. delay：规定过渡效果何时开始，默认值 `0s`\n1. count：规定动画被播放的次数，默认值 `infinite`\n1. direction：规定动画是否在下一周期逆向地播放\n1. playState：规定动画是否正在运行或暂停\n1. timeFunction： 规定过渡效果的时间曲线，参见 css transition-timing-function，默认值 `ease-in-out`",
+          "name": "options"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "style inline object"
+        }
+      ],
+      "name": "animation",
+      "longname": "module:styles/animation.animation",
+      "kind": "function",
+      "memberof": "module:styles/animation",
+      "scope": "static"
+    },
+    {
+      "description": "生成 transform 应用 2D 或 3D 转换(包括旋转、缩放、移动或倾斜) 的 style inline 对象\n\n转换函数包括：\n\n1. none\t定义不进行转换。\n1. matrix(n,n,n,n,n,n)\t定义 2D 转换，使用六个值的矩阵\n1. matrix3d(n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n)\t定义 3D 转换，使用 16 个值的 4x4 矩阵。\t\n1. translate(x,y)\t定义 2D 转换\n1. translate3d(x,y,z)\t定义 3D 转换。\t\n1. translateX(x)\t定义转换，只是用 X 轴的值\n1. translateY(y)\t定义转换，只是用 Y 轴的值\n1. translateZ(z)\t定义 3D 转换，只是用 Z 轴的值。\t\n1. scale(x,y)\t定义 2D 缩放转换\n1. scale3d(x,y,z)\t定义 3D 缩放转换。\t\n1. scaleX(x)\t通过设置 X 轴的值来定义缩放转换\n1. scaleY(y)\t通过设置 Y 轴的值来定义缩放转换\n1. scaleZ(z)\t通过设置 Z 轴的值来定义 3D 缩放转换。\t\n1. rotate(angle)\t定义 2D 旋转，在参数中规定角度\n1. rotate3d(x,y,z,angle)\t定义 3D 旋转。\t\n1. rotateX(angle)\t定义沿着 X 轴的 3D 旋转\n1. rotateY(angle)\t定义沿着 Y 轴的 3D 旋转\n1. rotateZ(angle)\t定义沿着 Z 轴的 3D 旋转\n1. skew(x-angle,y-angle)\t定义沿着 X 和 Y 轴的 2D 倾斜转换\n1. skewX(angle)\t定义沿着 X 轴的 2D 倾斜转换\n1. skewY(angle)\t定义沿着 Y 轴的 2D 倾斜转换\n1. perspective(n)\t为 3D 转换元素定义透视视图。",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "转换的名称",
+          "name": "name"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "variable": true,
+          "description": "转换的参数",
+          "name": "params"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "style inline object"
+        }
+      ],
+      "name": "transform",
+      "longname": "module:styles/animation.transform",
+      "kind": "function",
+      "memberof": "module:styles/animation",
+      "scope": "static"
+    },
+    {
+      "description": "transform 的批量版本",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "转换的名称",
+          "name": "param"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "style inline object"
+        }
+      ],
+      "name": "transforms",
+      "longname": "module:styles/animation.transforms",
+      "kind": "function",
+      "memberof": "module:styles/animation",
+      "scope": "static"
+    },
+    {
+      "kind": "module",
+      "name": "styles/background",
+      "longname": "module:styles/background"
+    },
+    {
+      "description": "生成设置背景的 style inline 对象",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "nullable": true,
+          "description": "背景图片地址，可以为空",
+          "name": "image"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "optional": true,
+          "description": "背景参数对象\n\n1. repeat|repeatX|repeatY：设置是否及如何重复背景图像，可分垂直水平两个方向分别设置，默认值为 `no-repeat`\n1. position|positionX|positionY：设置背景图像的开始位置，可分垂直水平两个方向分别设置，默认值为 `center`\n1. size|sizeW|sizeH：规定背景图片的尺寸，可分垂直水平两个方向分别设置，默认值为 `contain`\n1. color：设置元素的背景颜色\n1. attachment：设置背景图像是否固定或者随着页面的其余部分滚动，参见 css background-attachment\n1. origin：规定背景图片的定位区域，参见 css background-origin\n1. clip：规定背景的绘制区域，参见 css background-clip",
+          "name": "options"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "style inline object"
+        }
+      ],
+      "examples": [
+        "```jsx\nimport { backgroundImage } from '@bnorth/rich.css/lib/styles/background';\nexport default props=>{\n  return <div style={backgroundImage(props.bgimg, {size: '100%'})} />\n}\n```"
+      ],
+      "name": "backgroundImage",
+      "longname": "module:styles/background.backgroundImage",
+      "kind": "function",
+      "memberof": "module:styles/background",
+      "scope": "static"
+    },
+    {
+      "kind": "module",
+      "name": "styles/flex",
+      "longname": "module:styles/flex"
+    },
+    {
+      "description": "生成设置 flex 子元素 order 属性 的 style inline 对象，并实现浏览器兼容",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number",
+              "string"
+            ]
+          },
+          "nullable": false,
+          "description": "order 值",
+          "name": "val"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "style inline object"
+        }
+      ],
+      "name": "styleFlexSubOrder",
+      "longname": "module:styles/flex.styleFlexSubOrder",
+      "kind": "function",
+      "memberof": "module:styles/flex",
+      "scope": "static"
+    },
+    {
+      "description": "生成设置 flex 子元素 grow 属性 的 style inline 对象，并实现浏览器兼容",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number",
+              "string"
+            ]
+          },
+          "nullable": false,
+          "description": "grow 值",
+          "name": "val"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "style inline object"
+        }
+      ],
+      "name": "styleFlexSubGrow",
+      "longname": "module:styles/flex.styleFlexSubGrow",
+      "kind": "function",
+      "memberof": "module:styles/flex",
+      "scope": "static"
+    },
+    {
+      "description": "生成设置 flex 子元素 shrink 属性 的 style inline 对象，并实现浏览器兼容",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number",
+              "string"
+            ]
+          },
+          "nullable": false,
+          "description": "shrink 值",
+          "name": "val"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "style inline object"
+        }
+      ],
+      "name": "styleFlexSubShrink",
+      "longname": "module:styles/flex.styleFlexSubShrink",
+      "kind": "function",
+      "memberof": "module:styles/flex",
+      "scope": "static"
+    },
+    {
+      "description": "生成设置 flex 子元素 basis 属性 的 style inline 对象，并实现浏览器兼容",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number",
+              "string"
+            ]
+          },
+          "nullable": false,
+          "description": "basis 值",
+          "name": "val"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "style inline object"
+        }
+      ],
+      "name": "styleFlexSubBasis",
+      "longname": "module:styles/flex.styleFlexSubBasis",
+      "kind": "function",
+      "memberof": "module:styles/flex",
+      "scope": "static"
+    },
+    {
+      "kind": "module",
+      "name": "styles/shadow",
+      "longname": "module:styles/shadow"
+    },
+    {
+      "description": "生成设置阴影的 style inline 对象",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "'#888888'",
+          "description": "css 颜色值",
+          "name": "color"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "optional": true,
+          "description": "阴影参数对象\n\n1. h：水平阴影的位置，允许负值， 默认值为 `0`\n1. v：垂直阴影的位置，允许负值， 默认值为 `1px`\n1. blur：模糊距离，默认值为 `3px`\n1. spread：阴影的尺寸，默认值为 `0`\n1. inset：将外部阴影改为内部阴影，默认是外部",
+          "name": "options"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "style inline object"
+        }
+      ],
+      "examples": [
+        "```jsx\nimport { shadow } from '@bnorth/rich.css/lib/styles/shadow';\nexport default props=>{\n  return <div style={shadow('black', {blur: '10px'})} />\n}\n```"
+      ],
+      "name": "shadow",
+      "longname": "module:styles/shadow.shadow",
+      "kind": "function",
+      "memberof": "module:styles/shadow",
+      "scope": "static"
+    }
+  ]
+}

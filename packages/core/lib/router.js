@@ -72,7 +72,7 @@ var ParamSpe = ':';
 var SubPageSpe = '|';
 var ParamOptional = '?';
 var PageSign = '#';
-/**
+/*
  * @class
  * ***流程***
  * 1. router 构建期间，监听app 启动事件，在onAppStartRouter 事件时，将RouterComponent 加入到app 根元素上；监听浏览器地址栏

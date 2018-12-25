@@ -65,7 +65,7 @@ function () {
 }();
 
 Network.Options = {
-  baseUrl: window.location.origin + window.location.pathname,
+  baseUrl: './',
   apiUrl: '',
   url: '',
   // timeout: 1000*60,

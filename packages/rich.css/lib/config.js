@@ -4,11 +4,65 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _default = {
-  /* body */
-  bodyBackground: 'none',
 
-  /* color */
+/**
+ * 颜色的名称与颜色值键值对
+ * @typedef GenConfigColor
+ * @type {object}
+ * @example
+ * ```js
+ * textColors: {
+ *   normal: '#383838',
+ * },
+ * ```
+ */
+
+/**
+ * 键值对集合配置
+ * @typedef GenConfigSet
+ * @type {object}
+ * @property {string|number} base - 16,
+ * @property {number} min - 8,
+ * @property {number} minCount - fontSizeMinCalc: 4,
+ * @property {number} max - fontSizeMax: 24,
+ * @property {number} maxCount - fontSizeMaxCalc: 4,
+ * @property {(Array.number|string[])} set -
+ * @example
+ * ```js
+ * ```
+ */
+
+/**
+ * @typedef GenConfig
+ * @type {object}
+ * @property {object} body - 设置 body 的默认样式
+ * @property {GenConfigColor} textColors - 文字颜色集合
+ * @property {GenConfigColor} utilColors - 工具颜色集合
+ * @property {GenConfigColor} mainColors - 主色调颜色集合
+ * @property {GenConfigColor} opacityColors - 透明颜色集合
+ * @property {GenConfigSet} borderWidth - 边框宽度集合
+ * @property {GenConfigSet} borderRadius - 边框圆角尺寸集合
+ * @property {GenConfigSet} spacing - 空隙尺寸集合
+ * @property {GenConfigSet} fontSize - 字体尺寸结合
+ * @property {GenConfigSet} fontWeight - 字体粗细度集合
+ * @property {GenConfigSet} fontFamilys - 字体粗细度集合
+ * @property {GenConfigSet} lineHeight - 行高集合集合
+ * @property {GenConfigSet} animationTime - 动画时间集合
+ * @property {GenConfigSet} animationCount - 动画次数集合
+ * @property {GenConfigSet} animationProperty - 动画属性集合
+ * @property {string|number} stateOpacityDisabled - disabled 状态的透明值
+ * @property {string|number} stateOpacityActive - active 状态的透明值
+ */
+// iconFonts: null, 
+// iconClassName: 'icon-',
+
+/**
+ * class names 生成配置
+ * @exportdefault
+ * @type {GenConfig}
+ */
+var genConfig = {
+  bodyBackground: 'none',
   textColors: {
     normal: '#383838',
     light: '#959595',
@@ -35,8 +89,8 @@ var _default = {
     mask: 'rgba(0,0,0,0.53)',
     overlay: 'rgba(0,0,0,0.3)'
   },
-
-  /* border */
+  // border
+  // -------------------
   borderWidthSizeSet: [1, 2, 5, 10],
   borderRadiusSizeBase: 5,
   borderRadiusSizeSet: [1, 2, 5, 10, ['rounded', 1000]],
@@ -93,4 +147,5 @@ var _default = {
   iconFonts: null,
   iconClassName: 'icon-'
 };
+var _default = genConfig;
 exports.default = _default;

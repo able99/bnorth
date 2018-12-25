@@ -17,7 +17,7 @@ import Tabs from '@bnorth/components/lib/Tabs'
 import TabBar from '@bnorth/components/lib/TabBar'
 import NavBar from '@bnorth/components/lib/NavBar'
 import List from '@bnorth/components/lib/List'
-
+console.log(11111111111,Button, Button.Group,2222222);
 
 let Component = aprops=>{
   let { app, page, stateData, stateComponentSwitchs,  stateCommonProps, stateComponentProps } = aprops;

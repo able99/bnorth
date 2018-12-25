@@ -25,12 +25,6 @@ var _props = _interopRequireDefault(require("./utils/props"));
 
 var _dom = require("./utils/dom");
 
-/**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
- */
 function handleEnter(aprops, elem) {
   var _ref = aprops || {},
       _ref$dimension = _ref.dimension,

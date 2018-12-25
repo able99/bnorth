@@ -21,12 +21,6 @@ var _Panel = _interopRequireDefault(require("./Panel.Container"));
 
 require("./Panel.Icon");
 
-/**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
- */
 var TabBar = function TabBar(aprops) {
   var _parseProps = (0, _props.default)(aprops, TabBar.props),
       _parseProps$type = _parseProps.type,

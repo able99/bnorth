@@ -31,10 +31,6 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-/**
- * app 的插件管理器模块
- * @class
- */
 var Plugins =
 /*#__PURE__*/
 function () {

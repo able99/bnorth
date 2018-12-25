@@ -5,6 +5,30 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.shadow = shadow;
 
+/**
+ * @module
+ */
+
+/**
+ * 生成设置阴影的 style inline 对象
+ * @param {string} [color='#888888'] - css 颜色值
+ * @param {object=} options - 阴影参数对象
+ * 
+ * 1. h：水平阴影的位置，允许负值， 默认值为 `0`
+ * 1. v：垂直阴影的位置，允许负值， 默认值为 `1px`
+ * 1. blur：模糊距离，默认值为 `3px`
+ * 1. spread：阴影的尺寸，默认值为 `0`
+ * 1. inset：将外部阴影改为内部阴影，默认是外部
+ * 
+ * @returns {object} style inline object
+ * @example
+ * ```jsx
+ * import { shadow } from '@bnorth/rich.css/lib/styles/shadow';
+ * export default props=>{
+ *   return <div style={shadow('black', {blur: '10px'})} />
+ * }
+ * ```
+ */
 function shadow() {
   var color = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#888888';
 

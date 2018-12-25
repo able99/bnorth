@@ -21,12 +21,6 @@ var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
-/**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
- */
 var Spacing = function Spacing(aprops) {
   var _parseProps = (0, _props.default)(aprops, Spacing.props),
       _parseProps$count = _parseProps.count,

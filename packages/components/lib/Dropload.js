@@ -33,12 +33,6 @@ var _ScrollSpy = _interopRequireDefault(require("./ScrollSpy"));
 
 var _Panel = _interopRequireDefault(require("./Panel.Loader"));
 
-/**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
- */
 var Dropload =
 /*#__PURE__*/
 function (_React$Component) {

@@ -1,0 +1,819 @@
+{
+  "package": {
+    "name": "@bnorth/components",
+    "version": "3.1.6",
+    "description": "bnorth, components, react",
+    "keywords": [
+      "bnorth",
+      "components",
+      "react",
+      "@bnorth/rich.css"
+    ],
+    "author": "able99 <8846755@qq.com>",
+    "homepage": "https://github.com/able99",
+    "license": "MIT",
+    "main": "lib/index.js",
+    "files": [
+      "lib"
+    ],
+    "publishConfig": {
+      "registry": "https://registry.npmjs.org/"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/able99/bnorth.git"
+    },
+    "scripts": {
+      "start": "bnorth-build watch",
+      "build": "bnorth-build dev",
+      "doc": "npx bnorth-doc ./src/ ../../docs/components/"
+    },
+    "bugs": {
+      "url": "https://github.com/able99/bnorth/issues"
+    },
+    "dependencies": {
+      "@bnorth/rich.css": "^3.1.6",
+      "dom-helpers": "^3.3.1",
+      "hammerjs": "^2.0.8",
+      "react-transition-group": "^2.4.0"
+    },
+    "devDependencies": {
+      "@bnorth/build": "^3.1.6"
+    },
+    "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
+  },
+  "readme": "# bnorth-components\n\n基于 rich.css 的 react 组件库，同时为 @bnorth/core，提供了对话框，警告等插件\n\n",
+  "doclets": [
+    {
+      "description": "按钮和按钮组",
+      "kind": "module",
+      "name": "Button",
+      "longname": "module:Button"
+    },
+    {
+      "description": "按钮组件",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Button",
+      "longname": "module:Button.Button",
+      "memberof": "module:Button",
+      "params": []
+    },
+    {
+      "description": "渲染为该组件",
+      "type": {
+        "names": [
+          "component",
+          "element"
+        ]
+      },
+      "defaultvalue": "Panel",
+      "name": "component",
+      "longname": "module:Button.Button.component",
+      "kind": "attribute",
+      "memberof": "module:Button.Button",
+      "scope": "static"
+    },
+    {
+      "description": "Panel 的渲染组件，仅当 component 设置为 Panel 时有效",
+      "type": {
+        "names": [
+          "component",
+          "element"
+        ]
+      },
+      "defaultvalue": "'button'",
+      "name": "panelComponent",
+      "longname": "module:Button.Button.panelComponent",
+      "kind": "attribute",
+      "memberof": "module:Button.Button",
+      "scope": "static"
+    },
+    {
+      "description": "按钮组组件",
+      "kind": "component",
+      "id": null,
+      "name": "Group",
+      "longname": "module:Button.Button.Group",
+      "memberof": "module:Button.Button",
+      "scope": "static"
+    },
+    {
+      "description": "是否堆叠方式摆放按钮",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "stacked",
+      "longname": "module:Button.Button.Group.stacked",
+      "kind": "attribute",
+      "memberof": "module:Button.Button.Group",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "是否平分展开按钮",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "justify",
+      "longname": "module:Button.Button.Group.justify",
+      "kind": "attribute",
+      "memberof": "module:Button.Button.Group",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "按钮之间是否有分隔条",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "separator",
+      "longname": "module:Button.Button.Group.separator",
+      "kind": "attribute",
+      "memberof": "module:Button.Button.Group",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "分隔条属性",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "name": "separatorProps",
+      "longname": "module:Button.Button.Group.separatorProps",
+      "kind": "attribute",
+      "memberof": "module:Button.Button.Group",
+      "scope": "static",
+      "defaultvalue": "{}"
+    },
+    {
+      "description": "设置包含所有按钮的属性",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "name": "itemProps",
+      "longname": "module:Button.Button.Group.itemProps",
+      "kind": "attribute",
+      "memberof": "module:Button.Button.Group",
+      "scope": "static",
+      "defaultvalue": "undefined"
+    },
+    {
+      "description": "设置包含所有按钮的 class name 生成函数",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "name": "itemGetClassName",
+      "longname": "module:Button.Button.Group.itemGetClassName",
+      "kind": "attribute",
+      "memberof": "module:Button.Button.Group",
+      "scope": "static"
+    },
+    {
+      "description": "设置包含所有按钮的样式生成函数",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "defaultvalue": "Button.Group._itemGetStyle",
+      "name": "itemGetStyle",
+      "longname": "module:Button.Button.Group.itemGetStyle",
+      "kind": "attribute",
+      "memberof": "module:Button.Button.Group",
+      "scope": "static"
+    },
+    {
+      "description": "设置包含所有按钮的属性生成函数",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "defaultvalue": "Button.Group._itemGetProps",
+      "name": "itemGetProps",
+      "longname": "module:Button.Button.Group.itemGetProps",
+      "kind": "attribute",
+      "memberof": "module:Button.Button.Group",
+      "scope": "static"
+    },
+    {
+      "description": "渲染为该组件",
+      "type": {
+        "names": [
+          "component",
+          "element"
+        ]
+      },
+      "defaultvalue": "Panel.Container",
+      "name": "component",
+      "longname": "module:Button.Button.Group.component",
+      "kind": "attribute",
+      "memberof": "module:Button.Button.Group",
+      "scope": "static"
+    },
+    {
+      "description": "Panel 的渲染组件，仅当 component 设置为 Panel 时有效",
+      "type": {
+        "names": [
+          "component",
+          "element"
+        ]
+      },
+      "name": "panelComponent",
+      "longname": "module:Button.Button.Group.panelComponent",
+      "kind": "attribute",
+      "memberof": "module:Button.Button.Group",
+      "scope": "static",
+      "defaultvalue": "undefined"
+    },
+    {
+      "description": "按钮组默认的设置包含所有按钮的 class name 生成函数，该函数处理了边框和对堆叠，平分的属性的处理",
+      "kind": "component",
+      "id": null,
+      "access": "private",
+      "name": "Group._itemGetClassName",
+      "longname": "module:Button.Button.Group._itemGetClassName",
+      "memberof": "module:Button.Button",
+      "scope": "static"
+    },
+    {
+      "description": "按钮组的分隔条组件",
+      "kind": "component",
+      "id": null,
+      "access": "private",
+      "name": "Group._Separator",
+      "longname": "module:Button.Button.Group._Separator",
+      "memberof": "module:Button.Button",
+      "scope": "static"
+    },
+    {
+      "description": "按钮组的条目",
+      "kind": "component",
+      "id": null,
+      "see": [
+        "module:Button.Button"
+      ],
+      "name": "Group.Item",
+      "longname": "module:Button.Button.Group.Item",
+      "memberof": "module:Button.Button",
+      "scope": "static",
+      "defaultvalue": "Button"
+    },
+    {
+      "kind": "module",
+      "name": "View",
+      "longname": "module:View"
+    },
+    {
+      "description": "页面的根组件，也可以不使用该组件作为根组件",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "name": "View",
+      "longname": "module:View.View",
+      "memberof": "module:View",
+      "params": []
+    },
+    {
+      "description": "开启横屏模式",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "landscape",
+      "longname": "module:View.View.landscape",
+      "kind": "attribute",
+      "memberof": "module:View.View",
+      "scope": "static",
+      "defaultvalue": "undefined"
+    },
+    {
+      "description": "页面的容器，为横屏时计算宽度使用",
+      "type": {
+        "names": [
+          "element"
+        ]
+      },
+      "defaultvalue": "document.body",
+      "name": "container",
+      "longname": "module:View.View.container",
+      "kind": "attribute",
+      "memberof": "module:View.View",
+      "scope": "static"
+    },
+    {
+      "description": "实际对应组件",
+      "type": {
+        "names": [
+          "element",
+          "component"
+        ]
+      },
+      "defaultvalue": "Panel",
+      "name": "component",
+      "longname": "module:View.View.component",
+      "kind": "attribute",
+      "memberof": "module:View.View",
+      "scope": "static"
+    },
+    {
+      "description": "当实际组件为 panel 时，设置 panel 的对应组件",
+      "type": {
+        "names": [
+          "element",
+          "component"
+        ]
+      },
+      "name": "componentPanel",
+      "longname": "module:View.View.componentPanel",
+      "kind": "attribute",
+      "memberof": "module:View.View",
+      "scope": "static",
+      "defaultvalue": "undefined"
+    },
+    {
+      "description": "提供了蒙层组件和蒙层插件",
+      "kind": "module",
+      "name": "mask",
+      "longname": "module:mask"
+    },
+    {
+      "description": "蒙层组件",
+      "kind": "component",
+      "id": null,
+      "name": "Mask",
+      "longname": "module:mask.Mask",
+      "memberof": "module:mask",
+      "scope": "static"
+    },
+    {
+      "description": "设置 蒙层中间的 loader 组件的参数",
+      "memberof": "module:mask.Mask",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "name": "Mask.loaderProps",
+      "longname": "module:mask.Mask.Mask.loaderProps",
+      "kind": "attribute",
+      "scope": "static"
+    },
+    {
+      "description": "设置 Backdrop 的 mask 属性",
+      "memberof": "module:mask.Mask",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "Mask.mask",
+      "longname": "module:mask.Mask.Mask.mask",
+      "kind": "attribute",
+      "scope": "static",
+      "defaultvalue": "true"
+    },
+    {
+      "description": "渲染为该组件",
+      "memberof": "module:mask.Mask",
+      "type": {
+        "names": [
+          "component",
+          "element"
+        ]
+      },
+      "name": "Mask.component",
+      "longname": "module:mask.Mask.Mask.component",
+      "kind": "attribute",
+      "scope": "static",
+      "defaultvalue": "Backdrop"
+    },
+    {
+      "description": "提供了对蒙层的显示和控制的能力，同时修改了 app.render.mask 的默认行为",
+      "id": "mask",
+      "kind": "plugin",
+      "scope": "static",
+      "defaultvalue": "",
+      "exportdefault": true,
+      "name": "mask",
+      "longname": "module:mask.mask",
+      "memberof": "module:mask",
+      "params": []
+    },
+    {
+      "description": "显示蒙层",
+      "memberof": "module:mask.mask",
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "app.mask.show",
+          "value": "app.mask.show"
+        }
+      ],
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "nullable": true,
+          "description": "参数",
+          "name": "options"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "弹出层 id"
+        }
+      ],
+      "name": "app.mask.show",
+      "longname": "module:mask.mask.show",
+      "kind": "function",
+      "scope": "static"
+    },
+    {
+      "description": "关闭蒙层",
+      "memberof": "module:mask.mask",
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "app.mask.close",
+          "value": "app.mask.close"
+        }
+      ],
+      "name": "app.mask.close",
+      "longname": "module:mask.mask.close",
+      "kind": "function",
+      "scope": "static"
+    },
+    {
+      "description": "dom 操作工具集",
+      "kind": "module",
+      "name": "utils/dom",
+      "longname": "module:utils/dom"
+    },
+    {
+      "description": "是否支持 touch",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "domIsTouch",
+      "longname": "module:utils/dom.domIsTouch",
+      "kind": "constant",
+      "memberof": "module:utils/dom",
+      "scope": "static"
+    },
+    {
+      "description": "是否支持鼠标",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "domIsMouse",
+      "longname": "module:utils/dom.domIsMouse",
+      "kind": "constant",
+      "memberof": "module:utils/dom",
+      "scope": "static"
+    },
+    {
+      "description": "返回组件对应的元素",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "element",
+              "component"
+            ]
+          },
+          "description": "组件",
+          "name": "node"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "对应的元素"
+        }
+      ],
+      "name": "domFindNode",
+      "longname": "module:utils/dom.domFindNode",
+      "kind": "function",
+      "memberof": "module:utils/dom",
+      "scope": "static"
+    },
+    {
+      "description": "查找组件或元素的 container，查找模式：\n\n1. 如果父元素为 body 则返回 body\n1. 如果父元素是 page 则返回页面元素\n1. 返回具有参数 container 指定的，具有 data-container 响应名称属性的元素",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "element",
+              "component"
+            ]
+          },
+          "description": "组件或元素",
+          "name": "node"
+        },
+        {
+          "type": {
+            "names": [
+              "true",
+              "string"
+            ]
+          },
+          "description": "查找模式",
+          "name": "container"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "所在的 container"
+        }
+      ],
+      "name": "domFindContainer",
+      "longname": "module:utils/dom.domFindContainer",
+      "kind": "function",
+      "memberof": "module:utils/dom",
+      "scope": "static"
+    },
+    {
+      "description": "查找组件或者元素的可滚动父元素",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "element",
+              "component"
+            ]
+          },
+          "description": "组件或元素",
+          "name": "node"
+        },
+        {
+          "type": {
+            "names": [
+              "element",
+              "component"
+            ]
+          },
+          "description": "如果为真，直接作为结果返回",
+          "name": "container"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否是横向滚动",
+          "name": "horizontal"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "滚动父元素"
+        }
+      ],
+      "name": "domFindScrollContainer",
+      "longname": "module:utils/dom.domFindScrollContainer",
+      "kind": "function",
+      "memberof": "module:utils/dom",
+      "scope": "static"
+    },
+    {
+      "description": "将组建以 portal 方式，render 到制定元素",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "component"
+            ]
+          },
+          "description": "将 render 的组件",
+          "name": "component"
+        },
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "render 到的元素",
+          "name": "container"
+        }
+      ],
+      "name": "domCreatePortal",
+      "longname": "module:utils/dom.domCreatePortal",
+      "kind": "function",
+      "memberof": "module:utils/dom",
+      "scope": "static"
+    },
+    {
+      "description": "返回组件或者元素的坐标和尺寸",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "component",
+              "element"
+            ]
+          },
+          "description": "目标元素或组件",
+          "name": "node"
+        },
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "相对于该元素的相对坐标，为空时是相对于浏览器的绝对坐标",
+          "name": "container"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "- x,y 坐标，width,height 尺寸"
+        }
+      ],
+      "name": "domOffset",
+      "longname": "module:utils/dom.domOffset",
+      "kind": "function",
+      "memberof": "module:utils/dom",
+      "scope": "static"
+    },
+    {
+      "description": "将函数串联起来，返回一个函数，调用时将串行调用所包含的全部函数",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "variable": true,
+          "name": "全部函数"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "串联后的函数"
+        }
+      ],
+      "name": "chainedFuncs",
+      "longname": "module:utils/dom.chainedFuncs",
+      "kind": "function",
+      "memberof": "module:utils/dom",
+      "scope": "static"
+    },
+    {
+      "kind": "module",
+      "name": "utils/props",
+      "longname": "module:utils/props"
+    },
+    {
+      "description": "增加基类组件 bf-style-function 属性的函数集合",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "函数集合的名称和函数的键值对",
+          "name": "args"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "函数集合"
+        }
+      ],
+      "name": "addFunctions",
+      "longname": "module:utils/props.addFunctions",
+      "kind": "function",
+      "memberof": "module:utils/props",
+      "scope": "static"
+    },
+    {
+      "description": "虚拟组件基类，不可被直接使用，为组件提供通用的属性\n默认属性",
+      "kind": "component",
+      "id": null,
+      "scope": "static",
+      "name": "BaseComponent",
+      "longname": "module:utils/props.BaseComponent",
+      "memberof": "module:utils/props"
+    },
+    {
+      "description": "设置 class name\n\n- 当属性值为 true 时，将当前属性名，去掉 bc- 前缀，追加到 className 组件属性中\n- 当属性值为数字或字符串时，将去掉 bc- 前缀的属性名和属性值用 - 连接，追加到 className 组件属性中\n- 当属性值不为真时，没有任何作用",
+      "type": {
+        "names": [
+          "boolean",
+          "string",
+          "number"
+        ]
+      },
+      "examples": [
+        "```jsx\n<Panel bc-text-size=\"lg\" />\n```"
+      ],
+      "name": "\"bc-[classname]\"",
+      "longname": "module:utils/props.BaseComponent.\"bc-[classname]\"",
+      "kind": "attribute",
+      "memberof": "module:utils/props.BaseComponent",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置 style，将属性名去掉 bs- 前缀，和属性值，追加到组件的 style 属性对象中",
+      "type": {
+        "names": [
+          "*"
+        ]
+      },
+      "examples": [
+        "```jsx\n<Panel bs-width=\"50%\" />\n```"
+      ],
+      "name": "\"bs-[style]\"",
+      "longname": "module:utils/props.BaseComponent.\"bs-[style]\"",
+      "kind": "attribute",
+      "memberof": "module:utils/props.BaseComponent",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置 style 函数，将属性名去掉 bs- 前缀作为名称，从 bf-style-function 属性的函数集合中获取函数，将属性值(为数组时，作为展开参数)作为参数，执行并将结果追加到组件的 style 属性对象中",
+      "type": {
+        "names": [
+          "string",
+          "array"
+        ]
+      },
+      "examples": [
+        "```jsx\nimport { backgroundImage } from '@bnorth/rich.css/lib/styles/background';\nimport { addFunctions } from '@bnorth/components/lib/utils/props';\naddFunctions({ backgroundImage });\n\nexport default props=>{\n  return <Panel bf-background={[]} />\n}\n```"
+      ],
+      "name": "\"bf-[style-function]\"",
+      "longname": "module:utils/props.BaseComponent.\"bf-[style-function]\"",
+      "kind": "attribute",
+      "memberof": "module:utils/props.BaseComponent",
+      "scope": "static",
+      "defaultvalue": ""
+    }
+  ]
+}

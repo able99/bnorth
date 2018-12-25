@@ -1,7 +1,3 @@
-/**
- * app 的插件管理器模块
- * @class
- */
 export default class Plugins {
   constructor(app) {
     this.app = app;

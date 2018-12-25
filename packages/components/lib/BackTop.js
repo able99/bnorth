@@ -35,12 +35,6 @@ var _Fab = _interopRequireDefault(require("./Fab"));
 
 var _Icon = _interopRequireDefault(require("./Icon"));
 
-/**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
- */
 var BackTop =
 /*#__PURE__*/
 function (_React$Component) {

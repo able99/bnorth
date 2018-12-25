@@ -31,8 +31,14 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+/**
+ * @module
+ */
 
+/**
+ * 数据管理器的数据管理单元
+ * @exportdefault
+ */
 var State =
 /*#__PURE__*/
 function () {
@@ -44,11 +50,24 @@ function () {
       if (!stateId || !ownerId) return;
       return "*".concat(stateId, "@").concat(ownerId);
     }
+    /**
+     * 通过 state 的 完整 id 获取 state 实例
+     * @param {string} - state 的 id 
+     * @returns {moudle:state.State} 获取的 State 实例
+     */
+
   }, {
     key: "get",
     value: function get(_id) {
       return State.states[_id];
     }
+    /**
+     * 通过 state id 及 其所在 页面或者插件的 id 获取 state 实例
+     * @param {string} - state 的 id 
+     * @param {string} - state 所有者 的 id 
+     * @returns {moudle:state.State} 获取的 State 实例
+     */
+
   }, {
     key: "getState",
     value: function getState(stateId, ownerId) {
@@ -86,6 +105,10 @@ function () {
     } // constructor
     // ---------------
 
+    /**
+     * 不用于直接构造，而是在 page 的 controller 中，定义数据单元，由 page 构造 
+     */
+
   }]);
 
   function State(app, _id) {
@@ -117,17 +140,14 @@ function () {
       this.app.event.off(this._id);
       if (this.options.cleanOnStop !== false) this.clear();
       if (this._id !== true && this.options.removeOnStop !== false) delete State.states[this._id];
-    } // clean
-    // -------------------
+    } // state private work
 
   }, {
     key: "clear",
     value: function clear() {
       this.app.log.info('state clear');
       return this.app.context.clear(this._id);
-    } // state
-    // -------------------
-
+    }
   }, {
     key: "stateData",
     value: function stateData() {
@@ -147,14 +167,33 @@ function () {
     key: "stateDelete",
     value: function stateDelete(did) {
       this.app.context.delete(this._id, did);
-    } // data
+    } // data operation interface
     // -------------------
+
+    /**
+     * 读取数据单元中的数据
+     * @returns {*} 读取的数据
+     */
 
   }, {
     key: "data",
     value: function data() {
       return this.app.utils.objectCopy(this.stateData().data || this.options.initialization, this.options.deepCopy);
     }
+    /**
+     * 读取数据单元中的扩展数据
+     * @returns {*} 读取的数据
+     */
+
+  }, {
+    key: "extData",
+    value: function extData() {}
+    /**
+     * 以 json path 方式读取数据单元中的数据
+     * @param {string} - json path 
+     * @returns {*} 读取的数据
+     */
+
   }, {
     key: "get",
     value: function get() {
@@ -162,6 +201,14 @@ function () {
       var data = this.data();
       return this.app.utils.pathGet(data, path);
     }
+    /**
+     * 更新数据单元的数据
+     * @async
+     * @param {*} - 新数据  
+     * @param {object} - 更新参数，其中的 append 用于指定追加方式，参见 app.utils.objectUpdate 中对参数的说明
+     * @returns {*} 更新后的数据
+     */
+
   }, {
     key: "update",
     value: function () {
@@ -210,6 +257,15 @@ function () {
         return _update.apply(this, arguments);
       };
     }()
+    /**
+     * 以 json path 方式设置数据单元中的数据
+     * @async
+     * @param {string} - json path 
+     * @param {*} - 新的数据
+     * @param {boolean} - 是否是输入中状态
+     * @returns {*} 更新后的数据
+     */
+
   }, {
     key: "set",
     value: function () {
@@ -259,6 +315,12 @@ function () {
         return _set.apply(this, arguments);
       };
     }()
+    /**
+     * 删除数据单元中的数据
+     * @param {*} - 删除的参数，参见 app.utils.objectDelete 中对参数的说明
+     * @returns {*} 更新后的数据
+     */
+
   }, {
     key: "delete",
     value: function () {
@@ -288,15 +350,16 @@ function () {
       return function _delete(_x3) {
         return _delete2.apply(this, arguments);
       };
-    }() // ext
-    // -------------------
-
-  }, {
-    key: "extData",
-    value: function extData() {}
+    }()
   }]);
   return State;
 }();
+/**
+ * 存放全部 state 的集合
+ * @type {object}
+ */
 
-exports.default = State;
-(0, _defineProperty2.default)(State, "states", {});
+
+State.states = {};
+var _default = State;
+exports.default = _default;

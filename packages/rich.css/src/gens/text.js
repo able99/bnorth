@@ -1,3 +1,6 @@
+/**
+ * @module
+ */
 import { getSelector, getStyleSet, getSizeSet } from '../utils';
 
 
@@ -52,6 +55,15 @@ const baseSelector = 'text';
 const baseStyleSelector = 'font';
 
 
+/**
+ * 设置文本字体尺寸
+ * @classname text-size
+ * @param {font=} size - 字体尺寸
+ * @example
+ * ```jsx
+ * <div className="text-size-lg">
+ * ```
+ */
 export function genTextSizes(config) {
   let ret = {};
   let sizes = getSizeSet('font', config);
@@ -62,7 +74,12 @@ export function genTextSizes(config) {
   return ret;
 }
 
-export function genTextWeights(config) {
+/**
+ * 设置文本字体粗度
+ * @classname text-weight
+ * @param {fontWeight=} size - 字体粗度
+ */
+function genTextWeights(config) {
   let ret = {};
   let sizes = getSizeSet('fontWeight', config);
   let func = 'weight'
@@ -72,7 +89,7 @@ export function genTextWeights(config) {
   return ret;
 }
 
-export function genTextColors({utilColors, mainColors, textColors}) {
+function genTextColors({utilColors, mainColors, textColors}) {
   let ret = {};
   let func = 'color'
   let colors = { '-': textColors.normal, ...utilColors, ...mainColors, ...textColors };
@@ -81,7 +98,7 @@ export function genTextColors({utilColors, mainColors, textColors}) {
   return ret;
 }
 
-export function genTextStyles() {
+function genTextStyles() {
   let ret = {};
   let func = 'style'
   let selector = `${baseSelector}-${func}`;
@@ -90,7 +107,7 @@ export function genTextStyles() {
   return ret;
 }
 
-export function genTextDecorations() {
+function genTextDecorations() {
   let ret = {};
   let func = 'decoration'
   let selector = `${baseSelector}-${func}`;
@@ -98,7 +115,7 @@ export function genTextDecorations() {
   return ret;
 }
 
-export function genTextAligns() {
+function genTextAligns() {
   let ret = {};
   let func = 'align'
   let selector = `${baseSelector}-${func}`;
@@ -106,7 +123,7 @@ export function genTextAligns() {
   return ret;
 }
 
-export function genTextVerticalAligns() {
+function genTextVerticalAligns() {
   let ret = {};
   let func = 'vertical-align'
   let selector = `${baseSelector}-${func}`;
@@ -114,7 +131,7 @@ export function genTextVerticalAligns() {
   return ret;
 }
 
-export function genTextWhiteSpaces() {
+function genTextWhiteSpaces() {
   let ret = {};
   let func = 'white-space'
   let selector = `${baseSelector}-${func}`;
@@ -122,7 +139,7 @@ export function genTextWhiteSpaces() {
   return ret;
 }
 
-export function genLineHeight(config) {
+function genLineHeight(config) {
   let ret = {};
   let sizes = getSizeSet('lineHeight', config);
   let selector = 'line-height';
@@ -130,7 +147,7 @@ export function genLineHeight(config) {
   return ret;
 }
 
-export function genFamily({fontFamilys}) {
+function genFamily({fontFamilys}) {
   let ret = {};
   let func = 'family'
   let selector = `${baseSelector}-${func}`;
@@ -138,7 +155,7 @@ export function genFamily({fontFamilys}) {
   return ret;
 }
 
-export function genTruncate({textTruncateSet, lineHeightSizeBase}) {
+function genTruncate({textTruncateSet, lineHeightSizeBase}) {
   let ret = {};
   let func = 'truncate'
   let selector = `${baseSelector}-${func}`;
@@ -168,8 +185,13 @@ export function genTruncate({textTruncateSet, lineHeightSizeBase}) {
   return ret;
 }
 
-
-export default function gen(config) {
+/**
+ * 生成 文字相关 class names
+ * @exportdefault
+ * @param {ClassNamesConfig} - class names 生成配置对象
+ * @returns {object} class names 中间对象，由 cssGen 调用
+ */
+function genFunctionText(config) {
   return {
     ...genTextSizes(config), 
     ...genTextWeights(config), 
@@ -184,3 +206,5 @@ export default function gen(config) {
     ...genTruncate(config),
   };
 }
+
+export default genFunctionText;

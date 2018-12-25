@@ -63,7 +63,7 @@ Field._Container._Content = aprops=>{
   return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
 }
 
-/**
+/*
  * @compatible ime wrong on chrome and wrong cursor pos, cause by state controll input, it is ok on setState
  */
 Field._Normal = class extends React.Component {

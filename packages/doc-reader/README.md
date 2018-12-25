@@ -1,4 +1,4 @@
-# `doc-reader`
+# doc-reader
 
 jsdoc3 已经很完美的支持 es6 了，可惜还是不能支持 react 已经 css classes。基于 jsdoc3 通过 jsdoc3 插件和模板的开发，实现以上功能。可以为 bnorth 解决方案提供统一的 api 文档生成方案。
 
@@ -15,16 +15,16 @@ bnorth-doc [src] [des] [package] [readme]
 
 ## 特性
 
-1. 一站式整体解决方案
-1. 体系
-1. 插件机制
-1. 完全可定制
-1. 渐进式开发
-1. 组件可更改类型，减少组件层次，更方便控制布局
+1. 单页面方式速度快
+1. 支持 react 组件
+1. 支持 css class
+1. 支持 es6，友好显示 es 模块
 
-## bnorth api 文档
+## 基于该文档生成库的 bnorth api 文档
 
-[Documents](//able99.github.io/bnorth/)
+[bnorth core](//able99.github.io/bnorth/core/)
+[bnorth components](//able99.github.io/bnorth/components/)
+[bnorth rich.css](//able99.github.io/bnorth/richcss/)
 
 ## LICENSE
 

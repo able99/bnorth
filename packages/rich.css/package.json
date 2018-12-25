@@ -31,7 +31,8 @@
     "build": "npm run clean && npm run build:js && npm run build:css",
     "build:js": "bnorth-build dev",
     "build:css": "bnorth-build run scripts/index.js",
-    "clean": "bnorth-build clean lib css"
+    "clean": "bnorth-build clean lib css",
+    "doc": "npx bnorth-doc ./src/ ../../docs/richcss/"
   },
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"

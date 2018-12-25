@@ -43,12 +43,6 @@ var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _Backdrop = _interopRequireDefault(require("./Backdrop"));
 
-/**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
- */
 var Popover =
 /*#__PURE__*/
 function (_React$Component) {

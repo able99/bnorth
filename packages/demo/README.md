@@ -1,16 +1,8 @@
-# `bnorth-demo`
+# bnorth-demo
 
-> TODO: description
+bnorth 解决方案 demo
 
-## Usage
-
-```
-const bnorthDemo = require('bnorth-demo');
-
-// TODO: DEMONSTRATE API
-```
-
-## BUGLIST
+## demo 测试出的 bnorth 需要优化和解决的问题
 1. some component margin padding callapse, such as list demo filter
 1. svg animation refine, animation is broken, such as list demo dropdown loader
 1. pullrefresh mistakenly trigger onclick when pull on pc
@@ -27,7 +19,7 @@ const bnorthDemo = require('bnorth-demo');
 1. error info can not block render
 1. popover click will trigger close, and trigger not support function to close popover by mannual
 
-## FEATURE
+## demo 反馈给 bnorth 需要未来增加的功能
 1. browser plugin setTitle onPageResume 
 1. config
 1. border-none-a- should split to border-none-x-

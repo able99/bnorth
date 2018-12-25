@@ -6,17 +6,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.genTextSizes = genTextSizes;
-exports.genTextWeights = genTextWeights;
-exports.genTextColors = genTextColors;
-exports.genTextStyles = genTextStyles;
-exports.genTextDecorations = genTextDecorations;
-exports.genTextAligns = genTextAligns;
-exports.genTextVerticalAligns = genTextVerticalAligns;
-exports.genTextWhiteSpaces = genTextWhiteSpaces;
-exports.genLineHeight = genLineHeight;
-exports.genFamily = genFamily;
-exports.genTruncate = genTruncate;
-exports.default = gen;
+exports.default = void 0;
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
@@ -30,6 +20,9 @@ require("core-js/modules/web.dom.iterable");
 
 var _utils = require("../utils");
 
+/**
+ * @module
+ */
 var Styles = {
   '-': 'normal',
   'italic': true,
@@ -74,6 +67,15 @@ var WhiteSpaces = {
 };
 var baseSelector = 'text';
 var baseStyleSelector = 'font';
+/**
+ * 设置文本字体尺寸
+ * @classname text-size
+ * @param {font=} size - 字体尺寸
+ * @example
+ * ```jsx
+ * <div className="text-size-lg">
+ * ```
+ */
 
 function genTextSizes(config) {
   var ret = {};
@@ -90,6 +92,12 @@ function genTextSizes(config) {
   });
   return ret;
 }
+/**
+ * 设置文本字体粗度
+ * @classname text-weight
+ * @param {fontWeight=} size - 字体粗度
+ */
+
 
 function genTextWeights(config) {
   var ret = {};
@@ -264,7 +272,17 @@ function genTruncate(_ref23) {
   });
   return ret;
 }
+/**
+ * 生成 文字相关 class names
+ * @exportdefault
+ * @param {ClassNamesConfig} - class names 生成配置对象
+ * @returns {object} class names 中间对象，由 cssGen 调用
+ */
 
-function gen(config) {
+
+function genFunctionText(config) {
   return (0, _objectSpread2.default)({}, genTextSizes(config), genTextWeights(config), genTextColors(config), genTextStyles(config), genTextDecorations(config), genTextAligns(config), genTextVerticalAligns(config), genTextWhiteSpaces(config), genLineHeight(config), genFamily(config), genTruncate(config));
 }
+
+var _default = genFunctionText;
+exports.default = _default;

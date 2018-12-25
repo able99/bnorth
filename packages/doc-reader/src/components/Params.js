@@ -6,7 +6,7 @@ import Type from './Type';
 
 
 export default aprops=>{
-  let {app, title, data=[], showDefault, ...props} = aprops;
+  let {app, title, data=[], ...props} = aprops;
 
   return data.length?(
     <List header={title} headerProps={{'b-size': 'lg', 'className': 'text-weight-bold'}} {...props} separatorInset={false}>
@@ -17,16 +17,16 @@ export default aprops=>{
               <th className="padding-a-sm text-align-left">Name</th>
               <th className="padding-a-sm text-align-left">Type</th>
               <th className="padding-a-sm text-align-left">Description</th>
-              {showDefault?<th className="padding-a-sm text-align-left">default</th>:null}
+              <th className="padding-a-sm text-align-left">default</th>
             </tr>
           </thead>
           <tbody>
             {data.map((v,i)=>(
               <Panel component="tr" key={i} bc-bg-color-component={i%2===0}>
-                <td className="padding-a-sm">{v.name}</td>
-                <td className="padding-a-sm"><Type app={app} data={v.type} /></td>
-                <td className="padding-a-sm">{v.desc}</td>
-                {showDefault?<td className="padding-a-sm"><ReactMarkdown source={v.default} /></td>:null}
+                <td className="padding-a-sm" style={{width:"15%"}}>{v.name}</td>
+                <td className="padding-a-sm" style={{width:"30%"}}><Type app={app} {...v} /></td>
+                <td className="padding-a-sm"><ReactMarkdown source={v.description} /></td>
+                <td className="padding-a-sm" style={{width:"15%"}}>{v.defaultvalue}</td>
               </Panel>
             ))}
           </tbody>

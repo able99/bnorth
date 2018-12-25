@@ -35,12 +35,6 @@ var _Panel = _interopRequireDefault(require("./Panel.Container"));
 
 var _Button = _interopRequireDefault(require("./Button"));
 
-/**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
- */
 var Tabs =
 /*#__PURE__*/
 function (_React$Component) {

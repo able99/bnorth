@@ -4,18 +4,27 @@ import Link from './Link';
 import Section from './Section';
 
 
-let categories = [{title: 'Modules', kind: 'module'}, {title: 'Components', kind: 'component'}, {title: 'Classes', kind: 'class'}, {title: 'Typedefs', kind: 'typedef'}]
+let categories = [{title: 'Modules', kind: 'module'}, {title: 'Components', kind: 'component'}, {title: 'Classes', kind: 'class'}, {title: 'Typedefs', kind: 'typedef'}, {title: 'Classnames', kind: 'classname'}, {title: 'Plugins', kind: 'plugin'}]
 export default aprops=>{
-  let {app, stateDocs, ...props} = aprops;
+  let {app, doclets, ...props} = aprops;
 
   return (
     <Panel bc-border-set-a- bc-scrollable-y- {...props}>
+      <Section type="menu">
+        <Link app={app} doc={{name:"Home", longname:"home"}} type="" />
+      </Section>
+      <Section type="menu">
+        <Link app={app} doc={{name:"Global", longname:"global"}} type="global" />
+      </Section>
       {categories.map(v=>{
-        let docs = stateDocs.filter(vv=>vv.kind===v.kind);
+        let docs = doclets.filter(vv=>vv.kind===v.kind);
         return docs.length?(
           <Section key={v.title} title={v.title} type="menu">
             {docs.map(vv=>(
-              <Link key={vv.longname} app={app} name={vv.longname.replace(/^module:/i,'')} longname={vv.longname} />
+              <Link 
+                key={vv.longname} app={app} 
+                doc={{name: vv.longname.replace(/^module:/i,''), longname: vv.longname, exportdefault: vv.exportdefault}} 
+                type={v.kind==='global'||v.kind==='module'?v.kind:'type'} />
             ))}
           </Section>
         ):null;

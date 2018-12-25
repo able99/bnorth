@@ -1,2 +1,11 @@
-import App from './app';
-export default App;
+/**
+ * @module
+ */
+import Default from './app';
+
+ /**
+ * @class App
+ * @exportdefault
+ * @see module:app.App
+ */
+export default Default;

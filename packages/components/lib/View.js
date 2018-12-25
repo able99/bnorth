@@ -24,18 +24,19 @@ var _props = _interopRequireDefault(require("./utils/props"));
 var _Panel = _interopRequireDefault(require("./Panel"));
 
 /**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
+ * @module
+ */
+
+/**
+ * 页面的根组件，也可以不使用该组件作为根组件
+ * @component 
+ * @exportdefault
  */
 var View = function View(aprops) {
   var _parseProps = (0, _props.default)(aprops),
       landscape = _parseProps.landscape,
-      _parseProps$container = _parseProps.container,
-      container = _parseProps$container === void 0 ? document.body : _parseProps$container,
-      _parseProps$component = _parseProps.component,
-      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+      container = _parseProps.container,
+      Component = _parseProps.component,
       componentPanel = _parseProps.componentPanel,
       className = _parseProps.className,
       style = _parseProps.style,
@@ -62,5 +63,32 @@ var View = function View(aprops) {
   }, props), children);
 };
 
+View.defaultProps = {
+  /**
+   * 开启横屏模式
+   * @type {boolean}
+   */
+  landscape: undefined,
+
+  /**
+   * 页面的容器，为横屏时计算宽度使用
+   * @type {element}
+   * @default document.body
+   */
+  container: document.body,
+
+  /**
+   * 实际对应组件
+   * @type {element|component}
+   * @default Panel
+   */
+  component: _Panel.default,
+
+  /**
+   * 当实际组件为 panel 时，设置 panel 的对应组件
+   * @type {(element|component)}
+   */
+  componentPanel: undefined
+};
 var _default = View;
 exports.default = _default;

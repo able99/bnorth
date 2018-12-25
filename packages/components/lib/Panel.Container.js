@@ -35,12 +35,6 @@ var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
-/**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
- */
 function getSubComponentProps(index, size, componentClassName, componentStyle, containerProps) {
   var _ref = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {},
       className = _ref.className,

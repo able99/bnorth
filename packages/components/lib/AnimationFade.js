@@ -25,12 +25,6 @@ var _dom = require("./utils/dom");
 
 var _props = _interopRequireDefault(require("./utils/props"));
 
-/**
- * @overview bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
- */
 var AnimationFade = function AnimationFade(aprops) {
   var _parseProps = (0, _props.default)(aprops),
       _parseProps$in = _parseProps.in,
