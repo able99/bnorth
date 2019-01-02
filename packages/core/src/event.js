@@ -2,17 +2,28 @@
  * @module
  */
 
+
 /**
- * App Event 模块，提供事件管理的功能
+ * App 事件管理模块，提供事件管理的功能
+ * @see https://able99.github.io/cbnorth/event.html
  * @exportdefault
  */
 class Event {
   /**
    * app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造
-   * @param {moudle:app.App} app 
+   * @param {module:app.App} app 
    */
   constructor(app) {
+    /**
+     * App 的实例
+     * @type {module:app.App}
+     */
     this.app = app;
+    /**
+     * 模块的 id
+     * @type {string}
+     */
+    this._id = app._id+'.event';
     this._listener = {};
     this._events = {};
   }
@@ -43,14 +54,14 @@ class Event {
   }
 
   /**
-   * 通 on 函数，但是事件只触发一次，就会自动取消注册
+   * 同 on 函数，但是事件只触发一次
    */
   once(targetId, eventName, callback, ownerId) {
     return this._addListener(targetId, eventName, callback, ownerId, true);
   }
 
   /**
-   * 取消事件的注册
+   * 取消注册的事件处理函数
    * @param {function} - 注册时的事件处理函数或者事件处理函数的所有者 id 
    */
   off(item) {
@@ -64,9 +75,9 @@ class Event {
   }
 
   /**
-   * 批量删除事件处理函数
+   * 清除目标上的事件处理函数
    * @param {string} - 目标 id 
-   * @param {?string} - 事件名称，如果事件名称为空，则清除目标 id 的全部事件 
+   * @param {?string} - 事件名称，如果事件名称为空则为全部事件 
    */
   delete(targetId, eventName) {
     let name = eventName?this._getTargetEventName(targetId, eventName):targetId;
@@ -107,5 +118,6 @@ class Event {
     }
   }
 }
+
 
 export default Event;

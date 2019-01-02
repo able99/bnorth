@@ -14,9 +14,9 @@ var _app = _interopRequireDefault(require("./app"));
  */
 
 /**
-* @class App
-* @exportdefault
-* @see module:app.App
-*/
+ * @class App
+ * @exportdefault
+ * @see module:app.App
+ */
 var _default = _app.default;
 exports.default = _default;

@@ -6,7 +6,7 @@ import Container from '../components/Container'
 
 
 let Component = props=>{
-  let { app, stateDocs:{doclets=[]}={}, route:{name:type , params:{name}} } = props;
+  let { app, stateDocs:{doclets=[]}={}, route:{pageName:type , params:{name}} } = props;
   
   return (
     <View bc-bg-color-white bc-padding-a- bc-flex-direction-h>

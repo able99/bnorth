@@ -71,7 +71,7 @@ export default {
         message = app.utils.message2String(message);
         if(!message) return;
 
-        let _id = app.notice._id || app.router.getViewId(options);
+        let _id = app.notice._id || app.router.genPopLayerId(options);
         options._id = _id;
         props.in = true;
         props.onDoClose = ()=>app.notice.close();
@@ -80,22 +80,22 @@ export default {
         if(app.notice._timer) window.clearTimeout(app.notice._timer);
         app.notice._timer = window.setTimeout(()=>app.notice.close(),timeout);
 
-        return app.notice._id = app.router.addView(<Notification /> , props, options);
+        return app.notice._id = app.router.addPopLayer(<Notification /> , props, options);
       },
 
       close: ()=>{
         if(app.notice._timer) { window.clearTimeout(app.notice._timer); app.notice._timer = undefined; }
         if(!app.notice._id) return;
-        let {content, props={}, options={}} = app.router.getView(app.notice._id)||{};
+        let {content, props={}, options={}} = app.router.getPopLayerInfo(app.notice._id)||{};
         if(!content) { app.notice._id = undefined; return; }
 
         props.in = false;
         props.onTransitionFinished = ()=>{ 
-          app.router.removeView(app.notice._id); 
+          app.router.removePopLayer(app.notice._id); 
           app.notice._id = undefined; 
         }
 
-        return app.router.addView(content, props, options);
+        return app.router.addPopLayer(content, props, options);
       },
     };
 

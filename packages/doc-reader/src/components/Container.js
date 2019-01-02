@@ -18,12 +18,14 @@ let Container = aprops=>{
   let isClass = doc.kind==='class';
   let isComponent = doc.kind==='component';
   let isPlugin = doc.kind==='plugin';
+  let isTypedef = doc.kind==='typedef';
   let docs = [];
   if(isGlobal) docs = doclets.filter(v=>v.scope==='global');
   if(isModule) docs = doclets.filter(v=>v.memberof===name);
   if(isClass) docs = doclets.filter(v=>v.memberof===name);
   if(isComponent) docs = doclets.filter(v=>v.memberof===name);
   if(isPlugin) docs = doclets.filter(v=>v.memberof===name);
+  if(isTypedef) docs = doclets.filter(v=>v.memberof===name);
 
   let see = doc.see;
   let typedefs = docs.filter(v=>v.kind==='typedef');
@@ -35,6 +37,7 @@ let Container = aprops=>{
   let classes = docs.filter(v=>v.kind==='class');
   let classnames = docs.filter(v=>v.kind==='classname');
   let plugins = docs.filter(v=>v.kind==='plugin');
+  let events = docs.filter(v=>v.kind==='event');
   let attributes = docs.filter(v=>v.kind==='attribute');
   let constructor = isClass&&{ name: 'new '+doc.name+'()', description: doc.description, params: doc.params, }
   let properties = doc.properties||[];
@@ -148,6 +151,14 @@ let Container = aprops=>{
               app={app}   
               data={properties} />
           </List.Item>
+        </Section>
+      ):null}
+
+      {events.length?(
+        <Section title="Events" type="section">
+          {events.map(v=>(
+            <List.Item key={v.longname} ><Container app={app} doc={v} isSub /></List.Item>
+          ))}
         </Section>
       ):null}
 

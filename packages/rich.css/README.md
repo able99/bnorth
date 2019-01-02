@@ -1,33 +1,9 @@
-# rich.css
+# core
 
-## 使用方法
+rich.css 是一个可定制的，全面覆盖的 css 样式库
 
-```sh
-npm install --save @bnorth/rich.css
-```
+## 文档
 
-```jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import '@bnorth/rich.css/css/normalize.css';
-import genCss from '@bnorth/rich.css';
-import { getCssConfig, setCssConfig } from '@bnorth/rich.css/lib/gen';
+[bnorth 文档](//able99.github.io/#cbnorth)
+[参考手册](//able99.github.io/bnorth/richcss/)
 
-let { textColors } = getCssConfig();
-textColors.normal = '#222222';
-setCssConfig({textColors});
-genCss();
-
-ReactDOM.render(
-  <div className="text-color-primary">text</div>,
-  document.getElementById('root')
-);
-```
-
-## bnorth api 文档
-
-[Documents](//able99.github.io/bnorth/richcss/)
-
-## LICENSE
-
-MIT

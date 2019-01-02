@@ -49,26 +49,60 @@ var _keyboard = _interopRequireDefault(require("./keyboard"));
 
 /**
  * App 构建参数
- * @global
  * @typedef AppOptions
  * @type {object}
  * @property {string} [id='^app'] - 配置 app id
- * @property {class} Utils - 替换默认的app utils 模块
- * @property {class} Event - 替换默认的app Event 模块
- * @property {class} Plugins - 替换默认的app Plugins 模块
- * @property {class} Keyboard - 替换默认的app Keyboard 模块
- * @property {class} Context - 替换默认的app Context 模块
- * @property {class} Router - 替换默认的app Router 模块
- * @property {class} Render - 替换默认的app Render 模块
- * @property {class} State - 替换默认的app State 构造器
- * @property {class} Page - 替换默认的app Page 组件
- * @property {Object} plugin - app plugin，是 app 的第一个 plugin
+ * @property {class?} Utils - 替换默认的app utils 模块
+ * @property {class?} Event - 替换默认的app Event 模块
+ * @property {class?} Plugins - 替换默认的app Plugins 模块
+ * @property {class?} Keyboard - 替换默认的app Keyboard 模块
+ * @property {class?} Context - 替换默认的app Context 模块
+ * @property {class?} Router - 替换默认的app Router 模块
+ * @property {class?} Render - 替换默认的app Render 模块
+ * @property {class?} State - 替换默认的app 数据单元类
+ * @property {class?} Page - 替换默认的app 页面组件
+ * @property {string?} rootId - react 渲染到的跟元素的 css 选择字符串
+ * @property {module:plugins~PluginDefine?} plugin - app 插件，是 app 的第一个插件
+ */
+
+/**
+ * 应用启动前事件
+ * @event module:app.App#onAppStarting
+ */
+
+/**
+ * 启动后首先进入配置阶段
+ * @event module:app.App#onAppStartConfig
+ */
+
+/**
+ * 路由初始化阶段事件
+ * @event module:app.App#onAppStartRouter
+ */
+
+/**
+ * 数据管理器初始化阶段
+ * @event module:app.App#onAppStartContext
+ */
+
+/**
+ * 定制阶段事件，一般在该事件里处理定制
+ * @event module:app.App#onAppStartCustom
+ */
+
+/**
+ * 进行 dom render 阶段
+ * @event module:app.App#onAppStartRender
+ */
+
+/**
+ * 应用启动完成
+ * @event module:app.App#onAppStarted
  */
 
 /**
  * web 应用的主类，其他模块和插件的功能都会挂在在该的实例上。用户需要实例化，并调用 start 方法启动应用。
- * 
- * start 方法首先会加载各个模块，然后按照 _startEvents 顺序发出事件，各个模块和插件在事件驱动下运行。
+ * start 方法首先会加载各个模块，然后按照 _startEvents 属性定义的顺序触发事件，各个模块和插件在事件驱动下运行。
  * @exportdefault
  * @example
  * ```js
@@ -82,46 +116,38 @@ var App =
 function () {
   /**
    * 应用构建函数，完成对参数的配置，模块的加载
-   * @param {AppOptions} - 配置参数 
+   * @param {module:app~AppOptions} - 配置参数 
    */
   function App() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     (0, _classCallCheck2.default)(this, App);
 
     /**
-     * 启动事件列表，app.start 过程，将依次被触发，可以在调用 app.start 前修改，默认包括：
-     * 
-     * 1. onAppStarting：app 启动前触发
-     * 1. onAppStartConfig：启动后首先进入配置阶段
-     * 1. onAppStartRouter：路由初始化阶段事件
-     * 1. onAppStartContext：数据管理器初始化阶段
-     * 1. onAppStartHack：hack 阶段，一般在此期间，完成对 app 的个性化定制
-     * 1. onAppStartRender：dom 描画初始化阶段，创建根组件
-     * 1. onAppStarted：启动完成
+     * 启动事件列表，app.start 过程，将依次被触发，可以在调用 app.start 前修改
      * @type {string[]}
      */
     this._startEvents = ['onAppStarting', 'onAppStartConfig', 'onAppStartRouter', 'onAppStartContext', 'onAppStartHack', 'onAppStartRender', 'onAppStarted'];
     /**
-     * id
+     * 应用 id
      * @type {string}
      */
 
     this._id = options._id || '^app';
     /**
-     * app 参数
-     * @property {string} id - id
+     * app 构建参数
+     * @type {module:app~AppOptions}
      */
 
     this.options = options;
     /**
      * State 数据状态的类
-     * @type {State}
+     * @type {module:state.State}
      */
 
     this.State = this.options.State || _state.default;
     /**
      * Page 单个页面的组件
-     * @type {Page}
+     * @type {module:page.Page}
      */
 
     this.Page = this.options.Page || _page.default;
@@ -145,7 +171,7 @@ function () {
     this.Log = this.options.Log || _log.default;
     /**
      * Log 的实例
-     * @type {Log}
+     * @type {module:log.Log}
      */
 
     this.log = new this.Log(this, options);
@@ -157,7 +183,7 @@ function () {
     this.Event = this.options.Event || _event.default;
     /**
      * Event 的实例
-     * @type {Event}
+     * @type {module:event.Event}
      */
 
     this.event = new this.Event(this, options);
@@ -169,7 +195,7 @@ function () {
     this.Plugins = this.options.Plugins || _plugins.default;
     /**
      * Plugins 的实例
-     * @type {Plugins}
+     * @type {module:plugins.Plugins}
      */
 
     this.plugins = new this.Plugins(this, options);
@@ -181,7 +207,7 @@ function () {
     this.Keyboard = this.options.Keyboard || _keyboard.default;
     /**
      * Keyboard 的实例
-     * @type {Keyboard}
+     * @type {module:keyboard.Keyboard}
      */
 
     this.keyboard = new this.Keyboard(this, options);
@@ -193,7 +219,7 @@ function () {
     this.Context = this.options.Context || _context2.default;
     /**
      * Context 的实例
-     * @type {Context}
+     * @type {module.context.Context}
      */
 
     this.context = new this.Context(this, options);
@@ -205,7 +231,7 @@ function () {
     this.Router = this.options.Router || _router.default;
     /**
      * Router 的实例
-     * @type {Router}
+     * @type {module:router.Router}
      */
 
     this.router = new this.Router(this, options);
@@ -217,7 +243,7 @@ function () {
     this.Render = this.options.Render || _render.default;
     /**
      * Render 的实例
-     * @type {Render}
+     * @type {module:render.Render}
      */
 
     this.render = new this.Render(this, options);

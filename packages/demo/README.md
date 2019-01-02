@@ -2,6 +2,10 @@
 
 bnorth 解决方案 demo
 
+## 文档
+
+[bnorth 文档](//able99.github.io/#cbnorth)
+
 ## demo 测试出的 bnorth 需要优化和解决的问题
 1. some component margin padding callapse, such as list demo filter
 1. svg animation refine, animation is broken, such as list demo dropdown loader

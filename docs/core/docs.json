@@ -24,6 +24,7 @@
     "scripts": {
       "start": "bnorth-build watch",
       "build": "bnorth-build dev",
+      "doct": "npx bnorth-doc ./src/ ../doc-reader/public/",
       "doc": "npx bnorth-doc ./src/ ../../docs/core/"
     },
     "bugs": {
@@ -39,7 +40,7 @@
     },
     "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
   },
-  "readme": "# core\n\nbnorth 解决方案的核心库，是一个基于事件驱动的，支持插件扩展的 mmvc 模型框架。\n\n## 起步\n\n```sh\nnpm install @bnorth/core\n```\n\n```js\nimport App from '@bnorth/core';\nlet app = new App();\napp.start();\n```\n\n## bnorth api 文档\n\n[Documents](//able99.github.io/bnorth/)\n\n## LICENSE\n\nMIT\n\n",
+  "readme": "# core\n\ncore 是构建应用的核心，是应用的入口。core 实际上是一个事件驱动的 mvc 框架，实现了 App 类。提供了事件管理，页面管理，数据管理，插件管理，\b等核心功能\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n[参考手册](//able99.github.io/bnorth/core/)\n\n",
   "doclets": [
     {
       "kind": "module",
@@ -48,7 +49,6 @@
     },
     {
       "description": "App 构建参数",
-      "scope": "global",
       "kind": "typedef",
       "name": "AppOptions",
       "type": {
@@ -74,6 +74,7 @@
               "class"
             ]
           },
+          "nullable": true,
           "description": "替换默认的app utils 模块",
           "name": "Utils"
         },
@@ -83,6 +84,7 @@
               "class"
             ]
           },
+          "nullable": true,
           "description": "替换默认的app Event 模块",
           "name": "Event"
         },
@@ -92,6 +94,7 @@
               "class"
             ]
           },
+          "nullable": true,
           "description": "替换默认的app Plugins 模块",
           "name": "Plugins"
         },
@@ -101,6 +104,7 @@
               "class"
             ]
           },
+          "nullable": true,
           "description": "替换默认的app Keyboard 模块",
           "name": "Keyboard"
         },
@@ -110,6 +114,7 @@
               "class"
             ]
           },
+          "nullable": true,
           "description": "替换默认的app Context 模块",
           "name": "Context"
         },
@@ -119,6 +124,7 @@
               "class"
             ]
           },
+          "nullable": true,
           "description": "替换默认的app Router 模块",
           "name": "Router"
         },
@@ -128,6 +134,7 @@
               "class"
             ]
           },
+          "nullable": true,
           "description": "替换默认的app Render 模块",
           "name": "Render"
         },
@@ -137,7 +144,8 @@
               "class"
             ]
           },
-          "description": "替换默认的app State 构造器",
+          "nullable": true,
+          "description": "替换默认的app 数据单元类",
           "name": "State"
         },
         {
@@ -146,23 +154,93 @@
               "class"
             ]
           },
-          "description": "替换默认的app Page 组件",
+          "nullable": true,
+          "description": "替换默认的app 页面组件",
           "name": "Page"
         },
         {
           "type": {
             "names": [
-              "Object"
+              "string"
             ]
           },
-          "description": "app plugin，是 app 的第一个 plugin",
+          "nullable": true,
+          "description": "react 渲染到的跟元素的 css 选择字符串",
+          "name": "rootId"
+        },
+        {
+          "type": {
+            "names": [
+              "module:plugins~PluginDefine"
+            ]
+          },
+          "nullable": true,
+          "description": "app 插件，是 app 的第一个插件",
           "name": "plugin"
         }
       ],
-      "longname": "AppOptions"
+      "longname": "module:app~AppOptions",
+      "scope": "inner",
+      "memberof": "module:app"
     },
     {
-      "classdesc": "web 应用的主类，其他模块和插件的功能都会挂在在该的实例上。用户需要实例化，并调用 start 方法启动应用。\n\nstart 方法首先会加载各个模块，然后按照 _startEvents 顺序发出事件，各个模块和插件在事件驱动下运行。",
+      "description": "应用启动前事件",
+      "kind": "event",
+      "name": "onAppStarting",
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onAppStarting",
+      "scope": "instance"
+    },
+    {
+      "description": "启动后首先进入配置阶段",
+      "kind": "event",
+      "name": "onAppStartConfig",
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onAppStartConfig",
+      "scope": "instance"
+    },
+    {
+      "description": "路由初始化阶段事件",
+      "kind": "event",
+      "name": "onAppStartRouter",
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onAppStartRouter",
+      "scope": "instance"
+    },
+    {
+      "description": "数据管理器初始化阶段",
+      "kind": "event",
+      "name": "onAppStartContext",
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onAppStartContext",
+      "scope": "instance"
+    },
+    {
+      "description": "定制阶段事件，一般在该事件里处理定制",
+      "kind": "event",
+      "name": "onAppStartCustom",
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onAppStartCustom",
+      "scope": "instance"
+    },
+    {
+      "description": "进行 dom render 阶段",
+      "kind": "event",
+      "name": "onAppStartRender",
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onAppStartRender",
+      "scope": "instance"
+    },
+    {
+      "description": "应用启动完成",
+      "kind": "event",
+      "name": "onAppStarted",
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onAppStarted",
+      "scope": "instance"
+    },
+    {
+      "classdesc": "web 应用的主类，其他模块和插件的功能都会挂在在该的实例上。用户需要实例化，并调用 start 方法启动应用。\nstart 方法首先会加载各个模块，然后按照 _startEvents 属性定义的顺序触发事件，各个模块和插件在事件驱动下运行。",
       "exportdefault": true,
       "scope": "static",
       "examples": [
@@ -177,7 +255,7 @@
         {
           "type": {
             "names": [
-              "AppOptions"
+              "module:app~AppOptions"
             ]
           },
           "description": "配置参数",
@@ -186,7 +264,7 @@
       ]
     },
     {
-      "description": "启动事件列表，app.start 过程，将依次被触发，可以在调用 app.start 前修改，默认包括：\n\n1. onAppStarting：app 启动前触发\n1. onAppStartConfig：启动后首先进入配置阶段\n1. onAppStartRouter：路由初始化阶段事件\n1. onAppStartContext：数据管理器初始化阶段\n1. onAppStartHack：hack 阶段，一般在此期间，完成对 app 的个性化定制\n1. onAppStartRender：dom 描画初始化阶段，创建根组件\n1. onAppStarted：启动完成",
+      "description": "启动事件列表，app.start 过程，将依次被触发，可以在调用 app.start 前修改",
       "type": {
         "names": [
           "Array.<string>"
@@ -199,7 +277,7 @@
       "scope": "instance"
     },
     {
-      "description": "id",
+      "description": "应用 id",
       "type": {
         "names": [
           "string"
@@ -212,18 +290,12 @@
       "scope": "instance"
     },
     {
-      "description": "app 参数",
-      "properties": [
-        {
-          "type": {
-            "names": [
-              "string"
-            ]
-          },
-          "description": "id",
-          "name": "id"
-        }
-      ],
+      "description": "app 构建参数",
+      "type": {
+        "names": [
+          "module:app~AppOptions"
+        ]
+      },
       "name": "options",
       "longname": "module:app.App#options",
       "kind": "member",
@@ -235,7 +307,7 @@
       "description": "State 数据状态的类",
       "type": {
         "names": [
-          "State"
+          "module:state.State"
         ]
       },
       "name": "State",
@@ -248,7 +320,7 @@
       "description": "Page 单个页面的组件",
       "type": {
         "names": [
-          "Page"
+          "module:page.Page"
         ]
       },
       "name": "Page",
@@ -300,7 +372,7 @@
       "description": "Log 的实例",
       "type": {
         "names": [
-          "Log"
+          "module:log.Log"
         ]
       },
       "name": "log",
@@ -326,7 +398,7 @@
       "description": "Event 的实例",
       "type": {
         "names": [
-          "Event"
+          "module:event.Event"
         ]
       },
       "name": "event",
@@ -352,7 +424,7 @@
       "description": "Plugins 的实例",
       "type": {
         "names": [
-          "Plugins"
+          "module:plugins.Plugins"
         ]
       },
       "name": "plugins",
@@ -378,7 +450,7 @@
       "description": "Keyboard 的实例",
       "type": {
         "names": [
-          "Keyboard"
+          "module:keyboard.Keyboard"
         ]
       },
       "name": "keyboard",
@@ -404,7 +476,7 @@
       "description": "Context 的实例",
       "type": {
         "names": [
-          "Context"
+          "module.context.Context"
         ]
       },
       "name": "context",
@@ -430,7 +502,7 @@
       "description": "Router 的实例",
       "type": {
         "names": [
-          "Router"
+          "module:router.Router"
         ]
       },
       "name": "router",
@@ -456,7 +528,7 @@
       "description": "Render 的实例",
       "type": {
         "names": [
-          "Render"
+          "module:render.Render"
         ]
       },
       "name": "render",
@@ -497,11 +569,273 @@
     },
     {
       "kind": "module",
+      "name": "context",
+      "longname": "module:context"
+    },
+    {
+      "classdesc": "App 数据管理模块，提供数据仓库功能，实现数据管理",
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Context",
+      "longname": "module:context.Context",
+      "kind": "class",
+      "memberof": "module:context",
+      "description": "app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "name": "app"
+        }
+      ]
+    },
+    {
+      "description": "App 的实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:context.Context#app",
+      "kind": "member",
+      "memberof": "module:context.Context",
+      "scope": "instance",
+      "defaultvalue": "app"
+    },
+    {
+      "description": "模块的 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:context.Context#_id",
+      "kind": "member",
+      "memberof": "module:context.Context",
+      "scope": "instance"
+    },
+    {
+      "description": "清除指定 id 的数据块",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "数据块 id",
+          "name": "_id"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "完成时的回调函数",
+          "name": "cb"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "promise"
+            ]
+          },
+          "description": "react state 操作 promise"
+        }
+      ],
+      "name": "clear",
+      "longname": "module:context.Context#clear",
+      "kind": "function",
+      "memberof": "module:context.Context",
+      "scope": "instance"
+    },
+    {
+      "description": "更新指定 id 的数据块，使用 `app.utils.objectUpdate` 更新策略",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "数据块 id",
+          "name": "_id"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "要更新的数据",
+          "name": "data"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "完成时的回调函数",
+          "name": "cb"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "promise"
+            ]
+          },
+          "description": "react state 操作 promise"
+        }
+      ],
+      "name": "update",
+      "longname": "module:context.Context#update",
+      "kind": "function",
+      "memberof": "module:context.Context",
+      "scope": "instance"
+    },
+    {
+      "description": "设置指定 id 的数据块",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "数据块 id",
+          "name": "_id"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "要设置的数据",
+          "name": "data"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "完成时的回调函数",
+          "name": "cb"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "promise"
+            ]
+          },
+          "description": "react state 操作 promise"
+        }
+      ],
+      "name": "set",
+      "longname": "module:context.Context#set",
+      "kind": "function",
+      "memberof": "module:context.Context",
+      "scope": "instance"
+    },
+    {
+      "description": "设置指定 id 的数据块，使用 `app.utils.objectDelete`",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "数据块 id",
+          "name": "_id"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "删除标识",
+          "name": "_did"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "promise"
+            ]
+          },
+          "description": "react state 操作 promise"
+        }
+      ],
+      "name": "delete",
+      "longname": "module:context.Context#delete",
+      "kind": "function",
+      "memberof": "module:context.Context",
+      "scope": "instance"
+    },
+    {
+      "description": "读取指定 id 的数据块",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "数据块 id",
+          "name": "_id"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "读取失败时的默认值",
+          "name": "defualtValue"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "读取时是否深度复制，使用 `app.utils.objectCopy` 策略",
+          "name": "deep"
+        }
+      ],
+      "name": "data",
+      "longname": "module:context.Context#data",
+      "kind": "function",
+      "memberof": "module:context.Context",
+      "scope": "instance"
+    },
+    {
+      "kind": "module",
       "name": "event",
       "longname": "module:event"
     },
     {
-      "classdesc": "App Event 模块，提供事件管理的功能",
+      "classdesc": "App 事件管理模块，提供事件管理的功能",
+      "see": [
+        "https://able99.github.io/cbnorth/event.html"
+      ],
       "exportdefault": true,
       "scope": "static",
       "name": "Event",
@@ -513,12 +847,39 @@
         {
           "type": {
             "names": [
-              "moudle:app.App"
+              "module:app.App"
             ]
           },
           "name": "app"
         }
       ]
+    },
+    {
+      "description": "App 的实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:event.Event#app",
+      "kind": "member",
+      "memberof": "module:event.Event",
+      "scope": "instance",
+      "defaultvalue": "app"
+    },
+    {
+      "description": "模块的 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:event.Event#_id",
+      "kind": "member",
+      "memberof": "module:event.Event",
+      "scope": "instance"
     },
     {
       "description": "向目标注册指定的事件处理函数",
@@ -578,7 +939,7 @@
       "scope": "instance"
     },
     {
-      "description": "通 on 函数，但是事件只触发一次，就会自动取消注册",
+      "description": "同 on 函数，但是事件只触发一次",
       "name": "once",
       "longname": "module:event.Event#once",
       "kind": "function",
@@ -587,7 +948,7 @@
       "params": []
     },
     {
-      "description": "取消事件的注册",
+      "description": "取消注册的事件处理函数",
       "params": [
         {
           "type": {
@@ -606,7 +967,7 @@
       "scope": "instance"
     },
     {
-      "description": "批量删除事件处理函数",
+      "description": "清除目标上的事件处理函数",
       "params": [
         {
           "type": {
@@ -624,7 +985,7 @@
             ]
           },
           "nullable": true,
-          "description": "事件名称，如果事件名称为空，则清除目标 id 的全部事件",
+          "description": "事件名称，如果事件名称为空则为全部事件",
           "name": "eventName"
         }
       ],
@@ -739,22 +1100,112 @@
     },
     {
       "kind": "module",
-      "name": "state",
-      "longname": "module:state"
+      "name": "keyboard",
+      "longname": "module:keyboard"
     },
     {
-      "classdesc": "数据管理器的数据管理单元",
+      "description": "键盘按下",
+      "kind": "event",
+      "name": "keydown",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "event"
+            ]
+          },
+          "description": "键盘事件"
+        }
+      ],
+      "memberof": "module:keyboard.Keyboard",
+      "longname": "module:keyboard.Keyboard#event:keydown",
+      "scope": "instance"
+    },
+    {
+      "description": "键盘产生可见字符",
+      "kind": "event",
+      "name": "keypress",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "event"
+            ]
+          },
+          "description": "键盘事件"
+        }
+      ],
+      "memberof": "module:keyboard.Keyboard",
+      "longname": "module:keyboard.Keyboard#event:keypress",
+      "scope": "instance"
+    },
+    {
+      "description": "键盘抬起",
+      "kind": "event",
+      "name": "keyup",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "event"
+            ]
+          },
+          "description": "键盘事件"
+        }
+      ],
+      "memberof": "module:keyboard.Keyboard",
+      "longname": "module:keyboard.Keyboard#event:keyup",
+      "scope": "instance"
+    },
+    {
+      "classdesc": "App 键盘事件管理模块，统一管理键盘事件",
       "exportdefault": true,
       "scope": "static",
-      "name": "State",
-      "longname": "module:state.State",
+      "name": "Keyboard",
+      "longname": "module:keyboard.Keyboard",
       "kind": "class",
-      "memberof": "module:state",
-      "description": "不用于直接构造，而是在 page 的 controller 中，定义数据单元，由 page 构造",
-      "params": []
+      "memberof": "module:keyboard",
+      "description": "app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "name": "app"
+        }
+      ]
     },
     {
-      "description": "通过 state 的 完整 id 获取 state 实例",
+      "description": "App 的实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:keyboard.Keyboard#app",
+      "kind": "member",
+      "memberof": "module:keyboard.Keyboard",
+      "scope": "instance",
+      "defaultvalue": "app"
+    },
+    {
+      "description": "模块的 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:keyboard.Keyboard#_id",
+      "kind": "member",
+      "memberof": "module:keyboard.Keyboard",
+      "scope": "instance"
+    },
+    {
+      "description": "指定 id 的目标注册键盘事件处理函数",
       "params": [
         {
           "type": {
@@ -762,37 +1213,8 @@
               "string"
             ]
           },
-          "description": "state 的 id",
+          "description": "目标 id",
           "name": "_id"
-        }
-      ],
-      "returns": [
-        {
-          "type": {
-            "names": [
-              "moudle:state.State"
-            ]
-          },
-          "description": "获取的 State 实例"
-        }
-      ],
-      "name": "get",
-      "longname": "module:state.State.get",
-      "kind": "function",
-      "memberof": "module:state.State",
-      "scope": "static"
-    },
-    {
-      "description": "通过 state id 及 其所在 页面或者插件的 id 获取 state 实例",
-      "params": [
-        {
-          "type": {
-            "names": [
-              "string"
-            ]
-          },
-          "description": "state 的 id",
-          "name": "stateId"
         },
         {
           "type": {
@@ -800,7 +1222,3202 @@
               "string"
             ]
           },
-          "description": "state 所有者 的 id",
+          "description": "事件名称",
+          "name": "event"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "事件处理函数",
+          "name": "callback"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "注销函数"
+        }
+      ],
+      "name": "on",
+      "longname": "module:keyboard.Keyboard#on",
+      "kind": "function",
+      "memberof": "module:keyboard.Keyboard",
+      "scope": "instance"
+    },
+    {
+      "description": "注销键盘事件处理函数",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "function"
+            ]
+          },
+          "description": "目标 id 或者事件处理函数",
+          "name": "item"
+        }
+      ],
+      "name": "off",
+      "longname": "module:keyboard.Keyboard#off",
+      "kind": "function",
+      "memberof": "module:keyboard.Keyboard",
+      "scope": "instance"
+    },
+    {
+      "description": "模拟触发指定的键盘事件",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "event"
+            ]
+          },
+          "description": "键盘事件",
+          "name": "event"
+        }
+      ],
+      "name": "emit",
+      "longname": "module:keyboard.Keyboard#emit",
+      "kind": "function",
+      "memberof": "module:keyboard.Keyboard",
+      "scope": "instance"
+    },
+    {
+      "kind": "module",
+      "name": "log",
+      "longname": "module:log"
+    },
+    {
+      "classdesc": "App 日志模块，提供日志功能",
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Log",
+      "longname": "module:log.Log",
+      "kind": "class",
+      "memberof": "module:log",
+      "description": "app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "name": "app"
+        }
+      ]
+    },
+    {
+      "description": "App 的实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:log.Log#app",
+      "kind": "member",
+      "memberof": "module:log.Log",
+      "scope": "instance",
+      "defaultvalue": "app"
+    },
+    {
+      "description": "模块的 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:log.Log#_id",
+      "kind": "member",
+      "memberof": "module:log.Log",
+      "scope": "instance"
+    },
+    {
+      "description": "日志的等级",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "level",
+      "longname": "module:log.Log#level",
+      "kind": "member",
+      "memberof": "module:log.Log",
+      "scope": "instance",
+      "defaultvalue": "debug"
+    },
+    {
+      "description": "打印 verbose 级别日志",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "variable": true,
+          "name": "日志"
+        }
+      ],
+      "name": "verbose",
+      "longname": "module:log.Log#verbose",
+      "kind": "function",
+      "memberof": "module:log.Log",
+      "scope": "instance"
+    },
+    {
+      "description": "打印 info 级别日志",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "variable": true,
+          "name": "日志"
+        }
+      ],
+      "name": "info",
+      "longname": "module:log.Log#info",
+      "kind": "function",
+      "memberof": "module:log.Log",
+      "scope": "instance"
+    },
+    {
+      "description": "打印 debug 级别日志",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "variable": true,
+          "name": "日志"
+        }
+      ],
+      "name": "debug",
+      "longname": "module:log.Log#debug",
+      "kind": "function",
+      "memberof": "module:log.Log",
+      "scope": "instance"
+    },
+    {
+      "description": "打印 warning 级别日志",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "variable": true,
+          "name": "日志"
+        }
+      ],
+      "name": "warning",
+      "longname": "module:log.Log#warning",
+      "kind": "function",
+      "memberof": "module:log.Log",
+      "scope": "instance"
+    },
+    {
+      "description": "打印 error 级别日志",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "variable": true,
+          "name": "日志"
+        }
+      ],
+      "name": "error",
+      "longname": "module:log.Log#error",
+      "kind": "function",
+      "memberof": "module:log.Log",
+      "scope": "instance"
+    },
+    {
+      "description": "不受限制的打印日志",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "variable": true,
+          "name": "日志"
+        }
+      ],
+      "name": "log",
+      "longname": "module:log.Log#log",
+      "kind": "function",
+      "memberof": "module:log.Log",
+      "scope": "instance"
+    },
+    {
+      "kind": "module",
+      "name": "page",
+      "longname": "module:page"
+    },
+    {
+      "description": "页面 controller 的声明函数",
+      "kind": "typedef",
+      "name": "PageControllerDefineFunction",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "description": "App 实例",
+          "name": "app"
+        },
+        {
+          "type": {
+            "names": [
+              "module:page.Page"
+            ]
+          },
+          "description": "页面的实例",
+          "name": "page"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:page~PageControllerDefine"
+            ]
+          },
+          "description": "页面 controll 声明对象"
+        }
+      ],
+      "longname": "module:page~PageControllerDefineFunction",
+      "scope": "inner",
+      "memberof": "module:page"
+    },
+    {
+      "description": "页面 controller 的声明对象",
+      "kind": "typedef",
+      "name": "PageControllerDefine",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "为页面实例注册 app 事件处理函数",
+          "name": "onXXX"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "为页面实例注册页面事件处理函数",
+          "name": "onPageXXX"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "为页面实例注册数据单元事件处理函数",
+          "name": "onStateXXX"
+        },
+        {
+          "type": {
+            "names": [
+              "module:state~StateDefine"
+            ]
+          },
+          "description": "为页面实例声明数据单元",
+          "name": "stateXXX"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "为页面实例增加 action 函数",
+          "name": "actionXXX"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "为页面实例增加属性或者方法",
+          "name": "xxx"
+        }
+      ],
+      "longname": "module:page~PageControllerDefine",
+      "scope": "inner",
+      "memberof": "module:page"
+    },
+    {
+      "description": "页面的路由信息",
+      "kind": "typedef",
+      "name": "PageRouteInfo",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面 id",
+          "name": "_id"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面的前一页面的 id",
+          "name": "_idPrev"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面的父页面的 id",
+          "name": "_idParent"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面对应的路径字符串",
+          "name": "pathName"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面的名称",
+          "name": "pageName"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面的路径字符串的当前页面片段",
+          "name": "pagePathName"
+        },
+        {
+          "type": {
+            "names": [
+              "Array.<string>"
+            ]
+          },
+          "description": "页面的路径字符串参数",
+          "name": "pageParams"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "路由的名称，路由名称上是包含参数定义的名称",
+          "name": "routeName"
+        },
+        {
+          "type": {
+            "names": [
+              "module:router~RouteDefine"
+            ]
+          },
+          "description": "路由声明对象",
+          "name": "routeDefine"
+        },
+        {
+          "type": {
+            "names": [
+              "Array.<string>"
+            ]
+          },
+          "description": "路由的配置参数",
+          "name": "routeParams"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "状态数据",
+          "name": "state"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "查询字符串数据键值对",
+          "name": "query"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "锚点字符串",
+          "name": "hash"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "页面参数键值对",
+          "name": "params"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否是子页面",
+          "name": "isSubPage"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否是顶层活动页面",
+          "name": "isActive"
+        },
+        {
+          "type": {
+            "names": [
+              "component"
+            ]
+          },
+          "description": "子页面集合",
+          "name": "subPages"
+        },
+        {
+          "type": {
+            "names": [
+              "component"
+            ]
+          },
+          "description": "页面所属的弹出层集合",
+          "name": "popLayers"
+        }
+      ],
+      "longname": "module:page~PageRouteInfo",
+      "scope": "inner",
+      "memberof": "module:page"
+    },
+    {
+      "description": "新的页面被添加",
+      "kind": "event",
+      "name": "onPageAdd",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面 id",
+          "name": "_id"
+        },
+        {
+          "type": {
+            "names": [
+              "module:page.Page"
+            ]
+          },
+          "description": "页面实例",
+          "name": "page"
+        }
+      ],
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onPageAdd",
+      "scope": "instance"
+    },
+    {
+      "description": "页面被移除完成",
+      "kind": "event",
+      "name": "onPageRemove",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面 id",
+          "name": "_id"
+        },
+        {
+          "type": {
+            "names": [
+              "module:page.Page"
+            ]
+          },
+          "description": "页面实例",
+          "name": "page"
+        }
+      ],
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onPageRemove",
+      "scope": "instance"
+    },
+    {
+      "description": "页面启动时事件",
+      "kind": "event",
+      "name": "onPageStart",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "module:page.Page"
+            ]
+          },
+          "description": "页面实例",
+          "name": "page"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否是顶层页面",
+          "name": "isActive"
+        }
+      ],
+      "memberof": "module:page.Page",
+      "longname": "module:page.Page#event:onPageStart",
+      "scope": "instance"
+    },
+    {
+      "description": "页面成为活动页面时事件",
+      "kind": "event",
+      "name": "onPageActive",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "module:page.Page"
+            ]
+          },
+          "description": "页面实例",
+          "name": "page"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否是页面启动过程中触发的",
+          "name": "onStart"
+        }
+      ],
+      "memberof": "module:page.Page",
+      "longname": "module:page.Page#event:onPageActive",
+      "scope": "instance"
+    },
+    {
+      "description": "页面成为非活动页面时事件",
+      "kind": "event",
+      "name": "onPageInactive",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "module:page.Page"
+            ]
+          },
+          "description": "页面实例",
+          "name": "page"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否是页面注销流程中触发的",
+          "name": "onStop"
+        }
+      ],
+      "memberof": "module:page.Page",
+      "longname": "module:page.Page#event:onPageInactive",
+      "scope": "instance"
+    },
+    {
+      "description": "页面注销时事件",
+      "kind": "event",
+      "name": "onPageStop",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "module:page.Page"
+            ]
+          },
+          "description": "页面实例",
+          "name": "page"
+        }
+      ],
+      "memberof": "module:page.Page",
+      "longname": "module:page.Page#event:onPageStop",
+      "scope": "instance"
+    },
+    {
+      "description": "页面 id，由 router 模块注入",
+      "kind": "attribute",
+      "name": "_id",
+      "memberof": "module:page.Page",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "scope": "static",
+      "longname": "module:page.Page._id"
+    },
+    {
+      "description": "App 的实例，由 router 模块注入",
+      "kind": "attribute",
+      "name": "app",
+      "memberof": "module:page.Page",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "scope": "static",
+      "longname": "module:page.Page.app"
+    },
+    {
+      "description": "页面的路由信息，由 router 模块注入",
+      "kind": "attribute",
+      "name": "route",
+      "memberof": "module:page.Page",
+      "type": {
+        "names": [
+          "module:page~PageRouteInfo"
+        ]
+      },
+      "scope": "static",
+      "longname": "module:page.Page.route"
+    },
+    {
+      "classdesc": "页面组件，是由页面管理器管理的，是对应路由的 component 的父组件。管理页面的属性方法和事件，管理页面的生命周期，并向 component 注入页面相关属性。",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Page",
+      "longname": "module:page.Page",
+      "memberof": "module:page"
+    },
+    {
+      "description": "页面 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:page.Page#_id",
+      "kind": "member",
+      "memberof": "module:page.Page",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "app 实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:page.Page#app",
+      "kind": "member",
+      "memberof": "module:page.Page",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "页面框架的 dom 元素",
+      "type": {
+        "names": [
+          "element"
+        ]
+      },
+      "name": "frame",
+      "longname": "module:page.Page#frame",
+      "kind": "member",
+      "memberof": "module:page.Page",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "通过子页面的名字获取当前页面的子页面实例",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "子页面名称",
+          "name": "subName"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:page.Page"
+            ]
+          },
+          "description": "子页面实例"
+        }
+      ],
+      "name": "getSubPage",
+      "longname": "module:page.Page#getSubPage",
+      "kind": "function",
+      "memberof": "module:page.Page",
+      "scope": "instance"
+    },
+    {
+      "description": "子页面获取父页面的实例",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:page.Page"
+            ]
+          },
+          "description": "父页面实例"
+        }
+      ],
+      "name": "getParrentPage",
+      "longname": "module:page.Page#getParrentPage",
+      "kind": "function",
+      "memberof": "module:page.Page",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "页面获取前一页面的实例",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:page.Page"
+            ]
+          },
+          "description": "父页面实例"
+        }
+      ],
+      "name": "getPrevPage",
+      "longname": "module:page.Page#getPrevPage",
+      "kind": "function",
+      "memberof": "module:page.Page",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "动态建立页面 action 函数，*注：* 动态创建一般是在 render 中，渲染时会多次建立，有消耗，建议在 controller 中定义为好",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "nullable": false,
+          "description": "action 函数",
+          "name": "func"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "nullable": true,
+          "description": "action 名称，为空则生成随机名称",
+          "name": "name"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "页面 action 函数"
+        }
+      ],
+      "name": "action",
+      "longname": "module:page.Page#action",
+      "kind": "function",
+      "memberof": "module:page.Page",
+      "scope": "instance"
+    },
+    {
+      "kind": "module",
+      "name": "plugins",
+      "longname": "module:plugins"
+    },
+    {
+      "description": "插件的声明函数",
+      "kind": "typedef",
+      "name": "PluginDefineFunction",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "description": "App 实例",
+          "name": "app"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "variable": true,
+          "description": "插件的参数",
+          "name": "args"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:plugins~PluginDefine"
+            ]
+          },
+          "description": "插件的声明对象"
+        }
+      ],
+      "longname": "module:plugins~PluginDefineFunction",
+      "scope": "inner",
+      "memberof": "module:plugins"
+    },
+    {
+      "description": "插件的声明对象",
+      "kind": "typedef",
+      "name": "PluginDefine",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "nullable": true,
+          "description": "插件名称",
+          "name": "_id"
+        },
+        {
+          "type": {
+            "names": [
+              "string",
+              "Array.<string>"
+            ]
+          },
+          "nullable": true,
+          "description": "依赖的插件列表",
+          "name": "_dependencies"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "nullable": true,
+          "description": "app 或者 当前插件的事件处理函数",
+          "name": "onXXX"
+        },
+        {
+          "type": {
+            "names": [
+              "module:state~StateDefine"
+            ]
+          },
+          "nullable": true,
+          "description": "声明的数据单元",
+          "name": "stateXXX"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "nullable": true,
+          "description": "声明的属性或者方法",
+          "name": "xxx"
+        }
+      ],
+      "longname": "module:plugins~PluginDefine",
+      "scope": "inner",
+      "memberof": "module:plugins"
+    },
+    {
+      "description": "插件的实例对象",
+      "kind": "typedef",
+      "name": "PluginInstance",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "插件实例的 id，声明的 id 或者安装时生成的唯一运行 id",
+          "name": "_id"
+        },
+        {
+          "type": {
+            "names": [
+              "module:state.State"
+            ]
+          },
+          "description": "插件的数据单元实例",
+          "name": "stateXXX"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "插件的属性或者方法",
+          "name": "xxx"
+        }
+      ],
+      "longname": "module:plugins~PluginInstance",
+      "scope": "inner",
+      "memberof": "module:plugins"
+    },
+    {
+      "description": "新的插件已经被添加",
+      "kind": "event",
+      "name": "onPluginAdd",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "module:plugins~PluginInstance"
+            ]
+          },
+          "description": "插件的实例",
+          "name": "plugin"
+        }
+      ],
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onPluginAdd",
+      "scope": "instance"
+    },
+    {
+      "description": "插件已经被移除",
+      "kind": "event",
+      "name": "onPluginRemove",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "插件的 id",
+          "name": "_id"
+        }
+      ],
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onPluginRemove",
+      "scope": "instance"
+    },
+    {
+      "description": "插件即将安装",
+      "kind": "event",
+      "name": "onPluginMount",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "description": "App 实例",
+          "name": "app"
+        },
+        {
+          "type": {
+            "names": [
+              "module:plugins~PluginInstance"
+            ]
+          },
+          "description": "插件的实例",
+          "name": "plugin"
+        }
+      ],
+      "memberof": "module:plugins~PluginInstance",
+      "longname": "module:plugins~PluginInstance#event:onPluginMount",
+      "scope": "instance"
+    },
+    {
+      "description": "插件移除完成",
+      "kind": "event",
+      "name": "onPluginUnmount",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "description": "App 实例",
+          "name": "app"
+        },
+        {
+          "type": {
+            "names": [
+              "module:plugins~PluginInstance"
+            ]
+          },
+          "description": "插件的实例",
+          "name": "plugin"
+        }
+      ],
+      "memberof": "module:plugins~PluginInstance",
+      "longname": "module:plugins~PluginInstance#event:onPluginUnmount",
+      "scope": "instance"
+    },
+    {
+      "classdesc": "App 插件管理模块，提供 App 通过插件的扩展的能力",
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Plugins",
+      "longname": "module:plugins.Plugins",
+      "kind": "class",
+      "memberof": "module:plugins",
+      "description": "app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "name": "app"
+        }
+      ]
+    },
+    {
+      "description": "App 的实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:plugins.Plugins#app",
+      "kind": "member",
+      "memberof": "module:plugins.Plugins",
+      "scope": "instance",
+      "defaultvalue": "app"
+    },
+    {
+      "description": "模块的 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:plugins.Plugins#_id",
+      "kind": "member",
+      "memberof": "module:plugins.Plugins",
+      "scope": "instance"
+    },
+    {
+      "description": "通过插件 id 获取插件",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "插件 id，默认为 App 插件",
+          "name": "_id"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:plugins~PluginInstance"
+            ]
+          },
+          "description": "插件实例"
+        }
+      ],
+      "name": "getPluginById",
+      "longname": "module:plugins.Plugins#getPluginById",
+      "kind": "function",
+      "memberof": "module:plugins.Plugins",
+      "scope": "instance"
+    },
+    {
+      "description": "通过插件运行 id 获取插件",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "插件运行 id",
+          "name": "_id"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:plugins~PluginInstance"
+            ]
+          },
+          "description": "插件实例"
+        }
+      ],
+      "name": "getPluginByInstanceId",
+      "longname": "module:plugins.Plugins#getPluginByInstanceId",
+      "kind": "function",
+      "memberof": "module:plugins.Plugins",
+      "scope": "instance"
+    },
+    {
+      "description": "安装插件",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:plugins~PluginDefine",
+              "module:plugins~PluginDefineFunction"
+            ]
+          },
+          "description": "插件声明对象",
+          "name": "plugin"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "variable": true,
+          "description": "插件的参数",
+          "name": "args"
+        }
+      ],
+      "name": "add",
+      "longname": "module:plugins.Plugins#add",
+      "kind": "function",
+      "memberof": "module:plugins.Plugins",
+      "scope": "instance"
+    },
+    {
+      "description": "移除插件",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "插件实例 id",
+          "name": "_id"
+        }
+      ],
+      "name": "remove",
+      "longname": "module:plugins.Plugins#remove",
+      "kind": "function",
+      "memberof": "module:plugins.Plugins",
+      "scope": "instance"
+    },
+    {
+      "kind": "module",
+      "name": "render",
+      "longname": "module:render"
+    },
+    {
+      "classdesc": "App render 模块，负责 react 根组件描绘和 dom 控制，以及提供通用的描绘工具函数",
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Render",
+      "longname": "module:render.Render",
+      "kind": "class",
+      "memberof": "module:render",
+      "description": "app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "name": "app"
+        }
+      ]
+    },
+    {
+      "description": "App 的实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:render.Render#app",
+      "kind": "member",
+      "memberof": "module:render.Render",
+      "scope": "instance",
+      "defaultvalue": "app"
+    },
+    {
+      "description": "模块的 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:render.Render#_id",
+      "kind": "member",
+      "memberof": "module:render.Render",
+      "scope": "instance"
+    },
+    {
+      "description": "react 根组件",
+      "type": {
+        "names": [
+          "component",
+          "element"
+        ]
+      },
+      "name": "component",
+      "longname": "module:render.Render#component",
+      "kind": "member",
+      "memberof": "module:render.Render",
+      "scope": "instance",
+      "defaultvalue": ""
+    },
+    {
+      "description": "用于等待中显示的 dom 元素，用户可设置，默认使用 react 根元素渲染前的根元素上的元素，如果没有则建立一个默认的元素",
+      "type": {
+        "names": [
+          "element"
+        ]
+      },
+      "name": "domWaiting",
+      "longname": "module:render.Render#domWaiting",
+      "kind": "member",
+      "memberof": "module:render.Render",
+      "scope": "instance",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置因错误关闭 react 绘制的标志位",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "stopForRenderError",
+      "longname": "module:render.Render#stopForRenderError",
+      "kind": "member",
+      "memberof": "module:render.Render",
+      "scope": "instance",
+      "defaultvalue": ""
+    },
+    {
+      "description": "react 渲染到的根元素，通过 app.options.rootId 配置，默认使用 '#root' 获取根元素",
+      "type": {
+        "names": [
+          "component",
+          "element"
+        ]
+      },
+      "name": "domRoot",
+      "longname": "module:render.Render#domRoot",
+      "kind": "member",
+      "memberof": "module:render.Render",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "错误处理，严重级别，将停止 react 对跟元素的绘制，并将错误信息显示在跟元素上",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "error",
+              "string",
+              "object"
+            ]
+          },
+          "description": "错误信息",
+          "name": "message"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "参数信息，包括错误的标题 title",
+          "name": "options"
+        }
+      ],
+      "name": "critical",
+      "longname": "module:render.Render#critical",
+      "kind": "function",
+      "memberof": "module:render.Render",
+      "scope": "instance"
+    },
+    {
+      "description": "错误处理，普通级别，将跳转到路由模块的错误页面，可返回或者刷新",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "error",
+              "string",
+              "object"
+            ]
+          },
+          "description": "错误信息",
+          "name": "message"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "参数信息，包括错误的标题 title，页面 id",
+          "name": "options"
+        }
+      ],
+      "name": "panic",
+      "longname": "module:render.Render#panic",
+      "kind": "function",
+      "memberof": "module:render.Render",
+      "scope": "instance"
+    },
+    {
+      "description": "显示错误信息，未实现功能，由插件负责功能完善",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number",
+              "string",
+              "component",
+              "element"
+            ]
+          },
+          "description": "提示的内容",
+          "name": "message"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "参数，与实现者具体定义",
+          "name": ""
+        }
+      ],
+      "name": "error",
+      "longname": "module:render.Render#error",
+      "kind": "function",
+      "memberof": "module:render.Render",
+      "scope": "instance"
+    },
+    {
+      "description": "显示提示信息，未实现功能，由插件负责功能完善",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number",
+              "string",
+              "component",
+              "element"
+            ]
+          },
+          "description": "提示的内容",
+          "name": "content"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "参数，与实现者具体定义",
+          "name": "options"
+        }
+      ],
+      "name": "notice",
+      "longname": "module:render.Render#notice",
+      "kind": "function",
+      "memberof": "module:render.Render",
+      "scope": "instance"
+    },
+    {
+      "description": "显示阻塞式遮罩，未实现功能，由插件负责功能完善",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "开启或者关闭",
+          "name": "show"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "参数，与实现者具体定义",
+          "name": "options"
+        }
+      ],
+      "name": "mask",
+      "longname": "module:render.Render#mask",
+      "kind": "function",
+      "memberof": "module:render.Render",
+      "scope": "instance"
+    },
+    {
+      "description": "显示进度条，未实现功能，由插件负责功能完善",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "开启或者关闭",
+          "name": "show"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "参数，与实现者具体定义",
+          "name": "options"
+        }
+      ],
+      "name": "loading",
+      "longname": "module:render.Render#loading",
+      "kind": "function",
+      "memberof": "module:render.Render",
+      "scope": "instance"
+    },
+    {
+      "description": "限制 render 宽度",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "number"
+            ]
+          },
+          "name": "限制的宽度，为空或者0，取消限制"
+        }
+      ],
+      "name": "limitWidth",
+      "longname": "module:render.Render#limitWidth",
+      "kind": "function",
+      "memberof": "module:render.Render",
+      "scope": "instance"
+    },
+    {
+      "kind": "module",
+      "name": "router",
+      "longname": "module:router"
+    },
+    {
+      "description": "路由声明对象",
+      "kind": "typedef",
+      "name": "RouteDefine",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "component"
+            ]
+          },
+          "nullable": false,
+          "description": "页面的 component",
+          "name": "component"
+        },
+        {
+          "type": {
+            "names": [
+              "module:page~PageControllerDefine"
+            ]
+          },
+          "nullable": true,
+          "description": "页面的 controller",
+          "name": "controller"
+        },
+        {
+          "type": {
+            "names": [
+              "object",
+              "Array.<string>"
+            ]
+          },
+          "nullable": true,
+          "description": "嵌套的子页面，字符串数组表示子页面名称与页面路由名称相同",
+          "name": "subPageInfos"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "nullable": true,
+          "description": "懒加载函数，如果路由声明对象包含此参数，则不显示页面，而是显示加载页面，并调用并同步等待懒加载函数返回，再刷新页面。用户需要在懒加载函数中，返回路由声明对象。",
+          "name": "loader"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "定制的路由属性",
+          "name": "xxx"
+        }
+      ],
+      "examples": [
+        "***懒加载***\n```js\n{\n  'dynamic': {\n     loader: ()=>(new Promise((resolve)=>setTimeout(()=>resolve({\n       component: ()=><div>dynamic page</div>,\n     }) ,1000)));\n  },\n}\n```",
+        "***子页面***\n```js\n{\n  'home': { component: Home, subPageInfos: ['sub1', 'sub2']},\n  'sub1': Sub1,\n  'sub2': Sub2,\n}\n```"
+      ],
+      "longname": "module:router~RouteDefine",
+      "scope": "inner",
+      "memberof": "module:router"
+    },
+    {
+      "description": "路径的描述信息",
+      "kind": "typedef",
+      "name": "PathInfo",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "路径字符串",
+          "name": "pathname"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "状态数据",
+          "name": "state"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "查询字符串",
+          "name": "search"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "锚点字符串",
+          "name": "hash"
+        }
+      ],
+      "longname": "module:router~PathInfo",
+      "scope": "inner",
+      "memberof": "module:router"
+    },
+    {
+      "description": "路径条目的描述信息",
+      "kind": "typedef",
+      "name": "PathItem",
+      "type": {
+        "names": [
+          "string",
+          "object",
+          "Array.<string>"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "状态数据",
+          "name": "state"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "查询字符串键值对对象",
+          "name": "query"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "锚点字符串",
+          "name": "hash"
+        }
+      ],
+      "longname": "module:router~PathItem",
+      "scope": "inner",
+      "memberof": "module:router"
+    },
+    {
+      "description": "页面的描述信息",
+      "kind": "typedef",
+      "name": "PageInfo",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面 id",
+          "name": "_id"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面的前一页面的 id",
+          "name": "_idPrev"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面的父页面的 id",
+          "name": "_idParent"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面对应的路径字符串",
+          "name": "pathName"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面的名称",
+          "name": "pageName"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面的路径字符串的当前页面片段",
+          "name": "pagePathName"
+        },
+        {
+          "type": {
+            "names": [
+              "Array.<string>"
+            ]
+          },
+          "description": "页面的路径字符串参数",
+          "name": "pageParams"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "路由的名称，路由名称上是包含参数定义的名称",
+          "name": "routeName"
+        },
+        {
+          "type": {
+            "names": [
+              "module:router~RouteDefine"
+            ]
+          },
+          "description": "路由声明对象",
+          "name": "routeDefine"
+        },
+        {
+          "type": {
+            "names": [
+              "Array.<string>"
+            ]
+          },
+          "description": "路由的配置参数",
+          "name": "routeParams"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "状态数据",
+          "name": "state"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "查询字符串数据键值对",
+          "name": "query"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面的锚点字符串",
+          "name": "hash"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "页面参数键值对",
+          "name": "params"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否是子页面",
+          "name": "isSubPage"
+        },
+        {
+          "type": {
+            "names": [
+              "Array.<module:router~PageInfo>"
+            ]
+          },
+          "description": "子页面描述信息集合",
+          "name": "subPageInfos"
+        },
+        {
+          "type": {
+            "names": [
+              "Array.<module:router~PopLayerInfo>"
+            ]
+          },
+          "description": "所欲页面的弹出层集合",
+          "name": "popLayerInfos"
+        }
+      ],
+      "longname": "module:router~PageInfo",
+      "scope": "inner",
+      "memberof": "module:router"
+    },
+    {
+      "description": "弹出层配置参数",
+      "kind": "typedef",
+      "name": "PopLayerOptions",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "nullable": true,
+          "description": "指定 id，代替默认 id 生成规则",
+          "name": "_id"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "nullable": true,
+          "description": "指定页面 id，设置弹出层所属页面",
+          "name": "_idPage"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "nullable": true,
+          "description": "是否是模态，模态将获取键盘焦点",
+          "name": "isModal"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "nullable": true,
+          "description": "指定是 content 是子组件，还是内容直接渲染",
+          "name": "isContentComponent"
+        }
+      ],
+      "longname": "module:router~PopLayerOptions",
+      "scope": "inner",
+      "memberof": "module:router"
+    },
+    {
+      "description": "弹出层的描述信息",
+      "kind": "typedef",
+      "name": "PopLayerInfo",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "component",
+              "string",
+              "number",
+              "element"
+            ]
+          },
+          "description": "显示的内容或者组件",
+          "name": "content"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "属性",
+          "name": "props"
+        },
+        {
+          "type": {
+            "names": [
+              "module:router~PopLayerOptions"
+            ]
+          },
+          "description": "弹出层配置参数",
+          "name": "options"
+        }
+      ],
+      "longname": "module:router~PopLayerInfo",
+      "scope": "inner",
+      "memberof": "module:router"
+    },
+    {
+      "description": "路由信息更新，进行路由组件重画",
+      "kind": "event",
+      "name": "onRouterUpdate",
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onRouterUpdate",
+      "scope": "instance"
+    },
+    {
+      "description": "路由匹配到页面触发事件",
+      "kind": "event",
+      "name": "onRouteMatch",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "module:router~PageInfo"
+            ]
+          },
+          "description": "页面信息",
+          "name": "pageInfo"
+        },
+        {
+          "type": {
+            "names": [
+              "module:router~PathInfo"
+            ]
+          },
+          "description": "路径信息",
+          "name": "location"
+        }
+      ],
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onRouteMatch",
+      "scope": "instance"
+    },
+    {
+      "description": "路由错误事件，由于地址与路由表对应路由的参数配置不匹配",
+      "kind": "event",
+      "name": "onRouteErrorNoParam",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "参数名称",
+          "name": "name"
+        },
+        {
+          "type": {
+            "names": [
+              "module:router~PageInfo"
+            ]
+          },
+          "description": "页面信息",
+          "name": "pageInfo"
+        },
+        {
+          "type": {
+            "names": [
+              "module:router~PathInfo"
+            ]
+          },
+          "description": "路径信息",
+          "name": "location"
+        }
+      ],
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onRouteErrorNoParam",
+      "scope": "instance"
+    },
+    {
+      "description": "路由错误事件，由于地址与路由表不匹配",
+      "kind": "event",
+      "name": "onRouteErrorNoRoute",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面名称",
+          "name": "pageName"
+        },
+        {
+          "type": {
+            "names": [
+              "module:router~PageInfo"
+            ]
+          },
+          "description": "页面信息",
+          "name": "pageInfo"
+        },
+        {
+          "type": {
+            "names": [
+              "module:router~PathInfo"
+            ]
+          },
+          "description": "路径信息",
+          "name": "location"
+        }
+      ],
+      "memberof": "module:app.App",
+      "longname": "module:app.App#event:onRouteErrorNoRoute",
+      "scope": "instance"
+    },
+    {
+      "classdesc": "app 的页面管理器，负责路由映射，页面管理，弹出层管理，导航操作等功能\n\n一些约定：\n\n1. 子页面不能再拥有子页面\n1. 子页面的可见性由其父页面的可见性决定",
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Router",
+      "longname": "module:router.Router",
+      "kind": "class",
+      "memberof": "module:router",
+      "description": "app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "name": "app"
+        }
+      ]
+    },
+    {
+      "description": "App 的实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:router.Router#app",
+      "kind": "member",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "defaultvalue": "app"
+    },
+    {
+      "description": "模块的 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:router.Router#_id",
+      "kind": "member",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "懒加载页面的加载中组件",
+      "type": {
+        "names": [
+          "component"
+        ]
+      },
+      "name": "PageLoading",
+      "longname": "module:router.Router#PageLoading",
+      "kind": "member",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "defaultvalue": "PageLoading"
+    },
+    {
+      "description": "路由错误或者页面错误时的错误显示组件",
+      "type": {
+        "names": [
+          "component"
+        ]
+      },
+      "name": "PageError",
+      "longname": "module:router.Router#PageError",
+      "kind": "member",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "defaultvalue": "PageError"
+    },
+    {
+      "description": "设置导航时是否传递之前的查询字符串到新页面",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "passQuery",
+      "longname": "module:router.Router#passQuery",
+      "kind": "member",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置导航时是否传递之前的状态数据到新页面",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "passState",
+      "longname": "module:router.Router#passState",
+      "kind": "member",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置导航时是否传递之前的页面参数到新页面",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "passParams",
+      "longname": "module:router.Router#passParams",
+      "kind": "member",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "defaultvalue": ""
+    },
+    {
+      "description": "获取页面实例",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "number"
+            ]
+          },
+          "nullable": true,
+          "description": "获取参数\n\n1. string：获取指定 id 的页面\n1. number：获取指定序号的页面\n1. 空：获取顶层页面",
+          "name": "_id"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:page.Page"
+            ]
+          },
+          "description": "页面实例"
+        }
+      ],
+      "name": "getPage",
+      "longname": "module:router.Router#getPage",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "获取页面实例集合",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "Array.<module:page.Page>"
+            ]
+          },
+          "description": "页面实例"
+        }
+      ],
+      "name": "getPages",
+      "longname": "module:router.Router#getPages",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "生成弹出层 id",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:router~PopLayerOptions"
+            ]
+          },
+          "description": "配置参数",
+          "name": "options"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "弹出层 id"
+        }
+      ],
+      "name": "genPopLayerId",
+      "longname": "module:router.Router#genPopLayerId",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "添加弹出层",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number",
+              "string",
+              "component",
+              "element"
+            ]
+          },
+          "description": "内容",
+          "name": "content"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "组件属性",
+          "name": "props"
+        },
+        {
+          "type": {
+            "names": [
+              "module:router~PopLayerOptions"
+            ]
+          },
+          "description": "弹出层配置",
+          "name": "options"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "弹出层 id"
+        }
+      ],
+      "name": "addPopLayer",
+      "longname": "module:router.Router#addPopLayer",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "移除弹出层",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "nullable": false,
+          "description": "弹出层 id",
+          "name": "_id"
+        }
+      ],
+      "name": "removePopLayer",
+      "longname": "module:router.Router#removePopLayer",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "获取弹出层信息",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "弹出层 id",
+          "name": "_id"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:router~PopLayerInfo"
+            ]
+          }
+        }
+      ],
+      "name": "getPopLayerInfo",
+      "longname": "module:router.Router#getPopLayerInfo",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "获取全部弹出层信息集合",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "Array.<module:router~PopLayerInfo>"
+            ]
+          }
+        }
+      ],
+      "name": "getPopLayerInfos",
+      "longname": "module:router.Router#getPopLayerInfos",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "向路由表增加路由",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "路由名称",
+          "name": "name"
+        },
+        {
+          "type": {
+            "names": [
+              "module:router~RouteDefine",
+              "component"
+            ]
+          },
+          "description": "路由配置对象",
+          "name": "route"
+        }
+      ],
+      "name": "addRoute",
+      "longname": "module:router.Router#addRoute",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "addRoute 的批量版本，",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "路由表键值对\n\n- 键是路由名称，路由名称是包含参数定义的字符串，如果首字母是 `/`，则同时使用为默认根页面\n- 值是路由配置对象，参见 addRoute",
+          "name": "routes"
+        }
+      ],
+      "name": "setRoutes",
+      "longname": "module:router.Router#setRoutes",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "获取路由表",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "- 路由表"
+        }
+      ],
+      "name": "getRoutes",
+      "longname": "module:router.Router#getRoutes",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "获取指定路由名称的路由配置对象",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "路由名称",
+          "name": "routeName"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:router~RouteDefine"
+            ]
+          }
+        }
+      ],
+      "name": "getRouteByRouteName",
+      "longname": "module:router.Router#getRouteByRouteName",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "获取指定路由名称的路由配置对象",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面名称",
+          "name": "pageName"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:router~RouteDefine"
+            ]
+          }
+        }
+      ],
+      "name": "getRouteByPageName",
+      "longname": "module:router.Router#getRouteByPageName",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "为路由模块添加导航函数，即 pushXXX 和 replaceXXX 函数",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "页面名称",
+          "name": "pageName"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "导航函数名称",
+          "name": "navigatorName"
+        }
+      ],
+      "name": "addNavigatorFunction",
+      "longname": "module:router.Router#addNavigatorFunction",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "获取历史记录的级数",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "级数"
+        }
+      ],
+      "name": "getHistoryCount",
+      "longname": "module:router.Router#getHistoryCount",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "判断是否在根页面",
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否跟页面"
+        }
+      ],
+      "name": "isRootPath",
+      "longname": "module:router.Router#isRootPath",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "判断是否具有键盘焦点",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "页面或者弹出层 id",
+          "name": "_id"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否具有键盘焦点"
+        }
+      ],
+      "name": "isFocus",
+      "longname": "module:router.Router#isFocus",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "判断是否是顶层",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "页面或者弹出层 id",
+          "name": "_id"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否顶层"
+        }
+      ],
+      "name": "isActive",
+      "longname": "module:router.Router#isActive",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "记录将要被阻塞的路径",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:router~PathInfo",
+              "string",
+              "function"
+            ]
+          },
+          "nullable": true,
+          "description": "将被阻塞的路径，为空则使用当前路径",
+          "name": "_block"
+        }
+      ],
+      "name": "block",
+      "longname": "module:router.Router#block",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "恢复之前被阻塞的路径",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:router~PathInfo",
+              "string"
+            ]
+          },
+          "description": "要恢复的路径，为空则使用 block 保存的路径",
+          "name": "location"
+        }
+      ],
+      "name": "restore",
+      "longname": "module:router.Router#restore",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "解析路径参数",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:router~PathItem"
+            ]
+          },
+          "variable": true,
+          "description": "路径参数 \n\n1. 字符串表示页面路由名称，其中有两个特殊页面名称， '/' 表示， '..'\n1. 如果参数是数组表示带参数的页面，数组第一个元素表示页面名称路由，其他元素为参数\n1. 如果参数是对象，则设为路径信息的，state，query，hash 信息",
+          "name": "args"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:router~PathInfo"
+            ]
+          },
+          "description": "返回路径描述对象"
+        }
+      ],
+      "name": "getPathInfo",
+      "longname": "module:router.Router#getPathInfo",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "获取路径名称，但不跳转或者替换，参数参见 getPathInfo",
+      "name": "getPathName",
+      "longname": "module:router.Router#getPathName",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "获取 url，但不跳转或者替换，参数参见 getPathInfo",
+      "name": "getUrl",
+      "longname": "module:router.Router#getUrl",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "跳转路径，参数参见 getPathInfo",
+      "name": "push",
+      "longname": "module:router.Router#push",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "替换路径，参数参见 getPathInfo",
+      "name": "replace",
+      "longname": "module:router.Router#replace",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "在浏览历史记录中返回",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "返回的级数",
+          "name": "step",
+          "defaultvalue": 1
+        }
+      ],
+      "name": "back",
+      "longname": "module:router.Router#back",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "强制刷新全部页面",
+      "name": "refresh",
+      "longname": "module:router.Router#refresh",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "跳转到根页面",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "variable": true,
+          "description": "页面的参数",
+          "name": "args"
+        }
+      ],
+      "name": "pushRoot",
+      "longname": "module:router.Router#pushRoot",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "替换到根页面",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "variable": true,
+          "description": "页面的参数",
+          "name": "args"
+        }
+      ],
+      "name": "replaceRoot",
+      "longname": "module:router.Router#replaceRoot",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "description": "跳转到错误显示页面",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "error",
+              "string",
+              "object"
+            ]
+          },
+          "description": "错误内容",
+          "name": "message"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "错误标题",
+          "name": "title"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "错误目标 id",
+          "name": "_id"
+        }
+      ],
+      "name": "error",
+      "longname": "module:router.Router#error",
+      "kind": "function",
+      "memberof": "module:router.Router",
+      "scope": "instance"
+    },
+    {
+      "kind": "module",
+      "name": "state",
+      "longname": "module:state"
+    },
+    {
+      "description": "数据单元的声明对象",
+      "kind": "typedef",
+      "name": "StateDefine",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "nullable": true,
+          "description": "覆盖默认的实例 id 生成规则生成的 id",
+          "name": "id"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "{}",
+          "description": "指定数据单元中数据的初始值",
+          "name": "initialization"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "nullable": true,
+          "description": "拥有者生命周期结束时不删除数据单元",
+          "name": "removeOnStop"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "nullable": true,
+          "description": "数据更新时，采用深复制方案，参见 `app.utils.objectUpdate`",
+          "name": "deepCopy"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "nullable": true,
+          "description": "数据更新时，采用的数据追加方案，参见 `app.utils.objectUpdate`",
+          "name": "append"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "nullable": true,
+          "description": "注册 app 的事件处理函数",
+          "name": "onXXX"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "nullable": true,
+          "description": "注册该数据单元的事件处理函数",
+          "name": "onStateXXX"
+        },
+        {
+          "type": {
+            "names": [
+              "class",
+              "object"
+            ]
+          },
+          "nullable": true,
+          "description": "用于扩展和定制数据单元\n\n- 参数为 class 则使用该继承与 State 的数据单元\n- 参数为 object，对象中的 constructor 为数据单元类，其他将覆盖数据对象实例，实现定制",
+          "name": "state"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "nullable": true,
+          "description": "声明的属性或者方法",
+          "name": "xxx"
+        }
+      ],
+      "longname": "module:state~StateDefine",
+      "scope": "inner",
+      "memberof": "module:state"
+    },
+    {
+      "description": "数据单元创建时事件",
+      "kind": "event",
+      "name": "onStateStart",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "拥有者 id",
+          "name": "_id"
+        }
+      ],
+      "memberof": "module:state.State",
+      "longname": "module:state.State#event:onStateStart",
+      "scope": "instance"
+    },
+    {
+      "description": "数据单元注销时事件",
+      "kind": "event",
+      "name": "onStateStop",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "拥有者 id",
+          "name": "_id"
+        }
+      ],
+      "memberof": "module:state.State",
+      "longname": "module:state.State#event:onStateStop",
+      "scope": "instance"
+    },
+    {
+      "description": "数据单元数据更新中触发事件，如果事件处理函数返回非假数据，则使用该数据更新数据单元",
+      "kind": "event",
+      "name": "onStateUpdating",
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "更新后的数据",
+          "name": "nextData"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "更新后的数据",
+          "name": "prevData"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "调用更新函数时的数据",
+          "name": "data"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "state 的参数",
+          "name": "options"
+        }
+      ],
+      "memberof": "module:state.State",
+      "longname": "module:state.State#event:onStateUpdating",
+      "scope": "instance"
+    },
+    {
+      "description": "数据单元更新完成时触发事件，参数同 onStateUpdating",
+      "kind": "event",
+      "name": "onStateUpdated",
+      "memberof": "module:state.State",
+      "longname": "module:state.State#event:onStateUpdated",
+      "scope": "instance"
+    },
+    {
+      "classdesc": "数据单元拥有唯一 id，每个数据单元通过 id 对应 context 数据仓库的一个数据块，是对数据的包装，提供读取，更新等操作",
+      "exportdefault": true,
+      "scope": "static",
+      "name": "State",
+      "longname": "module:state.State",
+      "kind": "class",
+      "memberof": "module:state",
+      "description": "不用于直接构造，而是通过定义拥有者定义数据单元声明对象，由拥有者通过数据单元构建函数构造",
+      "params": []
+    },
+    {
+      "description": "通过 state 的实例 id 获取 state 实例",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "state 实例 id",
+          "name": "_id"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:state.State"
+            ]
+          },
+          "description": "state 实例"
+        }
+      ],
+      "name": "getStateById",
+      "longname": "module:state.State.getStateById",
+      "kind": "function",
+      "memberof": "module:state.State",
+      "scope": "static"
+    },
+    {
+      "description": "通过 state 实例在其所有者上的属性名和其所有者 id 获取 state 实例",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "state 在所有者上的属性名",
+          "name": "stateKey"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "state 所有者 id",
           "name": "ownerId"
         }
       ],
@@ -808,14 +4425,60 @@
         {
           "type": {
             "names": [
-              "moudle:state.State"
+              "module:state.State"
             ]
           },
           "description": "获取的 State 实例"
         }
       ],
-      "name": "getState",
-      "longname": "module:state.State.getState",
+      "name": "getStateByOwner",
+      "longname": "module:state.State.getStateByOwner",
+      "kind": "function",
+      "memberof": "module:state.State",
+      "scope": "static"
+    },
+    {
+      "description": "创建数据单元",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "description": "App 的实例",
+          "name": "app"
+        },
+        {
+          "type": {
+            "names": [
+              "module:state.StateDefine"
+            ]
+          },
+          "description": "数据单元声明对象",
+          "name": "aoptions"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "state 在所有者上的属性名",
+          "name": "stateKey"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "state 所有者 id",
+          "name": "ownerId"
+        }
+      ],
+      "name": "createState",
+      "longname": "module:state.State.createState",
       "kind": "function",
       "memberof": "module:state.State",
       "scope": "static"
@@ -1005,7 +4668,7 @@
       "async": true
     },
     {
-      "description": "存放全部 state 的集合",
+      "description": "存放全部数据单元的集合",
       "type": {
         "names": [
           "object"
@@ -1027,9 +4690,6 @@
       "classdesc": "App Utils 模块，提供一些工具函数",
       "exportdefault": true,
       "scope": "static",
-      "examples": [
-        "```js\napp.utils.captilaze('abc'); // 'Abc' \n```"
-      ],
       "name": "Utils",
       "longname": "module:utils.Utils",
       "kind": "class",
@@ -1039,7 +4699,7 @@
         {
           "type": {
             "names": [
-              "moudle:app.App"
+              "module:app.App"
             ]
           },
           "name": "app"
@@ -1061,7 +4721,20 @@
       "defaultvalue": "app"
     },
     {
-      "description": "组合由对象或者函数组成的参数集合",
+      "description": "模块的 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:utils.Utils#_id",
+      "kind": "member",
+      "memberof": "module:utils.Utils",
+      "scope": "instance"
+    },
+    {
+      "description": "合并由对象或者函数组成的参数集合",
       "params": [
         {
           "type": {
@@ -1135,7 +4808,7 @@
         }
       ],
       "examples": [
-        "```js\nlet obj = {a: {b:1}}\napp.utils.pathSet(obj, '.a.b', 2);\n```"
+        "```js\nlet obj = {a: {b:1}}\napp.utils.pathSet(obj, '.a.b', 2); // {a: {b:2}}\n```"
       ],
       "name": "pathSet",
       "longname": "module:utils.Utils#pathSet",
@@ -1184,7 +4857,7 @@
       "scope": "instance"
     },
     {
-      "description": "将 error 实例，字符串，错误错误对象(需要包含 message 字段)，转换为字符串",
+      "description": "将 error 实例，字符串，包含 message 字段的对象，安全转换为错误信息字符串",
       "params": [
         {
           "type": {
@@ -1412,6 +5085,9 @@
           },
           "description": "转换后的字符串"
         }
+      ],
+      "examples": [
+        "```js\napp.utils.captilaze('abc'); // 'Abc' \n```"
       ],
       "name": "captilaze",
       "longname": "module:utils.Utils#captilaze",

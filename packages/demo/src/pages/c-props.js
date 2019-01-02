@@ -31,7 +31,7 @@ let Component = aprops=>{
 
 
 let Controller = app=>({
-  stateCommonProps: app.plugins.getByName(app._id).stateCommonProps._id,
+  stateCommonProps: app.plugins.getPluginById().stateCommonProps._id,
 });
 
 

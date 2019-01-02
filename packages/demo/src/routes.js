@@ -2,20 +2,19 @@ import React from 'react';
 
 
 let PageInfo = props=>{
-  let { app, route:{name, _idParent, params, query, state, embed}={} } = props;
+  let { app, route } = props;
 
   return (
-    <div className="scrollable-y-">
-      <h3>{name}({embed?'embed page':'not embed page'})</h3>
-      <p>parentId: {_idParent}</p>
-      <div className="margin-top-">
-        <h4>params</h4>
-        <div>{JSON.stringify(params)}</div>
-        <h4>query</h4>
-        <div>{query?JSON.stringify(query):'no query'}</div>
-        <h4>state</h4>
-        <div>{state?JSON.stringify(state):'no state'}</div>
-      </div>
+    <div className="scrollable-y- padding-a-">
+      <h3><button onClick={()=>app.router.back()}>back</button>page info</h3>
+      <hr />
+      {Object.entries(route).map(([k,v])=>{
+        if(k==='subPageInfos'||k==='popLayerInfos') return null;
+        if(k==='subPages') return <div>subPages: {Object.keys(v)}</div>;
+        if(k==='popLayers') return <div>popLayers count: {v.length}</div>;
+        return <div>{k}: {JSON.stringify(v)}</div>;
+      })}
+      <hr />
       <div className="margin-top-">
         <h4>navigator</h4>
         <button className="padding-a-xxs margin-bottom-" onClick={()=>app.router.push(['pageinfo', 'pp1'])}>push pageinfo pp1</button>
@@ -33,7 +32,7 @@ export default {
   'components:tab?': {
     title: false,
     component: require('./pages/components').default,
-    embeds: ['c_components', 'c_list', 'c_props', 'c_plugins' ],
+    subPages: ['c_components', 'c_list', 'c_props', 'c_plugins' ],
   },
   'c_components': {component: require('./pages/c-components').default, title: 'components show'},
   'c_list': {component: require('./pages/c-list').default, title: 'list show'},
@@ -47,11 +46,7 @@ export default {
   'pageinfo:subparam1?': PageInfo,
   'dynamic': {
     loader: ()=>{
-      return new Promise((resolve)=>setTimeout(()=>{
-        resolve({
-          component: ()=><div>page c</div>,
-        })
-      },1000));
+      return new Promise(resolve=>setTimeout(()=>{resolve({component: ()=><div>page c</div> })},1000));
     }
   },
 

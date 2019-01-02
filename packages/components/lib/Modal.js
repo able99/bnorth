@@ -291,7 +291,7 @@ var _default = {
 
         if (!Content) return;
 
-        var _id = app.router.getViewId(options);
+        var _id = app.router.genPopLayerId(options);
 
         state = state && app.State.createState(app, state === true ? undefined : state, 'state', _id);
         options._id = _id;
@@ -318,7 +318,7 @@ var _default = {
         };
 
         props.children = app.modal._createContent(_id, Content, state);
-        return app.router.addView(_react.default.createElement(Modal, null), props, options);
+        return app.router.addPopLayer(_react.default.createElement(Modal, null), props, options);
       },
       update: function update(_id, Content) {
         var _ref3 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
@@ -329,7 +329,7 @@ var _default = {
 
         if (!_id) return;
 
-        var _ref4 = app.router.getView(_id) || {},
+        var _ref4 = app.router.getPopLayerInfo(_id) || {},
             content = _ref4.content,
             _ref4$prevProps = _ref4.prevProps,
             prevProps = _ref4$prevProps === void 0 ? {} : _ref4$prevProps,
@@ -341,12 +341,12 @@ var _default = {
           children: app.modal._createContent(_id, Content, state)
         });
         options = (0, _objectSpread2.default)({}, prevOptions, options);
-        return app.router.addView(content, props, options);
+        return app.router.addPopLayer(content, props, options);
       },
       close: function close(_id) {
         if (!_id) return;
 
-        var _ref5 = app.router.getView(_id) || {},
+        var _ref5 = app.router.getPopLayerInfo(_id) || {},
             content = _ref5.content,
             props = _ref5.props,
             options = _ref5.options;
@@ -355,11 +355,11 @@ var _default = {
         props.in = false;
 
         props.onTransitionFinished = function () {
-          app.router.removeView(_id);
+          app.router.removePopLayer(_id);
           app.context.clear(_id);
         };
 
-        return app.router.addView(content, props, options);
+        return app.router.addPopLayer(content, props, options);
       }
     };
   },

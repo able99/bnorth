@@ -71,11 +71,11 @@ let mask = {
        * @returns {string} 弹出层 id
        */
       show: ({options={}, ...props}={})=>{
-        let _id = app.mask._id||app.router.getViewId(options);
+        let _id = app.mask._id||app.router.genPopLayerId(options);
         options._id = _id;
         options.isModal = true;
 
-        return app.mask._id = app.router.addView(<Mask /> , props, options);
+        return app.mask._id = app.router.addPopLayer(<Mask /> , props, options);
       },
 
       /**
@@ -84,16 +84,16 @@ let mask = {
        * @mount app.mask.close
        */
       close: ()=>{
-        let {content, props={}, options={}} = app.router.getView(app.mask._id)||{};
+        let {content, props={}, options={}} = app.router.getPopLayerInfo(app.mask._id)||{};
         if(!content) { app.mask._id = undefined; return }
 
         props.in = false;
         props.onTransitionFinished = ()=>{ 
-          app.router.removeView(app.mask._id); 
+          app.router.removePopLayer(app.mask._id); 
           app.mask._id = undefined; 
         }
 
-        return app.router.addView(content, props, options);
+        return app.router.addPopLayer(content, props, options);
       },
     };
 

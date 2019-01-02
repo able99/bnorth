@@ -13,12 +13,40 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
+/**
+ * @module
+ */
+
+/**
+ * App 日志模块，提供日志功能
+ * @exportdefault
+ */
 var Log =
 /*#__PURE__*/
 function () {
+  /**
+   * app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造
+   * @param {module:app.App} app 
+   */
   function Log(app) {
     (0, _classCallCheck2.default)(this, Log);
+
+    /**
+     * App 的实例
+     * @type {module:app.App}
+     */
     this.app = app;
+    /**
+     * 模块的 id
+     * @type {string}
+     */
+
+    this._id = app._id + '.log';
+    /**
+     * 日志的等级
+     * @type {string}
+     */
+
     this.level = 'debug';
   }
 
@@ -52,6 +80,11 @@ function () {
         (_console2 = console).log.apply(_console2, args);
       }
     }
+    /**
+     * 打印 verbose 级别日志
+     * @param  {...*} 日志 
+     */
+
   }, {
     key: "verbose",
     value: function verbose() {
@@ -61,6 +94,11 @@ function () {
 
       return this._log.apply(this, [1].concat(args));
     }
+    /**
+     * 打印 info 级别日志
+     * @param  {...*} 日志 
+     */
+
   }, {
     key: "info",
     value: function info() {
@@ -70,6 +108,11 @@ function () {
 
       return this._log.apply(this, [2].concat(args));
     }
+    /**
+     * 打印 debug 级别日志
+     * @param  {...*} 日志 
+     */
+
   }, {
     key: "debug",
     value: function debug() {
@@ -79,6 +122,11 @@ function () {
 
       return this._log.apply(this, [3].concat(args));
     }
+    /**
+     * 打印 warning 级别日志
+     * @param  {...*} 日志 
+     */
+
   }, {
     key: "warning",
     value: function warning() {
@@ -88,6 +136,11 @@ function () {
 
       return this._log.apply(this, [4].concat(args));
     }
+    /**
+     * 打印 error 级别日志
+     * @param  {...*} 日志 
+     */
+
   }, {
     key: "error",
     value: function error() {
@@ -97,6 +150,11 @@ function () {
 
       return this._log.apply(this, [5].concat(args));
     }
+    /**
+     * 不受限制的打印日志
+     * @param  {...*} 日志 
+     */
+
   }, {
     key: "log",
     value: function log() {
@@ -110,7 +168,6 @@ function () {
   return Log;
 }();
 
-exports.default = Log;
 Log.levels = {
   'verbose': 1,
   'info': 2,
@@ -118,3 +175,5 @@ Log.levels = {
   'warning': 4,
   'error': 5
 };
+var _default = Log;
+exports.default = _default;

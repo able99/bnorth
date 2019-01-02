@@ -211,7 +211,7 @@ export default {
       show: (Content, { onAction, options={}, state, ...props}={})=>{
         if(!Content) return;
 
-        let _id = app.router.getViewId(options);
+        let _id = app.router.genPopLayerId(options);
         state = state&&app.State.createState(app, state===true?undefined:state, 'state', _id);
 
         options._id = _id;
@@ -222,12 +222,12 @@ export default {
         props.handleAction = index=>(!onAction || onAction( index, state, ()=>app.modal.close(_id), _id)!==false) && app.modal.close(_id);
         props.children = app.modal._createContent(_id, Content, state);
 
-        return app.router.addView(<Modal /> , props, options);
+        return app.router.addPopLayer(<Modal /> , props, options);
       },
 
       update: (_id, Content, { options={}, state, ...props}={})=>{
         if(!_id) return;
-        let {content, prevProps={}, options:prevOptions={}} = app.router.getView(_id)||{};
+        let {content, prevProps={}, options:prevOptions={}} = app.router.getPopLayerInfo(_id)||{};
         if(!content) return;
 
         props = {
@@ -240,21 +240,21 @@ export default {
           ...options,
         }
 
-        return app.router.addView(content, props, options);
+        return app.router.addPopLayer(content, props, options);
       },
       
       close: _id=>{
         if(!_id) return;
-        let {content, props, options} = app.router.getView(_id)||{};
+        let {content, props, options} = app.router.getPopLayerInfo(_id)||{};
         if(!content) return;
 
         props.in = false;
         props.onTransitionFinished = ()=>{
-          app.router.removeView(_id);
+          app.router.removePopLayer(_id);
           app.context.clear(_id);
         }
 
-        return app.router.addView(content, props, options);
+        return app.router.addPopLayer(content, props, options);
       },
     };
   },

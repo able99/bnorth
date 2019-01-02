@@ -2,18 +2,15 @@
  * @module
  */
 
+
 /**
  * App Utils 模块，提供一些工具函数
  * @exportdefault
- * @example
- * ```js
- * app.utils.captilaze('abc'); // 'Abc' 
- * ```
  */
 class Utils {
   /**
    * app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造
-   * @param {moudle:app.App} app 
+   * @param {module:app.App} app 
    */
   constructor(app) {
     /**
@@ -21,10 +18,15 @@ class Utils {
      * @type {module:app.App}
      */
     this.app = app;
+    /**
+     * 模块的 id
+     * @type {string}
+     */
+    this._id = app._id+'.utils';
   }
 
   /**
-   * 组合由对象或者函数组成的参数集合
+   * 合并由对象或者函数组成的参数集合
    * @param  {...(object|function)} - 参数集合 
    * @returns {object} 组合后的参数对象
    */
@@ -46,7 +48,7 @@ class Utils {
    * @example
    * ```js
    * let obj = {a: {b:1}}
-   * app.utils.pathSet(obj, '.a.b', 2);
+   * app.utils.pathSet(obj, '.a.b', 2); // {a: {b:2}}
    * ```
    */
   pathSet(data, path, val) {
@@ -69,7 +71,7 @@ class Utils {
   }
 
   /**
-   * 将 error 实例，字符串，错误错误对象(需要包含 message 字段)，转换为字符串
+   * 将 error 实例，字符串，包含 message 字段的对象，安全转换为错误信息字符串
    * @param {(Error|string|{message:string})} - 错误数据
    * @returns {stirng} 错误信息 
    */
@@ -189,6 +191,10 @@ class Utils {
    * 将字符串首字母大写
    * @param {!string} - 要转换的字符串
    * @returns {string} 转换后的字符串 
+   * @example
+   * ```js
+   * app.utils.captilaze('abc'); // 'Abc' 
+   * ```
    */
   captilaze(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);

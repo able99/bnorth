@@ -7,6 +7,15 @@ exports.defineTags = function(dictionary) {
       }
   });
 
+  // component attribute
+  dictionary.defineTag('attribute', {
+    onTagged: function(doclet, tag) {
+      doclet.kind = "attribute";
+      doclet.name = tag.value;
+      //console.error(doclet,tag);
+    }
+  });
+
   // plugin
   dictionary.defineTag('plugin', {
     onTagged: function(doclet, tag) {

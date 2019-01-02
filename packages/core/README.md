@@ -1,24 +1,9 @@
 # core
 
-bnorth 解决方案的核心库，是一个基于事件驱动的，支持插件扩展的 mmvc 模型框架。
-
-## 起步
-
-```sh
-npm install @bnorth/core
-```
-
-```js
-import App from '@bnorth/core';
-let app = new App();
-app.start();
-```
+core 是构建应用的核心，是应用的入口。core 实际上是一个事件驱动的 mvc 框架，实现了 App 类。提供了事件管理，页面管理，数据管理，插件管理，等核心功能
 
 ## 文档
 
-[Documents](//able99.github.io/bnorth/core/)
-
-## LICENSE
-
-MIT
+[bnorth 文档](//able99.github.io/#cbnorth)
+[参考手册](//able99.github.io/bnorth/core/)
 

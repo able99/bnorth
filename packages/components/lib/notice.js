@@ -113,7 +113,7 @@ var _default = {
         message = app.utils.message2String(message);
         if (!message) return;
 
-        var _id = app.notice._id || app.router.getViewId(options);
+        var _id = app.notice._id || app.router.genPopLayerId(options);
 
         options._id = _id;
         props.in = true;
@@ -127,7 +127,7 @@ var _default = {
         app.notice._timer = window.setTimeout(function () {
           return app.notice.close();
         }, timeout);
-        return app.notice._id = app.router.addView(_react.default.createElement(Notification, null), props, options);
+        return app.notice._id = app.router.addPopLayer(_react.default.createElement(Notification, null), props, options);
       },
       close: function close() {
         if (app.notice._timer) {
@@ -137,7 +137,7 @@ var _default = {
 
         if (!app.notice._id) return;
 
-        var _ref2 = app.router.getView(app.notice._id) || {},
+        var _ref2 = app.router.getPopLayerInfo(app.notice._id) || {},
             content = _ref2.content,
             _ref2$props = _ref2.props,
             props = _ref2$props === void 0 ? {} : _ref2$props,
@@ -152,11 +152,11 @@ var _default = {
         props.in = false;
 
         props.onTransitionFinished = function () {
-          app.router.removeView(app.notice._id);
+          app.router.removePopLayer(app.notice._id);
           app.notice._id = undefined;
         };
 
-        return app.router.addView(content, props, options);
+        return app.router.addPopLayer(content, props, options);
       }
     };
     app.notice._oldNotice = app.render.notice;

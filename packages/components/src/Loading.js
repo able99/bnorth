@@ -28,14 +28,14 @@ export default {
       timeoutPrgress: '20000',
       timeoutSet: '200',
       reset: (progress=0, cb, aprops, aoptions)=>{
-        let {content, props={}, options={}} = app.router.getView(app.loading._id)||{};
+        let {content, props={}, options={}} = app.router.getPopLayerInfo(app.loading._id)||{};
         if(!content){
-          app.loading._id = app.router.addView(
+          app.loading._id = app.router.addPopLayer(
             <Loading timeout={app.loading.timeoutSet} isProgress progress={progress} />, 
             aprops, aoptions
           );
         }else{
-          app.loading._id = app.router.addView(
+          app.loading._id = app.router.addPopLayer(
             content, 
             {...props, ...aprops, progress, timeout: app.loading.timeoutSet}, 
             {...options, ...aoptions}
@@ -43,11 +43,11 @@ export default {
         }
 
         setTimeout(()=>{
-          let {content, props={}, options={}} = app.router.getView(app.loading._id)||{};
+          let {content, props={}, options={}} = app.router.getPopLayerInfo(app.loading._id)||{};
           if(content){
             props.progress = 100;
             props.timeout = app.loading.timeoutPrgress;
-            app.loading._id = app.router.addView(content, props, options);
+            app.loading._id = app.router.addPopLayer(content, props, options);
             cb&&cb();
           }
         }, app.loading.timeoutSet);
@@ -62,7 +62,7 @@ export default {
         app.loading.count = force?0:Math.max(--app.loading.count,0);
         return app.loading.reset(app.loading.count?10:100, ()=>{
           if(!app.loading.count) {
-            app.router.removeView(app.loading._id); 
+            app.router.removePopLayer(app.loading._id); 
             app.loading._id = undefined; 
           }
         });

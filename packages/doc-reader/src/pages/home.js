@@ -6,9 +6,9 @@ import Menu from '../components/Menu'
 
 
 let Component = props=>{
-  let { app, stateDocs:{package:packageObj, readme, doclets=[]}={}, route:{active,params:{name}} } = props;
+  let { app, stateDocs:{package:packageObj, readme, doclets=[]}={}, route:{isActive,params:{name}} } = props;
   
-  return !active?null:(
+  return !isActive?null:(
     <View bc-bg-color-white bc-padding-a- bc-flex-direction-h>
       <Panel main>
         {readme?(

@@ -1,7 +1,5 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -11,15 +9,13 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
-require("core-js/modules/es6.object.keys");
-
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 require("core-js/modules/es7.symbol.async-iterator");
 
 require("core-js/modules/es6.symbol");
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 require("core-js/modules/es6.regexp.split");
 
@@ -45,35 +41,175 @@ var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/ge
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 
+var _reactDom = _interopRequireDefault(require("react-dom"));
+
+/**
+ * @module
+ */
+
+/**
+ * 页面 controller 的声明函数
+ * @typedef PageControllerDefineFunction
+ * @type {function}
+ * @param {module:app.App} app - App 实例
+ * @param {module:page.Page} page - 页面的实例
+ * @returns {module:page~PageControllerDefine} 页面 controll 声明对象
+ */
+
+/**
+ * 页面 controller 的声明对象
+ * @typedef PageControllerDefine
+ * @type {object}
+ * @property {function} onXXX - 为页面实例注册 app 事件处理函数
+ * @property {function} onPageXXX - 为页面实例注册页面事件处理函数
+ * @property {function} onStateXXX - 为页面实例注册数据单元事件处理函数
+ * @property {module:state~StateDefine} stateXXX - 为页面实例声明数据单元
+ * @property {function} actionXXX - 为页面实例增加 action 函数
+ * @property {*} xxx - 为页面实例增加属性或者方法
+ */
+
+/**
+ * 页面的路由信息
+ * @typedef PageRouteInfo
+ * @type {object}
+ * @property {string} _id - 页面 id
+ * @property {string} _idPrev - 页面的前一页面的 id
+ * @property {string} _idParent - 页面的父页面的 id
+ * @property {string} pathName - 页面对应的路径字符串
+ * @property {string} pageName - 页面的名称
+ * @property {string} pagePathName - 页面的路径字符串的当前页面片段
+ * @property {string[]} pageParams - 页面的路径字符串参数
+ * @property {string} routeName - 路由的名称，路由名称上是包含参数定义的名称
+ * @property {module:router~RouteDefine} routeDefine - 路由声明对象
+ * @property {string[]} routeParams - 路由的配置参数
+ * @property {object} state - 状态数据
+ * @property {object} query - 查询字符串数据键值对
+ * @property {string} hash - 锚点字符串
+ * @property {object} params - 页面参数键值对
+ * @property {boolean} isSubPage - 是否是子页面
+ * @property {boolean} isActive - 是否是顶层活动页面
+ * @property {component} subPages - 子页面集合
+ * @property {component} popLayers - 页面所属的弹出层集合
+ */
+
+/**
+ * 新的页面被添加
+ * @event module:app.App#onPageAdd
+ * @property {string} _id - 页面 id
+ * @property {module:page.Page} page - 页面实例
+ */
+
+/**
+ * 页面被移除完成
+ * @event module:app.App#onPageRemove
+ * @property {string} _id - 页面 id
+ * @property {module:page.Page} page - 页面实例
+ */
+
+/**
+ * 页面启动时事件
+ * @event module:page.Page#onPageStart
+ * @property {module:page.Page} page - 页面实例
+ * @property {boolean} isActive - 是否是顶层页面
+ */
+
+/**
+ * 页面成为活动页面时事件
+ * @event module:page.Page#onPageActive
+ * @property {module:page.Page} page - 页面实例
+ * @property {boolean} onStart - 是否是页面启动过程中触发的
+ */
+
+/**
+ * 页面成为非活动页面时事件
+ * @event module:page.Page#onPageInactive
+ * @property {module:page.Page} page - 页面实例
+ * @property {boolean} onStop - 是否是页面注销流程中触发的
+ */
+
+/**
+ * 页面注销时事件
+ * @event module:page.Page#onPageStop
+ * @property {module:page.Page} page - 页面实例
+ */
+
+/**
+ * 页面 id，由 router 模块注入
+ * @attribute _id
+ * @memberof module:page.Page
+ * @type {string} 
+ */
+
+/**
+ * App 的实例，由 router 模块注入
+ * @attribute app
+ * @memberof module:page.Page
+ * @type {module:app.App} 
+ */
+
+/**
+ * 页面的路由信息，由 router 模块注入
+ * @attribute route
+ * @memberof module:page.Page
+ * @type {module:page~PageRouteInfo} 
+ */
+
+/**
+ * 页面组件，是由页面管理器管理的，是对应路由的 component 的父组件。管理页面的属性方法和事件，管理页面的生命周期，并向 component 注入页面相关属性。
+ * @component
+ * @exportdefault
+ */
 var Page =
 /*#__PURE__*/
 function (_React$Component) {
   (0, _inherits2.default)(Page, _React$Component);
 
-  // constructor
-  // ---------------------------
-  function Page(props) {
+  function Page() {
     (0, _classCallCheck2.default)(this, Page);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Page).call(this, props));
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Page).apply(this, arguments));
   }
 
   (0, _createClass2.default)(Page, [{
-    key: "getEmbed",
-    value: function getEmbed(routerName) {
-      var _id = this.props.embeds[routerName] && this.props.embeds[routerName].props._id;
+    key: "getSubPage",
+
+    /**
+     * 通过子页面的名字获取当前页面的子页面实例
+     * @param {string} - 子页面名称 
+     * @returns {module:page.Page} 子页面实例
+     */
+    value: function getSubPage(subName) {
+      var _id = this.props.subPages[subName] && this.props.subPages[subName].props._id;
 
       return _id && this.props.app.router.getPage(_id);
-    } // key event
-    // ---------------------------
+    }
+    /**
+     * 子页面获取父页面的实例
+     * @returns {module:page.Page} 父页面实例
+     */
 
   }, {
-    key: "handleKeyEvent",
-    value: function handleKeyEvent(e) {
-      return e.keyCode === 27 && this.actionGoBack();
-    } // controller
-    // ---------------------------
+    key: "getParrentPage",
+    value: function getParrentPage() {
+      return this.app.getPage(this.props.route._idParent);
+    }
+    /**
+     * 页面获取前一页面的实例
+     * @returns {module:page.Page} 父页面实例
+     */
+
+  }, {
+    key: "getPrevPage",
+    value: function getPrevPage() {
+      return this.app.getPage(this.props.route._idPrev);
+    }
+    /**
+     * 动态建立页面 action 函数，*注：* 动态创建一般是在 render 中，渲染时会多次建立，有消耗，建议在 controller 中定义为好
+     * @param {!function} - action 函数
+     * @param {string?} - action 名称，为空则生成随机名称
+     * @returns {function} 页面 action 函数
+     */
 
   }, {
     key: "action",
@@ -95,25 +231,41 @@ function (_React$Component) {
           _this.app.log.error('page action', name, e);
 
           _this.app.render.panic(e, {
-            title: "action(".concat(name, ") error")
+            title: "action(".concat(name, ") error"),
+            _id: _this._id
           });
         }
       };
 
       if (name) this["action".concat(name)] = ret;
       return ret;
-    }
+    } // page private work
+    // ---------------------------
+
+    /*!
+     * 处理页面键盘事件，在返回键时，返回上级历史
+     */
+
   }, {
-    key: "parseController",
-    value: function parseController() {
+    key: "_handleKeyEvent",
+    value: function _handleKeyEvent(e) {
+      return e.keyCode === 27 && this.actionGoBack();
+    }
+    /*!
+     * 处理页面 controller 的构建和初始化
+     */
+
+  }, {
+    key: "_bindController",
+    value: function _bindController() {
       var _this2 = this;
 
       var _this$props = this.props,
           app = _this$props.app,
-          _this$props$route = _this$props.route;
-      _this$props$route = _this$props$route === void 0 ? {} : _this$props$route;
-      var component = _this$props$route.component,
-          controller = _this$props$route.controller;
+          _this$props$route$rou = _this$props.route.routeDefine;
+      _this$props$route$rou = _this$props$route$rou === void 0 ? {} : _this$props$route$rou;
+      var component = _this$props$route$rou.component,
+          controller = _this$props$route$rou.controller;
       var acontroller = controller || component.controller || {};
       var controllerObj = typeof acontroller === 'function' ? acontroller(app, this) : acontroller;
       if (!controllerObj.stateData) controllerObj.stateData = undefined;
@@ -130,14 +282,15 @@ function (_React$Component) {
 
           if (!_this2[k]) {
             app.render.panic(v, {
-              title: 'no state'
+              title: 'no state',
+              _id: _this2._id
             });
             return;
           }
 
           if (typeof v === 'string') return;
-          app.event.on(_this2._id, 'onPageStart', function (page, active) {
-            app.event.emit(_this2[k]._id, 'onStateStart', _this2[k]._id, active);
+          app.event.on(_this2._id, 'onPageStart', function (page, isActive) {
+            app.event.emit(_this2[k]._id, 'onStateStart', _this2[k]._id, isActive);
           }, _this2[k]._id);
           app.event.on(_this2._id, 'onPageActive', function (page, onStart) {
             app.event.emit(_this2[k]._id, 'onStateActive', _this2[k]._id, onStart);
@@ -188,7 +341,7 @@ function (_React$Component) {
             k = _ref6[0],
             v = _ref6[1];
 
-        return k.startsWith('_state') || k.startsWith('state') && k !== 'state';
+        return /_?state\w+/.test(k);
       }).map(function (_ref7) {
         var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
             k = _ref8[0],
@@ -198,25 +351,53 @@ function (_React$Component) {
       });
     }
   }, {
-    key: "_getStateObjs",
-    value: function _getStateObjs() {
-      var ret = {};
-      Object.entries(this).filter(function (_ref9) {
+    key: "_getPageComponentProps",
+    value: function _getPageComponentProps() {
+      var _this$props2 = this.props,
+          app = _this$props2.app,
+          _id = _this$props2._id,
+          route = _this$props2.route;
+      var states = Object.entries(this).filter(function (_ref9) {
         var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
             k = _ref10[0],
             v = _ref10[1];
 
-        return k.startsWith('_state') || k.startsWith('state') && k !== 'state';
-      }).forEach(function (_ref11) {
+        return /_?state\w+/.test(k);
+      }).reduce(function (v1, _ref11) {
         var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
             k = _ref12[0],
             v = _ref12[1];
 
-        ret[k] = v.data();
+        v1[k] = v.data();
         var extData = v.extData();
-        if (extData) ret["".concat(k, "Ext")] = extData;
-      });
-      return ret;
+        if (extData) v1["".concat(k, "Ext")] = extData;
+        return v1;
+      }, {});
+      return (0, _objectSpread2.default)({
+        app: app,
+        _id: _id,
+        route: route,
+        page: this
+      }, states);
+    }
+  }, {
+    key: "_getPageFrameProps",
+    value: function _getPageFrameProps() {
+      var _this$props3 = this.props,
+          _id = _this$props3._id,
+          route = _this$props3.route;
+      return {
+        'data-page': _id,
+        'data-page-sub': route.isSubPage ? route.routeName : undefined,
+        style: route.isSubPage ? undefined : {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          visibility: route.isActive ? 'visible' : 'hidden'
+        }
+      };
     } // page life circle
     // ---------------------------
 
@@ -225,26 +406,28 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this3 = this;
 
-      var _this$props2 = this.props,
-          app = _this$props2.app,
-          _id = _this$props2._id,
-          active = _this$props2.route.active;
+      var _this$props4 = this.props,
+          app = _this$props4.app,
+          _id = _this$props4._id,
+          isActive = _this$props4.route.isActive;
       app.log.info('page did mount', _id);
       this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
-        return _this3.handleKeyEvent(e);
+        return _this3._handleKeyEvent(e);
       });
-      this.parseController();
+
+      this._bindController();
+
       app.event.emit(app._id, 'onPageAdd', _id, this);
-      app.event.emit(this._id, 'onPageStart', this, active);
-      active && app.event.emit(this._id, 'onPageActive', this, true);
-      active && app.event.emit(app._id, 'onActivePageChange', this._id);
+      app.event.emit(this._id, 'onPageStart', this, isActive);
+      isActive && app.event.emit(this._id, 'onPageActive', this, true);
+      isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      var _this$props3 = this.props,
-          app = _this$props3.app,
-          _id = _this$props3._id;
+      var _this$props5 = this.props,
+          app = _this$props5.app,
+          _id = _this$props5._id;
       app.log.info('page will unmount', _id);
       app.event.emit(this._id, 'onPageInactive', this, true);
       app.event.emit(this._id, 'onPageStop', this);
@@ -255,13 +438,13 @@ function (_React$Component) {
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
-      var _this$props4 = this.props,
-          app = _this$props4.app,
-          active = _this$props4.route.active;
+      var _this$props6 = this.props,
+          app = _this$props6.app,
+          isActive = _this$props6.route.isActive;
 
-      if (prevProps.route.active !== active) {
-        app.event.emit(this._id, active ? 'onPageActive' : 'onPageInactive', this, false);
-        active && app.event.emit(app._id, 'onActivePageChange', this._id);
+      if (prevProps.route.isActive !== isActive) {
+        app.event.emit(this._id, isActive ? 'onPageActive' : 'onPageInactive', this, false);
+        isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
       }
     }
   }, {
@@ -270,15 +453,14 @@ function (_React$Component) {
       var app = this.props.app;
       app.log.info('page did catch');
       app.render.panic(error, {
-        title: 'page error catch'
-      }, this._id);
+        title: 'page error catch',
+        _id: this._id
+      });
     }
   }, {
     key: "shouldComponentUpdate",
     value: function shouldComponentUpdate(nextProps, nextState) {
-      if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query'])) return true;
-      if (!this.props.app.utils.shallowEqual(this.props.views, nextProps.views)) return true;
-      if (!this.props.app.utils.shallowEqual(this.props.embeds, nextProps.embeds)) return true;
+      if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query', 'popLayers', 'subPages'])) return true;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -304,78 +486,57 @@ function (_React$Component) {
       }
 
       return false;
-    } // page render
-    // ---------------------------
-
+    }
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
-
-      if (!this._controllerBinded) return null;
-      var _this$props5 = this.props,
-          context = _this$props5.context,
-          app = _this$props5.app,
-          _id = _this$props5._id,
-          route = _this$props5.route,
-          views = _this$props5.views,
-          embeds = _this$props5.embeds,
-          props = (0, _objectWithoutProperties2.default)(_this$props5, ["context", "app", "_id", "route", "views", "embeds"]);
+      var _this$props7 = this.props,
+          app = _this$props7.app,
+          _id = _this$props7._id,
+          _this$props7$route = _this$props7.route,
+          routeDefine = _this$props7$route.routeDefine,
+          subPages = _this$props7$route.subPages,
+          popLayers = _this$props7$route.popLayers,
+          props = (0, _objectWithoutProperties2.default)(_this$props7, ["app", "_id", "route"]);
       app.log.info('page render', _id);
-      var active = route.active,
-          embed = route.embed;
       this._actionNum = 0;
-      var componentProps = (0, _objectSpread2.default)({
-        app: app,
-        _id: _id,
-        route: route,
-        page: this,
-        frame: this.frame
-      }, this._getStateObjs());
-      Object.keys(embeds).forEach(function (v) {
-        embeds[v] = (0, _react.cloneElement)(embeds[v], (0, _objectSpread2.default)({}, v.props, {
-          frame: _this4.frame
-        }));
-      });
-
-      if (!embed) {
-        var styleSet = {
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          visibility: active ? 'visible' : 'hidden'
-        };
-
-        var refFrame = function refFrame(e) {
-          if (!e) return;
-          var update = !_this4.frame;
-          _this4.frame = e;
-          if (update) _this4.forceUpdate();
-        };
-
-        return _react.default.createElement("main", {
-          "data-page": _id,
-          ref: refFrame,
-          style: styleSet
-        }, _react.default.createElement(route.component, (0, _extends2.default)({}, props, componentProps), embeds), views);
-      } else {
-        return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(route.component, (0, _extends2.default)({}, props, componentProps), embeds), views);
-      }
+      return _react.default.createElement("main", this._getPageFrameProps(), this._controllerBinded ? _react.default.createElement(routeDefine.component, (0, _extends2.default)({}, props, this._getPageComponentProps()), subPages) : null, this._controllerBinded ? popLayers : null);
     }
   }, {
     key: "_id",
+    // page interface
+    // ---------------------
+
+    /**
+     * 页面 id
+     * @type {string}
+     */
     get: function get() {
       return this.props._id;
     }
+    /**
+     * app 实例
+     * @type {module:app.App}
+     */
+
   }, {
     key: "app",
     get: function get() {
       return this.props.app;
     }
+    /**
+     * 页面框架的 dom 元素
+     * @type {element}
+     */
+
+  }, {
+    key: "frame",
+    get: function get() {
+      return _reactDom.default.findDOMNode(this);
+    }
   }]);
   return Page;
 }(_react.default.Component);
 
-exports.default = Page;
+var _default = Page;
+exports.default = _default;

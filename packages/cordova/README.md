@@ -2,6 +2,12 @@
 
 easy create your hybird app with [cordova](https://cordova.apache.org/)
 
+## 文档
+
+[bnorth 文档](//able99.github.io/#cbnorth)
+[hybird 开发](//able99.github.io//cbnorht/bybird.html)
+
+
 ## Env
 
 ### Android

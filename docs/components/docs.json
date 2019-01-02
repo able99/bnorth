@@ -42,7 +42,7 @@
     },
     "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
   },
-  "readme": "# bnorth-components\n\n基于 rich.css 的 react 组件库，同时为 @bnorth/core，提供了对话框，警告等插件\n\n",
+  "readme": "# components\n\n提供了\b丰富的组件，\b包括布局组件 View，Panel 等，小组件 Button，Icon等，动画组件 AnimationFade，AnimationCollapse 等，以及复杂组件\b \bmodal，picker\b 等等\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n[参考手册](//able99.github.io/bnorth/components/)\n\n",
   "doclets": [
     {
       "description": "按钮和按钮组",
@@ -374,7 +374,8 @@
       "name": "Mask.loaderProps",
       "longname": "module:mask.Mask.Mask.loaderProps",
       "kind": "attribute",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": "undefined"
     },
     {
       "description": "设置 Backdrop 的 mask 属性",

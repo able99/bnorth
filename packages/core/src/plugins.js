@@ -1,6 +1,85 @@
-export default class Plugins {
+/**
+ * @module
+ */
+
+
+/**
+ * 插件的声明函数
+ * @typedef PluginDefineFunction
+ * @type {function}
+ * @param {module:app.App} app - App 实例
+ * @param {...*} args - 插件的参数 
+ * @returns {module:plugins~PluginDefine} 插件的声明对象
+ */
+
+/**
+ * 插件的声明对象
+ * @typedef PluginDefine
+ * @type {object}
+ * @property {string?} _id - 插件名称
+ * @property {(string|string[])?} _dependencies - 依赖的插件列表
+ * @property {function?} onXXX - app 或者 当前插件的事件处理函数
+ * @property {module:state~StateDefine?} stateXXX - 声明的数据单元
+ * @property {*?} xxx - 声明的属性或者方法
+ */
+
+/**
+ * 插件的实例对象
+ * @typedef PluginInstance
+ * @type {object}
+ * @property {string} _id - 插件实例的 id，声明的 id 或者安装时生成的唯一运行 id
+ * @property {module:state.State} stateXXX - 插件的数据单元实例
+ * @property {*} xxx - 插件的属性或者方法
+ */
+
+
+/**
+ * 新的插件已经被添加
+ * @event module:app.App#onPluginAdd
+ * @property {module:plugins~PluginInstance} plugin - 插件的实例
+ */
+
+/**
+ * 插件已经被移除
+ * @event module:app.App#onPluginRemove
+ * @property {string} _id - 插件的 id
+ */
+
+/**
+ * 插件即将安装
+ * @event module:plugins~PluginInstance#onPluginMount
+ * @property {module:app.App} app - App 实例
+ * @property {module:plugins~PluginInstance} plugin - 插件的实例
+ */
+
+/**
+ * 插件移除完成
+ * @event module:plugins~PluginInstance#onPluginUnmount
+ * @property {module:app.App} app - App 实例
+ * @property {module:plugins~PluginInstance} plugin - 插件的实例
+ */
+
+
+/**
+ * App 插件管理模块，提供 App 通过插件的扩展的能力
+ * @exportdefault
+ */
+class Plugins {
+  /**
+   * app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造
+   * @param {module:app.App} app 
+   */
   constructor(app) {
+    /**
+     * App 的实例
+     * @type {module:app.App}
+     */
     this.app = app;
+    /**
+     * 模块的 id
+     * @type {string}
+     */
+    this._id = app._id+'.plugins';
     this._idNum = 0;
     this._plugins = [];
   }
@@ -28,14 +107,29 @@ export default class Plugins {
     return plugin;
   }
 
-  getByName(name) {
-    return this._plugins.find(v=>v._id===('>'+(name||this.app._id)))
+  /**
+   * 通过插件 id 获取插件
+   * @param {string} - 插件 id，默认为 App 插件
+   * @returns {module:plugins~PluginInstance} 插件实例
+   */
+  getPluginById(_id) {
+    return this._plugins.find(v=>v._id===('>'+(_id||this.app._id)))
   }
 
-  getById(_id) {
+  /**
+   * 通过插件运行 id 获取插件
+   * @param {string} - 插件运行 id
+   * @returns {module:plugins~PluginInstance} 插件实例
+   */
+  getPluginByInstanceId(_id) {
     return this._plugins.find(v=>v._id===_id);
   }
 
+  /**
+   * 安装插件
+   * @param {module:plugins~PluginDefine|module:plugins~PluginDefineFunction} - 插件声明对象 
+   * @param  {...*} - 插件的参数 
+   */
   add(plugin, ...args) {
     plugin = this._checkPlugin(plugin, ...args);
     if(!plugin) return;
@@ -59,6 +153,8 @@ export default class Plugins {
         let _idState = plugin[k]._id;
         app.event.on(_id, 'onPluginMount', (app)=>{app.event.emit(_idState, 'onStateStart', _idState, false)}, _idState);
         app.event.on(_id, 'onPluginUnmount', (app)=>{app.event.emit(_idState, 'onStateStop', _idState)}, _idState);
+      } else {
+        plugin[k] = v;
       }
     })
 
@@ -66,6 +162,10 @@ export default class Plugins {
     app.event.emit(app._id, 'onPluginAdd', plugin);
   }
 
+  /**
+   * 移除插件
+   * @param {string} - 插件实例 id
+   */
   remove(_id) {
     this.app.log.info('plugin remove', _id);
     let index = this._plugins.findIndex(v=>v._id===_id);
@@ -78,3 +178,5 @@ export default class Plugins {
     this.app.event.emit(this.app._id, 'onPluginRemove', _id);
   }
 }
+
+export default Plugins;

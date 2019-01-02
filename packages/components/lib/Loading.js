@@ -57,7 +57,7 @@ var _default = {
         var aprops = arguments.length > 2 ? arguments[2] : undefined;
         var aoptions = arguments.length > 3 ? arguments[3] : undefined;
 
-        var _ref = app.router.getView(app.loading._id) || {},
+        var _ref = app.router.getPopLayerInfo(app.loading._id) || {},
             content = _ref.content,
             _ref$props = _ref.props,
             props = _ref$props === void 0 ? {} : _ref$props,
@@ -65,20 +65,20 @@ var _default = {
             options = _ref$options === void 0 ? {} : _ref$options;
 
         if (!content) {
-          app.loading._id = app.router.addView(_react.default.createElement(Loading, {
+          app.loading._id = app.router.addPopLayer(_react.default.createElement(Loading, {
             timeout: app.loading.timeoutSet,
             isProgress: true,
             progress: progress
           }), aprops, aoptions);
         } else {
-          app.loading._id = app.router.addView(content, (0, _objectSpread2.default)({}, props, aprops, {
+          app.loading._id = app.router.addPopLayer(content, (0, _objectSpread2.default)({}, props, aprops, {
             progress: progress,
             timeout: app.loading.timeoutSet
           }), (0, _objectSpread2.default)({}, options, aoptions));
         }
 
         setTimeout(function () {
-          var _ref2 = app.router.getView(app.loading._id) || {},
+          var _ref2 = app.router.getPopLayerInfo(app.loading._id) || {},
               content = _ref2.content,
               _ref2$props = _ref2.props,
               props = _ref2$props === void 0 ? {} : _ref2$props,
@@ -88,7 +88,7 @@ var _default = {
           if (content) {
             props.progress = 100;
             props.timeout = app.loading.timeoutPrgress;
-            app.loading._id = app.router.addView(content, props, options);
+            app.loading._id = app.router.addPopLayer(content, props, options);
             cb && cb();
           }
         }, app.loading.timeoutSet);
@@ -106,7 +106,7 @@ var _default = {
         app.loading.count = force ? 0 : Math.max(--app.loading.count, 0);
         return app.loading.reset(app.loading.count ? 10 : 100, function () {
           if (!app.loading.count) {
-            app.router.removeView(app.loading._id);
+            app.router.removePopLayer(app.loading._id);
             app.loading._id = undefined;
           }
         });

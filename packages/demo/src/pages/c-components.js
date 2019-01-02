@@ -17,7 +17,7 @@ import Tabs from '@bnorth/components/lib/Tabs'
 import TabBar from '@bnorth/components/lib/TabBar'
 import NavBar from '@bnorth/components/lib/NavBar'
 import List from '@bnorth/components/lib/List'
-console.log(11111111111,Button, Button.Group,2222222);
+
 
 let Component = aprops=>{
   let { app, page, stateData, stateComponentSwitchs,  stateCommonProps, stateComponentProps } = aprops;
@@ -252,9 +252,9 @@ let Component = aprops=>{
 };
 
 Component.controller = app=>({
-  stateCommonProps: app.plugins.getByName(app._id).stateCommonProps._id,
-  stateComponentProps: app.plugins.getByName(app._id).stateComponentProps._id,
-  stateComponentSwitchs: app.plugins.getByName(app._id).stateComponentSwitchs._id,
+  stateCommonProps: app.plugins.getPluginById().stateCommonProps._id,
+  stateComponentProps: app.plugins.getPluginById().stateComponentProps._id,
+  stateComponentSwitchs: app.plugins.getPluginById().stateComponentSwitchs._id,
 })
 
 export default Component;

@@ -95,11 +95,11 @@ var mask = {
             options = _ref$options === void 0 ? {} : _ref$options,
             props = (0, _objectWithoutProperties2.default)(_ref, ["options"]);
 
-        var _id = app.mask._id || app.router.getViewId(options);
+        var _id = app.mask._id || app.router.genPopLayerId(options);
 
         options._id = _id;
         options.isModal = true;
-        return app.mask._id = app.router.addView(_react.default.createElement(Mask, null), props, options);
+        return app.mask._id = app.router.addPopLayer(_react.default.createElement(Mask, null), props, options);
       },
 
       /**
@@ -108,7 +108,7 @@ var mask = {
        * @mount app.mask.close
        */
       close: function close() {
-        var _ref2 = app.router.getView(app.mask._id) || {},
+        var _ref2 = app.router.getPopLayerInfo(app.mask._id) || {},
             content = _ref2.content,
             _ref2$props = _ref2.props,
             props = _ref2$props === void 0 ? {} : _ref2$props,
@@ -123,11 +123,11 @@ var mask = {
         props.in = false;
 
         props.onTransitionFinished = function () {
-          app.router.removeView(app.mask._id);
+          app.router.removePopLayer(app.mask._id);
           app.mask._id = undefined;
         };
 
-        return app.router.addView(content, props, options);
+        return app.router.addPopLayer(content, props, options);
       }
     };
     app.mask._oldMask = app.render.mask;

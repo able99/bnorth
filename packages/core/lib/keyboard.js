@@ -17,28 +17,69 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
+/**
+ * @module
+ */
+
+/**
+ * 键盘按下
+ * @event module:keyboard.Keyboard#keydown
+ * @property {event} - 键盘事件
+ */
+
+/**
+ * 键盘产生可见字符
+ * @event module:keyboard.Keyboard#keypress
+ * @property {event} - 键盘事件
+ */
+
+/**
+ * 键盘抬起
+ * @event module:keyboard.Keyboard#keyup
+ * @property {event} - 键盘事件
+ */
+
+/**
+ * App 键盘事件管理模块，统一管理键盘事件
+ * @exportdefault
+ */
 var Keyboard =
 /*#__PURE__*/
 function () {
+  /**
+   * app 的功能模板，不直接构造，而是在启动过程，有 app 负责构造
+   * @param {module:app.App} app 
+   */
   function Keyboard(app) {
     var _this = this;
 
     (0, _classCallCheck2.default)(this, Keyboard);
+
+    /**
+     * App 的实例
+     * @type {module:app.App}
+     */
     this.app = app;
+    /**
+     * 模块的 id
+     * @type {string}
+     */
+
+    this._id = app._id + '.keyboard';
     this._listeners = [];
 
-    this._handleKeyEvent = function (e) {
-      return _this.handleKeyEvent(e);
+    this._handleKeyEventWork = function (e) {
+      return _this._handleKeyEvent(e);
     };
 
-    document.addEventListener('keydown', this._handleKeyEvent);
-    document.addEventListener('keypress', this._handleKeyEvent);
-    document.addEventListener('keyup', this._handleKeyEvent);
+    document.addEventListener('keydown', this._handleKeyEventWork);
+    document.addEventListener('keypress', this._handleKeyEventWork);
+    document.addEventListener('keyup', this._handleKeyEventWork);
   }
 
   (0, _createClass2.default)(Keyboard, [{
-    key: "handleKeyEvent",
-    value: function handleKeyEvent(e) {
+    key: "_handleKeyEvent",
+    value: function _handleKeyEvent(e) {
       var _this2 = this;
 
       this.app.log.info('keyboard trigger', e);
@@ -55,6 +96,14 @@ function () {
         return listener._id;
       }
     }
+    /**
+     * 指定 id 的目标注册键盘事件处理函数
+     * @param {string} - 目标 id
+     * @param {string} - 事件名称
+     * @param {function} - 事件处理函数 
+     * @returns {function} 注销函数
+     */
+
   }, {
     key: "on",
     value: function on(_id, event, callback) {
@@ -75,6 +124,11 @@ function () {
         return _this3.off(callback);
       };
     }
+    /**
+     * 注销键盘事件处理函数
+     * @param {string|function} - 目标 id 或者事件处理函数
+     */
+
   }, {
     key: "off",
     value: function off(item) {
@@ -92,13 +146,19 @@ function () {
         if (index >= 0) this._listeners.splice(index, 1);
       }
     }
+    /**
+     * 模拟触发指定的键盘事件
+     * @param {event} - 键盘事件 
+     */
+
   }, {
     key: "emit",
     value: function emit(event) {
-      return this.handleKeyEvent(event);
+      return this._handleKeyEvent(event);
     }
   }]);
   return Keyboard;
 }();
 
-exports.default = Keyboard;
+var _default = Keyboard;
+exports.default = _default;

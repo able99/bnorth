@@ -23,6 +23,7 @@
   "scripts": {
     "start": "bnorth-build watch",
     "build": "bnorth-build dev",
+    "doct": "npx bnorth-doc ./src/ ../doc-reader/public/",
     "doc": "npx bnorth-doc ./src/ ../../docs/core/"
   },
   "bugs": {
