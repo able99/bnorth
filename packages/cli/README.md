@@ -13,6 +13,7 @@ npx @bnorth/cli create [project-name]
 ## 文档
 
 [bnorth 文档](//able99.github.io/#cbnorth)
+
 [脚手架与工程配置](//able99.github.io/cbnorth/project.html)
 
 

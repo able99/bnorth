@@ -5,6 +5,7 @@ easy create your hybird app with [cordova](https://cordova.apache.org/)
 ## 文档
 
 [bnorth 文档](//able99.github.io/#cbnorth)
+
 [hybird 开发](//able99.github.io//cbnorht/bybird.html)
 
 
@@ -219,3 +220,21 @@ cordova-plugin-alipay-v2
 ### More Plugins
 
 [cordova plugins](https://cordova.apache.org/plugins/)  
+
+
+## issues
+
+- cordova the connection to the server was unsuccess file:///android_asset/www/index.html
+
+    1. add belows to config.xml
+
+    ```xml
+      <platform name="android">
+          <preference name="loadUrlTimeoutValue" value="600000" />
+      </platform>
+    ```
+
+    2. move code to main.html, update index.html
+    ```html
+    <script type="text/javascript">window.location="./main.html"</script>
+    ```

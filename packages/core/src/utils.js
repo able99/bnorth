@@ -4,7 +4,7 @@
 
 
 /**
- * App Utils 模块，提供一些工具函数
+ * App 工具模块，提供一些工具函数
  * @exportdefault
  */
 class Utils {

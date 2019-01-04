@@ -1,6 +1,6 @@
 # bnorth
 
-[bnorth](https://github.com/able99/bnorth) 是基于 [React](https://reactjs.org/) 和 [Cordova](https://cordova.apache.org/) 的大前端开发工具集。实现了基本的页面管理与数据流，并可以通过插件扩展能力。统一的样式库，丰富的 react 组件，大量的功能插件加上脚手架和打包工具提供了一站式的便捷的开发体验。
+[bnorth](https://github.com/able99/bnorth) 是基于 [React](https://reactjs.org/) 的大前端开发工具集。便捷的开发框架，实现了页面管理，数据管理等能力和可通过插件扩展的机制。并提供了统一的样式库，丰富的 react 组件，以及脚手架和工具集，形成了一站式的多平台的 web 和 hybird 应用开发系统。
 
 ## 起步
 
@@ -34,7 +34,9 @@ npm start
 
 ## 文档
 
-[bnorth 文档](//able99.github.io/#cbnorth)
+[bnorth 说明文档](//able99.github.io/cbnorth/main.html)
+
+[bnorth 参考手册](//able99.github.io/bnorth/)
 
 ## 例子
 

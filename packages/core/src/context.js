@@ -28,6 +28,7 @@ class ContextComponent extends React.Component {
 
 /**
  * App 数据管理模块，提供数据仓库功能，实现数据管理
+ * @see {@link https://able99.github.io/cbnorth/data.html} bnorth 数据流
  * @exportdefault
  */
 class Context {
