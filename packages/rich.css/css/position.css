@@ -1,3 +1,7 @@
+.position- {
+  position: initial;
+}
+
 .position-initial {
   position: initial;
 }
@@ -15,36 +19,36 @@
 }
 
 .offset-a-start {
-  left: 0px;
-  right: 0px;
-  top: 0px;
-  bottom: 0px;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 
 .offset-h-start {
-  left: 0px;
-  right: 0px;
+  left: 0;
+  right: 0;
 }
 
 .offset-v-start {
-  top: 0px;
-  bottom: 0px;
+  top: 0;
+  bottom: 0;
 }
 
 .offset-left-start {
-  left: 0px;
+  left: 0;
 }
 
 .offset-right-start {
-  right: 0px;
+  right: 0;
 }
 
 .offset-top-start {
-  top: 0px;
+  top: 0;
 }
 
 .offset-bottom-start {
-  bottom: 0px;
+  bottom: 0;
 }
 
 .offset-left-center {

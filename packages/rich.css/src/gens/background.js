@@ -1,27 +1,19 @@
-import { getSelector, getStyleSet } from '../utils';
+import { genClassObjects } from '../utils';
 
 
-export function genBgColor({utilColors, mainColors, opacityColors}) {
-  let ret = {};
-  let colors = { ...utilColors, ...mainColors, ...opacityColors };
-  let func = 'color';
-  let selector = `bg-${func}`;
-  let styleSelector = `background-${func}`;
-  Object.entries(colors).forEach(([k,v])=>(ret[getSelector(selector, k)] = getStyleSet(styleSelector, v)));
-  return ret;
+function genFuncBackground({utilColors, mainColors, opacityColors}) {
+  return Object.assign(
+    genClassObjects('.bg-color', {
+      styleKey: 'background-color',
+      styleValueSet: { ...utilColors, ...mainColors, ...opacityColors },
+    }), 
+    genClassObjects('.bg-none-', {
+      styleObjectMap: {
+        'background': 'none',
+      },
+    }), 
+  );
 }
 
-export function genBgNone() {
-  let ret = {};
-  ret[getSelector('bg', 'none-')] = {
-    'background': 'none',
-  };
-  return ret;
-}
 
-export default function gen(config) {
-  return {
-    ...genBgColor(config), 
-    ...genBgNone(config),
-  };
-}
+export default genFuncBackground;

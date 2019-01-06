@@ -1,101 +1,69 @@
-import { getSelector, getStyleSet, getSizeSet } from '../utils';
+/**
+ * @module
+ */
+import { getStyleValueSet, genClassObjects } from '../utils';
 import compatibleBorder from '../compatibles/compatibleBorder';
 
 
-const Dimentions = {
-  'a': '',
-  'h': ['left', 'right'],
-  'v': ['top', 'bottom'],
-  'left': true,
-  'right': true,
-  'top': true,
-  'bottom': true,
-}
-
-const RadiusDimentions = {
-  '':  '',
-  'top': ['top-left', 'top-right'],
-  'bottom': ['bottom-left', 'bottom-right'],
-  'top-left': true,
-  'top-right': true,
-  'bottom-left': true,
-  'bottom-right': true,
-}
-
-const Styles = {
-  '': 'solid',
-  'solid': true,
-  'none': true,
-  'dotted': true,
-  'dashed': true,
-  'inherit': true,
-}
-
-
-export default function gen(config) {
-  let ret = {};
-  let { utilColors, mainColors } = config;
+/**
+ * 生成边框相关样式表
+ * @exportdefault
+ * @param {ClassNamesConfig} - class names 生成配置对象
+ * @returns {object} class names 中间对象，由 cssGen 调用
+ */
+function genFuncBorder({ utilColors, mainColors, directionEdge, directionCorner, borderStyle, borderWidth, borderRadius }) {
   let colors = {'-': utilColors.border, ...utilColors, ...mainColors};
-  let widthSizes = getSizeSet('borderWidth', config);
-  let radiusSizes = getSizeSet('borderRadius', config);
-  let baseSelector = 'border';
-  let func;
 
-  func = 'set';
-  Object.entries(colors).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, kk)] = getStyleSet(baseSelector, `1px solid ${vv}`)))
-  
-  func = 'color';
-  Object.entries(colors).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, kk)] = getStyleSet(baseSelector, vv, { ext: func })))
-
-  func = 'style';
-  Object.entries(Styles).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, kk)] = getStyleSet(baseSelector, vv, { key: kk, ext: func, })))
-
-  func = 'width';
-  Object.entries(widthSizes).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, kk.trim())] = getStyleSet(baseSelector, vv, { ext: func })))
-
-  func = 'set';
-  Object.entries(Dimentions).forEach(([k,v])=>{
-    Object.entries(colors).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, k, kk)] = getStyleSet(baseSelector, `1px solid ${vv}`, {
-      mapKey: k, mapVal: v,
-    })))
-  })
-
-  func = 'color';
-  Object.entries(Dimentions).forEach(([k,v])=>{
-    Object.entries(colors).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, k, kk)] = getStyleSet(baseSelector, vv, {
-      mapKey: k, mapVal: v, ext: func,
-    })))
-  })
-
-  func = 'style';
-  Object.entries(Dimentions).forEach(([k,v])=>{
-    Object.entries(Styles).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, k, kk)] = getStyleSet(baseSelector, vv, {
-      mapKey: k, mapVal: v, ext: func, key: kk,
-    })))
-  })
-
-  func = 'width';
-  Object.entries(Dimentions).forEach(([k,v])=>{
-    Object.entries(widthSizes).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, k, kk.trim())] = getStyleSet(baseSelector, vv, {
-      mapKey: k, mapVal: v, ext: func,
-    })))
-  })
-
-  func = 'none';
-  Object.entries(Dimentions).forEach(([k,v])=>{
-    ret[getSelector(baseSelector, func, k, '-')] = getStyleSet(baseSelector, 'none', {
-      mapKey: k, mapVal: v,
-    })
-  })
-
-  
-  func = 'radius';
-  Object.entries(RadiusDimentions).forEach(([k,v])=>{
-    Object.entries(radiusSizes).forEach(([kk,vv])=>(ret[getSelector(baseSelector, func, k, kk.trim())] = compatibleBorder(getStyleSet(baseSelector, vv, {
-      mapKey: k, mapVal: v, ext: func,
-    }))))
-  })
-
-
-  return ret;
+  return Object.assign(
+    /**
+     * 设置边框
+     * @classname border-set
+     * @param {string} edge - 边框的位置
+     * @param {string=} color - 边框的颜色
+     * @example
+     * ```jsx
+     * <div className="border-set-a-">
+     * ```
+     */
+    genClassObjects('.border-set', {
+      styleKey: 'border',
+      styleKeySet: directionEdge,
+      styleValueSet: colors,
+      styleValueMap: val=>`1px solid ${val}`,
+    }), 
+    genClassObjects('.border-color', {
+      styleKey: 'border',
+      styleKeyExt: 'color',
+      styleKeySet: directionEdge,
+      styleValueSet: colors,
+    }), 
+    genClassObjects('.border-style', {
+      styleKey: 'border',
+      styleKeyExt: 'style',
+      styleKeySet: directionEdge,
+      styleValueSet: getStyleValueSet(borderStyle),
+    }),
+    genClassObjects('.border-width', {
+      styleKey: 'border',
+      styleKeyExt: 'width',
+      styleKeySet: directionEdge,
+      styleValueSet: getStyleValueSet(borderWidth),
+    }),
+    genClassObjects('.border-none', {
+      selectorExt: '-',
+      styleKey: 'border',
+      styleKeySet: directionEdge,
+      styleValueMap: ()=>'none',
+    }),
+    genClassObjects('.border-radius', {
+      styleKey: 'border',
+      styleKeyExt: 'radius',
+      styleKeySet: directionCorner,
+      styleValueSet: getStyleValueSet(borderRadius),
+      styleObjectCompatible: compatibleBorder,
+    }),
+  );
 }
+
+
+export default genFuncBorder;

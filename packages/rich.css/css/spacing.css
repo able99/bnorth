@@ -27,7 +27,7 @@
 }
 
 .margin-a-0 {
-  margin: 0px;
+  margin: 0;
 }
 
 .margin-a-1 {
@@ -86,8 +86,8 @@
 }
 
 .margin-h-0 {
-  margin-left: 0px;
-  margin-right: 0px;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .margin-h-1 {
@@ -151,8 +151,8 @@
 }
 
 .margin-v-0 {
-  margin-top: 0px;
-  margin-bottom: 0px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .margin-v-1 {
@@ -209,7 +209,7 @@
 }
 
 .margin-left-0 {
-  margin-left: 0px;
+  margin-left: 0;
 }
 
 .margin-left-1 {
@@ -261,7 +261,7 @@
 }
 
 .margin-right-0 {
-  margin-right: 0px;
+  margin-right: 0;
 }
 
 .margin-right-1 {
@@ -313,7 +313,7 @@
 }
 
 .margin-top-0 {
-  margin-top: 0px;
+  margin-top: 0;
 }
 
 .margin-top-1 {
@@ -365,7 +365,7 @@
 }
 
 .margin-bottom-0 {
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
 .margin-bottom-1 {
@@ -417,7 +417,7 @@
 }
 
 .padding-a-0 {
-  padding: 0px;
+  padding: 0;
 }
 
 .padding-a-1 {
@@ -476,8 +476,8 @@
 }
 
 .padding-h-0 {
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .padding-h-1 {
@@ -541,8 +541,8 @@
 }
 
 .padding-v-0 {
-  padding-top: 0px;
-  padding-bottom: 0px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .padding-v-1 {
@@ -599,7 +599,7 @@
 }
 
 .padding-left-0 {
-  padding-left: 0px;
+  padding-left: 0;
 }
 
 .padding-left-1 {
@@ -651,7 +651,7 @@
 }
 
 .padding-right-0 {
-  padding-right: 0px;
+  padding-right: 0;
 }
 
 .padding-right-1 {
@@ -703,7 +703,7 @@
 }
 
 .padding-top-0 {
-  padding-top: 0px;
+  padding-top: 0;
 }
 
 .padding-top-1 {
@@ -755,7 +755,7 @@
 }
 
 .padding-bottom-0 {
-  padding-bottom: 0px;
+  padding-bottom: 0;
 }
 
 .padding-bottom-1 {

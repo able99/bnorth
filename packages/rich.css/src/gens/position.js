@@ -1,75 +1,50 @@
-import { getSelector, getStyleSet } from '../utils';
+import { getStyleValueSet, genClassObjects } from '../utils';
 import compatibleAnimation from '../compatibles/compatibleAnimation';
 
-const Positions = {
-  'initial': true,
-  'relative': true,
-  'absolute': true,
-  'fixed': true,
-}
 
-const Offsets = {
-  'left': true,
-  'right': true,
-  'top': true,
-  'bottom': true,
-}
-
-const Offsets0 = {
-  'a': ['left', 'right', 'top', 'bottom'],
-  'h': ['left', 'right'],
-  'v': ['top', 'bottom'],
-  'left': true,
-  'right': true,
-  'top': true,
-  'bottom': true,
-}
-
-
-export function genPosition() {
-  let ret = {};
-  let selector = 'position';
-  Object.entries(Positions).forEach(([k,v])=>(ret[getSelector(selector, k)] = getStyleSet(selector, v, {key: k})));
-  return ret;
-}
-
-export function genOffset() {
-  let ret = {};
-  let selector = 'offset';
-  let func;
-
-  func = 'start';
-  Object.entries(Offsets0).forEach(([k,v])=>(ret[getSelector(selector, k, func)] = getStyleSet('', 0, {mapKey: k, mapVal: v})));
-  func = 'center'
-  Object.entries(Offsets).forEach(([k,v])=>(ret[getSelector(selector, k, func)] = getStyleSet(k, '50%')));
-  func = 'end'
-  Object.entries(Offsets).forEach(([k,v])=>(ret[getSelector(selector, k, func)] = getStyleSet(k, '100%')));
-  return ret;
-}
-
-export function genTranslate() {
-  let ret = {};
-  let selector = 'translate';
-  let func = 'center';
-
-  ret[getSelector(selector, func, 'a')] = compatibleAnimation({
-    'transform': 'translate3d(-50%, -50%, 0)',
-  });
-  ret[getSelector(selector, func, 'x')] = compatibleAnimation({
-    'transform': 'translate3d(-50%, 0, 0)',
-  });
-  ret[getSelector(selector, func, 'y')] = compatibleAnimation({
-    'transform': 'translate3d(0, -50%, 0)',
-  });
-  
-  return ret;
+function genFuncPosition({ position, directionOffsetAll, directionOffset }) {
+  return Object.assign(
+    genClassObjects('.position', {
+      styleKey: 'position',
+      styleValueSet: getStyleValueSet(position),
+    }), 
+    genClassObjects('.offset', {
+      selectorExt: 'start',
+      styleKeySet: directionOffsetAll,
+      styleValueMap: ()=>'0',
+    }),
+    genClassObjects('.offset', {
+      selectorExt: 'center',
+      styleKey: ' ',
+      styleKeySet: directionOffset,
+      styleValueMap: ()=>'50%',
+    }),
+    genClassObjects('.offset', {
+      selectorExt: 'end',
+      styleKey: ' ',
+      styleKeySet: directionOffset,
+      styleValueMap: ()=>'100%',
+    }),
+    genClassObjects('.translate-center', {
+      selectorExt: 'a',
+      styleKey: 'transform',
+      styleValueMap: ()=>'translate3d(-50%, -50%, 0)',
+      styleObjectCompatible: compatibleAnimation,
+    }),
+    genClassObjects('.translate-center', {
+      selectorExt: 'x',
+      styleKey: 'transform',
+      styleValueMap: ()=>'translate3d(-50%, 0, 0)',
+      styleObjectCompatible: compatibleAnimation,
+    }),
+    genClassObjects('.translate-center', {
+      selectorExt: 'y',
+      styleKey: 'transform',
+      styleValueMap: ()=>'translate3d(0, -50%, 0)',
+      styleObjectCompatible: compatibleAnimation,
+    }),
+  );
 }
 
 
-export default function gen(config) {
-  return {
-    ...genPosition(config), 
-    ...genOffset(config), 
-    ...genTranslate(config), 
-  };
-}
+export default genFuncPosition;

@@ -1,108 +1,152 @@
+import { genClassObjects } from '../utils';
 import { triangleImage } from '../styles/shape'
-import { getSelector } from '../utils';
 
 
-export function genButton({textColors, stateOpacityDisabled, stateOpacityActive}) {
-  let ret = {};
+function genFuncControl({textColors, mainColors, stateOpacityDisabled, stateOpacityActive}) {
+  return Object.assign(
+    genClassObjects('button:disabled, button[disabled], button.disabled', {
+      styleObjectMap: {
+        'opacity': stateOpacityDisabled,
+        'cursor': 'not-allowed',
+        'pointer-events': 'none',
+      },
+    }), 
+    genClassObjects('.status-:disabled, .status-[disabled], .status-.disabled', {
+      styleObjectMap: {
+        'opacity': stateOpacityDisabled,
+        'cursor': 'not-allowed',
+        'pointer-events': 'none',
+      },
+    }), 
+    genClassObjects('button:active, button[active], button.active', {
+      styleObjectMap: {
+        'opacity': stateOpacityActive,
+      },
+    }), 
+    genClassObjects('.status-:active, .status-[active], .status-.active', {
+      styleObjectMap: {
+        'opacity': stateOpacityActive,
+      },
+    }), 
+    genClassObjects('.button-active:not(.selected)', {
+      styleObjectMap: {
+        'color': textColors.normal,
+      },
+    }), 
 
-  ret['button:disabled, button[disabled], button.disabled'] = {
-    'opacity': stateOpacityDisabled,
-    'cursor': 'not-allowed',
-    'pointer-events': 'none',
-  }
+    genClassObjects('.switch-status input + .status- .on-', {
+      styleObjectMap: {
+        'display': 'none !important',
+      },
+    }), 
+    genClassObjects('.switch-status input + .status- .off-', {
+      styleObjectMap: {
+        'display': 'inline-block !important',
+      },
+    }), 
+    genClassObjects('.switch-status input:checked + .status- .on-', {
+      styleObjectMap: {
+        'display': 'inline-block !important',
+      },
+    }), 
+    genClassObjects('.switch-status input:checked + .status- .off-', {
+      styleObjectMap: {
+        'display': 'none !important',
+      },
+    }), 
 
-  ret['.status-:disabled, .status-[disabled], .status-.disabled'] = {
-    'opacity': stateOpacityDisabled,
-    'cursor': 'not-allowed',
-    'pointer-events': 'none',
-  }
+    genClassObjects('input:focus, textarea:focus, select:focus', {
+      styleObjectMap: {
+        'outline': 0,
+      },
+    }), 
+    genClassObjects('input.disabled, textarea.disabled, select.disabled, input[disabled], textarea[disabled], select[disabled], input[readonly], textarea[readonly], select[readonly], fieldset[disabled]', {
+      styleObjectMap: {
+        'cursor': 'not-allowed',
+      },
+    }), 
+    genClassObjects('select', {
+      styleObjectMap: {
+        'background': `url(${triangleImage(mainColors.primary)}) right 0.5em center no-repeat`,
+        'background-size': '0.5em',
+        'padding-left': '0.5em',
+        'padding-right': '1em',
+      },
+    }), 
+    genClassObjects('select::-ms-expand', {
+      styleObjectMap: {
+        'display': 'none',
+      },
+    }), 
 
-  ret['button:active, button[active], button.active'] = {
-    'opacity': stateOpacityActive,
-  }
-
-  ret['.status-:active, .status-[active], .status-.active'] = {
-    'opacity': stateOpacityActive,
-  }
-
-  ret['.button-active:not(.selected)'] = {
-    'color': textColors.normal,
-  }
-
-  ret['.button-underline'] = {
-    color: 'red',
-  }
-
-  return ret;
-}
-
-export function genSwitchStatus() {
-  let ret = {};
-
-  
-  ret['.switch-status input + .status- .on-'] = {
-    'display': 'none !important',
-  }
-  ret['.switch-status input + .status- .off-'] = {
-    'display': 'inline-block !important',
-  }
-
-  ret['.switch-status input:checked + .status- .on-'] = {
-    'display': 'inline-block !important',
-  }
-  ret['.switch-status input:checked + .status- .off-'] = {
-    'display': 'none !important',
-  }
-
- 
-  return ret;
-}
-
-export function genInput({utilColors, mainColors}) {
-  let ret = {};
-
-  ret['input:focus, textarea:focus, select:focus'] = {
-    'outline': 0,
-  }
-
-  ret['input.disabled, textarea.disabled, select.disabled, input[disabled], textarea[disabled], select[disabled], input[readonly], textarea[readonly], select[readonly], fieldset[disabled]'] = {
-    'cursor': 'not-allowed',
-  }
-
-  ret['select'] = {
-    'background': `url(${triangleImage(mainColors.primary)}) right 0.5em center no-repeat`,
-    'background-size': '0.5em',
-    'padding-left': '0.5em',
-    'padding-right': '1em',
-  }
-
-  ret['select::-ms-expand'] = {
-    'display': 'none',
-  }
-
-  return ret;
-}
-
-export function genState({stateOpacityDisabled, stateOpacityActive}) {
-  let ret = {};
-
-  ret[getSelector('status', 'disabled')] = {
-    'opacity': stateOpacityDisabled,
-  }
-
-  ret[getSelector('status', 'active')] = {
-    'opacity': stateOpacityActive,
-  }
-
-  return ret;
+    genClassObjects('.status-disabled', {
+      styleObjectMap: {
+        'opacity': stateOpacityDisabled,
+      },
+    }), 
+    genClassObjects('.status-active', {
+      styleObjectMap: {
+        'opacity': stateOpacityActive,
+      },
+    }), 
+  );
 }
 
 
-export default function gen(config) {
-  return {
-    ...genButton(config), 
-    ...genSwitchStatus(config),
-    ...genInput(config), 
-    ...genState(config), 
-  };
-}
+export default genFuncControl;
+
+
+
+
+
+// import { getSelector } from '../utils';
+
+
+// export function genIconFont({iconFonts, iconClassName}) {
+//   if(!iconFonts||!iconClassName) return;
+//   if(typeof iconFonts === 'string') iconFonts = [{src: iconFonts}];
+//   if(!Array.isArray(iconFonts)) iconFonts = [iconFonts];
+//   let ret = {};
+
+//   iconFonts.forEach((v,i)=>{
+//     ret[`@font-face${' '.repeat(i)}`] = {
+//       'font-family': v.family||'font',
+//       'font-weight': v.weight||'normal',
+//       'font-style': v.style||'normal',
+//       'src': v.src,
+//     }
+//   });
+
+//   let familys = iconFonts.reduce((v1, v2)=>{
+//     return v1 + (v2.family||'font') + ', ';
+//   },'') + 'sans-serif';
+
+//   ret[getSelector(iconClassName)] = {
+//     'font-family': familys,
+//   }
+
+//   return ret;
+// }
+
+// export function genIconClass({iconClassName='icon-'}) {
+//   if(!iconClassName) return;
+//   let ret = {};
+
+//   ret[getSelector(iconClassName+':before')] = {
+//     'content': 'attr(data-icon-name)',
+//   }
+
+//   ret[getSelector(iconClassName+'.button')] = {
+//     'font-size': 'inherit',
+//   }
+
+//   return ret;
+// }
+
+
+// export default function gen(config) {
+//   return {
+//     ...genIconFont(config), 
+//     ...genIconClass(config),
+//   };
+// }

@@ -177,13 +177,6 @@
 }
 
 .flex-sub-flex-extend {
-  flex: 1;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-  -moz-flex: 1;
-}
-
-.flex-sub-flex-grow {
   flex-grow: 1;
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
@@ -208,7 +201,7 @@
   height: 1px;
 }
 
-.flex-flex-overflow .text-truncate-old {
+.flex-overflow .text-truncate-old {
   position: absolute;
   width: 100%;
   left: 0;

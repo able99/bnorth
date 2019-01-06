@@ -47,7 +47,7 @@
     },
     "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
   },
-  "readme": "# rich.css\n\n## 使用方法\n\n```sh\nnpm install --save @bnorth/rich.css\n```\n\n```jsx\nimport React from 'react';\nimport ReactDOM from 'react-dom';\nimport '@bnorth/rich.css/css/normalize.css';\nimport genCss from '@bnorth/rich.css';\nimport { getCssConfig, setCssConfig } from '@bnorth/rich.css/lib/gen';\n\nlet { textColors } = getCssConfig();\ntextColors.normal = '#222222';\nsetCssConfig({textColors});\ngenCss();\n\nReactDOM.render(\n  <div className=\"text-color-primary\">text</div>,\n  document.getElementById('root')\n);\n```\n\n## bnorth api 文档\n\n[Documents](//able99.github.io/bnorth/)\n\n## LICENSE\n\nMIT",
+  "readme": "# core\n\nrich.css 是一个可定制的，全面覆盖的 css 样式库\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n[参考手册](//able99.github.io/bnorth/richcss/)\n\n",
   "doclets": [
     {
       "kind": "module",
@@ -97,6 +97,16 @@
           "object"
         ]
       },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "name": "xxx"
+        }
+      ],
       "examples": [
         "```js\ntextColors: {\n  normal: '#383838',\n},\n```"
       ],
@@ -116,7 +126,6 @@
         {
           "type": {
             "names": [
-              "string",
               "number"
             ]
           },
@@ -162,12 +171,20 @@
         {
           "type": {
             "names": [
-              "Array.number",
-              "Array.<string>"
+              "Array.<number>"
             ]
           },
           "description": "-",
-          "name": "set"
+          "name": "multiple"
+        },
+        {
+          "type": {
+            "names": [
+              "string",
+              "boolean"
+            ]
+          },
+          "name": "xxx"
         }
       ],
       "examples": [
@@ -356,7 +373,7 @@
       "name": "genConfig",
       "longname": "genConfig",
       "kind": "member",
-      "defaultvalue": "{\"bodyBackground\":\"none\",\"textColors\":\"\",\"utilColors\":\"\",\"mainColors\":\"\",\"opacityColors\":\"\",\"borderWidthSizeSet\":\"\",\"borderRadiusSizeBase\":5,\"borderRadiusSizeSet\":\"\",\"spacingSizeBase\":10,\"spacingSizeMin\":4,\"spacingSizeMinCalc\":3,\"spacingSizeMax\":16,\"spacingSizeMaxCalc\":3,\"spacingSizeSet\":\"\",\"fontSizeBase\":16,\"fontSizeMin\":8,\"fontSizeMinCalc\":4,\"fontSizeMax\":24,\"fontSizeMaxCalc\":4,\"fontSizeSet\":\"\",\"fontWeightSizeBase\":\"normal\",\"fontWeightSizeSet\":\"\",\"textTruncateSet\":\"\",\"fontFamilys\":\"\",\"lineHeightSizeBase\":1.4,\"lineHeightSizeSet\":\"\",\"animationTimeSizeSet\":\"\",\"animationCountSizeSet\":\"\",\"animationPropertySizeSet\":\"\",\"stateOpacityDisabled\":0.5,\"stateOpacityActive\":0.8,\"iconFonts\":null,\"iconClassName\":\"icon-\"}",
+      "defaultvalue": "{\"bodyBackground\":\"none\",\"textColors\":\"\",\"utilColors\":\"\",\"mainColors\":\"\",\"opacityColors\":\"\",\"directionEdge\":\"\",\"directionCorner\":\"\",\"borderWidth\":\"\",\"borderRadius\":\"\",\"borderStyle\":\"\",\"spacing\":\"\",\"textFontFamily\":\"\",\"textSize\":\"\",\"textWeight\":\"\",\"textStyle\":\"\",\"textDecoration\":\"\",\"textAlign\":\"\",\"textVerticalAligns\":\"\",\"textWhiteSpaces\":\"\",\"textLineHeight\":\"\",\"textTruncate\":\"\",\"animationTimeSizeSet\":\"\",\"animationCountSizeSet\":\"\",\"animationPropertySizeSet\":\"\",\"stateOpacityDisabled\":0.5,\"stateOpacityActive\":0.8,\"iconFonts\":null,\"iconClassName\":\"icon-\"}",
       "params": []
     },
     {
@@ -436,6 +453,73 @@
       "longname": "module:gen.gen",
       "kind": "function",
       "memberof": "module:gen"
+    },
+    {
+      "kind": "module",
+      "name": "gens/border",
+      "longname": "module:gens/border"
+    },
+    {
+      "description": "生成边框相关样式表",
+      "exportdefault": true,
+      "scope": "static",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "ClassNamesConfig"
+            ]
+          },
+          "description": "class names 生成配置对象",
+          "name": ""
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "class names 中间对象，由 cssGen 调用"
+        }
+      ],
+      "name": "genFuncBorder",
+      "longname": "module:gens/border.genFuncBorder",
+      "kind": "function",
+      "memberof": "module:gens/border"
+    },
+    {
+      "description": "设置边框",
+      "name": "border-set-[edge]-[color]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "边框的位置",
+          "name": "edge"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "description": "边框的颜色",
+          "name": "color"
+        }
+      ],
+      "examples": [
+        "```jsx\n<div className=\"border-set-a-\">\n```"
+      ],
+      "longname": "module:gens/border~border-set-[edge]-[color]",
+      "scope": "inner",
+      "memberof": "module:gens/border"
     },
     {
       "kind": "module",

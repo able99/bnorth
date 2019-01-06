@@ -1,53 +1,31 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = gen;
+exports.default = void 0;
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es7.object.entries");
-
-require("core-js/modules/web.dom.iterable");
+require("core-js/modules/es6.object.assign");
 
 var _utils = require("../utils");
 
-var Types = ['margin', 'padding'];
-var Dimentions = {
-  'a': '',
-  'h': ['left', 'right'],
-  'v': ['top', 'bottom'],
-  'left': true,
-  'right': true,
-  'top': true,
-  'bottom': true
-};
-
-function gen(config) {
-  var ret = {};
-  var sizes = (0, _utils.getSizeSet)('spacing', config);
-  Types.forEach(function (v) {
-    Object.entries(Dimentions).forEach(function (_ref) {
-      var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-          kk = _ref2[0],
-          vv = _ref2[1];
-
-      Object.entries(sizes).forEach(function (_ref3) {
-        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
-            kkk = _ref4[0],
-            vvv = _ref4[1];
-
-        ret[(0, _utils.getSelector)(v, kk, kkk.trim())] = (0, _utils.getStyleSet)(v, vvv, {
-          mapKey: kk,
-          mapVal: vv
-        });
-      });
-    });
-  });
-  return ret;
+/**
+ * @module
+ */
+function genFuncSpacing(_ref) {
+  var directionEdge = _ref.directionEdge,
+      spacing = _ref.spacing;
+  var styleValueSet = (0, _utils.getStyleValueSet)(spacing);
+  return Object.assign((0, _utils.genClassObjects)('.margin', {
+    styleKey: true,
+    styleKeySet: directionEdge,
+    styleValueSet: styleValueSet
+  }), (0, _utils.genClassObjects)('.padding', {
+    styleKey: true,
+    styleKeySet: directionEdge,
+    styleValueSet: styleValueSet
+  }));
 }
+
+var _default = genFuncSpacing;
+exports.default = _default;

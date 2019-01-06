@@ -1,4 +1,4 @@
-export function stylesToString(styles) {
+export function classObjectsToString(styles) {
   return (Array.isArray(styles)?styles:Object.entries(styles||{}))
   .map(([k,v])=>{
     let lines = (Array.isArray(v)?v:Object.entries(v||{}))
@@ -9,75 +9,96 @@ export function stylesToString(styles) {
   .join('\n\n');
 }
 
-export function getSizeSet(name, config) {
-  let ret = {};
-  if(!name||!config) return ret;
+export function getStyleValueSetDefault(styleValueSet) {
+  if(!styleValueSet) return;
+  return styleValueSet[Object.keys(styleValueSet)[0]];
+}
 
-  let base = config[`${name}SizeBase`];
-  let min = config[`${name}SizeMin`];
-  let minCalc = config[`${name}SizeMinCalc`];
-  let max = config[`${name}SizeMax`];
-  let maxCalc = config[`${name}SizeMaxCalc`];
-  let sizes = config[`${name}SizeSet`]||[];
+function getStyleValue(value, key, unit='px') {
+  value = value===true?key:value;
+  return typeof(value)==='number'?(value+unit):String(value).trim();
+}
 
-  if(base!==undefined)ret['-'] = base;
-  for(let i=minCalc-1; i>=0; i--) {
-    ret[i?('x'.repeat(i)+'s'):'sm'] = Math.round(base - (base-min)/minCalc*(i+1));
-  }
-  for(let i=0; i<maxCalc; i++) {
-    ret[i?('x'.repeat(i)+'l'):'lg'] = Math.round(base + (max-base)/maxCalc*(i+1));
-  }
-  if(Array.isArray(sizes)) {
-    for(let size of sizes) {
-      if(Array.isArray(size)){
-        ret[size[0]] = getStyleValue(size[1]);
-      }else{
-        let pre = typeof(size)==='number'?' ':'';
-        let ext = typeof(size)==='string'&&!isNaN(size)?'x':'';
-        let ratio = (typeof(size)==='string'&&!isNaN(size)&&base)||1;
-        ret[pre+size+ext] = getStyleValue(size*ratio);
+export function getStyleValueSet(set) {
+  if(!set) return {};
+  let unit = set['_unit'];
+
+  return (Array.isArray(set)?set.map(v=>[v,v]):Object.entries(set)).reduce((v1,[k,v])=>{
+    if(k==='_base') {
+      let isString = typeof(v)==='string';
+      let base = Number(v)||0;
+      let min =  Number(set['_min'])||0;
+      let minCount =  Number(set['_minCount'])||3;
+      let max =  Number(set['_max'])||100;
+      let maxCount =  Number(set['_maxCount'])||3;
+
+      v1['-'] = getStyleValue(isString?String(base):base, null, unit);
+      for(let i=minCount-1; i>=0; i--) {
+        let value = Math.round(base - (base-min)/minCount*(i+1));
+        v1[i?('x'.repeat(i)+'s'):'sm'] = getStyleValue(isString?String(value):value, null, unit);
       }
+      for(let i=0; i<maxCount; i++) {
+        let value = Math.round(base + (max-base)/maxCount*(i+1));
+        v1[i?('x'.repeat(i)+'l'):'lg'] = getStyleValue(isString?String(value):value, null, unit);
+      }
+    }else if(k==='_multiple' && Array.isArray(v)){
+      let base = set['_base'];
+      let isString = typeof(base)==='string';
+      base = Number(base)||0;
+      (base||base===0) && v.forEach(vv=>{
+        let value = base*Number(vv);
+        v1[vv+'x'] = getStyleValue(isString?String(value):value, null, unit);
+      })
+    }if(k==='_from') {
+      let from = Number(v)||0;
+      let to =  Number(set['_to'])||0;
+      let step =  Number(set['_step'])||1;
+
+      for(let i = from; i<=to; i+=step) {
+        v1[' '+i] = i;
+      }
+    }else if(k && k[0]!=='_'){
+      v1[k] = getStyleValue(v, k, unit);
     }
-  }else if(typeof sizes === 'object'){
-    Object.entries(sizes).forEach(([k,v])=>ret[k] = getStyleValue(v));
-  }
+
+    return v1;
+  }, {})
+}
+
+function concatCssKeys(isSelector, ...args) {
+  return args.reduce((v1,v2)=>{
+    if(v2!==0&&!v2) return v1;
+    return String(v1 + (v1&&v2!=='-'&&(!isSelector||(v1[0]==='.'&&v1.length>1))?'-':'') + String(v2).trim());
+  }, '');
+}
+
+export function genClassObjects(selector, {selectorExt, styleKey, styleKeySet, styleKeyExt, styleValueSet, styleValueMap, styleObjectMap, styleObjectCompatible}={}) {
+  let classObject = {};
+  if(styleKey===true) styleKey = selector[0]==='.'?selector.slice(1):selector;
+  if(!styleValueSet) styleValueSet = {'':''}
+  if(!styleKeySet) styleKeySet = {'':''}
   
-  
-  return ret;
-}
+  Object.entries(styleKeySet).forEach(([styleKeySetKey, styleKeySetValue])=>{
+    Object.entries(styleValueSet).forEach(([styleValueSetKey, styleValueSetValue])=>{
+      let styleObject = {};
 
+      if(styleObjectMap&&typeof(styleObjectMap)==='function') {
+        styleObject = styleObjectMap(styleKeySetKey, styleKeySetValue, styleValueSetKey, styleValueSetValue);
+      }else if(styleObjectMap) {
+        styleObject = {...styleObjectMap};
+      }else{
+        let styleKeySetValues = Array.isArray(styleKeySetValue)?styleKeySetValue:[styleKeySetValue];
 
-export function getSelector(...args) {
-  let ret = '.';
-  for(let arg of args) {
-    if(arg!==0&&!arg) continue;
-    ret += `${ret!=='.'&&arg!=='-'?'-':''}${arg}`;
-  }
-  return ret;
-}
+        styleKeySetValues.forEach(styleKeySetValue=>{
+          styleKeySetValue = styleKeySetValue===true?styleKeySetKey:styleKeySetValue;
+          let styleValue = styleValueMap?(typeof(styleValueMap)==='function'?styleValueMap(styleValueSetValue):styleValueMap):styleValueSetValue;
+          styleObject[concatCssKeys(false, styleKey, styleKeySetValue, styleKeyExt)] = styleValue;
+        });
+      }
 
-export function getStyleKey(...args) {
-  let ret = '';
-  for(let arg of args) {
-    if(arg!==0&&!arg) continue;
-    ret += `${ret?'-':''}${arg}`;
-  }
-  return ret;
-}
+      classObject[concatCssKeys(true, selector, styleKeySetKey, styleValueSetKey, selectorExt )] = styleObjectCompatible?styleObjectCompatible(styleObject):styleObject;
+    });
+  });
 
-export function getStyleValue(val, param) {
-  let ret = val===true?param:val;
-  return typeof(ret)==='number'?(ret+'px'):ret;
-}
-
-export function getStyleSet(pre, val, {key, mapKey, mapVal, ext, showMapKey}={}) {
-  let ret = {};
-
-  if(Array.isArray(mapVal)) {
-    mapVal.forEach(v=>ret[getStyleKey(pre, v, showMapKey?key:'', ext)] = getStyleValue(val, key));
-  }else{
-    if(val!==false) ret[getStyleKey(pre, mapVal?mapKey:'', showMapKey?key:'', ext)] = getStyleValue(val, key);
-  }
-  
-  return ret;
+  return classObject;
 }

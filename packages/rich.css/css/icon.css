@@ -1,7 +1,0 @@
-.icon-:before {
-  content: attr(data-icon-name);
-}
-
-.icon-.button {
-  font-size: inherit;
-}

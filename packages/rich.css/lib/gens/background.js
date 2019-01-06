@@ -5,49 +5,27 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.genBgColor = genBgColor;
-exports.genBgNone = genBgNone;
-exports.default = gen;
-
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es7.object.entries");
-
-require("core-js/modules/web.dom.iterable");
+exports.default = void 0;
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
+require("core-js/modules/es6.object.assign");
+
 var _utils = require("../utils");
 
-function genBgColor(_ref) {
+function genFuncBackground(_ref) {
   var utilColors = _ref.utilColors,
       mainColors = _ref.mainColors,
       opacityColors = _ref.opacityColors;
-  var ret = {};
-  var colors = (0, _objectSpread2.default)({}, utilColors, mainColors, opacityColors);
-  var func = 'color';
-  var selector = "bg-".concat(func);
-  var styleSelector = "background-".concat(func);
-  Object.entries(colors).forEach(function (_ref2) {
-    var _ref3 = (0, _slicedToArray2.default)(_ref2, 2),
-        k = _ref3[0],
-        v = _ref3[1];
-
-    return ret[(0, _utils.getSelector)(selector, k)] = (0, _utils.getStyleSet)(styleSelector, v);
-  });
-  return ret;
+  return Object.assign((0, _utils.genClassObjects)('.bg-color', {
+    styleKey: 'background-color',
+    styleValueSet: (0, _objectSpread2.default)({}, utilColors, mainColors, opacityColors)
+  }), (0, _utils.genClassObjects)('.bg-none-', {
+    styleObjectMap: {
+      'background': 'none'
+    }
+  }));
 }
 
-function genBgNone() {
-  var ret = {};
-  ret[(0, _utils.getSelector)('bg', 'none-')] = {
-    'background': 'none'
-  };
-  return ret;
-}
-
-function gen(config) {
-  return (0, _objectSpread2.default)({}, genBgColor(config), genBgNone(config));
-}
+var _default = genFuncBackground;
+exports.default = _default;

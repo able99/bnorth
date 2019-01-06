@@ -2,7 +2,7 @@
  * @module
  */
 import genConfig from './config';
-import { stylesToString } from './utils';
+import { classObjectsToString } from './utils';
 
 
 /**
@@ -44,7 +44,7 @@ export function getStyleElement(name) {
 export function writeStyles(styles, styleElement, append) {
   if(!styles||!styleElement) return;
 
-  let html = stylesToString(styles);
+  let html = classObjectsToString(styles);
   append?(styleElement.innerHTML+=html):(styleElement.innerHTML=html);
 }
 
@@ -64,7 +64,9 @@ function gen(name='richcss', ...gens) {
   let config = getCssConfig();
   let styleElement = getStyleElement(name);
 
-  return gens.forEach(v=>writeStyles(v(config), styleElement, true));
+  let classObjects = Object.assign({}, ...gens.map(config));
+  
+  writeStyles(classObjects, styleElement, true);
 }
 
 export default gen;

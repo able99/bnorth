@@ -5,100 +5,99 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = gen;
+exports.default = void 0;
 
 require("core-js/modules/es6.string.bold");
+
+require("core-js/modules/es6.object.assign");
 
 var _utils = require("../utils");
 
 var _compatibleAnimation = _interopRequireDefault(require("../compatibles/compatibleAnimation"));
 
-function gen(config) {
-  var textColors = config.textColors,
-      utilColors = config.utilColors,
-      fontSizeBase = config.fontSizeBase,
-      fontFamilys = config.fontFamilys,
-      fontWeightSizeBase = config.fontWeightSizeBase,
-      fontWeightSizeSet = config.fontWeightSizeSet,
-      bodyBackground = config.bodyBackground,
-      lineHeightSizeBase = config.lineHeightSizeBase;
-  var ret = {};
-  ret['html'] = {
-    'font-size': "".concat(fontSizeBase, "px")
-  };
-  ret['body'] = {
-    'font-size': "".concat(fontSizeBase, "px"),
-    'color': textColors.normal,
-    'font-family': fontFamilys['sans-serif'],
-    'font-weight': fontWeightSizeBase,
-    'line-height': lineHeightSizeBase,
-    'background': bodyBackground
-  };
-  var sizes = (0, _utils.getSizeSet)('font', config);
-  ret['h1'] = {
-    'font-weight': fontWeightSizeSet.bold,
-    'font-size': sizes['xxl']
-  };
-  ret['h2'] = {
-    'font-weight': fontWeightSizeSet.bold,
-    'font-size': sizes['xl']
-  };
-  ret['h3'] = {
-    'font-weight': fontWeightSizeSet.bold,
-    'font-size': sizes['lg']
-  };
-  ret['h4'] = {
-    'font-weight': fontWeightSizeSet.bold,
-    'font-size': sizes['']
-  };
-  ret['h5'] = {
-    'font-weight': fontWeightSizeSet.bold,
-    'font-size': sizes['sm']
-  };
-  ret['h6'] = {
-    'font-weight': fontWeightSizeSet.bold,
-    'font-size': sizes['xs']
-  };
-  ret['strong'] = {
-    'font-weight': fontWeightSizeSet.bold
-  };
-  ret['hr'] = {
-    'border': "1px solid ".concat(utilColors.border),
-    'border-width': '1 0 0',
-    'clear': 'both',
-    'height': 0
-  };
-  ret[(0, _utils.getSelector)('transition-set-')] = (0, _compatibleAnimation.default)({
-    'transition': '.15s ease-out'
-  });
-  ret[(0, _utils.getSelector)('line-height-0')] = {
-    'line-height': '0'
-  };
-  ret[(0, _utils.getSelector)('line-height-1')] = {
-    'line-height': '1'
-  };
-  ret[(0, _utils.getSelector)('line-height-1em')] = {
-    'line-height': '1em'
-  };
-  ret[(0, _utils.getSelector)('outline-none-')] = {
-    'outline': 'none'
-  };
-  ret[(0, _utils.getSelector)('appearance-none-')] = {
-    'appearance': 'none',
-    '-webkit-appearance': 'none',
-    '-moz-appearance': 'none'
-  };
-  ret[(0, _utils.getSelector)('backface-hidden-')] = {
-    'backface-visibility': 'hidden'
-  };
-  ret[(0, _utils.getSelector)('force-hardware-acceleration-')] = (0, _compatibleAnimation.default)({
-    'transform': 'translateZ(0)',
-    'backface-visibility': 'hidden',
-    'perspective': '1000'
-  });
-  ret[(0, _utils.getSelector)('font-smoothing-antialiased-')] = {
-    '-webkit-font-smoothing': 'antialiased',
-    '-moz-osx-font-smoothing': 'grayscale'
-  };
-  return ret;
+function genFuncBase(_ref) {
+  var textColors = _ref.textColors,
+      utilColors = _ref.utilColors,
+      textSize = _ref.textSize,
+      hMapTextSize = _ref.hMapTextSize,
+      textFontFamily = _ref.textFontFamily,
+      textWeight = _ref.textWeight,
+      bodyBackground = _ref.bodyBackground,
+      lineHeight = _ref.lineHeight,
+      transitionTime = _ref.transitionTime;
+  textSize = (0, _utils.getStyleValueSet)(textSize);
+  textWeight = (0, _utils.getStyleValueSet)(textWeight);
+  lineHeight = (0, _utils.getStyleValueSet)(lineHeight);
+  return Object.assign((0, _utils.genClassObjects)('html', {
+    styleObjectMap: {
+      'font-size': (0, _utils.getStyleValueSetDefault)(textSize)
+    }
+  }), (0, _utils.genClassObjects)('body', {
+    styleObjectMap: {
+      'font-size': (0, _utils.getStyleValueSetDefault)(textSize),
+      'color': textColors.normal,
+      'font-family': (0, _utils.getStyleValueSetDefault)(textFontFamily),
+      'font-weight': (0, _utils.getStyleValueSetDefault)(textWeight),
+      'line-height': (0, _utils.getStyleValueSetDefault)(lineHeight),
+      'background': bodyBackground
+    }
+  }), (0, _utils.genClassObjects)('h', {
+    styleValueSet: (0, _utils.getStyleValueSet)(hMapTextSize),
+    styleObjectMap: function styleObjectMap(styleKeySetKey, styleKeySetValue, styleValueSetKey, styleValueSetValue) {
+      return {
+        'font-weight': textWeight.bold,
+        'font-size': textSize[styleValueSetValue]
+      };
+    }
+  }), (0, _utils.genClassObjects)('strong', {
+    styleObjectMap: {
+      'font-weight': textWeight.bold
+    }
+  }), (0, _utils.genClassObjects)('hr', {
+    styleObjectMap: {
+      'border': "1px solid ".concat(utilColors.border),
+      'border-width': '1 0 0',
+      'clear': 'both',
+      'height': 0
+    }
+  }), (0, _utils.genClassObjects)('.transition-set', {
+    styleKey: 'transition',
+    styleValueSet: (0, _utils.getStyleValueSet)(transitionTime),
+    styleValueMap: function styleValueMap(val) {
+      return "".concat(val, " ease-out");
+    },
+    styleObjectCompatible: _compatibleAnimation.default
+  }), (0, _utils.genClassObjects)('.line-height', {
+    styleKey: true,
+    styleValueSet: lineHeight
+  }), (0, _utils.genClassObjects)('.outline-none-', {
+    styleObjectMap: {
+      'outline': 'none'
+    }
+  }), (0, _utils.genClassObjects)('.appearance-none-', {
+    styleObjectMap: {
+      'appearance': 'none',
+      '-webkit-appearance': 'none',
+      '-moz-appearance': 'none'
+    }
+  }), (0, _utils.genClassObjects)('.backface-hidden-', {
+    styleObjectMap: {
+      'backface-visibility': 'hidden'
+    }
+  }), (0, _utils.genClassObjects)('.force-hardware-acceleration-', {
+    styleObjectMap: {
+      'transform': 'translateZ(0)',
+      'backface-visibility': 'hidden',
+      'perspective': '1000'
+    },
+    styleObjectCompatible: _compatibleAnimation.default
+  }), (0, _utils.genClassObjects)('.font-smoothing-antialiased-', {
+    styleObjectMap: {
+      '-webkit-font-smoothing': 'antialiased',
+      '-moz-osx-font-smoothing': 'grayscale'
+    }
+  }));
 }
+
+var _default = genFuncBase;
+exports.default = _default;

@@ -22,10 +22,6 @@ button:active, button[active], button.active {
   color: #383838;
 }
 
-.button-underline {
-  color: red;
-}
-
 .switch-status input + .status- .on- {
   display: none !important;
 }

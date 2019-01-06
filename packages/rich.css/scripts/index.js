@@ -1,14 +1,12 @@
 const fs = require('fs-extra');
 const { join, basename } = require('path');
-
 const config = require('../lib/config').default;
-const { stylesToString } =  require('../lib/utils');
+const { classObjectsToString } =  require('../lib/utils');
 
 const OutPathCss = './css';
 const SrcPathCss = './src/css';
 const SrcPathGens = './lib/gens';
 
-fs.emptyDirSync('./css');
 
 function minCss(css) {
     return css.replace(/[ \n]/g,'').replace(/\/\*.*?\*\//g,'');
@@ -29,20 +27,31 @@ function importCss(css) {
     return ret.join('\n');
 }
 
-const csses = fs.readdirSync('./src/css');
-csses.forEach(v=>{
+function genCssFromCss() {
+  fs.readdirSync(SrcPathCss).forEach(v=>{
     const name = basename(v, '.css');
     let css = fs.readFileSync(join(SrcPathCss, v)).toString();
     css = importCss(css);
     fs.writeFileSync(join(OutPathCss, name+'.css'), css);
     fs.writeFileSync(join(OutPathCss, name+'.min.css'), minCss(css));
-})
+  })
+}
 
-const gens = fs.readdirSync(SrcPathGens);
-gens.forEach(v=>{
+function genCssFromJs() {
+  fs.readdirSync(SrcPathGens).forEach(v=>{
     const name = basename(v, '.js');
-    const gen = require(join('../lib/gens/', v)).default||require(join('../lib/gens/', v));
-    let css = stylesToString(gen(config));
+    const gen = require(join('..', SrcPathGens, v)).default;
+    let css = classObjectsToString(gen(config));
     fs.writeFileSync(join(OutPathCss, name+'.css'), css);
     fs.writeFileSync(join(OutPathCss, name+'.min.css'), minCss(css));
-})
+  })
+}
+
+function main() {
+  fs.emptyDirSync(OutPathCss);
+  genCssFromCss();
+  genCssFromJs();
+}
+
+main();
+

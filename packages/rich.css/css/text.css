@@ -202,7 +202,7 @@
   vertical-align: top;
 }
 
-.text-vertical-align-text-top {
+.text-vertical-align-texttop {
   vertical-align: text-top;
 }
 
@@ -250,10 +250,6 @@
   white-space: pre-line;
 }
 
-.line-height- {
-  line-height: 1.4px;
-}
-
 .text-family-sans-serif {
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Segoe UI", "Microsoft YaHei", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "wenquanyi micro hei", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -272,7 +268,7 @@
   white-space: nowrap;
 }
 
-.text-truncate-1 {
+.text-truncate-1- {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -282,7 +278,27 @@
   max-height: 1.4em;
 }
 
-.text-truncate-1-placeholder {
+.text-truncate-2- {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.4;
+  max-height: 2.8em;
+}
+
+.text-truncate-3- {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-height: 1.4;
+  max-height: 4.2em;
+}
+
+.text-truncate-1-placeholder- {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -293,17 +309,7 @@
   min-height: 1.4em;
 }
 
-.text-truncate-2 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-height: 1.4;
-  max-height: 2.8em;
-}
-
-.text-truncate-2-placeholder {
+.text-truncate-2-placeholder- {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -314,17 +320,7 @@
   min-height: 2.8em;
 }
 
-.text-truncate-3 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-height: 1.4;
-  max-height: 4.2em;
-}
-
-.text-truncate-3-placeholder {
+.text-truncate-3-placeholder- {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -333,25 +329,4 @@
   line-height: 1.4;
   max-height: 4.2em;
   min-height: 4.2em;
-}
-
-.text-truncate-4 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-  line-height: 1.4;
-  max-height: 5.6em;
-}
-
-.text-truncate-4-placeholder {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-  line-height: 1.4;
-  max-height: 5.6em;
-  min-height: 5.6em;
 }

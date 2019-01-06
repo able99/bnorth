@@ -23,8 +23,6 @@ var _display = _interopRequireDefault(require("./gens/display"));
 
 var _flex = _interopRequireDefault(require("./gens/flex"));
 
-var _icon = _interopRequireDefault(require("./gens/icon"));
-
 var _position = _interopRequireDefault(require("./gens/position"));
 
 var _size = _interopRequireDefault(require("./gens/size"));
@@ -58,7 +56,7 @@ var _text = _interopRequireDefault(require("./gens/text"));
  * ```
  */
 function genCss() {
-  (0, _gen.default)('richcss', _base.default, _background.default, _border.default, _text.default, _position.default, _display.default, _flex.default, _spacing.default, _size.default, _cursor.default, _control.default, _icon.default);
+  (0, _gen.default)('richcss', _base.default, _background.default, _border.default, _text.default, _position.default, _display.default, _flex.default, _spacing.default, _size.default, _cursor.default, _control.default);
 }
 
 var _default = genCss;

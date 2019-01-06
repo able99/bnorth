@@ -12,7 +12,9 @@ exports.getStyleElement = getStyleElement;
 exports.writeStyles = writeStyles;
 exports.default = void 0;
 
-require("core-js/modules/web.dom.iterable");
+require("core-js/modules/es6.object.assign");
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
@@ -64,7 +66,7 @@ function getStyleElement(name) {
 
 function writeStyles(styles, styleElement, append) {
   if (!styles || !styleElement) return;
-  var html = (0, _utils.stylesToString)(styles);
+  var html = (0, _utils.classObjectsToString)(styles);
   append ? styleElement.innerHTML += html : styleElement.innerHTML = html;
 }
 /**
@@ -90,9 +92,8 @@ function gen() {
     gens[_key - 1] = arguments[_key];
   }
 
-  return gens.forEach(function (v) {
-    return writeStyles(v(config), styleElement, true);
-  });
+  var classObjects = Object.assign.apply(Object, [{}].concat((0, _toConsumableArray2.default)(gens.map(config))));
+  writeStyles(classObjects, styleElement, true);
 }
 
 var _default = gen;

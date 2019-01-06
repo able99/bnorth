@@ -5,112 +5,64 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.genPosition = genPosition;
-exports.genOffset = genOffset;
-exports.genTranslate = genTranslate;
-exports.default = gen;
+exports.default = void 0;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es7.object.entries");
-
-require("core-js/modules/web.dom.iterable");
+require("core-js/modules/es6.object.assign");
 
 var _utils = require("../utils");
 
 var _compatibleAnimation = _interopRequireDefault(require("../compatibles/compatibleAnimation"));
 
-var Positions = {
-  'initial': true,
-  'relative': true,
-  'absolute': true,
-  'fixed': true
-};
-var Offsets = {
-  'left': true,
-  'right': true,
-  'top': true,
-  'bottom': true
-};
-var Offsets0 = {
-  'a': ['left', 'right', 'top', 'bottom'],
-  'h': ['left', 'right'],
-  'v': ['top', 'bottom'],
-  'left': true,
-  'right': true,
-  'top': true,
-  'bottom': true
-};
-
-function genPosition() {
-  var ret = {};
-  var selector = 'position';
-  Object.entries(Positions).forEach(function (_ref) {
-    var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-        k = _ref2[0],
-        v = _ref2[1];
-
-    return ret[(0, _utils.getSelector)(selector, k)] = (0, _utils.getStyleSet)(selector, v, {
-      key: k
-    });
-  });
-  return ret;
+function genFuncPosition(_ref) {
+  var position = _ref.position,
+      directionOffsetAll = _ref.directionOffsetAll,
+      directionOffset = _ref.directionOffset;
+  return Object.assign((0, _utils.genClassObjects)('.position', {
+    styleKey: 'position',
+    styleValueSet: (0, _utils.getStyleValueSet)(position)
+  }), (0, _utils.genClassObjects)('.offset', {
+    selectorExt: 'start',
+    styleKeySet: directionOffsetAll,
+    styleValueMap: function styleValueMap() {
+      return '0';
+    }
+  }), (0, _utils.genClassObjects)('.offset', {
+    selectorExt: 'center',
+    styleKey: ' ',
+    styleKeySet: directionOffset,
+    styleValueMap: function styleValueMap() {
+      return '50%';
+    }
+  }), (0, _utils.genClassObjects)('.offset', {
+    selectorExt: 'end',
+    styleKey: ' ',
+    styleKeySet: directionOffset,
+    styleValueMap: function styleValueMap() {
+      return '100%';
+    }
+  }), (0, _utils.genClassObjects)('.translate-center', {
+    selectorExt: 'a',
+    styleKey: 'transform',
+    styleValueMap: function styleValueMap() {
+      return 'translate3d(-50%, -50%, 0)';
+    },
+    styleObjectCompatible: _compatibleAnimation.default
+  }), (0, _utils.genClassObjects)('.translate-center', {
+    selectorExt: 'x',
+    styleKey: 'transform',
+    styleValueMap: function styleValueMap() {
+      return 'translate3d(-50%, 0, 0)';
+    },
+    styleObjectCompatible: _compatibleAnimation.default
+  }), (0, _utils.genClassObjects)('.translate-center', {
+    selectorExt: 'y',
+    styleKey: 'transform',
+    styleValueMap: function styleValueMap() {
+      return 'translate3d(0, -50%, 0)';
+    },
+    styleObjectCompatible: _compatibleAnimation.default
+  }));
 }
 
-function genOffset() {
-  var ret = {};
-  var selector = 'offset';
-  var func;
-  func = 'start';
-  Object.entries(Offsets0).forEach(function (_ref3) {
-    var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
-        k = _ref4[0],
-        v = _ref4[1];
-
-    return ret[(0, _utils.getSelector)(selector, k, func)] = (0, _utils.getStyleSet)('', 0, {
-      mapKey: k,
-      mapVal: v
-    });
-  });
-  func = 'center';
-  Object.entries(Offsets).forEach(function (_ref5) {
-    var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
-        k = _ref6[0],
-        v = _ref6[1];
-
-    return ret[(0, _utils.getSelector)(selector, k, func)] = (0, _utils.getStyleSet)(k, '50%');
-  });
-  func = 'end';
-  Object.entries(Offsets).forEach(function (_ref7) {
-    var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
-        k = _ref8[0],
-        v = _ref8[1];
-
-    return ret[(0, _utils.getSelector)(selector, k, func)] = (0, _utils.getStyleSet)(k, '100%');
-  });
-  return ret;
-}
-
-function genTranslate() {
-  var ret = {};
-  var selector = 'translate';
-  var func = 'center';
-  ret[(0, _utils.getSelector)(selector, func, 'a')] = (0, _compatibleAnimation.default)({
-    'transform': 'translate3d(-50%, -50%, 0)'
-  });
-  ret[(0, _utils.getSelector)(selector, func, 'x')] = (0, _compatibleAnimation.default)({
-    'transform': 'translate3d(-50%, 0, 0)'
-  });
-  ret[(0, _utils.getSelector)(selector, func, 'y')] = (0, _compatibleAnimation.default)({
-    'transform': 'translate3d(0, -50%, 0)'
-  });
-  return ret;
-}
-
-function gen(config) {
-  return (0, _objectSpread2.default)({}, genPosition(config), genOffset(config), genTranslate(config));
-}
+var _default = genFuncPosition;
+exports.default = _default;

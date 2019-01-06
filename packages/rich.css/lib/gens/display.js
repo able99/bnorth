@@ -1,184 +1,69 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.genDisplay = genDisplay;
-exports.genVisibility = genVisibility;
-exports.genOpacity = genOpacity;
-exports.genScrollable = genScrollable;
-exports.genOverflows = genOverflows;
-exports.genPointerEvents = genPointerEvents;
-exports.genFloat = genFloat;
-exports.default = gen;
+exports.default = void 0;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
-require("core-js/modules/es6.array.fill");
-
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es7.object.entries");
-
-require("core-js/modules/web.dom.iterable");
+require("core-js/modules/es6.object.assign");
 
 var _utils = require("../utils");
 
-var Displays = {
-  'inline': true,
-  'inlineblock': 'inline-block',
-  'none': true,
-  'block': true
-};
-var Visibilitis = {
-  'show': 'visible',
-  'hide': 'hidden'
-};
-var Overflows = {
-  'hidden': true,
-  'scroll': true,
-  'auto': true,
-  'inherit': true,
-  'visible': true
-};
-var PointerEvents = {
-  'none': true,
-  'all': true
-};
-var Floats = {
-  'left': true,
-  'right': true,
-  'none': true
-};
-
-function genDisplay() {
-  var ret = {};
-  var selector = 'display';
-  Object.entries(Displays).forEach(function (_ref) {
-    var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-        k = _ref2[0],
-        v = _ref2[1];
-
-    return ret[(0, _utils.getSelector)(selector, k)] = (0, _utils.getStyleSet)(selector, v, {
-      key: k
-    });
-  });
-  return ret;
+function genFuncDisplay(_ref) {
+  var directionAxis = _ref.directionAxis,
+      display = _ref.display,
+      visibility = _ref.visibility,
+      opacity = _ref.opacity,
+      pointerEvents = _ref.pointerEvents,
+      overflow = _ref.overflow,
+      float = _ref.float;
+  return Object.assign((0, _utils.genClassObjects)('.display', {
+    styleKey: true,
+    styleValueSet: (0, _utils.getStyleValueSet)(display)
+  }), (0, _utils.genClassObjects)('.visibility', {
+    styleKey: true,
+    styleValueSet: (0, _utils.getStyleValueSet)(visibility)
+  }), (0, _utils.genClassObjects)('.opacity', {
+    styleKey: true,
+    styleValueSet: (0, _utils.getStyleValueSet)(opacity),
+    styleValueMap: function styleValueMap(val) {
+      return (val / 100).toFixed(2);
+    }
+  }), (0, _utils.genClassObjects)('.scrollable', {
+    selectorExt: '-',
+    styleKeySet: (0, _utils.getStyleValueSet)(directionAxis),
+    styleObjectMap: function styleObjectMap(styleKeySetKey, styleKeySetValue, styleValueSetKey, styleValueSetValue) {
+      return {
+        'max-width': styleKeySetKey !== 'y' ? '100%' : undefined,
+        'max-height': styleKeySetKey !== 'x' ? '100%' : undefined,
+        'overflow-x': styleKeySetKey !== 'y' ? 'auto' : 'hidden',
+        'overflow-y': styleKeySetKey !== 'x' ? 'auto' : 'hidden',
+        '-webkit-overflow-scrolling': 'touch'
+      };
+    }
+  }), (0, _utils.genClassObjects)('.overflow', {
+    styleKey: true,
+    styleKeySet: (0, _utils.getStyleValueSet)(directionAxis),
+    styleValueSet: (0, _utils.getStyleValueSet)(overflow)
+  }), (0, _utils.genClassObjects)('.pointer-events', {
+    styleKey: true,
+    styleValueSet: (0, _utils.getStyleValueSet)(pointerEvents)
+  }), (0, _utils.genClassObjects)('.float', {
+    styleKey: true,
+    styleValueSet: (0, _utils.getStyleValueSet)(float)
+  }), (0, _utils.genClassObjects)('.clear:before', {
+    styleObjectMap: {
+      'content': "' '",
+      'display': 'table'
+    }
+  }), (0, _utils.genClassObjects)('.clear:after', {
+    styleObjectMap: {
+      'content': "' '",
+      'display': 'table',
+      'clear': 'both'
+    }
+  }));
 }
 
-function genVisibility() {
-  var ret = {};
-  var selector = 'visibility';
-  Object.entries(Visibilitis).forEach(function (_ref3) {
-    var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
-        k = _ref4[0],
-        v = _ref4[1];
-
-    return ret[(0, _utils.getSelector)(selector, k)] = (0, _utils.getStyleSet)(selector, v, {
-      key: k
-    });
-  });
-  return ret;
-}
-
-function genOpacity() {
-  var ret = {};
-  var selector = 'opacity';
-  Array(11).fill(0).map(function (v, i) {
-    return i * 10;
-  }).forEach(function (v) {
-    return ret[(0, _utils.getSelector)(selector, v)] = (0, _utils.getStyleSet)(selector, (v / 100).toFixed(2));
-  });
-  return ret;
-}
-
-function genScrollable() {
-  var ret = {};
-  var selector = 'scrollable';
-  ret[(0, _utils.getSelector)(selector, 'a-')] = {
-    'max-width': '100%',
-    'max-height': '100%',
-    'overflow-x': 'auto',
-    'overflow-y': 'auto',
-    '-webkit-overflow-scrolling': 'touch'
-  };
-  ret[(0, _utils.getSelector)(selector, 'x-')] = {
-    'max-width': '100%',
-    'overflow-x': 'auto',
-    'overflow-y': 'hidden',
-    '-webkit-overflow-scrolling': 'touch'
-  };
-  ret[(0, _utils.getSelector)(selector, 'y-')] = {
-    'max-height': '100%',
-    'overflow-x': 'hidden',
-    'overflow-y': 'auto',
-    '-webkit-overflow-scrolling': 'touch'
-  };
-  return ret;
-}
-
-function genOverflows() {
-  var ret = {};
-  var selector = 'overflow';
-  Object.entries(Overflows).forEach(function (_ref5) {
-    var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
-        k = _ref6[0],
-        v = _ref6[1];
-
-    ret[(0, _utils.getSelector)(selector, 'a', k)] = (0, _utils.getStyleSet)(selector, v, {
-      key: k
-    });
-    ret[(0, _utils.getSelector)(selector, 'x', k)] = (0, _utils.getStyleSet)("".concat(selector, "-x"), v, {
-      key: k
-    });
-    ret[(0, _utils.getSelector)(selector, 'y', k)] = (0, _utils.getStyleSet)("".concat(selector, "-y"), v, {
-      key: k
-    });
-  });
-  return ret;
-}
-
-function genPointerEvents() {
-  var ret = {};
-  var selector = 'pointer-events';
-  Object.entries(PointerEvents).forEach(function (_ref7) {
-    var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
-        k = _ref8[0],
-        v = _ref8[1];
-
-    return ret[(0, _utils.getSelector)(selector, k)] = (0, _utils.getStyleSet)(selector, v, {
-      key: k
-    });
-  });
-  return ret;
-}
-
-function genFloat() {
-  var ret = {};
-  var selector = 'float';
-  Object.entries(Floats).forEach(function (_ref9) {
-    var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
-        k = _ref10[0],
-        v = _ref10[1];
-
-    return ret[(0, _utils.getSelector)(selector, k)] = (0, _utils.getStyleSet)(selector, v, {
-      key: k
-    });
-  });
-  ret[(0, _utils.getSelector)('clear:before')] = {
-    'content': "' '",
-    'display': 'table'
-  };
-  ret[(0, _utils.getSelector)('clear:after')] = (0, _objectSpread2.default)({}, ret[(0, _utils.getSelector)('clear:before')], {
-    'clear': 'both'
-  });
-  return ret;
-}
-
-function gen(config) {
-  return (0, _objectSpread2.default)({}, genDisplay(config), genVisibility(config), genOpacity(config), genScrollable(config), genOverflows(config), genPointerEvents(config), genFloat(config));
-}
+var _default = genFuncDisplay;
+exports.default = _default;

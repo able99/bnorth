@@ -1,112 +1,93 @@
-import { getSelector, getSizeSet } from '../utils';
+import { getStyleValueSet, getStyleValueSetDefault, genClassObjects } from '../utils';
 import compatibleAnimation from '../compatibles/compatibleAnimation';
 
 
-export default function gen(config) {
-  let {
-    textColors,
-    utilColors,
-    fontSizeBase,
-    fontFamilys,
-    fontWeightSizeBase,
-    fontWeightSizeSet,
-    bodyBackground,
-    lineHeightSizeBase,
-  } = config;
-  let ret = {};
+function genFuncBase({ textColors, utilColors, textSize, hMapTextSize, textFontFamily, textWeight, bodyBackground, lineHeight, transitionTime }) {
+  textSize = getStyleValueSet(textSize);
+  textWeight = getStyleValueSet(textWeight);
+  lineHeight = getStyleValueSet(lineHeight);
 
-  
-  ret['html'] = {
-    'font-size': `${fontSizeBase}px`,
-  }
-
-  ret['body'] = {
-    'font-size':  `${fontSizeBase}px`,
-    'color':       textColors.normal,
-    'font-family': fontFamilys['sans-serif'],
-    'font-weight': fontWeightSizeBase,
-    'line-height': lineHeightSizeBase,
-    'background':  bodyBackground,
-  }
-
-  let sizes = getSizeSet('font', config);
-  ret['h1'] = {
-    'font-weight': fontWeightSizeSet.bold,
-    'font-size': sizes['xxl'],
-  }
-  ret['h2'] = {
-    'font-weight': fontWeightSizeSet.bold,
-    'font-size': sizes['xl'],
-  }
-  ret['h3'] = {
-    'font-weight': fontWeightSizeSet.bold,
-    'font-size': sizes['lg'],
-  }
-  ret['h4'] = {
-    'font-weight': fontWeightSizeSet.bold,
-    'font-size': sizes[''],
-  }
-  ret['h5'] = {
-    'font-weight': fontWeightSizeSet.bold,
-    'font-size': sizes['sm'],
-  }
-  ret['h6'] = {
-    'font-weight': fontWeightSizeSet.bold,
-    'font-size': sizes['xs'],
-  }
-
-  ret['strong'] = {
-    'font-weight': fontWeightSizeSet.bold,
-  }
-  
-  ret['hr'] = {
-    'border':  `1px solid ${utilColors.border}`,
-    'border-width': '1 0 0',
-    'clear': 'both',
-    'height': 0,
-  }
-
-  ret[getSelector('transition-set-')] = compatibleAnimation({
-    'transition': '.15s ease-out',
-  });
-
-  ret[getSelector('line-height-0')] = {
-    'line-height': '0',
-  };
-
-  ret[getSelector('line-height-1')] = {
-    'line-height': '1',
-  };
-
-  ret[getSelector('line-height-1em')] = {
-    'line-height': '1em',
-  };
-
-  ret[getSelector('outline-none-')] = {
-    'outline': 'none',
-  };
-
-  ret[getSelector('appearance-none-')] = {
-    'appearance': 'none',
-    '-webkit-appearance': 'none',
-    '-moz-appearance': 'none',
-  };
-
-  ret[getSelector('backface-hidden-')] = {
-    'backface-visibility': 'hidden',
-  };
-
-  ret[getSelector('force-hardware-acceleration-')] = compatibleAnimation({
-    'transform': 'translateZ(0)',
-    'backface-visibility': 'hidden',
-    'perspective': '1000',
-  });
-
-  ret[getSelector('font-smoothing-antialiased-')] = {
-    '-webkit-font-smoothing': 'antialiased',
-    '-moz-osx-font-smoothing': 'grayscale',
-  };
-
-
-  return ret;
+  return Object.assign(
+    genClassObjects('html', {
+      styleObjectMap: {
+        'font-size': getStyleValueSetDefault(textSize),
+      },
+    }), 
+    genClassObjects('body', {
+      styleObjectMap: {
+        'font-size':  getStyleValueSetDefault(textSize),
+        'color':       textColors.normal,
+        'font-family': getStyleValueSetDefault(textFontFamily),
+        'font-weight': getStyleValueSetDefault(textWeight),
+        'line-height': getStyleValueSetDefault(lineHeight),
+        'background':  bodyBackground,
+      },
+    }), 
+    genClassObjects('h', {
+      styleValueSet: getStyleValueSet(hMapTextSize),
+      styleObjectMap: (styleKeySetKey, styleKeySetValue, styleValueSetKey, styleValueSetValue)=>{
+        return {
+          'font-weight': textWeight.bold,
+          'font-size': textSize[styleValueSetValue],
+        }
+      }
+    }),
+    genClassObjects('strong', {
+      styleObjectMap: {
+        'font-weight': textWeight.bold,
+      },
+    }), 
+    genClassObjects('hr', {
+      styleObjectMap: {
+        'border':  `1px solid ${utilColors.border}`,
+        'border-width': '1 0 0',
+        'clear': 'both',
+        'height': 0,
+      },
+    }), 
+    genClassObjects('.transition-set', {
+      styleKey: 'transition',
+      styleValueSet: getStyleValueSet(transitionTime),
+      styleValueMap: val=>`${val} ease-out`,
+      styleObjectCompatible: compatibleAnimation,
+    }), 
+    genClassObjects('.line-height', {
+      styleKey: true,
+      styleValueSet: lineHeight, 
+    }), 
+    genClassObjects('.outline-none-', {
+      styleObjectMap: {
+        'outline': 'none',
+      },
+    }), 
+    genClassObjects('.appearance-none-', {
+      styleObjectMap: {
+        'appearance': 'none',
+        '-webkit-appearance': 'none',
+        '-moz-appearance': 'none',
+      },
+    }), 
+    genClassObjects('.backface-hidden-', {
+      styleObjectMap: {
+        'backface-visibility': 'hidden',
+      },
+    }), 
+    genClassObjects('.force-hardware-acceleration-', {
+      styleObjectMap: {
+        'transform': 'translateZ(0)',
+        'backface-visibility': 'hidden',
+        'perspective': '1000',
+      },
+      styleObjectCompatible: compatibleAnimation,
+    }), 
+    genClassObjects('.font-smoothing-antialiased-', {
+      styleObjectMap: {
+        '-webkit-font-smoothing': 'antialiased',
+        '-moz-osx-font-smoothing': 'grayscale',
+      },
+    }), 
+  );
 }
+
+
+export default genFuncBase;
