@@ -51,6 +51,7 @@
 
 /**
  * 数据单元拥有唯一 id，每个数据单元通过 id 对应 context 数据仓库的一个数据块，是对数据的包装，提供读取，更新等操作
+ * @see {@link https://able99.github.io/cbnorth/data.html} bnorth 数据流
  * @exportdefault
  */
 class State {

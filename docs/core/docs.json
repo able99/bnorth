@@ -40,7 +40,7 @@
     },
     "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
   },
-  "readme": "# core\n\ncore 是构建应用的核心，是应用的入口。core 实际上是一个事件驱动的 mvc 框架，实现了 App 类。提供了事件管理，页面管理，数据管理，插件管理，\b等核心功能\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n[参考手册](//able99.github.io/bnorth/core/)\n\n",
+  "readme": "# core\n\ncore 是构建应用的核心，是应用的入口。core 实际上是一个事件驱动的 mvc 框架，实现了 App 类。提供了事件管理，页面管理，数据管理，插件管理，\b等核心功能\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n\n[参考手册](//able99.github.io/bnorth/core/)\n\n",
   "doclets": [
     {
       "kind": "module",
@@ -574,6 +574,9 @@
     },
     {
       "classdesc": "App 数据管理模块，提供数据仓库功能，实现数据管理",
+      "see": [
+        "{@link https://able99.github.io/cbnorth/data.html} bnorth 数据流"
+      ],
       "exportdefault": true,
       "scope": "static",
       "name": "Context",
@@ -834,7 +837,7 @@
     {
       "classdesc": "App 事件管理模块，提供事件管理的功能",
       "see": [
-        "https://able99.github.io/cbnorth/event.html"
+        "{@link https://able99.github.io/cbnorth/event.html} bnorth 事件驱动机制"
       ],
       "exportdefault": true,
       "scope": "static",
@@ -1964,6 +1967,9 @@
     },
     {
       "classdesc": "页面组件，是由页面管理器管理的，是对应路由的 component 的父组件。管理页面的属性方法和事件，管理页面的生命周期，并向 component 注入页面相关属性。",
+      "see": [
+        "{@link https://able99.github.io/cbnorth/page.html} bnorth 页面管理"
+      ],
       "kind": "component",
       "id": null,
       "exportdefault": true,
@@ -2374,6 +2380,9 @@
     },
     {
       "classdesc": "App 插件管理模块，提供 App 通过插件的扩展的能力",
+      "see": [
+        "{@link https://able99.github.io/cbnorth/plugin.html} bnorth 插件机制"
+      ],
       "exportdefault": true,
       "scope": "static",
       "name": "Plugins",
@@ -3382,6 +3391,9 @@
     },
     {
       "classdesc": "app 的页面管理器，负责路由映射，页面管理，弹出层管理，导航操作等功能\n\n一些约定：\n\n1. 子页面不能再拥有子页面\n1. 子页面的可见性由其父页面的可见性决定",
+      "see": [
+        "{@link https://able99.github.io/cbnorth/page.html} bnorth 页面管理"
+      ],
       "exportdefault": true,
       "scope": "static",
       "name": "Router",
@@ -4361,6 +4373,9 @@
     },
     {
       "classdesc": "数据单元拥有唯一 id，每个数据单元通过 id 对应 context 数据仓库的一个数据块，是对数据的包装，提供读取，更新等操作",
+      "see": [
+        "{@link https://able99.github.io/cbnorth/data.html} bnorth 数据流"
+      ],
       "exportdefault": true,
       "scope": "static",
       "name": "State",
@@ -4687,7 +4702,7 @@
       "longname": "module:utils"
     },
     {
-      "classdesc": "App Utils 模块，提供一些工具函数",
+      "classdesc": "App 工具模块，提供一些工具函数",
       "exportdefault": true,
       "scope": "static",
       "name": "Utils",

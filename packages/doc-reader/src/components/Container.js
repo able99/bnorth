@@ -68,9 +68,14 @@ let Container = aprops=>{
 
       {see?(
         <Section title="参见" type="section">
-          {see.map(v=>(
-            <Link key={v} app={app} doc={{name: v, longname: v}} />
-          ))}
+          {see.map(v=>{
+            let groups = v.match(/\s*{\s*@link\s* (.*)}\s* (.*)/);
+            if(groups) {
+              return <Link key={v} app={app} doc={{name: groups[2]||groups[1], longname: groups[1]}} />
+            }else{
+              return <div>v</div>;
+            }
+          })}
         </Section>
       ):null}
 

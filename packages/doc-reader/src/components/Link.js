@@ -8,7 +8,7 @@ export default aprops=>{
   return (
     <List.Item 
       autoArrow={false} b-theme="link" 
-      onClick={doc.longname?(()=>app.router.push(['/'+type, doc.longname])):null} 
+      onClick={doc.longname?(()=>doc.longname.startsWith('http')?(window.location.href=doc.longname):app.router.push(['/'+type, doc.longname])):null} 
       media={doc.access?`[${doc.access}]`:''}
       title={doc.name||doc.longname} mainProps={{className: 'flex-sub-flex-none width-full- scrollable-x-'}}
       after={doc.exportdefault?'(exports)':''}

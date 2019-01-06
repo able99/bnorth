@@ -116,6 +116,7 @@ import ReactDOM from 'react-dom';
  
 /**
  * 页面组件，是由页面管理器管理的，是对应路由的 component 的父组件。管理页面的属性方法和事件，管理页面的生命周期，并向 component 注入页面相关属性。
+ * @see {@link https://able99.github.io/cbnorth/page.html} bnorth 页面管理
  * @component
  * @exportdefault
  */
