@@ -1,0 +1,634 @@
+{
+  "package": {
+    "name": "@bnorth/plugin-network",
+    "version": "3.1.6",
+    "description": "bnorth plugin for network",
+    "keywords": [
+      "bnorth",
+      "plugin",
+      "network",
+      "axios"
+    ],
+    "author": "hubn <8846755@qq.com>",
+    "homepage": "https://github.com/able99/",
+    "license": "MIT"
+  },
+  "readme": "# `bnorth-plugin-network`\n\n> TODO: description\n\n## Usage\n\n```\nlet app = new App();\napp.plugins.add(require('bnorth-plugin-network'));\n```\n",
+  "doclets": [
+    {
+      "kind": "module",
+      "name": "index",
+      "longname": "module:index"
+    },
+    {
+      "description": "解析请求类参数的回调，可使用 this 指针，指向 PluginOptions 实例",
+      "kind": "typedef",
+      "name": "NetworkRequestOptionCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "description": "App 的实例",
+          "name": "app"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "请求参数"
+        }
+      ],
+      "longname": "module:index~NetworkRequestOptionCallback",
+      "scope": "inner",
+      "memberof": "module:index"
+    },
+    {
+      "description": "解析响应类参数的回调，可使用 this 指针，指向 PluginOptions 实例",
+      "kind": "typedef",
+      "name": "NetworkResponseOptionCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "description": "App 的实例",
+          "name": "app"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "响应数据",
+          "name": "data"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "预处理后的响应数据"
+        }
+      ],
+      "longname": "module:index~NetworkResponseOptionCallback",
+      "scope": "inner",
+      "memberof": "module:index"
+    },
+    {
+      "description": "处理响应成功的回调，可使用 this 指针，指向 PluginOptions 实例",
+      "kind": "typedef",
+      "name": "NetworkHandleSuccessOptionCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "description": "App 的实例",
+          "name": "app"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetWorkResultSuccess"
+            ]
+          },
+          "description": "响应数据",
+          "name": "data"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:index~NetWorkResultSuccess"
+            ]
+          },
+          "description": "预处理后的响应数据"
+        }
+      ],
+      "longname": "module:index~NetworkHandleSuccessOptionCallback",
+      "scope": "inner",
+      "memberof": "module:index"
+    },
+    {
+      "description": "处理响应错误的回调，可使用 this 指针，指向 PluginOptions 实例",
+      "kind": "typedef",
+      "name": "NetworkHandleErrorOptionCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "module:app.App"
+            ]
+          },
+          "description": "App 的实例",
+          "name": "app"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetWorkResultError"
+            ]
+          },
+          "description": "响应数据",
+          "name": "data"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:index~NetWorkResultError"
+            ]
+          },
+          "description": "预处理后的响应错误"
+        }
+      ],
+      "longname": "module:index~NetworkHandleErrorOptionCallback",
+      "scope": "inner",
+      "memberof": "module:index"
+    },
+    {
+      "description": "请求成功返回值",
+      "kind": "typedef",
+      "name": "NetWorkResultSuccess",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "axios请求配置",
+          "name": "config"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "服务端返回的数据",
+          "name": "data"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "响应头",
+          "name": "headers"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "dom 请求实例",
+          "name": "request"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "服务端返回的状态码",
+          "name": "status"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "服务端返回的状态信息",
+          "name": "statusText"
+        }
+      ],
+      "longname": "module:index~NetWorkResultSuccess",
+      "scope": "inner",
+      "memberof": "module:index"
+    },
+    {
+      "description": "请求失败返回值",
+      "kind": "typedef",
+      "name": "NetWorkResultError",
+      "type": {
+        "names": [
+          "Error"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "axios请求配置",
+          "name": "config"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "dom 请求实例",
+          "name": "request"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetWorkResultSuccess"
+            ]
+          },
+          "description": "响应信息，如果网络错误该字段为空",
+          "name": "response"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "错误信息",
+          "name": "message"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "错误栈",
+          "name": "stack"
+        }
+      ],
+      "longname": "module:index~NetWorkResultError",
+      "scope": "inner",
+      "memberof": "module:index"
+    },
+    {
+      "description": "浏览器插件参数，扩展了默认的插件参数",
+      "kind": "typedef",
+      "name": "PluginOptions",
+      "augments": [
+        "module:plugin~PluginDefine"
+      ],
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "请求地址的基地址",
+          "name": "baseUrl"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "请求地址的基地址的补充",
+          "name": "apiUrl"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "请求地址",
+          "name": "url"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "请求超时时间",
+          "name": "timeout"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "相应的内容的类型",
+          "name": "responseType"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "请求参数键值对",
+          "name": "options"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetworkRequestOptionCallback"
+            ]
+          },
+          "description": "获取请求头",
+          "name": "getRequestHeaders"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetworkRequestOptionCallback"
+            ]
+          },
+          "description": "获取请求查询字符串",
+          "name": "getRequestParams"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetworkRequestOptionCallback"
+            ]
+          },
+          "description": "获取请求内容的类型",
+          "name": "getRequestContentType"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetworkRequestOptionCallback"
+            ]
+          },
+          "description": "获取请求的方法",
+          "name": "getRequestMethod"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetworkRequestOptionCallback"
+            ]
+          },
+          "description": "获取请求数据",
+          "name": "getRequestData"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetworkResponseOptionCallback"
+            ]
+          },
+          "description": "返回预处理的响应数据",
+          "name": "getResponseData"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetworkHandleErrorOptionCallback"
+            ]
+          },
+          "description": "预处理服务器的响应错误",
+          "name": "handleStatusError"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetworkHandleErrorOptionCallback"
+            ]
+          },
+          "description": "预处理运行时的响应错误",
+          "name": "handleError"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetworkHandleSuccessOptionCallback"
+            ]
+          },
+          "description": "预处理响应成功信息，如果阻止运行，抛出异常",
+          "name": "handleResponse"
+        }
+      ],
+      "longname": "module:index~PluginOptions",
+      "scope": "inner",
+      "memberof": "module:index"
+    },
+    {
+      "classdesc": "网络通讯类，由插件构造，挂载在 app 上",
+      "name": "Network",
+      "longname": "module:index~Network",
+      "kind": "class",
+      "scope": "inner",
+      "memberof": "module:index",
+      "params": []
+    },
+    {
+      "description": "App 的实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:index~Network#app",
+      "kind": "member",
+      "memberof": "module:index~Network",
+      "scope": "instance",
+      "defaultvalue": "app"
+    },
+    {
+      "description": "所属插件的实例的 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:index~Network#_id",
+      "kind": "member",
+      "memberof": "module:index~Network",
+      "scope": "instance",
+      "defaultvalue": "_id"
+    },
+    {
+      "description": "所属插件的实例的 options",
+      "type": {
+        "names": [
+          "module:index~PluginOptions"
+        ]
+      },
+      "name": "options",
+      "longname": "module:index~Network#options",
+      "kind": "member",
+      "memberof": "module:index~Network",
+      "scope": "instance",
+      "defaultvalue": "{}"
+    },
+    {
+      "description": "发起请求",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:index~PluginOptions"
+            ]
+          },
+          "description": "请求参数，可临时替换默认参数",
+          "name": "options"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "promise"
+            ]
+          },
+          "description": "返回 promise 实例"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetWorkResultSuccess"
+            ]
+          },
+          "description": "promise resolve 返回"
+        },
+        {
+          "type": {
+            "names": [
+              "module:index~NetWorkResultError"
+            ]
+          },
+          "description": "promise reject 返回"
+        }
+      ],
+      "name": "fetch",
+      "longname": "module:index~Network#fetch",
+      "kind": "function",
+      "memberof": "module:index~Network",
+      "scope": "instance"
+    },
+    {
+      "description": "网络请求类的默认参数",
+      "type": {
+        "names": [
+          "index~PluginOptions"
+        ]
+      },
+      "name": "Options",
+      "longname": "module:index~Network.Options",
+      "kind": "member",
+      "memberof": "module:index~Network",
+      "scope": "static",
+      "defaultvalue": "{\"baseUrl\":\"./\",\"apiUrl\":\"\",\"url\":\"\",\"getRequestHeaders\":\"\",\"getRequestParams\":\"\",\"getRequestContentType\":\"\",\"getRequestMethod\":\"\",\"getRequestData\":\"\",\"getResponseData\":\"\",\"handleStatusError\":\"\",\"handleError\":\"\",\"handleResponse\":\"\"}"
+    },
+    {
+      "description": "为 App 实例增加网络通讯模块",
+      "id": null,
+      "kind": "plugin",
+      "scope": "static",
+      "defaultvalue": "",
+      "exportdefault": true,
+      "name": "network",
+      "longname": "module:index.network",
+      "memberof": "module:index",
+      "params": []
+    },
+    {
+      "description": "为 App 实例增加网络通讯操作类",
+      "memberof": "module:index.network",
+      "type": {
+        "names": [
+          "module:index~Network"
+        ]
+      },
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "app.Network",
+          "value": "app.Network"
+        }
+      ],
+      "name": "app.Network",
+      "longname": "module:index.network.app.Network",
+      "kind": "member",
+      "scope": "static",
+      "defaultvalue": "Network"
+    },
+    {
+      "description": "为 App 实例增加网络通讯操作实例",
+      "memberof": "module:index.network",
+      "type": {
+        "names": [
+          "module:index~Network"
+        ]
+      },
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "app.network",
+          "value": "app.network"
+        }
+      ],
+      "name": "app.network",
+      "longname": "module:index.network.app.network",
+      "kind": "member",
+      "scope": "static"
+    }
+  ]
+}

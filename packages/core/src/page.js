@@ -140,6 +140,14 @@ class Page extends React.Component {
   }
 
   /**
+   * 页面路由匹配信息
+   * @type {module:page~PageRouteInfo}
+   */
+  get route() { 
+    return this.props.route;
+  }
+
+  /**
    * 页面框架的 dom 元素
    * @type {element}
    */
@@ -183,7 +191,8 @@ class Page extends React.Component {
     if(!name) name = `_${++this._actionNum}`
     let ret = (...args)=>{
       try{
-        this.app.log.info('page action', this.name, name);
+        this.app.log.info('page action', this._id, name);
+        this.app.event.emit(this._id, 'onPageAction', this._id, name);
         return func.apply(this, args);
       }catch(e){
         this.app.log.error('page action', name, e);
@@ -301,10 +310,10 @@ class Page extends React.Component {
   }
 
   componentWillUnmount() {
-    let { app, _id } = this.props;
+    let { app, _id, route:{isActive} } = this.props;
     app.log.info('page will unmount', _id);
 
-    app.event.emit(this._id, 'onPageInactive', this, true);
+    isActive&&app.event.emit(this._id, 'onPageInactive', this, true);
     app.event.emit(this._id,'onPageStop', this);
     app.event.emit(app._id, 'onPageRemove', _id, this);
     this._offKeyEvent && this._offKeyEvent();
@@ -327,8 +336,14 @@ class Page extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query', 'popLayers', 'subPages'])) return true;
-    for(let k of this._getStateKeys()) if(this.props.context[k]!==nextProps.context[k]) return true;
+    if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query', 'popLayers', 'subPages'])) {
+      this.app.event.emit(this._id, 'onPageUpdate', this._id, 'route');
+      return true;
+    }
+    for(let k of this._getStateKeys()) if(this.props.context[k]!==nextProps.context[k]) {
+      this.app.event.emit(this._id, 'onPageUpdate', this._id, 'state');
+      return true;
+    }
     return false;
   }
 

@@ -20,10 +20,24 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
 /**
- * bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
+ * @module
+ */
+
+/**
+ * 插件参数，扩展了默认的插件参数
+ * @typedef PluginOptions
+ * @extends package:core:plugin~PluginDefine
+ * @type {object}
+ * @property {string} moneyDefault - 默认金额
+ * @property {string} timeFormat - 默认时间格式化字符串
+ * @property {string} byteSizeG - 大小单位 G
+ * @property {string} byteSizeM - 大小单位 M
+ * @property {string} byteSizeK - 大小单位 K
+ * @property {string} byteSizeB - 大小单位 B
+ */
+
+/**
+ * 浏览器操作对象，由插件构造，挂载在 app 上
  */
 var Format =
 /*#__PURE__*/
@@ -31,14 +45,31 @@ function () {
   function Format(app, _id) {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     (0, _classCallCheck2.default)(this, Format);
+
+    /**
+     * App 的实例
+     * @type {module:app.App}
+     */
     this.app = app;
+    /**
+     * 所属插件的实例的 id
+     * @type {string}
+     */
+
     this._id = _id;
+    /**
+     * 所属插件的实例的 options
+     * @type {module:index~PluginOptions}
+     */
+
     this.options = (0, _objectSpread2.default)({}, Format.options, options);
   }
   /**
    * 格式化金额
    * @method
-   * @param {number|string} val - 金额
+   * @param {number|string} - 金额
+   * @param {object} - 临时替换配置参数，{moneyDefault: 默认值}
+   * @returns {string|number} 格式化后金额
    */
 
 
@@ -51,9 +82,10 @@ function () {
     /**
      * 计算折扣并格式化
      * @method
-     * @param {number|string} value - 金额
-     * @param {number|string} discount - 折扣
-     * @param {number|string} [min=0.01] - 最小金额
+     * @param {number|string} - 金额
+     * @param {number|string} - 折扣率
+     * @param {number|string} - 最小金额
+     * @returns {number} 格式化后金额
      */
 
   }, {
@@ -67,16 +99,18 @@ function () {
     /**
      * 格式化时间
      * @method
-     * @param {date|number|string} date - 需要格式化的时间
-     * @param {string} [format=app.format.timeFormat] - 格式化字符串<br />
-     * YYYY|YY: 年
-     * MM|M: 月
-     * DD|D: 日
-     * HH|H: 时
-     * mm|m: 分
-     * ss|s: 秒
-     * S: 毫秒
-     * Q: 季度
+     * @param {date|number|string} 需要格式化的时间
+     * @param {string} [format=app.format.timeFormat] - 格式化字符串
+     * 
+     * - YYYY|YY: 年
+     * - MM|M: 月
+     * - DD|D: 日
+     * - HH|H: 时
+     * - mm|m: 分
+     * - ss|s: 秒
+     * - S: 毫秒
+     * - Q: 季度
+     * 
      * @return {string} - 格式化后的时间字符串
      */
 
@@ -105,8 +139,9 @@ function () {
     /**
      * 格式化文件尺寸
      * @method
-     * @param {number} size - 文件大小
-     * @param {number} [fixed=2] - 小数点位数 
+     * @param {number} - 文件尺寸
+     * @param {number} - 小数点位数 
+     * @returns {number} 尺寸
      */
 
   }, {
@@ -128,19 +163,47 @@ function () {
   }]);
   return Format;
 }();
+/**
+ * Format 默认的参数配置
+ * @type {module:index~PluginOptions}
+ */
+
 
 Format.options = {
+  /**
+   * 货币默认值
+   * @type {string}
+   */
   moneyDefault: '0.00',
   timeFormat: "YYYY-MM-DD HH:mm:ss",
   byteSizeG: 'G',
   byteSizeM: 'M',
   byteSizeK: 'K',
   byteSizeB: 'B'
+  /**
+   * 为 App 实例增加格式化模块，提供了格式化功能
+   * @plugin 
+   * @exportdefault
+   */
+
 };
-var _default = {
+var format = {
   _id: 'format',
   onPluginMount: function onPluginMount(app, plugin, options) {
+    /**
+     * 为 App 实例增加格式化操作类
+     * @memberof module:index.format
+     * @type {module:index~Foramt}
+     * @mount app.Foramt
+     */
     app.Foramt = Format;
+    /**
+     * 为 App 实例增加格式化操作类
+     * @memberof module:index.format
+     * @type {module:index~Foramt}
+     * @mount app.format
+     */
+
     app.format = new Format(app, plugin._id, options);
   },
   onPluginUnmount: function onPluginUnmount(app) {
@@ -148,4 +211,5 @@ var _default = {
     delete app.format;
   }
 };
+var _default = format;
 exports.default = _default;

@@ -1,10 +1,9 @@
 # `bnorth-plugin-md5`
 
-> TODO: description
+bnorht 插件，负责 md5 编码
 
-## Usage
+## 文档
 
-```
-let app = new App();
-app.plugins.add(require('bnorth-plugin-md5'));
-```
+[bnorth 文档](//able99.github.io/#cbnorth)
+
+[参考手册](//able99.github.io/bnorth/pluginbase64/)

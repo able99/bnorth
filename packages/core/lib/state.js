@@ -50,7 +50,7 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
  * 
  * - 参数为 class 则使用该继承与 State 的数据单元
  * - 参数为 object，对象中的 constructor 为数据单元类，其他将覆盖数据对象实例，实现定制
- * @property {*?} xxx - 声明的属性或者方法
+ * @property {*?} xxx - 其他存在 options 中的属性
  */
 
 /**
@@ -81,6 +81,7 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 
 /**
  * 数据单元拥有唯一 id，每个数据单元通过 id 对应 context 数据仓库的一个数据块，是对数据的包装，提供读取，更新等操作
+ * @see {@link https://able99.github.io/cbnorth/data.html} bnorth 数据流
  * @exportdefault
  */
 var State =
@@ -169,8 +170,23 @@ function () {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     (0, _classCallCheck2.default)(this, State);
     app.log.info('state constructor', _id);
+    /**
+     * App 的实例
+     * @type {module:app.App}
+     */
+
     this.app = app;
+    /**
+     * 数据单元的 id
+     * @type {string}
+     */
+
     this._id = _id;
+    /**
+     * 数据单元的声明对象
+     * @type {module:state~StateDefine}
+     */
+
     this.options = options;
     if (this.options.initialization === undefined) this.options.initialization = {};
     Object.entries(this.options).forEach(function (_ref3) {

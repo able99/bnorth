@@ -29,8 +29,6 @@ require("core-js/modules/es7.object.entries");
 
 require("core-js/modules/web.dom.iterable");
 
-require("core-js/modules/es6.function.name");
-
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -158,6 +156,7 @@ var _reactDom = _interopRequireDefault(require("react-dom"));
 
 /**
  * 页面组件，是由页面管理器管理的，是对应路由的 component 的父组件。管理页面的属性方法和事件，管理页面的生命周期，并向 component 注入页面相关属性。
+ * @see {@link https://able99.github.io/cbnorth/page.html} bnorth 页面管理
  * @component
  * @exportdefault
  */
@@ -220,7 +219,9 @@ function (_React$Component) {
 
       var ret = function ret() {
         try {
-          _this.app.log.info('page action', _this.name, name);
+          _this.app.log.info('page action', _this._id, name);
+
+          _this.app.event.emit(_this._id, 'onPageAction', _this._id, name);
 
           for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
@@ -427,9 +428,10 @@ function (_React$Component) {
     value: function componentWillUnmount() {
       var _this$props5 = this.props,
           app = _this$props5.app,
-          _id = _this$props5._id;
+          _id = _this$props5._id,
+          isActive = _this$props5.route.isActive;
       app.log.info('page will unmount', _id);
-      app.event.emit(this._id, 'onPageInactive', this, true);
+      isActive && app.event.emit(this._id, 'onPageInactive', this, true);
       app.event.emit(this._id, 'onPageStop', this);
       app.event.emit(app._id, 'onPageRemove', _id, this);
       this._offKeyEvent && this._offKeyEvent();
@@ -460,7 +462,11 @@ function (_React$Component) {
   }, {
     key: "shouldComponentUpdate",
     value: function shouldComponentUpdate(nextProps, nextState) {
-      if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query', 'popLayers', 'subPages'])) return true;
+      if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query', 'popLayers', 'subPages'])) {
+        this.app.event.emit(this._id, 'onPageUpdate', this._id, 'route');
+        return true;
+      }
+
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -468,7 +474,11 @@ function (_React$Component) {
       try {
         for (var _iterator = this._getStateKeys()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var k = _step.value;
-          if (this.props.context[k] !== nextProps.context[k]) return true;
+
+          if (this.props.context[k] !== nextProps.context[k]) {
+            this.app.event.emit(this._id, 'onPageUpdate', this._id, 'state');
+            return true;
+          }
         }
       } catch (err) {
         _didIteratorError = true;
@@ -523,6 +533,16 @@ function (_React$Component) {
     key: "app",
     get: function get() {
       return this.props.app;
+    }
+    /**
+     * 页面路由匹配信息
+     * @type {module:page~PageRouteInfo}
+     */
+
+  }, {
+    key: "route",
+    get: function get() {
+      return this.props.route;
     }
     /**
      * 页面框架的 dom 元素

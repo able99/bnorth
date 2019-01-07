@@ -11,43 +11,9 @@
     ],
     "author": "hubn <8846755@qq.com>",
     "homepage": "https://github.com/able99",
-    "license": "MIT",
-    "main": "lib/index.js",
-    "directories": {
-      "lib": "lib",
-      "test": "__tests__"
-    },
-    "files": [
-      "lib",
-      "css"
-    ],
-    "publishConfig": {
-      "registry": "https://registry.npmjs.org/"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/able99/bnorth.git"
-    },
-    "scripts": {
-      "build": "npm run clean && npm run build:js && npm run build:css",
-      "build:js": "bnorth-build dev",
-      "build:css": "bnorth-build run scripts/index.js",
-      "clean": "bnorth-build clean lib css",
-      "doc": "npx bnorth-doc ./src/ ../../docs/richcss/"
-    },
-    "bugs": {
-      "url": "https://github.com/able99/bnorth/issues"
-    },
-    "dependencies": {
-      "animate.css": "^3.7.0",
-      "normalize.css": "^8.0.0"
-    },
-    "devDependencies": {
-      "@bnorth/build": "^3.1.6"
-    },
-    "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
+    "license": "MIT"
   },
-  "readme": "# rich.css\n\n## 使用方法\n\n```sh\nnpm install --save @bnorth/rich.css\n```\n\n```jsx\nimport React from 'react';\nimport ReactDOM from 'react-dom';\nimport '@bnorth/rich.css/css/normalize.css';\nimport genCss from '@bnorth/rich.css';\nimport { getCssConfig, setCssConfig } from '@bnorth/rich.css/lib/gen';\n\nlet { textColors } = getCssConfig();\ntextColors.normal = '#222222';\nsetCssConfig({textColors});\ngenCss();\n\nReactDOM.render(\n  <div className=\"text-color-primary\">text</div>,\n  document.getElementById('root')\n);\n```\n\n## bnorth api 文档\n\n[Documents](//able99.github.io/bnorth/)\n\n## LICENSE\n\nMIT",
+  "readme": "# core\n\nrich.css 是一个可定制的，全面覆盖的 css 样式库\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n\n[参考手册](//able99.github.io/bnorth/richcss/)\n\n",
   "doclets": [
     {
       "kind": "module",
