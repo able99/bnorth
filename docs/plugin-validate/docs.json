@@ -1,0 +1,17 @@
+{
+  "package": {
+    "name": "@bnorth/plugin-validate",
+    "version": "3.1.6",
+    "description": "bnorth plugin for validate",
+    "keywords": [
+      "bnorth",
+      "plugin",
+      "validate"
+    ],
+    "author": "hubn <8846755@qq.com>",
+    "homepage": "https://github.com/able99/",
+    "license": "MIT"
+  },
+  "readme": "# `bnorth-plugin-validate`\n\n> TODO: description\n\n## Usage\n\n```\nlet app = new App();\napp.plugins.add(require('bnorth-plugin-validate'));\n```\n",
+  "doclets": []
+}

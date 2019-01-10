@@ -23,7 +23,8 @@
   },
   "scripts": {
     "start": "bnorth-build watch",
-    "build": "bnorth-build dev"
+    "build": "bnorth-build dev",
+    "doc": "npx bnorth-doc ./src/ ../../docs/plugin-request/"
   },
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"

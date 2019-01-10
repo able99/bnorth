@@ -11,42 +11,7 @@
     ],
     "author": "hubn <8846755@qq.com>",
     "homepage": "https://github.com/able99",
-    "license": "MIT",
-    "main": "lib/index.js",
-    "directories": {
-      "lib": "lib",
-      "test": "__tests__"
-    },
-    "files": [
-      "lib",
-      "css"
-    ],
-    "publishConfig": {
-      "registry": "https://registry.npmjs.org/"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/able99/bnorth.git"
-    },
-    "scripts": {
-      "build": "npm run clean && npm run build:js && npm run build:css",
-      "build:js": "bnorth-build dev",
-      "build:css": "bnorth-build run scripts/index.js",
-      "clean": "bnorth-build clean lib css",
-      "doct": "npx bnorth-doc ./src/ ../doc-reader/public/",
-      "doc": "npx bnorth-doc ./src/ ../../docs/richcss/"
-    },
-    "bugs": {
-      "url": "https://github.com/able99/bnorth/issues"
-    },
-    "dependencies": {
-      "animate.css": "^3.7.0",
-      "normalize.css": "^8.0.0"
-    },
-    "devDependencies": {
-      "@bnorth/build": "^3.1.6"
-    },
-    "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
+    "license": "MIT"
   },
   "readme": "# core\n\nrich.css 是一个可定制的，全面覆盖的 css 样式库\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n\n[参考手册](//able99.github.io/bnorth/richcss/)\n\n",
   "doclets": [

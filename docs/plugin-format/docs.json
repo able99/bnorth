@@ -1,0 +1,401 @@
+{
+  "package": {
+    "name": "@bnorth/plugin-format",
+    "version": "3.1.6",
+    "description": "bnorth plugin for format",
+    "keywords": [
+      "bnorth",
+      "plugin",
+      "format"
+    ],
+    "author": "hubn <8846755@qq.com>",
+    "homepage": "https://github.com/able99/",
+    "license": "MIT"
+  },
+  "readme": "# `bnorth-plugin-format`\n\nbnorth 插件，实现格式化功能，比如时间格式化，数字格式化，货币格式化等。\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n\n[参考手册](//able99.github.io/bnorth/pluginbase64/)",
+  "doclets": [
+    {
+      "kind": "module",
+      "name": "index",
+      "longname": "module:index"
+    },
+    {
+      "description": "插件参数，扩展了默认的插件参数",
+      "kind": "typedef",
+      "name": "PluginOptions",
+      "augments": [
+        "package:core:plugin~PluginDefine"
+      ],
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "默认金额",
+          "name": "moneyDefault"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "默认时间格式化字符串",
+          "name": "timeFormat"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "大小单位 G",
+          "name": "byteSizeG"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "大小单位 M",
+          "name": "byteSizeM"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "大小单位 K",
+          "name": "byteSizeK"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "大小单位 B",
+          "name": "byteSizeB"
+        }
+      ],
+      "longname": "module:index~PluginOptions",
+      "scope": "inner",
+      "memberof": "module:index"
+    },
+    {
+      "classdesc": "浏览器操作对象，由插件构造，挂载在 app 上",
+      "name": "Format",
+      "longname": "module:index~Format",
+      "kind": "class",
+      "scope": "inner",
+      "memberof": "module:index",
+      "params": []
+    },
+    {
+      "description": "App 的实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:index~Format#app",
+      "kind": "member",
+      "memberof": "module:index~Format",
+      "scope": "instance",
+      "defaultvalue": "app"
+    },
+    {
+      "description": "所属插件的实例的 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:index~Format#_id",
+      "kind": "member",
+      "memberof": "module:index~Format",
+      "scope": "instance",
+      "defaultvalue": "_id"
+    },
+    {
+      "description": "所属插件的实例的 options",
+      "type": {
+        "names": [
+          "module:index~PluginOptions"
+        ]
+      },
+      "name": "options",
+      "longname": "module:index~Format#options",
+      "kind": "member",
+      "memberof": "module:index~Format",
+      "scope": "instance",
+      "defaultvalue": "{}"
+    },
+    {
+      "description": "格式化金额",
+      "kind": "function",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number",
+              "string"
+            ]
+          },
+          "description": "金额",
+          "name": "val"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "临时替换配置参数，{moneyDefault: 默认值}",
+          "name": "options"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "number"
+            ]
+          },
+          "description": "格式化后金额"
+        }
+      ],
+      "name": "money",
+      "longname": "module:index~Format#money",
+      "memberof": "module:index~Format",
+      "scope": "instance"
+    },
+    {
+      "description": "计算折扣并格式化",
+      "kind": "function",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number",
+              "string"
+            ]
+          },
+          "description": "金额",
+          "name": "value"
+        },
+        {
+          "type": {
+            "names": [
+              "number",
+              "string"
+            ]
+          },
+          "description": "折扣率",
+          "name": "discount"
+        },
+        {
+          "type": {
+            "names": [
+              "number",
+              "string"
+            ]
+          },
+          "description": "最小金额",
+          "name": "min",
+          "defaultvalue": 0.01
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "格式化后金额"
+        }
+      ],
+      "name": "discount",
+      "longname": "module:index~Format#discount",
+      "memberof": "module:index~Format",
+      "scope": "instance"
+    },
+    {
+      "description": "格式化时间",
+      "kind": "function",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "date",
+              "number",
+              "string"
+            ]
+          },
+          "name": "需要格式化的时间"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "app.format.timeFormat",
+          "description": "格式化字符串\n\n- YYYY|YY: 年\n- MM|M: 月\n- DD|D: 日\n- HH|H: 时\n- mm|m: 分\n- ss|s: 秒\n- S: 毫秒\n- Q: 季度",
+          "name": "format"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "- 格式化后的时间字符串"
+        }
+      ],
+      "name": "time",
+      "longname": "module:index~Format#time",
+      "memberof": "module:index~Format",
+      "scope": "instance"
+    },
+    {
+      "description": "格式化文件尺寸",
+      "kind": "function",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "文件尺寸",
+          "name": "size",
+          "defaultvalue": 0
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "小数点位数",
+          "name": "fixed",
+          "defaultvalue": 2
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "尺寸"
+        }
+      ],
+      "name": "byteSize",
+      "longname": "module:index~Format#byteSize",
+      "memberof": "module:index~Format",
+      "scope": "instance"
+    },
+    {
+      "description": "Format 默认的参数配置",
+      "type": {
+        "names": [
+          "module:index~PluginOptions"
+        ]
+      },
+      "name": "options",
+      "longname": "module:index~Format.options",
+      "kind": "member",
+      "memberof": "module:index~Format",
+      "scope": "static",
+      "defaultvalue": "{\"moneyDefault\":\"0.00\",\"timeFormat\":\"YYYY-MM-DD HH:mm:ss\",\"byteSizeG\":\"G\",\"byteSizeM\":\"M\",\"byteSizeK\":\"K\",\"byteSizeB\":\"B\"}"
+    },
+    {
+      "description": "货币默认值",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "moneyDefault",
+      "longname": "module:index~Format.options.moneyDefault",
+      "kind": "member",
+      "memberof": "module:index~Format.options",
+      "scope": "static",
+      "defaultvalue": "0.00"
+    },
+    {
+      "description": "为 App 实例增加格式化模块，提供了格式化功能",
+      "id": null,
+      "kind": "plugin",
+      "scope": "static",
+      "defaultvalue": "",
+      "exportdefault": true,
+      "name": "format",
+      "longname": "module:index.format",
+      "memberof": "module:index",
+      "params": []
+    },
+    {
+      "description": "为 App 实例增加格式化操作类",
+      "memberof": "module:index.format",
+      "type": {
+        "names": [
+          "module:index~Foramt"
+        ]
+      },
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "app.Foramt",
+          "value": "app.Foramt"
+        }
+      ],
+      "name": "app.Foramt",
+      "longname": "module:index.format.app.Foramt",
+      "kind": "member",
+      "scope": "static",
+      "defaultvalue": "Format"
+    },
+    {
+      "description": "为 App 实例增加格式化操作类",
+      "memberof": "module:index.format",
+      "type": {
+        "names": [
+          "module:index~Foramt"
+        ]
+      },
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "app.format",
+          "value": "app.format"
+        }
+      ],
+      "name": "app.format",
+      "longname": "module:index.format.app.format",
+      "kind": "member",
+      "scope": "static"
+    }
+  ]
+}

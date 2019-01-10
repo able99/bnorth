@@ -10,14 +10,24 @@ exports.default = void 0;
 var _jsMd = _interopRequireDefault(require("js-md5"));
 
 /**
- * bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
+ * @module
  */
-var _default = {
+
+/**
+ * 扩展了 App utils 模块，提供了 md5 编解码的工具函数
+ * @plugin 
+ * @exportdefault
+ */
+var md5 = {
   _id: 'md5',
   onPluginMount: function onPluginMount(app) {
+    /**
+     * md5 编码
+     * @memberof module:index.md5
+     * @mount app.utils.md5
+     * @param {string} - 字符串
+     * @returns {string} 编码后的字符串
+     */
     app.utils.md5 = function (str) {
       return (0, _jsMd.default)(str);
     };
@@ -26,4 +36,5 @@ var _default = {
     delete app.utils.md5;
   }
 };
+var _default = md5;
 exports.default = _default;

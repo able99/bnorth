@@ -5,8 +5,8 @@ import hibase64 from 'hi-base64';
 
 
 /**
- * 扩展了 App utils 模块，提供了 base64编解码的工具函数
- * @plugin base64
+ * 扩展了 App utils 模块，提供了 base64 编解码的工具函数
+ * @plugin 
  * @exportdefault
  */
 let base64 = {

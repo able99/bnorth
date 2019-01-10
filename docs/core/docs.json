@@ -9,36 +9,7 @@
     ],
     "author": "able99 <8846755@qq.com>",
     "homepage": "https://github.com/able99",
-    "license": "MIT",
-    "main": "lib/index.js",
-    "files": [
-      "lib"
-    ],
-    "publishConfig": {
-      "registry": "https://registry.npmjs.org/"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/able99/bnorth.git"
-    },
-    "scripts": {
-      "start": "bnorth-build watch",
-      "build": "bnorth-build dev",
-      "doct": "npx bnorth-doc ./src/ ../doc-reader/public/",
-      "doc": "npx bnorth-doc ./src/ ../../docs/core/"
-    },
-    "bugs": {
-      "url": "https://github.com/able99/bnorth/issues"
-    },
-    "dependencies": {
-      "history": "^4.7.2",
-      "react": "^16.3.2",
-      "react-dom": "^16.3.2"
-    },
-    "devDependencies": {
-      "@bnorth/build": "^3.1.6"
-    },
-    "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
+    "license": "MIT"
   },
   "readme": "# core\n\ncore 是构建应用的核心，是应用的入口。core 实际上是一个事件驱动的 mvc 框架，实现了 App 类。提供了事件管理，页面管理，数据管理，插件管理，\b等核心功能\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n\n[参考手册](//able99.github.io/bnorth/core/)\n\n",
   "doclets": [
@@ -2001,6 +1972,20 @@
       },
       "name": "app",
       "longname": "module:page.Page#app",
+      "kind": "member",
+      "memberof": "module:page.Page",
+      "scope": "instance",
+      "params": []
+    },
+    {
+      "description": "页面路由匹配信息",
+      "type": {
+        "names": [
+          "module:page~PageRouteInfo"
+        ]
+      },
+      "name": "route",
+      "longname": "module:page.Page#route",
       "kind": "member",
       "memberof": "module:page.Page",
       "scope": "instance",
@@ -4271,7 +4256,7 @@
             ]
           },
           "nullable": true,
-          "description": "声明的属性或者方法",
+          "description": "其他存在 options 中的属性",
           "name": "xxx"
         }
       ],
@@ -4497,6 +4482,48 @@
       "kind": "function",
       "memberof": "module:state.State",
       "scope": "static"
+    },
+    {
+      "description": "App 的实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:state.State#app",
+      "kind": "member",
+      "memberof": "module:state.State",
+      "scope": "instance",
+      "defaultvalue": "app"
+    },
+    {
+      "description": "数据单元的 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:state.State#_id",
+      "kind": "member",
+      "memberof": "module:state.State",
+      "scope": "instance",
+      "defaultvalue": "_id"
+    },
+    {
+      "description": "数据单元的声明对象",
+      "type": {
+        "names": [
+          "module:state~StateDefine"
+        ]
+      },
+      "name": "options",
+      "longname": "module:state.State#options",
+      "kind": "member",
+      "memberof": "module:state.State",
+      "scope": "instance",
+      "defaultvalue": "options"
     },
     {
       "description": "读取数据单元中的数据",

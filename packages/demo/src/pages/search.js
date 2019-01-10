@@ -17,7 +17,7 @@ let Component = aprops=>{
           containerProps={{className: 'padding-a- border-set-bottom-'}}
           className="padding-a- border-set-a- border-radius- bg-color-white bg-none-- border-none-a--"
           value={stateData.keyword}
-          onInput={e=>{console.log(e,e.target);page.stateData.set('keyword', e.target.value)}}
+          onInput={e=>page.stateData.set('keyword', e.target.value)}
           placeholder="input search keyword"
           before={(
             <Button onClick={()=>page.actionGoBack()} b-style="plain"><Icon name="left" /></Button>
@@ -38,6 +38,9 @@ Component.controller = (app,page)=>({
       keyword: page.props.route.params.keyword,
     }
   },
+
+  // onPageAction: (...args)=>console.log('action', args),
+  // onPageUpdate: (...args)=>console.log('update', args),
 
   actionSubmit: ()=>{
     let keyword = page.stateData.data().keyword;

@@ -40,7 +40,15 @@ obj.forEach(v=>{
   delete v.meta;
 })
 writeFileSync(join(desPath, 'docs.json'), JSON.stringify({
-  package: packageObj,
+  package: packageObj&&{
+    "name": packageObj.name,
+    "version": packageObj.version,
+    "description": packageObj.description,
+    "keywords": packageObj.keywords,
+    "author": packageObj.author,
+    "homepage": packageObj.homepage,
+    "license": packageObj.license,
+  },
   readme: readmeStr,
   doclets: obj,
 }, null, 2));

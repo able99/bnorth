@@ -11,38 +11,9 @@
     ],
     "author": "able99 <8846755@qq.com>",
     "homepage": "https://github.com/able99",
-    "license": "MIT",
-    "main": "lib/index.js",
-    "files": [
-      "lib"
-    ],
-    "publishConfig": {
-      "registry": "https://registry.npmjs.org/"
-    },
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/able99/bnorth.git"
-    },
-    "scripts": {
-      "start": "bnorth-build watch",
-      "build": "bnorth-build dev",
-      "doc": "npx bnorth-doc ./src/ ../../docs/components/"
-    },
-    "bugs": {
-      "url": "https://github.com/able99/bnorth/issues"
-    },
-    "dependencies": {
-      "@bnorth/rich.css": "^3.1.6",
-      "dom-helpers": "^3.3.1",
-      "hammerjs": "^2.0.8",
-      "react-transition-group": "^2.4.0"
-    },
-    "devDependencies": {
-      "@bnorth/build": "^3.1.6"
-    },
-    "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
+    "license": "MIT"
   },
-  "readme": "# components\n\n提供了\b丰富的组件，\b包括布局组件 View，Panel 等，小组件 Button，Icon等，动画组件 AnimationFade，AnimationCollapse 等，以及复杂组件\b \bmodal，picker\b 等等\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n[参考手册](//able99.github.io/bnorth/components/)\n\n",
+  "readme": "# components\n\n提供了\b丰富的组件，\b包括布局组件 View，Panel 等，小组件 Button，Icon等，动画组件 AnimationFade，AnimationCollapse 等，以及复杂组件\b \bmodal，picker\b 等等\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n\n[参考手册](//able99.github.io/bnorth/components/)\n\n",
   "doclets": [
     {
       "description": "按钮和按钮组",

@@ -1,0 +1,378 @@
+{
+  "package": {
+    "name": "@bnorth/plugin-storage",
+    "version": "3.1.6",
+    "description": "bnorth plugin for storage",
+    "keywords": [
+      "bnorth",
+      "plugin",
+      "storage"
+    ],
+    "author": "hubn <8846755@qq.com>",
+    "homepage": "https://github.com/able99/",
+    "license": "MIT"
+  },
+  "readme": "# `bnorth-plugin-storage`\n\n> TODO: description\n\n## Usage\n\n```\nlet app = new App();\napp.plugins.add(require('bnorth-plugin-storage'));\n```\n",
+  "doclets": [
+    {
+      "kind": "module",
+      "name": "index",
+      "longname": "module:index"
+    },
+    {
+      "classdesc": "存储管理类，由插件构造，挂载在 app 上",
+      "name": "Storage",
+      "longname": "module:index~Storage",
+      "kind": "class",
+      "scope": "inner",
+      "memberof": "module:index",
+      "params": []
+    },
+    {
+      "description": "App 的实例",
+      "type": {
+        "names": [
+          "module:app.App"
+        ]
+      },
+      "name": "app",
+      "longname": "module:index~Storage#app",
+      "kind": "member",
+      "memberof": "module:index~Storage",
+      "scope": "instance",
+      "defaultvalue": "app"
+    },
+    {
+      "description": "所属插件的实例的 id",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "_id",
+      "longname": "module:index~Storage#_id",
+      "kind": "member",
+      "memberof": "module:index~Storage",
+      "scope": "instance",
+      "defaultvalue": "_id"
+    },
+    {
+      "description": "所属插件的实例的 options",
+      "type": {
+        "names": [
+          "module:plugin~PluginOptions"
+        ]
+      },
+      "name": "options",
+      "longname": "module:index~Storage#options",
+      "kind": "member",
+      "memberof": "module:index~Storage",
+      "scope": "instance",
+      "defaultvalue": "options"
+    },
+    {
+      "description": "保存数据",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "名称",
+          "name": "item"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "数据",
+          "name": "data"
+        }
+      ],
+      "name": "setObj",
+      "longname": "module:index~Storage#setObj",
+      "kind": "function",
+      "memberof": "module:index~Storage",
+      "scope": "instance"
+    },
+    {
+      "description": "获取保存的数据",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "名称",
+          "name": "item"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "保存的数据"
+        }
+      ],
+      "name": "getObj",
+      "longname": "module:index~Storage#getObj",
+      "kind": "function",
+      "memberof": "module:index~Storage",
+      "scope": "instance"
+    },
+    {
+      "description": "保存字符串",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "名称",
+          "name": "item"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "数据",
+          "name": "data"
+        }
+      ],
+      "name": "set",
+      "longname": "module:index~Storage#set",
+      "kind": "function",
+      "memberof": "module:index~Storage",
+      "scope": "instance"
+    },
+    {
+      "description": "获取保存的字符串",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "名称",
+          "name": "item"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "保存的字符串"
+        }
+      ],
+      "name": "get",
+      "longname": "module:index~Storage#get",
+      "kind": "function",
+      "memberof": "module:index~Storage",
+      "scope": "instance"
+    },
+    {
+      "description": "json path 方式保存数据",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "名称",
+          "name": "item"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "path",
+          "name": "path"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "数据",
+          "name": "val"
+        }
+      ],
+      "name": "setObjPath",
+      "longname": "module:index~Storage#setObjPath",
+      "kind": "function",
+      "memberof": "module:index~Storage",
+      "scope": "instance"
+    },
+    {
+      "description": "json path 方式读取数据",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "名称",
+          "name": "item"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "path",
+          "name": "path"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "- 数据"
+        }
+      ],
+      "name": "getObjPath",
+      "longname": "module:index~Storage#getObjPath",
+      "kind": "function",
+      "memberof": "module:index~Storage",
+      "scope": "instance"
+    },
+    {
+      "description": "清除指定保存的数据",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "名称",
+          "name": "item"
+        }
+      ],
+      "name": "remove",
+      "longname": "module:index~Storage#remove",
+      "kind": "function",
+      "memberof": "module:index~Storage",
+      "scope": "instance"
+    },
+    {
+      "description": "清除全部数据",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "nullable": true,
+          "description": "为空清楚全部；设置后，清除符合正则表达式名称的全部数据",
+          "name": "reg"
+        }
+      ],
+      "name": "clear",
+      "longname": "module:index~Storage#clear",
+      "kind": "function",
+      "memberof": "module:index~Storage",
+      "scope": "instance"
+    },
+    {
+      "description": "为 App 实例增加存储管理模块",
+      "id": null,
+      "kind": "plugin",
+      "scope": "static",
+      "defaultvalue": "",
+      "exportdefault": true,
+      "name": "storage",
+      "longname": "module:index.storage",
+      "memberof": "module:index",
+      "params": []
+    },
+    {
+      "description": "为 App 实例增加存储管理类",
+      "memberof": "module:index.storage",
+      "type": {
+        "names": [
+          "module:index~Storage"
+        ]
+      },
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "app.Storage",
+          "value": "app.Storage"
+        }
+      ],
+      "name": "app.Storage",
+      "longname": "module:index.storage.app.Storage",
+      "kind": "member",
+      "scope": "static",
+      "defaultvalue": "Storage"
+    },
+    {
+      "description": "为 App 实例增加 local storage 存储管理实例",
+      "memberof": "module:index.storage",
+      "type": {
+        "names": [
+          "module:index~Storage"
+        ]
+      },
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "app.storage",
+          "value": "app.storage"
+        }
+      ],
+      "name": "app.storage",
+      "longname": "module:index.storage.app.storage",
+      "kind": "member",
+      "scope": "static"
+    },
+    {
+      "description": "为 App 实例增加 session storage 存储管理实例",
+      "memberof": "module:index.storage",
+      "type": {
+        "names": [
+          "module:index~Storage"
+        ]
+      },
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "app.storageSession",
+          "value": "app.storageSession"
+        }
+      ],
+      "name": "app.storageSession",
+      "longname": "module:index.storage.app.storageSession",
+      "kind": "member",
+      "scope": "static"
+    }
+  ]
+}

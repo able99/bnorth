@@ -24,7 +24,7 @@
   "scripts": {
     "start": "bnorth-build watch",
     "build": "bnorth-build dev",
-    "doc": "npx bnorth-doc ./src/ ../../docs/pluginbase64/"
+    "doc": "npx bnorth-doc ./src/ ../../docs/plugin-base64/"
   },
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"

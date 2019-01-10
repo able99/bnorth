@@ -1,0 +1,109 @@
+{
+  "package": {
+    "name": "@bnorth/plugin-base64",
+    "version": "3.1.6",
+    "description": "bnorth plugin for base64",
+    "keywords": [
+      "bnorth",
+      "plugin",
+      "base64"
+    ],
+    "author": "hubn <8846755@qq.com>",
+    "homepage": "https://github.com/able99/",
+    "license": "MIT"
+  },
+  "readme": "# `bnorth-plugin-base64`\n\nbnorth 插件，提供了编码和解码 base64 字符串的能力\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n\n[参考手册](//able99.github.io/bnorth/pluginbase64/)\n",
+  "doclets": [
+    {
+      "kind": "module",
+      "name": "index",
+      "longname": "module:index"
+    },
+    {
+      "description": "扩展了 App utils 模块，提供了 base64 编解码的工具函数",
+      "id": null,
+      "kind": "plugin",
+      "scope": "static",
+      "defaultvalue": "",
+      "exportdefault": true,
+      "name": "base64",
+      "longname": "module:index.base64",
+      "memberof": "module:index",
+      "params": []
+    },
+    {
+      "description": "base64 编码",
+      "memberof": "module:index.base64",
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "app.utils.base64encode",
+          "value": "app.utils.base64encode"
+        }
+      ],
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "字符串",
+          "name": "str"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "编码后的字符串"
+        }
+      ],
+      "name": "app.utils.base64encode",
+      "longname": "module:index.base64.app.utils.base64encode",
+      "kind": "function",
+      "scope": "static"
+    },
+    {
+      "description": "base64 解码",
+      "memberof": "module:index.base64",
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "app.utils.base64decode",
+          "value": "app.utils.base64decode"
+        }
+      ],
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "字符串",
+          "name": "str"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "解码后的字符串"
+        }
+      ],
+      "name": "app.utils.base64decode",
+      "longname": "module:index.base64.app.utils.base64decode",
+      "kind": "function",
+      "scope": "static"
+    }
+  ]
+}
