@@ -92,6 +92,7 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 
 /**
  * App 插件管理模块，提供 App 通过插件的扩展的能力
+ * @see {@link https://able99.github.io/cbnorth/plugin.html} bnorth 插件机制
  * @exportdefault
  */
 var Plugins =

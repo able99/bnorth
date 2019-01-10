@@ -48,7 +48,7 @@ function genFuncFlex(_ref) {
     styleKey: 'flex',
     styleValueSet: (0, _utils.getStyleValueSet)(flexSubFlex),
     styleObjectCompatible: _compatibleFlex.default
-  }), (0, _utils.genClassObjects)('.flex-sub-flex-extend', {
+  }), (0, _utils.genClassObjects)('.flex-sub-flex-grow', {
     styleKey: 'flex-grow',
     styleValueMap: '1',
     styleObjectCompatible: _compatibleFlex.default

@@ -1,7 +1,7 @@
 /**
  * @module
  */
-import base64 from 'hi-base64';
+import hibase64 from 'hi-base64';
 
 
 /**
@@ -20,7 +20,7 @@ let base64 = {
      * @param {string} - 字符串
      * @returns {string} 编码后的字符串
      */
-    app.utils.base64encode = (str, asciiOnly)=>base64.encode(str, asciiOnly);
+    app.utils.base64encode = (str, asciiOnly)=>hibase64.encode(str, asciiOnly);
     /**
      * base64 解码
      * @memberof module:index.base64
@@ -28,7 +28,7 @@ let base64 = {
      * @param {string} - 字符串
      * @returns {string} 解码后的字符串
      */
-    app.utils.base64decode = (str, asciiOnly)=>base64.decode(str, asciiOnly);
+    app.utils.base64decode = (str, asciiOnly)=>hibase64.decode(str, asciiOnly);
   },
 
   onPluginUnmount(app) {

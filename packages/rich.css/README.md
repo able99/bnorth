@@ -1,4 +1,4 @@
-# core
+# rich.css
 
 rich.css 是一个可定制的，全面覆盖的 css 样式库
 

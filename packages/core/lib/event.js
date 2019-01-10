@@ -37,7 +37,7 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 
 /**
  * App 事件管理模块，提供事件管理的功能
- * @see https://able99.github.io/cbnorth/event.html
+ * @see {@link https://able99.github.io/cbnorth/event.html} bnorth 事件驱动机制
  * @exportdefault
  */
 var Event =

@@ -1,7 +1,18 @@
+/**
+ * 控件样式与状态
+ * @module
+ */
 import { genClassObjects } from '../utils';
 import { triangleImage } from '../styles/shape'
 
 
+/**
+ * 样式生成函数：控件样式与状态
+ * @exportdefault
+ * @type {module:gen~GenFunc}
+ * @param {module:config~GenConfig} config - 生成配置对象
+ * @returns {module:gen~ClassObjects} 样式表的描述对象
+ */
 function genFuncControl({textColors, mainColors, stateOpacityDisabled, stateOpacityActive}) {
   return Object.assign(
     genClassObjects('button:disabled, button[disabled], button.disabled', {

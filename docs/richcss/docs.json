@@ -33,6 +33,7 @@
       "build:js": "bnorth-build dev",
       "build:css": "bnorth-build run scripts/index.js",
       "clean": "bnorth-build clean lib css",
+      "doct": "npx bnorth-doc ./src/ ../doc-reader/public/",
       "doc": "npx bnorth-doc ./src/ ../../docs/richcss/"
     },
     "bugs": {
@@ -47,7 +48,7 @@
     },
     "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
   },
-  "readme": "# core\n\nrich.css 是一个可定制的，全面覆盖的 css 样式库\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n[参考手册](//able99.github.io/bnorth/richcss/)\n\n",
+  "readme": "# core\n\nrich.css 是一个可定制的，全面覆盖的 css 样式库\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n\n[参考手册](//able99.github.io/bnorth/richcss/)\n\n",
   "doclets": [
     {
       "kind": "module",
@@ -89,7 +90,7 @@
       "memberof": "module:classes"
     },
     {
-      "description": "颜色的名称与颜色值键值对",
+      "description": "颜色键值对",
       "kind": "typedef",
       "name": "GenConfigColor",
       "type": {
@@ -104,6 +105,7 @@
               "string"
             ]
           },
+          "description": "颜色的名称键值对",
           "name": "xxx"
         }
       ],
@@ -114,12 +116,13 @@
       "scope": "global"
     },
     {
-      "description": "键值对集合配置",
+      "description": "样式值集合，支持配置生成。\n\n- 不是对象而是数组时，将首先转换为键值都为数组元素的对象在进行下面步骤\n- 下划线开够为特殊属性，是对应生成函数的参数\n- 属性值为 true，使用属性名\n- 属性值为数字时，转为为带单位的字符串\n- 属性值为字符串时，直接使用",
       "kind": "typedef",
       "name": "GenConfigSet",
       "type": {
         "names": [
-          "object"
+          "object",
+          "array"
         ]
       },
       "properties": [
@@ -129,8 +132,9 @@
               "number"
             ]
           },
-          "description": "16,",
-          "name": "base"
+          "nullable": true,
+          "description": "平分生成函数和倍数生成函数的基数",
+          "name": "_base"
         },
         {
           "type": {
@@ -138,8 +142,9 @@
               "number"
             ]
           },
-          "description": "8,",
-          "name": "min"
+          "nullable": true,
+          "description": "平分生成函数向下的最小值参数",
+          "name": "_min"
         },
         {
           "type": {
@@ -147,8 +152,9 @@
               "number"
             ]
           },
-          "description": "fontSizeMinCalc: 4,",
-          "name": "minCount"
+          "nullable": true,
+          "description": "平分生成函数向下的平分个数参数",
+          "name": "_minCount"
         },
         {
           "type": {
@@ -156,8 +162,9 @@
               "number"
             ]
           },
-          "description": "fontSizeMax: 24,",
-          "name": "max"
+          "nullable": true,
+          "description": "平分生成函数向上的最小值参数",
+          "name": "_max"
         },
         {
           "type": {
@@ -165,8 +172,9 @@
               "number"
             ]
           },
-          "description": "fontSizeMaxCalc: 4,",
-          "name": "maxCount"
+          "nullable": true,
+          "description": "平分生成函数向上的平分个数参数",
+          "name": "_maxCount"
         },
         {
           "type": {
@@ -174,8 +182,50 @@
               "Array.<number>"
             ]
           },
-          "description": "-",
-          "name": "multiple"
+          "nullable": true,
+          "description": "倍数生成函数的因数参数",
+          "name": "_multiple"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "nullable": true,
+          "description": "范围生成函数的起始",
+          "name": "_from"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "nullable": true,
+          "description": "范围生成函数的结尾",
+          "name": "_to"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "nullable": true,
+          "description": "范围生成函数的步长",
+          "name": "_step"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "'px'",
+          "description": "设置属性值为数字时自动转换的单位",
+          "name": "_unit"
         },
         {
           "type": {
@@ -184,11 +234,9 @@
               "boolean"
             ]
           },
+          "description": "配置属性",
           "name": "xxx"
         }
-      ],
-      "examples": [
-        "```js\n```"
       ],
       "longname": "GenConfigSet",
       "scope": "global"
@@ -205,11 +253,49 @@
         {
           "type": {
             "names": [
-              "object"
+              "string"
             ]
           },
-          "description": "设置 body 的默认样式",
-          "name": "body"
+          "description": "设置 body 的背景",
+          "name": "bodyBackground"
+        },
+        {
+          "type": {
+            "names": [
+              "string",
+              "number"
+            ]
+          },
+          "description": "disabled 状态的透明值",
+          "name": "stateOpacityDisabled"
+        },
+        {
+          "type": {
+            "names": [
+              "string",
+              "number"
+            ]
+          },
+          "description": "active 状态的透明值",
+          "name": "stateOpacityActive"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "标题元素到字体集合的映射",
+          "name": "hMapTextSize"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "行高集合",
+          "name": "lineHeight"
         },
         {
           "type": {
@@ -253,8 +339,8 @@
               "GenConfigSet"
             ]
           },
-          "description": "边框宽度集合",
-          "name": "borderWidth"
+          "description": "方向常亮集合：四边",
+          "name": "directionEdge"
         },
         {
           "type": {
@@ -262,8 +348,8 @@
               "GenConfigSet"
             ]
           },
-          "description": "边框圆角尺寸集合",
-          "name": "borderRadius"
+          "description": "方向常亮集合：四角",
+          "name": "directionCorner"
         },
         {
           "type": {
@@ -271,7 +357,169 @@
               "GenConfigSet"
             ]
           },
-          "description": "空隙尺寸集合",
+          "description": "方向常亮集合：偏移",
+          "name": "directionOffset"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "方向常亮集合：偏移，带全部",
+          "name": "directionOffsetAll"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "方向常亮集合：尺寸",
+          "name": "directionSize"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "方向常亮集合：数轴方向",
+          "name": "directionAxis"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "文字字体",
+          "name": "textFontFamily"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "字体大小",
+          "name": "textSize"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "字体粗度",
+          "name": "textWeight"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "字体样式",
+          "name": "textStyle"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "字体装饰",
+          "name": "textDecoration"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "文字对齐方式",
+          "name": "textAlign"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "文字垂直对齐方式",
+          "name": "textVerticalAligns"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "元素内空白方式",
+          "name": "textWhiteSpaces"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "文字截取方式",
+          "name": "textTruncate"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "显示方式",
+          "name": "display"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "可见方式",
+          "name": "visibility"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "透明度",
+          "name": "opacity"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "事件目标",
+          "name": "pointerEvents"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "浮动类型",
+          "name": "float"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "边距集合",
           "name": "spacing"
         },
         {
@@ -280,8 +528,8 @@
               "GenConfigSet"
             ]
           },
-          "description": "字体尺寸结合",
-          "name": "fontSize"
+          "description": "位置集合",
+          "name": "position"
         },
         {
           "type": {
@@ -289,8 +537,8 @@
               "GenConfigSet"
             ]
           },
-          "description": "字体粗细度集合",
-          "name": "fontWeight"
+          "description": "尺寸集合",
+          "name": "size"
         },
         {
           "type": {
@@ -298,8 +546,8 @@
               "GenConfigSet"
             ]
           },
-          "description": "字体粗细度集合",
-          "name": "fontFamilys"
+          "description": "伸缩盒布局的显示类型",
+          "name": "flexDisplay"
         },
         {
           "type": {
@@ -307,8 +555,8 @@
               "GenConfigSet"
             ]
           },
-          "description": "行高集合集合",
-          "name": "lineHeight"
+          "description": "定义伸缩盒布局的主轴方向",
+          "name": "flexDirection"
         },
         {
           "type": {
@@ -316,7 +564,70 @@
               "GenConfigSet"
             ]
           },
-          "description": "动画时间集合",
+          "description": "伸缩盒布局的主轴对齐方式",
+          "name": "flexJustify"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "伸缩盒布局的侧轴对齐方式",
+          "name": "flexAlign"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "伸缩盒布局的新行堆叠的方向",
+          "name": "flexWrap"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "伸缩盒布局的子元素分配空间方式",
+          "name": "flexSubFlex"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "光标样式",
+          "name": "cursor"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "过度动画影像的属性",
+          "name": "transitionProperty"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "过度动画的时间",
+          "name": "transitionTime"
+        },
+        {
+          "type": {
+            "names": [
+              "GenConfigSet"
+            ]
+          },
+          "description": "帧动画时间",
           "name": "animationTime"
         },
         {
@@ -325,7 +636,7 @@
               "GenConfigSet"
             ]
           },
-          "description": "动画次数集合",
+          "description": "帧动画次数",
           "name": "animationCount"
         },
         {
@@ -334,35 +645,33 @@
               "GenConfigSet"
             ]
           },
-          "description": "动画属性集合",
-          "name": "animationProperty"
+          "description": "帧动画过度类型",
+          "name": "animationTimingFunction"
         },
         {
           "type": {
             "names": [
-              "string",
-              "number"
+              "GenConfigSet"
             ]
           },
-          "description": "disabled 状态的透明值",
-          "name": "stateOpacityDisabled"
+          "description": "帧动画循环中的方向",
+          "name": "animationDirection"
         },
         {
           "type": {
             "names": [
-              "string",
-              "number"
+              "GenConfigSet"
             ]
           },
-          "description": "active 状态的透明值",
-          "name": "stateOpacityActive"
+          "description": "帧动画播放状态",
+          "name": "animationPlayState"
         }
       ],
       "longname": "GenConfig",
       "scope": "global"
     },
     {
-      "description": "class names 生成配置",
+      "description": "样式表生成配置",
       "exportdefault": true,
       "scope": "global",
       "type": {
@@ -373,7 +682,7 @@
       "name": "genConfig",
       "longname": "genConfig",
       "kind": "member",
-      "defaultvalue": "{\"bodyBackground\":\"none\",\"textColors\":\"\",\"utilColors\":\"\",\"mainColors\":\"\",\"opacityColors\":\"\",\"directionEdge\":\"\",\"directionCorner\":\"\",\"borderWidth\":\"\",\"borderRadius\":\"\",\"borderStyle\":\"\",\"spacing\":\"\",\"textFontFamily\":\"\",\"textSize\":\"\",\"textWeight\":\"\",\"textStyle\":\"\",\"textDecoration\":\"\",\"textAlign\":\"\",\"textVerticalAligns\":\"\",\"textWhiteSpaces\":\"\",\"textLineHeight\":\"\",\"textTruncate\":\"\",\"animationTimeSizeSet\":\"\",\"animationCountSizeSet\":\"\",\"animationPropertySizeSet\":\"\",\"stateOpacityDisabled\":0.5,\"stateOpacityActive\":0.8,\"iconFonts\":null,\"iconClassName\":\"icon-\"}",
+      "defaultvalue": "{\"bodyBackground\":\"none\",\"stateOpacityDisabled\":0.5,\"stateOpacityActive\":0.8,\"hMapTextSize\":\"\",\"lineHeight\":\"\",\"textColors\":\"\",\"utilColors\":\"\",\"mainColors\":\"\",\"opacityColors\":\"\",\"directionEdge\":\"\",\"directionCorner\":\"\",\"directionOffset\":\"\",\"directionOffsetAll\":\"\",\"directionSize\":\"\",\"directionAxis\":\"\",\"textFontFamily\":\"\",\"textSize\":\"\",\"textWeight\":\"\",\"textStyle\":\"\",\"textDecoration\":\"\",\"textAlign\":\"\",\"textVerticalAligns\":\"\",\"textWhiteSpaces\":\"\",\"textTruncate\":\"\",\"borderWidth\":\"\",\"borderStyle\":\"\",\"borderRadius\":\"\",\"display\":\"\",\"visibility\":\"\",\"opacity\":\"\",\"overflow\":\"\",\"pointerEvents\":\"\",\"float\":\"\",\"spacing\":\"\",\"position\":\"\",\"size\":\"\",\"flexDisplay\":\"\",\"flexDirection\":\"\",\"flexJustify\":\"\",\"flexAlign\":\"\",\"flexWrap\":\"\",\"flexSubFlex\":\"\",\"cursor\":\"\",\"transitionProperty\":\"\",\"transitionTime\":\"\",\"animationTime\":\"\",\"animationCount\":\"\",\"animationTimingFunction\":\"\",\"animationDirection\":\"\",\"animationPlayState\":\"\"}",
       "params": []
     },
     {
@@ -382,12 +691,58 @@
       "longname": "module:gen"
     },
     {
+      "description": "样式表的描述对象",
+      "kind": "typedef",
+      "name": "ClassObjects",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "longname": "module:gen~ClassObjects",
+      "scope": "inner",
+      "memberof": "module:gen"
+    },
+    {
+      "description": "样式生成函数",
+      "kind": "typedef",
+      "name": "GenFunc",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          }
+        }
+      ],
+      "longname": "module:gen~GenFunc",
+      "scope": "inner",
+      "memberof": "module:gen"
+    },
+    {
       "description": "读取配置",
       "returns": [
         {
           "type": {
             "names": [
-              "GenConfig"
+              "module:config~GenConfig"
             ]
           },
           "description": "配置对象"
@@ -405,7 +760,7 @@
         {
           "type": {
             "names": [
-              "GenConfig"
+              "module:config~GenConfig"
             ]
           },
           "description": "配置对象，只替换对象包含的属性",
@@ -438,7 +793,7 @@
         {
           "type": {
             "names": [
-              "function"
+              "module:gen~GenFunc"
             ]
           },
           "variable": true,
@@ -447,7 +802,7 @@
         }
       ],
       "examples": [
-        "```js\nimport cssGen from '@bnorth/rich.css/lib/gen';\nimport genText from '@bnorth/rich.css/lib/gens/text';\ncssGen('richcss', genText);\n```"
+        "```js\nimport cssGen from '@bnorth/rich.css/lib/gen';\nimport genFuncText from '@bnorth/rich.css/lib/gens/text';\ncssGen('richcss', genFuncText);\n```"
       ],
       "name": "gen",
       "longname": "module:gen.gen",
@@ -455,39 +810,25 @@
       "memberof": "module:gen"
     },
     {
+      "description": "边框样式",
       "kind": "module",
       "name": "gens/border",
       "longname": "module:gens/border"
     },
     {
-      "description": "生成边框相关样式表",
+      "description": "样式生成函数：边框",
       "exportdefault": true,
       "scope": "static",
-      "params": [
-        {
-          "type": {
-            "names": [
-              "ClassNamesConfig"
-            ]
-          },
-          "description": "class names 生成配置对象",
-          "name": ""
-        }
-      ],
-      "returns": [
-        {
-          "type": {
-            "names": [
-              "object"
-            ]
-          },
-          "description": "class names 中间对象，由 cssGen 调用"
-        }
-      ],
+      "type": {
+        "names": [
+          "module:gen~GenFunc"
+        ]
+      },
       "name": "genFuncBorder",
       "longname": "module:gens/border.genFuncBorder",
       "kind": "function",
-      "memberof": "module:gens/border"
+      "memberof": "module:gens/border",
+      "params": []
     },
     {
       "description": "设置边框",
@@ -497,7 +838,7 @@
         {
           "type": {
             "names": [
-              "string"
+              "module:config~GenConfigSet"
             ]
           },
           "description": "边框的位置",
@@ -506,16 +847,13 @@
         {
           "type": {
             "names": [
-              "string"
+              "module:config~GenConfigColor"
             ]
           },
-          "optional": true,
+          "nullable": true,
           "description": "边框的颜色",
           "name": "color"
         }
-      ],
-      "examples": [
-        "```jsx\n<div className=\"border-set-a-\">\n```"
       ],
       "longname": "module:gens/border~border-set-[edge]-[color]",
       "scope": "inner",
@@ -523,81 +861,13 @@
     },
     {
       "kind": "module",
+      "name": "gens/spacing",
+      "longname": "module:gens/spacing"
+    },
+    {
+      "kind": "module",
       "name": "gens/text",
       "longname": "module:gens/text"
-    },
-    {
-      "description": "设置文本字体尺寸",
-      "name": "text-size-[size]",
-      "kind": "classname",
-      "params": [
-        {
-          "type": {
-            "names": [
-              "font"
-            ]
-          },
-          "optional": true,
-          "description": "字体尺寸",
-          "name": "size"
-        }
-      ],
-      "examples": [
-        "```jsx\n<div className=\"text-size-lg\">\n```"
-      ],
-      "longname": "module:gens/text~text-size-[size]",
-      "scope": "inner",
-      "memberof": "module:gens/text"
-    },
-    {
-      "description": "设置文本字体粗度",
-      "name": "text-weight-[size]",
-      "kind": "classname",
-      "params": [
-        {
-          "type": {
-            "names": [
-              "fontWeight"
-            ]
-          },
-          "optional": true,
-          "description": "字体粗度",
-          "name": "size"
-        }
-      ],
-      "longname": "module:gens/text~text-weight-[size]",
-      "scope": "inner",
-      "memberof": "module:gens/text"
-    },
-    {
-      "description": "生成 文字相关 class names",
-      "exportdefault": true,
-      "scope": "static",
-      "params": [
-        {
-          "type": {
-            "names": [
-              "ClassNamesConfig"
-            ]
-          },
-          "description": "class names 生成配置对象",
-          "name": "config"
-        }
-      ],
-      "returns": [
-        {
-          "type": {
-            "names": [
-              "object"
-            ]
-          },
-          "description": "class names 中间对象，由 cssGen 调用"
-        }
-      ],
-      "name": "genFunctionText",
-      "longname": "module:gens/text.genFunctionText",
-      "kind": "function",
-      "memberof": "module:gens/text"
     },
     {
       "kind": "module",

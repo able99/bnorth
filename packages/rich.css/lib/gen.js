@@ -92,7 +92,9 @@ function gen() {
     gens[_key - 1] = arguments[_key];
   }
 
-  var classObjects = Object.assign.apply(Object, [{}].concat((0, _toConsumableArray2.default)(gens.map(config))));
+  var classObjects = Object.assign.apply(Object, [{}].concat((0, _toConsumableArray2.default)(gens.map(function (v) {
+    return v(config);
+  }))));
   writeStyles(classObjects, styleElement, true);
 }
 

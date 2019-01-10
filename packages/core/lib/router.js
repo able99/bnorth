@@ -338,6 +338,7 @@ function (_React$Component) {
  * 1. 子页面不能再拥有子页面
  * 1. 子页面的可见性由其父页面的可见性决定
  * 
+ * @see {@link https://able99.github.io/cbnorth/page.html} bnorth 页面管理
  * @exportdefault
  */
 
