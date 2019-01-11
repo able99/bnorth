@@ -1,5 +1,6 @@
 import React from 'react';
 import Panel from '@bnorth/components/lib/Panel';
+import { getDocName } from '../utils'
 import Link from './Link';
 import Section from './Section';
 
@@ -23,7 +24,7 @@ export default aprops=>{
             {docs.map(vv=>(
               <Link 
                 key={vv.longname} app={app} 
-                doc={{name: vv.longname.replace(/^module:/i,''), longname: vv.longname, exportdefault: vv.exportdefault}} 
+                doc={{name: getDocName(vv), longname: vv.longname, exportdefault: vv.exportdefault}} 
                 type={v.kind==='global'||v.kind==='module'?v.kind:'type'} />
             ))}
           </Section>

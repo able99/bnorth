@@ -1,5 +1,6 @@
 import React from 'react';
 import Panel from '@bnorth/components/lib/Panel';
+import { trimModuleName } from '../utils';
 import Link from './Link';
 
 let types = ['boolean', 'string', 'number', 'object', 'Object', 'array', 'Array', '*', 'any', 'class', 'Class', 'function', 'promise', 'Error', 'event', 'component', 'element'];
@@ -21,7 +22,7 @@ export default props=>{
             {i?<span>|</span>:null}
             <Link 
               app={app} bc-border-none-bottom- bc-text-decoration-underline={!normal}
-              doc={{name: normal?v:v.split(':').slice(-1)[0], name: isArray?(v+'[]'):v, longname:!normal&&v}} />
+              doc={{name: normal?v:v.split(':').slice(-1)[0], name: trimModuleName(v)+(isArray?'[]':''), longname:!normal&&v}} />
           </React.Fragment>
         )
       })}

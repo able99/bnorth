@@ -18,5 +18,6 @@ export default function(app) {
   Icon.appendSvgIcons(icoSvg);
   Icon.appendMap(iconMap);
 
+
   Loading.props = {style:{top: 45-3}}
 }

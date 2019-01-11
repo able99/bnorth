@@ -7,7 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.addFunctions = addFunctions;
 exports.default = parseProps;
-exports.BaseComponent = BaseComponent;
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
@@ -34,7 +33,7 @@ var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
  */
 var functions = {};
 /**
- * 增加基类组件 bf-style-function 属性的函数集合
+ * 为样式函数集合增加样式函数
  * @param {object} - 函数集合的名称和函数的键值对 
  * @returns {object} 函数集合
  */
@@ -100,40 +99,41 @@ function parseProps(aprops, aaprops) {
  * 默认属性
  * @component
  * @static
+ * @global
  * @name BaseComponent
  */
 
+/**
+ * 设置样式类
+ * 
+ * - 当属性值为 true 时，将当前属性名，去掉 bc- 前缀，追加到组件的样式类属性中
+ * - 当属性值为数字或字符串时，将去掉 bc- 前缀的属性名和属性值用 - 连接后，追加到组件的样式类属性中
+ * - 当属性值不为真时，没有任何作用
+ * 
+ * @attribute BaseComponent.bc-xxx
+ * @type {boolean|string|number} 
+ * @example
+ * ```jsx
+ * <Panel bc-text-size="lg" bc-text-weight-={true} className="text-color-primary" /> // className: 'text-color-primary text-size-lg text-weight-'
+ * ```
+ */
 
-function BaseComponent() {}
+/**
+ * 设置组件的样式对象，将属性名去掉 bs- 前缀，和属性值，追加到组件的样式对象中
+ * 
+ * @attribute BaseComponent.bs-xxx
+ * @type {number|string} 
+ * @example
+ * ```jsx
+ * <Panel bs-width="50%" style={{height: '50%'}} /> // style: { widht: 50%, height: 50% }
+ * ```
+ */
 
-BaseComponent.defaultProps = {
-  /**
-   * 设置 class name
-   * 
-   * - 当属性值为 true 时，将当前属性名，去掉 bc- 前缀，追加到 className 组件属性中
-   * - 当属性值为数字或字符串时，将去掉 bc- 前缀的属性名和属性值用 - 连接，追加到 className 组件属性中
-   * - 当属性值不为真时，没有任何作用
-   * @type {boolean|string|number} 
-   * @example
-   * ```jsx
-   * <Panel bc-text-size="lg" />
-   * ```
-   */
-  'bc-[classname]': '',
-
-  /**
-   * 设置 style，将属性名去掉 bs- 前缀，和属性值，追加到组件的 style 属性对象中
-   * @type {*} 
-   * @example
-   * ```jsx
-   * <Panel bs-width="50%" />
-   * ```
-   */
-  'bs-[style]': '',
-
-  /**
-   * 设置 style 函数，将属性名去掉 bs- 前缀作为名称，从 bf-style-function 属性的函数集合中获取函数，将属性值(为数组时，作为展开参数)作为参数，执行并将结果追加到组件的 style 属性对象中
-   * @type {string|array} 
+/**
+ * 执行样式函数，并将结果设置到组件的样式对象。将属性名去掉 bs- 前缀作为函数名称，从样式函数集合中获取函数，将属性值(为数组时，作为展开参数)作为参数，执行并将结果追加到组件的样式对象中
+ * 
+ * @attribute BaseComponent.bf-xxx
+ * @type {number|string|array} 
    * @example
    * ```jsx
    * import { backgroundImage } from '@bnorth/rich.css/lib/styles/background';
@@ -141,9 +141,45 @@ BaseComponent.defaultProps = {
    * addFunctions({ backgroundImage });
    * 
    * export default props=>{
-   *   return <Panel bf-background={[]} />
+   *   return <Panel bf-background={'bg.jpg'} /> // style: {backgroundImage: url(bg.jpg)}
    * }
    * ```
-   */
-  'bf-[style-function]': ''
-};
+ */
+
+/**
+ * 其他 react 标准属性，比如：
+ * 
+ * - className：样式类 
+ * - style：样式对象，注意 react 使用样式对象，而不是样式字符串
+ * - children：子元素
+ * - onXXX：事件
+ * - xxx：其他 react 属性和 dom 属性
+ * @attribute BaseComponent.xxx
+ */
+
+/**
+ * 设置映射组件
+ * 
+ * bnorth 组件，一般情况下都只是设置组件的样式和属性，或者设置默认的映射组件，而功能是由映射组件去完成。可以通过修改该属性，修改默认的映射组件。
+ * 比如 Button 组件的默认映射组件为 button，可以修改为 a 元素
+ * @attribute BaseComponent.component
+ * @type {element|component}
+ */
+
+/**
+ * 设置映射组件的映射组件，
+ * 当映射组件设置的映射组件为 bnorth 组件，而不是元素时，还可以通过该属性，设置映射组件的映射组件，方便二次包装组件
+ * @attribute BaseComponent.componentPanel
+ * @type {element|component}
+ */
+
+/**
+ * 其他映射组件可以设置的属性
+ * @attribute BaseComponent.xxx
+ */
+
+/**
+ * 设置组件通用的默认属性
+ * @member BaseComponent.props
+ * @static
+ */

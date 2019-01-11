@@ -1,5 +1,6 @@
-
-
+/**
+ * @module
+ */
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import { domIsTouch, domOffset, chainedFuncs, domFindContainer, domCreatePortal } from './utils/dom';
@@ -8,6 +9,14 @@ import Panel from './Panel';
 import Backdrop from './Backdrop';
 
 
+// Popover
+// --------------------
+
+/**
+ * @component
+ * @augments BaseComponent
+ * @exportdefault
+ */
 class Popover extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -57,12 +66,12 @@ class Popover extends React.Component {
         {typeof(children)==='function'?children(show, this.state, this.props):children}
         {!show?null:domCreatePortal((
           <Backdrop mask={mask} {...closeProps} {...maskProps}>
-            <Popover.Overlay 
+            <Overlay 
               calcPosition={calcPosition} placement={placement} offsetTarget={offsetTarget} offsetOverlay={offsetOverlay} 
               ref={e=>e&&(!offsetOverlay)&&this.setState({offsetOverlay:domOffset(e, this.container)})} 
               {...overlayProps}>
               {typeof overlay==='function'?overlay(this):overlay}
-            </Popover.Overlay>
+            </Overlay>
           </Backdrop>
         ), this.container)}
       </Component>
@@ -70,26 +79,87 @@ class Popover extends React.Component {
   }
 }
 
-Popover.Overlay = class extends React.Component {
-  render() {
-    let {
-      calcPosition, offsetTarget, offsetOverlay, placement,
-      component:Component=Panel, componentPanel, style, className, ...props
-    } = parseProps(this.props, Popover.Overlay.props);
+Popover.defaultProps = {};
+/**
+ * 设置是否创建时为弹出状态
+ * @attribute module:Popover.Popover.defaultIsShow
+ * @type {boolean}
+ */
+/**
+ * 
+ * @attribute module:Popover.Popover.trigger
+ * @type {boolean}
+ */
+/**
+ * 
+ * @attribute module:Popover.Popover.onClick
+ * @type {boolean}
+ */
+/**
+ * 
+ * @attribute module:Popover.Popover.onMouseOver
+ * @type {boolean}
+ */
+/**
+ * 
+ * @attribute module:Popover.Popover.overlay
+ * @type {boolean}
+ */
+/**
+ * 
+ * @attribute module:Popover.Popover.overlayProps
+ * @type {boolean}
+ */
+/**
+ * 
+ * @attribute module:Popover.Popover.mask
+ * @type {boolean}
+ */
+/**
+ * 
+ * @attribute module:Popover.Popover.maskProps
+ * @type {boolean}
+ */
+/**
+ * 
+ * @type {boolean}
+ */
+Popover.defaultProps.calcPosition = Popover.calcPosition;
+/**
+ * 
+ * @attribute module:Popover.Popover.placement
+ * @type {boolean}
+ */
+/**
+ * 
+ * @attribute module:Popover.Popover.container
+ * @type {boolean}
+ */
+/**
+ * 设置映射组件
+ * @type {element|component}
+ */
+Popover.defaultProps.component = Panel;
+/**
+ * 设置 Panel 组件的映射组件，只有当映射组件设置为 Panel 或者基于 Panel 时有效
+ * @attribute module:Popover.Popover.componentPanel
+ * @type {element|component}
+ */
 
-    let classStr = 'position-absolute bg-color-white border-set-a-';
-    let styleSet = {boxSizing: 'content-box'};
-    let [classSetPosition, styleSetPosition] = offsetOverlay?calcPosition(offsetTarget,offsetOverlay, ...((placement&&placement.split('-'))||[])) : [{'visibility-hidden':true},{}];
+export default Popover;
 
-    return (
-      <Component 
-        component={componentPanel} 
-        onMouseMove={e=>e.stopPropagation()} 
-        style={{...styleSet,...styleSetPosition,...style}} className={classes(classStr, classSetPosition, className)} {...props} />
-    );
-  }
-}
+// Calc Position
+// --------------------
 
+/**
+ * 弹出层位置计算函数
+ * @member
+ * @param {*} offsetTarget 
+ * @param {*} offsetOverlay 
+ * @param {*} placement 
+ * @param {*} main 
+ * @param {*} cross 
+ */
 Popover.calcPosition = function(offsetTarget, offsetOverlay, placement, main, cross) {
   let classSet = {'position-absolute': true};
   let styleSet = {};
@@ -164,5 +234,68 @@ Popover.calcPosition = function(offsetTarget, offsetOverlay, placement, main, cr
   return [classSet, styleSet];
 }
 
+// Overlay
+// --------------------
 
-export default Popover;
+/**
+ * 弹出层组件
+ * @component
+ * @augments BaseComponent
+ * @mount Popover.Overlay
+ */
+let Overlay = class extends React.Component {
+  render() {
+    let {
+      calcPosition, offsetTarget, offsetOverlay, placement,
+      component:Component=Panel, componentPanel, style, className, ...props
+    } = parseProps(this.props, Overlay.props);
+
+    let classStr = 'position-absolute bg-color-white border-set-a-';
+    let styleSet = {boxSizing: 'content-box'};
+    let [classSetPosition, styleSetPosition] = offsetOverlay?calcPosition(offsetTarget,offsetOverlay, ...((placement&&placement.split('-'))||[])) : [{'visibility-hidden':true},{}];
+
+    return (
+      <Component 
+        component={componentPanel} 
+        onMouseMove={e=>e.stopPropagation()} 
+        style={{...styleSet,...styleSetPosition,...style}} className={classes(classStr, classSetPosition, className)} {...props} />
+    );
+  }
+}
+Overlay.defaultProps = {};
+/**
+ * 
+ * @attribute module:Popover.Overlay.calcPosition
+ * @type {boolean}
+ */
+/**
+ * 
+ * @attribute module:Popover.Overlay.offsetTarget
+ * @type {boolean}
+ */
+/**
+ * 
+ * @attribute module:Popover.Overlay.offsetOverlay
+ * @type {boolean}
+ */
+/**
+ * 
+ * @attribute module:Popover.Overlay.placement
+ * @type {boolean}
+ */
+/**
+ * 设置映射组件
+ * @type {element|component}
+ */
+Overlay.defaultProps.component = Panel;
+/**
+ * 设置 Panel 组件的映射组件，只有当映射组件设置为 Panel 或者基于 Panel 时有效
+ * @attribute module:Popover.Popover.componentPanel
+ * @type {element|component}
+ */
+
+
+Object.defineProperty(Popover,"Overlay",{ get:function(){ return Overlay }, set:function(val){ Overlay = val }})
+
+
+

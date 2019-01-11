@@ -33,7 +33,7 @@ copySync(templatePath, desPath);
 result.error&&console.log(result.error.toString());
 console.log(result.stderr.toString());
 
-let obj = JSON.parse(result.output.join('\n'));
+let obj = JSON.parse(result.stdout.toString());
 obj = obj.filter(v=>!v.undocumented&&v.kind!=='package');
 obj.forEach(v=>{
   delete v.comment;

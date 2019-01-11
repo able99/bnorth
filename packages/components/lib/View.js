@@ -26,14 +26,17 @@ var _Panel = _interopRequireDefault(require("./Panel"));
 /**
  * @module
  */
+// View
+// ------------------------------
 
 /**
- * 页面的根组件，也可以不使用该组件作为根组件
+ * 页面根组件，非强制使用作为根组件
  * @component 
  * @exportdefault
+ * @augments BaseComponent
  */
 var View = function View(aprops) {
-  var _parseProps = (0, _props.default)(aprops),
+  var _parseProps = (0, _props.default)(aprops, View.props),
       landscape = _parseProps.landscape,
       container = _parseProps.container,
       Component = _parseProps.component,
@@ -63,32 +66,23 @@ var View = function View(aprops) {
   }, props), children);
 };
 
-View.defaultProps = {
-  /**
-   * 开启横屏模式
-   * @type {boolean}
-   */
-  landscape: undefined,
+View.defaultProps = {};
+/**
+ * 设置为横屏模式
+ * @attribute module:View.View.landscape
+ * @type {boolean}
+ */
 
-  /**
-   * 页面的容器，为横屏时计算宽度使用
-   * @type {element}
-   * @default document.body
-   */
-  container: document.body,
+/**
+ * 设置页面的容器，横屏时以容器为参照横屏旋转
+ * @type {element}
+ */
 
-  /**
-   * 实际对应组件
-   * @type {element|component}
-   * @default Panel
-   */
-  component: _Panel.default,
+View.defaultProps.container = document.body;
+/**
+ * 设置映射组件
+ */
 
-  /**
-   * 当实际组件为 panel 时，设置 panel 的对应组件
-   * @type {(element|component)}
-   */
-  componentPanel: undefined
-};
+View.defaultProps.component = _Panel.default;
 var _default = View;
 exports.default = _default;

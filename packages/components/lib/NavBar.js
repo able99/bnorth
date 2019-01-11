@@ -21,14 +21,25 @@ var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel.Icon"));
 
+/**
+ * 标题栏组件
+ * @module 
+ */
+// NarBar
+// --------------------------
+
+/**
+ * 标题栏组件
+ * @component
+ * @augments BaseComponent
+ * @exportdefault
+ */
 var NavBar = function NavBar(aprops) {
   var _parseProps = (0, _props.default)(aprops, NavBar.props),
       statusbarOverlay = _parseProps.statusbarOverlay,
       hidden = _parseProps.hidden,
-      _parseProps$component = _parseProps.component,
-      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
-      _parseProps$component2 = _parseProps.componentPanel,
-      componentPanel = _parseProps$component2 === void 0 ? 'nav' : _parseProps$component2,
+      Component = _parseProps.component,
+      componentPanel = _parseProps.componentPanel,
       className = _parseProps.className,
       style = _parseProps.style,
       props = (0, _objectWithoutProperties2.default)(_parseProps, ["statusbarOverlay", "hidden", "component", "componentPanel", "className", "style"]);
@@ -44,8 +55,43 @@ var NavBar = function NavBar(aprops) {
   }, props));
 };
 
-NavBar.Title = function (aprops) {
-  var _parseProps2 = (0, _props.default)(aprops, NavBar.Title.props),
+NavBar.defaultProps = {};
+/**
+ * 设置标题栏顶部覆盖状态栏的高度，当值为 true 时，取 20 作为默认值
+ * @attribute module:NavBar.NavBar.statusbarOverlay
+ * @type {boolean|number}
+ */
+
+/**
+ * 设置隐藏组件
+ * @attribute module:NavBar.NavBar.hidden
+ * @type {boolean}
+ */
+
+/**
+ * 设置映射组件
+ */
+
+NavBar.defaultProps.component = _Panel.default;
+/**
+ * 设置映射组件的映射组件，
+ */
+
+NavBar.defaultProps.componentPanel = 'nav';
+var _default = NavBar; // NavBar Title
+// ---------------------
+
+/**
+ * 标题栏组件的标题子组件
+ * @component
+ * @augments BaseComponent
+ * @mount NavBar.Title
+ */
+
+exports.default = _default;
+
+var _Title = function Title(aprops) {
+  var _parseProps2 = (0, _props.default)(aprops, _Title.props),
       isFullOrCenter = _parseProps2.isFullOrCenter,
       _parseProps2$componen = _parseProps2.component,
       Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
@@ -70,10 +116,38 @@ NavBar.Title = function (aprops) {
   }, props), "0"));
 };
 
-NavBar.Item = function (aprops) {
-  var _parseProps3 = (0, _props.default)(aprops, NavBar.Item.props),
-      _parseProps3$componen = _parseProps3.component,
-      Component = _parseProps3$componen === void 0 ? _Panel.default.Icon : _parseProps3$componen,
+Object.defineProperty(NavBar, "Title", {
+  get: function get() {
+    return _Title;
+  },
+  set: function set(val) {
+    _Title = val;
+  }
+});
+_Title.defaultProps = {};
+/**
+ * 设置标题组件铺满小组件之外空间，或者按需设置宽度并居中
+ * @attribute module:NavBar~Title.isFullOrCenter
+ * @type {boolean}
+ */
+
+/**
+ * 设置映射组件
+ */
+
+_Title.defaultProps.component = _Panel.default; // NavBar Item
+// ---------------------
+
+/**
+ * 标题栏组件的上的小组件
+ * @component
+ * @augments BaseComponent
+ * @mount NavBar.Item
+ */
+
+var _Item = function Item(aprops) {
+  var _parseProps3 = (0, _props.default)(aprops, _Item.props),
+      Component = _parseProps3.component,
       componentPanel = _parseProps3.componentPanel,
       className = _parseProps3.className,
       props = (0, _objectWithoutProperties2.default)(_parseProps3, ["component", "componentPanel", "className"]);
@@ -85,5 +159,17 @@ NavBar.Item = function (aprops) {
   }, props));
 };
 
-var _default = NavBar;
-exports.default = _default;
+Object.defineProperty(NavBar, "Item", {
+  get: function get() {
+    return _Item;
+  },
+  set: function set(val) {
+    _Item = val;
+  }
+});
+_Item.defaultProps = {};
+/**
+ * 设置映射组件
+ */
+
+_Item.defaultProps.component = _Panel.default.Icon;

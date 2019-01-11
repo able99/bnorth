@@ -29,6 +29,8 @@ var _Backdrop = _interopRequireDefault(require("./Backdrop"));
 /**
  * 蒙层组件
  * @component
+ * @augments BaseComponent
+ * @export
  */
 var Mask = function Mask(aprops) {
   var _parseProps = (0, _props.default)(aprops, Mask.props),
@@ -51,21 +53,18 @@ exports.Mask = Mask;
 Mask.defaultProps = {};
 /**
  * 设置 蒙层中间的 loader 组件的参数
- * @memberof module:mask.Mask
+ * @attribute module:mask.Mask.loaderProps
  * @type {object}
  */
 
-Mask.defaultProps.loaderProps = undefined;
 /**
  * 设置 Backdrop 的 mask 属性
- * @memberof module:mask.Mask
  * @type {boolean}
  */
 
 Mask.defaultProps.mask = true;
 /**
  * 渲染为该组件
- * @memberof module:mask.Mask
  * @type {component|element}
  */
 
@@ -81,55 +80,59 @@ var mask = {
   // --------------------------------
   _id: 'mask',
   onPluginMount: function onPluginMount(app) {
-    app.mask = {
-      /**
-       * 显示蒙层
-       * @memberof module:mask.mask
-       * @mount app.mask.show
-       * @param {object?} options - 参数
-       * @returns {string} 弹出层 id
-       */
-      show: function show() {
-        var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-            _ref$options = _ref.options,
-            options = _ref$options === void 0 ? {} : _ref$options,
-            props = (0, _objectWithoutProperties2.default)(_ref, ["options"]);
+    /**
+     * 挂载在 App 实例上的蒙层操作对象
+     * @memberof module:mask.mask
+     */
+    app.mask = {};
+    /**
+     * 显示蒙层
+     * @memberof module:mask.mask
+     * @param {object?} options - 参数
+     * @returns {string} 弹出层 id
+     */
 
-        var _id = app.mask._id || app.router.genPopLayerId(options);
+    app.mask.show = function () {
+      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          _ref$options = _ref.options,
+          options = _ref$options === void 0 ? {} : _ref$options,
+          props = (0, _objectWithoutProperties2.default)(_ref, ["options"]);
 
-        options._id = _id;
-        options.isModal = true;
-        return app.mask._id = app.router.addPopLayer(_react.default.createElement(Mask, null), props, options);
-      },
+      var _id = app.mask._id || app.router.genPopLayerId(options);
 
-      /**
-       * 关闭蒙层
-       * @memberof module:mask.mask
-       * @mount app.mask.close
-       */
-      close: function close() {
-        var _ref2 = app.router.getPopLayerInfo(app.mask._id) || {},
-            content = _ref2.content,
-            _ref2$props = _ref2.props,
-            props = _ref2$props === void 0 ? {} : _ref2$props,
-            _ref2$options = _ref2.options,
-            options = _ref2$options === void 0 ? {} : _ref2$options;
-
-        if (!content) {
-          app.mask._id = undefined;
-          return;
-        }
-
-        props.in = false;
-
-        props.onTransitionFinished = function () {
-          app.router.removePopLayer(app.mask._id);
-          app.mask._id = undefined;
-        };
-
-        return app.router.addPopLayer(content, props, options);
-      }
+      options._id = _id;
+      options.isModal = true;
+      return app.mask._id = app.router.addPopLayer(_react.default.createElement(Mask, null), props, options);
     };
+    /**
+     * 关闭蒙层
+     * @memberof module:mask.mask
+     */
+
+
+    app.mask.close = function () {
+      var _ref2 = app.router.getPopLayerInfo(app.mask._id) || {},
+          content = _ref2.content,
+          _ref2$props = _ref2.props,
+          props = _ref2$props === void 0 ? {} : _ref2$props,
+          _ref2$options = _ref2.options,
+          options = _ref2$options === void 0 ? {} : _ref2$options;
+
+      if (!content) {
+        app.mask._id = undefined;
+        return;
+      }
+
+      props.in = false;
+
+      props.onTransitionFinished = function () {
+        app.router.removePopLayer(app.mask._id);
+        app.mask._id = undefined;
+      };
+
+      return app.router.addPopLayer(content, props, options);
+    };
+
     app.mask._oldMask = app.render.mask;
 
     app.render.mask = function (show, options) {

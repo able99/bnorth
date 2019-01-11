@@ -2,6 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import Panel from '@bnorth/components/lib/Panel';
 import List from '@bnorth/components/lib/List';
+import { getDocName, trimDocName } from '../utils';
 import Section from './Section';
 import Params from './Params';
 import Link from './Link';
@@ -19,6 +20,7 @@ let Container = aprops=>{
   let isComponent = doc.kind==='component';
   let isPlugin = doc.kind==='plugin';
   let isTypedef = doc.kind==='typedef';
+  let isAttribute = doc.kind==='attribute';
   let docs = [];
   if(isGlobal) docs = doclets.filter(v=>v.scope==='global');
   if(isModule) docs = doclets.filter(v=>v.memberof===name);
@@ -28,6 +30,7 @@ let Container = aprops=>{
   if(isTypedef) docs = doclets.filter(v=>v.memberof===name);
 
   let see = doc.see;
+  let augments = doc.augments;
   let typedefs = docs.filter(v=>v.kind==='typedef');
   let members = docs.filter(v=>v.kind==='member');
   let constants = docs.filter(v=>v.kind==='constant');
@@ -49,22 +52,35 @@ let Container = aprops=>{
     <Panel {...props}>
       <Section title={
           <Panel>
-            {isSub&&doc.scope&&doc.scope!=='global'&&doc.scope!=='instance'&&doc.kind!=='attribute'?<span>[{doc.scope}]</span>:null}
+            {/* {isSub&&doc.scope&&doc.scope!=='global'&&doc.scope!=='instance'&&doc.kind!=='attribute'?<span>[{doc.scope}]</span>:null} */}
+            {isModule||isAttribute||!doc.scope?null:<span>[{doc.scope}]</span>}
             {doc.access?<span>[{doc.access}]</span>:null}
             {!isSub&&doc.kind?<span>[{doc.kind}]</span>:null}
             {isSub&&doc.async?<span>[同步]</span>:null}
-            <Panel inline>{isSub||doc.kind==='module'?doc.name.replace(/^exports\./i,''):doc.longname.replace(/^module:/i,'')}</Panel>
+            <Panel inline>{getDocName(doc)}</Panel>
             {!isSub&&doc.exportdefault?<Panel inline>(exports)</Panel>:null}
             {isSub&&doc.kind==='function'?<Panel inline>()</Panel>:null}
             {isSub&&(doc.kind==='member'||doc.kind==='attribute')?<Panel inline>:<Type app={app} type={doc.type} /></Panel>:null}
           </Panel>
         } 
         type={isSub?'sub':'main'}>
-        <List.Item desc={<ReactMarkdown source={isClass?doc.classdesc:doc.description} />}/>
+        <List.Item desc={<ReactMarkdown source={isClass?doc.classdesc:(doc.description||doc.classdesc)} />}/>
         {doc.examples&&doc.examples.map((v,i)=>(
           <List.Item key={i} title="Example:"><ReactMarkdown source={v} /></List.Item>
         ))}
       </Section>
+
+      {!isSub&&!isModule&&doc.memberof?(
+        <Section title="模块" type="section">
+          <List.Item>{getDocName({name:doc.memberof})}</List.Item>
+        </Section>
+      ):null}
+
+      {!isSub&&augments?(
+        <Section title="继承" type="section">
+          {augments.map(v=><Link key={v} app={app} doc={{name: trimDocName(v), longname: v}} />)}
+        </Section>
+      ):null}
 
       {see?(
         <Section title="参见" type="section">
@@ -207,7 +223,7 @@ let Container = aprops=>{
 
       {defaults?(
         <Section title="Default" type="key">
-          <List.Item><pre><code>{defaults[0]==='{'||defaults[0]==='['?JSON.stringify(JSON.parse(defaults),null,2):defaults}</code></pre></List.Item>
+          <List.Item><pre><code>{defaults[0]==='{'||defaults[0]==='['?JSON.stringify(JSON.parse(defaults),null,2):defaults.toString()}</code></pre></List.Item>
         </Section>
       ):null}
     </Panel>

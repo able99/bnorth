@@ -7,16 +7,21 @@ import classes from '@bnorth/rich.css/lib/classes';
 import parseProps from './utils/props';
 import Panel from './Panel';
 
+
+// View
+// ------------------------------
+
 /**
- * 页面的根组件，也可以不使用该组件作为根组件
+ * 页面根组件，非强制使用作为根组件
  * @component 
  * @exportdefault
+ * @augments BaseComponent
  */
 let View = aprops=>{
   let {
     landscape, container,
     component:Component, componentPanel, className, style, children, ...props
-  } = parseProps(aprops);
+  } = parseProps(aprops, View.props);
 
   let classStr = 'position-relative offset-a-start square-full overflow-a-hidden flex-display-block flex-direction-v bg-color-view';
   let styleSet = {};
@@ -37,29 +42,20 @@ let View = aprops=>{
   );
 }
 
-View.defaultProps = {
-  /**
-   * 开启横屏模式
-   * @type {boolean}
-   */
-  landscape: undefined,
-  /**
-   * 页面的容器，为横屏时计算宽度使用
-   * @type {element}
-   * @default document.body
-   */
-  container: document.body,
-  /**
-   * 实际对应组件
-   * @type {element|component}
-   * @default Panel
-   */
-  component: Panel, 
-  /**
-   * 当实际组件为 panel 时，设置 panel 的对应组件
-   * @type {(element|component)}
-   */
-  componentPanel: undefined,
-}
+View.defaultProps = {}
+/**
+ * 设置为横屏模式
+ * @attribute module:View.View.landscape
+ * @type {boolean}
+ */
+/**
+ * 设置页面的容器，横屏时以容器为参照横屏旋转
+ * @type {element}
+ */
+View.defaultProps.container = document.body;
+/**
+ * 设置映射组件
+ */
+View.defaultProps.component = Panel;
 
 export default View;

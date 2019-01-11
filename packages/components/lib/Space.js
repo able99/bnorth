@@ -21,8 +21,18 @@ var _props = _interopRequireDefault(require("./utils/props"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
-var Spacing = function Spacing(aprops) {
-  var _parseProps = (0, _props.default)(aprops, Spacing.props),
+/**
+ * @module
+ */
+
+/**
+ * 留白组件
+ * @component 
+ * @augments BaseComponent
+ * @exportdefault
+ */
+var Space = function Space(aprops) {
+  var _parseProps = (0, _props.default)(aprops, Space.props),
       _parseProps$count = _parseProps.count,
       count = _parseProps$count === void 0 ? 1 : _parseProps$count,
       stacked = _parseProps.stacked,
@@ -38,5 +48,18 @@ var Spacing = function Spacing(aprops) {
   }, Array(Number(count)).fill(stacked ? '\n' : ' ')), children);
 };
 
-var _default = Spacing;
+Space.defaultProps = {};
+/**
+ * 留白的数量，横向时为字符的数量，纵向时为行的数量
+ * @type {number}
+ */
+
+Space.defaultProps.count = 1;
+/**
+ * 设置为堆叠模式，即纵向留白
+ * @attribute module:Space.Space.stacked
+ * @type {boolean}
+ */
+
+var _default = Space;
 exports.default = _default;

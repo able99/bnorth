@@ -21,6 +21,15 @@ var _react = _interopRequireDefault(require("react"));
 
 var _dom = require("./utils/dom");
 
+/**
+ * @module
+ */
+
+/**
+ * 滚动监控组件
+ * @component
+ * @exportdefault
+ */
 var ScrollSpy =
 /*#__PURE__*/
 function (_React$Component) {
@@ -149,4 +158,65 @@ function (_React$Component) {
   return ScrollSpy;
 }(_react.default.Component);
 
-exports.default = ScrollSpy;
+ScrollSpy.defaultProps = {};
+/**
+ * TODO
+ * @type {boolean|string}
+ */
+
+ScrollSpy.defaultProps.target = true;
+/**
+ * TODO
+ * @attribute module:ScrollSpy.ScrollSpy.container
+ * @type {boolean}
+ */
+
+/**
+ * 监听横向滚动条，默认监听纵向滚动条
+ * @attribute module:ScrollSpy.ScrollSpy.horizontal
+ * @type {boolean}
+ */
+
+/**
+ * 相对位置
+ * 
+ * - above_inside：
+ * - below_inside：
+ * - inside：
+ * - above：
+ * - below：
+ * 
+ * @typedef RelativeType
+ * @type {string}
+ */
+
+/**
+ * 相对位置改变回调函数
+ * @callback onRelativeChangeCallback
+ * @param {module:ScrollSpy~RelativeType} relative - 相对位置
+ * @param {module:ScrollSpy~RelativeType} preRelative - 改变前的相对位置
+ * @param {event} event - 引起改变的滚动事件
+ * @param {element} container - 滚动对象的 dom 元素
+ */
+
+/**
+ * 设置滚动位置改变时引起，监控组件与滚动组件相对位置改变的事件的回调函数
+ * @attribute module:ScrollSpy.ScrollSpy.onRelativeChange
+ * @type {module:ScrollSpy~onRelativeChangeCallback}
+ */
+
+/**
+ * 滚动位置改变回调函数
+ * @callback onPosChangeCallback
+ * @param {event} event - 引起改变的滚动事件
+ * @param {element} container - 滚动对象的 dom 元素
+ */
+
+/**
+ * 设置滚动位置改变时触发事件的回调函数
+ * @attribute module:ScrollSpy.ScrollSpy.onPosChange
+ * @type {module:ScrollSpy~onPosChangeCallback}
+ */
+
+var _default = ScrollSpy;
+exports.default = _default;

@@ -13,12 +13,13 @@
     "homepage": "https://github.com/able99",
     "license": "MIT"
   },
-  "readme": "# core\n\nrich.css 是一个可定制的，全面覆盖的 css 样式库\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n\n[参考手册](//able99.github.io/bnorth/richcss/)\n\n",
+  "readme": "# rich.css\n\nrich.css 是一个可定制的，全面覆盖的 css 样式库\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n\n[参考手册](//able99.github.io/bnorth/richcss/)\n\n",
   "doclets": [
     {
       "kind": "module",
       "name": "classes",
-      "longname": "module:classes"
+      "longname": "module:classes",
+      "defaultvalue": ""
     },
     {
       "description": "将多种形式的 css class name 进行按循序组合，同类型的 class name 后面会覆盖前面的。\n\n同类型指的是 class name 名称相同，参数不同。",
@@ -52,7 +53,14 @@
       "name": "classes",
       "longname": "module:classes.classes",
       "kind": "function",
-      "memberof": "module:classes"
+      "memberof": "module:classes",
+      "defaultvalue": ""
+    },
+    {
+      "kind": "module",
+      "name": "config",
+      "longname": "module:config",
+      "defaultvalue": ""
     },
     {
       "description": "颜色键值对",
@@ -77,8 +85,10 @@
       "examples": [
         "```js\ntextColors: {\n  normal: '#383838',\n},\n```"
       ],
-      "longname": "GenConfigColor",
-      "scope": "global"
+      "longname": "module:config~GenConfigColor",
+      "scope": "inner",
+      "memberof": "module:config",
+      "defaultvalue": ""
     },
     {
       "description": "样式值集合，支持配置生成。\n\n- 不是对象而是数组时，将首先转换为键值都为数组元素的对象在进行下面步骤\n- 下划线开够为特殊属性，是对应生成函数的参数\n- 属性值为 true，使用属性名\n- 属性值为数字时，转为为带单位的字符串\n- 属性值为字符串时，直接使用",
@@ -203,8 +213,10 @@
           "name": "xxx"
         }
       ],
-      "longname": "GenConfigSet",
-      "scope": "global"
+      "longname": "module:config~GenConfigSet",
+      "scope": "inner",
+      "memberof": "module:config",
+      "defaultvalue": ""
     },
     {
       "kind": "typedef",
@@ -632,28 +644,46 @@
           "name": "animationPlayState"
         }
       ],
-      "longname": "GenConfig",
-      "scope": "global"
+      "longname": "module:config~GenConfig",
+      "scope": "inner",
+      "memberof": "module:config",
+      "defaultvalue": ""
     },
     {
       "description": "样式表生成配置",
       "exportdefault": true,
-      "scope": "global",
+      "scope": "static",
       "type": {
         "names": [
           "GenConfig"
         ]
       },
       "name": "genConfig",
-      "longname": "genConfig",
+      "longname": "module:config.genConfig",
       "kind": "member",
+      "memberof": "module:config",
       "defaultvalue": "{\"bodyBackground\":\"none\",\"stateOpacityDisabled\":0.5,\"stateOpacityActive\":0.8,\"hMapTextSize\":\"\",\"lineHeight\":\"\",\"textColors\":\"\",\"utilColors\":\"\",\"mainColors\":\"\",\"opacityColors\":\"\",\"directionEdge\":\"\",\"directionCorner\":\"\",\"directionOffset\":\"\",\"directionOffsetAll\":\"\",\"directionSize\":\"\",\"directionAxis\":\"\",\"textFontFamily\":\"\",\"textSize\":\"\",\"textWeight\":\"\",\"textStyle\":\"\",\"textDecoration\":\"\",\"textAlign\":\"\",\"textVerticalAligns\":\"\",\"textWhiteSpaces\":\"\",\"textTruncate\":\"\",\"borderWidth\":\"\",\"borderStyle\":\"\",\"borderRadius\":\"\",\"display\":\"\",\"visibility\":\"\",\"opacity\":\"\",\"overflow\":\"\",\"pointerEvents\":\"\",\"float\":\"\",\"spacing\":\"\",\"position\":\"\",\"size\":\"\",\"flexDisplay\":\"\",\"flexDirection\":\"\",\"flexJustify\":\"\",\"flexAlign\":\"\",\"flexWrap\":\"\",\"flexSubFlex\":\"\",\"cursor\":\"\",\"transitionProperty\":\"\",\"transitionTime\":\"\",\"animationTime\":\"\",\"animationCount\":\"\",\"animationTimingFunction\":\"\",\"animationDirection\":\"\",\"animationPlayState\":\"\"}",
       "params": []
     },
     {
       "kind": "module",
       "name": "gen",
-      "longname": "module:gen"
+      "longname": "module:gen",
+      "defaultvalue": ""
+    },
+    {
+      "description": "样式开关，实际上 - 符号，放在样式结尾。与默认值意义不同，有些默认值也是 - 结尾",
+      "kind": "typedef",
+      "name": "StyleSwitcher",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "longname": "module:gen~StyleSwitcher",
+      "scope": "inner",
+      "memberof": "module:gen",
+      "defaultvalue": ""
     },
     {
       "description": "样式表的描述对象",
@@ -666,7 +696,8 @@
       },
       "longname": "module:gen~ClassObjects",
       "scope": "inner",
-      "memberof": "module:gen"
+      "memberof": "module:gen",
+      "defaultvalue": ""
     },
     {
       "description": "样式生成函数",
@@ -699,7 +730,8 @@
       ],
       "longname": "module:gen~GenFunc",
       "scope": "inner",
-      "memberof": "module:gen"
+      "memberof": "module:gen",
+      "defaultvalue": ""
     },
     {
       "description": "读取配置",
@@ -717,7 +749,8 @@
       "longname": "module:gen.getCssConfig",
       "kind": "function",
       "memberof": "module:gen",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": ""
     },
     {
       "description": "修改配置",
@@ -739,7 +772,8 @@
       "longname": "module:gen.setCssConfig",
       "kind": "function",
       "memberof": "module:gen",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": ""
     },
     {
       "description": "根据传入的 gen 函数集合，生成 css dom 对象，并写入 dom header",
@@ -772,13 +806,440 @@
       "name": "gen",
       "longname": "module:gen.gen",
       "kind": "function",
-      "memberof": "module:gen"
+      "memberof": "module:gen",
+      "defaultvalue": ""
+    },
+    {
+      "description": "动画",
+      "kind": "module",
+      "name": "gens/animation",
+      "longname": "module:gens/animation",
+      "defaultvalue": ""
+    },
+    {
+      "description": "样式生成函数：动画",
+      "exportdefault": true,
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:gen~GenFunc"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          },
+          "description": "样式表的描述对象"
+        }
+      ],
+      "name": "genFuncAnimation",
+      "longname": "module:gens/animation.genFuncAnimation",
+      "kind": "function",
+      "memberof": "module:gens/animation",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置渐变动画影响的属性",
+      "name": "transition-property-[property]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#transitionProperty"
+            ]
+          },
+          "description": "属性",
+          "name": "property"
+        }
+      ],
+      "longname": "module:gens/animation~transition-property-[property]",
+      "scope": "inner",
+      "memberof": "module:gens/animation",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置渐变动画的过度时间",
+      "name": "transition-duration-[time]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#transitionTime"
+            ]
+          },
+          "description": "过度时间",
+          "name": "time"
+        }
+      ],
+      "longname": "module:gens/animation~transition-duration-[time]",
+      "scope": "inner",
+      "memberof": "module:gens/animation",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置渐变动画的延迟开始的时间",
+      "name": "transition-delay-[time]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#transitionTime"
+            ]
+          },
+          "description": "延迟时间",
+          "name": "time"
+        }
+      ],
+      "longname": "module:gens/animation~transition-delay-[time]",
+      "scope": "inner",
+      "memberof": "module:gens/animation",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置渐变动画的过度函数",
+      "name": "transition-timing-function-[func]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#animationTimingFunction"
+            ]
+          },
+          "description": "过度函数",
+          "name": "func"
+        }
+      ],
+      "longname": "module:gens/animation~transition-timing-function-[func]",
+      "scope": "inner",
+      "memberof": "module:gens/animation",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置帧动画的重复次数",
+      "name": "animation-iteration-count-[times]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#animationCount"
+            ]
+          },
+          "description": "重复次数",
+          "name": "times"
+        }
+      ],
+      "longname": "module:gens/animation~animation-iteration-count-[times]",
+      "scope": "inner",
+      "memberof": "module:gens/animation",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置帧动画的重复执行时的执行方向",
+      "name": "animation-direction-[direction]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#animationDirection"
+            ]
+          },
+          "description": "执行方向",
+          "name": "direction"
+        }
+      ],
+      "longname": "module:gens/animation~animation-direction-[direction]",
+      "scope": "inner",
+      "memberof": "module:gens/animation",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置帧动画的播放状态",
+      "name": "animation-play-state-[state]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#animationPlayState"
+            ]
+          },
+          "description": "播放状态",
+          "name": "state"
+        }
+      ],
+      "longname": "module:gens/animation~animation-play-state-[state]",
+      "scope": "inner",
+      "memberof": "module:gens/animation",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置帧动画的动画时间",
+      "name": "animation-duration-[time]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#animationTime"
+            ]
+          },
+          "description": "动画时间",
+          "name": "time"
+        }
+      ],
+      "longname": "module:gens/animation~animation-duration-[time]",
+      "scope": "inner",
+      "memberof": "module:gens/animation",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置帧动画的延迟开始的时间",
+      "name": "animation-delay-[time]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#animationTime"
+            ]
+          },
+          "description": "延迟时间",
+          "name": "time"
+        }
+      ],
+      "longname": "module:gens/animation~animation-delay-[time]",
+      "scope": "inner",
+      "memberof": "module:gens/animation",
+      "defaultvalue": ""
+    },
+    {
+      "description": "背景",
+      "kind": "module",
+      "name": "gens/background",
+      "longname": "module:gens/background",
+      "defaultvalue": ""
+    },
+    {
+      "description": "样式生成函数：背景",
+      "exportdefault": true,
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:gen~GenFunc"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          },
+          "description": "样式表的描述对象"
+        }
+      ],
+      "name": "genFuncBackground",
+      "longname": "module:gens/background.genFuncBackground",
+      "kind": "function",
+      "memberof": "module:gens/background",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置背景颜色",
+      "name": "bg-color-[color]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#utilColors",
+              "module:config~GenConfig#mainColors",
+              "module:config~GenConfig#opacityColors"
+            ]
+          },
+          "description": "颜色",
+          "name": "color"
+        }
+      ],
+      "longname": "module:gens/background~bg-color-[color]",
+      "scope": "inner",
+      "memberof": "module:gens/background",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置无背景",
+      "name": "bg-none-",
+      "kind": "classname",
+      "longname": "module:gens/background~bg-none-",
+      "scope": "inner",
+      "memberof": "module:gens/background",
+      "defaultvalue": ""
+    },
+    {
+      "description": "基本样式",
+      "kind": "module",
+      "name": "gens/base",
+      "longname": "module:gens/base",
+      "defaultvalue": ""
+    },
+    {
+      "description": "样式生成函数：基本样式",
+      "exportdefault": true,
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:gen~GenFunc"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          },
+          "description": "样式表的描述对象"
+        }
+      ],
+      "name": "genFuncBase",
+      "longname": "module:gens/base.genFuncBase",
+      "kind": "function",
+      "memberof": "module:gens/base",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置渐变动画，时间可变，属性固定为全部，渐变函数固定为 ease-out",
+      "name": "transition-set-[time]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#transitionTime"
+            ]
+          },
+          "description": "过度时间",
+          "name": "time"
+        }
+      ],
+      "longname": "module:gens/base~transition-set-[time]",
+      "scope": "inner",
+      "memberof": "module:gens/base",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置行高",
+      "name": "line-height-[lineHeight]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#lineHeight"
+            ]
+          },
+          "description": "行高",
+          "name": "lineHeight"
+        }
+      ],
+      "longname": "module:gens/base~line-height-[lineHeight]",
+      "scope": "inner",
+      "memberof": "module:gens/base",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置不显示轮廓",
+      "name": "outline-none-",
+      "kind": "classname",
+      "longname": "module:gens/base~outline-none-",
+      "scope": "inner",
+      "memberof": "module:gens/base",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置不显示特殊元素的浏览器默认样式",
+      "name": "appearance-none-",
+      "kind": "classname",
+      "longname": "module:gens/base~appearance-none-",
+      "scope": "inner",
+      "memberof": "module:gens/base",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置元素旋转时不显示背面",
+      "name": "backface-hidden-",
+      "kind": "classname",
+      "longname": "module:gens/base~backface-hidden-",
+      "scope": "inner",
+      "memberof": "module:gens/base",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置强制使用硬件加速绘制",
+      "name": "force-hardware-acceleration-",
+      "kind": "classname",
+      "longname": "module:gens/base~force-hardware-acceleration-",
+      "scope": "inner",
+      "memberof": "module:gens/base",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置文字反锯齿",
+      "name": "font-smoothing-antialiased-",
+      "kind": "classname",
+      "longname": "module:gens/base~font-smoothing-antialiased-",
+      "scope": "inner",
+      "memberof": "module:gens/base",
+      "defaultvalue": ""
     },
     {
       "description": "边框样式",
       "kind": "module",
       "name": "gens/border",
-      "longname": "module:gens/border"
+      "longname": "module:gens/border",
+      "defaultvalue": ""
     },
     {
       "description": "样式生成函数：边框",
@@ -789,55 +1250,1393 @@
           "module:gen~GenFunc"
         ]
       },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          },
+          "description": "样式表的描述对象"
+        }
+      ],
       "name": "genFuncBorder",
       "longname": "module:gens/border.genFuncBorder",
       "kind": "function",
       "memberof": "module:gens/border",
-      "params": []
+      "defaultvalue": ""
     },
     {
-      "description": "设置边框",
+      "description": "设置边框，可指定边框位置和颜色，实线样式和 1 像素宽度固定",
       "name": "border-set-[edge]-[color]",
       "kind": "classname",
       "params": [
         {
           "type": {
             "names": [
-              "module:config~GenConfigSet"
+              "module:config~GenConfig#directionEdge"
             ]
           },
-          "description": "边框的位置",
+          "description": "位置",
           "name": "edge"
         },
         {
           "type": {
             "names": [
-              "module:config~GenConfigColor"
+              "module:config~GenConfig#utilColors",
+              "module:config~GenConfig#mainColors"
             ]
           },
-          "nullable": true,
-          "description": "边框的颜色",
+          "optional": true,
+          "defaultvalue": "utilColors.border",
+          "description": "颜色",
           "name": "color"
         }
       ],
       "longname": "module:gens/border~border-set-[edge]-[color]",
       "scope": "inner",
-      "memberof": "module:gens/border"
+      "memberof": "module:gens/border",
+      "defaultvalue": ""
     },
     {
+      "description": "设置边框的颜色",
+      "name": "border-color-[edge]-[color]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionEdge"
+            ]
+          },
+          "description": "位置",
+          "name": "edge"
+        },
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#utilColors",
+              "module:config~GenConfig#mainColors"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "utilColors.border",
+          "description": "颜色",
+          "name": "color"
+        }
+      ],
+      "longname": "module:gens/border~border-color-[edge]-[color]",
+      "scope": "inner",
+      "memberof": "module:gens/border",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置边框的风格",
+      "name": "border-style-[edge]-[style]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionEdge"
+            ]
+          },
+          "description": "位置",
+          "name": "edge"
+        },
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#borderStyle"
+            ]
+          },
+          "description": "样式",
+          "name": "style"
+        }
+      ],
+      "longname": "module:gens/border~border-style-[edge]-[style]",
+      "scope": "inner",
+      "memberof": "module:gens/border",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置边框的宽度",
+      "name": "border-width-[edge]-[width]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionEdge"
+            ]
+          },
+          "description": "位置",
+          "name": "edge"
+        },
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#borderWidth"
+            ]
+          },
+          "description": "宽度",
+          "name": "width"
+        }
+      ],
+      "longname": "module:gens/border~border-width-[edge]-[width]",
+      "scope": "inner",
+      "memberof": "module:gens/border",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置无边框",
+      "name": "border-none-[edge]-[switcher]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionEdge"
+            ]
+          },
+          "description": "位置",
+          "name": "edge"
+        },
+        {
+          "type": {
+            "names": [
+              "module:config~gen#StyleSwitcher"
+            ]
+          },
+          "description": "样式开关",
+          "name": "switcher"
+        }
+      ],
+      "longname": "module:gens/border~border-none-[edge]-[switcher]",
+      "scope": "inner",
+      "memberof": "module:gens/border",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置边框圆角",
+      "name": "border-radius-[edge]-[width]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionCorner"
+            ]
+          },
+          "description": "圆角位置",
+          "name": "edge"
+        },
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#borderRadius"
+            ]
+          },
+          "description": "圆角半径",
+          "name": "width"
+        }
+      ],
+      "longname": "module:gens/border~border-radius-[edge]-[width]",
+      "scope": "inner",
+      "memberof": "module:gens/border",
+      "defaultvalue": ""
+    },
+    {
+      "description": "控件样式与状态",
+      "kind": "module",
+      "name": "gens/control",
+      "longname": "module:gens/control",
+      "defaultvalue": ""
+    },
+    {
+      "description": "样式生成函数：控件样式与状态",
+      "exportdefault": true,
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:gen~GenFunc"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          },
+          "description": "样式表的描述对象"
+        }
+      ],
+      "name": "genFuncControl",
+      "longname": "module:gens/control.genFuncControl",
+      "kind": "function",
+      "memberof": "module:gens/control",
+      "defaultvalue": ""
+    },
+    {
+      "description": "光标样式",
+      "kind": "module",
+      "name": "gens/cursor",
+      "longname": "module:gens/cursor",
+      "defaultvalue": ""
+    },
+    {
+      "description": "样式生成函数：光标样式",
+      "exportdefault": true,
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:gen~GenFunc"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          },
+          "description": "样式表的描述对象"
+        }
+      ],
+      "name": "genFuncCursor",
+      "longname": "module:gens/cursor.genFuncCursor",
+      "kind": "function",
+      "memberof": "module:gens/cursor",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置光标样式",
+      "name": "border-set-[cursor]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#cursor"
+            ]
+          },
+          "description": "光标样式",
+          "name": "cursor"
+        }
+      ],
+      "longname": "module:gens/cursor~border-set-[cursor]",
+      "scope": "inner",
+      "memberof": "module:gens/cursor",
+      "defaultvalue": ""
+    },
+    {
+      "description": "显示方式",
+      "kind": "module",
+      "name": "gens/display",
+      "longname": "module:gens/display",
+      "defaultvalue": ""
+    },
+    {
+      "description": "样式生成函数：显示方式",
+      "exportdefault": true,
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:gen~GenFunc"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          },
+          "description": "样式表的描述对象"
+        }
+      ],
+      "name": "genFuncDisplay",
+      "longname": "module:gens/display.genFuncDisplay",
+      "kind": "function",
+      "memberof": "module:gens/display",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置显示方式",
+      "name": "display-[display]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#display"
+            ]
+          },
+          "description": "显示方式",
+          "name": "display"
+        }
+      ],
+      "longname": "module:gens/display~display-[display]",
+      "scope": "inner",
+      "memberof": "module:gens/display",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置可见方式",
+      "name": "visibility-[visibility]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#visibility"
+            ]
+          },
+          "description": "可见方式",
+          "name": "visibility"
+        }
+      ],
+      "longname": "module:gens/display~visibility-[visibility]",
+      "scope": "inner",
+      "memberof": "module:gens/display",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置透明度",
+      "name": "opacity-[opacity]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#opacity"
+            ]
+          },
+          "description": "透明度",
+          "name": "opacity"
+        }
+      ],
+      "longname": "module:gens/display~opacity-[opacity]",
+      "scope": "inner",
+      "memberof": "module:gens/display",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置滚动",
+      "name": "scrollable-[direction]-[switcher]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionAxis"
+            ]
+          },
+          "description": "坐标轴方向",
+          "name": "direction"
+        },
+        {
+          "type": {
+            "names": [
+              "module:config~gen#StyleSwitcher"
+            ]
+          },
+          "description": "样式开关",
+          "name": "switcher"
+        }
+      ],
+      "longname": "module:gens/display~scrollable-[direction]-[switcher]",
+      "scope": "inner",
+      "memberof": "module:gens/display",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置溢出处理方式",
+      "name": "overflow-[direction]-[overflow]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionAxis"
+            ]
+          },
+          "description": "坐标轴方向",
+          "name": "direction"
+        },
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#overflow"
+            ]
+          },
+          "description": "处理方式",
+          "name": "overflow"
+        }
+      ],
+      "longname": "module:gens/display~overflow-[direction]-[overflow]",
+      "scope": "inner",
+      "memberof": "module:gens/display",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置事件响应目标",
+      "name": "pointer-events-[event]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#pointerEvents"
+            ]
+          },
+          "description": "事件响应目标",
+          "name": "event"
+        }
+      ],
+      "longname": "module:gens/display~pointer-events-[event]",
+      "scope": "inner",
+      "memberof": "module:gens/display",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置浮动方式",
+      "name": "float-[float]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#float"
+            ]
+          },
+          "description": "浮动方向",
+          "name": "float"
+        }
+      ],
+      "longname": "module:gens/display~float-[float]",
+      "scope": "inner",
+      "memberof": "module:gens/display",
+      "defaultvalue": ""
+    },
+    {
+      "description": "清除全部风向浮动",
+      "name": "clear",
+      "kind": "classname",
+      "longname": "module:gens/display~clear",
+      "scope": "inner",
+      "memberof": "module:gens/display",
+      "defaultvalue": ""
+    },
+    {
+      "description": "弹性布局",
+      "kind": "module",
+      "name": "gens/flex",
+      "longname": "module:gens/flex",
+      "defaultvalue": ""
+    },
+    {
+      "description": "样式生成函数：弹性布局",
+      "exportdefault": true,
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:gen~GenFunc"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          },
+          "description": "样式表的描述对象"
+        }
+      ],
+      "name": "genFuncFlex",
+      "longname": "module:gens/flex.genFuncFlex",
+      "kind": "function",
+      "memberof": "module:gens/flex",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置弹性布局显示方式",
+      "name": "flex-display-[display]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#flexDisplay"
+            ]
+          },
+          "description": "显示方式",
+          "name": "display"
+        }
+      ],
+      "longname": "module:gens/flex~flex-display-[display]",
+      "scope": "inner",
+      "memberof": "module:gens/flex",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置弹性布局方向",
+      "name": "flex-direction-[direction]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#flexDirection"
+            ]
+          },
+          "description": "弹性布局方向",
+          "name": "direction"
+        }
+      ],
+      "longname": "module:gens/flex~flex-direction-[direction]",
+      "scope": "inner",
+      "memberof": "module:gens/flex",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置主轴对齐方式",
+      "name": "flex-justify-[justify]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#flexJustify"
+            ]
+          },
+          "description": "主轴对齐方式",
+          "name": "justify"
+        }
+      ],
+      "longname": "module:gens/flex~flex-justify-[justify]",
+      "scope": "inner",
+      "memberof": "module:gens/flex",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置侧轴对齐方式",
+      "name": "flex-align-[align]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#flexAlign"
+            ]
+          },
+          "description": "侧轴对齐方式",
+          "name": "align"
+        }
+      ],
+      "longname": "module:gens/flex~flex-align-[align]",
+      "scope": "inner",
+      "memberof": "module:gens/flex",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置主轴堆叠方式和方向",
+      "name": "flex-wrap-[wrap]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#flexWrap"
+            ]
+          },
+          "description": "主轴堆叠方式和方向",
+          "name": "wrap"
+        }
+      ],
+      "longname": "module:gens/flex~flex-wrap-[wrap]",
+      "scope": "inner",
+      "memberof": "module:gens/flex",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置子元素在侧轴对齐方式",
+      "name": "flex-sub-align-[align]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#flexAlign"
+            ]
+          },
+          "description": "侧轴对齐方式",
+          "name": "align"
+        }
+      ],
+      "longname": "module:gens/flex~flex-sub-align-[align]",
+      "scope": "inner",
+      "memberof": "module:gens/flex",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置子元素的弹性方式",
+      "name": "flex-sub-flex-[flex]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#flexSubFlex"
+            ]
+          },
+          "description": "弹性方式",
+          "name": "flex"
+        }
+      ],
+      "longname": "module:gens/flex~flex-sub-flex-[flex]",
+      "scope": "inner",
+      "memberof": "module:gens/flex",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置子元素的弹性放大，权重为 1",
+      "name": "flex-sub-flex-grow",
+      "kind": "classname",
+      "longname": "module:gens/flex~flex-sub-flex-grow",
+      "scope": "inner",
+      "memberof": "module:gens/flex",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置子元素的弹性缩小，权重为 1",
+      "name": "flex-sub-flex-shrink",
+      "kind": "classname",
+      "longname": "module:gens/flex~flex-sub-flex-shrink",
+      "scope": "inner",
+      "memberof": "module:gens/flex",
+      "defaultvalue": ""
+    },
+    {
+      "description": "位置",
+      "kind": "module",
+      "name": "gens/position",
+      "longname": "module:gens/position",
+      "defaultvalue": ""
+    },
+    {
+      "description": "样式生成函数：位置",
+      "exportdefault": true,
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:gen~GenFunc"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          },
+          "description": "样式表的描述对象"
+        }
+      ],
+      "name": "genFuncPosition",
+      "longname": "module:gens/position.genFuncPosition",
+      "kind": "function",
+      "memberof": "module:gens/position",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置定位类型",
+      "name": "position-[position]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#position"
+            ]
+          },
+          "description": "定位类型",
+          "name": "position"
+        }
+      ],
+      "longname": "module:gens/position~position-[position]",
+      "scope": "inner",
+      "memberof": "module:gens/position",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置指定方向的偏移量为0",
+      "name": "offset-[offset]",
+      "kind": "classname",
+      "tags": [
+        {
+          "originalTitle": "classnameext",
+          "title": "classnameext",
+          "text": "start",
+          "value": "start"
+        }
+      ],
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionOffsetAll"
+            ]
+          },
+          "description": "偏移的方向",
+          "name": "offset"
+        }
+      ],
+      "longname": "module:gens/position~offset-[offset]",
+      "scope": "inner",
+      "memberof": "module:gens/position",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置指定方向的偏移量为中心，50%",
+      "name": "offset-[offset]",
+      "kind": "classname",
+      "tags": [
+        {
+          "originalTitle": "classnameext",
+          "title": "classnameext",
+          "text": "center",
+          "value": "center"
+        }
+      ],
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionOffset"
+            ]
+          },
+          "description": "偏移的方向",
+          "name": "offset"
+        }
+      ],
+      "longname": "module:gens/position~offset-[offset]",
+      "scope": "inner",
+      "memberof": "module:gens/position",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置指定方向的偏移量为 100%",
+      "name": "offset-[offset]",
+      "kind": "classname",
+      "tags": [
+        {
+          "originalTitle": "classnameext",
+          "title": "classnameext",
+          "text": "end",
+          "value": "end"
+        }
+      ],
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionOffset"
+            ]
+          },
+          "description": "偏移的方向",
+          "name": "offset"
+        }
+      ],
+      "longname": "module:gens/position~offset-[offset]",
+      "scope": "inner",
+      "memberof": "module:gens/position",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置元素偏移到父元素中心",
+      "name": "translate-center-a",
+      "kind": "classname",
+      "longname": "module:gens/position~translate-center-a",
+      "scope": "inner",
+      "memberof": "module:gens/position",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置元素 X 轴方向偏移到父元素中心",
+      "name": "translate-center-x",
+      "kind": "classname",
+      "longname": "module:gens/position~translate-center-x",
+      "scope": "inner",
+      "memberof": "module:gens/position",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置元素 Y 轴方向偏移到父元素中心",
+      "name": "translate-center-y",
+      "kind": "classname",
+      "longname": "module:gens/position~translate-center-y",
+      "scope": "inner",
+      "memberof": "module:gens/position",
+      "defaultvalue": ""
+    },
+    {
+      "description": "尺寸",
+      "kind": "module",
+      "name": "gens/size",
+      "longname": "module:gens/size",
+      "defaultvalue": ""
+    },
+    {
+      "description": "样式生成函数：尺寸",
+      "exportdefault": true,
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:gen~GenFunc"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          },
+          "description": "样式表的描述对象"
+        }
+      ],
+      "name": "genFuncSize",
+      "longname": "module:gens/size.genFuncSize",
+      "kind": "function",
+      "memberof": "module:gens/size",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置宽度与高度全部铺满 100%",
+      "name": "square-full",
+      "kind": "classname",
+      "longname": "module:gens/size~square-full",
+      "scope": "inner",
+      "memberof": "module:gens/size",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置尺寸",
+      "name": "|-[direction]-[size]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionSize"
+            ]
+          },
+          "description": "尺寸位置比如：宽，高等",
+          "name": "direction"
+        },
+        {
+          "type": {
+            "names": [
+              "module:config~gen#size"
+            ]
+          },
+          "description": "尺寸",
+          "name": "size"
+        }
+      ],
+      "longname": "module:gens/size~|-[direction]-[size]",
+      "scope": "inner",
+      "memberof": "module:gens/size",
+      "defaultvalue": ""
+    },
+    {
+      "description": "边距",
       "kind": "module",
       "name": "gens/spacing",
-      "longname": "module:gens/spacing"
+      "longname": "module:gens/spacing",
+      "defaultvalue": ""
     },
     {
+      "description": "样式生成函数：边距",
+      "exportdefault": true,
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:gen~GenFunc"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          },
+          "description": "样式表的描述对象"
+        }
+      ],
+      "name": "genFuncSpacing",
+      "longname": "module:gens/spacing.genFuncSpacing",
+      "kind": "function",
+      "memberof": "module:gens/spacing",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置外边距",
+      "name": "margin-[edge]-[spacing]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionEdge"
+            ]
+          },
+          "description": "位置",
+          "name": "edge"
+        },
+        {
+          "type": {
+            "names": [
+              "module:config~gen#spacing"
+            ]
+          },
+          "description": "边距",
+          "name": "spacing"
+        }
+      ],
+      "longname": "module:gens/spacing~margin-[edge]-[spacing]",
+      "scope": "inner",
+      "memberof": "module:gens/spacing",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置内边距",
+      "name": "padding-[edge]-[spacing]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#directionEdge"
+            ]
+          },
+          "description": "位置",
+          "name": "edge"
+        },
+        {
+          "type": {
+            "names": [
+              "module:config~gen#spacing"
+            ]
+          },
+          "description": "样式开关",
+          "name": "spacing"
+        }
+      ],
+      "longname": "module:gens/spacing~padding-[edge]-[spacing]",
+      "scope": "inner",
+      "memberof": "module:gens/spacing",
+      "defaultvalue": ""
+    },
+    {
+      "description": "文本样式",
       "kind": "module",
       "name": "gens/text",
-      "longname": "module:gens/text"
+      "longname": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "样式生成函数：文本",
+      "exportdefault": true,
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:gen~GenFunc"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig"
+            ]
+          },
+          "description": "生成配置对象",
+          "name": "config"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:gen~ClassObjects"
+            ]
+          },
+          "description": "样式表的描述对象"
+        }
+      ],
+      "name": "genFuncText",
+      "longname": "module:gens/text.genFuncText",
+      "kind": "function",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置文本尺寸",
+      "name": "text-size-[size]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#textSize"
+            ]
+          },
+          "description": "文本尺寸",
+          "name": "size"
+        }
+      ],
+      "longname": "module:gens/text~text-size-[size]",
+      "scope": "inner",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置文本粗度",
+      "name": "text-weight-[weight]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#textWeight"
+            ]
+          },
+          "description": "文本粗度",
+          "name": "weight"
+        }
+      ],
+      "longname": "module:gens/text~text-weight-[weight]",
+      "scope": "inner",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置文本样色",
+      "name": "text-color-[color]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#utilColors",
+              "module:config~GenConfig#mainColors",
+              "module:config~GenConfig#textColors"
+            ]
+          },
+          "optional": true,
+          "defaultvalue": "textColors.normal",
+          "description": "文本粗度",
+          "name": "color"
+        }
+      ],
+      "longname": "module:gens/text~text-color-[color]",
+      "scope": "inner",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置文本样式",
+      "name": "text-style-[style]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#textStyle"
+            ]
+          },
+          "description": "文本样式",
+          "name": "style"
+        }
+      ],
+      "longname": "module:gens/text~text-style-[style]",
+      "scope": "inner",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置文本装饰",
+      "name": "text-decoration-[style]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#textDecoration"
+            ]
+          },
+          "description": "文本装饰",
+          "name": "style"
+        }
+      ],
+      "longname": "module:gens/text~text-decoration-[style]",
+      "scope": "inner",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置对齐方式",
+      "name": "text-align-[align]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#textAlign"
+            ]
+          },
+          "description": "对齐方式",
+          "name": "align"
+        }
+      ],
+      "longname": "module:gens/text~text-align-[align]",
+      "scope": "inner",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置垂直对齐方式",
+      "name": "text-vertical-align-[verticalAlign]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#textVerticalAligns"
+            ]
+          },
+          "description": "垂直对齐方式",
+          "name": "verticalAlign"
+        }
+      ],
+      "longname": "module:gens/text~text-vertical-align-[verticalAlign]",
+      "scope": "inner",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置空白样式",
+      "name": "text-white-space-[whiteSpaces]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#textWhiteSpaces"
+            ]
+          },
+          "description": "空白样式",
+          "name": "whiteSpaces"
+        }
+      ],
+      "longname": "module:gens/text~text-white-space-[whiteSpaces]",
+      "scope": "inner",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置文本字体",
+      "name": "text-family-[family]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#textFontFamily"
+            ]
+          },
+          "description": "字体",
+          "name": "family"
+        }
+      ],
+      "longname": "module:gens/text~text-family-[family]",
+      "scope": "inner",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置文本溢出时省略显示",
+      "name": "text-truncate-",
+      "kind": "classname",
+      "longname": "module:gens/text~text-truncate-",
+      "scope": "inner",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置文本溢出时省略显示，line-clamp 方式，可设置行数，但是 ie 不兼容",
+      "name": "text-decoration-[line]-[switcher]",
+      "kind": "classname",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#textTruncate"
+            ]
+          },
+          "description": "文本行数",
+          "name": "line"
+        },
+        {
+          "type": {
+            "names": [
+              "module:config~gen#StyleSwitcher"
+            ]
+          },
+          "description": "样式开关",
+          "name": "switcher"
+        }
+      ],
+      "longname": "module:gens/text~text-decoration-[line]-[switcher]",
+      "scope": "inner",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置文本溢出时省略显示，不足设置行数时，保留行高度",
+      "name": "text-truncate-[line]-[switcher]",
+      "kind": "classname",
+      "tags": [
+        {
+          "originalTitle": "classnameext",
+          "title": "classnameext",
+          "text": "placeholder",
+          "value": "placeholder"
+        }
+      ],
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:config~GenConfig#textTruncate"
+            ]
+          },
+          "description": "文本行数",
+          "name": "line"
+        },
+        {
+          "type": {
+            "names": [
+              "module:config~gen#StyleSwitcher"
+            ]
+          },
+          "description": "样式开关",
+          "name": "switcher"
+        }
+      ],
+      "longname": "module:gens/text~text-truncate-[line]-[switcher]",
+      "scope": "inner",
+      "memberof": "module:gens/text",
+      "defaultvalue": ""
     },
     {
       "kind": "module",
       "name": "index",
-      "longname": "module:index"
+      "longname": "module:index",
+      "defaultvalue": ""
     },
     {
       "description": "生成全部 css class names\n\n执行后，将读取 css 配置对象，生成并写入 html header。修改 css 配置，需要在执行该函数前\n\n一般来说，在生成前，还需要引入标准化 css 文件，如果需要还需要引入自定义 css 文件等",
@@ -850,12 +2649,14 @@
       "longname": "module:index.genCss",
       "kind": "function",
       "memberof": "module:index",
+      "defaultvalue": "",
       "params": []
     },
     {
       "kind": "module",
       "name": "styles/animation",
-      "longname": "module:styles/animation"
+      "longname": "module:styles/animation",
+      "defaultvalue": ""
     },
     {
       "description": "生成 transition 过度动画属性的 style inline 对象",
@@ -896,7 +2697,8 @@
       "longname": "module:styles/animation.transiton",
       "kind": "function",
       "memberof": "module:styles/animation",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": ""
     },
     {
       "description": "生成 animation 帧动画属性的 style inline 对象",
@@ -946,7 +2748,8 @@
       "longname": "module:styles/animation.animation",
       "kind": "function",
       "memberof": "module:styles/animation",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": ""
     },
     {
       "description": "生成 transform 应用 2D 或 3D 转换(包括旋转、缩放、移动或倾斜) 的 style inline 对象\n\n转换函数包括：\n\n1. none\t定义不进行转换。\n1. matrix(n,n,n,n,n,n)\t定义 2D 转换，使用六个值的矩阵\n1. matrix3d(n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n)\t定义 3D 转换，使用 16 个值的 4x4 矩阵。\t\n1. translate(x,y)\t定义 2D 转换\n1. translate3d(x,y,z)\t定义 3D 转换。\t\n1. translateX(x)\t定义转换，只是用 X 轴的值\n1. translateY(y)\t定义转换，只是用 Y 轴的值\n1. translateZ(z)\t定义 3D 转换，只是用 Z 轴的值。\t\n1. scale(x,y)\t定义 2D 缩放转换\n1. scale3d(x,y,z)\t定义 3D 缩放转换。\t\n1. scaleX(x)\t通过设置 X 轴的值来定义缩放转换\n1. scaleY(y)\t通过设置 Y 轴的值来定义缩放转换\n1. scaleZ(z)\t通过设置 Z 轴的值来定义 3D 缩放转换。\t\n1. rotate(angle)\t定义 2D 旋转，在参数中规定角度\n1. rotate3d(x,y,z,angle)\t定义 3D 旋转。\t\n1. rotateX(angle)\t定义沿着 X 轴的 3D 旋转\n1. rotateY(angle)\t定义沿着 Y 轴的 3D 旋转\n1. rotateZ(angle)\t定义沿着 Z 轴的 3D 旋转\n1. skew(x-angle,y-angle)\t定义沿着 X 和 Y 轴的 2D 倾斜转换\n1. skewX(angle)\t定义沿着 X 轴的 2D 倾斜转换\n1. skewY(angle)\t定义沿着 Y 轴的 2D 倾斜转换\n1. perspective(n)\t为 3D 转换元素定义透视视图。",
@@ -985,7 +2788,8 @@
       "longname": "module:styles/animation.transform",
       "kind": "function",
       "memberof": "module:styles/animation",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": ""
     },
     {
       "description": "transform 的批量版本",
@@ -1014,12 +2818,14 @@
       "longname": "module:styles/animation.transforms",
       "kind": "function",
       "memberof": "module:styles/animation",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": ""
     },
     {
       "kind": "module",
       "name": "styles/background",
-      "longname": "module:styles/background"
+      "longname": "module:styles/background",
+      "defaultvalue": ""
     },
     {
       "description": "生成设置背景的 style inline 对象",
@@ -1063,12 +2869,14 @@
       "longname": "module:styles/background.backgroundImage",
       "kind": "function",
       "memberof": "module:styles/background",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": ""
     },
     {
       "kind": "module",
       "name": "styles/flex",
-      "longname": "module:styles/flex"
+      "longname": "module:styles/flex",
+      "defaultvalue": ""
     },
     {
       "description": "生成设置 flex 子元素 order 属性 的 style inline 对象，并实现浏览器兼容",
@@ -1099,7 +2907,8 @@
       "longname": "module:styles/flex.styleFlexSubOrder",
       "kind": "function",
       "memberof": "module:styles/flex",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": ""
     },
     {
       "description": "生成设置 flex 子元素 grow 属性 的 style inline 对象，并实现浏览器兼容",
@@ -1130,7 +2939,8 @@
       "longname": "module:styles/flex.styleFlexSubGrow",
       "kind": "function",
       "memberof": "module:styles/flex",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": ""
     },
     {
       "description": "生成设置 flex 子元素 shrink 属性 的 style inline 对象，并实现浏览器兼容",
@@ -1161,7 +2971,8 @@
       "longname": "module:styles/flex.styleFlexSubShrink",
       "kind": "function",
       "memberof": "module:styles/flex",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": ""
     },
     {
       "description": "生成设置 flex 子元素 basis 属性 的 style inline 对象，并实现浏览器兼容",
@@ -1192,12 +3003,14 @@
       "longname": "module:styles/flex.styleFlexSubBasis",
       "kind": "function",
       "memberof": "module:styles/flex",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": ""
     },
     {
       "kind": "module",
       "name": "styles/shadow",
-      "longname": "module:styles/shadow"
+      "longname": "module:styles/shadow",
+      "defaultvalue": ""
     },
     {
       "description": "生成设置阴影的 style inline 对象",
@@ -1241,7 +3054,8 @@
       "longname": "module:styles/shadow.shadow",
       "kind": "function",
       "memberof": "module:styles/shadow",
-      "scope": "static"
+      "scope": "static",
+      "defaultvalue": ""
     }
   ]
 }

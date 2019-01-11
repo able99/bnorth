@@ -35,6 +35,18 @@ var _Panel = _interopRequireDefault(require("./Panel.Container"));
 
 var _Button = _interopRequireDefault(require("./Button"));
 
+/**
+ * @module
+ */
+// Tabs
+// -------------------
+
+/**
+ * 标签页组件
+ * @component 
+ * @augments BaseComponent
+ * @exportdefault
+ */
 var Tabs =
 /*#__PURE__*/
 function (_React$Component) {
@@ -82,10 +94,10 @@ function (_React$Component) {
       return _react.default.createElement(Component, (0, _extends2.default)({
         component: componentPanel,
         className: (0, _classes.default)(classStr, className)
-      }, props), _react.default.createElement(Tabs._Nav, (0, _extends2.default)({
+      }, props), _react.default.createElement(_Nav, (0, _extends2.default)({
         onAction: this._handleAction,
         selected: selected
-      }, navProps), children), _react.default.createElement(Tabs._Container, (0, _extends2.default)({
+      }, navProps), children), _react.default.createElement(_Container, (0, _extends2.default)({
         onAction: this._handleAction,
         selected: selected
       }, containerProps), children));
@@ -94,20 +106,77 @@ function (_React$Component) {
   return Tabs;
 }(_react.default.Component);
 
-Tabs._Nav = function (aprops) {
-  var _parseProps2 = (0, _props2.default)(aprops, Tabs._Nav.props),
+Tabs.defaultProps = {};
+/**
+ * @callback TabsActionCallback
+ * @param {number} i - 标签的索引
+ * @param {*} event - 标签的事件名称
+ * @param {object} props - 标签的属性
+ * @returns {boolean} 返回为真，将阻止导航条组件的点击事件
+ */
+
+/**
+ * 设置标签页页面切换的动作回调函数
+ * @attribute module:Tabs.Tabs.onAction
+ * @type {module:Tabs~TabsActionCallback}
+ */
+
+/**
+ * 设置标签页当前选中索引
+ * @attribute module:Tabs.Tabs.selected
+ * @type {number}
+ */
+
+/**
+ * 设置标签页默认的选中索引
+ * @attribute module:Tabs.Tabs.defaultSelected
+ * @type {number}
+ */
+
+/**
+ * 设置标签页的标签导航组件的属性
+ * @attribute module:Tabs.Tabs.navProps
+ * @type {object}
+ */
+
+/**
+ * 设置标签页的标签内容容器组件的属性
+ * @attribute module:Tabs.Tabs.containerProps
+ * @type {object}
+ */
+
+/**
+ * 设置映射组件
+ */
+
+Tabs.defaultProps.component = _Panel.default;
+var _default = Tabs; // Tabs Nav
+// -------------------
+
+/**
+ * 标签页的导航条组件，标签页组件内部使用，不直接使用，可替换或者定制
+ * @component
+ * @augments BaseComponent
+ * @augments Panel.module:Container~PanelContainer
+ * @mount Tabs.Nav 
+ * @private
+ */
+
+exports.default = _default;
+
+var _Nav = function Nav(aprops) {
+  var _parseProps2 = (0, _props2.default)(aprops, _Nav.props),
       onAction = _parseProps2.onAction,
       selected = _parseProps2.selected,
       _parseProps2$itemProp = _parseProps2.itemProps,
       itemProps = _parseProps2$itemProp === void 0 ? {} : _parseProps2$itemProp,
       _parseProps2$itemGetC = _parseProps2.itemGetClassName,
-      itemGetClassName = _parseProps2$itemGetC === void 0 ? Tabs._Nav._itemGetClassName : _parseProps2$itemGetC,
+      itemGetClassName = _parseProps2$itemGetC === void 0 ? _Nav._itemGetClassName : _parseProps2$itemGetC,
       _parseProps2$itemGetS = _parseProps2.itemGetStyle,
-      itemGetStyle = _parseProps2$itemGetS === void 0 ? Tabs._Nav._itemGetStyle : _parseProps2$itemGetS,
+      itemGetStyle = _parseProps2$itemGetS === void 0 ? _Nav._itemGetStyle : _parseProps2$itemGetS,
       _parseProps2$itemGetP = _parseProps2.itemGetProps,
-      itemGetProps = _parseProps2$itemGetP === void 0 ? Tabs._Nav._itemGetProps : _parseProps2$itemGetP,
-      _parseProps2$componen = _parseProps2.component,
-      Component = _parseProps2$componen === void 0 ? _Button.default.Group : _parseProps2$componen,
+      itemGetProps = _parseProps2$itemGetP === void 0 ? _Nav._itemGetProps : _parseProps2$itemGetP,
+      Component = _parseProps2.component,
       componentPanel = _parseProps2.componentPanel,
       className = _parseProps2.className,
       children = _parseProps2.children,
@@ -127,7 +196,7 @@ Tabs._Nav = function (aprops) {
     itemGetProps: itemGetProps,
     className: (0, _classes.default)(classStr, className)
   }, props), children.map(function (v, i) {
-    return _react.default.createElement(Component.Item, {
+    return _react.default.createElement(_Button.default, {
       key: v.key || i,
       selected: selected === i,
       onClick: function onClick(e) {
@@ -137,20 +206,55 @@ Tabs._Nav = function (aprops) {
   }));
 };
 
-Tabs._Container = function (aprops) {
-  var _parseProps3 = (0, _props2.default)(aprops, Tabs._Container.props),
+Object.defineProperty(Tabs, "Nav", {
+  get: function get() {
+    return _Nav;
+  },
+  set: function set(val) {
+    _Nav = val;
+  }
+});
+_Nav.defaultProps = {};
+/**
+ * 设置标签页页面切换的动作回调函数
+ * @attribute module:Tabs~Nav.onAction
+ * @type {module:Tabs~TabsActionCallback}
+ */
+
+/**
+ * 设置标签页当前选中索引
+ * @attribute module:Tabs~Nav.selected
+ * @type {number}
+ */
+
+/**
+ * 设置映射组件
+ */
+
+_Nav.defaultProps.component = _Button.default.Group; // Tabs Container
+// ----------------------
+
+/**
+ * 标签页容器组件，标签页组件内部使用，不直接使用，可替换或者定制
+ * @component 
+ * @augments BaseComponent
+ * @augments Panel.module:Container~PanelContainer
+ * @mount Tabs.Container
+ * @private
+ */
+
+var _Container = function Container(aprops) {
+  var _parseProps3 = (0, _props2.default)(aprops, _Container.props),
       onAction = _parseProps3.onAction,
-      _parseProps3$type = _parseProps3.type,
-      type = _parseProps3$type === void 0 ? 'single' : _parseProps3$type,
+      type = _parseProps3.type,
       itemProps = _parseProps3.itemProps,
       _parseProps3$itemGetC = _parseProps3.itemGetClassName,
-      itemGetClassName = _parseProps3$itemGetC === void 0 ? Tabs._Container._itemGetClassName : _parseProps3$itemGetC,
+      itemGetClassName = _parseProps3$itemGetC === void 0 ? _Container.itemGetClassName : _parseProps3$itemGetC,
       _parseProps3$itemGetS = _parseProps3.itemGetStyle,
-      itemGetStyle = _parseProps3$itemGetS === void 0 ? Tabs._Container._itemGetStyle : _parseProps3$itemGetS,
+      itemGetStyle = _parseProps3$itemGetS === void 0 ? _Container.itemGetStyle : _parseProps3$itemGetS,
       _parseProps3$itemGetP = _parseProps3.itemGetProps,
-      itemGetProps = _parseProps3$itemGetP === void 0 ? Tabs._Container._itemGetProps : _parseProps3$itemGetP,
-      _parseProps3$componen = _parseProps3.component,
-      Component = _parseProps3$componen === void 0 ? _Panel.default.Container : _parseProps3$componen,
+      itemGetProps = _parseProps3$itemGetP === void 0 ? _Container.itemGetProps : _parseProps3$itemGetP,
+      Component = _parseProps3.component,
       componentPanel = _parseProps3.componentPanel,
       className = _parseProps3.className,
       children = _parseProps3.children,
@@ -167,30 +271,100 @@ Tabs._Container = function (aprops) {
     itemGetProps: itemGetProps,
     className: (0, _classes.default)(classStr, className)
   }, props), children.map(function (v, i) {
-    return _react.default.createElement(Tabs._Container._Item, (0, _extends2.default)({
+    return _react.default.createElement(Item, (0, _extends2.default)({
       key: v.key || i
     }, v.props));
   }));
 };
 
-Tabs._Container._Item = function (aprops) {
-  var title = aprops.title,
-      event = aprops.event,
-      _aprops$component = aprops.component,
-      Component = _aprops$component === void 0 ? _Panel.default : _aprops$component,
-      props = (0, _objectWithoutProperties2.default)(aprops, ["title", "event", "component"]);
-  return _react.default.createElement(Component, props);
-};
+Object.defineProperty(Tabs, "Container", {
+  get: function get() {
+    return _Container;
+  },
+  set: function set(val) {
+    _Container = val;
+  }
+});
+_Container.defaultProps = {};
+/**
+ * 组件的排列类型
+ */
 
-Tabs._Container._itemGetProps = function (i, length) {
+_Container.defaultProps.type = 'single';
+/**
+ * 设置标签页页面切换的动作回调函数
+ * @attribute module:Tabs~Container.onAction
+ * @type {module:Tabs~TabsActionCallback}
+ */
+
+/**
+ * 设置标签页当前选中索引
+ * @attribute module:Tabs~Container.selected
+ * @type {number}
+ */
+
+/*
+ * 设置映射组件
+ */
+
+_Container.defaultProps.component = _Panel.default.Container;
+
+_Container.itemGetProps = function (i, length) {
   var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
       selected = _ref.selected;
 
   return {
     selected: selected === i
   };
+}; // Tabs Container Item
+// -------------------
+
+/**
+ * 标签页容器组件的子组件，标签页组件内部使用，不直接使用，可替换或者定制
+ * @component 
+ * @augments BaseComponent
+ * @augments Panel.module:Container~PanelContainerItem
+ * @mount Tabs.Item
+ */
+
+
+var Item = function Item(aprops) {
+  var title = aprops.title,
+      event = aprops.event,
+      Component = aprops.component,
+      props = (0, _objectWithoutProperties2.default)(aprops, ["title", "event", "component"]);
+  return _react.default.createElement(Component, props);
 };
 
-Tabs.Item = Tabs._Container._Item;
-var _default = Tabs;
-exports.default = _default;
+Object.defineProperty(Tabs, "Item", {
+  get: function get() {
+    return Item;
+  },
+  set: function set(val) {
+    Item = val;
+  }
+});
+Item.defaultProps = {};
+/**
+ * 设置标签页的标签的唯一的事件编码
+ * @attribute module:Tabs~Item.event
+ * @type {string}
+ */
+
+/**
+ * 设置显示在标签页的导航组件的对应的标签中的内容
+ * @attribute module:Tabs~Item.title
+ * @type {string|component|element}
+ */
+
+/**
+ * 设置显示在标签页的容器组件的对应的标签的内容
+ * @attribute module:Tabs~Item.children
+ * @type {string|component|element}
+ */
+
+/*
+ * 设置映射组件
+ */
+
+Item.defaultProps.component = _Panel.default;

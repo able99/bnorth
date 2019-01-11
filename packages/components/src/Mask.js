@@ -12,8 +12,10 @@ import Backdrop from './Backdrop';
 /**
  * 蒙层组件
  * @component
+ * @augments BaseComponent
+ * @export
  */
-export let Mask = aprops=>{
+let Mask = aprops=>{
   let {
     loaderProps, mask,
     component:Component, className, ...props
@@ -29,23 +31,19 @@ export let Mask = aprops=>{
     </Component>
   )
 }
-
 Mask.defaultProps = {};
 /**
  * 设置 蒙层中间的 loader 组件的参数
- * @memberof module:mask.Mask
+ * @attribute module:mask.Mask.loaderProps
  * @type {object}
  */
-Mask.defaultProps.loaderProps = undefined;
 /**
  * 设置 Backdrop 的 mask 属性
- * @memberof module:mask.Mask
  * @type {boolean}
  */
 Mask.defaultProps.mask = true;
 /**
  * 渲染为该组件
- * @memberof module:mask.Mask
  * @type {component|element}
  */
 Mask.defaultProps.component = Backdrop;
@@ -62,40 +60,42 @@ let mask = {
   _id: 'mask',
 
   onPluginMount(app) {
-    app.mask = {
-      /**
-       * 显示蒙层
-       * @memberof module:mask.mask
-       * @mount app.mask.show
-       * @param {object?} options - 参数
-       * @returns {string} 弹出层 id
-       */
-      show: ({options={}, ...props}={})=>{
-        let _id = app.mask._id||app.router.genPopLayerId(options);
-        options._id = _id;
-        options.isModal = true;
+    /**
+     * 挂载在 App 实例上的蒙层操作对象
+     * @memberof module:mask.mask
+     */
+    app.mask = {};
+    
+    /**
+     * 显示蒙层
+     * @memberof module:mask.mask
+     * @param {object?} options - 参数
+     * @returns {string} 弹出层 id
+     */
+    app.mask.show = ({options={}, ...props}={})=>{
+      let _id = app.mask._id||app.router.genPopLayerId(options);
+      options._id = _id;
+      options.isModal = true;
 
-        return app.mask._id = app.router.addPopLayer(<Mask /> , props, options);
-      },
+      return app.mask._id = app.router.addPopLayer(<Mask /> , props, options);
+    }
 
-      /**
-       * 关闭蒙层
-       * @memberof module:mask.mask
-       * @mount app.mask.close
-       */
-      close: ()=>{
-        let {content, props={}, options={}} = app.router.getPopLayerInfo(app.mask._id)||{};
-        if(!content) { app.mask._id = undefined; return }
+    /**
+     * 关闭蒙层
+     * @memberof module:mask.mask
+     */
+    app.mask.close = ()=>{
+      let {content, props={}, options={}} = app.router.getPopLayerInfo(app.mask._id)||{};
+      if(!content) { app.mask._id = undefined; return }
 
-        props.in = false;
-        props.onTransitionFinished = ()=>{ 
-          app.router.removePopLayer(app.mask._id); 
-          app.mask._id = undefined; 
-        }
+      props.in = false;
+      props.onTransitionFinished = ()=>{ 
+        app.router.removePopLayer(app.mask._id); 
+        app.mask._id = undefined; 
+      }
 
-        return app.router.addPopLayer(content, props, options);
-      },
-    };
+      return app.router.addPopLayer(content, props, options);
+    }
 
     app.mask._oldMask = app.render.mask;
     app.render.mask = (show, options)=>show?app.mask.show(options):app.mask.close();
@@ -107,4 +107,6 @@ let mask = {
   },
 }
 
+
+export { Mask }
 export default mask;

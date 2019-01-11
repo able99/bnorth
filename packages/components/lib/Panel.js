@@ -19,6 +19,18 @@ var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
 var _props = _interopRequireDefault(require("./utils/props"));
 
+/**
+ * @module
+ */
+// Panel
+// ------------------------------
+
+/**
+ * 小面板组件，基本的布局单位，其他组件一般使用该组件做基本组件
+ * @component 
+ * @exportdefault
+ * @augments BaseComponent
+ */
 var Panel = function Panel(aprops) {
   var _parseProps = (0, _props.default)(aprops, Panel.props),
       main = _parseProps.main,
@@ -27,18 +39,12 @@ var Panel = function Panel(aprops) {
       status = _parseProps.status,
       hasBg = _parseProps.hasBg,
       hasSelection = _parseProps.hasSelection,
-      _parseProps$textTheme = _parseProps.textThemeOnBg,
-      textThemeOnBg = _parseProps$textTheme === void 0 ? 'white' : _parseProps$textTheme,
-      _parseProps$bgThemeOn = _parseProps.bgThemeOnHollow,
-      bgThemeOnHollow = _parseProps$bgThemeOn === void 0 ? 'white' : _parseProps$bgThemeOn,
-      _parseProps$textTheme2 = _parseProps.textThemeOnBgSelected,
-      textThemeOnBgSelected = _parseProps$textTheme2 === void 0 ? 'white' : _parseProps$textTheme2,
-      _parseProps$textTheme3 = _parseProps.textThemeOnBgUnselected,
-      textThemeOnBgUnselected = _parseProps$textTheme3 === void 0 ? 'disable' : _parseProps$textTheme3,
-      _parseProps$textTheme4 = _parseProps.textThemeUnselected,
-      textThemeUnselected = _parseProps$textTheme4 === void 0 ? 'disable' : _parseProps$textTheme4,
-      _parseProps$component = _parseProps.component,
-      Component = _parseProps$component === void 0 ? 'div' : _parseProps$component,
+      textThemeOnBg = _parseProps.textThemeOnBg,
+      bgThemeOnHollow = _parseProps.bgThemeOnHollow,
+      textThemeOnBgSelected = _parseProps.textThemeOnBgSelected,
+      textThemeOnBgUnselected = _parseProps.textThemeOnBgUnselected,
+      textThemeUnselected = _parseProps.textThemeUnselected,
+      Component = _parseProps.component,
       className = _parseProps.className,
       style = _parseProps.style,
       bTheme = _parseProps['b-theme'],
@@ -96,5 +102,95 @@ var Panel = function Panel(aprops) {
   }, props));
 };
 
+Panel.defaultProps = {};
+/**
+ * 设置为主模式，将开启 flex extend 样式和滚动样式
+ * @attribute module:Panel.Panel.main
+ * @type {boolean}
+ */
+
+/**
+ * 设为为 inline 模式，将开启 display inline 样式
+ * @attribute module:Panel.Panel.inline
+ * @type {boolean}
+ */
+
+/**
+ * 设置为选中状态，
+ * @attribute module:Panel.Panel.selected
+ * @type {boolean}
+ */
+
+/**
+ * 设置为响应点击状态
+ * @attribute module:Panel.Panel.status
+ * @type {boolean}
+ */
+
+/**
+ * 设置为有背景状态
+ * @attribute module:Panel.Panel.hasBg
+ * @type {boolean}
+ */
+
+/**
+ * 设置为有响应选中状态
+ * @attribute module:Panel.Panel.hasSelection
+ * @type {boolean}
+ */
+
+/**
+ * 设置文本主题，在有背景的面板上时
+ * @type {string}
+ */
+
+Panel.defaultProps.textThemeOnBg = 'white';
+/**
+ * 设置背景主题，在镂空样式时
+ * @type {string}
+ */
+
+Panel.defaultProps.bgThemeOnHollow = 'white';
+/**
+ * 设置文本主题，在有背景和在选择状态下
+ * @type {string}
+ */
+
+Panel.defaultProps.textThemeOnBgSelected = 'white';
+/**
+ * 设置文本主题，在有背景和在未选择状态下
+ * @type {string}
+ */
+
+Panel.defaultProps.textThemeOnBgUnselected = 'disable';
+/**
+ * 设置文本主题，在无背景和在未选择状态下
+ * @type {string}
+ */
+
+Panel.defaultProps.textThemeUnselected = 'disable';
+/**
+ * 设置样式主题，根据 richcss color 的设置
+ * @attribute module:Panel.Panel.b-theme
+ * @type {string}
+ */
+
+/**
+ * 设置样式风格，包括 plain，solid，hollow，underline
+ * @attribute module:Panel.Panel.b-style
+ * @type {string}
+ */
+
+/**
+ * 设置样式尺寸，设置文本的字体大小，根据 richcss textSize 的配置
+ * @attribute module:Panel.Panel.b-size
+ * @type {string}
+ */
+
+/**
+ * 设置映射组件
+ */
+
+Panel.defaultProps.component = 'div';
 var _default = Panel;
 exports.default = _default;

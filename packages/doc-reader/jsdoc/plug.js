@@ -12,7 +12,7 @@ exports.defineTags = function(dictionary) {
     onTagged: function(doclet, tag) {
       doclet.kind = "attribute";
       doclet.name = tag.value;
-      //console.error(doclet,tag);
+      doclet.scope = 'static';
     }
   });
 
@@ -41,6 +41,13 @@ exports.defineTags = function(dictionary) {
       doclet.scope = 'static';
     }
   });
+  // export
+  dictionary.defineTag('export', {
+    onTagged: function(doclet, tag) {
+      doclet.export = true;
+      doclet.scope = 'static';
+    }
+  });
 };
 
 exports.handlers = {
@@ -56,18 +63,20 @@ exports.handlers = {
     }
 
     // property default value
-    if(e.doclet.meta.code&&(e.doclet.meta.code.type==='ObjectExpression'||e.doclet.meta.code.type==='Literal'||e.doclet.meta.code.type==='Identifier')&&e.doclet.defaultvalue===undefined) {
-      e.doclet.defaultvalue = String(e.doclet.meta.code.value||'');
+    // if(e.doclet.meta.code&&(e.doclet.meta.code.type==='ObjectExpression'||e.doclet.meta.code.type==='Literal'||e.doclet.meta.code.type==='Identifier')&&e.doclet.defaultvalue===undefined) {
+    if(e.doclet.meta.code&&e.doclet.defaultvalue===undefined) {
+      e.doclet.defaultvalue = e.doclet.meta.code.value||'';
     }
 
     // attribute 
     if(e.doclet.kind==='member'&&e.doclet.memberof&&e.doclet.memberof.endsWith('.defaultProps')) {
+      e.doclet.name = e.doclet.name.replace('defaultProps.', '');
       e.doclet.longname = e.doclet.longname.replace('.defaultProps', '');
       e.doclet.memberof = e.doclet.memberof.replace('.defaultProps', '');
       e.doclet.kind = 'attribute';
     }
     if(e.doclet.kind==='member'&&e.doclet.memberof&&e.doclet.name.includes('defaultProps.')) {
-      e.doclet.name = e.doclet.name.replace('.defaultProps', '');
+      e.doclet.name = e.doclet.name.replace('defaultProps.', '');
       e.doclet.longname = e.doclet.longname.replace('.defaultProps', '');
       e.doclet.kind = 'attribute';
     }
