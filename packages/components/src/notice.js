@@ -7,6 +7,16 @@ import Button from './Button';
 import Icon from './Icon';
 
 
+export let Container = aprops=>{
+  let {
+    component:Component=Panel, className, ...props
+  } = parseProps(aprops, Container.props);
+
+  let classStr = 'position-absolute offset-top-start offset-left-top width-full';
+  
+  return <Component className={classes(classStr, className)} />;
+}
+
 export let Notification = aprops=>{
   let {
     onDoClose, 
@@ -15,7 +25,7 @@ export let Notification = aprops=>{
     component=Panel, className, children, ...props
   } = parseProps(aprops, Notification.props);
 
-  let classStr = 'flex-display-block flex-align-center padding-a- position-absolute offset-top-start offset-left-top width-full';
+  let classStr = 'flex-display-block flex-align-center width-full';
   
   return (
     <Transition 
@@ -23,8 +33,10 @@ export let Notification = aprops=>{
       b-style="solid" b-theme="mask" 
       transitionProps={transitionProps} onTransitionFinished={onTransitionFinished} 
       className={classes(classStr, className)} {...props}>
+      <div className="padding-a-">
       <Notification._Title {...titleProps}>{children}</Notification._Title>
       <Notification._Close onDoClose={onDoClose} {...closeProps}>{hasClose}</Notification._Close>
+      </div>
     </Transition>
   );
 }
@@ -80,7 +92,7 @@ export default {
         if(app.notice._timer) window.clearTimeout(app.notice._timer);
         app.notice._timer = window.setTimeout(()=>app.notice.close(),timeout);
 
-        return app.notice._id = app.router.addPopLayer(<Notification /> , props, options);
+        return app.notice._id = app.router.addPopLayer(<Container><Notification /></Container> , props, options);
       },
 
       close: ()=>{

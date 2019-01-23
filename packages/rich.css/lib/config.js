@@ -6,10 +6,14 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 /**
- * 颜色的名称与颜色值键值对
+ * @module
+ */
+
+/**
+ * 颜色键值对
  * @typedef GenConfigColor
  * @type {object}
- * @property {string} xxx
+ * @property {string} xxx - 颜色的名称键值对
  * @example
  * ```js
  * textColors: {
@@ -19,47 +23,92 @@ exports.default = void 0;
  */
 
 /**
- * 键值对集合配置
+ * 样式值集合，支持配置生成。
+ * 
+ * - 不是对象而是数组时，将首先转换为键值都为数组元素的对象在进行下面步骤
+ * - 下划线开够为特殊属性，是对应生成函数的参数
+ * - 属性值为 true，使用属性名
+ * - 属性值为数字时，转为为带单位的字符串
+ * - 属性值为字符串时，直接使用
+ * 
  * @typedef GenConfigSet
- * @type {object}
- * @property {number} base - 16,
- * @property {number} min - 8,
- * @property {number} minCount - fontSizeMinCalc: 4,
- * @property {number} max - fontSizeMax: 24,
- * @property {number} maxCount - fontSizeMaxCalc: 4,
- * @property {number[]} multiple - 
- * @property {string|boolean} xxx
- * @example
- * ```js
- * ```
+ * @type {object|array}
+ * @property {number?} _base - 平分生成函数和倍数生成函数的基数
+ * @property {number?} _min - 平分生成函数向下的最小值参数
+ * @property {number?} _minCount - 平分生成函数向下的平分个数参数
+ * @property {number?} _max - 平分生成函数向上的最小值参数
+ * @property {number?} _maxCount - 平分生成函数向上的平分个数参数
+ * @property {number[]?} _multiple - 倍数生成函数的因数参数
+ * @property {number?} _from - 范围生成函数的起始
+ * @property {number?} _to - 范围生成函数的结尾
+ * @property {number?} _step - 范围生成函数的步长
+ * @property {string} [_unit='px'] - 设置属性值为数字时自动转换的单位
+ * @property {string|boolean} xxx - 配置属性
  */
 
 /**
  * @typedef GenConfig
  * @type {object}
- * @property {object} body - 设置 body 的默认样式
+ * @property {string} bodyBackground - 设置 body 的背景
+ * @property {string|number} stateOpacityDisabled - disabled 状态的透明值
+ * @property {string|number} stateOpacityActive - active 状态的透明值
+ * @property {GenConfigSet}  hMapTextSize - 标题元素到字体集合的映射
+ * @property {GenConfigSet} lineHeight - 行高集合
+ * 
  * @property {GenConfigColor} textColors - 文字颜色集合
  * @property {GenConfigColor} utilColors - 工具颜色集合
  * @property {GenConfigColor} mainColors - 主色调颜色集合
  * @property {GenConfigColor} opacityColors - 透明颜色集合
- * @property {GenConfigSet} borderWidth - 边框宽度集合
- * @property {GenConfigSet} borderRadius - 边框圆角尺寸集合
- * @property {GenConfigSet} spacing - 空隙尺寸集合
- * @property {GenConfigSet} fontSize - 字体尺寸结合
- * @property {GenConfigSet} fontWeight - 字体粗细度集合
- * @property {GenConfigSet} fontFamilys - 字体粗细度集合
- * @property {GenConfigSet} lineHeight - 行高集合集合
- * @property {GenConfigSet} animationTime - 动画时间集合
- * @property {GenConfigSet} animationCount - 动画次数集合
- * @property {GenConfigSet} animationProperty - 动画属性集合
- * @property {string|number} stateOpacityDisabled - disabled 状态的透明值
- * @property {string|number} stateOpacityActive - active 状态的透明值
+ * 
+ * @property {GenConfigSet} directionEdge - 方向常亮集合：四边
+ * @property {GenConfigSet} directionCorner - 方向常亮集合：四角
+ * @property {GenConfigSet} directionOffset - 方向常亮集合：偏移
+ * @property {GenConfigSet} directionOffsetAll - 方向常亮集合：偏移，带全部
+ * @property {GenConfigSet} directionSize - 方向常亮集合：尺寸
+ * @property {GenConfigSet} directionAxis - 方向常亮集合：数轴方向
+ * 
+ * @property {object} textFontFamily - 文字字体
+ * @property {GenConfigSet} textSize - 字体大小
+ * @property {GenConfigSet} textWeight - 字体粗度
+ * @property {GenConfigSet} textStyle - 字体样式
+ * @property {GenConfigSet} textDecoration - 字体装饰
+ * @property {GenConfigSet} textAlign - 文字对齐方式
+ * @property {GenConfigSet} textVerticalAligns - 文字垂直对齐方式
+ * @property {GenConfigSet} textWhiteSpaces - 元素内空白方式
+ * @property {GenConfigSet} textTruncate - 文字截取方式
+ * 
+ * @property {GenConfigSet} display - 显示方式
+ * @property {GenConfigSet} visibility - 可见方式
+ * @property {GenConfigSet} opacity - 透明度
+ * @property {GenConfigSet} pointerEvents - 事件目标
+ * @property {GenConfigSet} float - 浮动类型
+ * 
+ * @property {GenConfigSet} spacing - 边距集合
+ * 
+ * @property {GenConfigSet} position - 位置集合
+ * 
+ * @property {GenConfigSet} size - 尺寸集合
+ * 
+ * @property {GenConfigSet} flexDisplay - 伸缩盒布局的显示类型
+ * @property {GenConfigSet} flexDirection - 定义伸缩盒布局的主轴方向
+ * @property {GenConfigSet} flexJustify - 伸缩盒布局的主轴对齐方式
+ * @property {GenConfigSet} flexAlign - 伸缩盒布局的侧轴对齐方式
+ * @property {GenConfigSet} flexWrap - 伸缩盒布局的新行堆叠的方向
+ * @property {GenConfigSet} flexSubFlex - 伸缩盒布局的子元素分配空间方式
+ * 
+ * @property {GenConfigSet} cursor - 光标样式
+ * 
+ * @property {GenConfigSet} transitionProperty - 过度动画影像的属性
+ * @property {GenConfigSet} transitionTime - 过度动画的时间
+ * @property {GenConfigSet} animationTime - 帧动画时间
+ * @property {GenConfigSet} animationCount - 帧动画次数
+ * @property {GenConfigSet} animationTimingFunction - 帧动画过度类型
+ * @property {GenConfigSet} animationDirection - 帧动画循环中的方向
+ * @property {GenConfigSet} animationPlayState - 帧动画播放状态
  */
-// iconFonts: null, 
-// iconClassName: 'icon-',
 
 /**
- * class names 生成配置
+ * 样式表生成配置
  * @exportdefault
  * @type {GenConfig}
  */
@@ -69,8 +118,6 @@ var genConfig = {
   bodyBackground: 'none',
   stateOpacityDisabled: 0.5,
   stateOpacityActive: 0.8,
-  iconFonts: null,
-  iconClassName: 'icon-',
   hMapTextSize: {
     '1': 'xxl',
     '2': 'xl',
@@ -152,61 +199,6 @@ var genConfig = {
     x: true,
     y: true
   },
-  // size
-  // -------------------
-  size: {
-    'auto': true,
-    'full': '100%',
-    'half': '50%',
-    ' 0': '0',
-    ' 1': 1,
-    ' 2': 2,
-    '1em': '1em',
-    '0em25': '0.25em',
-    '0em5': '0.5em',
-    '2em0': '2em'
-  },
-  // position
-  // -------------------
-  position: {
-    '-': 'initial',
-    'initial': true,
-    'relative': true,
-    'absolute': true,
-    'fixed': true
-  },
-  // border
-  // -------------------
-  borderWidth: [1, 2, 5, 10],
-  borderRadius: {
-    '-': 5,
-    ' 1': 1,
-    ' 2': 2,
-    ' 5': 5,
-    ' 10': 10,
-    'rounded': 1000
-  },
-  borderStyle: {
-    '-': 'solid',
-    'solid': true,
-    'none': true,
-    'dotted': true,
-    'dashed': true,
-    'inherit': true
-  },
-  // spacing
-  // -------------------
-  spacing: {
-    _base: 10,
-    _min: 4,
-    _minCount: 3,
-    _max: 16,
-    _maxCount: 3,
-    ' 0': '0',
-    ' 1': 1,
-    ' 2': 2,
-    _multiple: [2, 3, 4]
-  },
   // text
   // -------------------
   textFontFamily: {
@@ -271,6 +263,81 @@ var genConfig = {
     'preline': 'pre-line'
   },
   textTruncate: ['1', '2', '3'],
+  // border
+  // -------------------
+  borderWidth: [1, 2, 5, 10],
+  borderStyle: {
+    '-': 'solid',
+    'solid': true,
+    'none': true,
+    'dotted': true,
+    'dashed': true,
+    'inherit': true
+  },
+  borderRadius: {
+    '-': 5,
+    ' 1': 1,
+    ' 2': 2,
+    ' 5': 5,
+    ' 10': 10,
+    'rounded': 1000
+  },
+  // display
+  // ----------------
+  display: {
+    'inline': true,
+    'inlineblock': 'inline-block',
+    'none': true,
+    'block': true
+  },
+  visibility: {
+    'show': 'visible',
+    'hide': 'hidden'
+  },
+  opacity: {
+    _from: 0,
+    _to: 100,
+    _step: 10
+  },
+  overflow: ['hidden', 'scroll', 'auto', 'inherit', 'visible'],
+  pointerEvents: ['none', 'all'],
+  float: ['left', 'right', 'none'],
+  // spacing
+  // -------------------
+  spacing: {
+    _base: 10,
+    _min: 4,
+    _minCount: 3,
+    _max: 16,
+    _maxCount: 3,
+    ' 0': '0',
+    ' 1': 1,
+    ' 2': 2,
+    _multiple: [2, 3, 4]
+  },
+  // position
+  // -------------------
+  position: {
+    '-': 'initial',
+    'initial': true,
+    'relative': true,
+    'absolute': true,
+    'fixed': true
+  },
+  // size
+  // -------------------
+  size: {
+    'auto': true,
+    'full': '100%',
+    'half': '50%',
+    ' 0': '0',
+    ' 1': 1,
+    ' 2': 2,
+    '1em': '1em',
+    '0em25': '0.25em',
+    '0em5': '0.5em',
+    '2em0': '2em'
+  },
   // flex
   // ----------------
   flexDisplay: {
@@ -307,26 +374,6 @@ var genConfig = {
     'none': true,
     'extend': '1'
   },
-  // display
-  // ----------------
-  display: {
-    'inline': true,
-    'inlineblock': 'inline-block',
-    'none': true,
-    'block': true
-  },
-  visibility: {
-    'show': 'visible',
-    'hide': 'hidden'
-  },
-  opacity: {
-    _from: 0,
-    _to: 100,
-    _step: 10
-  },
-  overflow: ['hidden', 'scroll', 'auto', 'inherit', 'visible'],
-  pointerEvents: ['none', 'all'],
-  float: ['left', 'right', 'none'],
   // cursor
   // ----------------
   cursor: {
@@ -351,8 +398,11 @@ var genConfig = {
   },
   // animation
   // ----------------
+  transitionProperty: ['none', 'all', 'transform', 'width', 'height', 'opacity'],
   transitionTime: {
-    '-': '.15s'
+    '-': '.15s',
+    '500': '.5s',
+    '1000': '1s'
   },
   animationTime: {
     '500': '500ms',
@@ -382,8 +432,7 @@ var genConfig = {
   animationPlayState: {
     'running': true,
     'paused': true
-  },
-  animationProperty: ['none', 'all', 'transform', 'width', 'height', 'opacity']
+  }
 };
 var _default = genConfig;
 exports.default = _default;

@@ -10,17 +10,40 @@ require("core-js/modules/es6.object.assign");
 var _utils = require("../utils");
 
 /**
+ * 边距
  * @module
+ */
+
+/**
+ * 样式生成函数：边距
+ * @exportdefault
+ * @type {module:gen~GenFunc}
+ * @param {module:config~GenConfig} config - 生成配置对象
+ * @returns {module:gen~ClassObjects} 样式表的描述对象
  */
 function genFuncSpacing(_ref) {
   var directionEdge = _ref.directionEdge,
       spacing = _ref.spacing;
   var styleValueSet = (0, _utils.getStyleValueSet)(spacing);
-  return Object.assign((0, _utils.genClassObjects)('.margin', {
+  return Object.assign(
+  /**
+   * 设置外边距
+   * @classname margin
+   * @param {module:config~GenConfig#directionEdge} edge - 位置
+   * @param {module:config~gen#spacing} spacing - 边距
+   */
+  (0, _utils.genClassObjects)('.margin', {
     styleKey: true,
     styleKeySet: directionEdge,
     styleValueSet: styleValueSet
-  }), (0, _utils.genClassObjects)('.padding', {
+  }),
+  /**
+   * 设置内边距
+   * @classname padding
+   * @param {module:config~GenConfig#directionEdge} edge - 位置
+   * @param {module:config~gen#spacing} spacing - 样式开关
+   */
+  (0, _utils.genClassObjects)('.padding', {
     styleKey: true,
     styleKeySet: directionEdge,
     styleValueSet: styleValueSet

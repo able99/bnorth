@@ -66,7 +66,7 @@ let Group = aprops=>{
     .filter(v=>v)
     .reduce((v1,v2,i,a)=>{
       if(!separator||stacked) return a;
-      if(i>0)v1.push(<Separator key={'sep'+i} notItem {...separatorProps} />)
+      if(i>0)v1.push(<Separator key={'sep'+i} subTypeNotItem {...separatorProps} />)
       v1.push(v2);
       return v1;
     },[])
@@ -135,7 +135,7 @@ Group.itemGetClassName = (i, length, {separator, stacked, justify}={})=>{
  */
 let Separator = aprops=>{
   let { 
-    component:Component, panelComponent, notItem, className, ...props
+    component:Component, panelComponent, subTypeNotItem, className, ...props
   } = parseProps(aprops, Separator.props);
 
   let classStr = 'flex-sub-flex-none flex-display-inline flex-align-center flex-justify-center';

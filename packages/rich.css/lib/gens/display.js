@@ -9,6 +9,18 @@ require("core-js/modules/es6.object.assign");
 
 var _utils = require("../utils");
 
+/**
+ * 显示方式
+ * @module
+ */
+
+/**
+ * 样式生成函数：显示方式
+ * @exportdefault
+ * @type {module:gen~GenFunc}
+ * @param {module:config~GenConfig} config - 生成配置对象
+ * @returns {module:gen~ClassObjects} 样式表的描述对象
+ */
 function genFuncDisplay(_ref) {
   var directionAxis = _ref.directionAxis,
       display = _ref.display,
@@ -17,19 +29,44 @@ function genFuncDisplay(_ref) {
       pointerEvents = _ref.pointerEvents,
       overflow = _ref.overflow,
       float = _ref.float;
-  return Object.assign((0, _utils.genClassObjects)('.display', {
+  return Object.assign(
+  /**
+   * 设置显示方式
+   * @classname display
+   * @param {module:config~GenConfig#display} display - 显示方式
+   */
+  (0, _utils.genClassObjects)('.display', {
     styleKey: true,
     styleValueSet: (0, _utils.getStyleValueSet)(display)
-  }), (0, _utils.genClassObjects)('.visibility', {
+  }),
+  /**
+   * 设置可见方式
+   * @classname visibility
+   * @param {module:config~GenConfig#visibility} visibility - 可见方式
+   */
+  (0, _utils.genClassObjects)('.visibility', {
     styleKey: true,
     styleValueSet: (0, _utils.getStyleValueSet)(visibility)
-  }), (0, _utils.genClassObjects)('.opacity', {
+  }),
+  /**
+   * 设置透明度
+   * @classname opacity
+   * @param {module:config~GenConfig#opacity} opacity - 透明度
+   */
+  (0, _utils.genClassObjects)('.opacity', {
     styleKey: true,
     styleValueSet: (0, _utils.getStyleValueSet)(opacity),
     styleValueMap: function styleValueMap(val) {
       return (val / 100).toFixed(2);
     }
-  }), (0, _utils.genClassObjects)('.scrollable', {
+  }),
+  /**
+   * 设置滚动
+   * @classname scrollable
+   * @param {module:config~GenConfig#directionAxis} direction - 坐标轴方向
+   * @param {module:config~gen#StyleSwitcher} switcher - 样式开关
+   */
+  (0, _utils.genClassObjects)('.scrollable', {
     selectorExt: '-',
     styleKeySet: (0, _utils.getStyleValueSet)(directionAxis),
     styleObjectMap: function styleObjectMap(styleKeySetKey, styleKeySetValue, styleValueSetKey, styleValueSetValue) {
@@ -41,17 +78,41 @@ function genFuncDisplay(_ref) {
         '-webkit-overflow-scrolling': 'touch'
       };
     }
-  }), (0, _utils.genClassObjects)('.overflow', {
+  }),
+  /**
+   * 设置溢出处理方式
+   * @classname overflow
+   * @param {module:config~GenConfig#directionAxis} direction - 坐标轴方向
+   * @param {module:config~GenConfig#overflow} overflow - 处理方式
+   */
+  (0, _utils.genClassObjects)('.overflow', {
     styleKey: true,
     styleKeySet: (0, _utils.getStyleValueSet)(directionAxis),
     styleValueSet: (0, _utils.getStyleValueSet)(overflow)
-  }), (0, _utils.genClassObjects)('.pointer-events', {
+  }),
+  /**
+   * 设置事件响应目标
+   * @classname pointer-events
+   * @param {module:config~GenConfig#pointerEvents} event - 事件响应目标
+   */
+  (0, _utils.genClassObjects)('.pointer-events', {
     styleKey: true,
     styleValueSet: (0, _utils.getStyleValueSet)(pointerEvents)
-  }), (0, _utils.genClassObjects)('.float', {
+  }),
+  /**
+   * 设置浮动方式
+   * @classname float
+   * @param {module:config~GenConfig#float} float - 浮动方向
+   */
+  (0, _utils.genClassObjects)('.float', {
     styleKey: true,
     styleValueSet: (0, _utils.getStyleValueSet)(float)
-  }), (0, _utils.genClassObjects)('.clear:before', {
+  }),
+  /**
+   * 清除全部风向浮动
+   * @classname clear
+   */
+  (0, _utils.genClassObjects)('.clear:before', {
     styleObjectMap: {
       'content': "' '",
       'display': 'table'

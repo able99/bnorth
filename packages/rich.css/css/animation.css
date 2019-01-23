@@ -41,73 +41,45 @@
 }
 
 .transition-duration-500 {
-  transition-duration: 500ms;
-  -moz-transition-duration: 500ms;
-  -ms-transition-duration: 500ms;
-  -oz-transition-duration: 500ms;
+  transition-duration: .5s;
+  -moz-transition-duration: .5s;
+  -ms-transition-duration: .5s;
+  -oz-transition-duration: .5s;
 }
 
 .transition-duration-1000 {
-  transition-duration: 1000ms;
-  -moz-transition-duration: 1000ms;
-  -ms-transition-duration: 1000ms;
-  -oz-transition-duration: 1000ms;
+  transition-duration: 1s;
+  -moz-transition-duration: 1s;
+  -ms-transition-duration: 1s;
+  -oz-transition-duration: 1s;
 }
 
-.transition-duration-1500 {
-  transition-duration: 1500ms;
-  -moz-transition-duration: 1500ms;
-  -ms-transition-duration: 1500ms;
-  -oz-transition-duration: 1500ms;
-}
-
-.transition-duration-2500 {
-  transition-duration: 2500ms;
-  -moz-transition-duration: 2500ms;
-  -ms-transition-duration: 2500ms;
-  -oz-transition-duration: 2500ms;
-}
-
-.transition-duration-3500 {
-  transition-duration: 3500ms;
-  -moz-transition-duration: 3500ms;
-  -ms-transition-duration: 3500ms;
-  -oz-transition-duration: 3500ms;
+.transition-duration- {
+  transition-duration: .15s;
+  -moz-transition-duration: .15s;
+  -ms-transition-duration: .15s;
+  -oz-transition-duration: .15s;
 }
 
 .transition-delay-500 {
-  transition-delay: 500ms;
-  -moz-transition-delay: 500ms;
-  -ms-transition-delay: 500ms;
-  -oz-transition-delay: 500ms;
+  transition-delay: .5s;
+  -moz-transition-delay: .5s;
+  -ms-transition-delay: .5s;
+  -oz-transition-delay: .5s;
 }
 
 .transition-delay-1000 {
-  transition-delay: 1000ms;
-  -moz-transition-delay: 1000ms;
-  -ms-transition-delay: 1000ms;
-  -oz-transition-delay: 1000ms;
+  transition-delay: 1s;
+  -moz-transition-delay: 1s;
+  -ms-transition-delay: 1s;
+  -oz-transition-delay: 1s;
 }
 
-.transition-delay-1500 {
-  transition-delay: 1500ms;
-  -moz-transition-delay: 1500ms;
-  -ms-transition-delay: 1500ms;
-  -oz-transition-delay: 1500ms;
-}
-
-.transition-delay-2500 {
-  transition-delay: 2500ms;
-  -moz-transition-delay: 2500ms;
-  -ms-transition-delay: 2500ms;
-  -oz-transition-delay: 2500ms;
-}
-
-.transition-delay-3500 {
-  transition-delay: 3500ms;
-  -moz-transition-delay: 3500ms;
-  -ms-transition-delay: 3500ms;
-  -oz-transition-delay: 3500ms;
+.transition-delay- {
+  transition-delay: .15s;
+  -moz-transition-delay: .15s;
+  -ms-transition-delay: .15s;
+  -oz-transition-delay: .15s;
 }
 
 .transition-timing-function-ease {

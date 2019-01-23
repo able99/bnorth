@@ -52,6 +52,20 @@ hr {
   height: 0;
 }
 
+.transition-set-500 {
+  transition: .5s ease-out;
+  -moz-transition: .5s ease-out;
+  -ms-transition: .5s ease-out;
+  -oz-transition: .5s ease-out;
+}
+
+.transition-set-1000 {
+  transition: 1s ease-out;
+  -moz-transition: 1s ease-out;
+  -ms-transition: 1s ease-out;
+  -oz-transition: 1s ease-out;
+}
+
 .transition-set- {
   transition: .15s ease-out;
   -moz-transition: .15s ease-out;

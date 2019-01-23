@@ -17,6 +17,11 @@ import Tabs from '@bnorth/components/lib/Tabs'
 import TabBar from '@bnorth/components/lib/TabBar'
 import NavBar from '@bnorth/components/lib/NavBar'
 import List from '@bnorth/components/lib/List'
+import AnimationCollapse from '@bnorth/components/lib/AnimationCollapse'
+import AnimationFade from '@bnorth/components/lib/AnimationFade'
+import AnimationSlider from '@bnorth/components/lib/AnimationSlider'
+import Backdrop from '@bnorth/components/lib/Backdrop'
+import BackTop from '@bnorth/components/lib/BackTop';
 
 
 let Component = aprops=>{
@@ -27,6 +32,76 @@ let Component = aprops=>{
     <View bc-bg-color-white>
       <Panel main>
         <Panel bc-padding-a- bc-bg-color="view">gadget</Panel>
+
+        <Group title="AnimationCollapse" {...groupProps}>
+          <Group.Prop>
+            <Prop title="in" option={[true, false]} sub="AnimationCollapse" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="dimension" option={['width', 'height']} sub="AnimationCollapse" state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <AnimationCollapse bc-bg-color-primary {...stateCommonProps} {...stateComponentProps.AnimationCollapse}>
+            123<br />
+            123<br />
+            123<br />
+          </AnimationCollapse>
+        </Group>
+
+        <Group title="AnimationFade" {...groupProps}>
+          <Group.Prop>
+            <Prop title="in" option={[true, false]} sub="AnimationFade" state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <AnimationFade bc-bg-color-primary {...stateCommonProps} {...stateComponentProps.AnimationFade}>
+            123<br />
+            123<br />
+            123<br />
+          </AnimationFade>
+        </Group>
+
+        <Group title="AnimationSlider" {...groupProps}>
+          <Group.Prop>
+            <Prop title="index" option={['0', '1', '2']} sub="AnimationSlider" state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <AnimationSlider {...stateCommonProps} {...stateComponentProps.AnimationSlider}>
+            <AnimationSlider.Item bc-bg-color-primary >123</AnimationSlider.Item>
+            <AnimationSlider.Item bc-bg-color-success >456</AnimationSlider.Item>
+            <AnimationSlider.Item bc-bg-color-alert >789</AnimationSlider.Item>
+          </AnimationSlider>
+        </Group>
+
+
+
+
+
+
+        <Panel bc-padding-a- bc-bg-color="view">utils</Panel>
+
+        <Group title="Backdrop" {...groupProps}>
+          <Group.Prop>
+            <Prop title="in" option={[true, false]} sub="Backdrop" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="mask" option={[true, 'primary']} sub="Backdrop" state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <Panel bc-position-relative bc-width-full bs-height="100px">
+            123<br />
+            123<br />
+            123<br />
+            <Backdrop {...stateCommonProps} {...stateComponentProps.Backdrop}></Backdrop>
+          </Panel>
+        </Group>
+
+
+
+
+
+
+
+        <Panel bc-padding-a- bc-bg-color="view">gadget</Panel>
+
+        <Group title="BackTop" {...groupProps}>
+          <Group.Prop>
+            <Prop title="in" option={[true, false]} sub="Backdrop" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="mask" option={[true, 'primary']} sub="Backdrop" state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <BackTop></BackTop>
+        </Group>
 
         <Group title="Button" {...groupProps}>
           <Group.Prop>
@@ -84,6 +159,9 @@ let Component = aprops=>{
           <Group.Item title="char">
             <Icon {...stateCommonProps} char='B' />
           </Group.Item>
+          <Group.Item title="shape">
+            <Icon {...stateCommonProps} shape='triangle' />
+          </Group.Item>
         </Group>
 
         <Group title="Space" {...groupProps}>
@@ -131,10 +209,6 @@ let Component = aprops=>{
               title="progress" sub="Loader"
               option={{type: 'range', min: 0, max: 100}} 
               state={page.stateComponentProps} stateData={stateComponentProps}/>
-            <Prop 
-              title="timeout" sub="Loader" 
-              option={['10s','250ms']} 
-              state={page.stateComponentProps} stateData={stateComponentProps}/>
           </Group.Prop>
           <Group.Item title="circle progress">
             <Loader {...stateCommonProps} type="circle" isProgress {...stateComponentProps.Loader} />
@@ -151,18 +225,90 @@ let Component = aprops=>{
         </Group>
 
 
+
+
+
+
         <Panel bc-padding-a- bc-bg-color="view">layout</Panel>
 
         <Group title="Panel" {...groupProps}>
-          <Group.Item title="Panel">
-            <Panel {...stateCommonProps}>Panel</Panel>
+          <Panel {...stateCommonProps}>Panel</Panel>
+        </Group>
+
+        <Group title="Panel.Container" {...groupProps}>
+          <Group.Prop>
+            <Prop 
+              title="type" sub="Panel.Container" option={['single', 'justify', 'primary', 'flex']} 
+              state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <Group.Item title="Panel.Container">
+            <Panel.Container {...stateComponentProps['Panel.Container']}>
+              <Panel.Container>1</Panel.Container>
+              <Panel.Container selected subTypePrimary>2</Panel.Container>
+              <Panel.Container>3</Panel.Container>
+            </Panel.Container>
           </Group.Item>
+        </Group>
+
+        <Group title="Panel.AspectRatio" {...groupProps}>
+          <Group.Prop>
+            <Prop 
+              title="ratio" sub="Panel.AspectRatio" option={{type: 'range', min: 0, max: 10}} 
+              state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
           <Group.Item title="Panel.AspectRatio">
-            <Panel.AspectRatio bc-bg-color-primary ratio={0.5}>w/h=0.5</Panel.AspectRatio>
+            <Panel.AspectRatio bc-bg-color-primary ratio={stateComponentProps['Panel.AspectRatio']&&(stateComponentProps['Panel.AspectRatio'].ratio/10)}>ratio={stateComponentProps['Panel.AspectRatio']&&(stateComponentProps['Panel.AspectRatio'].ratio/10)}</Panel.AspectRatio>
           </Group.Item>
-          <Group.Item title="Panel.Container Panel.Loader Panel.Icon Panel.PullRefresh Panle.Touchable">
-            use by many components, no demo here
+        </Group>
+
+        <Group title="Panel.Icon" {...groupProps}>
+          <Group.Prop>
+            <Prop 
+              title="position" sub="Panel.Icon" option={['left', 'right', 'top', 'bottom']} 
+              state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <Group.Item title="Panel.Icon">
+            <Panel.Icon icon="view_comfy" {...stateComponentProps['Panel.Icon']}>content</Panel.Icon>
           </Group.Item>
+        </Group>
+
+        <Group title="Panel.Loader" {...groupProps}>
+          <Group.Prop>
+            <Prop 
+              title="position" sub="Panel.Loader" option={['left', 'right', 'top', 'bottom']} 
+              state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <Group.Item title="Panel.Loader">
+            <Panel.Loader icon="view_comfy" {...stateComponentProps['Panel.Loader']}>content</Panel.Loader>
+          </Group.Item>
+        </Group>
+
+        <Group title="List" {...groupProps}>
+          <Group.Prop>
+            <Prop 
+              title="separatorInset" sub="List"
+              state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop 
+              title="commonPropsToItem" sub="List"
+              state={page.stateData} stateData={stateData}/>
+          </Group.Prop>
+          <List 
+            header="header" footer="footer" {...stateComponentProps['List']}
+            {...(!(stateData.List&&stateData.List.commonPropsToItem)?stateCommonProps:{})}>
+            {Array.from(Array(3), (v,i)=>i).map(i=>(
+              <List.Item
+                title={'title'+i} media={'media'+i} subTitle={'subTitle'+i} desc={'desc'+i} after={'after'+i} 
+                onClick={()=>alert(i)} 
+                key={i} {...(stateData.List&&stateData.List.commonPropsToItem?stateCommonProps:{})}/>
+            ))}
+          </List>
+        </Group>
+
+        <Group title="NavBar" {...groupProps}>
+          <NavBar {...stateCommonProps}>
+            <NavBar.Item icon="left" iconProps={{defaultName: '<'}}>back</NavBar.Item>
+            <NavBar.Title>NavBar.Title</NavBar.Title>
+          </NavBar>
         </Group>
 
         <Group title="Tabs" {...groupProps}>
@@ -192,37 +338,23 @@ let Component = aprops=>{
           </TabBar>
         </Group>
 
-        <Group title="NavBar" {...groupProps}>
-          <NavBar {...stateCommonProps}>
-            <NavBar.Item icon="left" iconProps={{defaultName: '<'}}>back</NavBar.Item>
-            <NavBar.Title>NavBar.Title</NavBar.Title>
-          </NavBar>
-        </Group>
-
-        <Group title="List" {...groupProps}>
-          <Group.Prop>
-            <Prop 
-              title="separatorInset" sub="List"
-              state={page.stateComponentProps} stateData={stateComponentProps}/>
-            <Prop 
-              title="commonPropsToItem" sub="List"
-              state={page.stateData} stateData={stateData}/>
-          </Group.Prop>
-          <List 
-            header="header" footer="footer"  
-            {...(!(stateData.List&&stateData.List.commonPropsToItem)?stateCommonProps:{})}>
-            {Array.from(Array(3), (v,i)=>i).map(i=>(
-              <List.Item
-                title={'title'+i} media={'media'+i} subTitle={'subTitle'+i} desc={'desc'+i} after={'after'+i} 
-                onClick={()=>alert(i)} 
-                key={i} {...(stateData.List&&stateData.List.commonPropsToItem?stateCommonProps:{})}/>
-            ))}
-          </List>
-        </Group>
+        
 
 
         <Panel bc-padding-a- bc-bg-color="view">popup</Panel>
         
+        <Group title="Fab" {...groupProps}>
+          <Group.Prop>
+            <Prop title="h" option={['start','center','end']} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="v" option={['start','center','end']} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="margin" option={[true, false]} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="container" option={[true, false]} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <Panel bc-position-relative bc-width-full bs-height="150px">
+            <Fab {...stateComponentProps.Fab}>Fab1</Fab>
+          </Panel>
+        </Group>
+
         <Group title="Popover" {...groupProps}>
           <Group.Prop>
             <Prop 
@@ -233,19 +365,6 @@ let Component = aprops=>{
           <Popover inline {...stateCommonProps} overlay={<div>123<br/>123<br/>123<br/></div>} container {...stateComponentProps.Popover}>popover</Popover>
         </Group>
 
-        <Group title="Fab" {...groupProps}>
-          <Group.Prop>
-            <Prop title="h" option={['start','center','end']} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
-            <Prop title="v" option={['start','center','end']} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
-            <Prop title="container" option={[true]} sub="Fab" state={page.stateComponentProps} stateData={stateComponentProps}/>
-          </Group.Prop>
-          <Fab {...stateComponentProps.Fab}>Fab1</Fab>
-        </Group>
-
-        <Panel bc-padding-a- bc-bg-color="view">list</Panel>
-        <Group title="List, PullRefresh, Backtop, InfiniteScroll, ScrollSpy" {...groupProps}>
-          <Button onClick={()=>app.router.replace('/components:c_list')}>got to demo</Button>
-        </Group>
       </Panel>
     </View>
   );

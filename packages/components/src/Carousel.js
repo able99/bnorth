@@ -1,10 +1,6 @@
 /**
- * bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
+ * @module
  */
-
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import parseProps from './utils/props';
@@ -13,6 +9,15 @@ import Panel from './Panel.Touchable';
 import Icon from './Icon';
 
 
+// Carousel
+// ------------------------------
+
+/**
+ * 轮播组件
+ * @component 
+ * @exportdefault
+ * @augments BaseComponent
+ */
 class Carousel extends React.Component {
   static defaultProps = {
     defaultSelected: 0,
@@ -80,20 +85,21 @@ class Carousel extends React.Component {
 
   render() {
     let {
-      defaultSelected, controller:Controller, pager:Pager, interval, timeout, autoPlay, pauseOnHover,
+      defaultSelected, interval, timeout, autoPlay, pauseOnHover,
       pagerProps, controllerPrevProps, controllerNextProps,
+      controller:ControllerComponent, pager:PagerComponent, 
       component:Component=Panel.Touchable, componentPanel=AnimationSlider, children, ...props
     } = parseProps(this.props, Carousel.props);
     let { selected } = this.state;
     children = React.Children.toArray(children);
-    if(Controller===true) Controller = Carousel._Controller;
-    if(Pager===true) Pager = Carousel._Pager;
+    if(ControllerComponent===true) ControllerComponent = Controller;
+    if(PagerComponent===true) PagerComponent = Pager;
 
     let content = (
       <React.Fragment>
         {Controller?<Controller onClick={e=>this.prev()} {...controllerPrevProps}/>:null}
-        {Controller?<Controller onClick={e=>this.next()} {...controllerNextProps} isForward/>:null}
-        {Pager?<Pager onClick={e=>this.setState({selected: e})} count={children.length} selected={Math.round(selected)} {...pagerProps} />:null}
+        {Controller?<Controller onClick={e=>this.next()} {...controllerNextProps} isNext/>:null}
+        {Pager?<Pager onClick={e=>this.setState({selected: e})} size={children.length} selected={Math.round(selected)} {...pagerProps} />:null}
       </React.Fragment>
     );
 
@@ -109,24 +115,93 @@ class Carousel extends React.Component {
   }
 }
 
-Carousel._Controller = aprops=>{
+export default Carousel;
+
+// Carousel Item
+// ------------------------------
+Carousel.Item = AnimationSlider.Item;
+
+// Carousel Controller
+// ------------------------------
+
+/**
+ * 轮播组件内部使用的翻页控制组件
+ * @component 
+ * @private
+ * @augments BaseComponent
+ */
+let Controller = aprops=>{
   let {
-    isForward, name=aprops.isForward?'right':'left', defaultName=isForward?'>':'<', mask,
+    isNext, mask,
+    icon, iconNext, defaultIcon, defaultIconNext,
     component:Component=Icon, className, ...props
-  } = parseProps(aprops, Carousel._Controller.props);
+  } = parseProps(aprops, Controller.props);
 
   let classStr = 'position-absolute text-color-white cursor-pointer margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border';
-  let classSet = [`offset-${isForward?'right':'left'}-start`];
-  if(mask) classSet.push('bg-color-'+(mask===true?'overlay':mask));
+  let classSet = {
+    [`offset-${isNext?'right':'left'}-start`]: true,
+    ['bg-color-'+(mask===true?'overlay':mask)]: mask,
+  }
 
-  return <Component b-size="xl" name={name} defaultName={defaultName} className={classes(classStr, classSet, className)} {...props} />
+  return (
+    <Component 
+      b-size="xl" 
+      name={isNext?iconNext:icon} defaultName={isNext?defaultIconNext:defaultIcon} 
+      className={classes(classStr, classSet, className)} {...props} />
+  );
 }
 
-Carousel._Pager = aprops=>{
+Object.defineProperty(Carousel,"Controller",{ get:function(){ return Controller }, set:function(val){ Controller = val }})
+
+Controller.defaultProps = {};
+/**
+ * 是否是指示显示下一页的控制器
+ * @attribute module:Carousel~Controller.isNext
+ * @type {boolean}
+ */
+/**
+ * 设置组件是否具有蒙层背景或者指定蒙层的主题，true 表示使用默认的 mask 主题蒙层
+ * @attribute module:Carousel~Controller.mask
+ * @type {boolean|string}
+ */
+/**
+ * 设置控制器的图标
+ * @type {string}
+ */
+Controller.defaultProps.icon = 'left';
+/**
+ * 设置控制器为指向下一页时的图标
+ * @type {string}
+ */
+Controller.defaultProps.iconNext = 'right'; 
+/**
+ * 设置控制器的默认图标
+ * @type {string}
+ */
+Controller.defaultProps.defaultIcon = '<';
+/**
+ * 设置控制器为指向下一页时的默认图标
+ * @type {string}
+ */
+Controller.defaultProps.defaultIconNext = '>';
+/**
+ * 参见 BaseComponent
+ */
+Controller.defaultProps.component = Icon;
+// Carousel Pager
+// ------------------------------
+
+/**
+ * 轮播组件内部使用的分页控制器
+ * @component 
+ * @private
+ * @augments BaseComponent
+ */
+let Pager = aprops=>{
   let {
-    count, selected, onClick, itemProps, mask,
-    component:Component=Panel, componnetPanel='ol', className, ...props
-  } = parseProps(aprops, Carousel._Pager.props);
+    size, selected, onClick, itemProps, mask,
+    component:Component, componnetPanel, className, ...props
+  } = parseProps(aprops, Pager.props);
 
   let classStr = 'position-absolute flex-display-block flex-justify-center flex-align-center padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
   let classSet = [];
@@ -134,35 +209,61 @@ Carousel._Pager = aprops=>{
   
   return (
     <Component component={componnetPanel} className={classes(classStr, classSet, className)} {...props}>
-      {Array.from({length:count},(v,k)=>k).map(v=>(
-        <Carousel._Pager._Item key={v} onClick={onClick} count={count} selected={selected} i={v} {...itemProps} />
+      {Array.from({length:size},(v,k)=>k).map(v=>(
+        <Item key={v} onClick={onClick} size={size} selected={selected} index={v} {...itemProps} />
       ))}
     </Component>
   );
 }
 
-Carousel._Pager._Item = aprops=>{
+Object.defineProperty(Carousel,"Pager",{ get:function(){ return Pager }, set:function(val){ Pager = val }})
+
+Pager.defaultProps = {};
+/**
+ * 参见 BaseComponent
+ */
+Pager.defaultProps.component = Panel;
+/**
+ * 参见 BaseComponent
+ */
+Pager.defaultProps.componentPanel = 'ol';
+
+// Carousel Pager Item
+// ------------------------------
+
+/**
+ * 轮播组件内部使用的分页控制器的条目
+ * @component 
+ * @private
+ * @augments BaseComponent
+ */
+let Item = aprops=>{
   let {
-    count, selected, i, onClick,
-    component:Component=Panel, componnetPanel='li', className, ...props
-  } = parseProps(aprops, Carousel._Pager._Item.props);
+    index, size, selected, onClick,
+    component:Component, componnetPanel, className, ...props
+  } = parseProps(aprops, Item.props);
 
   let classStr = 'cursor-pointer width-0em5 height-0em5 border-radius-rounded border-set-a-white';
   let classSet = {
-    'bg-color-white': i===selected,
-    'bg-color-component': i===selected,
-    'margin-left-xxs': i>0,
+    'bg-color-white': index===selected,
+    'bg-color-component': index===selected,
+    'margin-left-xxs': index>0,
   };
 
-  return <Component component={componnetPanel} onClick={e=>onClick&&onClick(i)} className={classes(classStr, classSet, className)} {...props} />;
+  return <Component component={componnetPanel} onClick={e=>onClick&&onClick(index)} className={classes(classStr, classSet, className)} {...props} />;
 }
 
-Carousel.Item = AnimationSlider.Item;
+Object.defineProperty(Carousel.Pager,"Item",{ get:function(){ return Item }, set:function(val){ Item = val }})
 
-
-export default Carousel;
-
-
+Item.defaultProps = {};
+/**
+ * 参见 BaseComponent
+ */
+Item.defaultProps.component = Panel;
+/**
+ * 参见 BaseComponent
+ */
+Item.defaultProps.componentPanel = 'li';
 
 
 

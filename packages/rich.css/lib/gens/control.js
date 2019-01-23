@@ -11,6 +11,18 @@ var _utils = require("../utils");
 
 var _shape = require("../styles/shape");
 
+/**
+ * 控件样式与状态
+ * @module
+ */
+
+/**
+ * 样式生成函数：控件样式与状态
+ * @exportdefault
+ * @type {module:gen~GenFunc}
+ * @param {module:config~GenConfig} config - 生成配置对象
+ * @returns {module:gen~ClassObjects} 样式表的描述对象
+ */
 function genFuncControl(_ref) {
   var textColors = _ref.textColors,
       mainColors = _ref.mainColors,
@@ -40,19 +52,39 @@ function genFuncControl(_ref) {
     styleObjectMap: {
       'color': textColors.normal
     }
-  }), (0, _utils.genClassObjects)('.switch-status input + .status- .on-', {
+  }),
+  /**
+   * 支持基于 input check 状态的双态
+   * @classname check-status
+   */
+
+  /**
+   * 基于 input check 状态的双态的容器
+   * @classname check-status-inner
+   */
+
+  /**
+   * 基于 input check 状态的双态的
+   * @classname on-
+   */
+
+  /**
+   * 基于 input check 状态的双态的容器
+   * @classname off-
+   */
+  (0, _utils.genClassObjects)('.check-status input + .check-status-inner .check-status-checked', {
     styleObjectMap: {
       'display': 'none !important'
     }
-  }), (0, _utils.genClassObjects)('.switch-status input + .status- .off-', {
+  }), (0, _utils.genClassObjects)('.check-status input + .check-status-inner .check-status-unchecked', {
     styleObjectMap: {
       'display': 'inline-block !important'
     }
-  }), (0, _utils.genClassObjects)('.switch-status input:checked + .status- .on-', {
+  }), (0, _utils.genClassObjects)('.check-status input:checked + .check-status-inner .check-status-checked', {
     styleObjectMap: {
       'display': 'inline-block !important'
     }
-  }), (0, _utils.genClassObjects)('.switch-status input:checked + .status- .off-', {
+  }), (0, _utils.genClassObjects)('.check-status input:checked + .check-status-inner .check-status-unchecked', {
     styleObjectMap: {
       'display': 'none !important'
     }

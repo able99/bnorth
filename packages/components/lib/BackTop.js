@@ -29,12 +29,23 @@ var _dom = require("./utils/dom");
 
 var _props = _interopRequireDefault(require("./utils/props"));
 
+var _Panel = _interopRequireDefault(require("./Panel.Icon"));
+
 var _ScrollSpy = _interopRequireDefault(require("./ScrollSpy"));
 
 var _Fab = _interopRequireDefault(require("./Fab"));
 
-var _Icon = _interopRequireDefault(require("./Icon"));
+/**
+ * @module
+ */
 
+/**
+ * 列表返回顶部的小组件
+ * @component 
+ * @exportdefault
+ * @augments BaseComponent
+ * @augments module:Fab.Fab
+ */
 var BackTop =
 /*#__PURE__*/
 function (_React$Component) {
@@ -97,14 +108,16 @@ function (_React$Component) {
           onClick = _parseProps.onClick,
           trigger = _parseProps.trigger,
           offset = _parseProps.offset,
-          _parseProps$iconProps = _parseProps.iconProps,
-          iconProps = _parseProps$iconProps === void 0 ? {} : _parseProps$iconProps,
           _parseProps$scrollSpy = _parseProps.scrollSpyProps,
           scrollSpyProps = _parseProps$scrollSpy === void 0 ? {} : _parseProps$scrollSpy,
+          _parseProps$contentPr = _parseProps.contentProps,
+          contentProps = _parseProps$contentPr === void 0 ? {} : _parseProps$contentPr,
           _parseProps$component = _parseProps.component,
           Component = _parseProps$component === void 0 ? _Fab.default : _parseProps$component,
+          _parseProps$content = _parseProps.content,
+          Content = _parseProps$content === void 0 ? _Panel.default.Icon : _parseProps$content,
           children = _parseProps.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["onClick", "trigger", "offset", "iconProps", "scrollSpyProps", "component", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["onClick", "trigger", "offset", "scrollSpyProps", "contentProps", "component", "content", "children"]);
 
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_ScrollSpy.default, (0, _extends2.default)({
         onPosChange: this._handlePosChange.bind(this)
@@ -112,10 +125,10 @@ function (_React$Component) {
         onClick: (0, _dom.chainedFuncs)(function () {
           return _this2.scrollToTop();
         }, onClick)
-      }, props), children ? children : _react.default.createElement(_Icon.default, (0, _extends2.default)({
+      }, props), _react.default.createElement(Content, (0, _extends2.default)({
         name: "backTop",
         defaultName: "^"
-      }, iconProps))) : null);
+      }, contentProps), children)) : null);
     }
   }]);
   return BackTop;

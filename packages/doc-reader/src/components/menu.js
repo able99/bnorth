@@ -18,7 +18,7 @@ export default aprops=>{
         <Link app={app} doc={{name:"Global", longname:"global"}} type="global" />
       </Section>
       {categories.map(v=>{
-        let docs = doclets.filter(vv=>vv.kind===v.kind);
+        let docs = doclets.filter(vv=>vv.kind===v.kind&&vv.access!=='private');
         return docs.length?(
           <Section key={v.title} title={v.title} type="menu">
             {docs.map(vv=>(

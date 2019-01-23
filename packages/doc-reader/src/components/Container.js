@@ -89,7 +89,7 @@ let Container = aprops=>{
             if(groups) {
               return <Link key={v} app={app} doc={{name: groups[2]||groups[1], longname: groups[1]}} />
             }else{
-              return <div>v</div>;
+              return <div>{v}</div>;
             }
           })}
         </Section>
@@ -136,10 +136,18 @@ let Container = aprops=>{
       ):null}
 
       {constructor?(
-        <Section title="Constructor" type="section">
+        <Section title="构造函数" type="section">
           <List.Item><Container app={app} doc={constructor} isSub /></List.Item>
         </Section>
       ):null}
+
+      {attributes.length?(
+        <Section title="组件属性" type="section">
+          {attributes.map(v=>(
+            <List.Item key={v.longname} ><Container app={app} doc={v} isSub /></List.Item>
+          ))}
+        </Section>
+      ):null}  
 
       {members.length?(
         <Section title="Members" type="section">
@@ -178,14 +186,6 @@ let Container = aprops=>{
       {events.length?(
         <Section title="Events" type="section">
           {events.map(v=>(
-            <List.Item key={v.longname} ><Container app={app} doc={v} isSub /></List.Item>
-          ))}
-        </Section>
-      ):null}
-
-      {attributes.length?(
-        <Section title="Attributes" type="section">
-          {attributes.map(v=>(
             <List.Item key={v.longname} ><Container app={app} doc={v} isSub /></List.Item>
           ))}
         </Section>

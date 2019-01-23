@@ -1,13 +1,21 @@
-
-
+/**
+ * @module
+ */
 import React from 'react';
 import { domOffset, chainedFuncs } from './utils/dom';
 import parseProps from './utils/props';
+import Panel from './Panel.Icon';
 import ScrollSpy from './ScrollSpy';
 import Fab from './Fab';
-import Icon from './Icon';
 
 
+/**
+ * 列表返回顶部的小组件
+ * @component 
+ * @exportdefault
+ * @augments BaseComponent
+ * @augments module:Fab.Fab
+ */
 export default class BackTop extends React.Component {
   constructor(props) {
     super(props);
@@ -29,17 +37,16 @@ export default class BackTop extends React.Component {
   render() {
     let {
       onClick, trigger, offset,
-      iconProps={}, scrollSpyProps={},
-      component:Component=Fab, children, ...props
+      scrollSpyProps={}, contentProps={},
+      component:Component=Fab, content:Content=Panel.Icon, children, ...props
     } = parseProps(this.props, BackTop.props);
-
 
     return (
       <React.Fragment>
         <ScrollSpy onPosChange={this._handlePosChange.bind(this)} {...scrollSpyProps} />
         {this.state.isShow?(
           <Component onClick={chainedFuncs(()=>this.scrollToTop(), onClick)} {...props} >
-            {children?children:<Icon name="backTop" defaultName="^" {...iconProps} />}
+            <Content name="backTop" defaultName="^" {...contentProps}>{children}</Content>
           </Component>
         ):null}
       </React.Fragment>

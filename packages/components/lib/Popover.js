@@ -46,10 +46,21 @@ var _Backdrop = _interopRequireDefault(require("./Backdrop"));
 /**
  * @module
  */
+
+/**
+ * 弹出内容与目标组件的位置计算回调函数
+ * @callback calcPositionCallBack
+ * @param {module:utils/dom~ElementOffset} offsetTarget - 目标组件的坐标与尺寸
+ * @param {module:utils/dom~ElementOffset} offsetOverlay - 弹出内容的坐标与尺寸
+ * @param {string} placement - 弹出内容的位置，包括：left，right，top，bottom
+ * @param {string} main - 弹出内容的主轴布局方式，full：填满 center：居中 equal：与目标组件相同 auto：默认
+ * @param {string} cross - 弹出内容的侧轴布局方式，参见主轴
+ */
 // Popover
 // --------------------
 
 /**
+ * 可弹出内容组件，可设置弹出内容相对于当前组件的位置
  * @component
  * @augments BaseComponent
  * @exportdefault
@@ -67,6 +78,10 @@ function (_React$Component) {
     _this.state = {};
     return _this;
   }
+  /**
+   * 显示弹出内容
+   */
+
 
   (0, _createClass2.default)(Popover, [{
     key: "show",
@@ -76,6 +91,10 @@ function (_React$Component) {
         offsetTarget: (0, _dom.domOffset)(this, this.container)
       });
     }
+    /**
+     * 关闭弹出内容
+     */
+
   }, {
     key: "hide",
     value: function hide() {
@@ -107,15 +126,13 @@ function (_React$Component) {
           onMouseOver = _parseProps.onMouseOver,
           overlay = _parseProps.overlay,
           overlayProps = _parseProps.overlayProps,
-          _parseProps$mask = _parseProps.mask,
-          mask = _parseProps$mask === void 0 ? false : _parseProps$mask,
+          mask = _parseProps.mask,
           maskProps = _parseProps.maskProps,
           _parseProps$calcPosit = _parseProps.calcPosition,
           calcPosition = _parseProps$calcPosit === void 0 ? Popover.calcPosition : _parseProps$calcPosit,
           placement = _parseProps.placement,
           container = _parseProps.container,
-          _parseProps$component = _parseProps.component,
-          Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+          Component = _parseProps.component,
           componentPanel = _parseProps.componentPanel,
           children = _parseProps.children,
           props = (0, _objectWithoutProperties2.default)(_parseProps, ["defaultIsShow", "trigger", "onClick", "onMouseOver", "overlay", "overlayProps", "mask", "maskProps", "calcPosition", "placement", "container", "component", "componentPanel", "children"]);
@@ -139,15 +156,15 @@ function (_React$Component) {
           return _this3.hide();
         } : null,
         onMouseMove: triggerByHover ? function (e) {
-          var x = e.pageX;
-          var y = e.pageY;
+          var x = e.clientX;
+          var y = e.clientY;
           var toffset = _this3.state.offsetTarget || {};
-          if (!(toffset.left <= x && x <= toffset.left + toffset.width && toffset.top <= y && y <= toffset.top + toffset.height)) _this3.hide();
+          console.log(1111, x, y, toffset); // if(!(toffset.left <= x && x <= toffset.left+toffset.width && toffset.top <= y && y <= toffset.top+toffset.height)) this.hide();
         } : null
       };
       return _react.default.createElement(Component, (0, _extends2.default)({
         component: componentPanel
-      }, triggerProps, props), typeof children === 'function' ? children(show, this.state, this.props) : children, !show ? null : (0, _dom.domCreatePortal)(_react.default.createElement(_Backdrop.default, (0, _extends2.default)({
+      }, triggerProps, props), typeof children === 'function' ? children(show, this.state, this.props, this) : children, !show ? null : (0, _dom.domCreatePortal)(_react.default.createElement(_Backdrop.default, (0, _extends2.default)({
         mask: mask
       }, closeProps, maskProps), _react.default.createElement(_Overlay, (0, _extends2.default)({
         calcPosition: calcPosition,
@@ -167,94 +184,71 @@ function (_React$Component) {
 
 Popover.defaultProps = {};
 /**
- * 
+ * 设置是否创建时为弹出状态
  * @attribute module:Popover.Popover.defaultIsShow
  * @type {boolean}
  */
 
 /**
- * 
+ * 弹出内容触发方式，包括，click：点击时弹出 hover：鼠标移过时弹出
  * @attribute module:Popover.Popover.trigger
  * @type {boolean}
+ * @default 非触摸屏时：click，触摸屏时：hover
  */
 
 /**
- * 
- * @attribute module:Popover.Popover.onClick
- * @type {boolean}
- */
-
-/**
- * 
- * @attribute module:Popover.Popover.onMouseOver
- * @type {boolean}
- */
-
-/**
- * 
+ * 弹出的内容
  * @attribute module:Popover.Popover.overlay
- * @type {boolean}
+ * @type {element|component}
  */
 
 /**
- * 
+ * 弹出内容的属性
  * @attribute module:Popover.Popover.overlayProps
- * @type {boolean}
+ * @type {object}
  */
 
 /**
- * 
+ * 弹出内容是否有蒙层，如果设置为真，则使用默认蒙层主题的蒙层
  * @attribute module:Popover.Popover.mask
- * @type {boolean}
+ * @type {boolean|string}
  */
 
 /**
- * 
+ * 蒙层的属性
  * @attribute module:Popover.Popover.maskProps
- * @type {boolean}
+ * @type {object}
  */
 
 /**
- * 
- * @type {boolean}
+ * 弹出内容与组件的相对位置计算函数
+ * @attribute module:Popover.Popover.calcPosition
+ * @type {module:Popover~calcPositionCallBack}
  */
 
 Popover.defaultProps.calcPosition = Popover.calcPosition;
 /**
- * 
+ * 设置弹出内容与目标组件的相对位置与布局，格式为 placement-main-cross，参见 calcPositionCallBack
  * @attribute module:Popover.Popover.placement
- * @type {boolean}
+ * @type {string}
  */
 
 /**
- * 
+ * 设置弹出内容的容器
  * @attribute module:Popover.Popover.container
  * @type {boolean}
  */
 
 /**
- * 设置映射组件
- * @type {element|component}
+ * 参见 BaseComponent
  */
 
 Popover.defaultProps.component = _Panel.default;
-/**
- * 设置 Panel 组件的映射组件，只有当映射组件设置为 Panel 或者基于 Panel 时有效
- * @attribute module:Popover.Popover.componentPanel
- * @type {element|component}
- */
-
 var _default = Popover; // Calc Position
 // --------------------
 
 /**
  * 弹出层位置计算函数
- * @member
- * @param {*} offsetTarget 
- * @param {*} offsetOverlay 
- * @param {*} placement 
- * @param {*} main 
- * @param {*} cross 
  */
 
 exports.default = _default;
@@ -345,6 +339,7 @@ Popover.calcPosition = function (offsetTarget, offsetOverlay, placement, main, c
  * @component
  * @augments BaseComponent
  * @mount Popover.Overlay
+ * @private
  */
 
 
@@ -400,41 +395,30 @@ function (_React$Component2) {
 
 _Overlay.defaultProps = {};
 /**
- * 
- * @attribute module:Popover.Overlay.calcPosition
- * @type {boolean}
+ * 参见 calcPositionCallBack
+ * @attribute module:Popover~Overlay.calcPosition
  */
 
 /**
- * 
- * @attribute module:Popover.Overlay.offsetTarget
- * @type {boolean}
+ * 参见 calcPositionCallBack
+ * @attribute module:Popover~Overlay.offsetTarget
  */
 
 /**
- * 
- * @attribute module:Popover.Overlay.offsetOverlay
- * @type {boolean}
+ * 参见 calcPositionCallBack
+ * @attribute module:Popover~Overlay.offsetOverlay
  */
 
 /**
- * 
- * @attribute module:Popover.Overlay.placement
- * @type {boolean}
+ * 参见 calcPositionCallBack
+ * @attribute module:Popover~Overlay.placement
  */
 
 /**
- * 设置映射组件
- * @type {element|component}
+ * 参见 BaseComponent
  */
 
 _Overlay.defaultProps.component = _Panel.default;
-/**
- * 设置 Panel 组件的映射组件，只有当映射组件设置为 Panel 或者基于 Panel 时有效
- * @attribute module:Popover.Popover.componentPanel
- * @type {element|component}
- */
-
 Object.defineProperty(Popover, "Overlay", {
   get: function get() {
     return _Overlay;

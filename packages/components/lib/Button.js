@@ -95,7 +95,7 @@ var _Group = function Group(aprops) {
     if (!separator || stacked) return a;
     if (i > 0) v1.push(_react.default.createElement(_Separator, (0, _extends2.default)({
       key: 'sep' + i,
-      notItem: true
+      subTypeNotItem: true
     }, separatorProps)));
     v1.push(v2);
     return v1;
@@ -181,9 +181,9 @@ var _Separator = function Separator(aprops) {
   var _parseProps3 = (0, _props.default)(aprops, _Separator.props),
       Component = _parseProps3.component,
       panelComponent = _parseProps3.panelComponent,
-      notItem = _parseProps3.notItem,
+      subTypeNotItem = _parseProps3.subTypeNotItem,
       className = _parseProps3.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["component", "panelComponent", "notItem", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["component", "panelComponent", "subTypeNotItem", "className"]);
 
   var classStr = 'flex-sub-flex-none flex-display-inline flex-align-center flex-justify-center';
   return _react.default.createElement(Component, (0, _extends2.default)({

@@ -50,44 +50,60 @@ function getSubComponentProps(
 let Container = class extends React.Component {
   render() {
     let {
-      type, containerProps, itemProps, 
+      type, inline,
+      direction, justify, align, wrap,
+      containerProps, itemProps, 
       itemGetProps=Container.itemGetProps, itemGetClassName=Container.itemGetClassName, itemGetStyle=Container.itemGetStyle,
       component:Component, className, children, ...props
     } = parseProps(this.props, Container.props);
 
     let classStr = 'position-relative overflow-a-hidden';
+    let classSet = {};
 
     children = React.Children.toArray(children).filter(v=>v);
-    let containerItemCount = children.filter(v=>((typeof v)==='object'&&!v.props.notItem));
+    let containerItemCount = children.filter(v=>((typeof v)==='object'&&!v.props.subTypeNotItem)).length;
     let containerItemIndex = -1;
     children = React.Children.toArray(children).map((v,i,a)=>{
-      if(typeof v !== 'object' || v.props.notItem) return v;
+      if(typeof v !== 'object' || v.props.subTypeNotItem) return v;
       containerItemIndex++;
 
       let countProps = getSubComponentProps(
-        containerItemIndex, containerItemCount, 
-        '', {},
-        containerProps, v.props, 
+        containerItemIndex, containerItemCount, '', {}, containerProps, v.props, 
         itemProps, itemGetClassName, itemGetStyle, itemGetProps
       );
 
-      return (
-        <Item
-          key={v.key||containerItemIndex} type={type} index={containerItemIndex} size={containerItemCount}
-          {...countProps}  >
-          {v}
-        </Item>
-      );
+      return <Item key={v.key||containerItemIndex} type={type} index={containerItemIndex} size={containerItemCount} {...countProps}>{v}</Item>;
     })
 
     if(type==='single'){
       children = children.filter(v=>v.props.selected);
+      props.inline = inline;
     }else if(type==='justify'){
-      classStr += ' flex-display-block flex-justify-around flex-align-stretch';
+      classSet = {
+        ['flex-display-'+(inline?'inline':'block')]: true,
+        'flex-justify-around': true, 
+        'flex-align-stretch': true,
+      }
+    }else if(type==='primary'){
+      classSet = {
+        ['flex-display-'+(inline?'inline':'block')]: true,
+        'flex-align-center': true,
+      }
+    }else if(type==='flex'){
+      classSet = {
+        ['flex-display-'+(inline?'inline':'block')]: true,
+      }
+    }
+
+    let classSetFlex = {
+      ['flex-direction-'+direction]: direction,
+      ['flex-justify-'+justify]: justify,
+      ['flex-align-'+align]: align,
+      ['flex-wrap-'+wrap]: wrap,
     }
     
     return (
-      <Component className={classes(classStr, className)} {...props}>
+      <Component className={classes(classStr, classSet, classSetFlex, className)} {...props}>
         {children}
       </Component>
     )
@@ -100,10 +116,32 @@ Container.defaultProps = {}
 /**
  * 设置子组件的排列类型，包括：
  * 
- * - single： 仅 selected 属性为真的组件显示
+ * - single： 仅 selected 属性为真的子组件显示
  * - justify： 平分组件
+ * - primary: 仅 subTypePrimary 属性的子组件扩展，其他组件保持不延展不压缩
+ * - flex: 普通 flex 布局
  * 
  * @attribute Panel.module:Container~Container.type
+ * @type {string}
+ */
+/**
+ * 设置组件的 flex direction 属性，参见 rich.css
+ * @attribute Panel.module:Container~Container.direction
+ * @type {string}
+ */
+/**
+ * 设置组件的 flex justify 属性，参见 rich.css
+ * @attribute Panel.module:Container~Container.justify
+ * @type {string}
+ */
+/**
+ * 设置组件的 flex align 属性，参见 rich.css
+ * @attribute Panel.module:Container~Container.align
+ * @type {string}
+ */
+/**
+ * 设置组件的 flex wrap 属性，参见 rich.css
+ * @attribute Panel.module:Container~Container.wrap
  * @type {string}
  */
 /**
@@ -189,15 +227,17 @@ Container.defaultProps.component = Panel;
  */
 let Item = aprops=>{
   let {
-    type, index, size, containerProps, 
+    type, subTypePrimary, subTypeNotItem, index, size, containerProps, 
     className, children, ...props
   } = parseProps(aprops, Item.props);
 
   let classStr = '';
   if(type==='single'){
-    classStr += ' position-relative offset-a-start square-full overflow-a-hidden';
+    classStr = 'position-relative offset-a-start square-full overflow-a-hidden';
   }else if(type==='justify'){
-    classStr += ' flex-sub-flex-extend';
+    classStr = 'flex-sub-flex-extend';
+  }else if(type==='primary'){
+    classStr = subTypePrimary?'flex-sub-flex-extend':'flex-sub-flex-none';
   }
 
   return cloneElement(children, {className: classes(classStr, className), ...props});
@@ -207,9 +247,8 @@ Object.defineProperty(Panel.Container,"Item",{ get:function(){ return Item }, se
 
 Item.defaultProps = {}
 /**
- * 组件的排列类型
+ * 参见 Container
  * @attribute Panel.module:Container~Item.type
- * @type {string}
  */
 /**
  * 组件在容器中的索引

@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.Notification = void 0;
+exports.default = exports.Notification = exports.Container = void 0;
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
@@ -27,24 +27,39 @@ var _Button = _interopRequireDefault(require("./Button"));
 
 var _Icon = _interopRequireDefault(require("./Icon"));
 
-var Notification = function Notification(aprops) {
-  var _parseProps = (0, _props.default)(aprops, Notification.props),
-      onDoClose = _parseProps.onDoClose,
-      _parseProps$transitio = _parseProps.transition,
-      Transition = _parseProps$transitio === void 0 ? _AnimationCollapse.default : _parseProps$transitio,
-      transitionProps = _parseProps.transitionProps,
-      onTransitionFinished = _parseProps.onTransitionFinished,
-      titleProps = _parseProps.titleProps,
-      hasClose = _parseProps.hasClose,
-      closeProps = _parseProps.closeProps,
-      iconProps = _parseProps.iconProps,
+var Container = function Container(aprops) {
+  var _parseProps = (0, _props.default)(aprops, Container.props),
       _parseProps$component = _parseProps.component,
-      component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
+      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
       className = _parseProps.className,
-      children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["onDoClose", "transition", "transitionProps", "onTransitionFinished", "titleProps", "hasClose", "closeProps", "iconProps", "component", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["component", "className"]);
 
-  var classStr = 'flex-display-block flex-align-center padding-a- position-absolute offset-top-start offset-left-top width-full';
+  var classStr = 'position-absolute offset-top-start offset-left-top width-full';
+  return _react.default.createElement(Component, {
+    className: (0, _classes.default)(classStr, className)
+  });
+};
+
+exports.Container = Container;
+
+var Notification = function Notification(aprops) {
+  var _parseProps2 = (0, _props.default)(aprops, Notification.props),
+      onDoClose = _parseProps2.onDoClose,
+      _parseProps2$transiti = _parseProps2.transition,
+      Transition = _parseProps2$transiti === void 0 ? _AnimationCollapse.default : _parseProps2$transiti,
+      transitionProps = _parseProps2.transitionProps,
+      onTransitionFinished = _parseProps2.onTransitionFinished,
+      titleProps = _parseProps2.titleProps,
+      hasClose = _parseProps2.hasClose,
+      closeProps = _parseProps2.closeProps,
+      iconProps = _parseProps2.iconProps,
+      _parseProps2$componen = _parseProps2.component,
+      component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
+      className = _parseProps2.className,
+      children = _parseProps2.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["onDoClose", "transition", "transitionProps", "onTransitionFinished", "titleProps", "hasClose", "closeProps", "iconProps", "component", "className", "children"]);
+
+  var classStr = 'flex-display-block flex-align-center width-full';
   return _react.default.createElement(Transition, (0, _extends2.default)({
     component: component,
     "b-style": "solid",
@@ -52,19 +67,21 @@ var Notification = function Notification(aprops) {
     transitionProps: transitionProps,
     onTransitionFinished: onTransitionFinished,
     className: (0, _classes.default)(classStr, className)
-  }, props), _react.default.createElement(Notification._Title, titleProps, children), _react.default.createElement(Notification._Close, (0, _extends2.default)({
+  }, props), _react.default.createElement("div", {
+    className: "padding-a-"
+  }, _react.default.createElement(Notification._Title, titleProps, children), _react.default.createElement(Notification._Close, (0, _extends2.default)({
     onDoClose: onDoClose
-  }, closeProps), hasClose));
+  }, closeProps), hasClose)));
 };
 
 exports.Notification = Notification;
 
 Notification._Title = function (aprops) {
-  var _parseProps2 = (0, _props.default)(aprops, Notification._Title.props),
-      _parseProps2$componen = _parseProps2.component,
-      Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
-      className = _parseProps2.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["component", "className"]);
+  var _parseProps3 = (0, _props.default)(aprops, Notification._Title.props),
+      _parseProps3$componen = _parseProps3.component,
+      Component = _parseProps3$componen === void 0 ? _Panel.default : _parseProps3$componen,
+      className = _parseProps3.className,
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["component", "className"]);
 
   var classStr = 'text-weight- text-size-lg flex-sub-flex-extend';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -73,15 +90,15 @@ Notification._Title = function (aprops) {
 };
 
 Notification._Close = function (aprops) {
-  var _parseProps3 = (0, _props.default)(aprops, Notification._Close.props),
-      hasClose = _parseProps3.hasClose,
-      onDoClose = _parseProps3.onDoClose,
-      iconProps = _parseProps3.iconProps,
-      _parseProps3$componen = _parseProps3.component,
-      Component = _parseProps3$componen === void 0 ? _Button.default : _parseProps3$componen,
-      className = _parseProps3.className,
-      children = _parseProps3.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["hasClose", "onDoClose", "iconProps", "component", "className", "children"]);
+  var _parseProps4 = (0, _props.default)(aprops, Notification._Close.props),
+      hasClose = _parseProps4.hasClose,
+      onDoClose = _parseProps4.onDoClose,
+      iconProps = _parseProps4.iconProps,
+      _parseProps4$componen = _parseProps4.component,
+      Component = _parseProps4$componen === void 0 ? _Button.default : _parseProps4$componen,
+      className = _parseProps4.className,
+      children = _parseProps4.children,
+      props = (0, _objectWithoutProperties2.default)(_parseProps4, ["hasClose", "onDoClose", "iconProps", "component", "className", "children"]);
 
   if (!children) return null;
   children = children === true ? _react.default.createElement(_Icon.default, (0, _extends2.default)({
@@ -127,7 +144,7 @@ var _default = {
         app.notice._timer = window.setTimeout(function () {
           return app.notice.close();
         }, timeout);
-        return app.notice._id = app.router.addPopLayer(_react.default.createElement(Notification, null), props, options);
+        return app.notice._id = app.router.addPopLayer(_react.default.createElement(Container, null, _react.default.createElement(Notification, null)), props, options);
       },
       close: function close() {
         if (app.notice._timer) {

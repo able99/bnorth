@@ -9,6 +9,8 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -32,10 +34,16 @@ var _dom = require("./utils/dom");
 var _Button = _interopRequireDefault(require("./Button"));
 
 /**
- * bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
+ * @module
+ */
+
+/**
+ * 浮动按钮组件
+ * 
+ * 浮动按钮组件是浮动在指定容器上的组件，可设置浮动的位置，边缘距离和浮动的映射组件
+ * @component 
+ * @exportdefault
+ * @augments BaseComponent
  */
 var Fab =
 /*#__PURE__*/
@@ -56,18 +64,17 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this = this;
+      var _this = this,
+          _classSet;
 
       var _parseProps = (0, _props.default)(this.props, Fab.props),
-          _parseProps$h = _parseProps.h,
-          h = _parseProps$h === void 0 ? 'end' : _parseProps$h,
-          _parseProps$v = _parseProps.v,
-          v = _parseProps$v === void 0 ? 'end' : _parseProps$v,
+          h = _parseProps.h,
+          v = _parseProps.v,
+          margin = _parseProps.margin,
           container = _parseProps.container,
-          _parseProps$component = _parseProps.component,
-          Component = _parseProps$component === void 0 ? _Button.default : _parseProps$component,
+          Component = _parseProps.component,
           className = _parseProps.className,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["h", "v", "container", "component", "className"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["h", "v", "margin", "container", "component", "className"]);
 
       if ((container === true || typeof container === 'string') && !this.container) {
         return _react.default.createElement("span", {
@@ -80,18 +87,8 @@ function (_React$Component) {
         });
       }
 
-      var classStr = 'position-absolute margin-a-';
-      var classSet = {
-        'translate-center-x': h === 'center' && v !== 'center',
-        'translate-center-y': h !== 'center' && v === 'center',
-        'translate-center-a': h === 'center' && v === 'center',
-        'offset-left-center': h === 'center',
-        'offset-top-center': v === 'center',
-        'offset-left-start': h === 'start',
-        'offset-right-start': h === 'end',
-        'offset-top-start': v === 'start',
-        'offset-bottom-start': v === 'end'
-      };
+      var classStr = 'position-absolute';
+      var classSet = (_classSet = {}, (0, _defineProperty2.default)(_classSet, "margin-top-".concat(margin !== true ? margin : ''), margin && v === 'start'), (0, _defineProperty2.default)(_classSet, "margin-left-".concat(margin !== true ? margin : ''), margin && h === 'start'), (0, _defineProperty2.default)(_classSet, "margin-bottom-".concat(margin !== true ? margin : ''), margin && v === 'end'), (0, _defineProperty2.default)(_classSet, "margin-right-".concat(margin !== true ? margin : ''), margin && h === 'end'), (0, _defineProperty2.default)(_classSet, 'translate-center-x', h === 'center' && v !== 'center'), (0, _defineProperty2.default)(_classSet, 'translate-center-y', h !== 'center' && v === 'center'), (0, _defineProperty2.default)(_classSet, 'translate-center-a', h === 'center' && v === 'center'), (0, _defineProperty2.default)(_classSet, 'offset-left-center', h === 'center'), (0, _defineProperty2.default)(_classSet, 'offset-top-center', v === 'center'), (0, _defineProperty2.default)(_classSet, 'offset-left-start', h === 'start'), (0, _defineProperty2.default)(_classSet, 'offset-right-start', h === 'end'), (0, _defineProperty2.default)(_classSet, 'offset-top-start', v === 'start'), (0, _defineProperty2.default)(_classSet, 'offset-bottom-start', v === 'end'), _classSet);
 
       var component = _react.default.createElement(Component, (0, _extends2.default)({
         className: (0, _classes.default)(classStr, classSet, className)
@@ -103,4 +100,38 @@ function (_React$Component) {
   return Fab;
 }(_react.default.Component);
 
-exports.default = Fab;
+Fab.defaultProps = {};
+/**
+ * 设置组件在容器内容水平位置，取值为 start，center 和 end
+ * @type {string}
+ */
+
+Fab.defaultProps.h = 'end';
+/**
+ * 设置组件在容器内容垂直位置，取值为 start，center 和 end
+ * @type {string}
+ */
+
+Fab.defaultProps.v = 'end';
+/**
+ * 设置组件相对容器边缘的边距，true 为使用默认边距
+ * @type {boolean|string}
+ */
+
+Fab.defaultProps.margin = true;
+/**
+ * 设置浮动的容器。
+ * 
+ * 不设置表示相对具有 relative，absolute 或 fixed 的 css position 属性的父元素。
+ * 设置则作为 container 参数获取指定 container，参见 domFindContainer 函数
+ * @attribute module:Fab.Fab.container
+ * @type {boolean|string}
+ */
+
+/**
+ * 参见 BaseComponent
+ */
+
+Fab.defaultProps.component = _Button.default;
+var _default = Fab;
+exports.default = _default;

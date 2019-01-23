@@ -9,6 +9,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
@@ -83,8 +85,15 @@ function (_React$Component) {
   (0, _createClass2.default)(Container, [{
     key: "render",
     value: function render() {
+      var _classSetFlex;
+
       var _parseProps = (0, _props.default)(this.props, _Container.props),
           type = _parseProps.type,
+          inline = _parseProps.inline,
+          direction = _parseProps.direction,
+          justify = _parseProps.justify,
+          align = _parseProps.align,
+          wrap = _parseProps.wrap,
           containerProps = _parseProps.containerProps,
           itemProps = _parseProps.itemProps,
           _parseProps$itemGetPr = _parseProps.itemGetProps,
@@ -96,18 +105,19 @@ function (_React$Component) {
           Component = _parseProps.component,
           className = _parseProps.className,
           children = _parseProps.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["type", "containerProps", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["type", "inline", "direction", "justify", "align", "wrap", "containerProps", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className", "children"]);
 
       var classStr = 'position-relative overflow-a-hidden';
+      var classSet = {};
       children = _react.default.Children.toArray(children).filter(function (v) {
         return v;
       });
       var containerItemCount = children.filter(function (v) {
-        return (0, _typeof2.default)(v) === 'object' && !v.props.notItem;
-      });
+        return (0, _typeof2.default)(v) === 'object' && !v.props.subTypeNotItem;
+      }).length;
       var containerItemIndex = -1;
       children = _react.default.Children.toArray(children).map(function (v, i, a) {
-        if ((0, _typeof2.default)(v) !== 'object' || v.props.notItem) return v;
+        if ((0, _typeof2.default)(v) !== 'object' || v.props.subTypeNotItem) return v;
         containerItemIndex++;
         var countProps = getSubComponentProps(containerItemIndex, containerItemCount, '', {}, containerProps, v.props, itemProps, itemGetClassName, itemGetStyle, itemGetProps);
         return _react.default.createElement(_Item, (0, _extends2.default)({
@@ -122,12 +132,22 @@ function (_React$Component) {
         children = children.filter(function (v) {
           return v.props.selected;
         });
+        props.inline = inline;
       } else if (type === 'justify') {
-        classStr += ' flex-display-block flex-justify-around flex-align-stretch';
+        var _classSet;
+
+        classSet = (_classSet = {}, (0, _defineProperty2.default)(_classSet, 'flex-display-' + (inline ? 'inline' : 'block'), true), (0, _defineProperty2.default)(_classSet, 'flex-justify-around', true), (0, _defineProperty2.default)(_classSet, 'flex-align-stretch', true), _classSet);
+      } else if (type === 'primary') {
+        var _classSet2;
+
+        classSet = (_classSet2 = {}, (0, _defineProperty2.default)(_classSet2, 'flex-display-' + (inline ? 'inline' : 'block'), true), (0, _defineProperty2.default)(_classSet2, 'flex-align-center', true), _classSet2);
+      } else if (type === 'flex') {
+        classSet = (0, _defineProperty2.default)({}, 'flex-display-' + (inline ? 'inline' : 'block'), true);
       }
 
+      var classSetFlex = (_classSetFlex = {}, (0, _defineProperty2.default)(_classSetFlex, 'flex-direction-' + direction, direction), (0, _defineProperty2.default)(_classSetFlex, 'flex-justify-' + justify, justify), (0, _defineProperty2.default)(_classSetFlex, 'flex-align-' + align, align), (0, _defineProperty2.default)(_classSetFlex, 'flex-wrap-' + wrap, wrap), _classSetFlex);
       return _react.default.createElement(Component, (0, _extends2.default)({
-        className: (0, _classes.default)(classStr, className)
+        className: (0, _classes.default)(classStr, classSet, classSetFlex, className)
       }, props), children);
     }
   }]);
@@ -146,10 +166,36 @@ _Container.defaultProps = {};
 /**
  * 设置子组件的排列类型，包括：
  * 
- * - single： 仅 selected 属性为真的组件显示
+ * - single： 仅 selected 属性为真的子组件显示
  * - justify： 平分组件
+ * - primary: 仅 subTypePrimary 属性的子组件扩展，其他组件保持不延展不压缩
+ * - flex: 普通 flex 布局
  * 
  * @attribute Panel.module:Container~Container.type
+ * @type {string}
+ */
+
+/**
+ * 设置组件的 flex direction 属性，参见 rich.css
+ * @attribute Panel.module:Container~Container.direction
+ * @type {string}
+ */
+
+/**
+ * 设置组件的 flex justify 属性，参见 rich.css
+ * @attribute Panel.module:Container~Container.justify
+ * @type {string}
+ */
+
+/**
+ * 设置组件的 flex align 属性，参见 rich.css
+ * @attribute Panel.module:Container~Container.align
+ * @type {string}
+ */
+
+/**
+ * 设置组件的 flex wrap 属性，参见 rich.css
+ * @attribute Panel.module:Container~Container.wrap
  * @type {string}
  */
 
@@ -246,19 +292,23 @@ _Container.defaultProps.component = _Panel.default; // Panel Container Item
 var _Item = function Item(aprops) {
   var _parseProps2 = (0, _props.default)(aprops, _Item.props),
       type = _parseProps2.type,
+      subTypePrimary = _parseProps2.subTypePrimary,
+      subTypeNotItem = _parseProps2.subTypeNotItem,
       index = _parseProps2.index,
       size = _parseProps2.size,
       containerProps = _parseProps2.containerProps,
       className = _parseProps2.className,
       children = _parseProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["type", "index", "size", "containerProps", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["type", "subTypePrimary", "subTypeNotItem", "index", "size", "containerProps", "className", "children"]);
 
   var classStr = '';
 
   if (type === 'single') {
-    classStr += ' position-relative offset-a-start square-full overflow-a-hidden';
+    classStr = 'position-relative offset-a-start square-full overflow-a-hidden';
   } else if (type === 'justify') {
-    classStr += ' flex-sub-flex-extend';
+    classStr = 'flex-sub-flex-extend';
+  } else if (type === 'primary') {
+    classStr = subTypePrimary ? 'flex-sub-flex-extend' : 'flex-sub-flex-none';
   }
 
   return (0, _react.cloneElement)(children, (0, _objectSpread2.default)({
@@ -276,9 +326,8 @@ Object.defineProperty(_Panel.default.Container, "Item", {
 });
 _Item.defaultProps = {};
 /**
- * 组件的排列类型
+ * 参见 Container
  * @attribute Panel.module:Container~Item.type
- * @type {string}
  */
 
 /**

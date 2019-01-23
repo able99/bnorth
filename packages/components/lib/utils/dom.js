@@ -169,10 +169,19 @@ function domCreatePortal(component, container) {
 // -------------------
 
 /**
+ * @typedef ElementOffset
+ * @type {object}
+ * @param {number} x - 坐标 x
+ * @param {number} y - 坐标 y
+ * @param {number} width - 宽度
+ * @param {number} height - 高度
+ */
+
+/**
  * 返回组件或者元素的坐标和尺寸
  * @param {component|element} - 目标元素或组件 
  * @param {element} - 相对于该元素的相对坐标，为空时是相对于浏览器的绝对坐标 
- * @returns {object} - x,y 坐标，width,height 尺寸
+ * @returns {module:utils/dom~ElementOffset} - x,y 坐标，width,height 尺寸
  */
 
 
@@ -214,7 +223,7 @@ function chainedFuncs() {
       throw new Error('Invalid Argument Type, must only provide functions, undefined, or null.');
     }
 
-    if (acc === null) {
+    if (!acc) {
       return f;
     }
 
@@ -226,6 +235,6 @@ function chainedFuncs() {
       acc.apply(this, args);
       f.apply(this, args);
     };
-  }, null);
+  }, undefined);
 } // on, off, filter, listen
 // node, eventName, handler, capture

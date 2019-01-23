@@ -9,10 +9,21 @@ import Panel from './Panel';
 import Backdrop from './Backdrop';
 
 
+/**
+ * 弹出内容与目标组件的位置计算回调函数
+ * @callback calcPositionCallBack
+ * @param {module:utils/dom~ElementOffset} offsetTarget - 目标组件的坐标与尺寸
+ * @param {module:utils/dom~ElementOffset} offsetOverlay - 弹出内容的坐标与尺寸
+ * @param {string} placement - 弹出内容的位置，包括：left，right，top，bottom
+ * @param {string} main - 弹出内容的主轴布局方式，full：填满 center：居中 equal：与目标组件相同 auto：默认
+ * @param {string} cross - 弹出内容的侧轴布局方式，参见主轴
+ */
+
 // Popover
 // --------------------
 
 /**
+ * 可弹出内容组件，可设置弹出内容相对于当前组件的位置
  * @component
  * @augments BaseComponent
  * @exportdefault
@@ -23,10 +34,15 @@ class Popover extends React.Component {
     this.state = {};
   }
 
+  /**
+   * 显示弹出内容
+   */
   show() {
     this.setState({ show: true, offsetTarget: domOffset(this, this.container) });
   }
-
+  /**
+   * 关闭弹出内容
+   */
   hide() {
     this.setState({ show: false, offsetTarget: undefined, offsetOverlay: undefined });
   }
@@ -39,9 +55,9 @@ class Popover extends React.Component {
   render() {
     const {
       defaultIsShow, trigger, onClick, onMouseOver,
-      overlay, overlayProps, mask=false, maskProps,
+      overlay, overlayProps, mask, maskProps,
       calcPosition=Popover.calcPosition, placement, container,
-      component:Component=Panel, componentPanel, children, ...props
+      component:Component, componentPanel, children, ...props
     } = parseProps(this.props, Popover.props);
     const { show, offsetOverlay, offsetTarget } = this.state;
 
@@ -55,15 +71,17 @@ class Popover extends React.Component {
     let closeProps = {
       onClick: triggerByTouch?()=>this.hide():null,
       onMouseMove: triggerByHover?e=>{
-        let x = e.pageX; let y = e.pageY;
+        let x = e.clientX; let y = e.clientY;
         let toffset = this.state.offsetTarget||{};
-        if(!(toffset.left <= x && x <= toffset.left+toffset.width && toffset.top <= y && y <= toffset.top+toffset.height)) this.hide();
+        console.log(1111,x,y,toffset);
+        // if(!(toffset.left <= x && x <= toffset.left+toffset.width && toffset.top <= y && y <= toffset.top+toffset.height)) this.hide();
       }:null,
     };
+    
 
     return (
       <Component component={componentPanel} {...triggerProps} {...props}>
-        {typeof(children)==='function'?children(show, this.state, this.props):children}
+        {typeof(children)==='function'?children(show, this.state, this.props, this):children}
         {!show?null:domCreatePortal((
           <Backdrop mask={mask} {...closeProps} {...maskProps}>
             <Overlay 
@@ -86,65 +104,52 @@ Popover.defaultProps = {};
  * @type {boolean}
  */
 /**
- * 
+ * 弹出内容触发方式，包括，click：点击时弹出 hover：鼠标移过时弹出
  * @attribute module:Popover.Popover.trigger
  * @type {boolean}
+ * @default 非触摸屏时：click，触摸屏时：hover
  */
 /**
- * 
- * @attribute module:Popover.Popover.onClick
- * @type {boolean}
- */
-/**
- * 
- * @attribute module:Popover.Popover.onMouseOver
- * @type {boolean}
- */
-/**
- * 
+ * 弹出的内容
  * @attribute module:Popover.Popover.overlay
- * @type {boolean}
+ * @type {element|component}
  */
 /**
- * 
+ * 弹出内容的属性
  * @attribute module:Popover.Popover.overlayProps
- * @type {boolean}
+ * @type {object}
  */
 /**
- * 
+ * 弹出内容是否有蒙层，如果设置为真，则使用默认蒙层主题的蒙层
  * @attribute module:Popover.Popover.mask
- * @type {boolean}
+ * @type {boolean|string}
  */
 /**
- * 
+ * 蒙层的属性
  * @attribute module:Popover.Popover.maskProps
- * @type {boolean}
+ * @type {object}
  */
 /**
- * 
- * @type {boolean}
+ * 弹出内容与组件的相对位置计算函数
+ * @attribute module:Popover.Popover.calcPosition
+ * @type {module:Popover~calcPositionCallBack}
  */
 Popover.defaultProps.calcPosition = Popover.calcPosition;
 /**
- * 
+ * 设置弹出内容与目标组件的相对位置与布局，格式为 placement-main-cross，参见 calcPositionCallBack
  * @attribute module:Popover.Popover.placement
- * @type {boolean}
+ * @type {string}
  */
 /**
- * 
+ * 设置弹出内容的容器
  * @attribute module:Popover.Popover.container
  * @type {boolean}
  */
 /**
- * 设置映射组件
- * @type {element|component}
+ * 参见 BaseComponent
  */
 Popover.defaultProps.component = Panel;
-/**
- * 设置 Panel 组件的映射组件，只有当映射组件设置为 Panel 或者基于 Panel 时有效
- * @attribute module:Popover.Popover.componentPanel
- * @type {element|component}
- */
+
 
 export default Popover;
 
@@ -153,12 +158,6 @@ export default Popover;
 
 /**
  * 弹出层位置计算函数
- * @member
- * @param {*} offsetTarget 
- * @param {*} offsetOverlay 
- * @param {*} placement 
- * @param {*} main 
- * @param {*} cross 
  */
 Popover.calcPosition = function(offsetTarget, offsetOverlay, placement, main, cross) {
   let classSet = {'position-absolute': true};
@@ -242,6 +241,7 @@ Popover.calcPosition = function(offsetTarget, offsetOverlay, placement, main, cr
  * @component
  * @augments BaseComponent
  * @mount Popover.Overlay
+ * @private
  */
 let Overlay = class extends React.Component {
   render() {
@@ -264,38 +264,24 @@ let Overlay = class extends React.Component {
 }
 Overlay.defaultProps = {};
 /**
- * 
- * @attribute module:Popover.Overlay.calcPosition
- * @type {boolean}
+ * 参见 calcPositionCallBack
+ * @attribute module:Popover~Overlay.calcPosition
  */
 /**
- * 
- * @attribute module:Popover.Overlay.offsetTarget
- * @type {boolean}
+ * 参见 calcPositionCallBack
+ * @attribute module:Popover~Overlay.offsetTarget
  */
 /**
- * 
- * @attribute module:Popover.Overlay.offsetOverlay
- * @type {boolean}
+ * 参见 calcPositionCallBack
+ * @attribute module:Popover~Overlay.offsetOverlay
  */
 /**
- * 
- * @attribute module:Popover.Overlay.placement
- * @type {boolean}
+ * 参见 calcPositionCallBack
+ * @attribute module:Popover~Overlay.placement
  */
 /**
- * 设置映射组件
- * @type {element|component}
+ * 参见 BaseComponent
  */
 Overlay.defaultProps.component = Panel;
-/**
- * 设置 Panel 组件的映射组件，只有当映射组件设置为 Panel 或者基于 Panel 时有效
- * @attribute module:Popover.Popover.componentPanel
- * @type {element|component}
- */
-
 
 Object.defineProperty(Popover,"Overlay",{ get:function(){ return Overlay }, set:function(val){ Overlay = val }})
-
-
-

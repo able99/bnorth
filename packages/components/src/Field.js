@@ -1,74 +1,211 @@
 /**
- * bnorth solution
- * @copyright (c) 2016 able99
- * @author able99 (8846755@qq.com)
- * @license MIT
+ * @module
  */
-
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import { domFindNode } from './utils/dom';
 import parseProps from './utils/props';
-import Panel from './Panel';
+import Panel from './Panel.Container';
 import Icon from './Icon';
 
 
-let Field = aprops=>{
-  let { 
-    type, value=aprops.value===undefined&&aprops.hasOwnProperty('value')?'':aprops.value,
-    containerProps, before, after, label, beforeProps, afterProps,
-    ...props
-  } = aprops;
+// Filed
+// ------------------
 
-  let ComponentField = Field._Types[type||'text']||Field._Normal;
+/**
+ * 表单控件组件，是对 input 的包装，除 Field 属性外支持 input 标准属性
+ * @component
+ * @augments BaseComponent
+ * @exportdefault
+ */
+let Field = aprops=>{
+  let { before, after, label, beforeProps, afterProps, containerProps, ...props } = aprops;
+  if(props.hasOwnProperty('value')&&props.value===undefined) props.value = '';
+
+  let ComponentField = Field[aprops.type]||Field.text;
   if(!ComponentField) return null;
 
-  ComponentField = <ComponentField b-style={(before||after)&&'plain'} bc-flex-sub-flex-extend={Boolean(before||after)} type={type} value={value} {...props} />;
-  if(!before&&!after) return ComponentField;
-
   return (
-    <Field._Container 
-      before={before} after={after} label={label} beforeProps={beforeProps} afterProps={afterProps} 
-      {...containerProps}>
-      {ComponentField}
-    </Field._Container>
+    <Container before={before} after={after} label={label} beforeProps={beforeProps} afterProps={afterProps} {...containerProps}>
+      <ComponentField b-style={(before||after)&&'plain'} subTypePrimary={Boolean(before||after)} {...props} />
+    </Container>
   );
 }
 
-Field._Container = aprops=>{
-  let { 
-    inline, before, after, label, beforeProps, afterProps,
-    component:Component=Panel, componentPanel=label&&'label', className, children, ...props
-  } = parseProps(aprops, Field._Container.props);
+/**
+ * 设置控件组件的类型，支持 html input type 以及自定义的类型，参见 Field 的成员，默认使用 text 对应的类型
+ * @attribute module:Field.Field.type
+ * @type {string}
+ */
+/**
+ * 设置前置内容，将开启组模式，在容器中显示前置后置内容和表单控件组件
+ * @attribute module:Field.Field.before
+ * @type {component|element|string|number}
+ */
+/**
+ * 设置后置内容，将开启组模式，在容器中显示前置后置内容和表单控件组件
+ * @attribute module:Field.Field.after
+ * @type {component|element|string|number}
+ */
+/**
+ * 设置容器为 label 元素
+ * @attribute module:Field.Field.label
+ * @type {boolean}
+ */
+/**
+ * 设置前置内容的组件的属性
+ * @attribute module:Field.Field.beforeProps
+ * @type {object}
+ */
+/**
+ * 设置后置内容的组件的属性
+ * @attribute module:Field.Field.afterProps
+ * @type {object}
+ */
+/**
+ * 设置容器组件的属性
+ * @attribute module:Field.Field.containerProps
+ * @type {object}
+ */
 
-  let classStr = 'flex-align-center';
-  let classSet = inline?'flex-display-inline':'flex-display-block';
+export default Field;
+
+/**
+ * 控件组件支持的的类型，对应一般的类型以及默认类型
+ * @member module:Field.Field.text
+ * @default Field.Normal
+ */
+Object.defineProperty(Field,"text",{ get:function(){ return Field.Normal }})
+/**
+ * 控件组件支持的的类型，对应静态类型，该类型为表单组提供一致的组件和样式
+ * @member module:Field.Field.static
+ * @default Field.Static
+ */
+Object.defineProperty(Field,"static",{ get:function(){ return Field.Static }})
+/**
+ * 控件组件支持的的类型，对应 input checkbox 标准类型
+ * @member module:Field.Field.checkbox
+ * @default Field.Checkbox
+ */
+Object.defineProperty(Field,"checkbox",{ get:function(){ return Field.Checkbox }})
+/**
+ * 控件组件支持的的类型，对应 switch 类型，实现了开关按钮
+ * @member module:Field.Field.radio
+ * @default Field.Radio
+ */
+Object.defineProperty(Field,"radio",{ get:function(){ return Field.Radio }})
+/**
+ * 控件组件支持的的类型，对应 input switch 标准类型
+ * @member module:Field.Field.switch
+ * @default Field.Switch
+ */
+Object.defineProperty(Field,"switch",{ get:function(){ return Field.Switch }})
+/**
+ * 控件组件支持的的类型，对应 input file 标准类型
+ * @member module:Field.Field.file
+ * @default Field.File
+ */
+Object.defineProperty(Field,"file",{ get:function(){ return Field.File }})
+
+
+/**
+ * 表单控件组件的容器，只有设置了 before 或者 after 属性时，才会启动容器模式
+ * @component
+ * @mount Field.Container
+ * @augments BaseComponent
+ * @private
+ */
+let Container = aprops=>{
+  if(!aprops.before&&!aprops.after) return aprops.children;
+  let { 
+    before, after, label, beforeProps, afterProps,
+    component:Component, componentPanel=label&&'label', children, ...props
+  } = parseProps(aprops, Container.props);
+
 
   return (
-    <Component component={componentPanel} className={classes(classStr, classSet, className)} {...props}>
-      {before?<Field._Container._Content {...beforeProps}>{before}</Field._Container._Content>:null}
+    <Component component={componentPanel} type="primary" {...props}>
+      {before?<Content {...beforeProps}>{before}</Content>:null}
       {children}
-      {after?<Field._Container._Content {...afterProps}>{after}</Field._Container._Content>:null}
+      {after?<Content {...afterProps}>{after}</Content>:null}
     </Component>
   );
 }
 
-Field._Container._Content = aprops=>{
+Object.defineProperty(Field,"Container",{ get:function(){ return Container }, set:function(val){ Container = val }})
+
+Container.defaultProps = {};
+/**
+ * 设置容器是否使用 inline 模式
+ * @attribute module:Field~Container.inline
+ * @type {boolean}
+ */
+/**
+ * 参见 Field
+ * @attribute module:Field~Container.before
+ */
+/**
+ * 参见 Field
+ * @attribute module:Field~Container.after
+ */
+/**
+ * 参见 Field
+ * @attribute module:Field~Container.label
+ */
+/**
+ * 参见 Field
+ * @attribute module:Field~Container.beforeProps
+*/
+/**
+ * 参见 Field
+ * @attribute module:Field~Container.afterProps
+ */
+/**
+ * 参见 BaseComponent
+ */
+Container.defaultProps.component = Panel.Container;
+
+/**
+ * 表单控件组件的容器的前置和后置的内容组件
+ * @component
+ * @mount Field.Container.Content
+ * @augments BaseComponent
+ * @private
+ */
+let Content = aprops=>{
   let { 
-    component:Component=Panel, componentPanel, className, ...props
-  } = parseProps(aprops, Field._Container._Content.props);
+    component:Component, componentPanel, ...props
+  } = parseProps(aprops, Content.props);
 
-  let classStr = 'flex-sub-flex-none';
-
-  return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
+  return <Component component={componentPanel} {...props} />;
 }
 
-/*
- * @compatible ime wrong on chrome and wrong cursor pos, cause by state controll input, it is ok on setState
+Object.defineProperty(Field.Container,"Content",{ get:function(){ return Content }, set:function(val){ Content = val }})
+
+Content.defaultProps ={};
+/**
+ * 参见 BaseContainer
  */
-Field._Normal = class extends React.Component {
+Content.defaultProps.component = Panel;
+
+
+
+
+
+
+// Type: Normal
+// --------------------
+
+/**
+ * 表单控件的一般类型组件
+ * @component
+ * @mount Field.Normal
+ * @augments BaseComponent
+ * @private
+ */
+let Normal = class extends React.Component {
   _updateValue() {
-    this.input.value = this.props.value;
+    this.input.value = this.props.value||'';
   }
 
   componentDidMount() {
@@ -84,8 +221,8 @@ Field._Normal = class extends React.Component {
     let {
       type, value,
       onPressEnter, onKeyPress, 
-      component:Component=Panel, componentPanel="input", className, children, ...props
-    } = parseProps(this.props, Field._Normal.props);
+      component:Component, componentPanel, className, children, ...props
+    } = parseProps(this.props, Normal.props);
 
     let classStr = 'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle';
     let classSet = this.props['b-style']?'':'bg-none- border-none-a-';
@@ -100,7 +237,7 @@ Field._Normal = class extends React.Component {
       }
     }
 
-    if(Field._Normal._maps.includes(type)) {
+    if(Normal.typesToElement&&Normal.typesToElement.includes(type)) {
       componentPanel = type;
       type=null;
     }else{
@@ -109,23 +246,63 @@ Field._Normal = class extends React.Component {
 
     return (
       <Component 
-        component={componentPanel}
-        onKeyPress={handleKeyPress}
-        type={type} 
-        className={classes(classStr, classSet, className)} {...props}>
+        type={type} onKeyPress={handleKeyPress}
+        component={componentPanel} className={classes(classStr, classSet, className)} {...props}>
         {children}
       </Component>
     );
   }
 }
 
-Field._Normal._maps = ['progress', 'select', 'textarea'];
+Object.defineProperty(Field,"Normal",{ get:function(){ return Normal }, set:function(val){ Normal = val }})
 
-Field._Static = aprops=>{
+Normal.defaultProps = {};
+/**
+ * 参见 Field
+ * @attribute module:Field~Normal.type
+ */
+/**
+ * 控件的值
+ * @attribute module:Field~Normal.value
+ * @type {string}
+ */
+/**
+ * 当控件在焦点情况下输入回车时触发
+ * @attribute module:Field~Normal.onPressEnter
+ * @type {function}
+ */
+/**
+ * 参见 BaseComponent
+ */
+Normal.defaultProps.component = Panel;
+/**
+ * 参见 BaseComponent
+ */
+Normal.defaultProps.componentPanel = 'input';
+      
+/**
+ * 映射数组，数组内的 input type 直接映射为对应元素，例如：
+ * <Field type="textarea" /> => <textarea></textarea>
+ * @member
+ */
+Normal.typesToElement = ['progress', 'select', 'textarea'];
+
+
+// Type: Static
+// --------------------
+
+/**
+ * 表单控件的显示静态文本的组件，用于与其他表单组件达到一致样式
+ * @component
+ * @mount Field.Static
+ * @augments BaseComponent
+ * @private
+ */
+let Static = aprops=>{
   let {
     type, value,
-    component:Component=Panel, componentPanel="span", className, children, ...props
-  } = parseProps(aprops);
+    component:Component, componentPanel, className, children, ...props
+  } = parseProps(aprops, Static.props);
 
   let classStr = 'line-height-1 vertical-align-middle';
 
@@ -136,10 +313,42 @@ Field._Static = aprops=>{
   );
 }
 
-Field._HiddenInput = aprops=>{
+Object.defineProperty(Field,"Static",{ get:function(){ return Static }, set:function(val){ Static = val }})
+
+Static.defaultProps = {};
+/**
+ * 参见 Field
+ * @attribute module:Field~Static.type
+ */
+/**
+ * 显示的静态文本
+ * @attribute module:Field~Static.value
+ * @type {string}
+ */
+/**
+ * 参见 BaseComponent
+ */
+Static.defaultProps.component = Panel;
+/**
+ * 参见 BaseComponent
+ */
+Static.defaultProps.componentPanel = 'span';
+
+
+// Type: Hidden 
+// --------------------
+
+/**
+ * 表单控件的隐藏组件，使用 label 组件套住该组件，用于改变默认组件的样式
+ * @component
+ * @mount Field.HiddenInput
+ * @augments BaseComponent
+ * @private
+ */
+let HiddenInput = aprops=>{
   let {
-    component:Component='input', className, ...props
-  } = parseProps(aprops, Field._HiddenInput.props);
+    component:Component, className, ...props
+  } = parseProps(aprops, HiddenInput.props);
 
   let classStr = 'visibility-hide display-none';
 
@@ -147,124 +356,379 @@ Field._HiddenInput = aprops=>{
   
 }
 
-Field._Switch = aprops=>{
-  let {
-    type, value, defaultValue, domValue, disabled, onClick, onChange, 
-    Content, labelProps, inputProps, innerProps,
-    component:Component=Panel, componentPanel='label', className, children, ...props
-  } = parseProps(aprops, Field._Switch.props);
+Object.defineProperty(Field,"HiddenInput",{ get:function(){ return HiddenInput }, set:function(val){ HiddenInput = val }})
 
-  let classStr = 'switch-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none-';
+HiddenInput.defaultProps = {};
+/**
+ * 参见 BaseComponent
+ */
+HiddenInput.defaultProps.component = 'input';
+
+
+// Type: CheckState 
+// --------------------
+
+/**
+ * 表单控件的2态组件，用于实现 checkbox 等具有 checked 属性类型的组件，实现了2种状态切换的功能
+ * 
+ * 对该组件设置的其他属性，将设置到 content 组件上
+ * @component
+ * @mount Field.CheckState
+ * @augments BaseComponent
+ * @private
+ */
+let CheckState = aprops=>{
+  let {
+    type, value, defaultValue, content, 
+    domValue, disabled, onClick, onChange, 
+    CheckStateProps, inputProps, innerProps,
+    component:Component=Panel, componentPanel='label', className, children, ...props
+  } = parseProps(aprops, CheckState.props);
+
+  let classStr = 'check-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none-';
 
   return (
-    <Component component={componentPanel} onClick={(e)=>{e.stopPropagation();onClick&&onClick(e)}} className={classes(classStr, className)} {...labelProps}>
-      <Field._HiddenInput type={type} checked={value} defaultChecked={defaultValue} value={domValue} disabled={disabled} onChange={onChange} {...inputProps} />
-      <Field._Switch._Inner {...innerProps}>
-        <Field._Switch._Content component={Content} {...props} type={type} disabled={disabled} isOn>X</Field._Switch._Content>
-        <Field._Switch._Content component={Content} {...props} type={type} disabled={disabled}>-</Field._Switch._Content>
-      </Field._Switch._Inner>
+    <Component component={componentPanel} onClick={(e)=>{e.stopPropagation();onClick&&onClick(e)}} className={classes(classStr, className)} {...CheckStateProps}>
+      <HiddenInput type={type} checked={value} defaultChecked={defaultValue} value={domValue} disabled={disabled} onChange={onChange} {...inputProps} />
+      <CheckStateInner {...innerProps}>
+        <CheckStateContent component={content} {...props} type={type} disabled={disabled} isChecked>X</CheckStateContent>
+        <CheckStateContent component={content} {...props} type={type} disabled={disabled}>-</CheckStateContent>
+      </CheckStateInner>
     </Component>
   );
 }
 
-Field._Switch._Inner = aprops=>{
-  let {
-    component:Component=Panel, componentPanel='span', className, ...props
-  } = parseProps(aprops, Field._Switch._Inner.props);
+Object.defineProperty(Field,"CheckState",{ get:function(){ return CheckState }, set:function(val){ CheckState = val }})
 
-  let classStr = 'status- position-relative';
+CheckState.defaultProps = {};
+/**
+ * 
+ * @attribute module:Field~CheckState.value
+ * @type {boolean}
+ */
+/**
+ * 
+ * @attribute module:Field~CheckState.defaultValue
+ * @type {boolean}
+ */
+/**
+ * 设置 input dom 的 value 属性
+ * @attribute module:Field~CheckState.domValue
+ * @type {string}
+ */
+/**
+ * 设置2态内容
+ * @attribute module:Field~CheckState.content
+ * @type {string}
+ */
+/**
+ * 设置设置2态组件的属性
+ * @attribute module:Field~CheckState.labelProps
+ * @type {object}
+ */
+/**
+ * 设置隐藏的 input 的容器的属性
+ * @attribute module:Field~CheckState.inputProps
+ * @type {object}
+ */
+/**
+ * 设置2态内容的容器的属性
+ * @attribute module:Field~CheckState.innerProps
+ * @type {object}
+ */
+/**
+ * 参见 BaseComponent
+ */
+CheckState.defaultProps.component = Panel;
+/**
+ * 参见 BaseComponent
+ */
+CheckState.defaultProps.componentPanel = 'label';
+
+
+
+/**
+ * 表单控件的2态组件的状态内容的容器组件
+ * @component
+ * @mount Field.CheckState.Inner
+ * @augments BaseComponent
+ * @private
+ */
+let CheckStateInner = aprops=>{
+  let {
+    component:Component, componentPanel='span', className, ...props
+  } = parseProps(aprops, CheckStateInner.props);
+
+  let classStr = 'check-status-inner position-relative';
 
   return <Component component={componentPanel} className={classes(classStr, className)} {...props} />;
 }
 
-Field._Switch._Content = aprops=>{
+Object.defineProperty(Field.CheckState,"Inner",{ get:function(){ return CheckStateInner }, set:function(val){ CheckStateInner = val }})
+
+CheckStateInner.defaultProps = {};
+/**
+ * 参见 BaseComponent
+ */
+CheckStateInner.defaultProps.component = Panel;
+/**
+ * 参见 BaseComponent
+ */
+CheckStateInner.defaultProps.componentPanel = 'span';
+
+/**
+ * 表单控件的2态组件的状态内容组件
+ * @component
+ * @mount Field.CheckState.Content
+ * @augments BaseComponent
+ * @private
+ */
+let CheckStateContent = aprops=>{
   let {
-    isOn,
+    isChecked,
     component:Component=Panel, className, ...props
-  } = parseProps(aprops, Field._Switch._Content.props);
+  } = parseProps(aprops, CheckStateContent.props);
 
   let classStr = 'position-relative';
-  let classSet = [isOn?'on-':'off-'];
+  let classSet = [isChecked?'check-status-checked':'check-status-unchecked'];
 
-  return <Component inline className={classes(classStr, classSet, className)} {...props} isOn={isOn} />;
+  return <Component inline className={classes(classStr, classSet, className)} {...props} isChecked={isChecked} />;
 }
 
+Object.defineProperty(Field.CheckState,"Content",{ get:function(){ return CheckStateContent }, set:function(val){ CheckStateContent = val }})
 
-Field._Types = {};
-Field._Types.text = Field._Normal;
-Field._Types.textarea = Field._Normal;
-Field._Types.select = Field._Normal;
-Field._Types.progress = Field._Normal;
-Field._Types.static = Field._Static;
+CheckStateContent.defaultProps = {};
+/**
+ * 指示是否是2种状态中的开启状态
+ * @attribute module:Field~CheckStateContent.isChecked
+ */
+/**
+ * 参见 BaseComponent
+ */
+CheckStateContent.defaultProps.component = Panel;
 
-Field._SwitchContentCheckRadio = aprops=>{
+
+// radio checkbox
+// ----------------------
+
+/**
+ * 表单控件的 checkbox 和 radio 的2态组件内容
+ * @component
+ * @mount Field.CheckStateContentCheckRadio
+ * @augments BaseComponent
+ * @private
+ */
+let CheckStateContentCheckRadio = aprops=>{
   let {
-    type, isOn, disabled, name=aprops.isOn?'check':' ', defaultName=aprops.isOn?'X':' ', 
-    component:Component=Icon, 'b-theme':bTheme, 'b-style':bStyle, ...props
-  } = parseProps(aprops, Field._SwitchContentCheckRadio.props);
+    type, isChecked, disabled, 
+    name, nameChecked, defaultName, defaultNameChecked, 
+    component:Component, 'b-theme':bTheme, 'b-style':bStyle, ...props
+  } = parseProps(aprops, CheckStateContentCheckRadio.props);
 
   if(!bStyle) bStyle = 'hollow';
-  if(!isOn) {
-    bTheme = undefined;
-    bStyle = 'hollow';
-  }
+  if(!isChecked) { bTheme = undefined; bStyle = 'hollow' }
 
-  return <Component bc-border-radius-rounded={!Boolean(type==='checkbox')} type={type}  name={name} defaultName={defaultName} b-style={bStyle} b-theme={bTheme} bc-bg-color-component={disabled} {...props} />;
+  return (
+    <Component 
+      type={type}  
+      name={isChecked?nameChecked:name} defaultName={isChecked?defaultNameChecked:defaultName} 
+      bc-border-radius-rounded={!Boolean(type==='checkbox')} bc-bg-color-component={disabled}
+      b-style={bStyle} b-theme={bTheme} {...props} />
+  )
 }
-Field._Types.checkbox = aprops=>{
-  aprops = parseProps(aprops, Field._Types.checkbox.props);
-  return <Field._Switch Content={Field._SwitchContentCheckRadio} {...aprops} />
-};
-Field._Types.radio = aprops=>{
-  aprops = parseProps(aprops, Field._Types.radio.props);
-  return <Field._Switch Content={Field._SwitchContentCheckRadio} {...aprops} />
+
+Object.defineProperty(Field,"CheckStateContentCheckRadio",{ get:function(){ return CheckStateContentCheckRadio }, set:function(val){ CheckStateContentCheckRadio = val }})
+
+CheckStateContentCheckRadio.defaultProps = {};
+/**
+ * 指示是否是选择状态的内容组件
+ * @attribute module:Field~CheckStateContentCheckRadio.isChecked
+ * @type {boolean}
+ */
+/**
+ * 设置未选中时的图标名称
+ * @type {string}
+ */
+CheckStateContentCheckRadio.defaultProps.name = ' ';
+/**
+ * 设置选中时的图标名称
+ * @type {string}
+ */
+CheckStateContentCheckRadio.defaultProps.nameChecked = 'check';
+/**
+ * 设置未选中时的图标默认名称
+ * @type {string}
+ */
+CheckStateContentCheckRadio.defaultProps.defaultName = ' ';
+/**
+ * 设置选中时的图标默认名称
+ * @type {string}
+ */
+CheckStateContentCheckRadio.defaultProps.defaultNameChecked = 'x';
+/**
+ * 参见 BaseComponent
+ */
+CheckStateContentCheckRadio.defaultProps.component = Icon;
+ 
+
+/**
+ * 表单控件的对应的 checkbox 组件，基于2态组件实现
+ * @component
+ * @mount Field.Checkbox
+ * @augments BaseComponent
+ * @private
+ */
+let Checkbox = aprops=>{
+  aprops = parseProps(aprops, Checkbox.props);
+  return <CheckState content={Field.CheckStateContentCheckRadio} {...aprops} />
 };
 
-Field._SwitchContentSwitch = aprops=>{
+Object.defineProperty(Field,"Checkbox",{ get:function(){ return Checkbox }, set:function(val){ Checkbox = val }})
+
+
+/**
+ * 表单控件的对应的 radio 组件，基于2态组件实现
+ * @component
+ * @mount Field.Radio
+ * @augments BaseComponent
+ * @private
+ */
+let Radio = aprops=>{
+  aprops = parseProps(aprops, Radio.props);
+  return <CheckState content={Field.CheckStateContentCheckRadio} {...aprops} />
+};
+
+Object.defineProperty(Field,"Radio",{ get:function(){ return Radio }, set:function(val){ Radio = val }})
+
+
+// switch
+// ----------------------
+
+/**
+ * 表单控件用于开关组件的2态内容
+ * @component
+ * @mount Field.CheckStateContentSwitch
+ * @augments BaseComponent
+ * @private
+ */
+let CheckStateContentSwitch = aprops=>{
   let {
-    component:Component=Panel, className, children, ...props
-  } = parseProps(aprops, Field._SwitchContentSwitch.props);
+    component:Component, className, children, ...props
+  } = parseProps(aprops, CheckStateContentSwitch.props);
 
   let classStr = 'border-radius-rounded line-height-0';
 
   return (
     <Component b-style="hollow" className={classes(classStr, className)}>
-      <Field._SwitchContentSwitch.Item {...props} isPositive />
-      <Field._SwitchContentSwitch.Item {...props} />
+      <CheckStateContentSwitchItem {...props} isOn />
+      <CheckStateContentSwitchItem {...props} />
     </Component>
   )
 }
-Field._SwitchContentSwitch.Item = aprops=>{
+
+Object.defineProperty(Field,"CheckStateContentSwitch",{ get:function(){ return CheckStateContentSwitch }, set:function(val){ CheckStateContentSwitch = val }})
+
+CheckStateContentSwitch.defaultProps = {};
+/**
+ * 参见 BaseComponent
+ */
+CheckStateContentSwitch.defaultProps.component = Panel;
+
+/**
+ * 表单控件用于开关组件的2态内容的子组件，现实了开关的圆按钮
+ * @component
+ * @mount Field.CheckStateContentSwitchItem
+ * @augments BaseComponent
+ * @private
+ */
+let CheckStateContentSwitchItem = aprops=>{
   let {
-    isOn, isPositive, 
-    component:Component=Panel, 'b-theme':bTheme='component', className, children, ...props
-  } = parseProps(aprops, Field._SwitchContentSwitch.Item.props);
+    isChecked, isOn, 
+    component:Component, 'b-theme':bTheme='component', className, children, ...props
+  } = parseProps(aprops, CheckStateContentSwitchItem.props);
 
   let classStr = 'border-radius-rounded width-1em height-1em';
 
-  return <Component {...props} inline b-style="solid" b-theme={isPositive?(isOn?bTheme:'white'):(isOn?'white':'component')} className={classes(classStr, className)}  />
+  return <Component {...props} inline b-style="solid" b-theme={isOn?(isChecked?bTheme:'white'):(isChecked?'white':'component')} className={classes(classStr, className)}  />
 }
-Field._Types.switch = aprops=>{
-  aprops = parseProps(aprops, Field._Types.switch.props);
-  return <Field._Switch Content={Field._SwitchContentSwitch} {...aprops} type="checkbox" />
+
+Object.defineProperty(Field.CheckStateContentSwitch,"Item",{ get:function(){ return CheckStateContentSwitchItem }, set:function(val){ CheckStateContentSwitchItem = val }})
+
+CheckStateContentSwitchItem.defaultProps = {};
+/**
+ * 指示是否是2种状态中的开启状态
+ * @attribute module:Field~CheckStateContentSwitchItem.isChecked
+ */
+/**
+ * 指示是开启状态的子组件还是关闭状态的子组件
+ * @attribute module:Field~CheckStateContentSwitchItem.isOn
+ */
+/**
+ * 参见 BaseComponent
+ */
+CheckStateContentSwitchItem.defaultProps.component = Panel;
+
+/**
+ * 表单控件的开关组件，基于2态组件实现
+ * @component
+ * @mount Field.Switch
+ * @augments BaseComponent
+ * @private
+ */
+let Switch = aprops=>{
+  aprops = parseProps(aprops, Switch.props);
+  return <CheckState content={Field.CheckStateContentSwitch} {...aprops} type="checkbox" />
 };
 
-Field._Types.file = aprops=>{
+Object.defineProperty(Field,"Switch",{ get:function(){ return Switch }, set:function(val){ Switch = val }})
+
+
+// file
+// ----------------------
+/**
+ * 表单控件组件的文件选择控件实现的组件
+ * @component
+ * @mount Field.File
+ * @augments BaseComponent
+ * @private
+ */
+let File = aprops=>{
   let {
     type, value, inputProps, disabled, onClick, onChange, 
-    component:Component=Panel, componentPanel="label", className, children, ...props
-  } = parseProps(aprops, Field._Types.file.props);
+    component:Component, componentPanel, className, children, ...props
+  } = parseProps(aprops, File.props);
 
   let classStr = 'line-height-1 vertical-align-middle';
 
   return (
     <Component component={componentPanel} className={classes(classStr, className)} disabled={disabled} {...props}>
-      <Field._HiddenInput type={type} value={value} disabled={disabled} onClick={onClick} onChange={onChange} {...inputProps} />
+      <HiddenInput type={type} value={value} disabled={disabled} onClick={onClick} onChange={onChange} {...inputProps} />
       {children}
     </Component>
   );
 }
 
+Object.defineProperty(Field,"File",{ get:function(){ return File }, set:function(val){ File = val }})
 
-export default Field;
+File.defaultProps = {};
+/**
+ * 浏览器的文件对象
+ * @attribute module:Field~File.value
+ * @type {file}
+ */
+/**
+ * 设置隐藏的 input 的容器的属性
+ * @attribute module:Field~File.inputProps
+ * @type {object}
+ */
+File.defaultProps = {};
+/**
+ * 参见 BaseComponent
+ */
+File.defaultProps.component = Panel;
+/**
+ * 参见 BaseComponent
+ */
+File.defaultProps.componentPanel = 'label';
+
  

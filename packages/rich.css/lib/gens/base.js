@@ -15,6 +15,18 @@ var _utils = require("../utils");
 
 var _compatibleAnimation = _interopRequireDefault(require("../compatibles/compatibleAnimation"));
 
+/**
+ * 基本样式
+ * @module
+ */
+
+/**
+ * 样式生成函数：基本样式
+ * @exportdefault
+ * @type {module:gen~GenFunc}
+ * @param {module:config~GenConfig} config - 生成配置对象
+ * @returns {module:gen~ClassObjects} 样式表的描述对象
+ */
 function genFuncBase(_ref) {
   var textColors = _ref.textColors,
       utilColors = _ref.utilColors,
@@ -60,38 +72,75 @@ function genFuncBase(_ref) {
       'clear': 'both',
       'height': 0
     }
-  }), (0, _utils.genClassObjects)('.transition-set', {
+  }),
+  /**
+   * 设置渐变动画，时间可变，属性固定为全部，渐变函数固定为 ease-out
+   * @classname transition-set
+   * @param {module:config~GenConfig#transitionTime} time - 过度时间
+   */
+  (0, _utils.genClassObjects)('.transition-set', {
     styleKey: 'transition',
     styleValueSet: (0, _utils.getStyleValueSet)(transitionTime),
     styleValueMap: function styleValueMap(val) {
       return "".concat(val, " ease-out");
     },
     styleObjectCompatible: _compatibleAnimation.default
-  }), (0, _utils.genClassObjects)('.line-height', {
+  }),
+  /**
+   * 设置行高
+   * @classname line-height
+   * @param {module:config~GenConfig#lineHeight} lineHeight - 行高
+   */
+  (0, _utils.genClassObjects)('.line-height', {
     styleKey: true,
     styleValueSet: lineHeight
-  }), (0, _utils.genClassObjects)('.outline-none-', {
+  }),
+  /**
+   * 设置不显示轮廓
+   * @classname outline-none-
+   */
+  (0, _utils.genClassObjects)('.outline-none-', {
     styleObjectMap: {
       'outline': 'none'
     }
-  }), (0, _utils.genClassObjects)('.appearance-none-', {
+  }),
+  /**
+   * 设置不显示特殊元素的浏览器默认样式
+   * @classname appearance-none-
+   */
+  (0, _utils.genClassObjects)('.appearance-none-', {
     styleObjectMap: {
       'appearance': 'none',
       '-webkit-appearance': 'none',
       '-moz-appearance': 'none'
     }
-  }), (0, _utils.genClassObjects)('.backface-hidden-', {
+  }),
+  /**
+   * 设置元素旋转时不显示背面
+   * @classname backface-hidden-
+   */
+  (0, _utils.genClassObjects)('.backface-hidden-', {
     styleObjectMap: {
       'backface-visibility': 'hidden'
     }
-  }), (0, _utils.genClassObjects)('.force-hardware-acceleration-', {
+  }),
+  /**
+   * 设置强制使用硬件加速绘制
+   * @classname force-hardware-acceleration-
+   */
+  (0, _utils.genClassObjects)('.force-hardware-acceleration-', {
     styleObjectMap: {
       'transform': 'translateZ(0)',
       'backface-visibility': 'hidden',
       'perspective': '1000'
     },
     styleObjectCompatible: _compatibleAnimation.default
-  }), (0, _utils.genClassObjects)('.font-smoothing-antialiased-', {
+  }),
+  /**
+   * 设置文字反锯齿
+   * @classname font-smoothing-antialiased-
+   */
+  (0, _utils.genClassObjects)('.font-smoothing-antialiased-', {
     styleObjectMap: {
       '-webkit-font-smoothing': 'antialiased',
       '-moz-osx-font-smoothing': 'grayscale'

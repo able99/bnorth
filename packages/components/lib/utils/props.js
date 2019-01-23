@@ -179,7 +179,8 @@ function parseProps(aprops, aaprops) {
  */
 
 /**
- * 设置组件通用的默认属性
+ * 设置组件通用的默认属性，当设置为回调函数时，参数是组件当前属性，返回值是属性，可覆盖当前属性
  * @member BaseComponent.props
+ * @type {function|object}
  * @static
  */

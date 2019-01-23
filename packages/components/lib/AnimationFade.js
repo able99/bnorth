@@ -25,12 +25,24 @@ var _dom = require("./utils/dom");
 
 var _props = _interopRequireDefault(require("./utils/props"));
 
+/**
+ * 淡入淡出动画
+ * @module
+ */
+// Animation Fade
+// --------------------------
+
+/**
+ * 淡入淡出动画组件
+ * @component 
+ * @exportdefault
+ * @augments BaseComponent
+ * @see {@link https://reactcommunity.org/react-transition-group/transition} react-transition-group
+ */
 var AnimationFade = function AnimationFade(aprops) {
-  var _parseProps = (0, _props.default)(aprops),
-      _parseProps$in = _parseProps.in,
-      isIn = _parseProps$in === void 0 ? true : _parseProps$in,
-      _parseProps$timeout = _parseProps.timeout,
-      timeout = _parseProps$timeout === void 0 ? 100 : _parseProps$timeout,
+  var _parseProps = (0, _props.default)(aprops, AnimationFade.props),
+      isIn = _parseProps.in,
+      timeout = _parseProps.timeout,
       onTransitionFinished = _parseProps.onTransitionFinished,
       _parseProps$transitio = _parseProps.transitionProps,
       transitionProps = _parseProps$transitio === void 0 ? {} : _parseProps$transitio,
@@ -43,8 +55,8 @@ var AnimationFade = function AnimationFade(aprops) {
     timeout: timeout,
     onExited: (0, _dom.chainedFuncs)(transitionProps.onExited, onTransitionFinished)
   }), function (state) {
-    return _react.default.createElement(AnimationFade._Component, (0, _extends2.default)({
-      isIn: isIn,
+    return _react.default.createElement(AnimationFade.Content, (0, _extends2.default)({
+      in: isIn,
       timeout: timeout
     }, props, {
       animationState: state
@@ -52,20 +64,57 @@ var AnimationFade = function AnimationFade(aprops) {
   });
 };
 
-AnimationFade._Component = function (aprops) {
-  var _parseProps2 = (0, _props.default)(aprops),
-      isIn = _parseProps2.isIn,
+AnimationFade.defaultProps = {};
+/**
+ * 设置是否进入动画
+ * @type {boolean}
+ */
+
+AnimationFade.defaultProps.in = true;
+/**
+ * 设置动画时间，单位是毫秒
+ * @type {number}
+ */
+
+AnimationFade.defaultProps.timeout = 350;
+/**
+ * 设置动画完成时的回调函数
+ * @attribute module:AnimationFade.AnimationFade.onTransitionFinished
+ * @type {function}
+ */
+
+/**
+ * 设置动画组件的属性
+ * @attribute module:AnimationFade.AnimationFade.transitionProps
+ * @type {object}
+ */
+
+var _default = AnimationFade; // Animation Fade Content
+// --------------------------
+
+/**
+ * 淡入淡出动画组件的内容组件，用来包裹具体淡入淡出内容
+ * @component 
+ * @private
+ * @augments BaseComponent
+ * @mount AnimationFade.Content
+ */
+
+exports.default = _default;
+
+var _Content = function Content(aprops) {
+  var _parseProps2 = (0, _props.default)(aprops, _Content.props),
+      isIn = _parseProps2.in,
       timeout = _parseProps2.timeout,
       animationState = _parseProps2.animationState,
       _parseProps2$componen = _parseProps2.component,
       Component = _parseProps2$componen === void 0 ? 'div' : _parseProps2$componen,
-      componentPanel = _parseProps2.componentPanel,
       style = _parseProps2.style,
       className = _parseProps2.className,
       children = _parseProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isIn", "timeout", "animationState", "component", "componentPanel", "style", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["in", "timeout", "animationState", "component", "style", "className", "children"]);
 
-  var classSet = "opacity-".concat(animationState === 'entered' ? '100' : '5');
+  var classSet = "opacity-".concat(animationState === 'entered' || animationState === 'entering' ? '100' : isIn ? '50' : '0');
   var styleSet = (0, _objectSpread2.default)({}, style, (0, _animation.transiton)("".concat(timeout, "ms"), {
     property: 'opacity'
   }));
@@ -75,5 +124,38 @@ AnimationFade._Component = function (aprops) {
   }, props), children);
 };
 
-var _default = AnimationFade;
-exports.default = _default;
+_Content.defaultProps = {};
+/**
+ * 参见 AnimationFade
+ * @attribute module:AnimationFade~Content.in
+ */
+
+/**
+ * 参见 AnimationFade
+ * @attribute module:AnimationFade~Content.timeout
+ */
+
+/**
+ * 参见 AnimationFade
+ * @attribute module:AnimationFade~Content.dimension
+ */
+
+/**
+ * 动画状态，entering，entered，exiting，exited
+ * @attribute module:AnimationFade~Content.animationState
+ * @type {string}
+ */
+
+/**
+ * 参见 BaseComponent
+ */
+
+_Content.defaultProps.component = 'div';
+Object.defineProperty(AnimationFade, "Content", {
+  get: function get() {
+    return _Content;
+  },
+  set: function set(val) {
+    _Content = val;
+  }
+});

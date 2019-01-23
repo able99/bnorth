@@ -22,19 +22,19 @@ button:active, button[active], button.active {
   color: #383838;
 }
 
-.switch-status input + .status- .on- {
+.check-status input + .check-status-inner .check-status-checked {
   display: none !important;
 }
 
-.switch-status input + .status- .off- {
+.check-status input + .check-status-inner .check-status-unchecked {
   display: inline-block !important;
 }
 
-.switch-status input:checked + .status- .on- {
+.check-status input:checked + .check-status-inner .check-status-checked {
   display: inline-block !important;
 }
 
-.switch-status input:checked + .status- .off- {
+.check-status input:checked + .check-status-inner .check-status-unchecked {
   display: none !important;
 }
 

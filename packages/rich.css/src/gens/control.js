@@ -45,26 +45,44 @@ function genFuncControl({textColors, mainColors, stateOpacityDisabled, stateOpac
       },
     }), 
 
-    genClassObjects('.switch-status input + .status- .on-', {
+
+    /**
+     * 支持基于 input check 状态的双态
+     * @classname check-status
+     */
+    /**
+     * 基于 input check 状态的双态的容器
+     * @classname check-status-inner
+     */
+    /**
+     * 基于 input check 状态的双态的选中状态
+     * @classname check-status-checked
+     */
+    /**
+     * 基于 input check 状态的双态的未选中状态
+     * @classname check-status-unchecked
+     */
+    genClassObjects('.check-status input + .check-status-inner .check-status-checked', {
       styleObjectMap: {
         'display': 'none !important',
       },
     }), 
-    genClassObjects('.switch-status input + .status- .off-', {
+    genClassObjects('.check-status input + .check-status-inner .check-status-unchecked', {
       styleObjectMap: {
         'display': 'inline-block !important',
       },
     }), 
-    genClassObjects('.switch-status input:checked + .status- .on-', {
+    genClassObjects('.check-status input:checked + .check-status-inner .check-status-checked', {
       styleObjectMap: {
         'display': 'inline-block !important',
       },
     }), 
-    genClassObjects('.switch-status input:checked + .status- .off-', {
+    genClassObjects('.check-status input:checked + .check-status-inner .check-status-unchecked', {
       styleObjectMap: {
         'display': 'none !important',
       },
     }), 
+
 
     genClassObjects('input:focus, textarea:focus, select:focus', {
       styleObjectMap: {
