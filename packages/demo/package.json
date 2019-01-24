@@ -4,7 +4,7 @@
   "displayName": "bnorth",
   "id": "able99.bnorth.demo",
   "version": "3.1.6",
-  "icon": "../res/logo.png",
+  "icon": "./res/logo.png",
   "description": "bnorth demo",
   "keywords": [
     "bnorth",
@@ -24,7 +24,7 @@
   "scripts": {
     "start": "bnorth-build server",
     "build": "bnorth-build build",
-    "bcordova": "bnorth-cordova"
+    "bcordova": "npx bnorth-cordova"
   },
   "bugs": {
     "url": "https://github.com/able99/bnorth/issues"
@@ -47,6 +47,8 @@
     "@bnorth/cordova": "^3.1.6"
   },
   "bnorth": {
-    "outputPath": "../../docs/demo/"
+    "outputPublicPath": "./",
+    "outputPath": "../../docs/demo/",
+    "mockerFile": "./mocker/index.js"
   }
 }

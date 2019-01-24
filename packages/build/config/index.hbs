@@ -25,10 +25,6 @@
       <%= v %> >
     <% }) %>
 
-    <% _.each(htmlWebpackPlugin.options.headExts, function(v){ %> 
-      <%= v %> >
-    <% }) %>
-
     <script>
       var _bnorhtEnv = <%= JSON.stringify(htmlWebpackPlugin.options.env||{}) %>
       var _bnorhtVersion = <%= JSON.stringify(htmlWebpackPlugin.options.version||{}) %>
@@ -43,8 +39,9 @@
     <div 
       id="root" 
       <% _.each(htmlWebpackPlugin.options.rootAttr, function(v,k){ %>
-        <%= k %>="<%= v %>" >
+        <%= k %>="<%= v %>" 
       <% }) %>
+    >
 
       <% _.each(htmlWebpackPlugin.options.rootChildren, function(v){ %> 
         <%= v %>

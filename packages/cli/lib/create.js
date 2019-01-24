@@ -51,6 +51,7 @@ if(argv._[0]){
 
 console.log('* generating project file...');
 fs.copySync(path.join(templatePath, `project_${argv.template}`), '.');
+fs.copySync(path.join(templatePath, `project_${argv.template}`, '.gitignore'), './.gitignore');
 let appPackage = require(`${appPath}/package.json`);
 appPackage.name = appName;
 fs.writeFileSync(path.join('package.json'), JSON.stringify(appPackage, null, 2));

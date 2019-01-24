@@ -6,6 +6,7 @@ let config = {
   config: {
     bail: false,
     devtool: false,
+    filename: 'index.html',
     outputPath: './dist',
     outputFilename: '[name].[hash:8].js',
     outputPublicPath: './',

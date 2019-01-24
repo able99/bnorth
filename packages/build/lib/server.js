@@ -3,7 +3,9 @@ const WebpackDevServer = require('webpack-dev-server');
 const openBrowser = require( 'react-dev-utils/openBrowser');
 const choosePort = require('react-dev-utils/WebpackDevServerUtils').choosePort;
 const historyApiFallback = require('connect-history-api-fallback');
+const apiMocker = require('webpack-api-mocker');
 const chalk = require('chalk');
+const {resolve} = require('path');
 const { clearConsole, printStats } = require('./_print');
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 const { initEnv } = require('../config/env.config');
@@ -68,6 +70,7 @@ function doRun(type, serverConfig) {
     watchOptions: { ignored: /node_modules/ },
     open: true,
     before(app) {
+      bnorthConfig.mockerFile && apiMocker(app, resolve(bnorthConfig.mockerFile), bnorthConfig.mockerConfig);
     },
     after(app) {
     },
