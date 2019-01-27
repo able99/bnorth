@@ -22,6 +22,7 @@ import AnimationFade from '@bnorth/components/lib/AnimationFade'
 import AnimationSlider from '@bnorth/components/lib/AnimationSlider'
 import Backdrop from '@bnorth/components/lib/Backdrop'
 import BackTop from '@bnorth/components/lib/BackTop';
+import ScrollSpy from '@bnorth/components/lib/ScrollSpy';
 
 
 let Component = aprops=>{
@@ -87,6 +88,36 @@ let Component = aprops=>{
           </Panel>
         </Group>
 
+        <Group title="ScrollSpy" {...groupProps}>
+          <Group.Prop>
+            <Prop title="in" option={[true, false]} sub="Backdrop" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="mask" option={[true, 'primary']} sub="Backdrop" state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <Panel bc-position-relative bc-width-full bs-height="100px" bc-scrollable-y->
+            {Array.from({length: 20}, (v,i)=>i).map(v=>(
+              v===5
+                ?<ScrollSpy 
+                  onRelativeChange={(p)=>console.log(p)}
+                  onPosChange={(e,c)=>console.log(c.scrollTop)} 
+                  {...stateCommonProps} {...stateComponentProps.ScrollSpy} />
+                :<div>{v}</div>
+            ))}
+          </Panel>
+        </Group>
+
+        <Group title="BackTop" {...groupProps}>
+          <Group.Prop>
+            <Prop title="in" option={[true, false]} sub="BackTop" state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop title="mask" option={[true, 'primary']} sub="BackTop" state={page.stateComponentProps} stateData={stateComponentProps}/>
+          </Group.Prop>
+          <Panel bc-position-relative >
+            <Panel bc-position- bc-width-full bs-height="150px" bc-scrollable-y->
+              {Array.from({length: 20}, (v,i)=>i).map(v=>( <div>{v}</div>))}
+              <BackTop param="100%" {...stateCommonProps} {...stateComponentProps.BackTop} />
+            </Panel>
+          </Panel>
+        </Group>
+
 
 
 
@@ -94,14 +125,6 @@ let Component = aprops=>{
 
 
         <Panel bc-padding-a- bc-bg-color="view">gadget</Panel>
-
-        <Group title="BackTop" {...groupProps}>
-          <Group.Prop>
-            <Prop title="in" option={[true, false]} sub="Backdrop" state={page.stateComponentProps} stateData={stateComponentProps}/>
-            <Prop title="mask" option={[true, 'primary']} sub="Backdrop" state={page.stateComponentProps} stateData={stateComponentProps}/>
-          </Group.Prop>
-          <BackTop></BackTop>
-        </Group>
 
         <Group title="Button" {...groupProps}>
           <Group.Prop>

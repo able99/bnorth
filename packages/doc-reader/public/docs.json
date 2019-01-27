@@ -1,0 +1,6336 @@
+{
+  "package": {
+    "name": "@bnorth/components",
+    "version": "3.1.6",
+    "description": "bnorth, components, react",
+    "keywords": [
+      "bnorth",
+      "components",
+      "react",
+      "@bnorth/rich.css"
+    ],
+    "author": "able99 <8846755@qq.com>",
+    "homepage": "https://github.com/able99",
+    "license": "MIT"
+  },
+  "readme": "# components\n\n提供了\b丰富的组件，\b包括布局组件 View，Panel 等，小组件 Button，Icon等，动画组件 AnimationFade，AnimationCollapse 等，以及复杂组件\b \bmodal，picker\b 等等\n\n## 文档\n\n[bnorth 文档](//able99.github.io/#cbnorth)\n\n[参考手册](//able99.github.io/bnorth/components/)\n\n",
+  "doclets": [
+    {
+      "kind": "module",
+      "name": "AnimationCollapse",
+      "longname": "module:AnimationCollapse",
+      "defaultvalue": ""
+    },
+    {
+      "description": "折叠动画组件",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "augments": [
+        "BaseComponent"
+      ],
+      "see": [
+        "{@link https://reactcommunity.org/react-transition-group/transition} react-transition-group"
+      ],
+      "name": "AnimationCollapse",
+      "longname": "module:AnimationCollapse.AnimationCollapse",
+      "memberof": "module:AnimationCollapse",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置是否进入动画",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "in",
+      "longname": "module:AnimationCollapse.AnimationCollapse.in",
+      "kind": "attribute",
+      "memberof": "module:AnimationCollapse.AnimationCollapse",
+      "scope": "static",
+      "defaultvalue": true
+    },
+    {
+      "description": "设置动画时间，单位是毫秒",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "name": "timeout",
+      "longname": "module:AnimationCollapse.AnimationCollapse.timeout",
+      "kind": "attribute",
+      "memberof": "module:AnimationCollapse.AnimationCollapse",
+      "scope": "static",
+      "defaultvalue": 350
+    },
+    {
+      "description": "设置折叠的方向，width 与 height",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "dimension",
+      "longname": "module:AnimationCollapse.AnimationCollapse.dimension",
+      "kind": "attribute",
+      "memberof": "module:AnimationCollapse.AnimationCollapse",
+      "scope": "static",
+      "defaultvalue": "height"
+    },
+    {
+      "description": "设置动画完成时的回调函数",
+      "kind": "attribute",
+      "name": "onTransitionFinished",
+      "scope": "static",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "memberof": "module:AnimationCollapse.AnimationCollapse",
+      "longname": "module:AnimationCollapse.AnimationCollapse.onTransitionFinished",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置动画组件的属性",
+      "kind": "attribute",
+      "name": "transitionProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:AnimationCollapse.AnimationCollapse",
+      "longname": "module:AnimationCollapse.AnimationCollapse.transitionProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "动画各个阶段回调函数",
+      "kind": "typedef",
+      "name": "animationCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "动画组件的属性",
+          "name": "props"
+        },
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "动画组件内容的 dom 元素",
+          "name": "element"
+        }
+      ],
+      "longname": "module:AnimationCollapse~animationCallback",
+      "scope": "inner",
+      "memberof": "module:AnimationCollapse",
+      "defaultvalue": ""
+    },
+    {
+      "description": "动画处理函数：动画开始进入",
+      "kind": "member",
+      "type": {
+        "names": [
+          "module:AnimationCollapse~animationCallback"
+        ]
+      },
+      "name": "handleEnter",
+      "longname": "module:AnimationCollapse.AnimationCollapse.handleEnter",
+      "memberof": "module:AnimationCollapse.AnimationCollapse",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "动画处理函数：动画进入中",
+      "kind": "member",
+      "type": {
+        "names": [
+          "module:AnimationCollapse~animationCallback"
+        ]
+      },
+      "name": "handleEntering",
+      "longname": "module:AnimationCollapse.AnimationCollapse.handleEntering",
+      "memberof": "module:AnimationCollapse.AnimationCollapse",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "动画处理函数：动画进入完成",
+      "kind": "member",
+      "type": {
+        "names": [
+          "module:AnimationCollapse~animationCallback"
+        ]
+      },
+      "name": "handleEntered",
+      "longname": "module:AnimationCollapse.AnimationCollapse.handleEntered",
+      "memberof": "module:AnimationCollapse.AnimationCollapse",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "动画处理函数：动画开始退出",
+      "kind": "member",
+      "type": {
+        "names": [
+          "module:AnimationCollapse~animationCallback"
+        ]
+      },
+      "name": "handleExit",
+      "longname": "module:AnimationCollapse.AnimationCollapse.handleExit",
+      "memberof": "module:AnimationCollapse.AnimationCollapse",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "动画处理函数：动画退出中",
+      "kind": "member",
+      "type": {
+        "names": [
+          "module:AnimationCollapse~animationCallback"
+        ]
+      },
+      "name": "handleExiting",
+      "longname": "module:AnimationCollapse.AnimationCollapse.handleExiting",
+      "memberof": "module:AnimationCollapse.AnimationCollapse",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "动画处理函数：动画退出完成",
+      "kind": "member",
+      "type": {
+        "names": [
+          "module:AnimationCollapse~animationCallback"
+        ]
+      },
+      "name": "handleExited",
+      "longname": "module:AnimationCollapse.AnimationCollapse.handleExited",
+      "memberof": "module:AnimationCollapse.AnimationCollapse",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "折叠动画组件的内容组件，用来包裹具体折叠内容",
+      "kind": "component",
+      "id": null,
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "AnimationCollapse.Content",
+          "value": "AnimationCollapse.Content"
+        }
+      ],
+      "name": "AnimationCollapse.Content",
+      "longname": "module:AnimationCollapse~Content",
+      "scope": "inner",
+      "memberof": "module:AnimationCollapse",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 AnimationCollapse",
+      "kind": "attribute",
+      "name": "in",
+      "scope": "static",
+      "memberof": "module:AnimationCollapse~Content",
+      "longname": "module:AnimationCollapse~Content.in",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationCollapse",
+      "kind": "attribute",
+      "name": "timeout",
+      "scope": "static",
+      "memberof": "module:AnimationCollapse~Content",
+      "longname": "module:AnimationCollapse~Content.timeout",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationCollapse",
+      "kind": "attribute",
+      "name": "dimension",
+      "scope": "static",
+      "memberof": "module:AnimationCollapse~Content",
+      "longname": "module:AnimationCollapse~Content.dimension",
+      "defaultvalue": ""
+    },
+    {
+      "description": "动画状态，entering，entered，exiting，exited",
+      "kind": "attribute",
+      "name": "animationState",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:AnimationCollapse~Content",
+      "longname": "module:AnimationCollapse~Content.animationState",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:AnimationCollapse~Content.component",
+      "kind": "attribute",
+      "memberof": "module:AnimationCollapse~Content",
+      "scope": "static",
+      "defaultvalue": "div"
+    },
+    {
+      "description": "淡入淡出动画",
+      "kind": "module",
+      "name": "AnimationFade",
+      "longname": "module:AnimationFade",
+      "defaultvalue": ""
+    },
+    {
+      "description": "淡入淡出动画组件",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "augments": [
+        "BaseComponent"
+      ],
+      "see": [
+        "{@link https://reactcommunity.org/react-transition-group/transition} react-transition-group"
+      ],
+      "name": "AnimationFade",
+      "longname": "module:AnimationFade.AnimationFade",
+      "memberof": "module:AnimationFade",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置是否进入动画",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "in",
+      "longname": "module:AnimationFade.AnimationFade.in",
+      "kind": "attribute",
+      "memberof": "module:AnimationFade.AnimationFade",
+      "scope": "static",
+      "defaultvalue": true
+    },
+    {
+      "description": "设置动画时间，单位是毫秒",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "name": "timeout",
+      "longname": "module:AnimationFade.AnimationFade.timeout",
+      "kind": "attribute",
+      "memberof": "module:AnimationFade.AnimationFade",
+      "scope": "static",
+      "defaultvalue": 350
+    },
+    {
+      "description": "设置动画完成时的回调函数",
+      "kind": "attribute",
+      "name": "onTransitionFinished",
+      "scope": "static",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "memberof": "module:AnimationFade.AnimationFade",
+      "longname": "module:AnimationFade.AnimationFade.onTransitionFinished",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置动画组件的属性",
+      "kind": "attribute",
+      "name": "transitionProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:AnimationFade.AnimationFade",
+      "longname": "module:AnimationFade.AnimationFade.transitionProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "淡入淡出动画组件的内容组件，用来包裹具体淡入淡出内容",
+      "kind": "component",
+      "id": null,
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "AnimationFade.Content",
+          "value": "AnimationFade.Content"
+        }
+      ],
+      "name": "AnimationFade.Content",
+      "longname": "module:AnimationFade~Content",
+      "scope": "inner",
+      "memberof": "module:AnimationFade",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 AnimationFade",
+      "kind": "attribute",
+      "name": "in",
+      "scope": "static",
+      "memberof": "module:AnimationFade~Content",
+      "longname": "module:AnimationFade~Content.in",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationFade",
+      "kind": "attribute",
+      "name": "timeout",
+      "scope": "static",
+      "memberof": "module:AnimationFade~Content",
+      "longname": "module:AnimationFade~Content.timeout",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationFade",
+      "kind": "attribute",
+      "name": "dimension",
+      "scope": "static",
+      "memberof": "module:AnimationFade~Content",
+      "longname": "module:AnimationFade~Content.dimension",
+      "defaultvalue": ""
+    },
+    {
+      "description": "动画状态，entering，entered，exiting，exited",
+      "kind": "attribute",
+      "name": "animationState",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:AnimationFade~Content",
+      "longname": "module:AnimationFade~Content.animationState",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:AnimationFade~Content.component",
+      "kind": "attribute",
+      "memberof": "module:AnimationFade~Content",
+      "scope": "static",
+      "defaultvalue": "div"
+    },
+    {
+      "description": "滑动动画",
+      "kind": "module",
+      "name": "AnimationSlider",
+      "longname": "module:AnimationSlider",
+      "defaultvalue": ""
+    },
+    {
+      "description": "滑动动画组件",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "AnimationSlider",
+      "longname": "module:AnimationSlider.AnimationSlider",
+      "memberof": "module:AnimationSlider",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置一组显示的条目的数量",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "name": "countToShow",
+      "longname": "module:AnimationSlider.AnimationSlider.countToShow",
+      "kind": "attribute",
+      "memberof": "module:AnimationSlider.AnimationSlider",
+      "scope": "static",
+      "defaultvalue": 1
+    },
+    {
+      "description": "设置当前显示的组索引",
+      "kind": "attribute",
+      "name": "index",
+      "scope": "static",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "memberof": "module:AnimationSlider.AnimationSlider",
+      "longname": "module:AnimationSlider.AnimationSlider.index",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置动画时间，单位是毫秒",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "name": "timeout",
+      "longname": "module:AnimationSlider.AnimationSlider.timeout",
+      "kind": "attribute",
+      "memberof": "module:AnimationSlider.AnimationSlider",
+      "scope": "static",
+      "defaultvalue": 350
+    },
+    {
+      "description": "设置内置容器的属性",
+      "kind": "attribute",
+      "name": "innerProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:AnimationSlider.AnimationSlider",
+      "longname": "module:AnimationSlider.AnimationSlider.innerProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "统一设置各个条目的属性",
+      "kind": "attribute",
+      "name": "itemProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:AnimationSlider.AnimationSlider",
+      "longname": "module:AnimationSlider.AnimationSlider.itemProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置除各个动画条目之外的内容",
+      "kind": "attribute",
+      "name": "content",
+      "scope": "static",
+      "type": {
+        "names": [
+          "component",
+          "element"
+        ]
+      },
+      "memberof": "module:AnimationSlider.AnimationSlider",
+      "longname": "module:AnimationSlider.AnimationSlider.content",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:AnimationSlider.AnimationSlider.component",
+      "kind": "attribute",
+      "memberof": "module:AnimationSlider.AnimationSlider",
+      "scope": "static",
+      "defaultvalue": "div"
+    },
+    {
+      "description": "淡入淡出动画组件的内容组件，用来包裹具体淡入淡出内容",
+      "kind": "component",
+      "id": null,
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "AnimationSlider.Inner",
+          "value": "AnimationSlider.Inner"
+        }
+      ],
+      "name": "AnimationSlider.Inner",
+      "longname": "module:AnimationSlider~Inner",
+      "scope": "inner",
+      "memberof": "module:AnimationSlider",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 AnimationSlider",
+      "kind": "attribute",
+      "name": "countToShow",
+      "scope": "static",
+      "memberof": "module:AnimationSlider~Inner",
+      "longname": "module:AnimationSlider~Inner.countToShow",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationSlider",
+      "kind": "attribute",
+      "name": "index",
+      "scope": "static",
+      "memberof": "module:AnimationSlider~Inner",
+      "longname": "module:AnimationSlider~Inner.index",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationSlider",
+      "kind": "attribute",
+      "name": "timeout",
+      "scope": "static",
+      "memberof": "module:AnimationSlider~Inner",
+      "longname": "module:AnimationSlider~Inner.timeout",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:AnimationSlider~Inner.component",
+      "kind": "attribute",
+      "memberof": "module:AnimationSlider~Inner",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "淡入淡出动画组件的内容组件，用来包裹具体淡入淡出内容",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "AnimationSlider.Item",
+          "value": "AnimationSlider.Item"
+        }
+      ],
+      "name": "AnimationSlider.Item",
+      "longname": "module:AnimationSlider~Item",
+      "scope": "inner",
+      "memberof": "module:AnimationSlider",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "索引号",
+      "kind": "attribute",
+      "name": "i",
+      "scope": "static",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "memberof": "module:AnimationSlider~Item",
+      "longname": "module:AnimationSlider~Item.i",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationSlider",
+      "kind": "attribute",
+      "name": "countToShow",
+      "scope": "static",
+      "memberof": "module:AnimationSlider~Item",
+      "longname": "module:AnimationSlider~Item.countToShow",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationSlider",
+      "kind": "attribute",
+      "name": "index",
+      "scope": "static",
+      "memberof": "module:AnimationSlider~Item",
+      "longname": "module:AnimationSlider~Item.index",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationSlider",
+      "kind": "attribute",
+      "name": "timeout",
+      "scope": "static",
+      "memberof": "module:AnimationSlider~Item",
+      "longname": "module:AnimationSlider~Item.timeout",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:AnimationSlider~Item.component",
+      "kind": "attribute",
+      "memberof": "module:AnimationSlider~Item",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "kind": "module",
+      "name": "BackTop",
+      "longname": "module:BackTop",
+      "defaultvalue": ""
+    },
+    {
+      "classdesc": "列表返回顶部的小组件",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "augments": [
+        "BaseComponent",
+        "module:Fab.Fab"
+      ],
+      "name": "module:BackTop",
+      "longname": "module:BackTop",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "kind": "module",
+      "name": "Backdrop",
+      "longname": "module:Backdrop",
+      "defaultvalue": ""
+    },
+    {
+      "description": "背景组件\n\nBackdrop 会填满具有 relative，absolute 或 fixed 位置属性的父元素，并提供背景样式和点击操作等",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Backdrop",
+      "longname": "module:Backdrop.Backdrop",
+      "memberof": "module:Backdrop",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置背景的主题色，true 表示设置默认主题 mask",
+      "type": {
+        "names": [
+          "boolean",
+          "string"
+        ]
+      },
+      "name": "mask",
+      "longname": "module:Backdrop.Backdrop.mask",
+      "kind": "attribute",
+      "memberof": "module:Backdrop.Backdrop",
+      "scope": "static",
+      "defaultvalue": true
+    },
+    {
+      "description": "设置背景显示的进入和离开动画组件",
+      "type": {
+        "names": [
+          "component"
+        ]
+      },
+      "name": "transition",
+      "longname": "module:Backdrop.Backdrop.transition",
+      "kind": "attribute",
+      "memberof": "module:Backdrop.Backdrop",
+      "scope": "static",
+      "defaultvalue": "AnimationFade"
+    },
+    {
+      "description": "参见 AnimationFade",
+      "kind": "attribute",
+      "name": "in",
+      "scope": "static",
+      "memberof": "module:Backdrop.Backdrop",
+      "longname": "module:Backdrop.Backdrop.in",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationFade",
+      "kind": "attribute",
+      "name": "transitionProps",
+      "scope": "static",
+      "memberof": "module:Backdrop.Backdrop",
+      "longname": "module:Backdrop.Backdrop.transitionProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationFade",
+      "kind": "attribute",
+      "name": "onTransitionFinished",
+      "scope": "static",
+      "memberof": "module:Backdrop.Backdrop",
+      "longname": "module:Backdrop.Backdrop.onTransitionFinished",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Backdrop.Backdrop.component",
+      "kind": "attribute",
+      "memberof": "module:Backdrop.Backdrop",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "按钮和按钮组",
+      "kind": "module",
+      "name": "Button",
+      "longname": "module:Button",
+      "defaultvalue": ""
+    },
+    {
+      "description": "按钮组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Button",
+      "longname": "module:Button.Button",
+      "memberof": "module:Button",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置映射组件",
+      "name": "component",
+      "longname": "module:Button.Button.component",
+      "kind": "attribute",
+      "memberof": "module:Button.Button",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "设置映射组件的映射组件",
+      "name": "panelComponent",
+      "longname": "module:Button.Button.panelComponent",
+      "kind": "attribute",
+      "memberof": "module:Button.Button",
+      "scope": "static",
+      "defaultvalue": "button"
+    },
+    {
+      "description": "按钮组组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent",
+        "Panel.module:Container~PanelContainer"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Button.Group",
+          "value": "Button.Group"
+        }
+      ],
+      "name": "Button.Group",
+      "longname": "module:Button~Group",
+      "scope": "inner",
+      "memberof": "module:Button",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "是否堆叠方式摆放按钮",
+      "kind": "attribute",
+      "name": "stacked",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Button~Group",
+      "longname": "module:Button~Group.stacked",
+      "defaultvalue": ""
+    },
+    {
+      "description": "是否平分展开按钮",
+      "kind": "attribute",
+      "name": "justify",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Button~Group",
+      "longname": "module:Button~Group.justify",
+      "defaultvalue": ""
+    },
+    {
+      "description": "按钮之间是否有分隔条",
+      "kind": "attribute",
+      "name": "separator",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Button~Group",
+      "longname": "module:Button~Group.separator",
+      "defaultvalue": ""
+    },
+    {
+      "description": "分隔条属性",
+      "kind": "attribute",
+      "name": "separatorProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:Button~Group",
+      "longname": "module:Button~Group.separatorProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置映射组件",
+      "name": "component",
+      "longname": "module:Button~Group.component",
+      "kind": "attribute",
+      "memberof": "module:Button~Group",
+      "scope": "static",
+      "defaultvalue": "Panel.Container"
+    },
+    {
+      "description": "按钮组的分隔条组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Button.Group.Separator",
+          "value": "Button.Group.Separator"
+        }
+      ],
+      "access": "private",
+      "name": "Button.Group.Separator",
+      "longname": "module:Button~Separator",
+      "scope": "inner",
+      "memberof": "module:Button",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置映射组件",
+      "name": "component",
+      "longname": "module:Button~Separator.component",
+      "kind": "attribute",
+      "memberof": "module:Button~Separator",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "kind": "module",
+      "name": "Carousel",
+      "longname": "module:Carousel",
+      "defaultvalue": ""
+    },
+    {
+      "classdesc": "轮播组件",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Carousel",
+      "longname": "module:Carousel.Carousel",
+      "memberof": "module:Carousel",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "轮播组件内部使用的翻页控制组件",
+      "kind": "component",
+      "id": null,
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Controller",
+      "longname": "module:Carousel~Controller",
+      "scope": "inner",
+      "memberof": "module:Carousel",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "是否是指示显示下一页的控制器",
+      "kind": "attribute",
+      "name": "isNext",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Carousel~Controller",
+      "longname": "module:Carousel~Controller.isNext",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置组件是否具有蒙层背景或者指定蒙层的主题，true 表示使用默认的 mask 主题蒙层",
+      "kind": "attribute",
+      "name": "mask",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean",
+          "string"
+        ]
+      },
+      "memberof": "module:Carousel~Controller",
+      "longname": "module:Carousel~Controller.mask",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置控制器的图标",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "icon",
+      "longname": "module:Carousel~Controller.icon",
+      "kind": "attribute",
+      "memberof": "module:Carousel~Controller",
+      "scope": "static",
+      "defaultvalue": "left"
+    },
+    {
+      "description": "设置控制器为指向下一页时的图标",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "iconNext",
+      "longname": "module:Carousel~Controller.iconNext",
+      "kind": "attribute",
+      "memberof": "module:Carousel~Controller",
+      "scope": "static",
+      "defaultvalue": "right"
+    },
+    {
+      "description": "设置控制器的默认图标",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "defaultIcon",
+      "longname": "module:Carousel~Controller.defaultIcon",
+      "kind": "attribute",
+      "memberof": "module:Carousel~Controller",
+      "scope": "static",
+      "defaultvalue": "<"
+    },
+    {
+      "description": "设置控制器为指向下一页时的默认图标",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "defaultIconNext",
+      "longname": "module:Carousel~Controller.defaultIconNext",
+      "kind": "attribute",
+      "memberof": "module:Carousel~Controller",
+      "scope": "static",
+      "defaultvalue": ">"
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Carousel~Controller.component",
+      "kind": "attribute",
+      "memberof": "module:Carousel~Controller",
+      "scope": "static",
+      "defaultvalue": "Icon"
+    },
+    {
+      "description": "轮播组件内部使用的分页控制器",
+      "kind": "component",
+      "id": null,
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Pager",
+      "longname": "module:Carousel~Pager",
+      "scope": "inner",
+      "memberof": "module:Carousel",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Carousel~Pager.component",
+      "kind": "attribute",
+      "memberof": "module:Carousel~Pager",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "componentPanel",
+      "longname": "module:Carousel~Pager.componentPanel",
+      "kind": "attribute",
+      "memberof": "module:Carousel~Pager",
+      "scope": "static",
+      "defaultvalue": "ol"
+    },
+    {
+      "description": "轮播组件内部使用的分页控制器的条目",
+      "kind": "component",
+      "id": null,
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Item",
+      "longname": "module:Carousel~Item",
+      "scope": "inner",
+      "memberof": "module:Carousel",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Carousel~Item.component",
+      "kind": "attribute",
+      "memberof": "module:Carousel~Item",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "componentPanel",
+      "longname": "module:Carousel~Item.componentPanel",
+      "kind": "attribute",
+      "memberof": "module:Carousel~Item",
+      "scope": "static",
+      "defaultvalue": "li"
+    },
+    {
+      "kind": "module",
+      "name": "Fab",
+      "longname": "module:Fab",
+      "defaultvalue": ""
+    },
+    {
+      "classdesc": "浮动按钮组件\n\n浮动按钮组件是浮动在指定容器上的组件，可设置浮动的位置，边缘距离和浮动的映射组件",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Fab",
+      "longname": "module:Fab.Fab",
+      "memberof": "module:Fab",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置组件在容器内容水平位置，取值为 start，center 和 end",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "h",
+      "longname": "module:Fab.Fab.h",
+      "kind": "attribute",
+      "memberof": "module:Fab.Fab",
+      "scope": "static",
+      "defaultvalue": "end"
+    },
+    {
+      "description": "设置组件在容器内容垂直位置，取值为 start，center 和 end",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "v",
+      "longname": "module:Fab.Fab.v",
+      "kind": "attribute",
+      "memberof": "module:Fab.Fab",
+      "scope": "static",
+      "defaultvalue": "end"
+    },
+    {
+      "description": "设置组件相对容器边缘的边距，true 为使用默认边距",
+      "type": {
+        "names": [
+          "boolean",
+          "string"
+        ]
+      },
+      "name": "margin",
+      "longname": "module:Fab.Fab.margin",
+      "kind": "attribute",
+      "memberof": "module:Fab.Fab",
+      "scope": "static",
+      "defaultvalue": true
+    },
+    {
+      "description": "设置浮动的容器。\n\n不设置表示相对具有 relative，absolute 或 fixed 的 css position 属性的父元素。\n设置则作为 container 参数获取指定 container，参见 domFindContainer 函数",
+      "kind": "attribute",
+      "name": "container",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean",
+          "string"
+        ]
+      },
+      "memberof": "module:Fab.Fab",
+      "longname": "module:Fab.Fab.container",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Fab.Fab.component",
+      "kind": "attribute",
+      "memberof": "module:Fab.Fab",
+      "scope": "static",
+      "defaultvalue": "Button"
+    },
+    {
+      "kind": "module",
+      "name": "Field",
+      "longname": "module:Field",
+      "defaultvalue": ""
+    },
+    {
+      "description": "表单控件组件，是对 input 的包装，除 Field 属性外支持 input 标准属性",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Field",
+      "longname": "module:Field.Field",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置控件组件的类型，支持 html input type 以及自定义的类型，参见 Field 的成员，默认使用 text 对应的类型",
+      "kind": "attribute",
+      "name": "type",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.type",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置前置内容，将开启组模式，在容器中显示前置后置内容和表单控件组件",
+      "kind": "attribute",
+      "name": "before",
+      "scope": "static",
+      "type": {
+        "names": [
+          "component",
+          "element",
+          "string",
+          "number"
+        ]
+      },
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.before",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置后置内容，将开启组模式，在容器中显示前置后置内容和表单控件组件",
+      "kind": "attribute",
+      "name": "after",
+      "scope": "static",
+      "type": {
+        "names": [
+          "component",
+          "element",
+          "string",
+          "number"
+        ]
+      },
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.after",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置容器为 label 元素",
+      "kind": "attribute",
+      "name": "label",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.label",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置前置内容的组件的属性",
+      "kind": "attribute",
+      "name": "beforeProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.beforeProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置后置内容的组件的属性",
+      "kind": "attribute",
+      "name": "afterProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.afterProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置容器组件的属性",
+      "kind": "attribute",
+      "name": "containerProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.containerProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "控件组件支持的的类型，对应一般的类型以及默认类型",
+      "kind": "member",
+      "name": "text",
+      "defaultvalue": "Field.Normal",
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.text",
+      "scope": "static"
+    },
+    {
+      "description": "控件组件支持的的类型，对应静态类型，该类型为表单组提供一致的组件和样式",
+      "kind": "member",
+      "name": "static",
+      "defaultvalue": "Field.Static",
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.static",
+      "scope": "static"
+    },
+    {
+      "description": "控件组件支持的的类型，对应 input checkbox 标准类型",
+      "kind": "member",
+      "name": "checkbox",
+      "defaultvalue": "Field.Checkbox",
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.checkbox",
+      "scope": "static"
+    },
+    {
+      "description": "控件组件支持的的类型，对应 switch 类型，实现了开关按钮",
+      "kind": "member",
+      "name": "radio",
+      "defaultvalue": "Field.Radio",
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.radio",
+      "scope": "static"
+    },
+    {
+      "description": "控件组件支持的的类型，对应 input switch 标准类型",
+      "kind": "member",
+      "name": "switch",
+      "defaultvalue": "Field.Switch",
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.switch",
+      "scope": "static"
+    },
+    {
+      "description": "控件组件支持的的类型，对应 input file 标准类型",
+      "kind": "member",
+      "name": "file",
+      "defaultvalue": "Field.File",
+      "memberof": "module:Field.Field",
+      "longname": "module:Field.Field.file",
+      "scope": "static"
+    },
+    {
+      "description": "表单控件组件的容器，只有设置了 before 或者 after 属性时，才会启动容器模式",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.Container",
+          "value": "Field.Container"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.Container",
+      "longname": "module:Field~Container",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置容器是否使用 inline 模式",
+      "kind": "attribute",
+      "name": "inline",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Field~Container",
+      "longname": "module:Field~Container.inline",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 Field",
+      "kind": "attribute",
+      "name": "before",
+      "scope": "static",
+      "memberof": "module:Field~Container",
+      "longname": "module:Field~Container.before",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 Field",
+      "kind": "attribute",
+      "name": "after",
+      "scope": "static",
+      "memberof": "module:Field~Container",
+      "longname": "module:Field~Container.after",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 Field",
+      "kind": "attribute",
+      "name": "label",
+      "scope": "static",
+      "memberof": "module:Field~Container",
+      "longname": "module:Field~Container.label",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 Field",
+      "kind": "attribute",
+      "name": "beforeProps",
+      "scope": "static",
+      "memberof": "module:Field~Container",
+      "longname": "module:Field~Container.beforeProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 Field",
+      "kind": "attribute",
+      "name": "afterProps",
+      "scope": "static",
+      "memberof": "module:Field~Container",
+      "longname": "module:Field~Container.afterProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Field~Container.component",
+      "kind": "attribute",
+      "memberof": "module:Field~Container",
+      "scope": "static",
+      "defaultvalue": "Panel.Container"
+    },
+    {
+      "description": "表单控件组件的容器的前置和后置的内容组件",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.Container.Content",
+          "value": "Field.Container.Content"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.Container.Content",
+      "longname": "module:Field~Content",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseContainer",
+      "name": "component",
+      "longname": "module:Field~Content.component",
+      "kind": "attribute",
+      "memberof": "module:Field~Content",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "classdesc": "表单控件的一般类型组件",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.Normal",
+          "value": "Field.Normal"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.Normal",
+      "longname": "module:Field~Normal",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 Field",
+      "kind": "attribute",
+      "name": "type",
+      "scope": "static",
+      "memberof": "module:Field~Normal",
+      "longname": "module:Field~Normal.type",
+      "defaultvalue": ""
+    },
+    {
+      "description": "控件的值",
+      "kind": "attribute",
+      "name": "value",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Field~Normal",
+      "longname": "module:Field~Normal.value",
+      "defaultvalue": ""
+    },
+    {
+      "description": "当控件在焦点情况下输入回车时触发",
+      "kind": "attribute",
+      "name": "onPressEnter",
+      "scope": "static",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "memberof": "module:Field~Normal",
+      "longname": "module:Field~Normal.onPressEnter",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Field~Normal.component",
+      "kind": "attribute",
+      "memberof": "module:Field~Normal",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "componentPanel",
+      "longname": "module:Field~Normal.componentPanel",
+      "kind": "attribute",
+      "memberof": "module:Field~Normal",
+      "scope": "static",
+      "defaultvalue": "input"
+    },
+    {
+      "description": "映射数组，数组内的 input type 直接映射为对应元素，例如：\n<Field type=\"textarea\" /> => <textarea></textarea>",
+      "kind": "member",
+      "name": "typesToElement",
+      "longname": "module:Field~Normal.typesToElement",
+      "memberof": "module:Field~Normal",
+      "scope": "static",
+      "defaultvalue": "[\"progress\",\"select\",\"textarea\"]"
+    },
+    {
+      "description": "表单控件的显示静态文本的组件，用于与其他表单组件达到一致样式",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.Static",
+          "value": "Field.Static"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.Static",
+      "longname": "module:Field~Static",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 Field",
+      "kind": "attribute",
+      "name": "type",
+      "scope": "static",
+      "memberof": "module:Field~Static",
+      "longname": "module:Field~Static.type",
+      "defaultvalue": ""
+    },
+    {
+      "description": "显示的静态文本",
+      "kind": "attribute",
+      "name": "value",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Field~Static",
+      "longname": "module:Field~Static.value",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Field~Static.component",
+      "kind": "attribute",
+      "memberof": "module:Field~Static",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "componentPanel",
+      "longname": "module:Field~Static.componentPanel",
+      "kind": "attribute",
+      "memberof": "module:Field~Static",
+      "scope": "static",
+      "defaultvalue": "span"
+    },
+    {
+      "description": "表单控件的隐藏组件，使用 label 组件套住该组件，用于改变默认组件的样式",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.HiddenInput",
+          "value": "Field.HiddenInput"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.HiddenInput",
+      "longname": "module:Field~HiddenInput",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Field~HiddenInput.component",
+      "kind": "attribute",
+      "memberof": "module:Field~HiddenInput",
+      "scope": "static",
+      "defaultvalue": "input"
+    },
+    {
+      "description": "表单控件的2态组件，用于实现 checkbox 等具有 checked 属性类型的组件，实现了2种状态切换的功能\n\n对该组件设置的其他属性，将设置到 content 组件上",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.CheckState",
+          "value": "Field.CheckState"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.CheckState",
+      "longname": "module:Field~CheckState",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "kind": "attribute",
+      "name": "value",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Field~CheckState",
+      "longname": "module:Field~CheckState.value",
+      "defaultvalue": ""
+    },
+    {
+      "kind": "attribute",
+      "name": "defaultValue",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Field~CheckState",
+      "longname": "module:Field~CheckState.defaultValue",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置 input dom 的 value 属性",
+      "kind": "attribute",
+      "name": "domValue",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Field~CheckState",
+      "longname": "module:Field~CheckState.domValue",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置2态内容",
+      "kind": "attribute",
+      "name": "content",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Field~CheckState",
+      "longname": "module:Field~CheckState.content",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置设置2态组件的属性",
+      "kind": "attribute",
+      "name": "labelProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:Field~CheckState",
+      "longname": "module:Field~CheckState.labelProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置隐藏的 input 的容器的属性",
+      "kind": "attribute",
+      "name": "inputProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:Field~CheckState",
+      "longname": "module:Field~CheckState.inputProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置2态内容的容器的属性",
+      "kind": "attribute",
+      "name": "innerProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:Field~CheckState",
+      "longname": "module:Field~CheckState.innerProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Field~CheckState.component",
+      "kind": "attribute",
+      "memberof": "module:Field~CheckState",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "componentPanel",
+      "longname": "module:Field~CheckState.componentPanel",
+      "kind": "attribute",
+      "memberof": "module:Field~CheckState",
+      "scope": "static",
+      "defaultvalue": "label"
+    },
+    {
+      "description": "表单控件的2态组件的状态内容的容器组件",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.CheckState.Inner",
+          "value": "Field.CheckState.Inner"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.CheckState.Inner",
+      "longname": "module:Field~CheckStateInner",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Field~CheckStateInner.component",
+      "kind": "attribute",
+      "memberof": "module:Field~CheckStateInner",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "componentPanel",
+      "longname": "module:Field~CheckStateInner.componentPanel",
+      "kind": "attribute",
+      "memberof": "module:Field~CheckStateInner",
+      "scope": "static",
+      "defaultvalue": "span"
+    },
+    {
+      "description": "表单控件的2态组件的状态内容组件",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.CheckState.Content",
+          "value": "Field.CheckState.Content"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.CheckState.Content",
+      "longname": "module:Field~CheckStateContent",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "指示是否是2种状态中的开启状态",
+      "kind": "attribute",
+      "name": "isChecked",
+      "scope": "static",
+      "memberof": "module:Field~CheckStateContent",
+      "longname": "module:Field~CheckStateContent.isChecked",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Field~CheckStateContent.component",
+      "kind": "attribute",
+      "memberof": "module:Field~CheckStateContent",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表单控件的 checkbox 和 radio 的2态组件内容",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.CheckStateContentCheckRadio",
+          "value": "Field.CheckStateContentCheckRadio"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.CheckStateContentCheckRadio",
+      "longname": "module:Field~CheckStateContentCheckRadio",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "指示是否是选择状态的内容组件",
+      "kind": "attribute",
+      "name": "isChecked",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Field~CheckStateContentCheckRadio",
+      "longname": "module:Field~CheckStateContentCheckRadio.isChecked",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置未选中时的图标名称",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "name",
+      "longname": "module:Field~CheckStateContentCheckRadio.name",
+      "kind": "attribute",
+      "memberof": "module:Field~CheckStateContentCheckRadio",
+      "scope": "static",
+      "defaultvalue": " "
+    },
+    {
+      "description": "设置选中时的图标名称",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "nameChecked",
+      "longname": "module:Field~CheckStateContentCheckRadio.nameChecked",
+      "kind": "attribute",
+      "memberof": "module:Field~CheckStateContentCheckRadio",
+      "scope": "static",
+      "defaultvalue": "check"
+    },
+    {
+      "description": "设置未选中时的图标默认名称",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "defaultName",
+      "longname": "module:Field~CheckStateContentCheckRadio.defaultName",
+      "kind": "attribute",
+      "memberof": "module:Field~CheckStateContentCheckRadio",
+      "scope": "static",
+      "defaultvalue": " "
+    },
+    {
+      "description": "设置选中时的图标默认名称",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "defaultNameChecked",
+      "longname": "module:Field~CheckStateContentCheckRadio.defaultNameChecked",
+      "kind": "attribute",
+      "memberof": "module:Field~CheckStateContentCheckRadio",
+      "scope": "static",
+      "defaultvalue": "x"
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Field~CheckStateContentCheckRadio.component",
+      "kind": "attribute",
+      "memberof": "module:Field~CheckStateContentCheckRadio",
+      "scope": "static",
+      "defaultvalue": "Icon"
+    },
+    {
+      "description": "表单控件的对应的 checkbox 组件，基于2态组件实现",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.Checkbox",
+          "value": "Field.Checkbox"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.Checkbox",
+      "longname": "module:Field~Checkbox",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "表单控件的对应的 radio 组件，基于2态组件实现",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.Radio",
+          "value": "Field.Radio"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.Radio",
+      "longname": "module:Field~Radio",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "表单控件用于开关组件的2态内容",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.CheckStateContentSwitch",
+          "value": "Field.CheckStateContentSwitch"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.CheckStateContentSwitch",
+      "longname": "module:Field~CheckStateContentSwitch",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Field~CheckStateContentSwitch.component",
+      "kind": "attribute",
+      "memberof": "module:Field~CheckStateContentSwitch",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表单控件用于开关组件的2态内容的子组件，现实了开关的圆按钮",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.CheckStateContentSwitchItem",
+          "value": "Field.CheckStateContentSwitchItem"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.CheckStateContentSwitchItem",
+      "longname": "module:Field~CheckStateContentSwitchItem",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "指示是否是2种状态中的开启状态",
+      "kind": "attribute",
+      "name": "isChecked",
+      "scope": "static",
+      "memberof": "module:Field~CheckStateContentSwitchItem",
+      "longname": "module:Field~CheckStateContentSwitchItem.isChecked",
+      "defaultvalue": ""
+    },
+    {
+      "description": "指示是开启状态的子组件还是关闭状态的子组件",
+      "kind": "attribute",
+      "name": "isOn",
+      "scope": "static",
+      "memberof": "module:Field~CheckStateContentSwitchItem",
+      "longname": "module:Field~CheckStateContentSwitchItem.isOn",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Field~CheckStateContentSwitchItem.component",
+      "kind": "attribute",
+      "memberof": "module:Field~CheckStateContentSwitchItem",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表单控件的开关组件，基于2态组件实现",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.Switch",
+          "value": "Field.Switch"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.Switch",
+      "longname": "module:Field~Switch",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "表单控件组件的文件选择控件实现的组件",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Field.File",
+          "value": "Field.File"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "access": "private",
+      "name": "Field.File",
+      "longname": "module:Field~File",
+      "scope": "inner",
+      "memberof": "module:Field",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "浏览器的文件对象",
+      "kind": "attribute",
+      "name": "value",
+      "scope": "static",
+      "type": {
+        "names": [
+          "file"
+        ]
+      },
+      "memberof": "module:Field~File",
+      "longname": "module:Field~File.value",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置隐藏的 input 的容器的属性",
+      "kind": "attribute",
+      "name": "inputProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:Field~File",
+      "longname": "module:Field~File.inputProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Field~File.component",
+      "kind": "attribute",
+      "memberof": "module:Field~File",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "componentPanel",
+      "longname": "module:Field~File.componentPanel",
+      "kind": "attribute",
+      "memberof": "module:Field~File",
+      "scope": "static",
+      "defaultvalue": "label"
+    },
+    {
+      "kind": "module",
+      "name": "Icon",
+      "longname": "module:Icon",
+      "defaultvalue": ""
+    },
+    {
+      "description": "图标组件\n\n支持多种模式的图标和样式，包括 svg 字体库图标，图片图标，字符图标和形状图标，样式固定在字体大小的宽度和高度",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Icon",
+      "longname": "module:Icon.Icon",
+      "memberof": "module:Icon",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置 svg 字体库图标的图标映射名称",
+      "kind": "attribute",
+      "name": "name",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Icon.Icon",
+      "longname": "module:Icon.Icon.name",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置 svg 字体库图片映射失败时，默认的字符图标字符",
+      "kind": "attribute",
+      "name": "defaultName",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Icon.Icon",
+      "longname": "module:Icon.Icon.defaultName",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置图片图片的图片路径",
+      "kind": "attribute",
+      "name": "src",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Icon.Icon",
+      "longname": "module:Icon.Icon.src",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置字符图标的字符，需要是单字符",
+      "kind": "attribute",
+      "name": "char",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Icon.Icon",
+      "longname": "module:Icon.Icon.char",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置图形图标的图形函数名称或者图形的 svg path 路径",
+      "kind": "attribute",
+      "name": "shape",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Icon.Icon",
+      "longname": "module:Icon.Icon.shape",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置浮动的容器。",
+      "kind": "attribute",
+      "name": "rotate",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Icon.Icon",
+      "longname": "module:Icon.Icon.rotate",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Icon.Icon.component",
+      "kind": "attribute",
+      "memberof": "module:Icon.Icon",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "svg 图标名字数组",
+      "name": "_names",
+      "longname": "module:Icon.Icon._names",
+      "kind": "member",
+      "memberof": "module:Icon.Icon",
+      "scope": "static",
+      "defaultvalue": "[]"
+    },
+    {
+      "description": "svg 图标的名称映射",
+      "name": "_maps",
+      "longname": "module:Icon.Icon._maps",
+      "kind": "member",
+      "memberof": "module:Icon.Icon",
+      "scope": "static",
+      "defaultvalue": "{}"
+    },
+    {
+      "description": "图形图标的图形函数与图形路径映射",
+      "name": "_shapes",
+      "longname": "module:Icon.Icon._shapes",
+      "kind": "member",
+      "memberof": "module:Icon.Icon",
+      "scope": "static",
+      "defaultvalue": "{\"triangle\":\"M50 10 L90 90 L10 90 Z\"}"
+    },
+    {
+      "description": "将 svg 字体库文件内容生成字体库元素和字体库名称数组",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "svg 字体库文件内容",
+          "name": "svgStr"
+        }
+      ],
+      "name": "appendSvgIcons",
+      "longname": "module:Icon.Icon.appendSvgIcons",
+      "kind": "function",
+      "memberof": "module:Icon.Icon",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置字体库名称映射",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "object"
+            ]
+          },
+          "description": "字体库映射对象或者单个映射的值",
+          "name": "val"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "单个映射的名称，val 为 object 时，该参数无意义",
+          "name": "name"
+        }
+      ],
+      "name": "appendMap",
+      "longname": "module:Icon.Icon.appendMap",
+      "kind": "function",
+      "memberof": "module:Icon.Icon",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "kind": "module",
+      "name": "List",
+      "longname": "module:List",
+      "defaultvalue": ""
+    },
+    {
+      "description": "列表组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "exportdefault": true,
+      "scope": "static",
+      "name": "List",
+      "longname": "module:List.List",
+      "memberof": "module:List",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置列表条目缩进，取值为 padding 的配置值，true 为使用默认配置值，参见 rich.css spacing",
+      "kind": "attribute",
+      "name": "separatorInset",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean",
+          "string"
+        ]
+      },
+      "memberof": "module:List.List",
+      "longname": "module:List.List.separatorInset",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置列表的表头",
+      "kind": "attribute",
+      "name": "header",
+      "scope": "static",
+      "type": {
+        "names": [
+          "element",
+          "component"
+        ]
+      },
+      "memberof": "module:List.List",
+      "longname": "module:List.List.header",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置列表的脚注",
+      "kind": "attribute",
+      "name": "footer",
+      "scope": "static",
+      "type": {
+        "names": [
+          "element",
+          "component"
+        ]
+      },
+      "memberof": "module:List.List",
+      "longname": "module:List.List.footer",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置列表的条目容器的属性",
+      "kind": "attribute",
+      "name": "innerProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:List.List",
+      "longname": "module:List.List.innerProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置列表的表头的属性",
+      "kind": "attribute",
+      "name": "headerProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:List.List",
+      "longname": "module:List.List.headerProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置列表的脚注的属性",
+      "kind": "attribute",
+      "name": "footerProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:List.List",
+      "longname": "module:List.List.footerProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置列表的条目的属性",
+      "kind": "attribute",
+      "name": "itemProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:List.List",
+      "longname": "module:List.List.itemProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:List.List.component",
+      "kind": "attribute",
+      "memberof": "module:List.List",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表格组件的表格头部组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "List.Header",
+          "value": "List.Header"
+        }
+      ],
+      "access": "private",
+      "name": "List.Header",
+      "longname": "module:List~Header",
+      "scope": "inner",
+      "memberof": "module:List",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:List~Header.component",
+      "kind": "attribute",
+      "memberof": "module:List~Header",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表格组件的表格页脚组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "List.Footer",
+          "value": "List.Footer"
+        }
+      ],
+      "access": "private",
+      "name": "List.Footer",
+      "longname": "module:List~Footer",
+      "scope": "inner",
+      "memberof": "module:List",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:List~Footer.component",
+      "kind": "attribute",
+      "memberof": "module:List~Footer",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表格组件的表格行容器组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent",
+        "Panel.module:Container~Container"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "List.Inner",
+          "value": "List.Inner"
+        }
+      ],
+      "access": "private",
+      "name": "List.Inner",
+      "longname": "module:List~Inner",
+      "scope": "inner",
+      "memberof": "module:List",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 List",
+      "kind": "attribute",
+      "name": "separatorInset",
+      "scope": "static",
+      "memberof": "module:List~Inner",
+      "longname": "module:List~Inner.separatorInset",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:List~Inner.component",
+      "kind": "attribute",
+      "memberof": "module:List~Inner",
+      "scope": "static",
+      "defaultvalue": "Panel.Container"
+    },
+    {
+      "description": "设置列表条目的属性",
+      "name": "itemGetProps",
+      "longname": "module:List~Inner.itemGetProps",
+      "kind": "function",
+      "memberof": "module:List~Inner",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "表格组件的条目，表格行组件,条目由多个部分组成",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent",
+        "Panel.module:Container~Item"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "List.Item",
+          "value": "List.Item"
+        }
+      ],
+      "access": "private",
+      "name": "List.Item",
+      "longname": "module:List~Item",
+      "scope": "inner",
+      "memberof": "module:List",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "是否是第一个条目",
+      "kind": "attribute",
+      "name": "first",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.first",
+      "defaultvalue": ""
+    },
+    {
+      "description": "是否是最后一个条目",
+      "kind": "attribute",
+      "name": "last",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.last",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 List",
+      "kind": "attribute",
+      "name": "separatorInset",
+      "scope": "static",
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.separatorInset",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的媒体部分",
+      "kind": "attribute",
+      "name": "media",
+      "scope": "static",
+      "type": {
+        "names": [
+          "element",
+          "cmponent"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.media",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的媒体部分的属性",
+      "kind": "attribute",
+      "name": "mediaProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.mediaProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的主体部分",
+      "kind": "attribute",
+      "name": "main",
+      "scope": "static",
+      "type": {
+        "names": [
+          "element",
+          "cmponent"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.main",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的主体部分的属性",
+      "kind": "attribute",
+      "name": "mainProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.mainProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的标题部分",
+      "kind": "attribute",
+      "name": "title",
+      "scope": "static",
+      "type": {
+        "names": [
+          "element",
+          "cmponent"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.title",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的标题部分的属性",
+      "kind": "attribute",
+      "name": "titleProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.titleProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的副标题部分",
+      "kind": "attribute",
+      "name": "subTitle",
+      "scope": "static",
+      "type": {
+        "names": [
+          "element",
+          "cmponent"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.subTitle",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的副标题部分的属性",
+      "kind": "attribute",
+      "name": "subTitleProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.subTitleProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的描述部分",
+      "kind": "attribute",
+      "name": "desc",
+      "scope": "static",
+      "type": {
+        "names": [
+          "element",
+          "cmponent"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.desc",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的描述部分的属性",
+      "kind": "attribute",
+      "name": "descProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.descProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的尾部部分",
+      "kind": "attribute",
+      "name": "desc",
+      "scope": "static",
+      "type": {
+        "names": [
+          "element",
+          "cmponent"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.desc",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的尾部部分的属性",
+      "kind": "attribute",
+      "name": "descProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.descProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置条目的箭头部分",
+      "kind": "attribute",
+      "name": "arrow",
+      "scope": "static",
+      "type": {
+        "names": [
+          "element",
+          "cmponent"
+        ]
+      },
+      "memberof": "module:List~Item",
+      "longname": "module:List~Item.arrow",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置箭头部分是否自动显示，如果设置为真，则在有 onClick 时，自动显示箭头部分",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "autoArrow",
+      "longname": "module:List~Item.autoArrow",
+      "kind": "attribute",
+      "memberof": "module:List~Item",
+      "scope": "static",
+      "defaultvalue": true
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:List~Item.component",
+      "kind": "attribute",
+      "memberof": "module:List~Item",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表格组件的媒体部分组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "List.Item.Media",
+          "value": "List.Item.Media"
+        }
+      ],
+      "access": "private",
+      "name": "List.Item.Media",
+      "longname": "module:List~Media",
+      "scope": "inner",
+      "memberof": "module:List",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:List~Media.component",
+      "kind": "attribute",
+      "memberof": "module:List~Media",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表格组件的主体部分",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "List.Item.Main",
+          "value": "List.Item.Main"
+        }
+      ],
+      "access": "private",
+      "name": "List.Item.Main",
+      "longname": "module:List~Main",
+      "scope": "inner",
+      "memberof": "module:List",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:List~Main.component",
+      "kind": "attribute",
+      "memberof": "module:List~Main",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表格组件的标题部分",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "List.Item.Title",
+          "value": "List.Item.Title"
+        }
+      ],
+      "access": "private",
+      "name": "List.Item.Title",
+      "longname": "module:List~Title",
+      "scope": "inner",
+      "memberof": "module:List",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:List~Title.component",
+      "kind": "attribute",
+      "memberof": "module:List~Title",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表格组件的副标题部分",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "List.Item.SubTitle",
+          "value": "List.Item.SubTitle"
+        }
+      ],
+      "access": "private",
+      "name": "List.Item.SubTitle",
+      "longname": "module:List~SubTitle",
+      "scope": "inner",
+      "memberof": "module:List",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:List~SubTitle.component",
+      "kind": "attribute",
+      "memberof": "module:List~SubTitle",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表格组件的描述部分",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Lis.Itemt.Desc",
+          "value": "Lis.Itemt.Desc"
+        }
+      ],
+      "access": "private",
+      "name": "Lis.Itemt.Desc",
+      "longname": "module:List~Desc",
+      "scope": "inner",
+      "memberof": "module:List",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:List~Desc.component",
+      "kind": "attribute",
+      "memberof": "module:List~Desc",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表格组件的行尾部分",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Lis.Item.After",
+          "value": "Lis.Item.After"
+        }
+      ],
+      "access": "private",
+      "name": "Lis.Item.After",
+      "longname": "module:List~After",
+      "scope": "inner",
+      "memberof": "module:List",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:List~After.component",
+      "kind": "attribute",
+      "memberof": "module:List~After",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "表格组件的指示箭头部分",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Lis.Itemt.Arrow",
+          "value": "Lis.Itemt.Arrow"
+        }
+      ],
+      "access": "private",
+      "name": "Lis.Itemt.Arrow",
+      "longname": "module:List~Arrow",
+      "scope": "inner",
+      "memberof": "module:List",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "箭头的图标",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "icon",
+      "longname": "module:List~Arrow.icon",
+      "kind": "attribute",
+      "memberof": "module:List~Arrow",
+      "scope": "static",
+      "defaultvalue": "right"
+    },
+    {
+      "description": "箭头的默认图标",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "iconDefault",
+      "longname": "module:List~Arrow.iconDefault",
+      "kind": "attribute",
+      "memberof": "module:List~Arrow",
+      "scope": "static",
+      "defaultvalue": ">"
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:List~Arrow.component",
+      "kind": "attribute",
+      "memberof": "module:List~Arrow",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "kind": "module",
+      "name": "Loader",
+      "longname": "module:Loader",
+      "defaultvalue": ""
+    },
+    {
+      "description": "进度显示组件",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Loader",
+      "longname": "module:Loader.Loader",
+      "memberof": "module:Loader",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "显示的样式，默认支持 line 和 circle，可以通过给 Loader.xxx 赋值，增加新的样式",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "type",
+      "longname": "module:Loader.Loader.type",
+      "kind": "attribute",
+      "memberof": "module:Loader.Loader",
+      "scope": "static",
+      "defaultvalue": "circle"
+    },
+    {
+      "description": "作为进度条时，进度改变时的渐变动画时间",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "timeoutTransition",
+      "longname": "module:Loader.Loader.timeoutTransition",
+      "kind": "attribute",
+      "memberof": "module:Loader.Loader",
+      "scope": "static",
+      "defaultvalue": "250ms"
+    },
+    {
+      "description": "作为加载中等待动画时，帧动画时间",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "timeoutAnimation",
+      "longname": "module:Loader.Loader.timeoutAnimation",
+      "kind": "attribute",
+      "memberof": "module:Loader.Loader",
+      "scope": "static",
+      "defaultvalue": "2s"
+    },
+    {
+      "description": "设置为进度条或者是加载中等待动画",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "isProgress",
+      "longname": "module:Loader.Loader.isProgress",
+      "kind": "attribute",
+      "memberof": "module:Loader.Loader",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "作为进度条时，进度的百分比， 0-100",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "name": "progress",
+      "longname": "module:Loader.Loader.progress",
+      "kind": "attribute",
+      "memberof": "module:Loader.Loader",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置主颜色，一般不用设置，可以设置主题色",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "color",
+      "longname": "module:Loader.Loader.color",
+      "kind": "attribute",
+      "memberof": "module:Loader.Loader",
+      "scope": "static",
+      "defaultvalue": "currentColor"
+    },
+    {
+      "description": "设置辅助色，进度条的反色颜色，取值为 css 颜色",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "colorReverse",
+      "longname": "module:Loader.Loader.colorReverse",
+      "kind": "attribute",
+      "memberof": "module:Loader.Loader",
+      "scope": "static",
+      "defaultvalue": "lightgray"
+    },
+    {
+      "description": "进度显示组件的线性样式",
+      "kind": "component",
+      "id": null,
+      "access": "private",
+      "augments": [
+        "BaseComponent",
+        "module:Loader.Loader"
+      ],
+      "name": "line",
+      "longname": "module:Loader.Loader.line",
+      "memberof": "module:Loader.Loader",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "进度显示组件的圆环样式",
+      "kind": "component",
+      "id": null,
+      "access": "private",
+      "augments": [
+        "BaseComponent",
+        "module:Loader.Loader"
+      ],
+      "name": "circle",
+      "longname": "module:Loader.Loader.circle",
+      "memberof": "module:Loader.Loader",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "标题栏组件",
+      "kind": "module",
+      "name": "NavBar",
+      "longname": "module:NavBar",
+      "defaultvalue": ""
+    },
+    {
+      "description": "标题栏组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "exportdefault": true,
+      "scope": "static",
+      "name": "NavBar",
+      "longname": "module:NavBar.NavBar",
+      "memberof": "module:NavBar",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置标题栏顶部覆盖状态栏的高度，当值为 true 时，取 20 作为默认值",
+      "kind": "attribute",
+      "name": "statusbarOverlay",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean",
+          "number"
+        ]
+      },
+      "memberof": "module:NavBar.NavBar",
+      "longname": "module:NavBar.NavBar.statusbarOverlay",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置隐藏组件",
+      "kind": "attribute",
+      "name": "hidden",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:NavBar.NavBar",
+      "longname": "module:NavBar.NavBar.hidden",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置映射组件",
+      "name": "component",
+      "longname": "module:NavBar.NavBar.component",
+      "kind": "attribute",
+      "memberof": "module:NavBar.NavBar",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "设置映射组件的映射组件，",
+      "name": "componentPanel",
+      "longname": "module:NavBar.NavBar.componentPanel",
+      "kind": "attribute",
+      "memberof": "module:NavBar.NavBar",
+      "scope": "static",
+      "defaultvalue": "nav"
+    },
+    {
+      "description": "标题栏组件的标题子组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "NavBar.Title",
+          "value": "NavBar.Title"
+        }
+      ],
+      "name": "NavBar.Title",
+      "longname": "module:NavBar~Title",
+      "scope": "inner",
+      "memberof": "module:NavBar",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置标题组件铺满小组件之外空间，或者按需设置宽度并居中",
+      "kind": "attribute",
+      "name": "isFullOrCenter",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:NavBar~Title",
+      "longname": "module:NavBar~Title.isFullOrCenter",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置映射组件",
+      "name": "component",
+      "longname": "module:NavBar~Title.component",
+      "kind": "attribute",
+      "memberof": "module:NavBar~Title",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "标题栏组件的上的小组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "NavBar.Item",
+          "value": "NavBar.Item"
+        }
+      ],
+      "name": "NavBar.Item",
+      "longname": "module:NavBar~Item",
+      "scope": "inner",
+      "memberof": "module:NavBar",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置映射组件",
+      "name": "component",
+      "longname": "module:NavBar~Item.component",
+      "kind": "attribute",
+      "memberof": "module:NavBar~Item",
+      "scope": "static",
+      "defaultvalue": "Panel.Icon"
+    },
+    {
+      "kind": "module",
+      "name": "AspectRatio",
+      "memberof": "Panel",
+      "longname": "Panel.module:AspectRatio",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "扩展小面板组件，提供了可以设置纵横比的能力",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.AspectRatio",
+          "value": "Panel.AspectRatio"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Panel.AspectRatio",
+      "longname": "Panel.module:AspectRatio~AspectRatio",
+      "scope": "inner",
+      "memberof": "Panel.module:AspectRatio",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置纵横比",
+      "kind": "attribute",
+      "name": "ratio",
+      "scope": "static",
+      "type": {
+        "names": [
+          "number",
+          "string"
+        ]
+      },
+      "memberof": "Panel.module:AspectRatio~AspectRatio",
+      "longname": "Panel.module:AspectRatio~AspectRatio.ratio",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置组件实际显示内容的内部组件的属性",
+      "kind": "attribute",
+      "name": "innerProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "Panel.module:AspectRatio~AspectRatio",
+      "longname": "Panel.module:AspectRatio~AspectRatio.innerProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "Panel.module:AspectRatio~AspectRatio.component",
+      "kind": "attribute",
+      "memberof": "Panel.module:AspectRatio~AspectRatio",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "纵横比组件的内部内容组件，是实际显示内容的组件",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.AspectRatio.Inner",
+          "value": "Panel.AspectRatio.Inner"
+        }
+      ],
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Panel.AspectRatio.Inner",
+      "longname": "Panel.module:AspectRatio~Inner",
+      "scope": "inner",
+      "memberof": "Panel.module:AspectRatio",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "Panel.module:AspectRatio~Inner.component",
+      "kind": "attribute",
+      "memberof": "Panel.module:AspectRatio~Inner",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "扩展 Panel 组件，将组件挂载到 Panel 组件上",
+      "kind": "module",
+      "name": "Container",
+      "memberof": "Panel",
+      "longname": "Panel.module:Container",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "classdesc": "扩展小面板组件，提供了容器的能力，可管理子组件,\n\n容器内的子组件会被容器进行属性设置，如果希望特殊子组件不接受容器组件设置，子组件需要包含 noItem 属性",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.Container",
+          "value": "Panel.Container"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Panel.Container",
+      "longname": "Panel.module:Container~Container",
+      "scope": "inner",
+      "memberof": "Panel.module:Container",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置子组件的排列类型，包括：\n\n- single： 仅 selected 属性为真的子组件显示\n- justify： 平分组件\n- primary: 仅 subTypePrimary 属性的子组件扩展，其他组件保持不延展不压缩\n- flex: 普通 flex 布局",
+      "kind": "attribute",
+      "name": "type",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "Panel.module:Container~Container",
+      "longname": "Panel.module:Container~Container.type",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置组件的 flex direction 属性，参见 rich.css",
+      "kind": "attribute",
+      "name": "direction",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "Panel.module:Container~Container",
+      "longname": "Panel.module:Container~Container.direction",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置组件的 flex justify 属性，参见 rich.css",
+      "kind": "attribute",
+      "name": "justify",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "Panel.module:Container~Container",
+      "longname": "Panel.module:Container~Container.justify",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置组件的 flex align 属性，参见 rich.css",
+      "kind": "attribute",
+      "name": "align",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "Panel.module:Container~Container",
+      "longname": "Panel.module:Container~Container.align",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置组件的 flex wrap 属性，参见 rich.css",
+      "kind": "attribute",
+      "name": "wrap",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "Panel.module:Container~Container",
+      "longname": "Panel.module:Container~Container.wrap",
+      "defaultvalue": ""
+    },
+    {
+      "description": "统一设置子组件的属性",
+      "kind": "attribute",
+      "name": "itemProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "Panel.module:Container~Container",
+      "longname": "Panel.module:Container~Container.itemProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "获取子组件样式类的回调函数",
+      "kind": "typedef",
+      "name": "ItemGetClassNameCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "子组件的索引",
+          "name": "index"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "子组件数量",
+          "name": "size"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "容器组件的属性",
+          "name": "containerProps"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "子组件的属性",
+          "name": "componentProps"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "将增加的子组件属性",
+          "name": "itemProps"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "string",
+              "object",
+              "array"
+            ]
+          },
+          "description": "样式字符串，样式对象或者样式类数组，具体参见 rich.css classes 函数"
+        }
+      ],
+      "longname": "Panel.module:Container~ItemGetClassNameCallback",
+      "scope": "inner",
+      "memberof": "Panel.module:Container",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置获取子组件的样式类的回到函数",
+      "kind": "attribute",
+      "name": "itemGetClassName",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Container~ItemGetClassNameCallback"
+        ]
+      },
+      "memberof": "Panel.module:Container~Container",
+      "longname": "Panel.module:Container~Container.itemGetClassName",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置默认的获取子组件的样式类的回到函数",
+      "kind": "member",
+      "name": "itemGetClassName",
+      "type": {
+        "names": [
+          "Panel.module:Container~ItemGetClassNameCallback"
+        ]
+      },
+      "memberof": "Panel.module:Container~Container",
+      "longname": "Panel.module:Container~Container.itemGetClassName",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "获取子组件样式对象的回调函数",
+      "kind": "typedef",
+      "name": "ItemGetStyleCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "子组件的索引",
+          "name": "index"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "子组件数量",
+          "name": "size"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "容器组件的属性",
+          "name": "containerProps"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "子组件的属性",
+          "name": "componentProps"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "将增加的子组件属性",
+          "name": "itemProps"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "样式表对象"
+        }
+      ],
+      "longname": "Panel.module:Container~ItemGetStyleCallback",
+      "scope": "inner",
+      "memberof": "Panel.module:Container",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置子组件的样式对象的回调函数",
+      "kind": "attribute",
+      "name": "itemGetStyle",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Container~ItemGetStyleCallback"
+        ]
+      },
+      "memberof": "Panel.module:Container~Container",
+      "longname": "Panel.module:Container~Container.itemGetStyle",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置默认的子组件的样式对象的回调函数",
+      "kind": "member",
+      "name": "itemGetStyle",
+      "type": {
+        "names": [
+          "Panel.module:Container~ItemGetStyleCallback"
+        ]
+      },
+      "memberof": "Panel.module:Container~Container",
+      "longname": "Panel.module:Container~Container.itemGetStyle",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "获取子组件属性的回调函数",
+      "kind": "typedef",
+      "name": "ItemGetPropsCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "子组件的索引",
+          "name": "index"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "子组件数量",
+          "name": "size"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "容器组件的属性",
+          "name": "containerProps"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "子组件的属性",
+          "name": "componentProps"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "将增加的子组件属性",
+          "name": "itemProps"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "属性对象"
+        }
+      ],
+      "longname": "Panel.module:Container~ItemGetPropsCallback",
+      "scope": "inner",
+      "memberof": "Panel.module:Container",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置获取子组件的属性的回调函数",
+      "kind": "attribute",
+      "name": "itemGetProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Container~ItemGetPropsCallback"
+        ]
+      },
+      "memberof": "Panel.module:Container~Container",
+      "longname": "Panel.module:Container~Container.itemGetProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置默认的获取子组件的属性的回调函数",
+      "kind": "member",
+      "name": "itemGetProps",
+      "type": {
+        "names": [
+          "Panel.module:Container~ItemGetPropsCallback"
+        ]
+      },
+      "scope": "static",
+      "memberof": "Panel.module:Container~Container",
+      "longname": "Panel.module:Container~Container.itemGetProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置映射组件",
+      "name": "component",
+      "longname": "Panel.module:Container~Container.component",
+      "kind": "attribute",
+      "memberof": "Panel.module:Container~Container",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "带容器能力的小面板组件的子组件",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.Container.Item",
+          "value": "Panel.Container.Item"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Panel.Container.Item",
+      "longname": "Panel.module:Container~Item",
+      "scope": "inner",
+      "memberof": "Panel.module:Container",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 Container",
+      "kind": "attribute",
+      "name": "type",
+      "scope": "static",
+      "memberof": "Panel.module:Container~Item",
+      "longname": "Panel.module:Container~Item.type",
+      "defaultvalue": ""
+    },
+    {
+      "description": "组件在容器中的索引",
+      "kind": "attribute",
+      "name": "index",
+      "scope": "static",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "memberof": "Panel.module:Container~Item",
+      "longname": "Panel.module:Container~Item.index",
+      "defaultvalue": ""
+    },
+    {
+      "description": "容器中子组件的数量",
+      "kind": "attribute",
+      "name": "size",
+      "scope": "static",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "memberof": "Panel.module:Container~Item",
+      "longname": "Panel.module:Container~Item.size",
+      "defaultvalue": ""
+    },
+    {
+      "description": "容器组件的属性",
+      "kind": "attribute",
+      "name": "containerProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "Panel.module:Container~Item",
+      "longname": "Panel.module:Container~Item.containerProps",
+      "defaultvalue": ""
+    },
+    {
+      "kind": "module",
+      "name": "Icon",
+      "memberof": "Panel",
+      "longname": "Panel.module:Icon",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "图标小面板组件，扩展小面板组件，提供图标组件与面板内容混排的能力",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.Icon",
+          "value": "Panel.Icon"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Panel.Icon",
+      "longname": "Panel.module:Icon~PanelIcon",
+      "scope": "inner",
+      "memberof": "Panel.module:Icon",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置图标相对于内容的位置，包括 left，right，top，bottom 4 个位置",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "position",
+      "longname": "Panel.module:Icon~PanelIcon.position",
+      "kind": "attribute",
+      "memberof": "Panel.module:Icon~PanelIcon",
+      "scope": "static",
+      "defaultvalue": "left"
+    },
+    {
+      "description": "参见 Panel",
+      "kind": "attribute",
+      "name": "selected",
+      "scope": "static",
+      "memberof": "Panel.module:Icon~PanelIcon",
+      "longname": "Panel.module:Icon~PanelIcon.selected",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 Icon 的 name 属性",
+      "kind": "attribute",
+      "name": "icon",
+      "scope": "static",
+      "memberof": "Panel.module:Icon~PanelIcon",
+      "longname": "Panel.module:Icon~PanelIcon.icon",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 Icon",
+      "kind": "attribute",
+      "name": "src",
+      "scope": "static",
+      "memberof": "Panel.module:Icon~PanelIcon",
+      "longname": "Panel.module:Icon~PanelIcon.src",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 Icon",
+      "kind": "attribute",
+      "name": "char",
+      "scope": "static",
+      "memberof": "Panel.module:Icon~PanelIcon",
+      "longname": "Panel.module:Icon~PanelIcon.char",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 Icon",
+      "kind": "attribute",
+      "name": "shape",
+      "scope": "static",
+      "memberof": "Panel.module:Icon~PanelIcon",
+      "longname": "Panel.module:Icon~PanelIcon.shape",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置 icon，src，char 或 shape 在选中时的对应属性，不设置则选中不选中没有区别",
+      "kind": "attribute",
+      "name": "selectedIcon",
+      "scope": "static",
+      "type": {
+        "names": [
+          "*"
+        ]
+      },
+      "memberof": "Panel.module:Icon~PanelIcon",
+      "longname": "Panel.module:Icon~PanelIcon.selectedIcon",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置图标子组件的属性",
+      "kind": "attribute",
+      "name": "iconProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "Panel.module:Icon~PanelIcon",
+      "longname": "Panel.module:Icon~PanelIcon.iconProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置内容子组件的属性",
+      "kind": "attribute",
+      "name": "contentProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "Panel.module:Icon~PanelIcon",
+      "longname": "Panel.module:Icon~PanelIcon.contentProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "Panel.module:Icon~PanelIcon.component",
+      "kind": "attribute",
+      "memberof": "Panel.module:Icon~PanelIcon",
+      "scope": "static",
+      "defaultvalue": "Panel.Container"
+    },
+    {
+      "description": "图标小面板组件的内部图标组件",
+      "kind": "component",
+      "id": null,
+      "name": "Panel.Icon.Icon",
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.Icon.Icon",
+          "value": "Panel.Icon.Icon"
+        }
+      ],
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "see": [
+        "module:Icon.Icon"
+      ],
+      "memberof": "Panel.module:Icon",
+      "longname": "Panel.module:Icon~Icon",
+      "scope": "inner",
+      "defaultvalue": ""
+    },
+    {
+      "description": "图标小面板组件的内部内容组件",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.Icon.Content",
+          "value": "Panel.Icon.Content"
+        }
+      ],
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Panel.Icon.Content",
+      "longname": "Panel.module:Icon~Content",
+      "scope": "inner",
+      "memberof": "Panel.module:Icon",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 Panel.Icon",
+      "kind": "attribute",
+      "name": "position",
+      "scope": "static",
+      "memberof": "Panel.module:Icon~Content",
+      "longname": "Panel.module:Icon~Content.position",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "Panel.module:Icon~Content.component",
+      "kind": "attribute",
+      "memberof": "Panel.module:Icon~Content",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "kind": "module",
+      "name": "Loader",
+      "memberof": "Panel",
+      "longname": "Panel.module:Loader",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "加载动画小面板组件，扩展小面板组件，提供加载动画组件与面板内容混排的能力",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.Loader",
+          "value": "Panel.Loader"
+        }
+      ],
+      "augments": [
+        "BaseComponent",
+        "Panel.module:Container~Container"
+      ],
+      "name": "Panel.Loader",
+      "longname": "Panel.module:Loader~Loader",
+      "scope": "inner",
+      "memberof": "Panel.module:Loader",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置加载动画相对于内容的位置，包括 left，right，top，bottom 4 个位置",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "position",
+      "longname": "Panel.module:Loader~Loader.position",
+      "kind": "attribute",
+      "memberof": "Panel.module:Loader~Loader",
+      "scope": "static",
+      "defaultvalue": "left"
+    },
+    {
+      "description": "参见 Loader 组件的 isProgress 属性",
+      "kind": "attribute",
+      "name": "isProgress",
+      "scope": "static",
+      "memberof": "Panel.module:Loader~Loader",
+      "longname": "Panel.module:Loader~Loader.isProgress",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 Loader 组件的 progress 属性",
+      "kind": "attribute",
+      "name": "progress",
+      "scope": "static",
+      "memberof": "Panel.module:Loader~Loader",
+      "longname": "Panel.module:Loader~Loader.progress",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置加载动画子组件的属性",
+      "kind": "attribute",
+      "name": "loaderProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "Panel.module:Loader~Loader",
+      "longname": "Panel.module:Loader~Loader.loaderProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置内容子组件的属性",
+      "kind": "attribute",
+      "name": "contentProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "Panel.module:Loader~Loader",
+      "longname": "Panel.module:Loader~Loader.contentProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "Panel.module:Icon~PanelIcon.component",
+      "kind": "attribute",
+      "memberof": "Panel.module:Icon~PanelIcon",
+      "scope": "static",
+      "defaultvalue": "Panel.Container"
+    },
+    {
+      "description": "加载动画小面板组件的内部加载动画组件",
+      "kind": "component",
+      "id": null,
+      "name": "Panel.Loader.Loader",
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.Loader.Loader",
+          "value": "Panel.Loader.Loader"
+        }
+      ],
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "see": [
+        "module:Loader.Loader"
+      ],
+      "memberof": "Panel.module:Loader",
+      "longname": "Panel.module:Loader~Icon",
+      "scope": "inner",
+      "defaultvalue": ""
+    },
+    {
+      "description": "加载动画小面板组件的内部内容组件",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.Loader.Content",
+          "value": "Panel.Loader.Content"
+        }
+      ],
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Panel.Loader.Content",
+      "longname": "Panel.module:Loader~Content",
+      "scope": "inner",
+      "memberof": "Panel.module:Loader",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 Panel.Loader",
+      "kind": "attribute",
+      "name": "position",
+      "scope": "static",
+      "memberof": "Panel.module:Loader~Content",
+      "longname": "Panel.module:Loader~Content.position",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "Panel.module:Loader~Content.component",
+      "kind": "attribute",
+      "memberof": "Panel.module:Loader~Content",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "kind": "module",
+      "name": "Panel",
+      "longname": "module:Panel",
+      "defaultvalue": ""
+    },
+    {
+      "description": "小面板组件，基本的布局单位，其他组件一般使用该组件做基本组件",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Panel",
+      "longname": "module:Panel.Panel",
+      "memberof": "module:Panel",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置为主模式，将开启 flex extend 样式和滚动样式",
+      "kind": "attribute",
+      "name": "main",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Panel.Panel",
+      "longname": "module:Panel.Panel.main",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设为为 inline 模式，将开启 display inline 样式",
+      "kind": "attribute",
+      "name": "inline",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Panel.Panel",
+      "longname": "module:Panel.Panel.inline",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置为选中状态，",
+      "kind": "attribute",
+      "name": "selected",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Panel.Panel",
+      "longname": "module:Panel.Panel.selected",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置为响应点击状态",
+      "kind": "attribute",
+      "name": "status",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Panel.Panel",
+      "longname": "module:Panel.Panel.status",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置为有背景状态",
+      "kind": "attribute",
+      "name": "hasBg",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Panel.Panel",
+      "longname": "module:Panel.Panel.hasBg",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置为有响应选中状态",
+      "kind": "attribute",
+      "name": "hasSelection",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Panel.Panel",
+      "longname": "module:Panel.Panel.hasSelection",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置文本主题，在有背景的面板上时",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "textThemeOnBg",
+      "longname": "module:Panel.Panel.textThemeOnBg",
+      "kind": "attribute",
+      "memberof": "module:Panel.Panel",
+      "scope": "static",
+      "defaultvalue": "white"
+    },
+    {
+      "description": "设置背景主题，在镂空样式时",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "bgThemeOnHollow",
+      "longname": "module:Panel.Panel.bgThemeOnHollow",
+      "kind": "attribute",
+      "memberof": "module:Panel.Panel",
+      "scope": "static",
+      "defaultvalue": "white"
+    },
+    {
+      "description": "设置文本主题，在有背景和在选择状态下",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "textThemeOnBgSelected",
+      "longname": "module:Panel.Panel.textThemeOnBgSelected",
+      "kind": "attribute",
+      "memberof": "module:Panel.Panel",
+      "scope": "static",
+      "defaultvalue": "white"
+    },
+    {
+      "description": "设置文本主题，在有背景和在未选择状态下",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "textThemeOnBgUnselected",
+      "longname": "module:Panel.Panel.textThemeOnBgUnselected",
+      "kind": "attribute",
+      "memberof": "module:Panel.Panel",
+      "scope": "static",
+      "defaultvalue": "disable"
+    },
+    {
+      "description": "设置文本主题，在无背景和在未选择状态下",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "name": "textThemeUnselected",
+      "longname": "module:Panel.Panel.textThemeUnselected",
+      "kind": "attribute",
+      "memberof": "module:Panel.Panel",
+      "scope": "static",
+      "defaultvalue": "disable"
+    },
+    {
+      "description": "设置样式主题，根据 richcss color 的设置",
+      "kind": "attribute",
+      "name": "b-theme",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Panel.Panel",
+      "longname": "module:Panel.Panel.b-theme",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置样式风格，包括 plain，solid，hollow，underline",
+      "kind": "attribute",
+      "name": "b-style",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Panel.Panel",
+      "longname": "module:Panel.Panel.b-style",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置样式尺寸，设置文本的字体大小，根据 richcss textSize 的配置",
+      "kind": "attribute",
+      "name": "b-size",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Panel.Panel",
+      "longname": "module:Panel.Panel.b-size",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置映射组件",
+      "name": "component",
+      "longname": "module:Panel.Panel.component",
+      "kind": "attribute",
+      "memberof": "module:Panel.Panel",
+      "scope": "static",
+      "defaultvalue": "div"
+    },
+    {
+      "kind": "module",
+      "name": "Popover",
+      "longname": "module:Popover",
+      "defaultvalue": ""
+    },
+    {
+      "description": "弹出内容与目标组件的位置计算回调函数",
+      "kind": "typedef",
+      "name": "calcPositionCallBack",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:utils/dom~ElementOffset"
+            ]
+          },
+          "description": "目标组件的坐标与尺寸",
+          "name": "offsetTarget"
+        },
+        {
+          "type": {
+            "names": [
+              "module:utils/dom~ElementOffset"
+            ]
+          },
+          "description": "弹出内容的坐标与尺寸",
+          "name": "offsetOverlay"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "弹出内容的位置，包括：left，right，top，bottom",
+          "name": "placement"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "弹出内容的主轴布局方式，full：填满 center：居中 equal：与目标组件相同 auto：默认",
+          "name": "main"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "弹出内容的侧轴布局方式，参见主轴",
+          "name": "cross"
+        }
+      ],
+      "longname": "module:Popover~calcPositionCallBack",
+      "scope": "inner",
+      "memberof": "module:Popover",
+      "defaultvalue": ""
+    },
+    {
+      "classdesc": "可弹出内容组件，可设置弹出内容相对于当前组件的位置",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Popover",
+      "longname": "module:Popover.Popover",
+      "memberof": "module:Popover",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "显示弹出内容",
+      "name": "show",
+      "longname": "module:Popover.Popover#show",
+      "kind": "function",
+      "memberof": "module:Popover.Popover",
+      "scope": "instance",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "关闭弹出内容",
+      "name": "hide",
+      "longname": "module:Popover.Popover#hide",
+      "kind": "function",
+      "memberof": "module:Popover.Popover",
+      "scope": "instance",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置是否创建时为弹出状态",
+      "kind": "attribute",
+      "name": "defaultIsShow",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Popover.Popover",
+      "longname": "module:Popover.Popover.defaultIsShow",
+      "defaultvalue": ""
+    },
+    {
+      "description": "弹出内容触发方式，包括，click：点击时弹出 hover：鼠标移过时弹出",
+      "kind": "attribute",
+      "name": "trigger",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "defaultvalue": "非触摸屏时：click，触摸屏时：hover",
+      "memberof": "module:Popover.Popover",
+      "longname": "module:Popover.Popover.trigger"
+    },
+    {
+      "description": "弹出的内容",
+      "kind": "attribute",
+      "name": "overlay",
+      "scope": "static",
+      "type": {
+        "names": [
+          "element",
+          "component"
+        ]
+      },
+      "memberof": "module:Popover.Popover",
+      "longname": "module:Popover.Popover.overlay",
+      "defaultvalue": ""
+    },
+    {
+      "description": "弹出内容的属性",
+      "kind": "attribute",
+      "name": "overlayProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:Popover.Popover",
+      "longname": "module:Popover.Popover.overlayProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "弹出内容是否有蒙层，如果设置为真，则使用默认蒙层主题的蒙层",
+      "kind": "attribute",
+      "name": "mask",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean",
+          "string"
+        ]
+      },
+      "memberof": "module:Popover.Popover",
+      "longname": "module:Popover.Popover.mask",
+      "defaultvalue": ""
+    },
+    {
+      "description": "蒙层的属性",
+      "kind": "attribute",
+      "name": "maskProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:Popover.Popover",
+      "longname": "module:Popover.Popover.maskProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "弹出内容与组件的相对位置计算函数",
+      "kind": "attribute",
+      "name": "calcPosition",
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:Popover~calcPositionCallBack"
+        ]
+      },
+      "memberof": "module:Popover.Popover",
+      "longname": "module:Popover.Popover.calcPosition",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置弹出内容与目标组件的相对位置与布局，格式为 placement-main-cross，参见 calcPositionCallBack",
+      "kind": "attribute",
+      "name": "placement",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Popover.Popover",
+      "longname": "module:Popover.Popover.placement",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置弹出内容的容器",
+      "kind": "attribute",
+      "name": "container",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Popover.Popover",
+      "longname": "module:Popover.Popover.container",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Popover.Popover.component",
+      "kind": "attribute",
+      "memberof": "module:Popover.Popover",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "弹出层位置计算函数",
+      "name": "calcPosition",
+      "longname": "module:Popover.Popover.calcPosition",
+      "kind": "function",
+      "memberof": "module:Popover.Popover",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "classdesc": "弹出层组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Popover.Overlay",
+          "value": "Popover.Overlay"
+        }
+      ],
+      "access": "private",
+      "name": "Popover.Overlay",
+      "longname": "module:Popover~Overlay",
+      "scope": "inner",
+      "memberof": "module:Popover",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 calcPositionCallBack",
+      "kind": "attribute",
+      "name": "calcPosition",
+      "scope": "static",
+      "memberof": "module:Popover~Overlay",
+      "longname": "module:Popover~Overlay.calcPosition",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 calcPositionCallBack",
+      "kind": "attribute",
+      "name": "offsetTarget",
+      "scope": "static",
+      "memberof": "module:Popover~Overlay",
+      "longname": "module:Popover~Overlay.offsetTarget",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 calcPositionCallBack",
+      "kind": "attribute",
+      "name": "offsetOverlay",
+      "scope": "static",
+      "memberof": "module:Popover~Overlay",
+      "longname": "module:Popover~Overlay.offsetOverlay",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 calcPositionCallBack",
+      "kind": "attribute",
+      "name": "placement",
+      "scope": "static",
+      "memberof": "module:Popover~Overlay",
+      "longname": "module:Popover~Overlay.placement",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Popover~Overlay.component",
+      "kind": "attribute",
+      "memberof": "module:Popover~Overlay",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "kind": "module",
+      "name": "ScrollSpy",
+      "longname": "module:ScrollSpy",
+      "defaultvalue": ""
+    },
+    {
+      "classdesc": "滚动监控组件",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "name": "ScrollSpy",
+      "longname": "module:ScrollSpy.ScrollSpy",
+      "memberof": "module:ScrollSpy",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "TODO",
+      "type": {
+        "names": [
+          "boolean",
+          "string"
+        ]
+      },
+      "name": "target",
+      "longname": "module:ScrollSpy.ScrollSpy.target",
+      "kind": "attribute",
+      "memberof": "module:ScrollSpy.ScrollSpy",
+      "scope": "static",
+      "defaultvalue": true
+    },
+    {
+      "description": "TODO",
+      "kind": "attribute",
+      "name": "container",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:ScrollSpy.ScrollSpy",
+      "longname": "module:ScrollSpy.ScrollSpy.container",
+      "defaultvalue": ""
+    },
+    {
+      "description": "监听横向滚动条，默认监听纵向滚动条",
+      "kind": "attribute",
+      "name": "horizontal",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:ScrollSpy.ScrollSpy",
+      "longname": "module:ScrollSpy.ScrollSpy.horizontal",
+      "defaultvalue": ""
+    },
+    {
+      "description": "相对位置\n\n- above_inside：\n- below_inside：\n- inside：\n- above：\n- below：",
+      "kind": "typedef",
+      "name": "RelativeType",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "longname": "module:ScrollSpy~RelativeType",
+      "scope": "inner",
+      "memberof": "module:ScrollSpy",
+      "defaultvalue": ""
+    },
+    {
+      "description": "相对位置改变回调函数",
+      "kind": "typedef",
+      "name": "onRelativeChangeCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "module:ScrollSpy~RelativeType"
+            ]
+          },
+          "description": "相对位置",
+          "name": "relative"
+        },
+        {
+          "type": {
+            "names": [
+              "module:ScrollSpy~RelativeType"
+            ]
+          },
+          "description": "改变前的相对位置",
+          "name": "preRelative"
+        },
+        {
+          "type": {
+            "names": [
+              "event"
+            ]
+          },
+          "description": "引起改变的滚动事件",
+          "name": "event"
+        },
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "滚动对象的 dom 元素",
+          "name": "container"
+        }
+      ],
+      "longname": "module:ScrollSpy~onRelativeChangeCallback",
+      "scope": "inner",
+      "memberof": "module:ScrollSpy",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置滚动位置改变时引起，监控组件与滚动组件相对位置改变的事件的回调函数",
+      "kind": "attribute",
+      "name": "onRelativeChange",
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:ScrollSpy~onRelativeChangeCallback"
+        ]
+      },
+      "memberof": "module:ScrollSpy.ScrollSpy",
+      "longname": "module:ScrollSpy.ScrollSpy.onRelativeChange",
+      "defaultvalue": ""
+    },
+    {
+      "description": "滚动位置改变回调函数",
+      "kind": "typedef",
+      "name": "onPosChangeCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "event"
+            ]
+          },
+          "description": "引起改变的滚动事件",
+          "name": "event"
+        },
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "滚动对象的 dom 元素",
+          "name": "container"
+        }
+      ],
+      "longname": "module:ScrollSpy~onPosChangeCallback",
+      "scope": "inner",
+      "memberof": "module:ScrollSpy",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置滚动位置改变时触发事件的回调函数",
+      "kind": "attribute",
+      "name": "onPosChange",
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:ScrollSpy~onPosChangeCallback"
+        ]
+      },
+      "memberof": "module:ScrollSpy.ScrollSpy",
+      "longname": "module:ScrollSpy.ScrollSpy.onPosChange",
+      "defaultvalue": ""
+    },
+    {
+      "kind": "module",
+      "name": "Space",
+      "longname": "module:Space",
+      "defaultvalue": ""
+    },
+    {
+      "description": "留白组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Space",
+      "longname": "module:Space.Space",
+      "memberof": "module:Space",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "留白的数量，横向时为字符的数量，纵向时为行的数量",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "name": "count",
+      "longname": "module:Space.Space.count",
+      "kind": "attribute",
+      "memberof": "module:Space.Space",
+      "scope": "static",
+      "defaultvalue": 1
+    },
+    {
+      "description": "设置为堆叠模式，即纵向留白",
+      "kind": "attribute",
+      "name": "stacked",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Space.Space",
+      "longname": "module:Space.Space.stacked",
+      "defaultvalue": ""
+    },
+    {
+      "kind": "module",
+      "name": "TabBar",
+      "longname": "module:TabBar",
+      "defaultvalue": ""
+    },
+    {
+      "description": "标签页导航条组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent",
+        "Panel.module:Container~PanelContainer"
+      ],
+      "exportdefault": true,
+      "scope": "static",
+      "name": "TabBar",
+      "longname": "module:TabBar.TabBar",
+      "memberof": "module:TabBar",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "标签页导航条组件的项目子组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "TabBar.Item",
+          "value": "TabBar.Item"
+        }
+      ],
+      "name": "TabBar.Item",
+      "longname": "module:TabBar~Item",
+      "scope": "inner",
+      "memberof": "module:TabBar",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置映射组件",
+      "name": "component",
+      "longname": "module:TabBar~Item.component",
+      "kind": "attribute",
+      "memberof": "module:TabBar~Item",
+      "scope": "static",
+      "defaultvalue": "Panel.Icon"
+    },
+    {
+      "kind": "module",
+      "name": "Tabs",
+      "longname": "module:Tabs",
+      "defaultvalue": ""
+    },
+    {
+      "classdesc": "标签页组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "exportdefault": true,
+      "scope": "static",
+      "name": "Tabs",
+      "longname": "module:Tabs.Tabs",
+      "memberof": "module:Tabs",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "kind": "typedef",
+      "name": "TabsActionCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "标签的索引",
+          "name": "i"
+        },
+        {
+          "type": {
+            "names": [
+              "*"
+            ]
+          },
+          "description": "标签的事件名称",
+          "name": "event"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "标签的属性",
+          "name": "props"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "返回为真，将阻止导航条组件的点击事件"
+        }
+      ],
+      "longname": "module:Tabs~TabsActionCallback",
+      "scope": "inner",
+      "memberof": "module:Tabs",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置标签页页面切换的动作回调函数",
+      "kind": "attribute",
+      "name": "onAction",
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:Tabs~TabsActionCallback"
+        ]
+      },
+      "memberof": "module:Tabs.Tabs",
+      "longname": "module:Tabs.Tabs.onAction",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置标签页当前选中索引",
+      "kind": "attribute",
+      "name": "selected",
+      "scope": "static",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "memberof": "module:Tabs.Tabs",
+      "longname": "module:Tabs.Tabs.selected",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置标签页默认的选中索引",
+      "kind": "attribute",
+      "name": "defaultSelected",
+      "scope": "static",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "memberof": "module:Tabs.Tabs",
+      "longname": "module:Tabs.Tabs.defaultSelected",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置标签页的标签导航组件的属性",
+      "kind": "attribute",
+      "name": "navProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:Tabs.Tabs",
+      "longname": "module:Tabs.Tabs.navProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置标签页的标签内容容器组件的属性",
+      "kind": "attribute",
+      "name": "containerProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:Tabs.Tabs",
+      "longname": "module:Tabs.Tabs.containerProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置映射组件",
+      "name": "component",
+      "longname": "module:Tabs.Tabs.component",
+      "kind": "attribute",
+      "memberof": "module:Tabs.Tabs",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "标签页的导航条组件，标签页组件内部使用，不直接使用，可替换或者定制",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent",
+        "Panel.module:Container~PanelContainer"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Tabs.Nav",
+          "value": "Tabs.Nav"
+        }
+      ],
+      "access": "private",
+      "name": "Tabs.Nav",
+      "longname": "module:Tabs~Nav",
+      "scope": "inner",
+      "memberof": "module:Tabs",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置标签页页面切换的动作回调函数",
+      "kind": "attribute",
+      "name": "onAction",
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:Tabs~TabsActionCallback"
+        ]
+      },
+      "memberof": "module:Tabs~Nav",
+      "longname": "module:Tabs~Nav.onAction",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置标签页当前选中索引",
+      "kind": "attribute",
+      "name": "selected",
+      "scope": "static",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "memberof": "module:Tabs~Nav",
+      "longname": "module:Tabs~Nav.selected",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置映射组件",
+      "name": "component",
+      "longname": "module:Tabs~Nav.component",
+      "kind": "attribute",
+      "memberof": "module:Tabs~Nav",
+      "scope": "static",
+      "defaultvalue": "Button.Group"
+    },
+    {
+      "description": "标签页容器组件，标签页组件内部使用，不直接使用，可替换或者定制",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent",
+        "Panel.module:Container~PanelContainer"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Tabs.Container",
+          "value": "Tabs.Container"
+        }
+      ],
+      "access": "private",
+      "name": "Tabs.Container",
+      "longname": "module:Tabs~Container",
+      "scope": "inner",
+      "memberof": "module:Tabs",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "组件的排列类型",
+      "name": "type",
+      "longname": "module:Tabs~Container.type",
+      "kind": "attribute",
+      "memberof": "module:Tabs~Container",
+      "scope": "static",
+      "defaultvalue": "single"
+    },
+    {
+      "description": "设置标签页页面切换的动作回调函数",
+      "kind": "attribute",
+      "name": "onAction",
+      "scope": "static",
+      "type": {
+        "names": [
+          "module:Tabs~TabsActionCallback"
+        ]
+      },
+      "memberof": "module:Tabs~Container",
+      "longname": "module:Tabs~Container.onAction",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置标签页当前选中索引",
+      "kind": "attribute",
+      "name": "selected",
+      "scope": "static",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "memberof": "module:Tabs~Container",
+      "longname": "module:Tabs~Container.selected",
+      "defaultvalue": ""
+    },
+    {
+      "description": "标签页容器组件的子组件，标签页组件内部使用，不直接使用，可替换或者定制",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent",
+        "Panel.module:Container~PanelContainerItem"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Tabs.Item",
+          "value": "Tabs.Item"
+        }
+      ],
+      "name": "Tabs.Item",
+      "longname": "module:Tabs~Item",
+      "scope": "inner",
+      "memberof": "module:Tabs",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置标签页的标签的唯一的事件编码",
+      "kind": "attribute",
+      "name": "event",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "module:Tabs~Item",
+      "longname": "module:Tabs~Item.event",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置显示在标签页的导航组件的对应的标签中的内容",
+      "kind": "attribute",
+      "name": "title",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string",
+          "component",
+          "element"
+        ]
+      },
+      "memberof": "module:Tabs~Item",
+      "longname": "module:Tabs~Item.title",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置显示在标签页的容器组件的对应的标签的内容",
+      "kind": "attribute",
+      "name": "children",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string",
+          "component",
+          "element"
+        ]
+      },
+      "memberof": "module:Tabs~Item",
+      "longname": "module:Tabs~Item.children",
+      "defaultvalue": ""
+    },
+    {
+      "kind": "module",
+      "name": "View",
+      "longname": "module:View",
+      "defaultvalue": ""
+    },
+    {
+      "description": "页面根组件，非强制使用作为根组件",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "View",
+      "longname": "module:View.View",
+      "memberof": "module:View",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置为横屏模式",
+      "kind": "attribute",
+      "name": "landscape",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:View.View",
+      "longname": "module:View.View.landscape",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置页面的容器，横屏时以容器为参照横屏旋转",
+      "type": {
+        "names": [
+          "element"
+        ]
+      },
+      "name": "container",
+      "longname": "module:View.View.container",
+      "kind": "attribute",
+      "memberof": "module:View.View",
+      "scope": "static",
+      "defaultvalue": "document.body"
+    },
+    {
+      "description": "设置映射组件",
+      "name": "component",
+      "longname": "module:View.View.component",
+      "kind": "attribute",
+      "memberof": "module:View.View",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "description": "提供了蒙层组件和蒙层插件",
+      "kind": "module",
+      "name": "mask",
+      "longname": "module:mask",
+      "defaultvalue": ""
+    },
+    {
+      "description": "蒙层组件",
+      "kind": "component",
+      "id": null,
+      "augments": [
+        "BaseComponent"
+      ],
+      "export": true,
+      "scope": "static",
+      "name": "Mask",
+      "longname": "module:mask.Mask",
+      "memberof": "module:mask",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "设置 蒙层中间的 loader 组件的参数",
+      "kind": "attribute",
+      "name": "loaderProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "module:mask.Mask",
+      "longname": "module:mask.Mask.loaderProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置 Backdrop 的 mask 属性",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "mask",
+      "longname": "module:mask.Mask.mask",
+      "kind": "attribute",
+      "memberof": "module:mask.Mask",
+      "scope": "static",
+      "defaultvalue": true
+    },
+    {
+      "description": "渲染为该组件",
+      "type": {
+        "names": [
+          "component",
+          "element"
+        ]
+      },
+      "name": "component",
+      "longname": "module:mask.Mask.component",
+      "kind": "attribute",
+      "memberof": "module:mask.Mask",
+      "scope": "static",
+      "defaultvalue": "Backdrop"
+    },
+    {
+      "description": "提供了对蒙层的显示和控制的能力，同时修改了 app.render.mask 的默认行为",
+      "id": "mask",
+      "kind": "plugin",
+      "scope": "static",
+      "defaultvalue": "",
+      "exportdefault": true,
+      "name": "mask",
+      "longname": "module:mask.mask",
+      "memberof": "module:mask",
+      "params": []
+    },
+    {
+      "description": "挂载在 App 实例上的蒙层操作对象",
+      "memberof": "module:mask.mask",
+      "name": "app.mask",
+      "longname": "module:mask.mask.app.mask",
+      "kind": "member",
+      "scope": "static",
+      "defaultvalue": "{}"
+    },
+    {
+      "description": "显示蒙层",
+      "memberof": "module:mask.mask",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "nullable": true,
+          "description": "参数",
+          "name": "options"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "弹出层 id"
+        }
+      ],
+      "name": "app.mask.show",
+      "longname": "module:mask.mask.app.mask.show",
+      "kind": "function",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "关闭蒙层",
+      "memberof": "module:mask.mask",
+      "name": "app.mask.close",
+      "longname": "module:mask.mask.app.mask.close",
+      "kind": "function",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "dom 操作工具集",
+      "kind": "module",
+      "name": "utils/dom",
+      "longname": "module:utils/dom",
+      "defaultvalue": ""
+    },
+    {
+      "description": "是否支持 touch",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "domIsTouch",
+      "longname": "module:utils/dom.domIsTouch",
+      "kind": "constant",
+      "memberof": "module:utils/dom",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "是否支持鼠标",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "name": "domIsMouse",
+      "longname": "module:utils/dom.domIsMouse",
+      "kind": "constant",
+      "memberof": "module:utils/dom",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "返回组件对应的元素",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "element",
+              "component"
+            ]
+          },
+          "description": "组件",
+          "name": "node"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "对应的元素"
+        }
+      ],
+      "name": "domFindNode",
+      "longname": "module:utils/dom.domFindNode",
+      "kind": "function",
+      "memberof": "module:utils/dom",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "查找组件或元素的 container，查找模式：\n\n1. 如果父元素为 body 则返回 body\n1. 如果父元素是 page 则返回页面元素\n1. 返回具有参数 container 指定的，具有 data-container 响应名称属性的元素",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "element",
+              "component"
+            ]
+          },
+          "description": "组件或元素",
+          "name": "node"
+        },
+        {
+          "type": {
+            "names": [
+              "true",
+              "string"
+            ]
+          },
+          "description": "查找模式",
+          "name": "container"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "所在的 container"
+        }
+      ],
+      "name": "domFindContainer",
+      "longname": "module:utils/dom.domFindContainer",
+      "kind": "function",
+      "memberof": "module:utils/dom",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "查找组件或者元素的可滚动父元素",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "element",
+              "component"
+            ]
+          },
+          "description": "组件或元素",
+          "name": "node"
+        },
+        {
+          "type": {
+            "names": [
+              "element",
+              "component"
+            ]
+          },
+          "description": "如果为真，直接作为结果返回",
+          "name": "container"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "是否是横向滚动",
+          "name": "horizontal"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "滚动父元素"
+        }
+      ],
+      "name": "domFindScrollContainer",
+      "longname": "module:utils/dom.domFindScrollContainer",
+      "kind": "function",
+      "memberof": "module:utils/dom",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "将组建以 portal 方式，render 到制定元素",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "component"
+            ]
+          },
+          "description": "将 render 的组件",
+          "name": "component"
+        },
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "render 到的元素",
+          "name": "container"
+        }
+      ],
+      "name": "domCreatePortal",
+      "longname": "module:utils/dom.domCreatePortal",
+      "kind": "function",
+      "memberof": "module:utils/dom",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "kind": "typedef",
+      "name": "ElementOffset",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "坐标 x",
+          "name": "x"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "坐标 y",
+          "name": "y"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "宽度",
+          "name": "width"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "高度",
+          "name": "height"
+        }
+      ],
+      "longname": "module:utils/dom~ElementOffset",
+      "scope": "inner",
+      "memberof": "module:utils/dom",
+      "defaultvalue": ""
+    },
+    {
+      "description": "返回组件或者元素的坐标和尺寸",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "component",
+              "element"
+            ]
+          },
+          "description": "目标元素或组件",
+          "name": "node"
+        },
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "相对于该元素的相对坐标，为空时是相对于浏览器的绝对坐标",
+          "name": "container"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "module:utils/dom~ElementOffset"
+            ]
+          },
+          "description": "- x,y 坐标，width,height 尺寸"
+        }
+      ],
+      "name": "domOffset",
+      "longname": "module:utils/dom.domOffset",
+      "kind": "function",
+      "memberof": "module:utils/dom",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "将函数串联起来，返回一个函数，调用时将串行调用所包含的全部函数",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "variable": true,
+          "name": "全部函数"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "串联后的函数"
+        }
+      ],
+      "name": "chainedFuncs",
+      "longname": "module:utils/dom.chainedFuncs",
+      "kind": "function",
+      "memberof": "module:utils/dom",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "description": "虚拟组件基类，不可被直接使用，为组件提供通用的属性\n默认属性",
+      "kind": "component",
+      "id": null,
+      "scope": "global",
+      "name": "BaseComponent",
+      "longname": "BaseComponent",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置样式类\n\n- 当属性值为 true 时，将当前属性名，去掉 bc- 前缀，追加到组件的样式类属性中\n- 当属性值为数字或字符串时，将去掉 bc- 前缀的属性名和属性值用 - 连接后，追加到组件的样式类属性中\n- 当属性值不为真时，没有任何作用",
+      "kind": "attribute",
+      "name": "bc-xxx",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean",
+          "string",
+          "number"
+        ]
+      },
+      "examples": [
+        "```jsx\n<Panel bc-text-size=\"lg\" bc-text-weight-={true} className=\"text-color-primary\" /> // className: 'text-color-primary text-size-lg text-weight-'\n```"
+      ],
+      "memberof": "BaseComponent",
+      "longname": "BaseComponent.bc-xxx",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置组件的样式对象，将属性名去掉 bs- 前缀，和属性值，追加到组件的样式对象中",
+      "kind": "attribute",
+      "name": "bs-xxx",
+      "scope": "static",
+      "type": {
+        "names": [
+          "number",
+          "string"
+        ]
+      },
+      "examples": [
+        "```jsx\n<Panel bs-width=\"50%\" style={{height: '50%'}} /> // style: { widht: 50%, height: 50% }\n```"
+      ],
+      "memberof": "BaseComponent",
+      "longname": "BaseComponent.bs-xxx",
+      "defaultvalue": ""
+    },
+    {
+      "description": "执行样式函数，并将结果设置到组件的样式对象。将属性名去掉 bs- 前缀作为函数名称，从样式函数集合中获取函数，将属性值(为数组时，作为展开参数)作为参数，执行并将结果追加到组件的样式对象中",
+      "kind": "attribute",
+      "name": "bf-xxx",
+      "scope": "static",
+      "type": {
+        "names": [
+          "number",
+          "string",
+          "array"
+        ]
+      },
+      "examples": [
+        "```jsx\nimport { backgroundImage } from '@bnorth/rich.css/lib/styles/background';\nimport { addFunctions } from '@bnorth/components/lib/utils/props';\naddFunctions({ backgroundImage });\n\nexport default props=>{\n  return <Panel bf-background={'bg.jpg'} /> // style: {backgroundImage: url(bg.jpg)}\n}\n```"
+      ],
+      "memberof": "BaseComponent",
+      "longname": "BaseComponent.bf-xxx",
+      "defaultvalue": ""
+    },
+    {
+      "description": "其他 react 标准属性，比如：\n\n- className：样式类 \n- style：样式对象，注意 react 使用样式对象，而不是样式字符串\n- children：子元素\n- onXXX：事件\n- xxx：其他 react 属性和 dom 属性",
+      "kind": "attribute",
+      "name": "xxx",
+      "scope": "static",
+      "memberof": "BaseComponent",
+      "longname": "BaseComponent.xxx",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置映射组件\n\nbnorth 组件，一般情况下都只是设置组件的样式和属性，或者设置默认的映射组件，而功能是由映射组件去完成。可以通过修改该属性，修改默认的映射组件。\n比如 Button 组件的默认映射组件为 button，可以修改为 a 元素",
+      "kind": "attribute",
+      "name": "component",
+      "scope": "static",
+      "type": {
+        "names": [
+          "element",
+          "component"
+        ]
+      },
+      "memberof": "BaseComponent",
+      "longname": "BaseComponent.component",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置映射组件的映射组件，\n当映射组件设置的映射组件为 bnorth 组件，而不是元素时，还可以通过该属性，设置映射组件的映射组件，方便二次包装组件",
+      "kind": "attribute",
+      "name": "componentPanel",
+      "scope": "static",
+      "type": {
+        "names": [
+          "element",
+          "component"
+        ]
+      },
+      "memberof": "BaseComponent",
+      "longname": "BaseComponent.componentPanel",
+      "defaultvalue": ""
+    },
+    {
+      "description": "其他映射组件可以设置的属性",
+      "kind": "attribute",
+      "name": "xxx",
+      "scope": "static",
+      "memberof": "BaseComponent",
+      "longname": "BaseComponent.xxx",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置组件通用的默认属性，当设置为回调函数时，参数是组件当前属性，返回值是属性，可覆盖当前属性",
+      "kind": "member",
+      "name": "props",
+      "type": {
+        "names": [
+          "function",
+          "object"
+        ]
+      },
+      "scope": "static",
+      "memberof": "BaseComponent",
+      "longname": "BaseComponent.props",
+      "defaultvalue": ""
+    },
+    {
+      "kind": "module",
+      "name": "utils/props",
+      "longname": "module:utils/props",
+      "defaultvalue": ""
+    },
+    {
+      "description": "为样式函数集合增加样式函数",
+      "params": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "函数集合的名称和函数的键值对",
+          "name": "args"
+        }
+      ],
+      "returns": [
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "函数集合"
+        }
+      ],
+      "name": "addFunctions",
+      "longname": "module:utils/props.addFunctions",
+      "kind": "function",
+      "memberof": "module:utils/props",
+      "scope": "static",
+      "defaultvalue": ""
+    }
+  ]
+}

@@ -51,13 +51,9 @@ var BackTop =
 function (_React$Component) {
   (0, _inherits2.default)(BackTop, _React$Component);
 
-  function BackTop(props) {
-    var _this;
-
+  function BackTop() {
     (0, _classCallCheck2.default)(this, BackTop);
-    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(BackTop).call(this, props));
-    _this.state = {};
-    return _this;
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(BackTop).apply(this, arguments));
   }
 
   (0, _createClass2.default)(BackTop, [{
@@ -68,7 +64,7 @@ function (_React$Component) {
   }, {
     key: "isShow",
     value: function isShow() {
-      return this.state.isShow;
+      return this.state && this.state.isShow;
     }
   }, {
     key: "toggle",
@@ -78,14 +74,14 @@ function (_React$Component) {
   }, {
     key: "show",
     value: function show() {
-      !this.state.isShow && this.setState({
+      !this.isShow() && this.setState({
         isShow: true
       });
     }
   }, {
     key: "hide",
     value: function hide() {
-      this.state.isShow && this.setState({
+      this.isShow() && this.setState({
         isShow: false
       });
     }
@@ -94,40 +90,39 @@ function (_React$Component) {
     value: function _handlePosChange(event, el) {
       this.container = el;
       var _this$props = this.props,
-          _this$props$trigger = _this$props.trigger,
-          trigger = _this$props$trigger === void 0 ? BackTop._trigger : _this$props$trigger,
-          offset = _this$props.offset;
-      trigger(offset, this.container) ? this.show() : this.hide();
+          _this$props$calc = _this$props.calc,
+          calc = _this$props$calc === void 0 ? BackTop.calc : _this$props$calc,
+          param = _this$props.param;
+      calc(param, this.container) ? this.show() : this.hide();
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this = this;
 
       var _parseProps = (0, _props.default)(this.props, BackTop.props),
           onClick = _parseProps.onClick,
-          trigger = _parseProps.trigger,
-          offset = _parseProps.offset,
-          _parseProps$scrollSpy = _parseProps.scrollSpyProps,
-          scrollSpyProps = _parseProps$scrollSpy === void 0 ? {} : _parseProps$scrollSpy,
-          _parseProps$contentPr = _parseProps.contentProps,
-          contentProps = _parseProps$contentPr === void 0 ? {} : _parseProps$contentPr,
-          _parseProps$component = _parseProps.component,
-          Component = _parseProps$component === void 0 ? _Fab.default : _parseProps$component,
-          _parseProps$content = _parseProps.content,
-          Content = _parseProps$content === void 0 ? _Panel.default.Icon : _parseProps$content,
+          calc = _parseProps.calc,
+          param = _parseProps.param,
+          Content = _parseProps.content,
+          contentIcon = _parseProps.contentIcon,
+          contentIconDefault = _parseProps.contentIconDefault,
+          contentProps = _parseProps.contentProps,
+          scrollSpyProps = _parseProps.scrollSpyProps,
+          Component = _parseProps.component,
           children = _parseProps.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["onClick", "trigger", "offset", "scrollSpyProps", "contentProps", "component", "content", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["onClick", "calc", "param", "content", "contentIcon", "contentIconDefault", "contentProps", "scrollSpyProps", "component", "children"]);
 
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_ScrollSpy.default, (0, _extends2.default)({
         onPosChange: this._handlePosChange.bind(this)
-      }, scrollSpyProps)), this.state.isShow ? _react.default.createElement(Component, (0, _extends2.default)({
+      }, scrollSpyProps)), this.isShow() ? _react.default.createElement(Component, (0, _extends2.default)({
+        container: undefined,
         onClick: (0, _dom.chainedFuncs)(function () {
-          return _this2.scrollToTop();
+          return _this.scrollToTop();
         }, onClick)
       }, props), _react.default.createElement(Content, (0, _extends2.default)({
-        name: "backTop",
-        defaultName: "^"
+        icon: contentIcon,
+        iconDefault: contentIconDefault
       }, contentProps), children)) : null);
     }
   }]);
@@ -135,13 +130,21 @@ function (_React$Component) {
 }(_react.default.Component);
 
 exports.default = BackTop;
+BackTop.defaultProps = {}; //calc param;
 
-BackTop._trigger = function (value, container) {
-  if (!value) {
+BackTop.defaultProps.param = "100%";
+BackTop.defaultProps.contentIcon = "backTop";
+BackTop.defaultProps.contentIconDefault = "^"; //      scrollSpyProps={}, contentProps={},
+
+BackTop.defaultProps.component = _Fab.default;
+BackTop.defaultProps.content = _Panel.default.Icon;
+
+BackTop.calc = function (param, container) {
+  if (!param) {
     return container.scrollTop >= (container ? (0, _dom.domOffset)(container).height : 0);
-  } else if (!isNaN(value)) {
-    return container.scrollTop >= value;
-  } else if (typeof value === 'string' && value.test(/\d*%/)) {
-    return container.scrollTop >= (container ? (0, _dom.domOffset)(container).height * Number(value.slice(0, -1)) / 100 : 0);
+  } else if (!isNaN(param)) {
+    return container.scrollTop >= param;
+  } else if (typeof param === 'string' && /\d*%/.test(param)) {
+    return container.scrollTop >= (container ? (0, _dom.domOffset)(container).height * Number(param.slice(0, -1)) / 100 : 0);
   }
 };

@@ -47,6 +47,7 @@ var _PanelIcon = function PanelIcon(aprops) {
       position = _parseProps.position,
       selected = _parseProps.selected,
       icon = _parseProps.icon,
+      iconDefault = _parseProps.iconDefault,
       src = _parseProps.src,
       char = _parseProps.char,
       shape = _parseProps.shape,
@@ -55,7 +56,7 @@ var _PanelIcon = function PanelIcon(aprops) {
       contentProps = _parseProps.contentProps,
       Component = _parseProps.component,
       children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["position", "selected", "icon", "src", "char", "shape", "selectedIcon", "iconProps", "contentProps", "component", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps, ["position", "selected", "icon", "iconDefault", "src", "char", "shape", "selectedIcon", "iconProps", "contentProps", "component", "children"]);
 
   return _react.default.createElement(Component, (0, _extends2.default)({
     type: "flex",
@@ -65,6 +66,7 @@ var _PanelIcon = function PanelIcon(aprops) {
     selected: selected
   }, props), position ? _react.default.createElement(_Icon.default, (0, _extends2.default)({
     name: icon && (selected && selectedIcon ? selectedIcon : icon),
+    nameDefault: iconDefault && (selected && selectedIcon ? selectedIcon : iconDefault),
     src: src && (selected && selectedIcon ? selectedIcon : src),
     char: char && (selected && selectedIcon ? selectedIcon : char),
     shape: shape && (selected && selectedIcon ? selectedIcon : shape)

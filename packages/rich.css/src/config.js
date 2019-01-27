@@ -348,6 +348,7 @@ let genConfig = {
     'relative': true,
     'absolute': true,
     'fixed': true,
+    'sticky': true,
   },
 
   // size

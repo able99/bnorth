@@ -10,43 +10,39 @@ import Fab from './Fab';
 
 
 /**
- * 列表返回顶部的小组件
+ * 返回顶部的小组件
  * @component 
  * @exportdefault
  * @augments BaseComponent
  * @augments module:Fab.Fab
  */
 export default class BackTop extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   scrollToTop() { this.container&&this.container.scrollTop&&(this.container.scrollTop=0) }
-  isShow() { return this.state.isShow; }
+  isShow() { return this.state&&this.state.isShow; }
   toggle() { this.isShow()?this.hide():this.show(); }
-  show() { !this.state.isShow&&this.setState({isShow: true}) }
-  hide() { this.state.isShow&&this.setState({isShow: false}) }
+  show() { !this.isShow()&&this.setState({isShow: true}) }
+  hide() { this.isShow()&&this.setState({isShow: false}) }
 
   _handlePosChange(event, el) {
     this.container = el;
-    let { trigger=BackTop._trigger ,offset } = this.props;
-    trigger(offset, this.container)?this.show():this.hide();
+    let { calc=BackTop.calc , param } = this.props;
+    calc(param, this.container)?this.show():this.hide();
   }
 
   render() {
     let {
-      onClick, trigger, offset,
-      scrollSpyProps={}, contentProps={},
-      component:Component=Fab, content:Content=Panel.Icon, children, ...props
+      onClick, calc, param, 
+      content:Content, contentIcon, contentIconDefault,  contentProps,
+      scrollSpyProps,
+      component:Component, children, ...props
     } = parseProps(this.props, BackTop.props);
 
     return (
       <React.Fragment>
         <ScrollSpy onPosChange={this._handlePosChange.bind(this)} {...scrollSpyProps} />
-        {this.state.isShow?(
-          <Component onClick={chainedFuncs(()=>this.scrollToTop(), onClick)} {...props} >
-            <Content name="backTop" defaultName="^" {...contentProps}>{children}</Content>
+        {this.isShow()?(
+          <Component container={undefined} onClick={chainedFuncs(()=>this.scrollToTop(), onClick)} {...props} >
+            <Content icon={contentIcon} iconDefault={contentIconDefault} {...contentProps}>{children}</Content>
           </Component>
         ):null}
       </React.Fragment>
@@ -54,12 +50,46 @@ export default class BackTop extends React.Component {
   }
 }
 
-BackTop._trigger = function(value, container) {
-  if(!value){
-    return container.scrollTop>=(container?domOffset(container).height:0);
-  }else if(!isNaN(value)){
-    return container.scrollTop>=(value);
-  }else if(typeof(value)==='string'&&value.test(/\d*%/)){
-    return container.scrollTop>=(container?domOffset(container).height*Number(value.slice(0,-1))/100:0);
+BackTop.defaultProps = {};
+/**
+ * 设置图标子组件的属性
+ * @attribute module:BackTop.calc
+ * @type {function}
+ * @default module:BackTop.calc
+ */
+/**
+ * @type {number|string}
+ */
+BackTop.defaultProps.param="100%";
+BackTop.defaultProps.content=Panel.Icon;
+BackTop.defaultProps.contentIcon="backTop";
+BackTop.defaultProps.contentIconDefault="^";
+/**
+ * 设置图标子组件的属性
+ * @attribute module:BackTop.contentProps
+ * @type {function}
+ * @default module:BackTop.calc
+ */
+/**
+ * 设置图标子组件的属性
+ * @attribute module:BackTop.scrollSpyProps
+ * @type {function}
+ * @default module:BackTop.calc
+ */
+/**
+ * 参见 BaseComponent
+ */
+BackTop.defaultProps.component=Fab;
+
+
+/**
+ * 默认的计算是否出现回到顶部按钮的函数
+ * @member
+ */
+BackTop.calc = function(param, container) {
+  if(!isNaN(param)){
+    return container.scrollTop>=(param);
+  }else if(typeof(param)==='string'&&/\d*%/.test(param)){
+    return container.scrollTop>=(container?domOffset(container).height*Number(param.slice(0,-1))/100:0);
   }
 }

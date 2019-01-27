@@ -25,7 +25,7 @@ const positionToDirection = { left: 'h', right: 'hv', top: 'v', bottom: 'vv' }
 let PanelIcon = aprops=>{
   let {
     position, selected, 
-    icon, src, char, shape, selectedIcon,
+    icon, iconDefault, src, char, shape, selectedIcon,
     iconProps, contentProps, 
     component:Component, children, ...props
   } = parseProps(aprops, PanelIcon.props);
@@ -36,6 +36,7 @@ let PanelIcon = aprops=>{
       {position?(
         <Icon 
           name={icon&&(selected&&selectedIcon?selectedIcon:icon)}
+          nameDefault={iconDefault&&(selected&&selectedIcon?selectedIcon:iconDefault)}
           src={src&&(selected&&selectedIcon?selectedIcon:src)}
           char={char&&(selected&&selectedIcon?selectedIcon:char)}
           shape={shape&&(selected&&selectedIcon?selectedIcon:shape)}

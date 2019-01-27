@@ -98,7 +98,8 @@ class ScrollSpy extends React.Component {
   }
 
   render() {
-    return this.props.children||<span style={{ fontSize: 0 }} />;
+    let { component:Component, style, ...props} = this.props;
+    return <Component style={{ fontSize: 0, ...style}} {...props} />;
   }
 }
 
@@ -154,6 +155,9 @@ ScrollSpy.defaultProps.target = true;
  * @attribute module:ScrollSpy.ScrollSpy.onPosChange
  * @type {module:ScrollSpy~onPosChangeCallback}
  */
-
+/**
+ * 参见 BaseComponent
+ */
+ScrollSpy.defaultProps.component = 'span';
 
 export default ScrollSpy;

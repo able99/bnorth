@@ -7,6 +7,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -148,11 +154,15 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      return this.props.children || _react.default.createElement("span", {
-        style: {
+      var _this$props3 = this.props,
+          Component = _this$props3.component,
+          style = _this$props3.style,
+          props = (0, _objectWithoutProperties2.default)(_this$props3, ["component", "style"]);
+      return _react.default.createElement(Component, (0, _extends2.default)({
+        style: (0, _objectSpread2.default)({
           fontSize: 0
-        }
-      });
+        }, style)
+      }, props));
     }
   }]);
   return ScrollSpy;
@@ -218,5 +228,10 @@ ScrollSpy.defaultProps.target = true;
  * @type {module:ScrollSpy~onPosChangeCallback}
  */
 
+/**
+ * 参见 BaseComponent
+ */
+
+ScrollSpy.defaultProps.component = 'span';
 var _default = ScrollSpy;
 exports.default = _default;
