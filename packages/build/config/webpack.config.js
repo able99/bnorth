@@ -103,8 +103,9 @@ function getRules() {
 
 function getPlugins() {
   let {
+    filename,
     extractCss,
-    html,
+    htmlTemplateParams={},
     webParams,
     outputPublicPath,
   } = getBnorthConfig();
@@ -139,47 +140,56 @@ function getPlugins() {
 
   // html
   ret.push(new HtmlWebpackPlugin({
-    template: join(existsSync(join(appSrc, 'index.hbs'))?appSrc:__dirname, 'index.hbs'),
     inject: true,
-    outputPublicPath,
     charset: 'utf-8',
+
+    filename,
+    template: join(existsSync(join(appSrc, 'index.hbs'))?appSrc:__dirname, 'index.hbs'),
+    outputPublicPath,
+    
     title: appPackage.displayNameWeb||appPackage.displayName||appPackage.name,
-    icon: appPackage.iconWeb||appPackage.icon,
+    icon: basename(appPackage.iconWeb||appPackage.icon||''),
+
+    env,
+    version: appPackage.version,
+    webParams,
+
     metaNames: {
       'viewport': 'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no',
       'format-detection': 'telephone=no',
       'msapplication-tap-highlight': 'no',
+      ...htmlTemplateParams.metaNamesExt||{},
     },
     metaHttpEquiv: {
       'X-UA-Compatible': 'IE=11',
+      ...htmlTemplateParams.metaHttpEquivExt||{},
     },
-    heads: [],
-    headExts: [],
     jsFiles: [],
     cssFiles: [],
-    env,
-    version: appPackage.version,
-    webParams,
+    heads: [],
+
     rootBefore: [],
-    rootAfter: [],
     rootAttr: {
       'style': 'position: fixed;width: 100%;height: 100%;top:0;right:0;bottom:0;left:0;',
+      ...htmlTemplateParams.rootAttrExt||[],
     },
     rootChildren: [
-      '<div style="margin-top:48px;text-align:center">...</div>'
+      '<div style="margin-top:48px;text-align:center">...</div>',
+      ...htmlTemplateParams.rootChildrenExt||[],
     ],
-    rootChildrenExt: [],
-    ...html,
+    rootAfter: [],
+    
+    ...htmlTemplateParams,
   }));
 
   // pubic
-  existsSync(appPublic) && ret.push(new CopyWebpackPlugin([
-    {
-      from: appPublic,
-      to: './',
-    },
-  ]));
-
+  let copys = [];
+  if(existsSync(appPublic)) copys.push({ from: appPublic, to: './' });
+  if(existsSync(appPackage.iconWeb||appPackage.icon)) copys.push({
+    from: appPackage.iconWeb||appPackage.icon,
+    to: './',
+  });
+  copys.length && ret.push(new CopyWebpackPlugin(copys));
   
   // production
   // -----------------------------

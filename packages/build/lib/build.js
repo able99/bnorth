@@ -14,8 +14,8 @@ const { printError, printStats, buildSizeCalcPrint, buildSizeCalcSaveBefore } = 
 
 
 module.exports = function run(type) {
-  initEnv({env: 'production'});
   const argv = initArgv(type);
+  initEnv({env: argv.debug?'development':'production'});
   const bnorthConfig = initBnorthConfig();
   initBabelOption();
   const webpackConfig = initWebpackConfig();

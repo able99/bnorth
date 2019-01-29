@@ -15,6 +15,8 @@ export default function(app) {
 
   app.plugins.add(require('@bnorth/plugin-storage').default);
   app.plugins.add(require('@bnorth/plugin-browser').default, {autoTitle: true});
+  app.plugins.add(require('@bnorth/plugin-browser/lib/wechat').default, {});
+  app.plugins.add(require('@bnorth/plugin-browser/lib/alipay').default, {});
   // app.plugins.add(require('@bnorth/plugin-user').default);
   
 }
