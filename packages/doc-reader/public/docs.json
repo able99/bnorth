@@ -708,7 +708,7 @@
       "defaultvalue": ""
     },
     {
-      "classdesc": "列表返回顶部的小组件",
+      "classdesc": "返回顶部的小组件",
       "kind": "component",
       "id": null,
       "exportdefault": true,
@@ -719,8 +719,81 @@
       ],
       "name": "module:BackTop",
       "longname": "module:BackTop",
-      "defaultvalue": "",
-      "params": []
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置图标子组件的属性",
+      "kind": "attribute",
+      "name": "calc",
+      "scope": "static",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "defaultvalue": "module:BackTop.calc",
+      "memberof": "module:BackTop",
+      "longname": "module:BackTop.calc"
+    },
+    {
+      "type": {
+        "names": [
+          "number",
+          "string"
+        ]
+      },
+      "name": "param",
+      "longname": "module:BackTop~BackTop.param",
+      "kind": "attribute",
+      "scope": "static",
+      "memberof": "module:BackTop~BackTop",
+      "defaultvalue": "100%"
+    },
+    {
+      "description": "设置图标子组件的属性",
+      "kind": "attribute",
+      "name": "contentProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "defaultvalue": "module:BackTop.calc",
+      "memberof": "module:BackTop",
+      "longname": "module:BackTop.contentProps"
+    },
+    {
+      "description": "设置图标子组件的属性",
+      "kind": "attribute",
+      "name": "scrollSpyProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "defaultvalue": "module:BackTop.calc",
+      "memberof": "module:BackTop",
+      "longname": "module:BackTop.scrollSpyProps"
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:BackTop~BackTop.component",
+      "kind": "attribute",
+      "scope": "static",
+      "memberof": "module:BackTop~BackTop",
+      "defaultvalue": "Fab"
+    },
+    {
+      "description": "默认的计算是否出现回到顶部按钮的函数",
+      "kind": "member",
+      "name": "calc",
+      "longname": "module:BackTop~BackTop.calc",
+      "scope": "static",
+      "memberof": "module:BackTop~BackTop",
+      "defaultvalue": ""
     },
     {
       "kind": "module",
@@ -4130,6 +4203,65 @@
       "defaultvalue": ""
     },
     {
+      "classdesc": "淡入淡出动画组件的内容组件，用来包裹具体淡入淡出内容",
+      "kind": "component",
+      "id": null,
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "AnimationSlider.Inner",
+          "value": "AnimationSlider.Inner"
+        }
+      ],
+      "name": "AnimationSlider.Inner",
+      "longname": "Panel.module:Container~Inner",
+      "scope": "inner",
+      "memberof": "Panel.module:Container",
+      "defaultvalue": "",
+      "params": []
+    },
+    {
+      "description": "参见 AnimationSlider",
+      "kind": "attribute",
+      "name": "countToShow",
+      "scope": "static",
+      "memberof": "module:AnimationSlider~Inner",
+      "longname": "module:AnimationSlider~Inner.countToShow",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationSlider",
+      "kind": "attribute",
+      "name": "index",
+      "scope": "static",
+      "memberof": "module:AnimationSlider~Inner",
+      "longname": "module:AnimationSlider~Inner.index",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 AnimationSlider",
+      "kind": "attribute",
+      "name": "timeout",
+      "scope": "static",
+      "memberof": "module:AnimationSlider~Inner",
+      "longname": "module:AnimationSlider~Inner.timeout",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "Panel.module:Container~Inner.component",
+      "kind": "attribute",
+      "memberof": "Panel.module:Container~Inner",
+      "scope": "static",
+      "defaultvalue": "Panel.Touchable"
+    },
+    {
       "kind": "module",
       "name": "Icon",
       "memberof": "Panel",
@@ -4429,9 +4561,9 @@
     {
       "description": "参见 BaseComponent",
       "name": "component",
-      "longname": "Panel.module:Icon~PanelIcon.component",
+      "longname": "Panel.module:Loader~Loader.component",
       "kind": "attribute",
-      "memberof": "Panel.module:Icon~PanelIcon",
+      "memberof": "Panel.module:Loader~Loader",
       "scope": "static",
       "defaultvalue": "Panel.Container"
     },
@@ -4498,6 +4630,649 @@
       "longname": "Panel.module:Loader~Content.component",
       "kind": "attribute",
       "memberof": "Panel.module:Loader~Content",
+      "scope": "static",
+      "defaultvalue": "Panel"
+    },
+    {
+      "kind": "module",
+      "name": "Touchable",
+      "memberof": "Panel",
+      "longname": "Panel.module:Touchable",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "classdesc": "支持手势的小面板",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.Touchable",
+          "value": "Panel.Touchable"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "see": [
+        "{@link https://hammerjs.github.io/} hammerjs"
+      ],
+      "name": "Panel.Touchable",
+      "longname": "Panel.module:Touchable~Touchable",
+      "scope": "inner",
+      "memberof": "Panel.module:Touchable",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置手势识别器的识别方向，none，left，right，up，down，horizontal，vertical，all",
+      "kind": "attribute",
+      "name": "direction",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.direction",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置手势识别器的参数，比如 touchAction ：设置 touchAction",
+      "kind": "attribute",
+      "name": "options",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.options",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置指定手势识别器的参数，enable 为通用属性，如果想要打开某个识别器，需要设置为 true。\n识别器包括：tap<点>, doubletap<双点击>, press<按住>, 水平方位的pan<平移> 和 swipe<快速滑动>, 以及多触点的 pinch<捏放> 和 rotate<旋转>识别器",
+      "kind": "attribute",
+      "name": "recognizers",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "examples": [
+        "```jsx\n<Panel.Touchable direction=\"horizontal\" recognizers={{'pan':{enable: true}}} onPan={e=>console.log(e.deltaY, e.deltaX)} />\n```"
+      ],
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.recognizers",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置关联触发的识别器",
+      "kind": "attribute",
+      "name": "recognizeWith",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.recognizeWith",
+      "defaultvalue": ""
+    },
+    {
+      "description": "手势事件",
+      "kind": "typedef",
+      "name": "RecognizerEvent",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "properties": [
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "事件名称",
+          "name": "type"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "x 轴移动距离",
+          "name": "deltaX"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "y 轴移动距离",
+          "name": "deltaY"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "事件时间（毫秒）",
+          "name": "deltaTime"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "移动距离",
+          "name": "distance"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "移动角度",
+          "name": "angle"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "x 轴移动速率",
+          "name": "velocityX"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "y 轴移动速率",
+          "name": "velocityY"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "最高速率",
+          "name": "volocity"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "事件方向",
+          "name": "direction"
+        },
+        {
+          "type": {
+            "names": [
+              "string"
+            ]
+          },
+          "description": "偏移方向",
+          "name": "offsetDirection"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "缩放比率",
+          "name": "scale"
+        },
+        {
+          "type": {
+            "names": [
+              "event"
+            ]
+          },
+          "description": "源事件",
+          "name": "srcEvent"
+        },
+        {
+          "type": {
+            "names": [
+              "number"
+            ]
+          },
+          "description": "旋转角度",
+          "name": "rotation"
+        },
+        {
+          "type": {
+            "names": [
+              "object"
+            ]
+          },
+          "description": "多点的中心坐标，或者单点的点击坐标",
+          "name": "center"
+        },
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "事件目标",
+          "name": "target"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "交互为首次交互",
+          "name": "isFirst"
+        },
+        {
+          "type": {
+            "names": [
+              "boolean"
+            ]
+          },
+          "description": "交互为最后一次交互",
+          "name": "isFinal"
+        },
+        {
+          "type": {
+            "names": [
+              "function"
+            ]
+          },
+          "description": "阻止默认事件处理",
+          "name": "preventDefault"
+        }
+      ],
+      "longname": "Panel.module:Touchable~RecognizerEvent",
+      "scope": "inner",
+      "memberof": "Panel.module:Touchable",
+      "defaultvalue": ""
+    },
+    {
+      "description": "手势事件回调函数",
+      "kind": "typedef",
+      "name": "RecognizerCallback",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "params": [
+        {
+          "type": {
+            "names": [
+              "Panel.module:Touchable~RecognizerEvent"
+            ]
+          },
+          "description": "手势事件",
+          "name": "event"
+        },
+        {
+          "type": {
+            "names": [
+              "element"
+            ]
+          },
+          "description": "手势识别的元素",
+          "name": "element"
+        }
+      ],
+      "longname": "Panel.module:Touchable~RecognizerCallback",
+      "scope": "inner",
+      "memberof": "Panel.module:Touchable",
+      "defaultvalue": ""
+    },
+    {
+      "description": "双击事件处理函数，对应手势 doubletap",
+      "kind": "attribute",
+      "name": "onDoubleTap",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onDoubleTap",
+      "defaultvalue": ""
+    },
+    {
+      "description": "平移事件处理函数，对应手势 pan",
+      "kind": "attribute",
+      "name": "onPan",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onPan",
+      "defaultvalue": ""
+    },
+    {
+      "description": "平移事件取消处理函数，对应手势 pancancel",
+      "kind": "attribute",
+      "name": "onPanCancel",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onPanCancel",
+      "defaultvalue": ""
+    },
+    {
+      "description": "平移事件结束处理函数，对应手势 panend",
+      "kind": "attribute",
+      "name": "onPanEnd",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onPanEnd",
+      "defaultvalue": ""
+    },
+    {
+      "description": "捏放事件处理函数，对应手势 pinch",
+      "kind": "attribute",
+      "name": "onPinch",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onPinch",
+      "defaultvalue": ""
+    },
+    {
+      "description": "捏放事件取消处理函数，对应手势 pinchcancel",
+      "kind": "attribute",
+      "name": "onPinchCancel",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onPinchCancel",
+      "defaultvalue": ""
+    },
+    {
+      "description": "捏放事件结束处理函数，对应手势 pinchend",
+      "kind": "attribute",
+      "name": "onPinchEnd",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onPinchEnd",
+      "defaultvalue": ""
+    },
+    {
+      "description": "缩小事件处理函数，对应手势 pinchin",
+      "kind": "attribute",
+      "name": "onPinchIn",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onPinchIn",
+      "defaultvalue": ""
+    },
+    {
+      "description": "放大事件处理函数，对应手势 pinchout",
+      "kind": "attribute",
+      "name": "onPinchOut",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onPinchOut",
+      "defaultvalue": ""
+    },
+    {
+      "description": "捏放事件开始处理函数，对应手势 pinchstart",
+      "kind": "attribute",
+      "name": "onPinchStart",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onPinchStart",
+      "defaultvalue": ""
+    },
+    {
+      "description": "按住事件处理函数，对应手势 press",
+      "kind": "attribute",
+      "name": "onPress",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onPress",
+      "defaultvalue": ""
+    },
+    {
+      "description": "按住并抬起事件处理函数，对应手势 pressup",
+      "kind": "attribute",
+      "name": "onPressUp",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onPressUp",
+      "defaultvalue": ""
+    },
+    {
+      "description": "旋转事件处理函数，对应手势 rotate",
+      "kind": "attribute",
+      "name": "onRotate",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onRotate",
+      "defaultvalue": ""
+    },
+    {
+      "description": "旋转取消事件处理函数，对应手势 rotatecancel",
+      "kind": "attribute",
+      "name": "onRotateCancel",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onRotateCancel",
+      "defaultvalue": ""
+    },
+    {
+      "description": "旋转结束事件处理函数，对应手势 rotateend",
+      "kind": "attribute",
+      "name": "onRotateEnd",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onRotateEnd",
+      "defaultvalue": ""
+    },
+    {
+      "description": "旋转并移动事件处理函数，对应手势 rotatemove",
+      "kind": "attribute",
+      "name": "onRotateMove",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onRotateMove",
+      "defaultvalue": ""
+    },
+    {
+      "description": "旋转开始事件处理函数，对应手势 rotatestart",
+      "kind": "attribute",
+      "name": "onRotateStart",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onRotateStart",
+      "defaultvalue": ""
+    },
+    {
+      "description": "快速滑动事件处理函数，对应手势 swipe",
+      "kind": "attribute",
+      "name": "onSwipe",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onSwipe",
+      "defaultvalue": ""
+    },
+    {
+      "description": "快速右滑事件处理函数，对应手势 swiperight",
+      "kind": "attribute",
+      "name": "onSwipeRight",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onSwipeRight",
+      "defaultvalue": ""
+    },
+    {
+      "description": "快速左滑事件处理函数，对应手势 swipeleft",
+      "kind": "attribute",
+      "name": "onSwipeLeft",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onSwipeLeft",
+      "defaultvalue": ""
+    },
+    {
+      "description": "快速上滑事件处理函数，对应手势 swipeup",
+      "kind": "attribute",
+      "name": "onSwipeUp",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onSwipeUp",
+      "defaultvalue": ""
+    },
+    {
+      "description": "快速下滑事件处理函数，对应手势 swipedown",
+      "kind": "attribute",
+      "name": "onSwipeDown",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onSwipeDown",
+      "defaultvalue": ""
+    },
+    {
+      "description": "点击事件处理函数，对应手势 tap",
+      "kind": "attribute",
+      "name": "onTap",
+      "scope": "static",
+      "type": {
+        "names": [
+          "Panel.module:Touchable~RecognizerCallback"
+        ]
+      },
+      "memberof": "Panel.module:Touchable~Touchable",
+      "longname": "Panel.module:Touchable~Touchable.onTap",
+      "defaultvalue": ""
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "Panel.module:Touchable~Touchable.component",
+      "kind": "attribute",
+      "memberof": "Panel.module:Touchable~Touchable",
       "scope": "static",
       "defaultvalue": "Panel"
     },
@@ -5233,6 +6008,15 @@
       "defaultvalue": ""
     },
     {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:ScrollSpy.ScrollSpy.component",
+      "kind": "attribute",
+      "memberof": "module:ScrollSpy.ScrollSpy",
+      "scope": "static",
+      "defaultvalue": "span"
+    },
+    {
       "kind": "module",
       "name": "Space",
       "longname": "module:Space",
@@ -5578,7 +6362,7 @@
       "kind": "attribute",
       "memberof": "module:Tabs~Container",
       "scope": "static",
-      "defaultvalue": "single"
+      "defaultvalue": "scroll"
     },
     {
       "description": "设置标签页页面切换的动作回调函数",

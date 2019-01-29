@@ -165,17 +165,17 @@ Nav.defaultProps.component = Button.Group;
  */
 let Container = aprops=>{
   let {
-    onAction, type, 
+    onAction, type, selected:index,
     itemProps, itemGetClassName=Container.itemGetClassName, itemGetStyle=Container.itemGetStyle, itemGetProps=Container.itemGetProps,
     component:Component, componentPanel, className, children, ...props
   } = parseProps(aprops, Container.props);
 
-  let classStr = 'flex-sub-flex-extend';
+  let classStr = 'flex-sub-flex-extend height-full';
 
   return (
     <Component 
       component={componentPanel}
-      type={type} containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
+      index={index} type={type} containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
       className={classes(classStr, className)} {...props}>
       {children.map((v,i)=><Item key={v.key||i} {...v.props} />)}
     </Component>
@@ -188,7 +188,7 @@ Container.defaultProps = {};
 /**
  * 组件的排列类型
  */
-Container.defaultProps.type = 'single';
+Container.defaultProps.type = 'scroll';
 /**
  * 设置标签页页面切换的动作回调函数
  * @attribute module:Tabs~Container.onAction

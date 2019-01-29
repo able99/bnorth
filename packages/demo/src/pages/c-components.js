@@ -261,14 +261,17 @@ let Component = aprops=>{
         <Group title="Panel.Container" {...groupProps}>
           <Group.Prop>
             <Prop 
-              title="type" sub="Panel.Container" option={['single', 'justify', 'primary', 'flex']} 
+              title="type" sub="Panel.Container" option={['single', 'justify', 'primary', 'flex', 'scroll']} 
+              state={page.stateComponentProps} stateData={stateComponentProps}/>
+            <Prop 
+              title="index" sub="Panel.Container" option={[0,1,2]} 
               state={page.stateComponentProps} stateData={stateComponentProps}/>
           </Group.Prop>
           <Group.Item title="Panel.Container">
             <Panel.Container {...stateComponentProps['Panel.Container']}>
-              <Panel.Container>1</Panel.Container>
-              <Panel.Container selected subTypePrimary>2</Panel.Container>
-              <Panel.Container>3</Panel.Container>
+              <Panel.Container selected={page.stateComponentProps&&page.stateComponentProps.index===0}>1</Panel.Container>
+              <Panel.Container selected={page.stateComponentProps&&page.stateComponentProps.index===1} subTypePrimary>2</Panel.Container>
+              <Panel.Container selected={page.stateComponentProps&&page.stateComponentProps.index===2}>3</Panel.Container>
             </Panel.Container>
           </Group.Item>
         </Group>
@@ -335,10 +338,10 @@ let Component = aprops=>{
         </Group>
 
         <Group title="Tabs" {...groupProps}>
-          <Tabs {...stateCommonProps}>
-            <Tabs.Item title="title1">tabs1</Tabs.Item>
-            <Tabs.Item title="title2">tabs2</Tabs.Item>
-            <Tabs.Item title="title3">tabs3</Tabs.Item>
+          <Tabs {...stateCommonProps} bs-height={150} containerProps={{itemProps:{className: 'scrollable-y-'}}}>
+            <Tabs.Item title="title1">{Array.from({length:20},(k,i)=>i).map(v=><div>tab1-{v+1}</div>)}</Tabs.Item>
+            <Tabs.Item title="title2">{Array.from({length:20},(k,i)=>i).map(v=><div>tab2-{v+1}</div>)}</Tabs.Item>
+            <Tabs.Item title="title3">{Array.from({length:20},(k,i)=>i).map(v=><div>tab3-{v+1}</div>)}</Tabs.Item>
           </Tabs>
         </Group>
 

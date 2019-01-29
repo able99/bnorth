@@ -18,7 +18,7 @@ let PropSel = aprops=>{
           }}
           checked={(sub?(stateData[sub]&&stateData[sub][title]===v):stateData[title]===v)||false}
           type='radio' key={v} />
-        <span>{v||'none'}</span>
+        <span>{v!==undefined?v:'none'}</span>
       </label>
     ))
   }else if(!option) {

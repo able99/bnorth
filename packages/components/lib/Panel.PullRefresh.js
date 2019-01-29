@@ -87,7 +87,15 @@ function (_React$Component) {
           props = (0, _objectWithoutProperties2.default)(_parseProps, ["isLoading", "onLoad", "triggerOffset", "loaderProps", "titleLoading", "children"]);
 
       return _react.default.createElement(_Panel.default.Touchable, (0, _extends2.default)({
+        recognizers: {
+          pan: {
+            enable: true
+          }
+        },
         direction: "vertical",
+        options: {
+          touchAction: 'pan-y'
+        },
         onPan: this.handleMove.bind(this),
         onPanCancel: function onPanCancel(el, e) {
           return _this2.handleEnd(el, e);

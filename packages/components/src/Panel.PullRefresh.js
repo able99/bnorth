@@ -39,7 +39,7 @@ Panel.PullRefresh = class PullRefresh extends React.Component {
 
     return (
       <Panel.Touchable 
-        direction="vertical" onPan={this.handleMove.bind(this)} onPanCancel={(el,e)=>this.handleEnd(el,e)} onPanEnd={(el,e)=>this.handleEnd(el,e)} 
+        recognizers={{pan: {enable: true}}} direction="vertical" options={{touchAction:'pan-y'}} onPan={this.handleMove.bind(this)} onPanCancel={(el,e)=>this.handleEnd(el,e)} onPanEnd={(el,e)=>this.handleEnd(el,e)} 
         {...props}>
         <PullRefresh._Loader 
           isLoading={isLoading} offset={this.state.offset} triggerOffset={triggerOffset} 

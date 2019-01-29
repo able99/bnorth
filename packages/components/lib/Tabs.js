@@ -247,6 +247,7 @@ var _Container = function Container(aprops) {
   var _parseProps3 = (0, _props2.default)(aprops, _Container.props),
       onAction = _parseProps3.onAction,
       type = _parseProps3.type,
+      index = _parseProps3.selected,
       itemProps = _parseProps3.itemProps,
       _parseProps3$itemGetC = _parseProps3.itemGetClassName,
       itemGetClassName = _parseProps3$itemGetC === void 0 ? _Container.itemGetClassName : _parseProps3$itemGetC,
@@ -258,11 +259,12 @@ var _Container = function Container(aprops) {
       componentPanel = _parseProps3.componentPanel,
       className = _parseProps3.className,
       children = _parseProps3.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["onAction", "type", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "componentPanel", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["onAction", "type", "selected", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "componentPanel", "className", "children"]);
 
-  var classStr = 'flex-sub-flex-extend';
+  var classStr = 'flex-sub-flex-extend height-full';
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
+    index: index,
     type: type,
     containerProps: aprops,
     itemProps: itemProps,
@@ -290,7 +292,7 @@ _Container.defaultProps = {};
  * 组件的排列类型
  */
 
-_Container.defaultProps.type = 'single';
+_Container.defaultProps.type = 'scroll';
 /**
  * 设置标签页页面切换的动作回调函数
  * @attribute module:Tabs~Container.onAction

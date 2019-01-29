@@ -40,7 +40,7 @@ var _Fab = _interopRequireDefault(require("./Fab"));
  */
 
 /**
- * 列表返回顶部的小组件
+ * 返回顶部的小组件
  * @component 
  * @exportdefault
  * @augments BaseComponent
@@ -130,19 +130,48 @@ function (_React$Component) {
 }(_react.default.Component);
 
 exports.default = BackTop;
-BackTop.defaultProps = {}; //calc param;
+BackTop.defaultProps = {};
+/**
+ * 设置图标子组件的属性
+ * @attribute module:BackTop.calc
+ * @type {function}
+ * @default module:BackTop.calc
+ */
+
+/**
+ * @type {number|string}
+ */
 
 BackTop.defaultProps.param = "100%";
+BackTop.defaultProps.content = _Panel.default.Icon;
 BackTop.defaultProps.contentIcon = "backTop";
-BackTop.defaultProps.contentIconDefault = "^"; //      scrollSpyProps={}, contentProps={},
+BackTop.defaultProps.contentIconDefault = "^";
+/**
+ * 设置图标子组件的属性
+ * @attribute module:BackTop.contentProps
+ * @type {function}
+ * @default module:BackTop.calc
+ */
+
+/**
+ * 设置图标子组件的属性
+ * @attribute module:BackTop.scrollSpyProps
+ * @type {function}
+ * @default module:BackTop.calc
+ */
+
+/**
+ * 参见 BaseComponent
+ */
 
 BackTop.defaultProps.component = _Fab.default;
-BackTop.defaultProps.content = _Panel.default.Icon;
+/**
+ * 默认的计算是否出现回到顶部按钮的函数
+ * @member
+ */
 
 BackTop.calc = function (param, container) {
-  if (!param) {
-    return container.scrollTop >= (container ? (0, _dom.domOffset)(container).height : 0);
-  } else if (!isNaN(param)) {
+  if (!isNaN(param)) {
     return container.scrollTop >= param;
   } else if (typeof param === 'string' && /\d*%/.test(param)) {
     return container.scrollTop >= (container ? (0, _dom.domOffset)(container).height * Number(param.slice(0, -1)) / 100 : 0);

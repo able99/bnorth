@@ -4,8 +4,9 @@
  */
 import React, { cloneElement } from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
+import { transiton, transform } from '@bnorth/rich.css/lib/styles/animation'; 
 import parseProps from './utils/props';
-import Panel from './Panel';
+import Panel from './Panel.Touchable';
 
 
 function getSubComponentProps(
@@ -51,6 +52,7 @@ let Container = class extends React.Component {
   render() {
     let {
       type, inline,
+      content, index, countToShow=1, timeout,
       direction, justify, align, wrap,
       containerProps, itemProps, 
       itemGetProps=Container.itemGetProps, itemGetClassName=Container.itemGetClassName, itemGetStyle=Container.itemGetStyle,
@@ -66,12 +68,12 @@ let Container = class extends React.Component {
     children = React.Children.toArray(children).map((v,i,a)=>{
       if(typeof v !== 'object' || v.props.subTypeNotItem) return v;
       containerItemIndex++;
-
       let countProps = getSubComponentProps(
         containerItemIndex, containerItemCount, '', {}, containerProps, v.props, 
         itemProps, itemGetClassName, itemGetStyle, itemGetProps
       );
-
+      if(index===undefined&&countProps.selected) index = containerItemIndex;
+      if(index>=0&&index===containerItemIndex) countProps.selected = true; 
       return <Item key={v.key||containerItemIndex} type={type} index={containerItemIndex} size={containerItemCount} {...countProps}>{v}</Item>;
     })
 
@@ -93,6 +95,8 @@ let Container = class extends React.Component {
       classSet = {
         ['flex-display-'+(inline?'inline':'block')]: true,
       }
+    }else if(type==='scroll') {
+      children = <Inner countToShow={countToShow} index={index} timeout={timeout}>{children}</Inner>
     }
 
     let classSetFlex = {
@@ -238,6 +242,8 @@ let Item = aprops=>{
     classStr = 'flex-sub-flex-extend';
   }else if(type==='primary'){
     classStr = subTypePrimary?'flex-sub-flex-extend':'flex-sub-flex-none';
+  }else if(type==='scroll'){
+    classStr = 'flex-sub-flex-extend height-full';
   }
 
   return cloneElement(children, {className: classes(classStr, className), ...props});
@@ -268,3 +274,56 @@ Item.defaultProps = {}
 
 
 export default Panel;
+
+
+
+
+/**
+ * 淡入淡出动画组件的内容组件，用来包裹具体淡入淡出内容
+ * @component 
+ * @private
+ * @augments BaseComponent
+ * @mount AnimationSlider.Inner
+ */
+let Inner = class extends React.Component {
+  render() {
+    let {
+      countToShow, index, timeout,
+      component:Component, className, style, children, ...props
+    } = parseProps(this.props, Inner.props);
+
+    children = React.Children.toArray(children);
+
+    let classStr = 'flex-display-block flex-align-stretch height-full';
+    let styleSet = {
+      width: `${100/countToShow*children.length}%`,
+      ...transiton(timeout),
+      ...transform('translateX',`${-100/children.length*(index%children.length)}%`),
+      ...style,
+    }
+
+    return <Component 
+            direction="horizontal" recognizers={{'pan':{enable: true}}} 
+            onPan={e=>console.log(e.deltaY, e.deltaX)}
+            
+            className={classes(classStr, className)} style={styleSet} {...props}>{children}</Component>;
+  }
+}
+
+Inner.defaultProps = {};
+/**
+ * 参见 AnimationSlider
+ * @attribute module:AnimationSlider~Inner.countToShow
+ */
+/**
+ * 参见 AnimationSlider
+ * @attribute module:AnimationSlider~Inner.index
+ */
+/**
+ * 参见 AnimationSlider
+ * @attribute module:AnimationSlider~Inner.timeout
+ */
+/**
+ * 参见 BaseComponent
+ */
+Inner.defaultProps.component = Panel.Touchable;

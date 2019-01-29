@@ -33,9 +33,11 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
+var _animation = require("@bnorth/rich.css/lib/styles/animation");
+
 var _props = _interopRequireDefault(require("./utils/props"));
 
-var _Panel = _interopRequireDefault(require("./Panel"));
+var _Panel = _interopRequireDefault(require("./Panel.Touchable"));
 
 /**
  * 扩展 Panel 组件，将组件挂载到 Panel 组件上
@@ -90,6 +92,11 @@ function (_React$Component) {
       var _parseProps = (0, _props.default)(this.props, _Container.props),
           type = _parseProps.type,
           inline = _parseProps.inline,
+          content = _parseProps.content,
+          index = _parseProps.index,
+          _parseProps$countToSh = _parseProps.countToShow,
+          countToShow = _parseProps$countToSh === void 0 ? 1 : _parseProps$countToSh,
+          timeout = _parseProps.timeout,
           direction = _parseProps.direction,
           justify = _parseProps.justify,
           align = _parseProps.align,
@@ -105,7 +112,7 @@ function (_React$Component) {
           Component = _parseProps.component,
           className = _parseProps.className,
           children = _parseProps.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["type", "inline", "direction", "justify", "align", "wrap", "containerProps", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["type", "inline", "content", "index", "countToShow", "timeout", "direction", "justify", "align", "wrap", "containerProps", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className", "children"]);
 
       var classStr = 'position-relative overflow-a-hidden';
       var classSet = {};
@@ -120,6 +127,8 @@ function (_React$Component) {
         if ((0, _typeof2.default)(v) !== 'object' || v.props.subTypeNotItem) return v;
         containerItemIndex++;
         var countProps = getSubComponentProps(containerItemIndex, containerItemCount, '', {}, containerProps, v.props, itemProps, itemGetClassName, itemGetStyle, itemGetProps);
+        if (index === undefined && countProps.selected) index = containerItemIndex;
+        if (index >= 0 && index === containerItemIndex) countProps.selected = true;
         return _react.default.createElement(_Item, (0, _extends2.default)({
           key: v.key || containerItemIndex,
           type: type,
@@ -143,6 +152,12 @@ function (_React$Component) {
         classSet = (_classSet2 = {}, (0, _defineProperty2.default)(_classSet2, 'flex-display-' + (inline ? 'inline' : 'block'), true), (0, _defineProperty2.default)(_classSet2, 'flex-align-center', true), _classSet2);
       } else if (type === 'flex') {
         classSet = (0, _defineProperty2.default)({}, 'flex-display-' + (inline ? 'inline' : 'block'), true);
+      } else if (type === 'scroll') {
+        children = _react.default.createElement(Inner, {
+          countToShow: countToShow,
+          index: index,
+          timeout: timeout
+        }, children);
       }
 
       var classSetFlex = (_classSetFlex = {}, (0, _defineProperty2.default)(_classSetFlex, 'flex-direction-' + direction, direction), (0, _defineProperty2.default)(_classSetFlex, 'flex-justify-' + justify, justify), (0, _defineProperty2.default)(_classSetFlex, 'flex-align-' + align, align), (0, _defineProperty2.default)(_classSetFlex, 'flex-wrap-' + wrap, wrap), _classSetFlex);
@@ -309,6 +324,8 @@ var _Item = function Item(aprops) {
     classStr = 'flex-sub-flex-extend';
   } else if (type === 'primary') {
     classStr = subTypePrimary ? 'flex-sub-flex-extend' : 'flex-sub-flex-none';
+  } else if (type === 'scroll') {
+    classStr = 'flex-sub-flex-extend height-full';
   }
 
   return (0, _react.cloneElement)(children, (0, _objectSpread2.default)({
@@ -349,4 +366,80 @@ _Item.defaultProps = {};
  */
 
 var _default = _Panel.default;
+/**
+ * 淡入淡出动画组件的内容组件，用来包裹具体淡入淡出内容
+ * @component 
+ * @private
+ * @augments BaseComponent
+ * @mount AnimationSlider.Inner
+ */
+
 exports.default = _default;
+
+var Inner =
+/*#__PURE__*/
+function (_React$Component2) {
+  (0, _inherits2.default)(Inner, _React$Component2);
+
+  function Inner() {
+    (0, _classCallCheck2.default)(this, Inner);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Inner).apply(this, arguments));
+  }
+
+  (0, _createClass2.default)(Inner, [{
+    key: "render",
+    value: function render() {
+      var _parseProps3 = (0, _props.default)(this.props, Inner.props),
+          countToShow = _parseProps3.countToShow,
+          index = _parseProps3.index,
+          timeout = _parseProps3.timeout,
+          Component = _parseProps3.component,
+          className = _parseProps3.className,
+          style = _parseProps3.style,
+          children = _parseProps3.children,
+          props = (0, _objectWithoutProperties2.default)(_parseProps3, ["countToShow", "index", "timeout", "component", "className", "style", "children"]);
+
+      children = _react.default.Children.toArray(children);
+      var classStr = 'flex-display-block flex-align-stretch height-full';
+      var styleSet = (0, _objectSpread2.default)({
+        width: "".concat(100 / countToShow * children.length, "%")
+      }, (0, _animation.transiton)(timeout), (0, _animation.transform)('translateX', "".concat(-100 / children.length * (index % children.length), "%")), style);
+      return _react.default.createElement(Component, (0, _extends2.default)({
+        direction: "horizontal",
+        recognizers: {
+          'pan': {
+            enable: true
+          }
+        },
+        onPan: function onPan(e) {
+          return console.log(e.deltaY, e.deltaX);
+        },
+        className: (0, _classes.default)(classStr, className),
+        style: styleSet
+      }, props), children);
+    }
+  }]);
+  return Inner;
+}(_react.default.Component);
+
+Inner.defaultProps = {};
+/**
+ * 参见 AnimationSlider
+ * @attribute module:AnimationSlider~Inner.countToShow
+ */
+
+/**
+ * 参见 AnimationSlider
+ * @attribute module:AnimationSlider~Inner.index
+ */
+
+/**
+ * 参见 AnimationSlider
+ * @attribute module:AnimationSlider~Inner.timeout
+ */
+
+/**
+ * 参见 BaseComponent
+ */
+
+Inner.defaultProps.component = _Panel.default.Touchable;
