@@ -82,7 +82,7 @@ function () {
     value: function _handleKeyEvent(e) {
       var _this2 = this;
 
-      this.app.log.info('keyboard trigger', e);
+      this.app.log.debug('keyboard trigger', e);
 
       var listener = this._listeners.reverse().find(function (_ref) {
         var event = _ref.event,

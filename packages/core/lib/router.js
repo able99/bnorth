@@ -495,6 +495,7 @@ function () {
   }, {
     key: "_updateRender",
     value: function _updateRender() {
+      this.app.log.debug('router:update render');
       this.app.event.emit(this.app._id, 'onRouterUpdate');
     }
   }, {
@@ -507,7 +508,7 @@ function () {
     value: function _handleLocationChange(location, action) {
       var _this5 = this;
 
-      this.app.log.info('router location', location);
+      this.app.log.debug('router location', location);
 
       this._clearError();
 
@@ -1150,7 +1151,7 @@ function () {
   }, {
     key: "block",
     value: function block(_block) {
-      this.app.log.info('router block', _block);
+      this.app.log.debug('router block', _block);
 
       if (typeof _block === 'function') {
         this._block = this._history.location;
@@ -1170,7 +1171,7 @@ function () {
   }, {
     key: "restore",
     value: function restore(location) {
-      this.app.log.info('router restore', location);
+      this.app.log.debug('router restore', location);
       location || this._block ? this._history.replace(location || this._block) : this.replaceRoot();
       this._block = null;
       return true;
@@ -1272,7 +1273,7 @@ function () {
         args[_key4] = arguments[_key4];
       }
 
-      this.app.log.info('router push', args);
+      this.app.log.debug('router push', args);
 
       this._history.push(this.getPathInfo.apply(this, args));
 
@@ -1289,7 +1290,7 @@ function () {
         args[_key5] = arguments[_key5];
       }
 
-      this.app.log.info('router replace', args);
+      this.app.log.debug('router replace', args);
 
       this._history.replace(this.getPathInfo.apply(this, args));
 
@@ -1304,7 +1305,7 @@ function () {
     key: "back",
     value: function back() {
       var step = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      this.app.log.info('router back');
+      this.app.log.debug('router back');
 
       this._history.go(-step);
 

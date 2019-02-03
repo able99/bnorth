@@ -111,7 +111,7 @@ class State {
    * 不用于直接构造，而是通过定义拥有者定义数据单元声明对象，由拥有者通过数据单元构建函数构造
    */
   constructor(app, _id, options={}) {
-    app.log.info('state constructor', _id);
+    app.log.debug('state constructor', _id);
 
     /**
      * App 的实例
@@ -135,14 +135,14 @@ class State {
   }
 
   destructor() {
-    this.app.log.info('state destructor', this._id);
+    this.app.log.debug('state destructor', this._id);
     this.app.event.off(this._id);
     if(this.options.cleanOnStop!==false) this.clear();
     if(this._id!==true && this.options.removeOnStop!==false) delete State.states[this._id];
   }
 
   // state private work
-  clear() { this.app.log.info('state clear'); return this.app.context.clear(this._id) }
+  clear() { this.app.log.debug('state clear'); return this.app.context.clear(this._id) }
   stateData() { return this.app.utils.objectCopy(this.app.context.data(this._id, {})) }
   stateUpdate(data) { this.app.context.update(this._id, data) }
   stateSet(data) { this.app.context.set(this._id, data) }
@@ -182,7 +182,7 @@ class State {
    * @returns {*} 更新后的数据
    */
   async update(data, options) {
-    this.app.log.info('state update', data, options);
+    this.app.log.debug('state update', data, options);
 
     options = this.app.utils.getOptions(this.options, options);
     let prevData = this.data();

@@ -169,7 +169,7 @@ function () {
 
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     (0, _classCallCheck2.default)(this, State);
-    app.log.info('state constructor', _id);
+    app.log.debug('state constructor', _id);
     /**
      * App 的实例
      * @type {module:app.App}
@@ -204,7 +204,7 @@ function () {
   (0, _createClass2.default)(State, [{
     key: "destructor",
     value: function destructor() {
-      this.app.log.info('state destructor', this._id);
+      this.app.log.debug('state destructor', this._id);
       this.app.event.off(this._id);
       if (this.options.cleanOnStop !== false) this.clear();
       if (this._id !== true && this.options.removeOnStop !== false) delete State.states[this._id];
@@ -213,7 +213,7 @@ function () {
   }, {
     key: "clear",
     value: function clear() {
-      this.app.log.info('state clear');
+      this.app.log.debug('state clear');
       return this.app.context.clear(this._id);
     }
   }, {
@@ -288,7 +288,7 @@ function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                this.app.log.info('state update', data, options);
+                this.app.log.debug('state update', data, options);
                 options = this.app.utils.getOptions(this.options, options);
                 prevData = this.data();
                 nextData = this.app.utils.objectUpdate(prevData, data, options.append);

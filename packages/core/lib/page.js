@@ -219,7 +219,7 @@ function (_React$Component) {
 
       var ret = function ret() {
         try {
-          _this.app.log.info('page action', _this._id, name);
+          _this.app.log.debug('page action', _this._id, name);
 
           _this.app.event.emit(_this._id, 'onPageAction', _this._id, name);
 
@@ -390,7 +390,10 @@ function (_React$Component) {
       return {
         'data-page': _id,
         'data-page-sub': route.isSubPage ? route.routeName : undefined,
-        style: route.isSubPage ? undefined : {
+        style: route.isSubPage ? {
+          width: '100%',
+          height: '100%'
+        } : {
           position: 'absolute',
           top: 0,
           left: 0,
@@ -411,7 +414,7 @@ function (_React$Component) {
           app = _this$props4.app,
           _id = _this$props4._id,
           isActive = _this$props4.route.isActive;
-      app.log.info('page did mount', _id);
+      app.log.debug('page did mount', _id);
       this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
         return _this3._handleKeyEvent(e);
       });
@@ -430,7 +433,7 @@ function (_React$Component) {
           app = _this$props5.app,
           _id = _this$props5._id,
           isActive = _this$props5.route.isActive;
-      app.log.info('page will unmount', _id);
+      app.log.debug('page will unmount', _id);
       isActive && app.event.emit(this._id, 'onPageInactive', this, true);
       app.event.emit(this._id, 'onPageStop', this);
       app.event.emit(app._id, 'onPageRemove', _id, this);
@@ -453,7 +456,7 @@ function (_React$Component) {
     key: "componentDidCatch",
     value: function componentDidCatch(error, info) {
       var app = this.props.app;
-      app.log.info('page did catch');
+      app.log.debug('page did catch');
       app.render.panic(error, {
         title: 'page error catch',
         _id: this._id
@@ -508,7 +511,7 @@ function (_React$Component) {
           subPages = _this$props7$route.subPages,
           popLayers = _this$props7$route.popLayers,
           props = (0, _objectWithoutProperties2.default)(_this$props7, ["app", "_id", "route"]);
-      app.log.info('page render', _id);
+      app.log.debug('page render', _id);
       this._actionNum = 0;
       return _react.default.createElement("main", this._getPageFrameProps(), this._controllerBinded ? _react.default.createElement(routeDefine.component, (0, _extends2.default)({}, props, this._getPageComponentProps()), subPages) : null, this._controllerBinded ? popLayers : null);
     }

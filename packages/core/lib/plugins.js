@@ -125,7 +125,7 @@ function () {
     value: function _checkPlugin(plugin) {
       var _this = this;
 
-      this.app.log.info('plugin check');
+      this.app.log.debug('plugin check');
       if (!plugin) return;
 
       for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -233,7 +233,7 @@ function () {
       if (!plugin) return;
       var app = this.app;
       var _id = plugin._id;
-      app.log.info('plugin add', plugin._id);
+      app.log.debug('plugin add', plugin._id);
 
       this._plugins.push(plugin);
 
@@ -281,7 +281,7 @@ function () {
   }, {
     key: "remove",
     value: function remove(_id) {
-      this.app.log.info('plugin remove', _id);
+      this.app.log.debug('plugin remove', _id);
 
       var index = this._plugins.findIndex(function (v) {
         return v._id === _id;

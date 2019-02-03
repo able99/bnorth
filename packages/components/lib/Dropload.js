@@ -11,8 +11,6 @@ var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends")
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
-require("core-js/modules/es6.promise");
-
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -48,14 +46,14 @@ function (_React$Component) {
     value: function _handlePosChange(event, target) {
       var _this$props = this.props,
           isLoading = _this$props.isLoading,
-          onLoad = _this$props.onLoad;
+          onLoad = _this$props.onLoad,
+          _this$props$offset = _this$props.offset,
+          offset = _this$props$offset === void 0 ? 35 : _this$props$offset;
       if (isLoading || !onLoad) return;
       var distance = Math.abs(target.scrollTop + target.clientHeight - target.scrollHeight);
 
-      if (distance < 35) {
-        !this.trigger && Promise.resolve().then(function () {
-          return onLoad();
-        });
+      if (distance < offset) {
+        !this.trigger && onLoad();
         this.trigger = true;
       } else {
         this.trigger = false;
@@ -68,11 +66,12 @@ function (_React$Component) {
           disabled = _parseProps.disabled,
           isLoading = _parseProps.isLoading,
           onLoad = _parseProps.onLoad,
+          offset = _parseProps.offset,
           _parseProps$component = _parseProps.component,
           Component = _parseProps$component === void 0 ? _Panel.default.Loader : _parseProps$component,
           componentPanel = _parseProps.componentPanel,
           className = _parseProps.className,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["disabled", "isLoading", "onLoad", "component", "componentPanel", "className"]);
+          props = (0, _objectWithoutProperties2.default)(_parseProps, ["disabled", "isLoading", "onLoad", "offset", "component", "componentPanel", "className"]);
 
       if (disabled) return null;
       var classStr = 'padding-a-';
@@ -81,7 +80,8 @@ function (_React$Component) {
       }), _react.default.createElement(Component, (0, _extends2.default)({
         component: componentPanel,
         position: "top",
-        isProgress: !isLoading,
+        isProgress: false,
+        "bc-visibility-hide": !isLoading,
         className: (0, _classes.default)(classStr, className)
       }, props)));
     }

@@ -1239,6 +1239,92 @@
     },
     {
       "kind": "module",
+      "name": "Dropload",
+      "longname": "module:Dropload",
+      "defaultvalue": ""
+    },
+    {
+      "classdesc": "无限加载组价，滑动到底部时触发加载",
+      "kind": "component",
+      "id": null,
+      "exportdefault": true,
+      "scope": "static",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Dropload",
+      "longname": "module:Dropload.Dropload",
+      "memberof": "module:Dropload",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置是否为可用状态",
+      "kind": "attribute",
+      "name": "disabled",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Dropload.Dropload",
+      "longname": "module:Dropload.Dropload.disabled",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置是否正在加载中",
+      "kind": "attribute",
+      "name": "isLoading",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "module:Dropload.Dropload",
+      "longname": "module:Dropload.Dropload.isLoading",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置触发加载的回调函数",
+      "kind": "attribute",
+      "name": "onLoad",
+      "scope": "static",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "memberof": "module:Dropload.Dropload",
+      "longname": "module:Dropload.Dropload.onLoad",
+      "defaultvalue": ""
+    },
+    {
+      "description": "设置距离底部的距离，当即将滚动到底部，小于该距离时触发加载",
+      "type": {
+        "names": [
+          "number",
+          "string"
+        ]
+      },
+      "name": "offset",
+      "longname": "module:Dropload.Dropload.offset",
+      "kind": "attribute",
+      "memberof": "module:Dropload.Dropload",
+      "scope": "static",
+      "defaultvalue": 35
+    },
+    {
+      "description": "参见 BaseComponent",
+      "name": "component",
+      "longname": "module:Dropload.Dropload.component",
+      "kind": "attribute",
+      "memberof": "module:Dropload.Dropload",
+      "scope": "static",
+      "defaultvalue": "Panel.Loader"
+    },
+    {
+      "kind": "module",
       "name": "Fab",
       "longname": "module:Fab",
       "defaultvalue": ""
@@ -4632,6 +4718,131 @@
       "memberof": "Panel.module:Loader~Content",
       "scope": "static",
       "defaultvalue": "Panel"
+    },
+    {
+      "kind": "module",
+      "name": "PullRefresh",
+      "memberof": "Panel",
+      "longname": "Panel.module:PullRefresh",
+      "scope": "static",
+      "defaultvalue": ""
+    },
+    {
+      "classdesc": "支持滚动与下拉刷新的小面板",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.PullRefresh",
+          "value": "Panel.PullRefresh"
+        }
+      ],
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Panel.PullRefresh",
+      "longname": "Panel.module:PullRefresh~PullRefresh",
+      "scope": "inner",
+      "memberof": "Panel.module:PullRefresh",
+      "defaultvalue": ""
+    },
+    {
+      "description": "下拉触发刷新的长度",
+      "type": {
+        "names": [
+          "number"
+        ]
+      },
+      "name": "triggerOffset",
+      "longname": "Panel.module:PullRefresh~PullRefresh.triggerOffset",
+      "kind": "attribute",
+      "memberof": "Panel.module:PullRefresh~PullRefresh",
+      "scope": "static",
+      "defaultvalue": 60
+    },
+    {
+      "description": "点击事件处理函数，对应手势 tap",
+      "kind": "attribute",
+      "name": "isLoading",
+      "scope": "static",
+      "type": {
+        "names": [
+          "boolean"
+        ]
+      },
+      "memberof": "Panel.module:PullRefresh~PullRefresh",
+      "longname": "Panel.module:PullRefresh~PullRefresh.isLoading",
+      "defaultvalue": ""
+    },
+    {
+      "description": "点击事件处理函数，对应手势 tap",
+      "kind": "attribute",
+      "name": "onLoad",
+      "scope": "static",
+      "type": {
+        "names": [
+          "function"
+        ]
+      },
+      "memberof": "Panel.module:PullRefresh~PullRefresh",
+      "longname": "Panel.module:PullRefresh~PullRefresh.onLoad",
+      "defaultvalue": ""
+    },
+    {
+      "description": "点击事件处理函数，对应手势 tap",
+      "kind": "attribute",
+      "name": "loaderProps",
+      "scope": "static",
+      "type": {
+        "names": [
+          "object"
+        ]
+      },
+      "memberof": "Panel.module:PullRefresh~PullRefresh",
+      "longname": "Panel.module:PullRefresh~PullRefresh.loaderProps",
+      "defaultvalue": ""
+    },
+    {
+      "description": "点击事件处理函数，对应手势 tap",
+      "kind": "attribute",
+      "name": "titleLoading",
+      "scope": "static",
+      "type": {
+        "names": [
+          "string",
+          "number",
+          "component",
+          "element"
+        ]
+      },
+      "memberof": "Panel.module:PullRefresh~PullRefresh",
+      "longname": "Panel.module:PullRefresh~PullRefresh.titleLoading",
+      "defaultvalue": ""
+    },
+    {
+      "description": "支持滚动与下拉刷新的小面板的下拉进度组件",
+      "kind": "component",
+      "id": null,
+      "tags": [
+        {
+          "originalTitle": "mount",
+          "title": "mount",
+          "text": "Panel.PushRefresh.Refresh",
+          "value": "Panel.PushRefresh.Refresh"
+        }
+      ],
+      "access": "private",
+      "augments": [
+        "BaseComponent"
+      ],
+      "name": "Panel.PushRefresh.Refresh",
+      "longname": "Panel.module:PullRefresh~Refresh",
+      "scope": "inner",
+      "memberof": "Panel.module:PullRefresh",
+      "defaultvalue": "",
+      "params": []
     },
     {
       "kind": "module",

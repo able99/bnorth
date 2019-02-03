@@ -191,7 +191,7 @@ class Page extends React.Component {
     if(!name) name = `_${++this._actionNum}`
     let ret = (...args)=>{
       try{
-        this.app.log.info('page action', this._id, name);
+        this.app.log.debug('page action', this._id, name);
         this.app.event.emit(this._id, 'onPageAction', this._id, name);
         return func.apply(this, args);
       }catch(e){
@@ -288,7 +288,9 @@ class Page extends React.Component {
     return {
       'data-page': _id,
       'data-page-sub': route.isSubPage?route.routeName:undefined,
-      style: route.isSubPage?undefined:{
+      style: route.isSubPage?{
+        width: '100%', height: '100%',
+      }:{
         position: 'absolute', top: 0, left: 0, bottom: 0, right: 0,
         visibility: route.isActive?'visible':'hidden',
       }
@@ -299,7 +301,7 @@ class Page extends React.Component {
   // ---------------------------
   componentDidMount() {
     let { app, _id, route:{isActive} } = this.props;
-    app.log.info('page did mount', _id);
+    app.log.debug('page did mount', _id);
 
     this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this._handleKeyEvent(e));
     this._bindController();
@@ -311,7 +313,7 @@ class Page extends React.Component {
 
   componentWillUnmount() {
     let { app, _id, route:{isActive} } = this.props;
-    app.log.info('page will unmount', _id);
+    app.log.debug('page will unmount', _id);
 
     isActive&&app.event.emit(this._id, 'onPageInactive', this, true);
     app.event.emit(this._id,'onPageStop', this);
@@ -331,7 +333,7 @@ class Page extends React.Component {
 
   componentDidCatch(error, info) {
     let { app } = this.props;
-    app.log.info('page did catch');
+    app.log.debug('page did catch');
     app.render.panic(error, {title:'page error catch', _id: this._id});
   }
 
@@ -349,7 +351,7 @@ class Page extends React.Component {
 
   render() {
     let { app, _id, route:{routeDefine,subPages,popLayers}, ...props } = this.props;
-    app.log.info('page render', _id);
+    app.log.debug('page render', _id);
     this._actionNum = 0;
 
     return (

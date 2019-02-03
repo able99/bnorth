@@ -12,8 +12,7 @@ import Icon from '@bnorth/components/lib/Icon';
 
 let Component = aprops=>{
   let { app, page, stateData, stateList, stateListExt } = aprops;
-  // app.log.debug('page: c-list',stateData,stateList,stateListExt);
-
+  console.log(55555,stateListExt);
   return (
     <View>
         <Field 
@@ -110,7 +109,7 @@ Component.controller = (app,page)=>({
           .filter(v=>!data.keyword?true:v.includes(data.keyword))
           .slice(data.pageStart, data.pageStart+data.pageSize)
           .map(v=>({type: data.type, data: v, num: Number(v)}))
-        setTimeout(()=>resolve({ data: result}), append?1500:1000);
+        setTimeout(()=>resolve({ data: result}), append?5000:5000);
       });
     },
   },

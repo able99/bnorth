@@ -93,6 +93,7 @@ class Context {
    * @returns {promise} react state 操作 promise
    */
   update(_id, data, cb) {
+    this.app.log.debug('context: update', _id);
     let state = this.provider.data();
     state[_id] = this.app.utils.objectUpdate(state[_id], data);
     return this.provider.update(state, cb);
@@ -106,6 +107,7 @@ class Context {
    * @returns {promise} react state 操作 promise
    */
   set(_id, data, cb) {
+    this.app.log.debug('context: set', _id);
     let state = this.provider.data();
     state[_id] = data;
     return this.provider.update(state, cb);
@@ -118,6 +120,7 @@ class Context {
    * @returns {promise} react state 操作 promise
    */
   delete(_id, _did, cb) {
+    this.app.log.debug('context: delete', _id);
     let state = this.provider.data();
     state[_id] = this.app.utils.objectDelete(state[_id], _did);
     return this.provider.update(state, cb);

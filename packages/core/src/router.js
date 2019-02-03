@@ -313,6 +313,7 @@ class Router {
   // private work
   // --------------------------------------
   _updateRender() {
+    this.app.log.debug('router:update render');
     this.app.event.emit(this.app._id, 'onRouterUpdate');
   }
 
@@ -321,7 +322,7 @@ class Router {
   }
 
   _handleLocationChange(location, action) {
-    this.app.log.info('router location', location);
+    this.app.log.debug('router location', location);
     this._clearError();
 
     Object.keys(this._states).filter(v=>!location.pathname.startsWith(v)).forEach(v=>{delete this._states[v]});
@@ -666,7 +667,7 @@ class Router {
    * @param {(module:router~PathInfo|string|function)?} - 将被阻塞的路径，为空则使用当前路径 
    */
   block(_block) {
-    this.app.log.info('router block', _block);
+    this.app.log.debug('router block', _block);
     if(typeof _block==='function'){
       this._block = this._history.location;
       _block = _block(this.app);
@@ -682,7 +683,7 @@ class Router {
    * @param {module:router~PathInfo|string} - 要恢复的路径，为空则使用 block 保存的路径
    */
   restore(location) {
-    this.app.log.info('router restore', location);
+    this.app.log.debug('router restore', location);
     location||this._block?this._history.replace(location||this._block):this.replaceRoot();
     this._block = null;
     return true;
@@ -752,7 +753,7 @@ class Router {
    * 跳转路径，参数参见 getPathInfo
    */
   push(...args) {
-    this.app.log.info('router push', args);
+    this.app.log.debug('router push', args);
     this._history.push(this.getPathInfo(...args));
     return true;
   }
@@ -761,7 +762,7 @@ class Router {
    * 替换路径，参数参见 getPathInfo
    */
   replace(...args) {
-    this.app.log.info('router replace', args);
+    this.app.log.debug('router replace', args);
     this._history.replace(this.getPathInfo(...args));
     return true;
   }
@@ -771,7 +772,7 @@ class Router {
    * @param {number} - 返回的级数 
    */
   back(step=1) {
-    this.app.log.info('router back');
+    this.app.log.debug('router back');
     this._history.go(-step);
     return true;
   }

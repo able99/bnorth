@@ -86,7 +86,7 @@ class Plugins {
   }
 
   _checkPlugin(plugin, ...args) {
-    this.app.log.info('plugin check');
+    this.app.log.debug('plugin check');
     if(!plugin) return;
     if(plugin instanceof Function) plugin = plugin(this.app, ...args);
     
@@ -136,7 +136,7 @@ class Plugins {
     if(!plugin) return;
     let app = this.app;
     let _id = plugin._id;
-    app.log.info('plugin add', plugin._id);
+    app.log.debug('plugin add', plugin._id);
     this._plugins.push(plugin);
   
     Object.entries(plugin).forEach(([k,v])=>{
@@ -168,7 +168,7 @@ class Plugins {
    * @param {string} - 插件实例 id
    */
   remove(_id) {
-    this.app.log.info('plugin remove', _id);
+    this.app.log.debug('plugin remove', _id);
     let index = this._plugins.findIndex(v=>v._id===_id);
     if(index<0) return;
     let plugin = this._plugins[index];

@@ -51,7 +51,7 @@ class Keyboard {
   }
 
   _handleKeyEvent(e) {
-    this.app.log.info('keyboard trigger', e);
+    this.app.log.debug('keyboard trigger', e);
     let listener = this._listeners.reverse().find(({event, callback, _id})=>(callback && e.type===event && this.app.router.isFocus(_id)));
     if(listener) {
       listener.callback(e);
