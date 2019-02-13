@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
-import parseProps from './utils/props';
+import BaseComponent from './BaseComponent';
 import Backdrop from './Backdrop';
 import Panel from './Panel';
 import Button from './Button';
@@ -16,7 +16,7 @@ export let Modal = aprops=>{
     bodyProps, 
     footerProps, 
     component:Component=Panel, style, className, children, ...props
-  } = parseProps(aprops, Modal.props);
+  } = BaseComponent(aprops, Modal);
 
   children = typeof(children)==='function'?children(this):children;
   let classStr = 'position-relative backface-hidden overflow-a-hidden bg-color-white';
@@ -64,7 +64,7 @@ Modal._Container = aprops=>{
     role, handleAction, 
     transition, 
     component:Component=Backdrop, className, ...props
-  } = parseProps(aprops);
+  } = BaseComponent(aprops, Modal._Container);
 
   let classSet = {
     'flex-display-block': role!=='document',
@@ -84,7 +84,7 @@ Modal._Header = aprops=>{
     role, handleAction,
     title, titleProps, hasTitleClose, titleCloseProps, titleCloseIconProps,
     component:Component=Panel, className, ...props 
-  } = parseProps(aprops, Modal._Header.props);
+  } = BaseComponent(aprops, Modal._Header);
   if(!title&&!hasTitleClose) return null;
 
   let classStr = 'width-full padding-a- border-set-bottom- flex-display-block flex-justify-between flex-align-center';
@@ -107,7 +107,7 @@ Modal._Header._Title = aprops=>{
   let { 
     hasTitleClose,
     component:Component=Panel, className, ...props 
-  } = parseProps(aprops, Modal._Header._Title.props);
+  } = BaseComponent(aprops, Modal._Header._Title);
   
   let classStr = 'flex-sub-flex-grow text-weight-bold text-size-lg';
   let classSet = { 'text-align-center': !hasTitleClose };  
@@ -120,7 +120,7 @@ Modal._Header._TitleClose = aprops=>{
     handleAction, 
     titleCloseIconProps,
     component:Component=Button, className, children, ...props 
-  } = parseProps(aprops, Modal._Header._TitleClose.props);
+  } = BaseComponent(aprops, Modal._Header._TitleClose);
 
   let classStr = 'padding-h-sm padding-v-0';
   
@@ -138,7 +138,7 @@ Modal._Header._TitleClose = aprops=>{
 Modal._Header._TitleClose._Icon = aprops=>{
   let { 
     component:Component=Icon, ...props 
-  } = parseProps(aprops, Modal._Header._TitleClose._Icon.props);
+  } = BaseComponent(aprops, Modal._Header._TitleClose._Icon);
 
   return <Component name="close" defaultName="x" {...props} />
 }
@@ -147,7 +147,7 @@ Modal._Body = aprops=>{
   let { 
     role, handleAction,
     component:Component=Panel, className, children, ...props 
-  } = parseProps(aprops, Modal._Body.props);
+  } = BaseComponent(aprops, Modal._Body);
 
   children = typeof(children)==='function'?children(this):children;
   if(!children) return null;
@@ -162,7 +162,7 @@ Modal._Footer =  aprops=>{
     buttons=Modal._Footer._buttons[aprops.role]||[],
     itemProps, itemGetClassName=Modal._Footer._itemGetClassName, itemGetStyle=Modal._Footer._itemGetStyle, itemGetProps=Modal._Footer._itemGetProps,
     component:Component=Button.Group, className, children, ...props 
-  } = parseProps(aprops, Modal._Footer.props);
+  } = BaseComponent(aprops, Modal._Footer);
   if(!buttons.length) return null;
 
   let classStr = 'border-set-top-';

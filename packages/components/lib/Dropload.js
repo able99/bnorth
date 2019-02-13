@@ -25,12 +25,25 @@ var _react = _interopRequireDefault(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
+var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
 
 var _ScrollSpy = _interopRequireDefault(require("./ScrollSpy"));
 
-var _Panel = _interopRequireDefault(require("./Panel.Loader"));
+var _Panel = _interopRequireDefault(require("./Panel"));
 
+require("./Loader");
+
+/**
+ * @module
+ */
+
+/**
+ * 无限加载组价，滑动到底部时触发加载
+ * 
+ * @component 
+ * @exportdefault
+ * @augments BaseComponent
+ */
 var Dropload =
 /*#__PURE__*/
 function (_React$Component) {
@@ -62,23 +75,21 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _parseProps = (0, _props.default)(this.props, Dropload.props),
-          disabled = _parseProps.disabled,
-          isLoading = _parseProps.isLoading,
-          onLoad = _parseProps.onLoad,
-          offset = _parseProps.offset,
-          _parseProps$component = _parseProps.component,
-          Component = _parseProps$component === void 0 ? _Panel.default.Loader : _parseProps$component,
-          componentPanel = _parseProps.componentPanel,
-          className = _parseProps.className,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["disabled", "isLoading", "onLoad", "offset", "component", "componentPanel", "className"]);
+      var _BaseComponent = (0, _BaseComponent2.default)(this.props, Dropload),
+          disabled = _BaseComponent.disabled,
+          isLoading = _BaseComponent.isLoading,
+          onLoad = _BaseComponent.onLoad,
+          offset = _BaseComponent.offset,
+          _BaseComponent$compon = _BaseComponent.component,
+          Component = _BaseComponent$compon === void 0 ? _Panel.default.Loader : _BaseComponent$compon,
+          className = _BaseComponent.className,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["disabled", "isLoading", "onLoad", "offset", "component", "className"]);
 
       if (disabled) return null;
       var classStr = 'padding-a-';
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_ScrollSpy.default, {
         onPosChange: this._handlePosChange.bind(this)
       }), _react.default.createElement(Component, (0, _extends2.default)({
-        component: componentPanel,
         position: "top",
         isProgress: false,
         "bc-visibility-hide": !isLoading,
@@ -89,5 +100,35 @@ function (_React$Component) {
   return Dropload;
 }(_react.default.Component);
 
+Dropload.defaultProps = {};
+/**
+ * 设置是否为可用状态
+ * @attribute module:Dropload.Dropload.disabled
+ * @type {boolean}
+ */
+
+/**
+ * 设置是否正在加载中
+ * @attribute module:Dropload.Dropload.isLoading
+ * @type {boolean}
+ */
+
+/**
+ * 设置触发加载的回调函数
+ * @attribute module:Dropload.Dropload.onLoad
+ * @type {function}
+ */
+
+/**
+ * 设置距离底部的距离，当即将滚动到底部，小于该距离时触发加载
+ * @type {number|string}
+ */
+
+Dropload.defaultProps.offset = 35;
+/**
+ * 参见 BaseComponent
+ */
+
+Dropload.defaultProps.component = _Panel.default.Loader;
 var _default = Dropload;
 exports.default = _default;

@@ -19,7 +19,7 @@ var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
+var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -36,34 +36,23 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @augments BaseComponent
  */
 var View = function View(aprops) {
-  var _parseProps = (0, _props.default)(aprops, View.props),
-      landscape = _parseProps.landscape,
-      container = _parseProps.container,
-      Component = _parseProps.component,
-      componentPanel = _parseProps.componentPanel,
-      className = _parseProps.className,
-      style = _parseProps.style,
-      children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["landscape", "container", "component", "componentPanel", "className", "style", "children"]);
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, View),
+      landscape = _BaseComponent.landscape,
+      container = _BaseComponent.container,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["landscape", "container"]);
 
-  var classStr = 'position-relative offset-a-start square-full overflow-a-hidden flex-display-block flex-direction-v bg-color-view';
-  var styleSet = {};
-
-  if (landscape && container.clientHeight > container.clientWidth) {
-    styleSet = (0, _objectSpread2.default)({
-      width: container.clientHeight,
-      height: container.clientWidth,
-      top: (container.clientHeight - container.clientWidth) / 2,
-      left: (container.clientWidth - container.clientHeight) / 2
-    }, (0, _animation.transform)('rotate', '90deg'));
-  }
-
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    component: componentPanel,
+  var classNamePre = 'position-relative offset-a-start square-full overflow-a-hidden flex-display-block flex-direction-v bg-color-view';
+  var stylePre = landscape && container.clientHeight > container.clientWidth ? (0, _objectSpread2.default)({
+    width: container.clientHeight,
+    height: container.clientWidth,
+    top: (container.clientHeight - container.clientWidth) / 2,
+    left: (container.clientWidth - container.clientHeight) / 2
+  }, (0, _animation.transform)('rotate', '90deg')) : {};
+  return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "data-container": true,
-    style: (0, _objectSpread2.default)({}, styleSet, style),
-    className: (0, _classes.default)(classStr, className)
-  }, props), children);
+    stylePre: stylePre,
+    classNamePre: classNamePre
+  }, props));
 };
 
 View.defaultProps = {};
@@ -79,10 +68,5 @@ View.defaultProps = {};
  */
 
 View.defaultProps.container = document.body;
-/**
- * 设置映射组件
- */
-
-View.defaultProps.component = _Panel.default;
 var _default = View;
 exports.default = _default;

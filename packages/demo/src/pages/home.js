@@ -1,51 +1,34 @@
 import React from 'react';
-import View from '@bnorth/components/lib/View'
-import Panel from '@bnorth/components/lib/Panel'
-import NavBar from '@bnorth/components/lib/NavBar'
-import List from '@bnorth/components/lib/List'
-import Icon from '@bnorth/components/lib/Icon'
+import NavBar from '../components/navbar'
+import List from '../components/list'
 
 
 export default props=>{
   let { app } = props;
 
   return (
-    <View>
-      <NavBar><NavBar.Title>Bnorth Demo</NavBar.Title></NavBar>
-      <Panel main>
+    <div className="bg-color-white width-full height-full flex-display-block flex-direction-v">
+      <NavBar title="bnorth demo" />
+      <div className="scrollable-y- flex-sub-flex-extend">
         <List>
           <List.Item 
-            media={<Icon name="view_comfy" bc-margin-a- />}
-            title="components" 
-            desc="demo: all components and component props"
-            descProps={{className: 'text-color-light'}}
+            title="组件列表" 
+            desc="组件展示"
             onClick={()=>app.router.push('components')} />
           <List.Item 
-            media={<Icon name="room" bc-margin-a- />}
-            title="router" 
-            desc="demo: router and page manager"
-            descProps={{className: 'text-color-light'}}
+            title="路由管理" 
+            desc="路由管理演示"
             onClick={()=>app.router.push('router')} />
           <List.Item 
-            media={<Icon name="person" bc-margin-a- />}
-            title="data" 
-            desc="demo: data manager includes network data"
-            descProps={{className: 'text-color-light'}}
+            title="数据管理" 
+            desc="数据管理演示"
             onClick={()=>app.router.push('data')} />
           <List.Item 
-            media={<Icon name="extension" bc-margin-a- />}
-            title="plugins" 
-            desc="demo: useful bnorth plugin list"
-            descProps={{className: 'text-color-light'}}
+            title="插件列表" 
+            desc="插件展示"
             onClick={()=>app.router.push('plugins')} />
         </List>
-      </Panel>
-      <Panel bc-margin-a-xxl bc-text-color-light bc-border-set-top- bc-padding-top- bc-text-size-sm>
-        <Panel bc-text-align-center><big><strong>bnorth solution</strong></big></Panel>
-        <Panel bc-text-align-center>able99 xwan</Panel>
-        <Panel bc-text-align-center>Ver:{window._bnorhtVersion}</Panel>
-        <Panel bc-text-align-center><Icon name="copyright" />2018</Panel>
-      </Panel>
-    </View>
+      </div>
+    </div>
   );
 };

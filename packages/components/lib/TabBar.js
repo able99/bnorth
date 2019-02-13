@@ -11,108 +11,179 @@ var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends")
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+
+var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/helpers/assertThisInitialized"));
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _react = _interopRequireDefault(require("react"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
+var _Panel = _interopRequireDefault(require("./Panel"));
 
-var _Panel = _interopRequireDefault(require("./Panel.Container"));
-
-require("./Panel.Icon");
+var _Icon = require("./Icon");
 
 /**
  * @module
  */
 // TabBar
-// -----------------------
+// -------------------
 
 /**
- * 标签页导航条组件
+ * 标签页组件
  * @component 
  * @augments BaseComponent
- * @augments Panel.module:Container~PanelContainer
+ * @augments Panel.module:Container~PanelContainer 
  * @exportdefault
  */
-var TabBar = function TabBar(aprops) {
-  var _parseProps = (0, _props.default)(aprops, TabBar.props),
-      _parseProps$type = _parseProps.type,
-      type = _parseProps$type === void 0 ? "justify" : _parseProps$type,
-      itemProps = _parseProps.itemProps,
-      _parseProps$itemGetCl = _parseProps.itemGetClassName,
-      itemGetClassName = _parseProps$itemGetCl === void 0 ? TabBar.itemGetClassName : _parseProps$itemGetCl,
-      _parseProps$itemGetSt = _parseProps.itemGetStyle,
-      itemGetStyle = _parseProps$itemGetSt === void 0 ? TabBar.itemGetStyle : _parseProps$itemGetSt,
-      _parseProps$itemGetPr = _parseProps.itemGetProps,
-      itemGetProps = _parseProps$itemGetPr === void 0 ? TabBar.itemGetProps : _parseProps$itemGetPr,
-      _parseProps$component = _parseProps.component,
-      Component = _parseProps$component === void 0 ? _Panel.default.Container : _parseProps$component,
-      componentPanel = _parseProps.componentPanel,
-      className = _parseProps.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["type", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "componentPanel", "className"]);
+var TabBar =
+/*#__PURE__*/
+function (_React$Component) {
+  (0, _inherits2.default)(TabBar, _React$Component);
 
-  var classStr = 'width-full border-set-top-border';
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    component: componentPanel,
-    type: type,
-    containerProps: aprops,
-    itemProps: itemProps,
-    itemGetClassName: itemGetClassName,
-    itemGetStyle: itemGetStyle,
-    itemGetProps: itemGetProps,
-    className: (0, _classes.default)(classStr, className)
-  }, props));
-};
+  function TabBar(_props) {
+    var _this;
+
+    (0, _classCallCheck2.default)(this, TabBar);
+    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(TabBar).call(this, _props));
+    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "_handleAction", function (i) {
+      var _this$props = _this.props,
+          onAction = _this$props.onAction,
+          children = _this$props.children;
+
+      _this.setState({
+        selectedIndex: i
+      });
+
+      if (onAction) {
+        children = _react.default.Children.toArray(children).filter(function (v) {
+          return v;
+        });
+        var props = children[i] && children[i].props;
+        onAction(i, props, props && props.event);
+      }
+    });
+    _this.state = {
+      selectedIndex: _props.selectedIndexDefault || 0
+    };
+    return _this;
+  }
+
+  (0, _createClass2.default)(TabBar, [{
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var _BaseComponent = (0, _BaseComponent2.default)(this.props, TabBar, {
+        isContainer: true
+      }),
+          _BaseComponent$select = _BaseComponent.selectedIndex,
+          selectedIndex = _BaseComponent$select === void 0 ? this.state.selectedIndex : _BaseComponent$select,
+          selectedIndexDefault = _BaseComponent.selectedIndexDefault,
+          onAction = _BaseComponent.onAction,
+          navProps = _BaseComponent.navProps,
+          containerProps = _BaseComponent.containerProps,
+          Component = _BaseComponent.component,
+          componentPanel = _BaseComponent.componentPanel,
+          children = _BaseComponent.children,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["selectedIndex", "selectedIndexDefault", "onAction", "navProps", "containerProps", "component", "componentPanel", "children"]);
+
+      children = _react.default.Children.toArray(children).filter(function (v) {
+        return v;
+      });
+      return _react.default.createElement(Component, (0, _extends2.default)({
+        component: componentPanel,
+        type: "primary",
+        position: "top",
+        align: "stretch"
+      }, props), _react.default.createElement(_Panel.default.Container, (0, _extends2.default)({
+        type: "justify",
+        selectedIndex: selectedIndex
+      }, navProps), children.map(function (v, i) {
+        var _v$props = v.props,
+            event = _v$props.event,
+            _onClick = _v$props.onClick,
+            children = _v$props.children,
+            props = (0, _objectWithoutProperties2.default)(_v$props, ["event", "onClick", "children"]);
+        return _react.default.createElement(_Icon.PanelIcon, (0, _extends2.default)({
+          key: v.key || i,
+          selected: selectedIndex === i,
+          hasSelection: true,
+          onClick: function onClick(e) {
+            _this2._handleAction(i);
+
+            _onClick && _onClick(e);
+          }
+        }, props));
+      })), _react.default.createElement(_Panel.default.Container, (0, _extends2.default)({
+        itemSelected: true,
+        selectedIndex: selectedIndex,
+        onSelect: function onSelect(index) {
+          return _this2._handleAction(index);
+        }
+      }, containerProps), children.map(function (v, i) {
+        return _react.default.createElement(_Panel.default, {
+          key: v.key || i
+        }, v.props.children);
+      })));
+    }
+  }]);
+  return TabBar;
+}(_react.default.Component);
 
 TabBar.defaultProps = {};
-/*
- * 组件的排列类型
+/**
+ * @callback TabBarActionCallback
+ * @param {number} i - 标签的索引
+ * @param {*} event - 标签的事件名称
+ * @param {object} props - 标签的属性
+ * @returns {boolean} 返回为真，将阻止导航条组件的点击事件
  */
 
-TabBar.defaultProps.type = 'justify';
-/*
- * 设置映射组件
+/**
+ * 设置标签页页面切换的动作回调函数
+ * @attribute module:TabBar.TabBar.onAction
+ * @type {module:TabBar~TabBarActionCallback}
+ */
+
+/**
+ * 设置标签页当前选中索引
+ * @attribute module:TabBar.TabBar.selectedIndex
+ * @type {number}
+ */
+
+/**
+ * 设置标签页默认的选中索引
+ * @attribute module:TabBar.TabBar.selectedIndexDefault
+ * @type {number}
+ */
+
+/**
+ * 设置标签页的标签导航组件的属性
+ * @attribute module:TabBar.TabBar.navProps
+ * @type {object}
+ */
+
+/**
+ * 设置标签页的标签内容容器组件的属性
+ * @attribute module:TabBar.TabBar.containerProps
+ * @type {object}
+ */
+
+/**
+ * 设置映射组件，采用 Panel.Container 类型为 primary
  */
 
 TabBar.defaultProps.component = _Panel.default.Container;
-var _default = TabBar; // TabBar Item
-// -----------------------
-
-/**
- * 标签页导航条组件的项目子组件
- * @component 
- * @augments BaseComponent
- * @mount TabBar.Item
- */
-
+var _default = TabBar;
 exports.default = _default;
-
-var _Item = function Item(aprops) {
-  var _parseProps2 = (0, _props.default)(aprops, _Item.props),
-      _parseProps2$componen = _parseProps2.component,
-      Component = _parseProps2$componen === void 0 ? _Panel.default.Icon : _parseProps2$componen,
-      className = _parseProps2.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["component", "className"]);
-
-  var classStr = 'padding-top-sm padding-bottom-xs cursor-pointer status- transition-set-';
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    position: "top",
-    hasSelection: true,
-    className: (0, _classes.default)(classStr, className)
-  }, props));
-};
-
-Object.defineProperty(TabBar, "Item", {
-  get: function get() {
-    return _Item;
-  },
-  set: function set(val) {
-    _Item = val;
-  }
-});
-_Item.defaultProps = {};
-/**
- * 设置映射组件
- */
-
-_Item.defaultProps.component = _Panel.default.Icon;

@@ -3,9 +3,8 @@
  */
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
-import parseProps from './utils/props';
-import AnimationSlider from './AnimationSlider';
-import Panel from './Panel.Touchable';
+import BaseComponent from './BaseComponent';
+import Panel from './Panel';
 import Icon from './Icon';
 
 
@@ -20,7 +19,7 @@ import Icon from './Icon';
  */
 class Carousel extends React.Component {
   static defaultProps = {
-    defaultSelected: 0,
+    selectedIndexDefault: 0,
     controller: true, 
     pager: true, 
     interval: 4000, 
@@ -29,87 +28,78 @@ class Carousel extends React.Component {
 
   constructor(props){
     super(props);
-    this.state = {selected: props.defaultSelected};
+    this.state = {selectedIndex: props.selectedIndexDefault};
   }
 
   prev() {
-    let selected = this.state.selected-1;
-    this.setState({selected: selected>=0?selected:(React.Children.toArray(this.props.children).filter(v=>v).length-1)});
-    this._goNext();
+    let { selectedIndex } = this.state;
+    selectedIndex--;
+    if(selectedIndex<0) selectedIndex = React.Children.toArray(this.props.children).filter(v=>v).length - 1;
+    this.setState({selectedIndex});
+    this.go();
   }
 
   next() {
-    this.setState({selected: (this.state.selected+1)%(React.Children.toArray(this.props.children).filter(v=>v).length)});
-    this._goNext();
+    let { selectedIndex } = this.state;
+    selectedIndex++;
+    selectedIndex = (++selectedIndex)%(React.Children.toArray(this.props.children).filter(v=>v).length);
+    this.setState({selectedIndex});
+    this.go();
   }
 
   pause() {
-    this._isPaused = true;
-    this._clearTimeoutNext();
+    this.isPaused = true;
+    this.stop();
   }
 
   play() {
-    this._isPaused = false;
-    this._goNext();
+    this.isPaused = false;
+    this.go();
   }
 
-  _goNext() {
+  go() {
     let { autoPlay, interval } = this.props;
-    this._clearTimeoutNext();
-    if (autoPlay && !this._isPaused && interval) this._timeoutNext = setTimeout(()=>this.next(), interval);
+    this.stop();
+    if (autoPlay && !this._isPaused && interval) this.timer = setTimeout(()=>this.next(), interval);
   }
 
-  _clearTimeoutNext() {
-    if(this._timeoutNext) { clearTimeout(this._timeoutNext); this._timeoutNext = undefined; }
-  }
-
-  _handleFocus() {
-    if(this.props.pauseOnHover) this.pause();
-  }
-
-  _handleBlur() {
-    if(this._isPaused) this.play();
+  stop() {
+    if(this.timer) { clearTimeout(this.timer); this.timer = undefined; }
   }
 
   componentDidMount() {
-    this.props.autoPlay && this._goNext();
+    this.go();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(prevProps.interval !== this.props.interval || prevProps.autoPlay !== this.props.autoPlay) this._goNext();
+    if(prevProps.interval !== this.props.interval || prevProps.autoPlay !== this.props.autoPlay) this.go();
   }
 
   componentWillUnmount() {
-    this._clearTimeoutNext();
+    this.stop();
   }
 
   render() {
     let {
-      defaultSelected, interval, timeout, autoPlay, pauseOnHover,
-      pagerProps, controllerPrevProps, controllerNextProps,
-      controller:ControllerComponent, pager:PagerComponent, 
-      component:Component=Panel.Touchable, componentPanel=AnimationSlider, children, ...props
-    } = parseProps(this.props, Carousel.props);
-    let { selected } = this.state;
-    children = React.Children.toArray(children);
+      selectedIndexDefault, interval, timeout, autoPlay, pauseOnHover,
+      controller:ControllerComponent, pager:PagerComponent, pagerProps, controllerPrevProps, controllerNextProps,
+      component:Component=Panel.Container, componentPanel, children, ...props
+    } = BaseComponent(this.props, Carousel);
+    let { selectedIndex } = this.state;
+
+    children = React.Children.toArray(children).filter(v=>v);
     if(ControllerComponent===true) ControllerComponent = Controller;
     if(PagerComponent===true) PagerComponent = Pager;
 
-    let content = (
-      <React.Fragment>
-        {Controller?<Controller onClick={e=>this.prev()} {...controllerPrevProps}/>:null}
-        {Controller?<Controller onClick={e=>this.next()} {...controllerNextProps} isNext/>:null}
-        {Pager?<Pager onClick={e=>this.setState({selected: e})} size={children.length} selected={Math.round(selected)} {...pagerProps} />:null}
-      </React.Fragment>
-    );
-
     return (
-      <Component
-        component={componentPanel}  
-        index={selected} onSwipeLeft={e=>this.next()} onSwipeRight={e=>this.prev()} onMouseOver={e=>this._handleFocus()} onMouseOut={e=>this._handleBlur()}
-        content={content}
-        {...props}>
+      <Component component={componentPanel}  
+        selectedIndex={selectedIndex} onSelect={selectedIndex=>this.setState({selectedIndex}, ()=>this.go())}
+        onMouseOver={e=>pauseOnHover&&this.pause()} onMouseOut={e=>this.isPaused&&this.play()}
+        type="scroll" {...props}>
         {children}
+        {Controller?<Controller onClick={e=>this.prev()} {...controllerPrevProps} itemPlain />:null}
+        {Controller?<Controller onClick={e=>this.next()} {...controllerNextProps} itemPlain isNext />:null}
+        {Pager?<Pager onClick={selectedIndex=>this.setState({selectedIndex}, ()=>this.go())} size={children.length} selectedIndex={Math.round(selectedIndex)} {...pagerProps} itemPlain />:null}
       </Component>
     );
   }
@@ -117,9 +107,10 @@ class Carousel extends React.Component {
 
 export default Carousel;
 
+
 // Carousel Item
 // ------------------------------
-Carousel.Item = AnimationSlider.Item;
+Carousel.Item = Panel;
 
 // Carousel Controller
 // ------------------------------
@@ -135,7 +126,7 @@ let Controller = aprops=>{
     isNext, mask,
     icon, iconNext, defaultIcon, defaultIconNext,
     component:Component=Icon, className, ...props
-  } = parseProps(aprops, Controller.props);
+  } = BaseComponent(aprops, Controller);
 
   let classStr = 'position-absolute text-color-white cursor-pointer margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border';
   let classSet = {
@@ -201,7 +192,7 @@ let Pager = aprops=>{
   let {
     size, selected, onClick, itemProps, mask,
     component:Component, componnetPanel, className, ...props
-  } = parseProps(aprops, Pager.props);
+  } = BaseComponent(aprops, Pager);
 
   let classStr = 'position-absolute flex-display-block flex-justify-center flex-align-center padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
   let classSet = [];
@@ -241,7 +232,7 @@ let Item = aprops=>{
   let {
     index, size, selected, onClick,
     component:Component, componnetPanel, className, ...props
-  } = parseProps(aprops, Item.props);
+  } = BaseComponent(aprops, Item);
 
   let classStr = 'cursor-pointer width-0em5 height-0em5 border-radius-rounded border-set-a-white';
   let classSet = {

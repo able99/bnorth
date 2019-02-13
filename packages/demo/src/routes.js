@@ -28,29 +28,29 @@ let PageInfo = props=>{
 export default {
   '/': require('./pages/home').default,
   '/test': require('./test').default,
+  'components:component?': {component: require('./pages/components').default, title: 'components'},
+  // 'components:tab?': {
+  //   title: false,
+  //   component: require('./pages/components').default,
+  //   subPages: ['c_components', 'c_list', 'c_props', 'c_plugins' ],
+  // },
+  // 'c_components': {component: require('./pages/c-components').default, title: 'components show'},
+  // 'c_list': {component: require('./pages/c-list').default, title: 'list show'},
+  // 'search:keyword:pageid': require('./pages/search').default,
+  // 'c_props': require('./pages/c-props').default,
+  // 'c_plugins': require('./pages/c-plugins').default,
 
-  'components:tab?': {
-    title: false,
-    component: require('./pages/components').default,
-    subPages: ['c_components', 'c_list', 'c_props', 'c_plugins' ],
-  },
-  'c_components': {component: require('./pages/c-components').default, title: 'components show'},
-  'c_list': {component: require('./pages/c-list').default, title: 'list show'},
-  'search:keyword:pageid': require('./pages/search').default,
-  'c_props': require('./pages/c-props').default,
-  'c_plugins': require('./pages/c-plugins').default,
+  // 'router': require('./pages/router').default,
+  // 'require_param:param1': PageInfo,
+  // 'option_param:param1?': PageInfo,
+  // 'pageinfo:subparam1?': PageInfo,
+  // 'dynamic': {
+  //   loader: ()=>{
+  //     return new Promise(resolve=>setTimeout(()=>{resolve({component: ()=><div>page c</div> })},1000));
+  //   }
+  // },
 
-  'router': require('./pages/router').default,
-  'require_param:param1': PageInfo,
-  'option_param:param1?': PageInfo,
-  'pageinfo:subparam1?': PageInfo,
-  'dynamic': {
-    loader: ()=>{
-      return new Promise(resolve=>setTimeout(()=>{resolve({component: ()=><div>page c</div> })},1000));
-    }
-  },
+  // 'data': require('./pages/data').default,
 
-  'data': require('./pages/data').default,
-
-  'plugins': require('./pages/plugins').default,
+  // 'plugins': require('./pages/plugins').default,
 }

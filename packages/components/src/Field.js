@@ -3,9 +3,8 @@
  */
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
-import { domFindNode } from './utils/dom';
-import parseProps from './utils/props';
-import Panel from './Panel.Container';
+import BaseComponent, { domFindNode } from './BaseComponent';
+import Panel from './Panel';
 import Icon from './Icon';
 
 
@@ -27,7 +26,7 @@ let Field = aprops=>{
 
   return (
     <Container before={before} after={after} label={label} beforeProps={beforeProps} afterProps={afterProps} {...containerProps}>
-      <ComponentField b-style={(before||after)&&'plain'} subTypePrimary={Boolean(before||after)} {...props} />
+      <ComponentField b-style={(before||after)&&'plain'} itemSelected={Boolean(before||after)} {...props} />
     </Container>
   );
 }
@@ -120,7 +119,7 @@ let Container = aprops=>{
   let { 
     before, after, label, beforeProps, afterProps,
     component:Component, componentPanel=label&&'label', children, ...props
-  } = parseProps(aprops, Container.props);
+  } = BaseComponent(aprops, Container, {isContainer: true});
 
 
   return (
@@ -175,7 +174,7 @@ Container.defaultProps.component = Panel.Container;
 let Content = aprops=>{
   let { 
     component:Component, componentPanel, ...props
-  } = parseProps(aprops, Content.props);
+  } = BaseComponent(aprops, Content);
 
   return <Component component={componentPanel} {...props} />;
 }
@@ -222,7 +221,7 @@ let Normal = class extends React.Component {
       type, value,
       onPressEnter, onKeyPress, 
       component:Component, componentPanel, className, children, ...props
-    } = parseProps(this.props, Normal.props);
+    } = BaseComponent(this.props, Normal);
 
     let classStr = 'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle';
     let classSet = this.props['b-style']?'':'bg-none- border-none-a-';
@@ -302,7 +301,7 @@ let Static = aprops=>{
   let {
     type, value,
     component:Component, componentPanel, className, children, ...props
-  } = parseProps(aprops, Static.props);
+  } = BaseComponent(aprops, Static);
 
   let classStr = 'line-height-1 vertical-align-middle';
 
@@ -348,7 +347,7 @@ Static.defaultProps.componentPanel = 'span';
 let HiddenInput = aprops=>{
   let {
     component:Component, className, ...props
-  } = parseProps(aprops, HiddenInput.props);
+  } = BaseComponent(aprops, HiddenInput);
 
   let classStr = 'visibility-hide display-none';
 
@@ -383,7 +382,7 @@ let CheckState = aprops=>{
     domValue, disabled, onClick, onChange, 
     CheckStateProps, inputProps, innerProps,
     component:Component=Panel, componentPanel='label', className, children, ...props
-  } = parseProps(aprops, CheckState.props);
+  } = BaseComponent(aprops, CheckState);
 
   let classStr = 'check-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none-';
 
@@ -457,7 +456,7 @@ CheckState.defaultProps.componentPanel = 'label';
 let CheckStateInner = aprops=>{
   let {
     component:Component, componentPanel='span', className, ...props
-  } = parseProps(aprops, CheckStateInner.props);
+  } = BaseComponent(aprops, CheckStateInner);
 
   let classStr = 'check-status-inner position-relative';
 
@@ -487,7 +486,7 @@ let CheckStateContent = aprops=>{
   let {
     isChecked,
     component:Component=Panel, className, ...props
-  } = parseProps(aprops, CheckStateContent.props);
+  } = BaseComponent(aprops, CheckStateContent);
 
   let classStr = 'position-relative';
   let classSet = [isChecked?'check-status-checked':'check-status-unchecked'];
@@ -523,7 +522,7 @@ let CheckStateContentCheckRadio = aprops=>{
     type, isChecked, disabled, 
     name, nameChecked, defaultName, defaultNameChecked, 
     component:Component, 'b-theme':bTheme, 'b-style':bStyle, ...props
-  } = parseProps(aprops, CheckStateContentCheckRadio.props);
+  } = BaseComponent(aprops, CheckStateContentCheckRadio);
 
   if(!bStyle) bStyle = 'hollow';
   if(!isChecked) { bTheme = undefined; bStyle = 'hollow' }
@@ -579,7 +578,7 @@ CheckStateContentCheckRadio.defaultProps.component = Icon;
  * @private
  */
 let Checkbox = aprops=>{
-  aprops = parseProps(aprops, Checkbox.props);
+  aprops = BaseComponent(aprops, Checkbox);
   return <CheckState content={Field.CheckStateContentCheckRadio} {...aprops} />
 };
 
@@ -594,7 +593,7 @@ Object.defineProperty(Field,"Checkbox",{ get:function(){ return Checkbox }, set:
  * @private
  */
 let Radio = aprops=>{
-  aprops = parseProps(aprops, Radio.props);
+  aprops = BaseComponent(aprops, Radio);
   return <CheckState content={Field.CheckStateContentCheckRadio} {...aprops} />
 };
 
@@ -614,7 +613,7 @@ Object.defineProperty(Field,"Radio",{ get:function(){ return Radio }, set:functi
 let CheckStateContentSwitch = aprops=>{
   let {
     component:Component, className, children, ...props
-  } = parseProps(aprops, CheckStateContentSwitch.props);
+  } = BaseComponent(aprops, CheckStateContentSwitch);
 
   let classStr = 'border-radius-rounded line-height-0';
 
@@ -645,7 +644,7 @@ let CheckStateContentSwitchItem = aprops=>{
   let {
     isChecked, isOn, 
     component:Component, 'b-theme':bTheme='component', className, children, ...props
-  } = parseProps(aprops, CheckStateContentSwitchItem.props);
+  } = BaseComponent(aprops, CheckStateContentSwitchItem);
 
   let classStr = 'border-radius-rounded width-1em height-1em';
 
@@ -676,7 +675,7 @@ CheckStateContentSwitchItem.defaultProps.component = Panel;
  * @private
  */
 let Switch = aprops=>{
-  aprops = parseProps(aprops, Switch.props);
+  aprops = BaseComponent(aprops, Switch);
   return <CheckState content={Field.CheckStateContentSwitch} {...aprops} type="checkbox" />
 };
 
@@ -696,7 +695,7 @@ let File = aprops=>{
   let {
     type, value, inputProps, disabled, onClick, onChange, 
     component:Component, componentPanel, className, children, ...props
-  } = parseProps(aprops, File.props);
+  } = BaseComponent(aprops, File);
 
   let classStr = 'line-height-1 vertical-align-middle';
 

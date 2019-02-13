@@ -2,11 +2,12 @@
  * 提供了蒙层组件和蒙层插件
  * @module
  */
-import classes from '@bnorth/rich.css/lib/classes'; 
-import parseProps from './utils/props'
 import React from 'react';
-import Panel from './Panel.Loader';
+import classes from '@bnorth/rich.css/lib/classes'; 
+import BaseComponent from './BaseComponent'
+import Panel from './Panel';
 import Backdrop from './Backdrop';
+import './Loader';
 
 
 /**
@@ -19,7 +20,7 @@ let Mask = aprops=>{
   let {
     loaderProps, mask,
     component:Component, className, ...props
-  } = parseProps(aprops, Mask.props);
+  } = BaseComponent(aprops, Mask);
 
   let classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center text-color-white';
 

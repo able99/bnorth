@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -31,11 +33,9 @@ var _react = _interopRequireDefault(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-var _dom = require("./utils/dom");
+var _BaseComponent13 = _interopRequireWildcard(require("./BaseComponent"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
-
-var _Panel = _interopRequireDefault(require("./Panel.Container"));
+var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _Icon = _interopRequireDefault(require("./Icon"));
 
@@ -70,7 +70,7 @@ var Field = function Field(aprops) {
     afterProps: afterProps
   }, containerProps), _react.default.createElement(ComponentField, (0, _extends2.default)({
     "b-style": (before || after) && 'plain',
-    subTypePrimary: Boolean(before || after)
+    itemSelected: Boolean(before || after)
   }, props)));
 };
 /**
@@ -195,17 +195,19 @@ Object.defineProperty(Field, "file", {
 var _Container = function Container(aprops) {
   if (!aprops.before && !aprops.after) return aprops.children;
 
-  var _parseProps = (0, _props.default)(aprops, _Container.props),
-      before = _parseProps.before,
-      after = _parseProps.after,
-      label = _parseProps.label,
-      beforeProps = _parseProps.beforeProps,
-      afterProps = _parseProps.afterProps,
-      Component = _parseProps.component,
-      _parseProps$component = _parseProps.componentPanel,
-      componentPanel = _parseProps$component === void 0 ? label && 'label' : _parseProps$component,
-      children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["before", "after", "label", "beforeProps", "afterProps", "component", "componentPanel", "children"]);
+  var _BaseComponent = (0, _BaseComponent13.default)(aprops, _Container, {
+    isContainer: true
+  }),
+      before = _BaseComponent.before,
+      after = _BaseComponent.after,
+      label = _BaseComponent.label,
+      beforeProps = _BaseComponent.beforeProps,
+      afterProps = _BaseComponent.afterProps,
+      Component = _BaseComponent.component,
+      _BaseComponent$compon = _BaseComponent.componentPanel,
+      componentPanel = _BaseComponent$compon === void 0 ? label && 'label' : _BaseComponent$compon,
+      children = _BaseComponent.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["before", "after", "label", "beforeProps", "afterProps", "component", "componentPanel", "children"]);
 
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel,
@@ -267,10 +269,10 @@ _Container.defaultProps.component = _Panel.default.Container;
  */
 
 var _Content = function Content(aprops) {
-  var _parseProps2 = (0, _props.default)(aprops, _Content.props),
-      Component = _parseProps2.component,
-      componentPanel = _parseProps2.componentPanel,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["component", "componentPanel"]);
+  var _BaseComponent2 = (0, _BaseComponent13.default)(aprops, _Content),
+      Component = _BaseComponent2.component,
+      componentPanel = _BaseComponent2.componentPanel,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["component", "componentPanel"]);
 
   return _react.default.createElement(Component, (0, _extends2.default)({
     component: componentPanel
@@ -319,7 +321,7 @@ function (_React$Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.input = (0, _dom.domFindNode)(this);
+      this.input = (0, _BaseComponent13.domFindNode)(this);
 
       this._updateValue();
     }
@@ -331,16 +333,16 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _parseProps3 = (0, _props.default)(this.props, _Normal.props),
-          type = _parseProps3.type,
-          value = _parseProps3.value,
-          onPressEnter = _parseProps3.onPressEnter,
-          onKeyPress = _parseProps3.onKeyPress,
-          Component = _parseProps3.component,
-          componentPanel = _parseProps3.componentPanel,
-          className = _parseProps3.className,
-          children = _parseProps3.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps3, ["type", "value", "onPressEnter", "onKeyPress", "component", "componentPanel", "className", "children"]);
+      var _BaseComponent3 = (0, _BaseComponent13.default)(this.props, _Normal),
+          type = _BaseComponent3.type,
+          value = _BaseComponent3.value,
+          onPressEnter = _BaseComponent3.onPressEnter,
+          onKeyPress = _BaseComponent3.onKeyPress,
+          Component = _BaseComponent3.component,
+          componentPanel = _BaseComponent3.componentPanel,
+          className = _BaseComponent3.className,
+          children = _BaseComponent3.children,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["type", "value", "onPressEnter", "onKeyPress", "component", "componentPanel", "className", "children"]);
 
       var classStr = 'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle';
       var classSet = this.props['b-style'] ? '' : 'bg-none- border-none-a-';
@@ -427,14 +429,14 @@ _Normal.typesToElement = ['progress', 'select', 'textarea']; // Type: Static
  */
 
 var _Static = function Static(aprops) {
-  var _parseProps4 = (0, _props.default)(aprops, _Static.props),
-      type = _parseProps4.type,
-      value = _parseProps4.value,
-      Component = _parseProps4.component,
-      componentPanel = _parseProps4.componentPanel,
-      className = _parseProps4.className,
-      children = _parseProps4.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps4, ["type", "value", "component", "componentPanel", "className", "children"]);
+  var _BaseComponent4 = (0, _BaseComponent13.default)(aprops, _Static),
+      type = _BaseComponent4.type,
+      value = _BaseComponent4.value,
+      Component = _BaseComponent4.component,
+      componentPanel = _BaseComponent4.componentPanel,
+      className = _BaseComponent4.className,
+      children = _BaseComponent4.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["type", "value", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'line-height-1 vertical-align-middle';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -486,10 +488,10 @@ _Static.defaultProps.componentPanel = 'span'; // Type: Hidden
  */
 
 var _HiddenInput = function HiddenInput(aprops) {
-  var _parseProps5 = (0, _props.default)(aprops, _HiddenInput.props),
-      Component = _parseProps5.component,
-      className = _parseProps5.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps5, ["component", "className"]);
+  var _BaseComponent5 = (0, _BaseComponent13.default)(aprops, _HiddenInput),
+      Component = _BaseComponent5.component,
+      className = _BaseComponent5.className,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["component", "className"]);
 
   var classStr = 'visibility-hide display-none';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -524,25 +526,25 @@ _HiddenInput.defaultProps.component = 'input'; // Type: CheckState
  */
 
 var _CheckState = function CheckState(aprops) {
-  var _parseProps6 = (0, _props.default)(aprops, _CheckState.props),
-      type = _parseProps6.type,
-      value = _parseProps6.value,
-      defaultValue = _parseProps6.defaultValue,
-      content = _parseProps6.content,
-      domValue = _parseProps6.domValue,
-      disabled = _parseProps6.disabled,
-      _onClick = _parseProps6.onClick,
-      onChange = _parseProps6.onChange,
-      CheckStateProps = _parseProps6.CheckStateProps,
-      inputProps = _parseProps6.inputProps,
-      innerProps = _parseProps6.innerProps,
-      _parseProps6$componen = _parseProps6.component,
-      Component = _parseProps6$componen === void 0 ? _Panel.default : _parseProps6$componen,
-      _parseProps6$componen2 = _parseProps6.componentPanel,
-      componentPanel = _parseProps6$componen2 === void 0 ? 'label' : _parseProps6$componen2,
-      className = _parseProps6.className,
-      children = _parseProps6.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps6, ["type", "value", "defaultValue", "content", "domValue", "disabled", "onClick", "onChange", "CheckStateProps", "inputProps", "innerProps", "component", "componentPanel", "className", "children"]);
+  var _BaseComponent6 = (0, _BaseComponent13.default)(aprops, _CheckState),
+      type = _BaseComponent6.type,
+      value = _BaseComponent6.value,
+      defaultValue = _BaseComponent6.defaultValue,
+      content = _BaseComponent6.content,
+      domValue = _BaseComponent6.domValue,
+      disabled = _BaseComponent6.disabled,
+      _onClick = _BaseComponent6.onClick,
+      onChange = _BaseComponent6.onChange,
+      CheckStateProps = _BaseComponent6.CheckStateProps,
+      inputProps = _BaseComponent6.inputProps,
+      innerProps = _BaseComponent6.innerProps,
+      _BaseComponent6$compo = _BaseComponent6.component,
+      Component = _BaseComponent6$compo === void 0 ? _Panel.default : _BaseComponent6$compo,
+      _BaseComponent6$compo2 = _BaseComponent6.componentPanel,
+      componentPanel = _BaseComponent6$compo2 === void 0 ? 'label' : _BaseComponent6$compo2,
+      className = _BaseComponent6.className,
+      children = _BaseComponent6.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent6, ["type", "value", "defaultValue", "content", "domValue", "disabled", "onClick", "onChange", "CheckStateProps", "inputProps", "innerProps", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'check-status transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle bg-none-';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -643,12 +645,12 @@ _CheckState.defaultProps.componentPanel = 'label';
  */
 
 var _CheckStateInner = function CheckStateInner(aprops) {
-  var _parseProps7 = (0, _props.default)(aprops, _CheckStateInner.props),
-      Component = _parseProps7.component,
-      _parseProps7$componen = _parseProps7.componentPanel,
-      componentPanel = _parseProps7$componen === void 0 ? 'span' : _parseProps7$componen,
-      className = _parseProps7.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps7, ["component", "componentPanel", "className"]);
+  var _BaseComponent7 = (0, _BaseComponent13.default)(aprops, _CheckStateInner),
+      Component = _BaseComponent7.component,
+      _BaseComponent7$compo = _BaseComponent7.componentPanel,
+      componentPanel = _BaseComponent7$compo === void 0 ? 'span' : _BaseComponent7$compo,
+      className = _BaseComponent7.className,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent7, ["component", "componentPanel", "className"]);
 
   var classStr = 'check-status-inner position-relative';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -685,12 +687,12 @@ _CheckStateInner.defaultProps.componentPanel = 'span';
  */
 
 var _CheckStateContent = function CheckStateContent(aprops) {
-  var _parseProps8 = (0, _props.default)(aprops, _CheckStateContent.props),
-      isChecked = _parseProps8.isChecked,
-      _parseProps8$componen = _parseProps8.component,
-      Component = _parseProps8$componen === void 0 ? _Panel.default : _parseProps8$componen,
-      className = _parseProps8.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps8, ["isChecked", "component", "className"]);
+  var _BaseComponent8 = (0, _BaseComponent13.default)(aprops, _CheckStateContent),
+      isChecked = _BaseComponent8.isChecked,
+      _BaseComponent8$compo = _BaseComponent8.component,
+      Component = _BaseComponent8$compo === void 0 ? _Panel.default : _BaseComponent8$compo,
+      className = _BaseComponent8.className,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent8, ["isChecked", "component", "className"]);
 
   var classStr = 'position-relative';
   var classSet = [isChecked ? 'check-status-checked' : 'check-status-unchecked'];
@@ -732,18 +734,18 @@ _CheckStateContent.defaultProps.component = _Panel.default; // radio checkbox
  */
 
 var _CheckStateContentCheckRadio = function CheckStateContentCheckRadio(aprops) {
-  var _parseProps9 = (0, _props.default)(aprops, _CheckStateContentCheckRadio.props),
-      type = _parseProps9.type,
-      isChecked = _parseProps9.isChecked,
-      disabled = _parseProps9.disabled,
-      name = _parseProps9.name,
-      nameChecked = _parseProps9.nameChecked,
-      defaultName = _parseProps9.defaultName,
-      defaultNameChecked = _parseProps9.defaultNameChecked,
-      Component = _parseProps9.component,
-      bTheme = _parseProps9['b-theme'],
-      bStyle = _parseProps9['b-style'],
-      props = (0, _objectWithoutProperties2.default)(_parseProps9, ["type", "isChecked", "disabled", "name", "nameChecked", "defaultName", "defaultNameChecked", "component", 'b-theme', 'b-style']);
+  var _BaseComponent9 = (0, _BaseComponent13.default)(aprops, _CheckStateContentCheckRadio),
+      type = _BaseComponent9.type,
+      isChecked = _BaseComponent9.isChecked,
+      disabled = _BaseComponent9.disabled,
+      name = _BaseComponent9.name,
+      nameChecked = _BaseComponent9.nameChecked,
+      defaultName = _BaseComponent9.defaultName,
+      defaultNameChecked = _BaseComponent9.defaultNameChecked,
+      Component = _BaseComponent9.component,
+      bTheme = _BaseComponent9['b-theme'],
+      bStyle = _BaseComponent9['b-style'],
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent9, ["type", "isChecked", "disabled", "name", "nameChecked", "defaultName", "defaultNameChecked", "component", 'b-theme', 'b-style']);
 
   if (!bStyle) bStyle = 'hollow';
 
@@ -816,7 +818,7 @@ _CheckStateContentCheckRadio.defaultProps.component = _Icon.default;
  */
 
 var _Checkbox = function Checkbox(aprops) {
-  aprops = (0, _props.default)(aprops, _Checkbox.props);
+  aprops = (0, _BaseComponent13.default)(aprops, _Checkbox);
   return _react.default.createElement(_CheckState, (0, _extends2.default)({
     content: Field.CheckStateContentCheckRadio
   }, aprops));
@@ -839,7 +841,7 @@ Object.defineProperty(Field, "Checkbox", {
  */
 
 var _Radio = function Radio(aprops) {
-  aprops = (0, _props.default)(aprops, _Radio.props);
+  aprops = (0, _BaseComponent13.default)(aprops, _Radio);
   return _react.default.createElement(_CheckState, (0, _extends2.default)({
     content: Field.CheckStateContentCheckRadio
   }, aprops));
@@ -864,11 +866,11 @@ Object.defineProperty(Field, "Radio", {
  */
 
 var _CheckStateContentSwitch = function CheckStateContentSwitch(aprops) {
-  var _parseProps10 = (0, _props.default)(aprops, _CheckStateContentSwitch.props),
-      Component = _parseProps10.component,
-      className = _parseProps10.className,
-      children = _parseProps10.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps10, ["component", "className", "children"]);
+  var _BaseComponent10 = (0, _BaseComponent13.default)(aprops, _CheckStateContentSwitch),
+      Component = _BaseComponent10.component,
+      className = _BaseComponent10.className,
+      children = _BaseComponent10.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent10, ["component", "className", "children"]);
 
   var classStr = 'border-radius-rounded line-height-0';
   return _react.default.createElement(Component, {
@@ -902,15 +904,15 @@ _CheckStateContentSwitch.defaultProps.component = _Panel.default;
  */
 
 var _CheckStateContentSwitchItem = function CheckStateContentSwitchItem(aprops) {
-  var _parseProps11 = (0, _props.default)(aprops, _CheckStateContentSwitchItem.props),
-      isChecked = _parseProps11.isChecked,
-      isOn = _parseProps11.isOn,
-      Component = _parseProps11.component,
-      _parseProps11$bTheme = _parseProps11['b-theme'],
-      bTheme = _parseProps11$bTheme === void 0 ? 'component' : _parseProps11$bTheme,
-      className = _parseProps11.className,
-      children = _parseProps11.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps11, ["isChecked", "isOn", "component", 'b-theme', "className", "children"]);
+  var _BaseComponent11 = (0, _BaseComponent13.default)(aprops, _CheckStateContentSwitchItem),
+      isChecked = _BaseComponent11.isChecked,
+      isOn = _BaseComponent11.isOn,
+      Component = _BaseComponent11.component,
+      _BaseComponent11$bTh = _BaseComponent11['b-theme'],
+      bTheme = _BaseComponent11$bTh === void 0 ? 'component' : _BaseComponent11$bTh,
+      className = _BaseComponent11.className,
+      children = _BaseComponent11.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent11, ["isChecked", "isOn", "component", 'b-theme', "className", "children"]);
 
   var classStr = 'border-radius-rounded width-1em height-1em';
   return _react.default.createElement(Component, (0, _extends2.default)({}, props, {
@@ -954,7 +956,7 @@ _CheckStateContentSwitchItem.defaultProps.component = _Panel.default;
  */
 
 var _Switch = function Switch(aprops) {
-  aprops = (0, _props.default)(aprops, _Switch.props);
+  aprops = (0, _BaseComponent13.default)(aprops, _Switch);
   return _react.default.createElement(_CheckState, (0, _extends2.default)({
     content: Field.CheckStateContentSwitch
   }, aprops, {
@@ -981,18 +983,18 @@ Object.defineProperty(Field, "Switch", {
  */
 
 var _File = function File(aprops) {
-  var _parseProps12 = (0, _props.default)(aprops, _File.props),
-      type = _parseProps12.type,
-      value = _parseProps12.value,
-      inputProps = _parseProps12.inputProps,
-      disabled = _parseProps12.disabled,
-      onClick = _parseProps12.onClick,
-      onChange = _parseProps12.onChange,
-      Component = _parseProps12.component,
-      componentPanel = _parseProps12.componentPanel,
-      className = _parseProps12.className,
-      children = _parseProps12.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps12, ["type", "value", "inputProps", "disabled", "onClick", "onChange", "component", "componentPanel", "className", "children"]);
+  var _BaseComponent12 = (0, _BaseComponent13.default)(aprops, _File),
+      type = _BaseComponent12.type,
+      value = _BaseComponent12.value,
+      inputProps = _BaseComponent12.inputProps,
+      disabled = _BaseComponent12.disabled,
+      onClick = _BaseComponent12.onClick,
+      onChange = _BaseComponent12.onChange,
+      Component = _BaseComponent12.component,
+      componentPanel = _BaseComponent12.componentPanel,
+      className = _BaseComponent12.className,
+      children = _BaseComponent12.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent12, ["type", "value", "inputProps", "disabled", "onClick", "onChange", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'line-height-1 vertical-align-middle';
   return _react.default.createElement(Component, (0, _extends2.default)({

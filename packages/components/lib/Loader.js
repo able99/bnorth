@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.PanelLoader = exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
@@ -17,7 +17,7 @@ var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
+var _BaseComponent5 = _interopRequireDefault(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -34,15 +34,15 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @augments BaseComponent
  */
 var Loader = function Loader(aprops) {
-  var _parseProps = (0, _props.default)(aprops, Loader.props),
-      type = _parseProps.type,
-      timeoutTransition = _parseProps.timeoutTransition,
-      timeoutAnimation = _parseProps.timeoutAnimation,
-      isProgress = _parseProps.isProgress,
-      progress = _parseProps.progress,
-      color = _parseProps.color,
-      colorReverse = _parseProps.colorReverse,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["type", "timeoutTransition", "timeoutAnimation", "isProgress", "progress", "color", "colorReverse"]);
+  var _BaseComponent = (0, _BaseComponent5.default)(aprops, Loader),
+      type = _BaseComponent.type,
+      timeoutTransition = _BaseComponent.timeoutTransition,
+      timeoutAnimation = _BaseComponent.timeoutAnimation,
+      isProgress = _BaseComponent.isProgress,
+      progress = _BaseComponent.progress,
+      color = _BaseComponent.color,
+      colorReverse = _BaseComponent.colorReverse,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "timeoutTransition", "timeoutAnimation", "isProgress", "progress", "color", "colorReverse"]);
 
   var Component = Loader[type];
   if (!Component) return null;
@@ -113,15 +113,15 @@ var _default = Loader; // Loader Line
 exports.default = _default;
 
 Loader.line = function (aprops) {
-  var _parseProps2 = (0, _props.default)(aprops, Loader.line.props),
-      isProgress = _parseProps2.isProgress,
-      progress = _parseProps2.progress,
-      timeout = _parseProps2.timeout,
-      color = _parseProps2.color,
-      colorReverse = _parseProps2.colorReverse,
-      className = _parseProps2.className,
-      children = _parseProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isProgress", "progress", "timeout", "color", "colorReverse", "className", "children"]);
+  var _BaseComponent2 = (0, _BaseComponent5.default)(aprops, Loader.line),
+      isProgress = _BaseComponent2.isProgress,
+      progress = _BaseComponent2.progress,
+      timeout = _BaseComponent2.timeout,
+      color = _BaseComponent2.color,
+      colorReverse = _BaseComponent2.colorReverse,
+      className = _BaseComponent2.className,
+      children = _BaseComponent2.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isProgress", "progress", "timeout", "color", "colorReverse", "className", "children"]);
 
   var classStr = 'width-full height-1em';
   return _react.default.createElement("svg", (0, _extends2.default)({
@@ -165,15 +165,15 @@ Loader.line = function (aprops) {
 
 
 Loader.circle = function (aprops) {
-  var _parseProps3 = (0, _props.default)(aprops, Loader.circle.props),
-      isProgress = _parseProps3.isProgress,
-      progress = _parseProps3.progress,
-      timeout = _parseProps3.timeout,
-      color = _parseProps3.color,
-      colorReverse = _parseProps3.colorReverse,
-      className = _parseProps3.className,
-      children = _parseProps3.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["isProgress", "progress", "timeout", "color", "colorReverse", "className", "children"]);
+  var _BaseComponent3 = (0, _BaseComponent5.default)(aprops, Loader.circle),
+      isProgress = _BaseComponent3.isProgress,
+      progress = _BaseComponent3.progress,
+      timeout = _BaseComponent3.timeout,
+      color = _BaseComponent3.color,
+      colorReverse = _BaseComponent3.colorReverse,
+      className = _BaseComponent3.className,
+      children = _BaseComponent3.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["isProgress", "progress", "timeout", "color", "colorReverse", "className", "children"]);
 
   var classStr = 'width-1em height-1em';
   return _react.default.createElement("svg", (0, _extends2.default)({
@@ -203,4 +203,65 @@ Loader.circle = function (aprops) {
     dur: timeout,
     repeatCount: "indefinite"
   }) : null), children);
+}; // Panel Loader
+// ---------------------
+
+/**
+ * 加载动画小面板组件，扩展小面板组件，提供加载动画组件与面板内容混排的能力
+ * @component
+ * @mount Panel.Loader
+ * @augments BaseComponent
+ * @augments Panel.module:Container~Container
+ */
+
+
+var PanelLoader = function PanelLoader(aprops) {
+  var _BaseComponent4 = (0, _BaseComponent5.default)(aprops, PanelLoader, {
+    isContainer: true
+  }),
+      isProgress = _BaseComponent4.isProgress,
+      progress = _BaseComponent4.progress,
+      loaderProps = _BaseComponent4.loaderProps,
+      title = _BaseComponent4.title,
+      titleProps = _BaseComponent4.titleProps,
+      children = _BaseComponent4.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["isProgress", "progress", "loaderProps", "title", "titleProps", "children"]);
+
+  return _react.default.createElement(_Panel.default.Container, (0, _extends2.default)({
+    type: "flex",
+    position: "left",
+    justify: "center",
+    align: "center"
+  }, props), _react.default.createElement(Loader, (0, _extends2.default)({
+    isProgress: isProgress,
+    progress: progress
+  }, loaderProps)), title || children ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    "bc-text-truncate-1-": true
+  }, titleProps), title, children) : null);
 };
+
+exports.PanelLoader = PanelLoader;
+PanelLoader.defaultProps = {};
+/**
+ * Loader 的属性, 参见 Loader
+ * @attribute Panel.module:Loader~PanelLoader.loader*
+ * @type {*}
+ */
+
+/**
+ * 设置图标子组件的属性
+ * @attribute Panel.module:Loader~PanelLoader.loaderProps
+ * @type {object}
+ */
+
+/**
+ * 设置文字，也可以使用 children
+ * @attribute Panel.module:Loader~PanelLoader.title
+ * @type {string}
+ */
+
+/**
+ * 设置内容子组件的属性
+ * @attribute Panel.module:Loader~PanelLoader.titleProps
+ * @type {object}
+ */

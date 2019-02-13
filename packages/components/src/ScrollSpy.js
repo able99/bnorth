@@ -2,7 +2,7 @@
  * @module
  */
 import React from 'react';
-import { listen, domOffset, domFindNode, domFindScrollContainer } from './utils/dom';
+import { listen, domOffset, domFindNode, domFindScrollContainer } from './BaseComponent';
 
 
 /**

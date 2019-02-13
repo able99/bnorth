@@ -2,11 +2,11 @@
  * @module
  */
 import React from 'react';
-import { domOffset, chainedFuncs } from './utils/dom';
-import parseProps from './utils/props';
-import Panel from './Panel.Icon';
+import BaseComponent, { domOffset, chainedFuncs } from './BaseComponent';
+import Panel from './Panel';
 import ScrollSpy from './ScrollSpy';
 import Fab from './Fab';
+import { PanelIcon } from './Icon';
 
 
 /**
@@ -32,18 +32,18 @@ export default class BackTop extends React.Component {
   render() {
     let {
       onClick, calc, param, 
-      content:Content, contentIcon, contentIconDefault,  contentProps,
       scrollSpyProps,
-      component:Component, children, ...props
-    } = parseProps(this.props, BackTop.props);
+      content:Content, contentProps,
+      children, ...props
+    } = BaseComponent(this.props, BackTop);
 
     return (
       <React.Fragment>
         <ScrollSpy onPosChange={this._handlePosChange.bind(this)} {...scrollSpyProps} />
         {this.isShow()?(
-          <Component container={undefined} onClick={chainedFuncs(()=>this.scrollToTop(), onClick)} {...props} >
-            <Content icon={contentIcon} iconDefault={contentIconDefault} {...contentProps}>{children}</Content>
-          </Component>
+          <Panel onClick={chainedFuncs(()=>this.scrollToTop(), onClick)} {...props} >
+            <Content name="backTop:^" {...contentProps}>{children}</Content>
+          </Panel>
         ):null}
       </React.Fragment>
     )
@@ -52,34 +52,31 @@ export default class BackTop extends React.Component {
 
 BackTop.defaultProps = {};
 /**
- * 设置图标子组件的属性
+ * 设置出现时机的计算函数
  * @attribute module:BackTop.calc
  * @type {function}
  * @default module:BackTop.calc
  */
 /**
+ * 设置出现时机的计算参数
  * @type {number|string}
  */
 BackTop.defaultProps.param="100%";
-BackTop.defaultProps.content=Panel.Icon;
-BackTop.defaultProps.contentIcon="backTop";
-BackTop.defaultProps.contentIconDefault="^";
+/**
+ * 设置滚动监控组件的属性
+ * @attribute module:BackTop.scrollSpyProps
+ * @type {object}
+ */
+/**
+ * 设置内容的组件
+ */
+BackTop.defaultProps.content=PanelIcon;
 /**
  * 设置图标子组件的属性
  * @attribute module:BackTop.contentProps
  * @type {function}
- * @default module:BackTop.calc
  */
-/**
- * 设置图标子组件的属性
- * @attribute module:BackTop.scrollSpyProps
- * @type {function}
- * @default module:BackTop.calc
- */
-/**
- * 参见 BaseComponent
- */
-BackTop.defaultProps.component=Fab;
+BackTop.defaultProps.componentTranform=Fab;
 
 
 /**

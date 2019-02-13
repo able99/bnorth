@@ -4,8 +4,9 @@
  */
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
-import parseProps from './utils/props';
-import Panel from './Panel.Icon';
+import BaseComponent from './BaseComponent';
+import Panel from './Panel';
+import { PanelIcon } from './Icon';
 
 
 // NarBar
@@ -21,7 +22,7 @@ let NavBar = aprops=>{
   let {
     statusbarOverlay, hidden, 
     component:Component, componentPanel, className, style, ...props
-  } = parseProps(aprops, NavBar.props);
+  } = BaseComponent(aprops, NavBar);
   
   if(hidden) return null;
 
@@ -68,7 +69,7 @@ let Title = aprops=>{
   let {
     isFullOrCenter,
     component:Component=Panel, componentPanel, className, children, ...props
-  } = parseProps(aprops, Title.props);
+  } = BaseComponent(aprops, Title);
 
   let classStr = 'text-align-center flex-sub-flex-extend text-weight-bold text-size-xl';
 
@@ -107,7 +108,7 @@ Title.defaultProps.component = Panel;
 let Item = aprops=>{
   let {
     component:Component, componentPanel, className, ...props
-  } = parseProps(aprops, Item.props);
+  } = BaseComponent(aprops, Item);
 
   let classStr = 'padding-h-sm flex-sub-flex-none cursor-pointer status-';
 
@@ -120,4 +121,4 @@ Item.defaultProps = {};
 /**
  * 设置映射组件
  */
-Item.defaultProps.component = Panel.Icon;
+Item.defaultProps.component = PanelIcon;

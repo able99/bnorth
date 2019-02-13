@@ -11,15 +11,17 @@ var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends")
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
-
-var _props = _interopRequireDefault(require("./utils/props"));
-
 var _react = _interopRequireDefault(require("react"));
 
-var _Panel = _interopRequireDefault(require("./Panel.Loader"));
+var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+
+var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
+
+var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _Backdrop = _interopRequireDefault(require("./Backdrop"));
+
+require("./Loader");
 
 /**
  * 提供了蒙层组件和蒙层插件
@@ -33,12 +35,12 @@ var _Backdrop = _interopRequireDefault(require("./Backdrop"));
  * @export
  */
 var Mask = function Mask(aprops) {
-  var _parseProps = (0, _props.default)(aprops, Mask.props),
-      loaderProps = _parseProps.loaderProps,
-      mask = _parseProps.mask,
-      Component = _parseProps.component,
-      className = _parseProps.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["loaderProps", "mask", "component", "className"]);
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, Mask),
+      loaderProps = _BaseComponent.loaderProps,
+      mask = _BaseComponent.mask,
+      Component = _BaseComponent.component,
+      className = _BaseComponent.className,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["loaderProps", "mask", "component", "className"]);
 
   var classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center text-color-white';
   return _react.default.createElement(Component, (0, _extends2.default)({

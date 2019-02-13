@@ -4,7 +4,7 @@
 import React from 'react';
 import { transiton } from '@bnorth/rich.css/lib/styles/animation';
 import classes from '@bnorth/rich.css/lib/classes'; 
-import parseProps from './utils/props';
+import BaseComponent from './BaseComponent';
 import Panel from './Panel';
 
  
@@ -21,7 +21,7 @@ let Loader = aprops=>{
   let {
     type, timeoutTransition, timeoutAnimation, isProgress, progress, color, colorReverse,
     ...props
-  } = parseProps(aprops, Loader.props);
+  } = BaseComponent(aprops, Loader);
 
   let Component = Loader[type];
   if(!Component) return null;
@@ -89,7 +89,7 @@ Loader.line = aprops=>{
   let {
     isProgress, progress, timeout, color, colorReverse,
     className, children, ...props
-  } = parseProps(aprops, Loader.line.props);
+  } = BaseComponent(aprops, Loader.line);
 
   let classStr = 'width-full height-1em';
 
@@ -123,7 +123,7 @@ Loader.circle = aprops=>{
   let {
     isProgress, progress, timeout, color, colorReverse,
     className, children, ...props
-  } = parseProps(aprops, Loader.circle.props);
+  } = BaseComponent(aprops, Loader.circle);
 
   let classStr = 'width-1em height-1em';
 
@@ -142,3 +142,55 @@ Loader.circle = aprops=>{
     </svg>
   );
 }
+
+
+
+// Panel Loader
+// ---------------------
+
+/**
+ * 加载动画小面板组件，扩展小面板组件，提供加载动画组件与面板内容混排的能力
+ * @component
+ * @mount Panel.Loader
+ * @augments BaseComponent
+ * @augments Panel.module:Container~Container
+ */
+let PanelLoader = aprops=>{
+  let {
+    isProgress, progress, loaderProps, 
+    title, titleProps, 
+    children, ...props
+  } = BaseComponent(aprops, PanelLoader, {isContainer: true});
+
+
+  return (
+    <Panel.Container type="flex"  position="left" justify="center" align="center" {...props}>
+      <Loader isProgress={isProgress} progress={progress} {...loaderProps} />
+      {title||children?<Panel bc-text-truncate-1- {...titleProps} >{title}{children}</Panel>:null}
+    </Panel.Container>
+  );
+}
+
+PanelLoader.defaultProps = {};
+/**
+ * Loader 的属性, 参见 Loader
+ * @attribute Panel.module:Loader~PanelLoader.loader*
+ * @type {*}
+ */
+/**
+ * 设置图标子组件的属性
+ * @attribute Panel.module:Loader~PanelLoader.loaderProps
+ * @type {object}
+ */
+/**
+ * 设置文字，也可以使用 children
+ * @attribute Panel.module:Loader~PanelLoader.title
+ * @type {string}
+ */
+/**
+ * 设置内容子组件的属性
+ * @attribute Panel.module:Loader~PanelLoader.titleProps
+ * @type {object}
+ */
+
+export { PanelLoader };

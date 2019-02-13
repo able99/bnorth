@@ -2,7 +2,7 @@
  * @module
  */
 import React from 'react';
-import parseProps from './utils/props';
+import BaseComponent from './BaseComponent';
 import Panel from './Panel';
 
 
@@ -14,9 +14,9 @@ import Panel from './Panel';
  */
 let Space = (aprops)=>{
   let {
-    count=1, stacked,
+    count, stacked,
     component:Component=Panel, children, ...props
-  } = parseProps(aprops, Space.props);
+  } = BaseComponent(aprops, Space);
 
   return (
     <Component inline {...props}>

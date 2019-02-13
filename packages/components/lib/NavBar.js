@@ -17,9 +17,11 @@ var _react = _interopRequireDefault(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
+var _BaseComponent4 = _interopRequireDefault(require("./BaseComponent"));
 
-var _Panel = _interopRequireDefault(require("./Panel.Icon"));
+var _Panel = _interopRequireDefault(require("./Panel"));
+
+var _Icon = require("./Icon");
 
 /**
  * 标题栏组件
@@ -35,14 +37,14 @@ var _Panel = _interopRequireDefault(require("./Panel.Icon"));
  * @exportdefault
  */
 var NavBar = function NavBar(aprops) {
-  var _parseProps = (0, _props.default)(aprops, NavBar.props),
-      statusbarOverlay = _parseProps.statusbarOverlay,
-      hidden = _parseProps.hidden,
-      Component = _parseProps.component,
-      componentPanel = _parseProps.componentPanel,
-      className = _parseProps.className,
-      style = _parseProps.style,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["statusbarOverlay", "hidden", "component", "componentPanel", "className", "style"]);
+  var _BaseComponent = (0, _BaseComponent4.default)(aprops, NavBar),
+      statusbarOverlay = _BaseComponent.statusbarOverlay,
+      hidden = _BaseComponent.hidden,
+      Component = _BaseComponent.component,
+      componentPanel = _BaseComponent.componentPanel,
+      className = _BaseComponent.className,
+      style = _BaseComponent.style,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["statusbarOverlay", "hidden", "component", "componentPanel", "className", "style"]);
 
   if (hidden) return null;
   var classStr = 'flex-display-block flex-justify-around flex-align-center width-full padding-v-sm border-set-bottom-';
@@ -91,14 +93,14 @@ var _default = NavBar; // NavBar Title
 exports.default = _default;
 
 var _Title = function Title(aprops) {
-  var _parseProps2 = (0, _props.default)(aprops, _Title.props),
-      isFullOrCenter = _parseProps2.isFullOrCenter,
-      _parseProps2$componen = _parseProps2.component,
-      Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
-      componentPanel = _parseProps2.componentPanel,
-      className = _parseProps2.className,
-      children = _parseProps2.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["isFullOrCenter", "component", "componentPanel", "className", "children"]);
+  var _BaseComponent2 = (0, _BaseComponent4.default)(aprops, _Title),
+      isFullOrCenter = _BaseComponent2.isFullOrCenter,
+      _BaseComponent2$compo = _BaseComponent2.component,
+      Component = _BaseComponent2$compo === void 0 ? _Panel.default : _BaseComponent2$compo,
+      componentPanel = _BaseComponent2.componentPanel,
+      className = _BaseComponent2.className,
+      children = _BaseComponent2.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isFullOrCenter", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'text-align-center flex-sub-flex-extend text-weight-bold text-size-xl';
   return isFullOrCenter ? _react.default.createElement(Component, (0, _extends2.default)({
@@ -146,11 +148,11 @@ _Title.defaultProps.component = _Panel.default; // NavBar Item
  */
 
 var _Item = function Item(aprops) {
-  var _parseProps3 = (0, _props.default)(aprops, _Item.props),
-      Component = _parseProps3.component,
-      componentPanel = _parseProps3.componentPanel,
-      className = _parseProps3.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["component", "componentPanel", "className"]);
+  var _BaseComponent3 = (0, _BaseComponent4.default)(aprops, _Item),
+      Component = _BaseComponent3.component,
+      componentPanel = _BaseComponent3.componentPanel,
+      className = _BaseComponent3.className,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["component", "componentPanel", "className"]);
 
   var classStr = 'padding-h-sm flex-sub-flex-none cursor-pointer status-';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -172,4 +174,4 @@ _Item.defaultProps = {};
  * 设置映射组件
  */
 
-_Item.defaultProps.component = _Panel.default.Icon;
+_Item.defaultProps.component = _Icon.PanelIcon;

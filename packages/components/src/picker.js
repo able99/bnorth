@@ -3,9 +3,9 @@
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import { transform } from '@bnorth/rich.css/lib/styles/animation';
-import { domFindNode, domOffset } from './utils/dom';
-import parseProps from './utils/props';
-import Panel from './Panel.Touchable';
+import BaseComponent, { domFindNode, domOffset } from './BaseComponent';
+import Panel from './Panel';
+import Touchable from './Touchable';
 import Button from './Button';
 
 
@@ -79,7 +79,7 @@ export class Picker extends React.Component {
     const {
       lineCount, data, onInit, onChange, index:_index,
       component:Component=Panel, componentPanel, className, ...props
-    } = parseProps(this.props, Picker.props);
+    } = BaseComponent(this.props, Picker);
     const { index, itemSize } = this.state;
 
     let classStr = 'flex-display-block  overflow-y-hidden';
@@ -102,7 +102,7 @@ Picker._Line = aprops=>{
   const {
     itemSize, lineCount,
     component:Component=Panel, componentPanel, className, style, ...props
-  } = parseProps(aprops, Picker._Line.props);
+  } = BaseComponent(aprops, Picker._Line);
 
   let classStr = 'border-set-v- position-absolute width-full pointer-events-none';
   let styleSet = { top: Math.floor(lineCount/2)*itemSize, height: itemSize, ...style};
@@ -140,8 +140,8 @@ Picker._Col = class extends React.Component {
   render() {
     const {
       data=[], index, lineCount, onSize,
-      component:Component=Panel.Touchable, componentPanel, className, ...props
-    } = parseProps(this.props, Picker._Col.props);
+      component:Component=Touchable, componentPanel, className, ...props
+    } = BaseComponent(this.props, Picker._Col);
     const { offset } = this.state;
     if(!data.length) data.push(' ');
 
@@ -165,7 +165,7 @@ Picker._Item = aprops=>{
   const {
     selected,
     component:Component=Panel, componentPanel, className, children, ...props
-  } = parseProps(aprops, Picker._Item.props);
+  } = BaseComponent(aprops, Picker._Item);
 
   let classStr = 'padding-a- text-align-center width-full';
 

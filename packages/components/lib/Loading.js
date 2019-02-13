@@ -17,19 +17,19 @@ var _react = _interopRequireDefault(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
+var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
 
 var _Loader = _interopRequireDefault(require("./Loader"));
 
 var Loading = function Loading(aprops) {
-  var _parseProps = (0, _props.default)(aprops, Loading.props),
-      progress = _parseProps.progress,
-      _parseProps$height = _parseProps.height,
-      height = _parseProps$height === void 0 ? 3 : _parseProps$height,
-      _parseProps$component = _parseProps.component,
-      Component = _parseProps$component === void 0 ? _Loader.default : _parseProps$component,
-      className = _parseProps.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["progress", "height", "component", "className"]);
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, Loading),
+      progress = _BaseComponent.progress,
+      _BaseComponent$height = _BaseComponent.height,
+      height = _BaseComponent$height === void 0 ? 3 : _BaseComponent$height,
+      _BaseComponent$compon = _BaseComponent.component,
+      Component = _BaseComponent$compon === void 0 ? _Loader.default : _BaseComponent$compon,
+      className = _BaseComponent.className,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["progress", "height", "component", "className"]);
 
   var classStr = 'position-absolute offset-left-start offset-top-start offset-right-start width-full';
   return _react.default.createElement(Component, (0, _extends2.default)({

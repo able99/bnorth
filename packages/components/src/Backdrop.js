@@ -2,10 +2,8 @@
  * @module
  */
 import React from 'react';
-import classes from '@bnorth/rich.css/lib/classes'; 
-import parseProps from './utils/props';
-import AnimationFade from './AnimationFade';
-import Panel from './Panel';
+import BaseComponent from './BaseComponent';
+import Animation from './Animation';
 
 
 /**
@@ -14,24 +12,18 @@ import Panel from './Panel';
  * Backdrop 会填满具有 relative，absolute 或 fixed 位置属性的父元素，并提供背景样式和点击操作等
  * @component 
  * @exportdefault
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel.Panel
  */
 let Backdrop = aprops=>{
-  let { 
-    mask, transition:Transition, in:isIn, transitionProps, onTransitionFinished,
-    component, componentPanel, className, children, ...props 
-  } = parseProps(aprops, Backdrop.props);
+  let { mask, transition:Transition, ...props } = BaseComponent(aprops, Backdrop);
 
-  let classStr = 'position-absolute square-full offset-a-start overflow-a-hidden';
-  let classSet = mask?`bg-color-${mask===true?'mask':mask}`:'';
+  let classNamePre = {
+    'position-absolute square-full offset-a-start overflow-a-hidden': true,
+    ['bg-color-'+(mask===true?'mask':mask)]: mask,
+  }
 
-  return (
-    <Transition 
-      in={isIn} transitionProps={transitionProps} onTransitionFinished={onTransitionFinished} 
-      component={component} componentPanel={componentPanel} className={classes(classStr, classSet, className)} {...props}>
-      {children}
-    </Transition>
-  );
+  return <Transition type="fade" classNamePre={classNamePre} {...props} />;
 }
 
 Backdrop.defaultProps = {};
@@ -44,23 +36,12 @@ Backdrop.defaultProps.mask = true;
  * 设置背景显示的进入和离开动画组件
  * @type {component}
  */
-Backdrop.defaultProps.transition = AnimationFade;
+Backdrop.defaultProps.transition = Animation;
 /**
- * 参见 AnimationFade
- * @attribute module:Backdrop.Backdrop.in
+ * 动画参数，参见 Animation
+ * @attribute module:Backdrop.Backdrop.transition*
  */
-/**
- * 参见 AnimationFade
- * @attribute module:Backdrop.Backdrop.transitionProps
- */
-/**
- * 参见 AnimationFade
- * @attribute module:Backdrop.Backdrop.onTransitionFinished
- */
-/**
- * 参见 BaseComponent
- */
-Backdrop.defaultProps.component = Panel;
+
 
 
 export default Backdrop;

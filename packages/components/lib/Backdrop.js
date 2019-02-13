@@ -9,17 +9,15 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
-
-var _AnimationFade = _interopRequireDefault(require("./AnimationFade"));
-
-var _Panel = _interopRequireDefault(require("./Panel"));
+var _Animation = _interopRequireDefault(require("./Animation"));
 
 /**
  * @module
@@ -31,31 +29,22 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * Backdrop 会填满具有 relative，absolute 或 fixed 位置属性的父元素，并提供背景样式和点击操作等
  * @component 
  * @exportdefault
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel.Panel
  */
 var Backdrop = function Backdrop(aprops) {
-  var _parseProps = (0, _props.default)(aprops, Backdrop.props),
-      mask = _parseProps.mask,
-      Transition = _parseProps.transition,
-      isIn = _parseProps.in,
-      transitionProps = _parseProps.transitionProps,
-      onTransitionFinished = _parseProps.onTransitionFinished,
-      component = _parseProps.component,
-      componentPanel = _parseProps.componentPanel,
-      className = _parseProps.className,
-      children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["mask", "transition", "in", "transitionProps", "onTransitionFinished", "component", "componentPanel", "className", "children"]);
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, Backdrop),
+      mask = _BaseComponent.mask,
+      Transition = _BaseComponent.transition,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["mask", "transition"]);
 
-  var classStr = 'position-absolute square-full offset-a-start overflow-a-hidden';
-  var classSet = mask ? "bg-color-".concat(mask === true ? 'mask' : mask) : '';
+  var classNamePre = (0, _defineProperty2.default)({
+    'position-absolute square-full offset-a-start overflow-a-hidden': true
+  }, 'bg-color-' + (mask === true ? 'mask' : mask), mask);
   return _react.default.createElement(Transition, (0, _extends2.default)({
-    in: isIn,
-    transitionProps: transitionProps,
-    onTransitionFinished: onTransitionFinished,
-    component: component,
-    componentPanel: componentPanel,
-    className: (0, _classes.default)(classStr, classSet, className)
-  }, props), children);
+    type: "fade",
+    classNamePre: classNamePre
+  }, props));
 };
 
 Backdrop.defaultProps = {};
@@ -70,26 +59,11 @@ Backdrop.defaultProps.mask = true;
  * @type {component}
  */
 
-Backdrop.defaultProps.transition = _AnimationFade.default;
+Backdrop.defaultProps.transition = _Animation.default;
 /**
- * 参见 AnimationFade
- * @attribute module:Backdrop.Backdrop.in
+ * 动画参数，参见 Animation
+ * @attribute module:Backdrop.Backdrop.transition*
  */
 
-/**
- * 参见 AnimationFade
- * @attribute module:Backdrop.Backdrop.transitionProps
- */
-
-/**
- * 参见 AnimationFade
- * @attribute module:Backdrop.Backdrop.onTransitionFinished
- */
-
-/**
- * 参见 BaseComponent
- */
-
-Backdrop.defaultProps.component = _Panel.default;
 var _default = Backdrop;
 exports.default = _default;

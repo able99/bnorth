@@ -25,7 +25,7 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _react = _interopRequireDefault(require("react"));
 
-var _dom = require("./utils/dom");
+var _BaseComponent = require("./BaseComponent");
 
 /**
  * @module
@@ -61,13 +61,13 @@ function (_React$Component) {
       if (!target || !onRelativeChange) return;
 
       if (target === true) {
-        this.targetOffset = (0, _dom.domOffset)(this, this.container);
+        this.targetOffset = (0, _BaseComponent.domOffset)(this, this.container);
       } else if (target === 'parent') {
-        var dom = (0, _dom.domFindNode)(this);
+        var dom = (0, _BaseComponent.domFindNode)(this);
         if (!dom) return;
         dom = dom.parentNode;
         if (!dom) return;
-        this.targetOffset = (0, _dom.domOffset)(dom, this.container);
+        this.targetOffset = (0, _BaseComponent.domOffset)(dom, this.container);
       }
 
       if (this.targetOffset) this.targetOffset.bottom = this.targetOffset.top + this.targetOffset.height;
@@ -110,12 +110,12 @@ function (_React$Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.container = (0, _dom.domFindScrollContainer)(this, this.props.container, this.props.horizontal);
+      this.container = (0, _BaseComponent.domFindScrollContainer)(this, this.props.container, this.props.horizontal);
 
       this._getTargetOffset();
 
-      this.offScrollListener = (0, _dom.listen)(this.container, 'scroll', this._handlePosChange.bind(this), true);
-      this.offResizeListener = (0, _dom.listen)(window, 'resize', this._handlePosChange.bind(this), true);
+      this.offScrollListener = (0, _BaseComponent.listen)(this.container, 'scroll', this._handlePosChange.bind(this), true);
+      this.offResizeListener = (0, _BaseComponent.listen)(window, 'resize', this._handlePosChange.bind(this), true);
 
       this._handlePosChange();
     }

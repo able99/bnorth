@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -25,13 +27,11 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _react = _interopRequireDefault(require("react"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
-
-var _props = _interopRequireDefault(require("./utils/props"));
-
-var _dom = require("./utils/dom");
+var _BaseComponent2 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Button = _interopRequireDefault(require("./Button"));
+
+var _Panel = _interopRequireDefault(require("./Panel"));
 
 /**
  * @module
@@ -43,7 +43,9 @@ var _Button = _interopRequireDefault(require("./Button"));
  * 浮动按钮组件是浮动在指定容器上的组件，可设置浮动的位置，边缘距离和浮动的映射组件
  * @component 
  * @exportdefault
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel.Panel
+ * @augments module:Button.Button
  */
 var Fab =
 /*#__PURE__*/
@@ -56,30 +58,25 @@ function (_React$Component) {
   }
 
   (0, _createClass2.default)(Fab, [{
-    key: "_handleRef",
-    value: function _handleRef(e) {
-      this.container = (0, _dom.domFindContainer)(e, this.props.container);
-      this.forceUpdate();
-    }
-  }, {
     key: "render",
     value: function render() {
       var _this = this,
-          _classSet;
+          _classNamePre;
 
-      var _parseProps = (0, _props.default)(this.props, Fab.props),
-          h = _parseProps.h,
-          v = _parseProps.v,
-          margin = _parseProps.margin,
-          container = _parseProps.container,
-          Component = _parseProps.component,
-          className = _parseProps.className,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["h", "v", "margin", "container", "component", "className"]);
+      var _BaseComponent = (0, _BaseComponent2.default)(this.props, Fab),
+          h = _BaseComponent.h,
+          v = _BaseComponent.v,
+          margin = _BaseComponent.margin,
+          container = _BaseComponent.container,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["h", "v", "margin", "container"]);
 
       if ((container === true || typeof container === 'string') && !this.container) {
         return _react.default.createElement("span", {
           ref: function ref(e) {
-            return e && _this._handleRef(e);
+            if (!e) return;
+            _this.container = (0, _BaseComponent2.domFindContainer)(e, _this.props.container);
+
+            _this.forceUpdate();
           },
           style: {
             fontSize: 0
@@ -87,14 +84,15 @@ function (_React$Component) {
         });
       }
 
-      var classStr = 'position-absolute';
-      var classSet = (_classSet = {}, (0, _defineProperty2.default)(_classSet, "margin-top-".concat(margin !== true ? margin : ''), margin && v === 'start'), (0, _defineProperty2.default)(_classSet, "margin-left-".concat(margin !== true ? margin : ''), margin && h === 'start'), (0, _defineProperty2.default)(_classSet, "margin-bottom-".concat(margin !== true ? margin : ''), margin && v === 'end'), (0, _defineProperty2.default)(_classSet, "margin-right-".concat(margin !== true ? margin : ''), margin && h === 'end'), (0, _defineProperty2.default)(_classSet, 'translate-center-x', h === 'center' && v !== 'center'), (0, _defineProperty2.default)(_classSet, 'translate-center-y', h !== 'center' && v === 'center'), (0, _defineProperty2.default)(_classSet, 'translate-center-a', h === 'center' && v === 'center'), (0, _defineProperty2.default)(_classSet, 'offset-left-center', h === 'center'), (0, _defineProperty2.default)(_classSet, 'offset-top-center', v === 'center'), (0, _defineProperty2.default)(_classSet, 'offset-left-start', h === 'start'), (0, _defineProperty2.default)(_classSet, 'offset-right-start', h === 'end'), (0, _defineProperty2.default)(_classSet, 'offset-top-start', v === 'start'), (0, _defineProperty2.default)(_classSet, 'offset-bottom-start', v === 'end'), _classSet);
+      var classNamePre = (_classNamePre = {
+        'position-absolute': true
+      }, (0, _defineProperty2.default)(_classNamePre, "margin-top-".concat(margin !== true ? margin : ''), margin && v === 'start'), (0, _defineProperty2.default)(_classNamePre, "margin-left-".concat(margin !== true ? margin : ''), margin && h === 'start'), (0, _defineProperty2.default)(_classNamePre, "margin-bottom-".concat(margin !== true ? margin : ''), margin && v === 'end'), (0, _defineProperty2.default)(_classNamePre, "margin-right-".concat(margin !== true ? margin : ''), margin && h === 'end'), (0, _defineProperty2.default)(_classNamePre, 'translate-center-x', h === 'center' && v !== 'center'), (0, _defineProperty2.default)(_classNamePre, 'translate-center-y', h !== 'center' && v === 'center'), (0, _defineProperty2.default)(_classNamePre, 'translate-center-a', h === 'center' && v === 'center'), (0, _defineProperty2.default)(_classNamePre, 'offset-left-center', h === 'center'), (0, _defineProperty2.default)(_classNamePre, 'offset-top-center', v === 'center'), (0, _defineProperty2.default)(_classNamePre, 'offset-left-start', h === 'start'), (0, _defineProperty2.default)(_classNamePre, 'offset-right-start', h === 'end'), (0, _defineProperty2.default)(_classNamePre, 'offset-top-start', v === 'start'), (0, _defineProperty2.default)(_classNamePre, 'offset-bottom-start', v === 'end'), _classNamePre);
 
-      var component = _react.default.createElement(Component, (0, _extends2.default)({
-        className: (0, _classes.default)(classStr, classSet, className)
+      var component = _react.default.createElement(_Panel.default, (0, _extends2.default)({
+        classNamePre: classNamePre
       }, props));
 
-      return this.container ? (0, _dom.domCreatePortal)(component, this.container) : component;
+      return this.container ? (0, _BaseComponent2.domCreatePortal)(component, this.container) : component;
     }
   }]);
   return Fab;
@@ -126,10 +124,6 @@ Fab.defaultProps.margin = true;
  * 设置则作为 container 参数获取指定 container，参见 domFindContainer 函数
  * @attribute module:Fab.Fab.container
  * @type {boolean|string}
- */
-
-/**
- * 参见 BaseComponent
  */
 
 Fab.defaultProps.component = _Button.default;

@@ -3,8 +3,7 @@
  */
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
-import { domIsTouch, domOffset, chainedFuncs, domFindContainer, domCreatePortal } from './utils/dom';
-import parseProps from './utils/props';
+import BaseComponent, { domIsTouch, domOffset, chainedFuncs, domFindContainer, domCreatePortal } from './BaseComponent';
 import Panel from './Panel';
 import Backdrop from './Backdrop';
 
@@ -58,7 +57,7 @@ class Popover extends React.Component {
       overlay, overlayProps, mask, maskProps,
       calcPosition=Popover.calcPosition, placement, container,
       component:Component, componentPanel, children, ...props
-    } = parseProps(this.props, Popover.props);
+    } = BaseComponent(this.props, Popover);
     const { show, offsetOverlay, offsetTarget } = this.state;
 
 
@@ -248,7 +247,7 @@ let Overlay = class extends React.Component {
     let {
       calcPosition, offsetTarget, offsetOverlay, placement,
       component:Component=Panel, componentPanel, style, className, ...props
-    } = parseProps(this.props, Overlay.props);
+    } = BaseComponent(this.props, Overlay);
 
     let classStr = 'position-absolute bg-color-white border-set-a-';
     let styleSet = {boxSizing: 'content-box'};

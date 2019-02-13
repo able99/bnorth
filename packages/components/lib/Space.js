@@ -17,7 +17,7 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
+var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -32,14 +32,13 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @exportdefault
  */
 var Space = function Space(aprops) {
-  var _parseProps = (0, _props.default)(aprops, Space.props),
-      _parseProps$count = _parseProps.count,
-      count = _parseProps$count === void 0 ? 1 : _parseProps$count,
-      stacked = _parseProps.stacked,
-      _parseProps$component = _parseProps.component,
-      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
-      children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["count", "stacked", "component", "children"]);
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, Space),
+      count = _BaseComponent.count,
+      stacked = _BaseComponent.stacked,
+      _BaseComponent$compon = _BaseComponent.component,
+      Component = _BaseComponent$compon === void 0 ? _Panel.default : _BaseComponent$compon,
+      children = _BaseComponent.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["count", "stacked", "component", "children"]);
 
   return _react.default.createElement(Component, (0, _extends2.default)({
     inline: true

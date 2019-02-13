@@ -5,7 +5,9 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.PanelIcon = exports.default = void 0;
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
@@ -15,11 +17,13 @@ var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 require("core-js/modules/es7.array.includes");
 
 require("core-js/modules/es6.string.includes");
+
+require("core-js/modules/es6.regexp.split");
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
 require("core-js/modules/es6.function.name");
 
@@ -31,7 +35,7 @@ var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
 var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
-var _props = _interopRequireDefault(require("./utils/props"));
+var _BaseComponent3 = _interopRequireDefault(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -46,81 +50,82 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @component 
  * @exportdefault
  * @augments BaseComponent
+ * @augments module:Panel.Panel
  */
 var Icon = function Icon(aprops) {
-  var _parseProps = (0, _props.default)(aprops, Icon.props),
-      name = _parseProps.name,
-      defaultName = _parseProps.defaultName,
-      src = _parseProps.src,
-      char = _parseProps.char,
-      shape = _parseProps.shape,
-      rotate = _parseProps.rotate,
-      Component = _parseProps.component,
-      componentPanel = _parseProps.componentPanel,
-      className = _parseProps.className,
-      style = _parseProps.style,
-      children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["name", "defaultName", "src", "char", "shape", "rotate", "component", "componentPanel", "className", "style", "children"]);
+  var _BaseComponent = (0, _BaseComponent3.default)(aprops, Icon),
+      name = _BaseComponent.name,
+      src = _BaseComponent.src,
+      char = _BaseComponent.char,
+      shape = _BaseComponent.shape,
+      rotate = _BaseComponent.rotate,
+      component = _BaseComponent.component,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["name", "src", "char", "shape", "rotate", "component"]);
 
-  var classStr = 'display-inline';
-  var classSet = ['width-1em', 'height-1em'];
-  var styleSet = rotate ? (0, _animation.transform)('rotate', String(rotate) + 'deg') : {};
-  if (shape) shape = Icon._shapes[shape] || shape;
-  if (name) name = Icon._maps[name] || name;
+  var classNamePre = ['display-inline', 'width-1em', 'height-1em'];
+  var stylePre = rotate ? (0, _animation.transform)('rotate', String(rotate) + 'deg') : {};
 
-  if (name && !Icon._names.includes(name)) {
-    char = defaultName || name;
-    name = undefined;
+  if (name) {
+    var _name$split = name.split(':'),
+        _name$split2 = (0, _slicedToArray2.default)(_name$split, 2),
+        nameSvg = _name$split2[0],
+        defaultNameSvg = _name$split2[1];
+
+    nameSvg = Icon._maps[nameSvg] || nameSvg;
+
+    if (!Icon._names.includes(nameSvg)) {
+      char = defaultNameSvg || nameSvg;
+      nameSvg = undefined;
+    }
+
+    name = nameSvg;
+  }
+
+  if (shape) {
+    shape = Icon._shapes[shape] || shape;
   }
 
   if (name) {
-    if (!componentPanel) componentPanel = 'svg';
-    styleSet.strokeWidth = 0;
-    styleSet.stroke = 'currentColor';
-    styleSet.fill = 'currentColor';
+    if (!component) component = 'svg';
+    stylePre.strokeWidth = 0;
+    stylePre.stroke = 'currentColor';
+    stylePre.fill = 'currentColor';
     props.dangerouslySetInnerHTML = {
       __html: "<use xlink:href=\"#".concat(name, "\"></use>")
     };
   } else if (src) {
-    if (!componentPanel) componentPanel = 'img';
+    if (!component) component = 'img';
     props.src = src;
     props.alt = '';
   } else if (shape) {
-    if (!componentPanel) componentPanel = 'svg';
-    styleSet.strokeWidth = 0;
-    styleSet.stroke = 'currentColor';
-    styleSet.fill = 'currentColor';
+    if (!component) component = 'svg';
+    stylePre.strokeWidth = 0;
+    stylePre.stroke = 'currentColor';
+    stylePre.fill = 'currentColor';
     props.preserveAspectRatio = "none";
     props.viewBox = "0 0 100 100";
     props.children = typeof shape === 'function' ? shape() : _react.default.createElement("path", {
       d: shape
     });
   } else if (char) {
-    if (!componentPanel) componentPanel = 'span';
-    classSet.push('display-inlineblock text-align-center line-height-1em');
+    if (!component) component = 'span';
+    classNamePre.push('display-inlineblock text-align-center line-height-1em');
     props.children = char[0];
   } else {
-    classSet = [];
-    props.children = children;
+    classNamePre = [];
   }
 
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    component: componentPanel,
-    style: (0, _objectSpread2.default)({}, styleSet, style),
-    className: (0, _classes.default)(classStr, classSet, className)
+  return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    component: component,
+    classNamePre: classNamePre,
+    stylePre: stylePre
   }, props));
 };
 
 Icon.defaultProps = {};
 /**
- * 设置 svg 字体库图标的图标映射名称
+ * 设置 svg 字体库图标的图标映射名称，如果设置没有 svg 图标时的默认字符，使用 : 分隔符，比如 name="star:^"
  * @attribute module:Icon.Icon.name
- * @type {string}
- */
-
-/**
- * 设置 svg 字体库图片映射失败时，默认的字符图标字符
- * @attribute module:Icon.Icon.defaultName
  * @type {string}
  */
 
@@ -148,11 +153,6 @@ Icon.defaultProps = {};
  * @type {string}
  */
 
-/**
- * 参见 BaseComponent
- */
-
-Icon.defaultProps.component = _Panel.default;
 /**
  * svg 图标名字数组
  */
@@ -203,4 +203,77 @@ Icon.appendMap = function (val, name) {
 };
 
 var _default = Icon;
+/**
+ * 图标小面板组件，扩展小面板组件，提供图标组件与面板内容混排的能力
+ * @component
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Container~Container
+ */
+
 exports.default = _default;
+
+var PanelIcon = function PanelIcon(aprops) {
+  var _BaseComponent2 = (0, _BaseComponent3.default)(aprops, PanelIcon, {
+    isContainer: true
+  }),
+      selected = _BaseComponent2.selected,
+      name = _BaseComponent2.name,
+      src = _BaseComponent2.src,
+      char = _BaseComponent2.char,
+      shape = _BaseComponent2.shape,
+      iconSelected = _BaseComponent2.iconSelected,
+      rotate = _BaseComponent2.rotate,
+      iconProps = _BaseComponent2.iconProps,
+      title = _BaseComponent2.title,
+      titleProps = _BaseComponent2.titleProps,
+      children = _BaseComponent2.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["selected", "name", "src", "char", "shape", "iconSelected", "rotate", "iconProps", "title", "titleProps", "children"]);
+
+  return _react.default.createElement(_Panel.default.Container, (0, _extends2.default)({
+    type: "flex",
+    position: "left",
+    justify: "center",
+    align: "center",
+    selected: selected
+  }, props), _react.default.createElement(Icon, (0, _extends2.default)({
+    name: name && (selected && iconSelected ? iconSelected : name),
+    src: src && (selected && iconSelected ? iconSelected : src),
+    char: char && (selected && iconSelected ? iconSelected : char),
+    shape: shape && (selected && iconSelected ? iconSelected : shape),
+    rotate: rotate
+  }, iconProps)), title || children ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    "bc-text-truncate-1-": true
+  }, titleProps), title, children) : null);
+};
+
+exports.PanelIcon = PanelIcon;
+PanelIcon.defaultProps = {};
+/**
+ * Icon 的属性，参见 Icon
+ * @attribute module:Icon~PanelIcon.icon*
+ * @type {string}
+ */
+
+/**
+ * 设置 icon，src，char 或 shape 在选中时的对应属性，不设置则选中不选中没有区别
+ * @attribute module:Icon~PanelIcon.iconSelected
+ * @type {string}
+ */
+
+/**
+ * 设置图标子组件的属性
+ * @attribute module:Icon~PanelIcon.iconProps
+ * @type {object}
+ */
+
+/**
+ * 设置标题内容，也可以使用 children
+ * @attribute module:Icon~PanelIcon.title
+ * @type {string}
+ */
+
+/**
+ * 设置标题内容子组件的属性
+ * @attribute module:Icon~PanelIcon.titleProps
+ * @type {object}
+ */

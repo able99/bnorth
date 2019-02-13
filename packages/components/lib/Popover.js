@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -35,9 +37,7 @@ var _react = _interopRequireDefault(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-var _dom = require("./utils/dom");
-
-var _props = _interopRequireDefault(require("./utils/props"));
+var _BaseComponent3 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -88,7 +88,7 @@ function (_React$Component) {
     value: function show() {
       this.setState({
         show: true,
-        offsetTarget: (0, _dom.domOffset)(this, this.container)
+        offsetTarget: (0, _BaseComponent3.domOffset)(this, this.container)
       });
     }
     /**
@@ -109,7 +109,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      this.container = (0, _dom.domFindContainer)(this, this.props.container);
+      this.container = (0, _BaseComponent3.domFindContainer)(this, this.props.container);
       if (this.props.defaultIsShow) Promise.resolve().then(function () {
         return _this2.show();
       });
@@ -119,35 +119,35 @@ function (_React$Component) {
     value: function render() {
       var _this3 = this;
 
-      var _parseProps = (0, _props.default)(this.props, Popover.props),
-          defaultIsShow = _parseProps.defaultIsShow,
-          trigger = _parseProps.trigger,
-          onClick = _parseProps.onClick,
-          onMouseOver = _parseProps.onMouseOver,
-          overlay = _parseProps.overlay,
-          overlayProps = _parseProps.overlayProps,
-          mask = _parseProps.mask,
-          maskProps = _parseProps.maskProps,
-          _parseProps$calcPosit = _parseProps.calcPosition,
-          calcPosition = _parseProps$calcPosit === void 0 ? Popover.calcPosition : _parseProps$calcPosit,
-          placement = _parseProps.placement,
-          container = _parseProps.container,
-          Component = _parseProps.component,
-          componentPanel = _parseProps.componentPanel,
-          children = _parseProps.children,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["defaultIsShow", "trigger", "onClick", "onMouseOver", "overlay", "overlayProps", "mask", "maskProps", "calcPosition", "placement", "container", "component", "componentPanel", "children"]);
+      var _BaseComponent = (0, _BaseComponent3.default)(this.props, Popover),
+          defaultIsShow = _BaseComponent.defaultIsShow,
+          trigger = _BaseComponent.trigger,
+          onClick = _BaseComponent.onClick,
+          onMouseOver = _BaseComponent.onMouseOver,
+          overlay = _BaseComponent.overlay,
+          overlayProps = _BaseComponent.overlayProps,
+          mask = _BaseComponent.mask,
+          maskProps = _BaseComponent.maskProps,
+          _BaseComponent$calcPo = _BaseComponent.calcPosition,
+          calcPosition = _BaseComponent$calcPo === void 0 ? Popover.calcPosition : _BaseComponent$calcPo,
+          placement = _BaseComponent.placement,
+          container = _BaseComponent.container,
+          Component = _BaseComponent.component,
+          componentPanel = _BaseComponent.componentPanel,
+          children = _BaseComponent.children,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["defaultIsShow", "trigger", "onClick", "onMouseOver", "overlay", "overlayProps", "mask", "maskProps", "calcPosition", "placement", "container", "component", "componentPanel", "children"]);
 
       var _this$state = this.state,
           show = _this$state.show,
           offsetOverlay = _this$state.offsetOverlay,
           offsetTarget = _this$state.offsetTarget;
-      var triggerByTouch = trigger ? trigger === 'click' : _dom.domIsTouch;
-      var triggerByHover = trigger ? trigger === 'hover' : !_dom.domIsTouch;
+      var triggerByTouch = trigger ? trigger === 'click' : _BaseComponent3.domIsTouch;
+      var triggerByHover = trigger ? trigger === 'hover' : !_BaseComponent3.domIsTouch;
       var triggerProps = {
-        onClick: triggerByTouch ? (0, _dom.chainedFuncs)(onClick, function () {
+        onClick: triggerByTouch ? (0, _BaseComponent3.chainedFuncs)(onClick, function () {
           return _this3.state.show ? _this3.hide() : _this3.show();
         }) : onClick,
-        onMouseOver: triggerByHover ? (0, _dom.chainedFuncs)(onMouseOver, function (e) {
+        onMouseOver: triggerByHover ? (0, _BaseComponent3.chainedFuncs)(onMouseOver, function (e) {
           return _this3.show();
         }) : onMouseOver
       };
@@ -164,7 +164,7 @@ function (_React$Component) {
       };
       return _react.default.createElement(Component, (0, _extends2.default)({
         component: componentPanel
-      }, triggerProps, props), typeof children === 'function' ? children(show, this.state, this.props, this) : children, !show ? null : (0, _dom.domCreatePortal)(_react.default.createElement(_Backdrop.default, (0, _extends2.default)({
+      }, triggerProps, props), typeof children === 'function' ? children(show, this.state, this.props, this) : children, !show ? null : (0, _BaseComponent3.domCreatePortal)(_react.default.createElement(_Backdrop.default, (0, _extends2.default)({
         mask: mask
       }, closeProps, maskProps), _react.default.createElement(_Overlay, (0, _extends2.default)({
         calcPosition: calcPosition,
@@ -173,7 +173,7 @@ function (_React$Component) {
         offsetOverlay: offsetOverlay,
         ref: function ref(e) {
           return e && !offsetOverlay && _this3.setState({
-            offsetOverlay: (0, _dom.domOffset)(e, _this3.container)
+            offsetOverlay: (0, _BaseComponent3.domOffset)(e, _this3.container)
           });
         }
       }, overlayProps), typeof overlay === 'function' ? overlay(this) : overlay)), this.container));
@@ -356,17 +356,17 @@ function (_React$Component2) {
   (0, _createClass2.default)(Overlay, [{
     key: "render",
     value: function render() {
-      var _parseProps2 = (0, _props.default)(this.props, _Overlay.props),
-          calcPosition = _parseProps2.calcPosition,
-          offsetTarget = _parseProps2.offsetTarget,
-          offsetOverlay = _parseProps2.offsetOverlay,
-          placement = _parseProps2.placement,
-          _parseProps2$componen = _parseProps2.component,
-          Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
-          componentPanel = _parseProps2.componentPanel,
-          style = _parseProps2.style,
-          className = _parseProps2.className,
-          props = (0, _objectWithoutProperties2.default)(_parseProps2, ["calcPosition", "offsetTarget", "offsetOverlay", "placement", "component", "componentPanel", "style", "className"]);
+      var _BaseComponent2 = (0, _BaseComponent3.default)(this.props, _Overlay),
+          calcPosition = _BaseComponent2.calcPosition,
+          offsetTarget = _BaseComponent2.offsetTarget,
+          offsetOverlay = _BaseComponent2.offsetOverlay,
+          placement = _BaseComponent2.placement,
+          _BaseComponent2$compo = _BaseComponent2.component,
+          Component = _BaseComponent2$compo === void 0 ? _Panel.default : _BaseComponent2$compo,
+          componentPanel = _BaseComponent2.componentPanel,
+          style = _BaseComponent2.style,
+          className = _BaseComponent2.className,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["calcPosition", "offsetTarget", "offsetOverlay", "placement", "component", "componentPanel", "style", "className"]);
 
       var classStr = 'position-absolute bg-color-white border-set-a-';
       var styleSet = {

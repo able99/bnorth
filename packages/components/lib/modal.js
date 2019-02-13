@@ -17,7 +17,7 @@ var _react = _interopRequireDefault(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
+var _BaseComponent9 = _interopRequireDefault(require("./BaseComponent"));
 
 var _Backdrop = _interopRequireDefault(require("./Backdrop"));
 
@@ -30,27 +30,27 @@ var _Icon = _interopRequireDefault(require("./Icon"));
 var _this = void 0;
 
 var Modal = function Modal(aprops) {
-  var _parseProps = (0, _props.default)(aprops, Modal.props),
-      role = _parseProps.role,
-      handleAction = _parseProps.handleAction,
-      _parseProps$in = _parseProps.in,
-      isIn = _parseProps$in === void 0 ? true : _parseProps$in,
-      onTransitionFinished = _parseProps.onTransitionFinished,
-      containerProps = _parseProps.containerProps,
-      title = _parseProps.title,
-      titleProps = _parseProps.titleProps,
-      hasTitleClose = _parseProps.hasTitleClose,
-      titleCloseProps = _parseProps.titleCloseProps,
-      titleCloseIconProps = _parseProps.titleCloseIconProps,
-      headerProps = _parseProps.headerProps,
-      bodyProps = _parseProps.bodyProps,
-      footerProps = _parseProps.footerProps,
-      _parseProps$component = _parseProps.component,
-      Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
-      style = _parseProps.style,
-      className = _parseProps.className,
-      children = _parseProps.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps, ["role", "handleAction", "in", "onTransitionFinished", "containerProps", "title", "titleProps", "hasTitleClose", "titleCloseProps", "titleCloseIconProps", "headerProps", "bodyProps", "footerProps", "component", "style", "className", "children"]);
+  var _BaseComponent = (0, _BaseComponent9.default)(aprops, Modal),
+      role = _BaseComponent.role,
+      handleAction = _BaseComponent.handleAction,
+      _BaseComponent$in = _BaseComponent.in,
+      isIn = _BaseComponent$in === void 0 ? true : _BaseComponent$in,
+      onTransitionFinished = _BaseComponent.onTransitionFinished,
+      containerProps = _BaseComponent.containerProps,
+      title = _BaseComponent.title,
+      titleProps = _BaseComponent.titleProps,
+      hasTitleClose = _BaseComponent.hasTitleClose,
+      titleCloseProps = _BaseComponent.titleCloseProps,
+      titleCloseIconProps = _BaseComponent.titleCloseIconProps,
+      headerProps = _BaseComponent.headerProps,
+      bodyProps = _BaseComponent.bodyProps,
+      footerProps = _BaseComponent.footerProps,
+      _BaseComponent$compon = _BaseComponent.component,
+      Component = _BaseComponent$compon === void 0 ? _Panel.default : _BaseComponent$compon,
+      style = _BaseComponent.style,
+      className = _BaseComponent.className,
+      children = _BaseComponent.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["role", "handleAction", "in", "onTransitionFinished", "containerProps", "title", "titleProps", "hasTitleClose", "titleCloseProps", "titleCloseIconProps", "headerProps", "bodyProps", "footerProps", "component", "style", "className", "children"]);
 
   children = typeof children === 'function' ? children(_this) : children;
   var classStr = 'position-relative backface-hidden overflow-a-hidden bg-color-white';
@@ -93,14 +93,14 @@ var Modal = function Modal(aprops) {
 exports.Modal = Modal;
 
 Modal._Container = function (aprops) {
-  var _parseProps2 = (0, _props.default)(aprops),
-      role = _parseProps2.role,
-      handleAction = _parseProps2.handleAction,
-      transition = _parseProps2.transition,
-      _parseProps2$componen = _parseProps2.component,
-      Component = _parseProps2$componen === void 0 ? _Backdrop.default : _parseProps2$componen,
-      className = _parseProps2.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["role", "handleAction", "transition", "component", "className"]);
+  var _BaseComponent2 = (0, _BaseComponent9.default)(aprops, Modal._Container),
+      role = _BaseComponent2.role,
+      handleAction = _BaseComponent2.handleAction,
+      transition = _BaseComponent2.transition,
+      _BaseComponent2$compo = _BaseComponent2.component,
+      Component = _BaseComponent2$compo === void 0 ? _Backdrop.default : _BaseComponent2$compo,
+      className = _BaseComponent2.className,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["role", "handleAction", "transition", "component", "className"]);
 
   var classSet = {
     'flex-display-block': role !== 'document',
@@ -116,18 +116,18 @@ Modal._Container = function (aprops) {
 };
 
 Modal._Header = function (aprops) {
-  var _parseProps3 = (0, _props.default)(aprops, Modal._Header.props),
-      role = _parseProps3.role,
-      handleAction = _parseProps3.handleAction,
-      title = _parseProps3.title,
-      titleProps = _parseProps3.titleProps,
-      hasTitleClose = _parseProps3.hasTitleClose,
-      titleCloseProps = _parseProps3.titleCloseProps,
-      titleCloseIconProps = _parseProps3.titleCloseIconProps,
-      _parseProps3$componen = _parseProps3.component,
-      Component = _parseProps3$componen === void 0 ? _Panel.default : _parseProps3$componen,
-      className = _parseProps3.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps3, ["role", "handleAction", "title", "titleProps", "hasTitleClose", "titleCloseProps", "titleCloseIconProps", "component", "className"]);
+  var _BaseComponent3 = (0, _BaseComponent9.default)(aprops, Modal._Header),
+      role = _BaseComponent3.role,
+      handleAction = _BaseComponent3.handleAction,
+      title = _BaseComponent3.title,
+      titleProps = _BaseComponent3.titleProps,
+      hasTitleClose = _BaseComponent3.hasTitleClose,
+      titleCloseProps = _BaseComponent3.titleCloseProps,
+      titleCloseIconProps = _BaseComponent3.titleCloseIconProps,
+      _BaseComponent3$compo = _BaseComponent3.component,
+      Component = _BaseComponent3$compo === void 0 ? _Panel.default : _BaseComponent3$compo,
+      className = _BaseComponent3.className,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["role", "handleAction", "title", "titleProps", "hasTitleClose", "titleCloseProps", "titleCloseIconProps", "component", "className"]);
 
   if (!title && !hasTitleClose) return null;
   var classStr = 'width-full padding-a- border-set-bottom- flex-display-block flex-justify-between flex-align-center';
@@ -142,12 +142,12 @@ Modal._Header = function (aprops) {
 };
 
 Modal._Header._Title = function (aprops) {
-  var _parseProps4 = (0, _props.default)(aprops, Modal._Header._Title.props),
-      hasTitleClose = _parseProps4.hasTitleClose,
-      _parseProps4$componen = _parseProps4.component,
-      Component = _parseProps4$componen === void 0 ? _Panel.default : _parseProps4$componen,
-      className = _parseProps4.className,
-      props = (0, _objectWithoutProperties2.default)(_parseProps4, ["hasTitleClose", "component", "className"]);
+  var _BaseComponent4 = (0, _BaseComponent9.default)(aprops, Modal._Header._Title),
+      hasTitleClose = _BaseComponent4.hasTitleClose,
+      _BaseComponent4$compo = _BaseComponent4.component,
+      Component = _BaseComponent4$compo === void 0 ? _Panel.default : _BaseComponent4$compo,
+      className = _BaseComponent4.className,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["hasTitleClose", "component", "className"]);
 
   var classStr = 'flex-sub-flex-grow text-weight-bold text-size-lg';
   var classSet = {
@@ -159,14 +159,14 @@ Modal._Header._Title = function (aprops) {
 };
 
 Modal._Header._TitleClose = function (aprops) {
-  var _parseProps5 = (0, _props.default)(aprops, Modal._Header._TitleClose.props),
-      handleAction = _parseProps5.handleAction,
-      titleCloseIconProps = _parseProps5.titleCloseIconProps,
-      _parseProps5$componen = _parseProps5.component,
-      Component = _parseProps5$componen === void 0 ? _Button.default : _parseProps5$componen,
-      className = _parseProps5.className,
-      children = _parseProps5.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps5, ["handleAction", "titleCloseIconProps", "component", "className", "children"]);
+  var _BaseComponent5 = (0, _BaseComponent9.default)(aprops, Modal._Header._TitleClose),
+      handleAction = _BaseComponent5.handleAction,
+      titleCloseIconProps = _BaseComponent5.titleCloseIconProps,
+      _BaseComponent5$compo = _BaseComponent5.component,
+      Component = _BaseComponent5$compo === void 0 ? _Button.default : _BaseComponent5$compo,
+      className = _BaseComponent5.className,
+      children = _BaseComponent5.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["handleAction", "titleCloseIconProps", "component", "className", "children"]);
 
   var classStr = 'padding-h-sm padding-v-0';
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -179,10 +179,10 @@ Modal._Header._TitleClose = function (aprops) {
 };
 
 Modal._Header._TitleClose._Icon = function (aprops) {
-  var _parseProps6 = (0, _props.default)(aprops, Modal._Header._TitleClose._Icon.props),
-      _parseProps6$componen = _parseProps6.component,
-      Component = _parseProps6$componen === void 0 ? _Icon.default : _parseProps6$componen,
-      props = (0, _objectWithoutProperties2.default)(_parseProps6, ["component"]);
+  var _BaseComponent6 = (0, _BaseComponent9.default)(aprops, Modal._Header._TitleClose._Icon),
+      _BaseComponent6$compo = _BaseComponent6.component,
+      Component = _BaseComponent6$compo === void 0 ? _Icon.default : _BaseComponent6$compo,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent6, ["component"]);
 
   return _react.default.createElement(Component, (0, _extends2.default)({
     name: "close",
@@ -191,14 +191,14 @@ Modal._Header._TitleClose._Icon = function (aprops) {
 };
 
 Modal._Body = function (aprops) {
-  var _parseProps7 = (0, _props.default)(aprops, Modal._Body.props),
-      role = _parseProps7.role,
-      handleAction = _parseProps7.handleAction,
-      _parseProps7$componen = _parseProps7.component,
-      Component = _parseProps7$componen === void 0 ? _Panel.default : _parseProps7$componen,
-      className = _parseProps7.className,
-      children = _parseProps7.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps7, ["role", "handleAction", "component", "className", "children"]);
+  var _BaseComponent7 = (0, _BaseComponent9.default)(aprops, Modal._Body),
+      role = _BaseComponent7.role,
+      handleAction = _BaseComponent7.handleAction,
+      _BaseComponent7$compo = _BaseComponent7.component,
+      Component = _BaseComponent7$compo === void 0 ? _Panel.default : _BaseComponent7$compo,
+      className = _BaseComponent7.className,
+      children = _BaseComponent7.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent7, ["role", "handleAction", "component", "className", "children"]);
 
   children = typeof children === 'function' ? children(_this) : children;
   if (!children) return null;
@@ -209,23 +209,23 @@ Modal._Body = function (aprops) {
 };
 
 Modal._Footer = function (aprops) {
-  var _parseProps8 = (0, _props.default)(aprops, Modal._Footer.props),
-      role = _parseProps8.role,
-      handleAction = _parseProps8.handleAction,
-      _parseProps8$buttons = _parseProps8.buttons,
-      buttons = _parseProps8$buttons === void 0 ? Modal._Footer._buttons[aprops.role] || [] : _parseProps8$buttons,
-      itemProps = _parseProps8.itemProps,
-      _parseProps8$itemGetC = _parseProps8.itemGetClassName,
-      itemGetClassName = _parseProps8$itemGetC === void 0 ? Modal._Footer._itemGetClassName : _parseProps8$itemGetC,
-      _parseProps8$itemGetS = _parseProps8.itemGetStyle,
-      itemGetStyle = _parseProps8$itemGetS === void 0 ? Modal._Footer._itemGetStyle : _parseProps8$itemGetS,
-      _parseProps8$itemGetP = _parseProps8.itemGetProps,
-      itemGetProps = _parseProps8$itemGetP === void 0 ? Modal._Footer._itemGetProps : _parseProps8$itemGetP,
-      _parseProps8$componen = _parseProps8.component,
-      Component = _parseProps8$componen === void 0 ? _Button.default.Group : _parseProps8$componen,
-      className = _parseProps8.className,
-      children = _parseProps8.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps8, ["role", "handleAction", "buttons", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
+  var _BaseComponent8 = (0, _BaseComponent9.default)(aprops, Modal._Footer),
+      role = _BaseComponent8.role,
+      handleAction = _BaseComponent8.handleAction,
+      _BaseComponent8$butto = _BaseComponent8.buttons,
+      buttons = _BaseComponent8$butto === void 0 ? Modal._Footer._buttons[aprops.role] || [] : _BaseComponent8$butto,
+      itemProps = _BaseComponent8.itemProps,
+      _BaseComponent8$itemG = _BaseComponent8.itemGetClassName,
+      itemGetClassName = _BaseComponent8$itemG === void 0 ? Modal._Footer._itemGetClassName : _BaseComponent8$itemG,
+      _BaseComponent8$itemG2 = _BaseComponent8.itemGetStyle,
+      itemGetStyle = _BaseComponent8$itemG2 === void 0 ? Modal._Footer._itemGetStyle : _BaseComponent8$itemG2,
+      _BaseComponent8$itemG3 = _BaseComponent8.itemGetProps,
+      itemGetProps = _BaseComponent8$itemG3 === void 0 ? Modal._Footer._itemGetProps : _BaseComponent8$itemG3,
+      _BaseComponent8$compo = _BaseComponent8.component,
+      Component = _BaseComponent8$compo === void 0 ? _Button.default.Group : _BaseComponent8$compo,
+      className = _BaseComponent8.className,
+      children = _BaseComponent8.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent8, ["role", "handleAction", "buttons", "itemProps", "itemGetClassName", "itemGetStyle", "itemGetProps", "component", "className", "children"]);
 
   if (!buttons.length) return null;
   var classStr = 'border-set-top-';

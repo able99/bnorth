@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
-import parseProps from './utils/props';
+import BaseComponent from './BaseComponent';
 import AnimationCollapse from './AnimationCollapse';
 import Panel from './Panel';
 import Button from './Button';
@@ -10,7 +10,7 @@ import Icon from './Icon';
 export let Container = aprops=>{
   let {
     component:Component=Panel, className, ...props
-  } = parseProps(aprops, Container.props);
+  } = BaseComponent(aprops, Container);
 
   let classStr = 'position-absolute offset-top-start offset-left-top width-full';
   
@@ -23,7 +23,7 @@ export let Notification = aprops=>{
     transition:Transition=AnimationCollapse, transitionProps, onTransitionFinished,
     titleProps, hasClose, closeProps, iconProps, 
     component=Panel, className, children, ...props
-  } = parseProps(aprops, Notification.props);
+  } = BaseComponent(aprops, Notification);
 
   let classStr = 'flex-display-block flex-align-center width-full';
   
@@ -44,7 +44,7 @@ export let Notification = aprops=>{
 Notification._Title = aprops=>{
   let {
     component:Component=Panel, className, ...props
-  } = parseProps(aprops, Notification._Title.props);
+  } = BaseComponent(aprops, Notification._Title);
 
   let classStr = 'text-weight- text-size-lg flex-sub-flex-extend';
 
@@ -55,7 +55,7 @@ Notification._Close = aprops=>{
   let {
     hasClose, onDoClose, iconProps,
     component:Component=Button, className, children, ...props
-  } = parseProps(aprops, Notification._Close.props);
+  } = BaseComponent(aprops, Notification._Close);
   if(!children) return null;
 
   children = children===true?<Icon name="close" defaultName="x" {...iconProps} />:children;

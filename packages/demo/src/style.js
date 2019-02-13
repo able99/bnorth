@@ -1,6 +1,7 @@
 import '@bnorth/rich.css/css/normalize.css';
 import genCss from '@bnorth/rich.css';
 import Icon from '@bnorth/components/lib/Icon';
+import Space from '@bnorth/components/lib/Space';
 import {Loading} from '@bnorth/components/lib/loading';
 import icoSvg from '../res/default.ico.svg';
 import './index.css';
@@ -18,7 +19,7 @@ export default function(app) {
 
   Icon.appendSvgIcons(icoSvg);
   Icon.appendMap(iconMap);
-
+  Space.props = {'b-theme': 'alert', 'data-a': 1}
 
   Loading.props = {style:{top: 45-3}}
 }

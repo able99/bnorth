@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -51,11 +53,11 @@ var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
 var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
-var _dom = require("./utils/dom");
+var _BaseComponent5 = _interopRequireWildcard(require("./BaseComponent"));
 
-var _props = _interopRequireDefault(require("./utils/props"));
+var _Panel = _interopRequireDefault(require("./Panel"));
 
-var _Panel = _interopRequireDefault(require("./Panel.Touchable"));
+var _Touchable = _interopRequireDefault(require("./Touchable"));
 
 var _Button = _interopRequireDefault(require("./Button"));
 
@@ -152,17 +154,17 @@ function (_React$Component) {
     value: function render() {
       var _this3 = this;
 
-      var _parseProps = (0, _props.default)(this.props, Picker.props),
-          lineCount = _parseProps.lineCount,
-          data = _parseProps.data,
-          onInit = _parseProps.onInit,
-          onChange = _parseProps.onChange,
-          _index = _parseProps.index,
-          _parseProps$component = _parseProps.component,
-          Component = _parseProps$component === void 0 ? _Panel.default : _parseProps$component,
-          componentPanel = _parseProps.componentPanel,
-          className = _parseProps.className,
-          props = (0, _objectWithoutProperties2.default)(_parseProps, ["lineCount", "data", "onInit", "onChange", "index", "component", "componentPanel", "className"]);
+      var _BaseComponent = (0, _BaseComponent5.default)(this.props, Picker),
+          lineCount = _BaseComponent.lineCount,
+          data = _BaseComponent.data,
+          onInit = _BaseComponent.onInit,
+          onChange = _BaseComponent.onChange,
+          _index = _BaseComponent.index,
+          _BaseComponent$compon = _BaseComponent.component,
+          Component = _BaseComponent$compon === void 0 ? _Panel.default : _BaseComponent$compon,
+          componentPanel = _BaseComponent.componentPanel,
+          className = _BaseComponent.className,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["lineCount", "data", "onInit", "onChange", "index", "component", "componentPanel", "className"]);
 
       var _this$state = this.state,
           index = _this$state.index,
@@ -205,15 +207,15 @@ exports.Picker = Picker;
 });
 
 Picker._Line = function (aprops) {
-  var _parseProps2 = (0, _props.default)(aprops, Picker._Line.props),
-      itemSize = _parseProps2.itemSize,
-      lineCount = _parseProps2.lineCount,
-      _parseProps2$componen = _parseProps2.component,
-      Component = _parseProps2$componen === void 0 ? _Panel.default : _parseProps2$componen,
-      componentPanel = _parseProps2.componentPanel,
-      className = _parseProps2.className,
-      style = _parseProps2.style,
-      props = (0, _objectWithoutProperties2.default)(_parseProps2, ["itemSize", "lineCount", "component", "componentPanel", "className", "style"]);
+  var _BaseComponent2 = (0, _BaseComponent5.default)(aprops, Picker._Line),
+      itemSize = _BaseComponent2.itemSize,
+      lineCount = _BaseComponent2.lineCount,
+      _BaseComponent2$compo = _BaseComponent2.component,
+      Component = _BaseComponent2$compo === void 0 ? _Panel.default : _BaseComponent2$compo,
+      componentPanel = _BaseComponent2.componentPanel,
+      className = _BaseComponent2.className,
+      style = _BaseComponent2.style,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["itemSize", "lineCount", "component", "componentPanel", "className", "style"]);
 
   var classStr = 'border-set-v- position-absolute width-full pointer-events-none';
   var styleSet = (0, _objectSpread2.default)({
@@ -245,8 +247,8 @@ function (_React$Component2) {
   (0, _createClass2.default)(_class, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var el = (0, _dom.domFindNode)(this);
-      this.itemSize = el && el.children[0] && el.children[0].children && (0, _dom.domOffset)(el.children[0].children[0]).height;
+      var el = (0, _BaseComponent5.domFindNode)(this);
+      this.itemSize = el && el.children[0] && el.children[0].children && (0, _BaseComponent5.domOffset)(el.children[0].children[0]).height;
       this.props.onSize && this.props.onSize(this.itemSize);
     }
   }, {
@@ -278,17 +280,17 @@ function (_React$Component2) {
     value: function render() {
       var _this5 = this;
 
-      var _parseProps3 = (0, _props.default)(this.props, Picker._Col.props),
-          _parseProps3$data = _parseProps3.data,
-          data = _parseProps3$data === void 0 ? [] : _parseProps3$data,
-          index = _parseProps3.index,
-          lineCount = _parseProps3.lineCount,
-          onSize = _parseProps3.onSize,
-          _parseProps3$componen = _parseProps3.component,
-          Component = _parseProps3$componen === void 0 ? _Panel.default.Touchable : _parseProps3$componen,
-          componentPanel = _parseProps3.componentPanel,
-          className = _parseProps3.className,
-          props = (0, _objectWithoutProperties2.default)(_parseProps3, ["data", "index", "lineCount", "onSize", "component", "componentPanel", "className"]);
+      var _BaseComponent3 = (0, _BaseComponent5.default)(this.props, Picker._Col),
+          _BaseComponent3$data = _BaseComponent3.data,
+          data = _BaseComponent3$data === void 0 ? [] : _BaseComponent3$data,
+          index = _BaseComponent3.index,
+          lineCount = _BaseComponent3.lineCount,
+          onSize = _BaseComponent3.onSize,
+          _BaseComponent3$compo = _BaseComponent3.component,
+          Component = _BaseComponent3$compo === void 0 ? _Touchable.default : _BaseComponent3$compo,
+          componentPanel = _BaseComponent3.componentPanel,
+          className = _BaseComponent3.className,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["data", "index", "lineCount", "onSize", "component", "componentPanel", "className"]);
 
       var offset = this.state.offset;
       if (!data.length) data.push(' ');
@@ -320,14 +322,14 @@ function (_React$Component2) {
 }(_react.default.Component);
 
 Picker._Item = function (aprops) {
-  var _parseProps4 = (0, _props.default)(aprops, Picker._Item.props),
-      selected = _parseProps4.selected,
-      _parseProps4$componen = _parseProps4.component,
-      Component = _parseProps4$componen === void 0 ? _Panel.default : _parseProps4$componen,
-      componentPanel = _parseProps4.componentPanel,
-      className = _parseProps4.className,
-      children = _parseProps4.children,
-      props = (0, _objectWithoutProperties2.default)(_parseProps4, ["selected", "component", "componentPanel", "className", "children"]);
+  var _BaseComponent4 = (0, _BaseComponent5.default)(aprops, Picker._Item),
+      selected = _BaseComponent4.selected,
+      _BaseComponent4$compo = _BaseComponent4.component,
+      Component = _BaseComponent4$compo === void 0 ? _Panel.default : _BaseComponent4$compo,
+      componentPanel = _BaseComponent4.componentPanel,
+      className = _BaseComponent4.className,
+      children = _BaseComponent4.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["selected", "component", "componentPanel", "className", "children"]);
 
   var classStr = 'padding-a- text-align-center width-full';
   return _react.default.createElement(Component, (0, _extends2.default)({

@@ -3,9 +3,10 @@
  */
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
-import parseProps from './utils/props';
+import BaseComponent from './BaseComponent';
 import ScrollSpy from './ScrollSpy';
-import Panel from './Panel.Loader';
+import Panel from './Panel';
+import './Loader';
 
 
 /**
@@ -34,7 +35,7 @@ class Dropload extends React.Component{
     let { 
       disabled, isLoading, onLoad, offset,
       component:Component=Panel.Loader, className, ...props 
-    } = parseProps(this.props, Dropload.props);
+    } = BaseComponent(this.props, Dropload);
     if(disabled) return null;
   
     let classStr = 'padding-a-';
