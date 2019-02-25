@@ -2,33 +2,30 @@
  * @module
  */
 import React from 'react';
-import classes from '@bnorth/rich.css/lib/classes'; 
 import BaseComponent from './BaseComponent';
-import Panel from './Panel';
+import Panel, { PanelContainer } from './Panel';
 import Icon from './Icon';
 
 
 /**
  * 列表组件
  * @component 
- * @augments BaseComponent
  * @exportdefault
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel~PanelContainer
  */
 let List = aprops=>{
   let {
-    separatorInset, hasTheme,
-    header, footer, headerProps, footerProps, 
+    separatorInset, hasTheme, header, footer, headerProps, footerProps, 
     children, ...props
   } = BaseComponent(aprops, List, {isContainer: true});
-  
-  props.itemProps = { separatorInset, hasTheme }
 
   return (
-    <Panel.Container {...props}>
+    <PanelContainer {...props}>
       {header?<Panel bc-border-set-bottom- bc-padding-a- itemPlain {...headerProps}>{header}</Panel>:null}
       {children}
       {footer?<Panel bc-border-set-top- bc-padding-a- itemPlain {...footerProps}>{footer}</Panel>:null}
-    </Panel.Container>
+    </PanelContainer>
   );
 }
 
@@ -64,7 +61,7 @@ List.defaultProps = {};
  */
 List.defaultProps.hasTheme = true;
 
-
+Object.defineProperty(List,"List",{ get:function(){ return List }, set:function(val){ List = val }})
 export default List;
 
 
@@ -74,19 +71,18 @@ export default List;
 /**
  * 表格组件的条目，表格行组件,条目由多个部分组成
  * @component
- * @augments BaseComponent
- * @augments Panel.module:Container~Item
- * @mount List.Item 
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel~PanelContainerItem
  * @private
  */
 let Item = aprops=>{
   let {
-    itemIndex, itemCount, separatorInset, hasTheme, onClick, 
+    itemIndex, itemCount, containerProps:{separatorInset, hasTheme}, onClick, 
     media, mediaProps, mainProps, title, titleProps, subTitle, subTitleProps, desc, descProps, after, afterProps, arrow, arrowProps, autoArrow=true, 
-    component:Component=Panel, componentPanel, className, children, ...props
+    children, ...props
   } = BaseComponent(aprops, Item);
 
-  let classSet = {
+  let classNamePre = {
     'padding-a-': true,
     'bg-color-white': hasTheme,
     'status-': Boolean(onClick),
@@ -97,19 +93,17 @@ let Item = aprops=>{
   };
 
   return (
-    <Component component={componentPanel} 
-      type="primary" align="center" 
-      className={classes(classSet, className)} onClick={onClick} {...props}>
+    <PanelContainer type="primary" align="center" classNamePre={classNamePre} onClick={onClick} {...props}>
       {media?(<Panel bc-margin-right- {...mediaProps}>{media===true?undefined:media}</Panel>):null}
-      <Panel.Container itemSelected {...mainProps}>
+      <PanelContainer itemSelected {...mainProps}>
         {title?(<Panel {...titleProps}>{title===true?undefined:title}</Panel>):null}
         {subTitle?(<Panel b-size={hasTheme&&"sm"} {...subTitleProps}>{subTitle===true?undefined:subTitle}</Panel>):null}
         {desc?(<Panel b-size={hasTheme&&"sm"} b-theme={hasTheme&&"light"} {...descProps}>{desc===true?undefined:desc}</Panel>):null}
         {children}
-      </Panel.Container>
+      </PanelContainer>
       {after?(<Panel b-size={hasTheme&&"sm"} b-theme={hasTheme&&"light"} {...afterProps}>{after===true?undefined:after}</Panel>):null}
       {arrow||(autoArrow&&onClick)?(<Panel component={Icon} name="right" nameDefault=">" b-size={hasTheme&&"sm"} b-theme={hasTheme&&"light"} {...arrowProps}>{arrow===true?undefined:arrow}</Panel>):null}
-    </Component>
+    </PanelContainer>
   );
 }
 
@@ -190,7 +184,3 @@ Item.defaultProps = {};
  * @type {boolean}
  */
 Item.defaultProps.autoArrow = true; 
-/**
- * 参见 BaseComponent
- */
-Item.defaultProps.component = Panel.Container;

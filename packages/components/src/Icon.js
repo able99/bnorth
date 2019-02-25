@@ -14,7 +14,7 @@ import Panel from './Panel';
  * 支持多种模式的图标和样式，包括 svg 字体库图标，图片图标，字符图标和形状图标，样式固定在字体大小的宽度和高度
  * @component 
  * @exportdefault
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
  * @augments module:Panel.Panel
  */
 let Icon = aprops=>{

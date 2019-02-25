@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -15,11 +17,9 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
-
 var _BaseComponent3 = _interopRequireDefault(require("./BaseComponent"));
 
-var _Panel = _interopRequireDefault(require("./Panel"));
+var _Panel = _interopRequireWildcard(require("./Panel"));
 
 var _Icon = _interopRequireDefault(require("./Icon"));
 
@@ -30,11 +30,12 @@ var _Icon = _interopRequireDefault(require("./Icon"));
 /**
  * 列表组件
  * @component 
- * @augments BaseComponent
  * @exportdefault
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel~PanelContainer
  */
-var List = function List(aprops) {
-  var _BaseComponent = (0, _BaseComponent3.default)(aprops, List, {
+var _List = function List(aprops) {
+  var _BaseComponent = (0, _BaseComponent3.default)(aprops, _List, {
     isContainer: true
   }),
       separatorInset = _BaseComponent.separatorInset,
@@ -46,11 +47,7 @@ var List = function List(aprops) {
       children = _BaseComponent.children,
       props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["separatorInset", "hasTheme", "header", "footer", "headerProps", "footerProps", "children"]);
 
-  props.itemProps = {
-    separatorInset: separatorInset,
-    hasTheme: hasTheme
-  };
-  return _react.default.createElement(_Panel.default.Container, props, header ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
+  return _react.default.createElement(_Panel.PanelContainer, props, header ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "bc-border-set-bottom-": true,
     "bc-padding-a-": true,
     itemPlain: true
@@ -61,7 +58,7 @@ var List = function List(aprops) {
   }, footerProps), footer) : null);
 };
 
-List.defaultProps = {};
+_List.defaultProps = {};
 /**
  * 设置列表条目缩进，取值为 padding 的配置值，true 为使用默认配置值，参见 rich.css spacing
  * @attribute module:List.List.separatorInset
@@ -97,29 +94,37 @@ List.defaultProps = {};
  * @type {boolean}
  */
 
-List.defaultProps.hasTheme = true;
-var _default = List; // List Item
+_List.defaultProps.hasTheme = true;
+Object.defineProperty(_List, "List", {
+  get: function get() {
+    return _List;
+  },
+  set: function set(val) {
+    _List = val;
+  }
+});
+var _default = _List; // List Item
 // ----------------
 
 /**
  * 表格组件的条目，表格行组件,条目由多个部分组成
  * @component
- * @augments BaseComponent
- * @augments Panel.module:Container~Item
- * @mount List.Item 
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel~PanelContainerItem
  * @private
  */
 
 exports.default = _default;
 
 var _Item = function Item(aprops) {
-  var _classSet;
+  var _classNamePre;
 
   var _BaseComponent2 = (0, _BaseComponent3.default)(aprops, _Item),
       itemIndex = _BaseComponent2.itemIndex,
       itemCount = _BaseComponent2.itemCount,
-      separatorInset = _BaseComponent2.separatorInset,
-      hasTheme = _BaseComponent2.hasTheme,
+      _BaseComponent2$conta = _BaseComponent2.containerProps,
+      separatorInset = _BaseComponent2$conta.separatorInset,
+      hasTheme = _BaseComponent2$conta.hasTheme,
       onClick = _BaseComponent2.onClick,
       media = _BaseComponent2.media,
       mediaProps = _BaseComponent2.mediaProps,
@@ -136,27 +141,22 @@ var _Item = function Item(aprops) {
       arrowProps = _BaseComponent2.arrowProps,
       _BaseComponent2$autoA = _BaseComponent2.autoArrow,
       autoArrow = _BaseComponent2$autoA === void 0 ? true : _BaseComponent2$autoA,
-      _BaseComponent2$compo = _BaseComponent2.component,
-      Component = _BaseComponent2$compo === void 0 ? _Panel.default : _BaseComponent2$compo,
-      componentPanel = _BaseComponent2.componentPanel,
-      className = _BaseComponent2.className,
       children = _BaseComponent2.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["itemIndex", "itemCount", "separatorInset", "hasTheme", "onClick", "media", "mediaProps", "mainProps", "title", "titleProps", "subTitle", "subTitleProps", "desc", "descProps", "after", "afterProps", "arrow", "arrowProps", "autoArrow", "component", "componentPanel", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["itemIndex", "itemCount", "containerProps", "onClick", "media", "mediaProps", "mainProps", "title", "titleProps", "subTitle", "subTitleProps", "desc", "descProps", "after", "afterProps", "arrow", "arrowProps", "autoArrow", "children"]);
 
-  var classSet = (_classSet = {
+  var classNamePre = (_classNamePre = {
     'padding-a-': true,
     'bg-color-white': hasTheme,
     'status-': Boolean(onClick)
-  }, (0, _defineProperty2.default)(_classSet, "margin-left-".concat(separatorInset && separatorInset !== true ? '-' + separatorInset : ''), separatorInset), (0, _defineProperty2.default)(_classSet, 'padding-left-0', separatorInset), (0, _defineProperty2.default)(_classSet, 'cursor-pointer', onClick || arrow), (0, _defineProperty2.default)(_classSet, 'border-set-bottom-', itemIndex < itemCount - 1), _classSet);
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    component: componentPanel,
+  }, (0, _defineProperty2.default)(_classNamePre, "margin-left-".concat(separatorInset && separatorInset !== true ? '-' + separatorInset : ''), separatorInset), (0, _defineProperty2.default)(_classNamePre, 'padding-left-0', separatorInset), (0, _defineProperty2.default)(_classNamePre, 'cursor-pointer', onClick || arrow), (0, _defineProperty2.default)(_classNamePre, 'border-set-bottom-', itemIndex < itemCount - 1), _classNamePre);
+  return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
     type: "primary",
     align: "center",
-    className: (0, _classes.default)(classSet, className),
+    classNamePre: classNamePre,
     onClick: onClick
   }, props), media ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "bc-margin-right-": true
-  }, mediaProps), media === true ? undefined : media) : null, _react.default.createElement(_Panel.default.Container, (0, _extends2.default)({
+  }, mediaProps), media === true ? undefined : media) : null, _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
     itemSelected: true
   }, mainProps), title ? _react.default.createElement(_Panel.default, titleProps, title === true ? undefined : title) : null, subTitle ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "b-size": hasTheme && "sm"
@@ -175,7 +175,7 @@ var _Item = function Item(aprops) {
   }, arrowProps), arrow === true ? undefined : arrow) : null);
 };
 
-Object.defineProperty(List, "Item", {
+Object.defineProperty(_List, "Item", {
   get: function get() {
     return _Item;
   },
@@ -273,8 +273,3 @@ _Item.defaultProps = {};
  */
 
 _Item.defaultProps.autoArrow = true;
-/**
- * 参见 BaseComponent
- */
-
-_Item.defaultProps.component = _Panel.default.Container;

@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import BaseComponent from './BaseComponent';
-import AnimationCollapse from './AnimationCollapse';
+import Animation from './Animation';
 import Panel from './Panel';
 import Button from './Button';
 import Icon from './Icon';
@@ -20,7 +20,7 @@ export let Container = aprops=>{
 export let Notification = aprops=>{
   let {
     onDoClose, 
-    transition:Transition=AnimationCollapse, transitionProps, onTransitionFinished,
+    transition:Transition=Animation, transitionProps, onTransitionFinished,
     titleProps, hasClose, closeProps, iconProps, 
     component=Panel, className, children, ...props
   } = BaseComponent(aprops, Notification);
@@ -31,7 +31,7 @@ export let Notification = aprops=>{
     <Transition 
       component={component} 
       b-style="solid" b-theme="mask" 
-      transitionProps={transitionProps} onTransitionFinished={onTransitionFinished} 
+      transitionProps={transitionProps} onFinished={onTransitionFinished} 
       className={classes(classStr, className)} {...props}>
       <div className="padding-a-">
       <Notification._Title {...titleProps}>{children}</Notification._Title>

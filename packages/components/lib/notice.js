@@ -19,7 +19,7 @@ var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
 var _BaseComponent5 = _interopRequireDefault(require("./BaseComponent"));
 
-var _AnimationCollapse = _interopRequireDefault(require("./AnimationCollapse"));
+var _Animation = _interopRequireDefault(require("./Animation"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -46,7 +46,7 @@ var Notification = function Notification(aprops) {
   var _BaseComponent2 = (0, _BaseComponent5.default)(aprops, Notification),
       onDoClose = _BaseComponent2.onDoClose,
       _BaseComponent2$trans = _BaseComponent2.transition,
-      Transition = _BaseComponent2$trans === void 0 ? _AnimationCollapse.default : _BaseComponent2$trans,
+      Transition = _BaseComponent2$trans === void 0 ? _Animation.default : _BaseComponent2$trans,
       transitionProps = _BaseComponent2.transitionProps,
       onTransitionFinished = _BaseComponent2.onTransitionFinished,
       titleProps = _BaseComponent2.titleProps,
@@ -65,7 +65,7 @@ var Notification = function Notification(aprops) {
     "b-style": "solid",
     "b-theme": "mask",
     transitionProps: transitionProps,
-    onTransitionFinished: onTransitionFinished,
+    onFinished: onTransitionFinished,
     className: (0, _classes.default)(classStr, className)
   }, props), _react.default.createElement("div", {
     className: "padding-a-"

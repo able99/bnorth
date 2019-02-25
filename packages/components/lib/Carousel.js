@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -8,6 +10,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 require("core-js/modules/es6.array.from");
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
@@ -23,15 +27,11 @@ var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/ge
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _react = _interopRequireDefault(require("react"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
+var _BaseComponent4 = _interopRequireDefault(require("./BaseComponent"));
 
-var _BaseComponent5 = _interopRequireDefault(require("./BaseComponent"));
-
-var _Panel = _interopRequireDefault(require("./Panel"));
+var _Panel = _interopRequireWildcard(require("./Panel"));
 
 var _Icon = _interopRequireDefault(require("./Icon"));
 
@@ -45,7 +45,8 @@ var _Icon = _interopRequireDefault(require("./Icon"));
  * 轮播组件
  * @component 
  * @exportdefault
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel~PanelContainer
  */
 var Carousel =
 /*#__PURE__*/
@@ -67,7 +68,6 @@ function (_React$Component) {
     key: "prev",
     value: function prev() {
       var selectedIndex = this.state.selectedIndex;
-      selectedIndex--;
       if (selectedIndex < 0) selectedIndex = _react.default.Children.toArray(this.props.children).filter(function (v) {
         return v;
       }).length - 1;
@@ -80,7 +80,6 @@ function (_React$Component) {
     key: "next",
     value: function next() {
       var selectedIndex = this.state.selectedIndex;
-      selectedIndex++;
       selectedIndex = ++selectedIndex % _react.default.Children.toArray(this.props.children).filter(function (v) {
         return v;
       }).length;
@@ -142,10 +141,9 @@ function (_React$Component) {
     value: function render() {
       var _this3 = this;
 
-      var _BaseComponent = (0, _BaseComponent5.default)(this.props, Carousel),
+      var _BaseComponent = (0, _BaseComponent4.default)(this.props, Carousel),
           selectedIndexDefault = _BaseComponent.selectedIndexDefault,
           interval = _BaseComponent.interval,
-          timeout = _BaseComponent.timeout,
           autoPlay = _BaseComponent.autoPlay,
           pauseOnHover = _BaseComponent.pauseOnHover,
           ControllerComponent = _BaseComponent.controller,
@@ -153,11 +151,9 @@ function (_React$Component) {
           pagerProps = _BaseComponent.pagerProps,
           controllerPrevProps = _BaseComponent.controllerPrevProps,
           controllerNextProps = _BaseComponent.controllerNextProps,
-          _BaseComponent$compon = _BaseComponent.component,
-          Component = _BaseComponent$compon === void 0 ? _Panel.default.Container : _BaseComponent$compon,
-          componentPanel = _BaseComponent.componentPanel,
+          Component = _BaseComponent.component,
           children = _BaseComponent.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["selectedIndexDefault", "interval", "timeout", "autoPlay", "pauseOnHover", "controller", "pager", "pagerProps", "controllerPrevProps", "controllerNextProps", "component", "componentPanel", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["selectedIndexDefault", "interval", "autoPlay", "pauseOnHover", "controller", "pager", "pagerProps", "controllerPrevProps", "controllerNextProps", "component", "children"]);
 
       var selectedIndex = this.state.selectedIndex;
       children = _react.default.Children.toArray(children).filter(function (v) {
@@ -166,7 +162,7 @@ function (_React$Component) {
       if (ControllerComponent === true) ControllerComponent = _Controller;
       if (PagerComponent === true) PagerComponent = _Pager;
       return _react.default.createElement(Component, (0, _extends2.default)({
-        component: componentPanel,
+        type: "scroll",
         selectedIndex: selectedIndex,
         onSelect: function onSelect(selectedIndex) {
           return _this3.setState({
@@ -180,8 +176,7 @@ function (_React$Component) {
         },
         onMouseOut: function onMouseOut(e) {
           return _this3.isPaused && _this3.play();
-        },
-        type: "scroll"
+        }
       }, props), children, _Controller ? _react.default.createElement(_Controller, (0, _extends2.default)({
         onClick: function onClick(e) {
           return _this3.prev();
@@ -203,8 +198,8 @@ function (_React$Component) {
             return _this3.go();
           });
         },
-        size: children.length,
-        selectedIndex: Math.round(selectedIndex)
+        itemCount: children.length,
+        selectedIndex: selectedIndex
       }, pagerProps, {
         itemPlain: true
       })) : null);
@@ -213,13 +208,62 @@ function (_React$Component) {
   return Carousel;
 }(_react.default.Component);
 
-(0, _defineProperty2.default)(Carousel, "defaultProps", {
-  selectedIndexDefault: 0,
-  controller: true,
-  pager: true,
-  interval: 4000,
-  autoPlay: true
-});
+Carousel.defaultProps = {};
+/**
+ * 默认的轮播条目
+ * @type {number}
+ */
+
+Carousel.defaultProps.selectedIndexDefault = 0;
+/**
+ * 轮播间隔
+ * @type {number}
+ */
+
+Carousel.defaultProps.interval = 4000;
+/**
+ * 鼠标滑过时，是否暂停
+ * @type { boolean}
+ */
+
+Carousel.defaultProps.pauseOnHover = false;
+/**
+ * 是否自动播放
+ * @type { boolean}
+ */
+
+Carousel.defaultProps.autoPlay = true;
+/**
+ * 前进后退按钮，true 表示使用默认按钮
+ * @type {boolean|component}
+ */
+
+Carousel.defaultProps.controller = true;
+/**
+ * 后退按钮属性
+ * @attribute module:Carousel.Carousel.controllerPrevProps
+ * @type {Object}
+ */
+
+/**
+ * 前进按钮属性
+ * @attribute module:Carousel.Carousel.controllerNextProps
+ * @type {Object}
+ */
+
+/**
+ * 分页器组件，true 表示使用默认分页器
+ * @type {boolean|component}
+ */
+
+Carousel.defaultProps.pager = true;
+/**
+ * 分页器属性
+ * @attribute module:Carousel.Carousel.pagerProps
+ * @type {Object}
+ */
+
+Carousel.defaultProps.component = _Panel.PanelContainer;
 var _default = Carousel; // Carousel Item
 // ------------------------------
 
@@ -231,31 +275,31 @@ Carousel.Item = _Panel.default; // Carousel Controller
  * 轮播组件内部使用的翻页控制组件
  * @component 
  * @private
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:ICon.Icon
  */
 
 var _Controller = function Controller(aprops) {
-  var _classSet;
+  var _classNamePre;
 
-  var _BaseComponent2 = (0, _BaseComponent5.default)(aprops, _Controller),
+  var _BaseComponent2 = (0, _BaseComponent4.default)(aprops, _Controller),
       isNext = _BaseComponent2.isNext,
       mask = _BaseComponent2.mask,
       icon = _BaseComponent2.icon,
       iconNext = _BaseComponent2.iconNext,
       defaultIcon = _BaseComponent2.defaultIcon,
       defaultIconNext = _BaseComponent2.defaultIconNext,
-      _BaseComponent2$compo = _BaseComponent2.component,
-      Component = _BaseComponent2$compo === void 0 ? _Icon.default : _BaseComponent2$compo,
-      className = _BaseComponent2.className,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isNext", "mask", "icon", "iconNext", "defaultIcon", "defaultIconNext", "component", "className"]);
+      Component = _BaseComponent2.component,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isNext", "mask", "icon", "iconNext", "defaultIcon", "defaultIconNext", "component"]);
 
-  var classStr = 'position-absolute text-color-white cursor-pointer margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border';
-  var classSet = (_classSet = {}, (0, _defineProperty2.default)(_classSet, "offset-".concat(isNext ? 'right' : 'left', "-start"), true), (0, _defineProperty2.default)(_classSet, 'bg-color-' + (mask === true ? 'overlay' : mask), mask), _classSet);
+  var classNamePre = (_classNamePre = {
+    'position-absolute text-color-white cursor-pointer margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border': true
+  }, (0, _defineProperty2.default)(_classNamePre, "offset-".concat(isNext ? 'right' : 'left', "-start"), true), (0, _defineProperty2.default)(_classNamePre, 'bg-color-' + (mask === true ? 'overlay' : mask), mask), _classNamePre);
   return _react.default.createElement(Component, (0, _extends2.default)({
     "b-size": "xl",
     name: isNext ? iconNext : icon,
     defaultName: isNext ? defaultIconNext : defaultIcon,
-    className: (0, _classes.default)(classStr, classSet, className)
+    classNamePre: classNamePre
   }, props));
 };
 
@@ -304,10 +348,6 @@ _Controller.defaultProps.defaultIcon = '<';
  */
 
 _Controller.defaultProps.defaultIconNext = '>';
-/**
- * 参见 BaseComponent
- */
-
 _Controller.defaultProps.component = _Icon.default; // Carousel Pager
 // ------------------------------
 
@@ -315,39 +355,36 @@ _Controller.defaultProps.component = _Icon.default; // Carousel Pager
  * 轮播组件内部使用的分页控制器
  * @component 
  * @private
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel~PanelContainer
  */
 
 var _Pager = function Pager(aprops) {
-  var _BaseComponent3 = (0, _BaseComponent5.default)(aprops, _Pager),
-      size = _BaseComponent3.size,
-      selected = _BaseComponent3.selected,
+  var _BaseComponent3 = (0, _BaseComponent4.default)(aprops, _Pager, {
+    isContainer: true
+  }),
+      itemCount = _BaseComponent3.itemCount,
       onClick = _BaseComponent3.onClick,
-      itemProps = _BaseComponent3.itemProps,
       mask = _BaseComponent3.mask,
-      Component = _BaseComponent3.component,
-      componnetPanel = _BaseComponent3.componnetPanel,
-      className = _BaseComponent3.className,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["size", "selected", "onClick", "itemProps", "mask", "component", "componnetPanel", "className"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["itemCount", "onClick", "mask"]);
 
-  var classStr = 'position-absolute flex-display-block flex-justify-center flex-align-center padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
-  var classSet = [];
-  if (mask) classSet.push('bg-color-' + (mask === true ? 'overlay' : mask));
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    component: componnetPanel,
-    className: (0, _classes.default)(classStr, classSet, className)
+  var classNamePre = (0, _defineProperty2.default)({
+    'position-absolute padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x': true
+  }, 'bg-color-' + (mask === true ? 'overlay' : mask), mask);
+  return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
+    type: "flex",
+    itemCount: itemCount,
+    classNamePre: classNamePre
   }, props), Array.from({
-    length: size
+    length: itemCount
   }, function (v, k) {
     return k;
   }).map(function (v) {
-    return _react.default.createElement(_Item, (0, _extends2.default)({
+    return _react.default.createElement(_Panel.default, {
+      component: "li",
       key: v,
-      onClick: onClick,
-      size: size,
-      selected: selected,
-      index: v
-    }, itemProps));
+      onClick: onClick
+    });
   }));
 };
 
@@ -360,67 +397,13 @@ Object.defineProperty(Carousel, "Pager", {
   }
 });
 _Pager.defaultProps = {};
-/**
- * 参见 BaseComponent
- */
+_Pager.defaultProps.component = 'ol';
 
-_Pager.defaultProps.component = _Panel.default;
-/**
- * 参见 BaseComponent
- */
-
-_Pager.defaultProps.componentPanel = 'ol'; // Carousel Pager Item
-// ------------------------------
-
-/**
- * 轮播组件内部使用的分页控制器的条目
- * @component 
- * @private
- * @augments BaseComponent
- */
-
-var _Item = function Item(aprops) {
-  var _BaseComponent4 = (0, _BaseComponent5.default)(aprops, _Item),
-      index = _BaseComponent4.index,
-      size = _BaseComponent4.size,
-      selected = _BaseComponent4.selected,
-      _onClick = _BaseComponent4.onClick,
-      Component = _BaseComponent4.component,
-      componnetPanel = _BaseComponent4.componnetPanel,
-      className = _BaseComponent4.className,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["index", "size", "selected", "onClick", "component", "componnetPanel", "className"]);
-
-  var classStr = 'cursor-pointer width-0em5 height-0em5 border-radius-rounded border-set-a-white';
-  var classSet = {
-    'bg-color-white': index === selected,
-    'bg-color-component': index === selected,
-    'margin-left-xxs': index > 0
+_Pager.itemGetClassName = function (itemProps, containerProps) {
+  return {
+    'cursor-pointer width-0em5 height-0em5 border-radius-rounded border-set-a-white': true,
+    'bg-color-white': itemProps.itemSelected,
+    'bg-color-component': itemProps.itemSelected,
+    'margin-left-xxs': itemProps.itemIndex > 0
   };
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    component: componnetPanel,
-    onClick: function onClick(e) {
-      return _onClick && _onClick(index);
-    },
-    className: (0, _classes.default)(classStr, classSet, className)
-  }, props));
 };
-
-Object.defineProperty(Carousel.Pager, "Item", {
-  get: function get() {
-    return _Item;
-  },
-  set: function set(val) {
-    _Item = val;
-  }
-});
-_Item.defaultProps = {};
-/**
- * 参见 BaseComponent
- */
-
-_Item.defaultProps.component = _Panel.default;
-/**
- * 参见 BaseComponent
- */
-
-_Item.defaultProps.componentPanel = 'li';

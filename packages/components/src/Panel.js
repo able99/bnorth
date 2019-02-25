@@ -14,27 +14,29 @@ import Touchable from './Touchable';
  * 小面板组件，基本的布局单位，其他组件一般使用该组件做基本组件
  * @component 
  * @exportdefault
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
  */
 let Panel = aprops=>{
-  if(aprops.componentTranform) {
-    let ComponentTranform = aprops.componentTranform;
-    return <ComponentTranform {...{...aprops, componentTranform:undefined}} />
-  }
+  if(aprops.componentTranform) { let ComponentTranform = aprops.componentTranform; return <ComponentTranform {...{...aprops, componentTranform:undefined}} /> }
 
   let {
-    main, inline, selected, status, hasBg, hasSelection, itemIndex, itemCount, itemSelect, itemPlain,
-    textThemeOnBg, bgThemeOnHollow, textThemeOnBgSelected, textThemeOnBgUnselected, textThemeUnselected, 
-    component:Component="div", className, style, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, ...props
+    main, page, full, inline, 
+    itemIndex, itemCount, itemSelected, itemPlain, containerProps,
+    selected, status, hasBg, hasSelection, textThemeOnBg, bgThemeOnHollow, textThemeOnBgSelected, textThemeOnBgUnselected, textThemeUnselected, 
+    'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, 
+    component:Component="div", className, style, ...props
   } = BaseComponent(aprops, Panel);
   if(hasBg===undefined) hasBg = bStyle==='solid'&&bTheme;
   if(hasSelection===undefined) hasSelection = bStyle==='underline';
 
-  let classStr = 'position-relative';
+  if(page) props['data-container'] = true;
+
   let classSet = {
-    'scrollable-a-': main,
-    'flex-sub-flex-extend': main,
+    'position-relative': true,
+    'offset-a-start square-full overflow-a-hidden': full,
     'display-inlineblock': inline,
+    'flex-display-block flex-direction-v bg-color-view': page,
+    'scrollable-a- flex-sub-flex-extend': main,
     'status-': status,
   }
   let styleSet = {};
@@ -44,7 +46,6 @@ let Panel = aprops=>{
   if(!hasSelection) textTheme = hasBg?textThemeOnBg:bTheme;
   textTheme = textTheme?(textTheme===true?'':textTheme):false; 
   classSet['text-color-'+textTheme] = textTheme!==false;
-
   classSet['text-size-'+(bSize==='true'?'':bSize)] = bSize;
 
   if(bStyle==='solid') {
@@ -57,28 +58,31 @@ let Panel = aprops=>{
     classSet[bgThemeOnHollow===false?'bg-none-':('bg-color-'+(bgThemeOnHollow===true?'':bgThemeOnHollow))] = true;
   }else if(bStyle==='underline') {
     let theme = bTheme?(bTheme===true?'':bTheme):(bTheme===false?false:'');
-    classSet['bg-none-'] = true;
-    classSet['border-none-top-'] = true;
-    classSet['border-none-left-'] = true;
-    classSet['border-none-right-'] = true;
+    classSet['border-none-top- border-none-left- border-none-right- bg-none-'] = true;
     classSet['border-width-bottom-2'] = true;
     classSet['border-set-bottom-'+theme] = theme!==false;
     if(!selected) styleSet['borderColor'] = 'transparent';
   }else if(bStyle==='plain') {
-    classSet['border-none-top-'] = true;
-    classSet['border-none-bottom-'] = true;
-    classSet['border-none-left-'] = true;
-    classSet['border-none-right-'] = true;
-    classSet['bg-none-'] = true;
+    classSet['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
   }
 
-  return <Component className={classes(classStr, classSet, className)} style={{...styleSet, ...style}} {...props} />
+  return <Component className={classes(classSet, className)} style={{...styleSet, ...style}} {...props} />
 }
 
 Panel.defaultProps = {};
 /**
  * 设置为主模式，将开启 flex extend 样式和滚动样式
+ * @attribute module:Panel.Panel.page
+ * @type {boolean}
+ */
+/**
+ * 设置为主模式，将开启 flex extend 样式和滚动样式
  * @attribute module:Panel.Panel.main
+ * @type {boolean}
+ */
+/**
+ * 设置为主模式，将开启 flex extend 样式和滚动样式
+ * @attribute module:Panel.Panel.full
  * @type {boolean}
  */
 /**
@@ -147,7 +151,7 @@ Panel.defaultProps.textThemeUnselected = 'disable';
  * @type {string}
  */
 
-
+Object.defineProperty(Panel,"Panel",{ get:function(){ return Panel }, set:function(val){ Panel = val }})
 export default Panel;
 
 
@@ -164,26 +168,25 @@ const positionToDirection = { left: 'h', right: 'hv', top: 'v', bottom: 'vv' }
 /**
  * 扩展小面板组件，提供了容器的能力，可管理子组件,
  * 
- * 容器内的子组件会被容器进行属性设置，如果希望特殊子组件不接受容器组件设置，子组件需要包含 noItem 属性
+ * 容器内的子组件会被容器进行属性设置，如果希望特殊子组件不接受容器组件设置，子组件需要包含 itemPlain 属性
  * @component
- * @mount Panel.Container
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
  * @augments module:Panel.Panel
  */
-let Container = class extends React.Component {
+export let PanelContainer = class extends React.Component {
   render() {
     let {
-      type, containerProps, inline, position, direction, justify, align, wrap,
-      content, selectedIndex=0, countToShow=1, onSelect, 
-      separator:SeparatorComponent, separatorProps, 
-      itemProps, itemGetProps=Container.itemGetProps, itemGetClassName=Container.itemGetClassName, itemGetStyle=Container.itemGetStyle,
+      type, inline, position, direction, justify, align, wrap,
+      selectedIndex=0, countToShow=1, onSelectedChange, 
+      separator:SeparatorComponent, separatorProps, noOverlay,
+      itemProps, itemGetProps, itemGetClassName, itemGetStyle,
       component:Component, className, children, ...props
-    } = BaseComponent(this.props, Container);
-
-    let classStr = 'position-relative overflow-a-hidden';
-    let classSet = {};
-
+    } = BaseComponent(this.props, PanelContainer);
     if(SeparatorComponent===true) SeparatorComponent = Separator;
+
+    let classSet = {
+      'position-relative overflow-a-hidden': true,
+    };
 
     children = React.Children.toArray(children).filter(v=>v);
     children = !SeparatorComponent?children:children.reduce((v1,v2,i,a)=>{
@@ -192,40 +195,31 @@ let Container = class extends React.Component {
       v1.push(v2);
       return v1;
     },[])
-
     let aindex = children.findIndex(v=>typeof v==='object'&&v.props.itemSelected);
     selectedIndex = aindex>=0?aindex:selectedIndex;
     let itemCount = children.filter(v=>((typeof v)==='object'&&!v.props.itemPlain)).length;
     let itemIndex = -1;
-    children = React.Children.toArray(children).map(v=>{
-      if(typeof v !== 'object' || v.props.itemPlain) return v;
-      itemIndex++;
-      return (
-        <Item separator={SeparatorComponent} {...getSubComponentProps(
-          type, selectedIndex, containerProps||{}, 
-          itemIndex, itemCount, v.props, itemProps, itemGetClassName, itemGetStyle, itemGetProps
-        )}>
-          {v}
-        </Item>
-      );
-    })
+    children = React.Children.toArray(children).map(v=>typeof v !== 'object' || v.props.itemPlain?v:(<PanelContainerItem {...PanelContainer.genSubProps(
+      type, selectedIndex, this.props, 
+      ++itemIndex, itemCount, v.props, itemProps, itemGetClassName, itemGetStyle, itemGetProps
+    )}>{v}</PanelContainerItem>))
 
     if(type==='single'){
       children = children.filter(v=>v.props.itemSelected);
       props.inline = inline;
     }else if(type==='justify'){
-      classSet = {
+      classSet = { ...classSet,
         ['flex-display-'+(inline?'inline':'block')]: true,
-        'flex-justify-around': true, 
-        'flex-align-stretch': true,
+        'flex-justify-around flex-align-stretch': true, 
       }
     }else if(type==='primary'){
-      classSet = {
+      classSet = { ...classSet,
         ['flex-display-'+(inline?'inline':'block')]: true,
         'flex-align-center': true,
       }
     }else if(type==='flex'){
       classSet = {
+        ...classSet,
         ['flex-display-'+(inline?'inline':'block')]: true,
       }
     }else if(type==='scroll') {
@@ -233,27 +227,26 @@ let Container = class extends React.Component {
       let childrenItem = children.filter(v=>((typeof v)==='object'&&!v.props.itemPlain));
       children = (
         <React.Fragment>
-          <InnerScroll countToShow={countToShow} selectedIndex={selectedIndex} onSelect={onSelect}>{childrenItem}</InnerScroll>
+          <InnerScroll countToShow={countToShow} selectedIndex={selectedIndex} onSelectedChange={onSelectedChange}>{childrenItem}</InnerScroll>
           {childrenPlain}
         </React.Fragment>
       );
     }
 
     if(position) direction = positionToDirection[position];
-    let classSetFlex = {
+    classSet = {
+      ...classSet,
       ['flex-direction-'+direction]: direction,
       ['flex-justify-'+justify]: justify,
       ['flex-align-'+align]: align,
       ['flex-wrap-'+wrap]: wrap,
     }
     
-    return <Component className={classes(classStr, classSet, classSetFlex, className)} {...props}>{children}</Component>;
+    return <Component className={classes(classSet, className)} {...props}>{children}</Component>;
   }
 }
 
-Object.defineProperty(Panel,"Container",{ get:function(){ return Container }, set:function(val){ Container = val }})
-
-Container.defaultProps = {}
+PanelContainer.defaultProps = {}
 /**
  * 设置子组件的排列类型，包括：
  * 
@@ -262,32 +255,32 @@ Container.defaultProps = {}
  * - primary: 仅 subTypePrimary 属性的子组件扩展，其他组件保持不延展不压缩
  * - flex: 普通 flex 布局
  * 
- * @attribute Panel.module:Container~Container.type
+ * @attribute module:Panel~PanelContainer.type
  * @type {string}
  */
 /**
  * 设置组件的 flex direction 属性，参见 rich.css
- * @attribute Panel.module:Container~Container.direction
+ * @attribute module:Panel~PanelContainer.direction
  * @type {string}
  */
 /**
  * 设置组件的 flex justify 属性，参见 rich.css
- * @attribute Panel.module:Container~Container.justify
+ * @attribute module:Panel~PanelContainer.justify
  * @type {string}
  */
 /**
  * 设置组件的 flex align 属性，参见 rich.css
- * @attribute Panel.module:Container~Container.align
+ * @attribute module:Panel~PanelContainer.align
  * @type {string}
  */
 /**
  * 设置组件的 flex wrap 属性，参见 rich.css
- * @attribute Panel.module:Container~Container.wrap
+ * @attribute module:Panel~PanelContainer.wrap
  * @type {string}
  */
 /**
  * 统一设置子组件的属性
- * @attribute Panel.module:Container~Container.itemProps
+ * @attribute module:Panel~PanelContainer.itemProps
  * @type {object}
  */
 /**
@@ -302,13 +295,13 @@ Container.defaultProps = {}
  */
 /**
  * 设置获取子组件的样式类的回到函数
- * @attribute Panel.module:Container~Container.itemGetClassName
- * @type {Panel.module:Container~ItemGetClassNameCallback}
+ * @attribute module:Panel~PanelContainer.itemGetClassName
+ * @type {module:Panel~ItemGetClassNameCallback}
  */
 /**
  * 设置默认的获取子组件的样式类的回到函数
- * @member Panel.module:Container~Container.itemGetClassName
- * @type {Panel.module:Container~ItemGetClassNameCallback}
+ * @member module:Panel~PanelContainer.itemGetClassName
+ * @type {module:Panel~ItemGetClassNameCallback}
  */
 /**
  * 获取子组件样式对象的回调函数
@@ -322,13 +315,13 @@ Container.defaultProps = {}
  */
 /**
  * 设置子组件的样式对象的回调函数
- * @attribute Panel.module:Container~Container.itemGetStyle
- * @type {Panel.module:Container~ItemGetStyleCallback}
+ * @attribute module:Panel~PanelContainer.itemGetStyle
+ * @type {module:Panel~ItemGetStyleCallback}
  */
 /**
  * 设置默认的子组件的样式对象的回调函数
- * @member Panel.module:Container~Container.itemGetStyle
- * @type {Panel.module:Container~ItemGetStyleCallback}
+ * @member module:Panel~PanelContainer.itemGetStyle
+ * @type {module:Panel~ItemGetStyleCallback}
  */
 /**
  * 获取子组件属性的回调函数
@@ -342,102 +335,123 @@ Container.defaultProps = {}
  */
 /**
  * 设置获取子组件的属性的回调函数
- * @attribute Panel.module:Container~Container.itemGetProps
- * @type {Panel.module:Container~ItemGetPropsCallback}
+ * @attribute module:Panel~PanelContainer.itemGetProps
+ * @type {module:Panel~ItemGetPropsCallback}
  */
 /**
  * 设置默认的获取子组件的属性的回调函数
- * @member Panel.module:Container~Container.itemGetProps
- * @type {Panel.module:Container~ItemGetPropsCallback}
+ * @member module:Panel~PanelContainer.itemGetProps
+ * @type {module:Panel~ItemGetPropsCallback}
  * @static
  */
-Container.defaultProps.component = Panel;
+PanelContainer.defaultProps.component = Panel;
 
-
-// Panel Container Item
-// ------------------------------
-
-function getSubComponentProps(
+/**
+ * 子组件属性计算函数
+ * @member
+ */
+PanelContainer.genSubProps = function(
   type, selectedIndex, containerProps, 
   itemIndex, itemCount, 
   {key, className, style, ...componentProps}={}, 
   {className:itemClassName, style:itemStyle, ...itemProps}={},
   itemGetClassName, itemGetStyle, itemGetProps
 ){
-  return {
-    key:key||itemIndex, type, itemIndex, itemCount, itemSelected: selectedIndex===itemIndex,
-    style: {
-      ...((itemGetStyle&&itemGetStyle(itemIndex, itemCount, containerProps, componentProps, itemProps))||{}), 
-      ...itemStyle, 
-      ...style,
-    },
-    className: classes(
-      itemGetClassName&&itemGetClassName(itemIndex, itemCount, containerProps, componentProps, itemProps),
-      itemClassName,
-      className,
-    ),
-    ...((itemGetProps&&itemGetProps(itemIndex, itemCount, containerProps, componentProps, itemProps))||{}),
-    ...itemProps,
+  let ret = {
+    key:key||itemIndex, 
+    type, containerProps: containerProps.containerProps, itemIndex, itemCount, itemSelected: selectedIndex===itemIndex,
     ...componentProps,
+    ...itemProps,
+  }
+
+  ret.style = {
+    ...((itemGetStyle&&itemGetStyle(ret, containerProps))||{}), 
+    ...itemStyle, 
+    ...style,
   };
+  ret.className = classes(
+    itemGetClassName&&itemGetClassName(ret, containerProps),
+    itemClassName,
+    className,
+  );
+  
+  return {
+    ...ret,
+    ...((itemGetProps&&itemGetProps(ret, containerProps))||{}),
+  }
 }
+
+Object.defineProperty(Panel,"Container",{ get:function(){ return PanelContainer }, set:function(val){ PanelContainer = val }})
+
+
+
+
+// Panel Container Item
+// ------------------------------
 
 /**
  * 带容器能力的小面板组件的子组件
  * @component 
- * @mount Panel.Container.Item
- * @augments BaseComponent
  */
-let Item = aprops=>{
+export let PanelContainerItem = aprops=>{
   let {
-    type, separator, itemSelected, itemPlain, index, size, containerProps, 
+    type, containerProps={}, itemIndex, itemCount, itemSelected, itemPlain, 
     className, children, ...props
-  } = BaseComponent(aprops, Item);
+  } = BaseComponent(aprops, PanelContainerItem);
 
-  let classStr = '';
-  let classSet = {};
+  if(itemPlain) return children;
 
-  if(type==='single'){
-    classStr = 'position-relative offset-a-start square-full overflow-a-hidden';
-  }else if(type==='justify'){
-    classStr = 'flex-sub-flex-extend';
-  }else if(type==='primary'){
-    classStr = itemSelected?'flex-sub-flex-extend':'flex-sub-flex-none';
-  }else if(type==='scroll'){
-    classStr = 'flex-sub-flex-extend height-full';
-  }
+  let classSet = [];
+  if(type==='single') classSet.push('position-relative offset-a-start square-full overflow-a-hidden');
+  if(type==='justify') classSet.push('flex-sub-flex-extend');
+  if(type==='primary') classSet.push(itemSelected?'flex-sub-flex-extend':'flex-sub-flex-none');
+  if(type==='scroll') classSet.push('flex-sub-flex-extend height-full');
+  if(containerProps.noOverlay&&itemIndex<itemCount-1) classSet.push('border-none-right-');
+  if(containerProps.separator) classSet.push('border-none-a- bg-none-');
 
-  classSet = {
-    'border-none-right-': index<size-1,
-    'border-none-a-': separator,
-    'bg-none-': separator,
-  }
-
-  return cloneElement(children, {className: classes(classStr, classSet, className), ...props});
+  return cloneElement(children, {className: classes(classSet, className), containerProps, itemIndex, itemCount, itemSelected, itemPlain, ...props});
 }
 
-Object.defineProperty(Panel.Container,"Item",{ get:function(){ return Item }, set:function(val){ Item = val }})
-
-Item.defaultProps = {}
+PanelContainerItem.defaultProps = {}
 /**
- * 参见 Container
- * @attribute Panel.module:Container~Item.type
+ * 容器组件的组织类型
+ * @attribute module:Panel~PanelContainerItem.type
+ */
+/**
+ * 容器组件是否有分隔要求 
+ * @attribute module:Panel~PanelContainerItem.separator
  */
 /**
  * 组件在容器中的索引
- * @attribute Panel.module:Container~Item.index
+ * @attribute module:Panel~PanelContainerItem.itemIndex
  * @type {number}
  */
 /**
  * 容器中子组件的数量
- * @attribute Panel.module:Container~Item.size
+ * @attribute module:Panel~PanelContainerItem.itemCount
  * @type {number}
  */
 /**
+ * 组件为容器中选中组件
+ * @attribute module:Panel~PanelContainerItem.itemSelected
+ * @type {boolean}
+ */
+/**
+ * 组件不接受容器管理
+ * @attribute module:Panel~PanelContainerItem.itemPlain
+ * @type {boolean}
+ */
+/**
  * 容器组件的属性
- * @attribute Panel.module:Container~Item.containerProps
+ * @attribute module:Panel~PanelContainerItem.containerProps
  * @type {object}
  */
+
+Object.defineProperty(Panel,"ContainerItem",{ get:function(){ return PanelContainerItem }, set:function(val){ PanelContainerItem = val }})
+
+
+
+
 
 
 
@@ -445,12 +459,12 @@ Item.defaultProps = {}
 // ------------------------
 
 /**
- * 淡入淡出动画组件的内容组件，用来包裹具体淡入淡出内容
+ * 容器内部的滑动组件
  * @component 
  * @private
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
  * @augments module:Panel.Panel
- * @mount AnimationSlider.InnerScroll
+ * @augments module:Touchable.Touchable
  */
 let InnerScroll = class extends React.Component {
   handlePanStart(event, element) {
@@ -462,13 +476,13 @@ let InnerScroll = class extends React.Component {
   }
 
   handlePanEnd(event, element) {
-    let { selectedIndex, countToShow, onSelect, children } = this.props;
+    let { selectedIndex, countToShow, onSelectedChange, children } = this.props;
     this.setState({offset: undefined},()=>{
-      if(onSelect) {
+      if(onSelectedChange) {
         let aindex = selectedIndex - Math.round((event.deltaX*children.length)/(countToShow*element.clientWidth));
         aindex = Math.min(aindex, children.length-1);
         aindex = Math.max(aindex, 0);
-        if(selectedIndex!==aindex) onSelect(aindex);
+        if(selectedIndex!==aindex) onSelectedChange(aindex);
       }
     });
   }
@@ -504,50 +518,32 @@ let InnerScroll = class extends React.Component {
 }
 
 InnerScroll.defaultProps = {};
-/**
- * 参见 AnimationSlider
- * @attribute module:AnimationSlider~InnerScroll.countToShow
- */
-/**
- * 参见 AnimationSlider
- * @attribute module:AnimationSlider~InnerScroll.selectedIndex
- */
 InnerScroll.defaultProps.component = Touchable;
 
+Object.defineProperty(Panel,"InnerScroll",{ get:function(){ return InnerScroll }, set:function(val){ InnerScroll = val }})
 
 
-// Button Group Separator
+
+
+
+
+
+// Separator
 // -------------------------
 
 /**
- * 按钮组的分隔条组件
+ * 分隔条组件
  * @component
- * @augments BaseComponent
- * @mount Button.Group.Separator
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel.Panel
  * @private
  */
 let Separator = aprops=>{
-  let { 
-    component:Component, panelComponent, subTypeNotItem, className, ...props
-  } = BaseComponent(aprops, Separator);
-
-  let classStr = 'flex-sub-flex-none flex-display-inline flex-align-center flex-justify-center';
-
-  return (
-    <Component 
-      component={panelComponent} 
-      inline b-theme='border' b-size='lg'
-      className={classes(classStr,className)} {...props}>
-      <span>|</span>
-    </Component>
-  );
+  let { component:Component, ...props } = BaseComponent(aprops, Separator);
+  let classNamePre = 'flex-sub-flex-none flex-display-inline flex-align-center flex-justify-center';
+  return <Panel inline b-theme='border' b-size='lg' classNamePre={classNamePre} {...props}><span>|</span></Panel>;
 }
 
-Object.defineProperty(Panel.Container,"Separator",{ get:function(){ return Separator }, set:function(val){ Separator = val }})
+Object.defineProperty(Panel,"Separator",{ get:function(){ return Separator }, set:function(val){ Separator = val }})
 
-Separator.defaultProps = {}
-/**
- * 设置映射组件
- */
-Separator.defaultProps.component = Panel;
 

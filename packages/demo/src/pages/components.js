@@ -10,17 +10,17 @@ import Dropload from '@bnorth/components/lib/Dropload'
 import Fab from '@bnorth/components/lib/Fab'
 import Field from '@bnorth/components/lib/Field'
 import Icon, { PanelIcon } from '@bnorth/components/lib/Icon'
+import Landscape from '@bnorth/components/lib/Landscape'
 import List from '@bnorth/components/lib/List'
 import Loader, { PanelLoader } from '@bnorth/components/lib/Loader'
 import NavBar from '@bnorth/components/lib/NavBar'
-import Panel from '@bnorth/components/lib/Panel'
+import Panel, { PanelContainer } from '@bnorth/components/lib/Panel'
 import Popover from '@bnorth/components/lib/Popover'
 import PullRefresh from '@bnorth/components/lib/PullRefresh'
 import ScrollSpy from '@bnorth/components/lib/ScrollSpy';
 import Space from '@bnorth/components/lib/Space'
 import TabBar from '@bnorth/components/lib/TabBar'
 import Touchable from '@bnorth/components/lib/Touchable';
-import View from '@bnorth/components/lib/View'
 import img from '../../res/aboutme.svg';
 
 let listComponent = (length=3, Component='div', pre, ext, props)=>{
@@ -151,6 +151,13 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
+      <Groups.Group title="Landscape" desc="横屏">
+        <Groups.Sep title="容器宽度大于高度" />
+        <Groups.Show><Panel b-style="solid" b-theme="primary" bs-width={200} bs-height={100} data-container><Landscape>{listComponent()}</Landscape></Panel></Groups.Show>
+        <Groups.Sep title="容器高度大于宽度" />
+        <Groups.Show><Panel b-style="solid" b-theme="primary" bs-width={100} bs-height={200} data-container><Landscape>{listComponent()}</Landscape></Panel></Groups.Show>
+      </Groups.Group>
+      
       <Groups.Group title="List" desc="列表">
         <Groups.Props data={{
           separatorInset: undefined,
@@ -194,7 +201,7 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Panel.Container" desc="面板容器组件">
+      <Groups.Group title="PanelContainer" desc="面板容器组件">
         <Groups.Props data={{
           type: ['single', 'justify', 'primary', 'flex', 'scroll'],
           selectedIndex: [0,1,2,3,4,5],
@@ -202,9 +209,9 @@ let Component = aprops=>{
           separator: undefined,
         }}/>
         <Groups.Show>
-          <Panel.Container {...stateData} onSelect={selectedIndex=>page.stateData.update({selectedIndex})}>
-            {listComponent(5, Panel.Container)}
-          </Panel.Container>
+          <PanelContainer {...stateData} onSelectedChange={selectedIndex=>page.stateData.update({selectedIndex})}>
+            {listComponent(5)}
+          </PanelContainer>
         </Groups.Show>
       </Groups.Group>
      
