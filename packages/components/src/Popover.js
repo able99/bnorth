@@ -75,7 +75,7 @@ class Popover extends React.Component {
       <Panel {...triggerProps} {...props}>
         {children}
         {!show?null:domCreatePortal((
-          <Panel componentTranform={Backdrop} {...closeProps} {...backdropProps}>
+          <Panel componentTransform={Backdrop} {...closeProps} {...backdropProps}>
             <Overlay 
               calcPosition={calcPosition} placement={placement} offsetTarget={offsetTarget} offsetOverlay={offsetOverlay} 
               ref={e=>e&&(!offsetOverlay)&&this.setState({offsetOverlay:domOffset(e, this.container)})} 

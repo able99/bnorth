@@ -13,6 +13,7 @@ import Icon, { PanelIcon } from '@bnorth/components/lib/Icon'
 import Landscape from '@bnorth/components/lib/Landscape'
 import List from '@bnorth/components/lib/List'
 import Loader, { PanelLoader } from '@bnorth/components/lib/Loader'
+import { Mask } from '@bnorth/components/lib/mask'
 import { Modal } from '@bnorth/components/lib/modal'
 import { Notice } from '@bnorth/components/lib/notice'
 import NavBar from '@bnorth/components/lib/NavBar'
@@ -123,11 +124,11 @@ let Component = aprops=>{
           <Groups.Sep title="textarea" />
           <Field type="textarea" />
           <Groups.Sep title="checkbox" />
-          {/* <Field type="checkbox" /> */}
+          <Field type="checkbox" />
           <Groups.Sep title="radio" />
-          {/* <Field type="radio" /> */}
+          <Field type="radio" />
           <Groups.Sep title="switch" />
-          {/* <Field type="switch" /> */}
+          <Field type="switch" />
           <Groups.Sep title="file" />
           <Field type="file">open</Field>
           <Groups.Sep title="container" />
@@ -185,6 +186,14 @@ let Component = aprops=>{
           <Loader />
           <Groups.Sep title="PanelLoader" />
           <PanelLoader title="title" />
+        </Groups.Show>
+      </Groups.Group>
+
+      <Groups.Group title="Mask" desc="蒙层">
+        <Groups.Show>
+          <div style={{height: 500}} className="position-relative">
+            <Mask>body</Mask>
+          </div>
         </Groups.Show>
       </Groups.Group>
 

@@ -105,7 +105,7 @@ var Modal = function Modal(aprops) {
     }, v));
   })) : null);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    componentTranform: _Backdrop.default,
+    componentTransform: _Backdrop.default,
     handleAction: handleAction,
     in: isIn,
     onFinished: onFinished,

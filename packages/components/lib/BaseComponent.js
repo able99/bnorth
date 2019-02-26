@@ -277,11 +277,13 @@ function BaseComponent(aprops, Component) {
       selected = _aprops.selected,
       disabled = _aprops.disabled,
       classNamePre = _aprops.classNamePre,
+      classNameExt = _aprops.classNameExt,
       stylePre = _aprops.stylePre,
+      styleExt = _aprops.styleExt,
       className = _aprops.className,
       style = _aprops.style,
       refWrap = _aprops.refWrap,
-      props = (0, _objectWithoutProperties2.default)(_aprops, ["active", "selected", "disabled", "classNamePre", "stylePre", "className", "style", "refWrap"]);
+      props = (0, _objectWithoutProperties2.default)(_aprops, ["active", "selected", "disabled", "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "refWrap"]);
   var classSet = {};
   var styleSet = {};
 
@@ -377,8 +379,8 @@ function BaseComponent(aprops, Component) {
   if (selected) classSet['selected'] = true;
   if (disabled) classSet['disabled'] = true;
   return (0, _objectSpread2.default)({}, props, {
-    className: (0, _classes.default)(classNamePre, classSet, className),
-    style: (0, _objectSpread2.default)({}, stylePre, styleSet, style),
+    className: (0, _classes.default)(classNamePre, classSet, className, classNameExt),
+    style: (0, _objectSpread2.default)({}, stylePre, styleSet, style, styleExt),
     selected: selected,
     active: active,
     disabled: disabled,

@@ -195,7 +195,7 @@ export default function BaseComponent(aprops, Component, {isContainer}={}) {
 
   let {
     active, selected, disabled,
-    classNamePre, stylePre, className, style, refWrap, ...props
+    classNamePre, classNameExt, stylePre, styleExt, className, style, refWrap, ...props
   } = aprops;
 
   let classSet = {};
@@ -281,8 +281,8 @@ export default function BaseComponent(aprops, Component, {isContainer}={}) {
   
   return {
     ...props,
-    className: classes(classNamePre, classSet, className),
-    style: {...stylePre, ...styleSet, ...style},
+    className: classes(classNamePre, classSet, className, classNameExt),
+    style: {...stylePre, ...styleSet, ...style, ...styleExt},
     selected, active, disabled,
     ref: refWrap,
   };

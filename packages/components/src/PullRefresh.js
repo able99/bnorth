@@ -60,11 +60,11 @@ class PullRefresh extends React.Component {
 
     return (
       <Panel 
-        componentTranform={Touchable} recognizers={{pan: {enable: true}}} direction="vertical" options={{touchAction:'pan-y'}} 
+        componentTransform={Touchable} recognizers={{pan: {enable: true}}} direction="vertical" options={{touchAction:'pan-y'}} 
         onPan={this.handleMove.bind(this)} onPanCancel={(el,e)=>this.handleEnd(el,e)} onPanEnd={(el,e)=>this.handleEnd(el,e)}
         classNamePre={classNamePre} {...props}>
         <Panel 
-          componentTranform={PanelLoader} position="top" isProgress={!isLoading} progress={offset*100/triggerOffset} 
+          componentTransform={PanelLoader} position="top" isProgress={!isLoading} progress={offset*100/triggerOffset} 
           classNamePre={classNamePreLoader} stylePre={stylePreLoader} {...loaderProps} />
         {children}
       </Panel>

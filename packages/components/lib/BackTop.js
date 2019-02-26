@@ -158,7 +158,7 @@ BackTop.defaultProps.content = _Icon.PanelIcon;
  * @type {function}
  */
 
-BackTop.defaultProps.componentTranform = _Fab.default;
+BackTop.defaultProps.componentTransform = _Fab.default;
 /**
  * 默认的计算是否出现回到顶部按钮的函数
  * @member

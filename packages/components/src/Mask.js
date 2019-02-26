@@ -7,7 +7,7 @@ import classes from '@bnorth/rich.css/lib/classes';
 import BaseComponent from './BaseComponent'
 import Panel from './Panel';
 import Backdrop from './Backdrop';
-import './Loader';
+import { PanelLoader } from './Loader';
 
 
 /**
@@ -16,38 +16,27 @@ import './Loader';
  * @augments BaseComponent
  * @export
  */
-let Mask = aprops=>{
+export let Mask = aprops=>{
   let {
-    loaderProps, mask,
-    component:Component, className, ...props
+    loaderProps,
+    children, ...props
   } = BaseComponent(aprops, Mask);
 
-  let classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center text-color-white';
+  let classNamePre = 'flex-display-block flex-direction-v flex-justify-center flex-align-center text-color-white';
 
   return (
-    <Component 
-      mask={mask}
-      className={classes(classStr, className)} {...props}>
-      <Panel.Loader position='top' {...loaderProps} />
-    </Component>
+    <Panel componentTransform={Backdrop} classNamePre={classNamePre} {...props}>
+      <PanelLoader position='top' {...loaderProps}>{children}</PanelLoader>
+    </Panel>
   )
 }
+
 Mask.defaultProps = {};
 /**
  * 设置 蒙层中间的 loader 组件的参数
  * @attribute module:mask.Mask.loaderProps
  * @type {object}
  */
-/**
- * 设置 Backdrop 的 mask 属性
- * @type {boolean}
- */
-Mask.defaultProps.mask = true;
-/**
- * 渲染为该组件
- * @type {component|element}
- */
-Mask.defaultProps.component = Backdrop;
 
 
 /**
@@ -109,5 +98,4 @@ let mask = {
 }
 
 
-export { Mask }
 export default mask;

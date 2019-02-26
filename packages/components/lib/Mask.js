@@ -21,7 +21,7 @@ var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _Backdrop = _interopRequireDefault(require("./Backdrop"));
 
-require("./Loader");
+var _Loader = require("./Loader");
 
 /**
  * 提供了蒙层组件和蒙层插件
@@ -37,18 +37,16 @@ require("./Loader");
 var Mask = function Mask(aprops) {
   var _BaseComponent = (0, _BaseComponent2.default)(aprops, Mask),
       loaderProps = _BaseComponent.loaderProps,
-      mask = _BaseComponent.mask,
-      Component = _BaseComponent.component,
-      className = _BaseComponent.className,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["loaderProps", "mask", "component", "className"]);
+      children = _BaseComponent.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["loaderProps", "children"]);
 
-  var classStr = 'flex-display-block flex-direction-v flex-justify-center flex-align-center text-color-white';
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    mask: mask,
-    className: (0, _classes.default)(classStr, className)
-  }, props), _react.default.createElement(_Panel.default.Loader, (0, _extends2.default)({
+  var classNamePre = 'flex-display-block flex-direction-v flex-justify-center flex-align-center text-color-white';
+  return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    componentTransform: _Backdrop.default,
+    classNamePre: classNamePre
+  }, props), _react.default.createElement(_Loader.PanelLoader, (0, _extends2.default)({
     position: "top"
-  }, loaderProps)));
+  }, loaderProps), children));
 };
 
 exports.Mask = Mask;
@@ -59,18 +57,6 @@ Mask.defaultProps = {};
  * @type {object}
  */
 
-/**
- * 设置 Backdrop 的 mask 属性
- * @type {boolean}
- */
-
-Mask.defaultProps.mask = true;
-/**
- * 渲染为该组件
- * @type {component|element}
- */
-
-Mask.defaultProps.component = _Backdrop.default;
 /**
  * 提供了对蒙层的显示和控制的能力，同时修改了 app.render.mask 的默认行为
  * @plugin mask

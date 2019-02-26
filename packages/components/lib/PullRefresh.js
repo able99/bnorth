@@ -9,8 +9,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
@@ -29,7 +27,7 @@ var _react = _interopRequireDefault(require("react"));
 
 var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
-var _BaseComponent3 = _interopRequireWildcard(require("./BaseComponent"));
+var _BaseComponent2 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -92,7 +90,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this = this;
 
-      _BaseComponent3.domIsMouse && (0, _BaseComponent3.domFindNode)(this).addEventListener("click", function (event) {
+      _BaseComponent2.domIsMouse && (0, _BaseComponent2.domFindNode)(this).addEventListener("click", function (event) {
         if (_this.mark) {
           event.stopPropagation();
           _this.mark = false;
@@ -104,7 +102,7 @@ function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var _BaseComponent = (0, _BaseComponent3.default)(this.props, PullRefresh),
+      var _BaseComponent = (0, _BaseComponent2.default)(this.props, PullRefresh),
           isLoading = _BaseComponent.isLoading,
           onLoad = _BaseComponent.onLoad,
           triggerOffset = _BaseComponent.triggerOffset,
@@ -124,7 +122,7 @@ function (_React$Component) {
       if (offset > 0) stylePreLoader.height = offset;
       if (isLoading) stylePreLoader.height = triggerOffset;
       return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-        componentTranform: _Touchable.default,
+        componentTransform: _Touchable.default,
         recognizers: {
           pan: {
             enable: true
@@ -143,7 +141,7 @@ function (_React$Component) {
         },
         classNamePre: classNamePre
       }, props), _react.default.createElement(_Panel.default, (0, _extends2.default)({
-        componentTranform: _Loader.PanelLoader,
+        componentTransform: _Loader.PanelLoader,
         position: "top",
         isProgress: !isLoading,
         progress: offset * 100 / triggerOffset,
@@ -180,53 +178,5 @@ PullRefresh.defaultProps.triggerOffset = 60;
  * @type {object}
  */
 
-var _default = PullRefresh; // Panel PushRefresh Refresh
-// ------------------
-
-/**
- * 支持滚动与下拉刷新的小面板的下拉进度组件
- * @component
- * @mount PushRefresh.Refresh
- * @private 
- * @augments BaseComponent
- */
-
+var _default = PullRefresh;
 exports.default = _default;
-
-var _Refresh = function Refresh(aprops) {
-  var _BaseComponent2 = (0, _BaseComponent3.default)(aprops, _Refresh),
-      isLoading = _BaseComponent2.isLoading,
-      offset = _BaseComponent2.offset,
-      triggerOffset = _BaseComponent2.triggerOffset,
-      Component = _BaseComponent2.component,
-      componentPanel = _BaseComponent2.componentPanel,
-      className = _BaseComponent2.className,
-      style = _BaseComponent2.style,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isLoading", "offset", "triggerOffset", "component", "componentPanel", "className", "style"]);
-
-  var classStr = 'overflow-a-hidden transition-property-height';
-  var styleSet = {
-    height: 0
-  };
-  if (offset > 0) styleSet.height = offset;
-  if (isLoading) styleSet.height = triggerOffset;
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    component: componentPanel,
-    position: "top",
-    isProgress: !isLoading,
-    progress: offset * 100 / triggerOffset,
-    className: (0, _classes.default)(classStr, className),
-    style: (0, _objectSpread2.default)({}, styleSet, style)
-  }, props));
-};
-
-Object.defineProperty(PullRefresh, "Refresh", {
-  get: function get() {
-    return _Refresh;
-  },
-  set: function set(val) {
-    _Refresh = val;
-  }
-});
-_Refresh.defaultProps = {};
-_Refresh.defaultProps.component = _Panel.default.Loader;

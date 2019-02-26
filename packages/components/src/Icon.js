@@ -43,6 +43,7 @@ let Icon = aprops=>{
     stylePre.stroke = 'currentColor';
     stylePre.fill='currentColor';
     props.dangerouslySetInnerHTML = {__html: `<use xlink:href="#${name}"></use>`};
+    props.children = null;
   }else if(src) {
     if(!component) component = 'img';
     props.src = src;

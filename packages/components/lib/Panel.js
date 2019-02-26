@@ -54,10 +54,10 @@ var _Touchable = _interopRequireDefault(require("./Touchable"));
  * @augments module:BaseComponent.BaseComponent
  */
 var _Panel = function Panel(aprops) {
-  if (aprops.componentTranform) {
-    var ComponentTranform = aprops.componentTranform;
-    return _react.default.createElement(ComponentTranform, (0, _objectSpread6.default)({}, aprops, {
-      componentTranform: undefined
+  if (aprops.componentTransform) {
+    var ComponentTransform = aprops.componentTransform;
+    return _react.default.createElement(ComponentTransform, (0, _objectSpread6.default)({}, aprops, {
+      componentTransform: undefined
     }));
   }
 

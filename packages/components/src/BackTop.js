@@ -76,7 +76,7 @@ BackTop.defaultProps.content=PanelIcon;
  * @attribute module:BackTop.contentProps
  * @type {function}
  */
-BackTop.defaultProps.componentTranform=Fab;
+BackTop.defaultProps.componentTransform=Fab;
 
 
 /**

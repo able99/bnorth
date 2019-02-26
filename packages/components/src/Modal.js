@@ -53,7 +53,7 @@ export let Modal = aprops=>{
     </Panel>
   )
   
-  return <Panel componentTranform={Backdrop} handleAction={handleAction} in={isIn} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
+  return <Panel componentTransform={Backdrop} handleAction={handleAction} in={isIn} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
 }
 
 Modal.buttons = {

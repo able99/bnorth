@@ -93,6 +93,7 @@ var Icon = function Icon(aprops) {
     props.dangerouslySetInnerHTML = {
       __html: "<use xlink:href=\"#".concat(name, "\"></use>")
     };
+    props.children = null;
   } else if (src) {
     if (!component) component = 'img';
     props.src = src;

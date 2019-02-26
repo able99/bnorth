@@ -158,7 +158,7 @@ function (_React$Component) {
         } : null
       };
       return _react.default.createElement(_Panel.default, (0, _extends2.default)({}, triggerProps, props), children, !show ? null : (0, _BaseComponent3.domCreatePortal)(_react.default.createElement(_Panel.default, (0, _extends2.default)({
-        componentTranform: _Backdrop.default
+        componentTransform: _Backdrop.default
       }, closeProps, backdropProps), _react.default.createElement(_Overlay, (0, _extends2.default)({
         calcPosition: calcPosition,
         placement: placement,
