@@ -290,7 +290,7 @@ function (_React$Component) {
           onSelectedChange = _BaseComponent2.onSelectedChange,
           SeparatorComponent = _BaseComponent2.separator,
           separatorProps = _BaseComponent2.separatorProps,
-          noOverlay = _BaseComponent2.noOverlay,
+          noOverlap = _BaseComponent2.noOverlap,
           itemProps = _BaseComponent2.itemProps,
           itemGetProps = _BaseComponent2.itemGetProps,
           itemGetClassName = _BaseComponent2.itemGetClassName,
@@ -298,7 +298,7 @@ function (_React$Component) {
           Component = _BaseComponent2.component,
           className = _BaseComponent2.className,
           children = _BaseComponent2.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["type", "inline", "position", "direction", "justify", "align", "wrap", "selectedIndex", "countToShow", "onSelectedChange", "separator", "separatorProps", "noOverlay", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["type", "inline", "position", "direction", "justify", "align", "wrap", "selectedIndex", "countToShow", "onSelectedChange", "separator", "separatorProps", "noOverlap", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className", "children"]);
 
       if (SeparatorComponent === true) SeparatorComponent = _Separator;
       var classSet = {
@@ -549,7 +549,7 @@ var _PanelContainerItem = function PanelContainerItem(aprops) {
   if (type === 'justify') classSet.push('flex-sub-flex-extend');
   if (type === 'primary') classSet.push(itemSelected ? 'flex-sub-flex-extend' : 'flex-sub-flex-none');
   if (type === 'scroll') classSet.push('flex-sub-flex-extend height-full');
-  if (containerProps.noOverlay && itemIndex < itemCount - 1) classSet.push('border-none-right-');
+  if (containerProps.noOverlap && itemIndex < itemCount - 1) classSet.push('border-none-right-');
   if (containerProps.separator) classSet.push('border-none-a- bg-none-');
   return (0, _react.cloneElement)(children, (0, _objectSpread6.default)({
     className: (0, _classes.default)(classSet, className),

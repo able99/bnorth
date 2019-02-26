@@ -1,193 +1,64 @@
 import React from 'react';
-import classes from '@bnorth/rich.css/lib/classes'; 
 import BaseComponent from './BaseComponent';
 import Backdrop from './Backdrop';
-import Panel from './Panel';
+import Panel, { PanelContainer } from './Panel';
 import Button from './Button';
-import Icon from './Icon';
+import { PanelIcon } from './Icon';
 
 
 export let Modal = aprops=>{
   let {
-    role, handleAction, 
-    in:isIn=true, onTransitionFinished,
+    role, handleAction, in:isIn=true, onFinished,
     containerProps, 
-    title, titleProps, hasTitleClose, titleCloseProps, titleCloseIconProps, headerProps, 
+    headerProps, title, titleProps, close, closeProps, 
     bodyProps, 
-    footerProps, 
-    component:Component=Panel, style, className, children, ...props
+    footerProps, buttons=Modal.buttons[aprops.role]||[],
+    children, ...props
   } = BaseComponent(aprops, Modal);
-
   children = typeof(children)==='function'?children(this):children;
-  let classStr = 'position-relative backface-hidden overflow-a-hidden bg-color-white';
-  let classSet = {
+
+  let classNamePre = {
+    'position-relative backface-hidden overflow-a-hidden bg-color-white': true,
     'square-full': role==='popup',
     'border-radius-': role!=='popup'&&role!=='document',
   };
-  let styleSet = {
+  let stylePre = {
     width: role!=='popup'?'80%':undefined,
-    ...style||{},
   };
-
-  let component = role==='document'?children:(
-    <Component 
-      onClick={e=>e.stopPropagation()} 
-      style={styleSet} className={classes(classStr, classSet, className)} {...props}>
-      <Modal._Header 
-        role={role} handleAction={handleAction} 
-        title={title} titleProps={titleProps} 
-        hasTitleClose={hasTitleClose} titleCloseProps={titleCloseProps} titleCloseIconProps={titleCloseIconProps}
-        {...headerProps} />
-      <Modal._Body 
-        role={role} handleAction={handleAction} 
-        {...bodyProps}>
-        {children}
-      </Modal._Body>
-      <Modal._Footer 
-        role={role} handleAction={handleAction}
-        {...footerProps} />
-    </Component>
-  )
-  
-  return (
-    <Modal._Container 
-      role={role} handleAction={handleAction} 
-      in={isIn} onTransitionFinished={onTransitionFinished} 
-      {...containerProps}>
-      {component}
-    </Modal._Container>
-  )
-}
-
-Modal._Container = aprops=>{
-  let { 
-    role, handleAction, 
-    transition, 
-    component:Component=Backdrop, className, ...props
-  } = BaseComponent(aprops, Modal._Container);
-
-  let classSet = {
-    'flex-display-block': role!=='document',
-    'flex-justify-center': role!=='document',
-    'flex-align-center': role!=='document',
+  let classNamePreContainer = { 'flex-display-block': role!=='document', 'flex-justify-center': role!=='document', 'flex-align-center': role!=='document', }
+  let classNamePreHeader = 'width-full padding-a- border-set-bottom- flex-display-block flex-justify-between flex-align-center';
+  let classNamePreTitle = {
+    'flex-sub-flex-grow text-weight-bold text-size-lg': true,
+    'text-align-center': !close,  
+  }
+  let classNamePreFooter = {
+    'border-set-top-': children,
   }
 
-  return (
-    <Component
-      onClick={()=>handleAction&&handleAction()}
-      className={classes(classSet, className)} {...props} />
-  );
-}
-
-Modal._Header = aprops=>{
-  let { 
-    role, handleAction,
-    title, titleProps, hasTitleClose, titleCloseProps, titleCloseIconProps,
-    component:Component=Panel, className, ...props 
-  } = BaseComponent(aprops, Modal._Header);
-  if(!title&&!hasTitleClose) return null;
-
-  let classStr = 'width-full padding-a- border-set-bottom- flex-display-block flex-justify-between flex-align-center';
+  children = (
+    <Panel onClick={e=>e.stopPropagation()} stylePre={role!=='document'&&stylePre} classNamePre={role!=='document'&&classNamePre} {...props}>
+      {role==='document'?children:null}
+      {role!=='document'&&(title||close)?(
+        <Panel classNamePre={classNamePreHeader} {...headerProps}>
+          {title?<Panel classNamePre={classNamePreTitle} {...titleProps}>{title}</Panel>:null}
+          {close?<PanelIcon inline bc-cursor-pointer onClick={handleAction} name="close" defaultName="x" {...closeProps}>{close===true?undefined:close}</PanelIcon>:null}
+        </Panel>
+      ):null}
+      {role!=='document'&&children?(<Panel bc-padding-a- {...bodyProps}>{children}</Panel>):null}
+      {role!=='document'&&buttons.length?(
+        <PanelContainer type="justify" noOverlap classNamePre={classNamePreFooter} {...footerProps}>
+          {buttons.map((v,i)=><Panel component={Button} key={i} b-style="hollow" bc-bg-none- onClick={()=>handleAction&&handleAction(i)} {...v} />)}
+        </PanelContainer>
+      ):null}
+    </Panel>
+  )
   
-  return (
-    <Component className={classes(classStr, className)} {...props}>
-      <Modal._Header._Title hasTitleClose={hasTitleClose} {...titleProps}>{title}</Modal._Header._Title>
-      {!hasTitleClose?null:(
-        <Modal._Header._TitleClose 
-          handleAction={handleAction} 
-          titleCloseIconProps={titleCloseIconProps} {...titleCloseProps}>
-          {hasTitleClose} 
-        </Modal._Header._TitleClose>
-      )}
-    </Component>
-  );
+  return <Panel componentTranform={Backdrop} handleAction={handleAction} in={isIn} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
 }
 
-Modal._Header._Title = aprops=>{
-  let { 
-    hasTitleClose,
-    component:Component=Panel, className, ...props 
-  } = BaseComponent(aprops, Modal._Header._Title);
-  
-  let classStr = 'flex-sub-flex-grow text-weight-bold text-size-lg';
-  let classSet = { 'text-align-center': !hasTitleClose };  
-
-  return <Component className={classes(classStr, classSet, className)} {...props} />; 
-}
-
-Modal._Header._TitleClose = aprops=>{
-  let { 
-    handleAction, 
-    titleCloseIconProps,
-    component:Component=Button, className, children, ...props 
-  } = BaseComponent(aprops, Modal._Header._TitleClose);
-
-  let classStr = 'padding-h-sm padding-v-0';
-  
-  return (
-    <Component
-      b-style="plain"
-      onClick={()=>handleAction&&handleAction()} 
-      className={classes(classStr, className)}
-      {...props}>
-      {children===true?<Modal._Header._TitleClose._Icon {...titleCloseIconProps} />:children}
-    </Component>
-  );
-}
-
-Modal._Header._TitleClose._Icon = aprops=>{
-  let { 
-    component:Component=Icon, ...props 
-  } = BaseComponent(aprops, Modal._Header._TitleClose._Icon);
-
-  return <Component name="close" defaultName="x" {...props} />
-}
-
-Modal._Body = aprops=>{
-  let { 
-    role, handleAction,
-    component:Component=Panel, className, children, ...props 
-  } = BaseComponent(aprops, Modal._Body);
-
-  children = typeof(children)==='function'?children(this):children;
-  if(!children) return null;
-  let classStr = 'padding-a-';
-  
-  return <Component className={classes(classStr, className)} {...props}>{children}</Component>;
-}
-
-Modal._Footer =  aprops=>{
-  let { 
-    role, handleAction,
-    buttons=Modal._Footer._buttons[aprops.role]||[],
-    itemProps, itemGetClassName=Modal._Footer._itemGetClassName, itemGetStyle=Modal._Footer._itemGetStyle, itemGetProps=Modal._Footer._itemGetProps,
-    component:Component=Button.Group, className, children, ...props 
-  } = BaseComponent(aprops, Modal._Footer);
-  if(!buttons.length) return null;
-
-  let classStr = 'border-set-top-';
-  
-  return (
-    <Component 
-      type="justify" 
-      containerProps={aprops} itemProps={itemProps} itemGetClassName={itemGetClassName} itemGetStyle={itemGetStyle} itemGetProps={itemGetProps}
-      className={classes(classStr, className)} {...props}>
-      {buttons.map((v,i)=><Button.Group.Item key={i}>{v}</Button.Group.Item>)}
-    </Component>
-  );
-}
-
-Modal._Footer._itemGetProps=(i, length, {handleAction}={}, subPropsEach, subProps)=>{
-  return {
-    'b-style': 'hollow',
-    'bc-bg-none-': true,
-    onClick: ()=>handleAction&&handleAction(i),
-  };
-}
-
-Modal._Footer._buttons = {
-  alert: ['确定'], 
-  prompt: ['取消','确定'],
+Modal.buttons = {
+  alert: [{children: '确定'}], 
+  prompt: [{children: '取消'},{children: '确定'}],
 }
 
 

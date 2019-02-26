@@ -3,123 +3,88 @@ import classes from '@bnorth/rich.css/lib/classes';
 import BaseComponent from './BaseComponent';
 import Animation from './Animation';
 import Panel from './Panel';
-import Button from './Button';
-import Icon from './Icon';
+import { PanelIcon } from './Icon';
 
 
-export let Container = aprops=>{
+export let Notice = aprops=>{
   let {
-    component:Component=Panel, className, ...props
-  } = BaseComponent(aprops, Container);
+    containerProps,
+    onDoClose, onFinished, transitionProps, 
+    contentProps, closeProps, close, 
+    children, ...props
+  } = BaseComponent(aprops, Notice);
 
-  let classStr = 'position-absolute offset-top-start offset-left-top width-full';
-  
-  return <Component className={classes(classStr, className)} />;
-}
-
-export let Notification = aprops=>{
-  let {
-    onDoClose, 
-    transition:Transition=Animation, transitionProps, onTransitionFinished,
-    titleProps, hasClose, closeProps, iconProps, 
-    component=Panel, className, children, ...props
-  } = BaseComponent(aprops, Notification);
-
-  let classStr = 'flex-display-block flex-align-center width-full';
-  
-  return (
-    <Transition 
-      component={component} 
-      b-style="solid" b-theme="mask" 
-      transitionProps={transitionProps} onFinished={onTransitionFinished} 
-      className={classes(classStr, className)} {...props}>
-      <div className="padding-a-">
-      <Notification._Title {...titleProps}>{children}</Notification._Title>
-      <Notification._Close onDoClose={onDoClose} {...closeProps}>{hasClose}</Notification._Close>
-      </div>
-    </Transition>
-  );
-}
-
-Notification._Title = aprops=>{
-  let {
-    component:Component=Panel, className, ...props
-  } = BaseComponent(aprops, Notification._Title);
-
-  let classStr = 'text-weight- text-size-lg flex-sub-flex-extend';
-
-  return <Component className={classes(classStr, className)} {...props} />;
-}
-
-Notification._Close = aprops=>{
-  let {
-    hasClose, onDoClose, iconProps,
-    component:Component=Button, className, children, ...props
-  } = BaseComponent(aprops, Notification._Close);
-  if(!children) return null;
-
-  children = children===true?<Icon name="close" defaultName="x" {...iconProps} />:children;
-  let classStr = 'padding-h-sm padding-v-0 flex-sub-flex-none';
+  let classNamePreContainer = 'position-absolute offset-top-start offset-left-top width-full';
+  let classNamePre = 'flex-display-block flex-align-center width-full';
+  let classNamePreInner = 'padding-a-';
+  let classNamePreContent = 'text-weight- text-size-lg flex-sub-flex-extend';
+  let classNamePreClose = 'padding-h-sm padding-v-0 flex-sub-flex-none';
 
   return (
-    <Component 
-      b-style="plain" b-theme="white" 
-      onClick={onDoClose} 
-      className={classes(classStr, className)} {...props}>
-      {children}
-    </Component>
+    <Panel className={classNamePreContainer} {...containerProps}>
+      <Animation
+        type="collapse" transitionProps={transitionProps} onFinished={onFinished} 
+        b-style="solid" b-theme="mask" classNamePre={classNamePre} {...props}>
+        <Panel classNamePre={classNamePreInner}>
+          {children?<Panel classNamePre={classNamePreContent} {...contentProps}>{children}</Panel>:null}
+          {close?<PanelIcon b-style="plain" b-theme="white" inline bc-cursor-pointer onClick={onDoClose} name="close" defaultName="x" {...closeProps}>{close===true?undefined:close}</PanelIcon>:null}
+        </Panel>
+      </Animation>
+    </Panel>
   );
 }
 
 
-export default {
-  _id: 'notice',
 
-  onPluginMount(app) {
-    app.notice = {
-      _timer: undefined,
 
-      show: (message, { timeout=3000, options={}, ...props}={})=>{
-        message = app.utils.message2String(message);
-        if(!message) return;
+// export default {
+//   _id: 'notice',
 
-        let _id = app.notice._id || app.router.genPopLayerId(options);
-        options._id = _id;
-        props.in = true;
-        props.onDoClose = ()=>app.notice.close();
-        props.children = message;
+//   onPluginMount(app) {
+//     app.notice = {
+//       _timer: undefined,
 
-        if(app.notice._timer) window.clearTimeout(app.notice._timer);
-        app.notice._timer = window.setTimeout(()=>app.notice.close(),timeout);
+//       show: (message, { timeout=3000, options={}, ...props}={})=>{
+//         message = app.utils.message2String(message);
+//         if(!message) return;
 
-        return app.notice._id = app.router.addPopLayer(<Container><Notification /></Container> , props, options);
-      },
+//         let _id = app.notice._id || app.router.genPopLayerId(options);
+//         options._id = _id;
+//         props.in = true;
+//         props.onDoClose = ()=>app.notice.close();
+//         props.children = message;
 
-      close: ()=>{
-        if(app.notice._timer) { window.clearTimeout(app.notice._timer); app.notice._timer = undefined; }
-        if(!app.notice._id) return;
-        let {content, props={}, options={}} = app.router.getPopLayerInfo(app.notice._id)||{};
-        if(!content) { app.notice._id = undefined; return; }
+//         if(app.notice._timer) window.clearTimeout(app.notice._timer);
+//         app.notice._timer = window.setTimeout(()=>app.notice.close(),timeout);
 
-        props.in = false;
-        props.onTransitionFinished = ()=>{ 
-          app.router.removePopLayer(app.notice._id); 
-          app.notice._id = undefined; 
-        }
+//         return app.notice._id = app.router.addPopLayer(<Container><Notification /></Container> , props, options);
+//       },
 
-        return app.router.addPopLayer(content, props, options);
-      },
-    };
+//       close: ()=>{
+//         if(app.notice._timer) { window.clearTimeout(app.notice._timer); app.notice._timer = undefined; }
+//         if(!app.notice._id) return;
+//         let {content, props={}, options={}} = app.router.getPopLayerInfo(app.notice._id)||{};
+//         if(!content) { app.notice._id = undefined; return; }
 
-    app.notice._oldNotice = app.render.notice;
-    app.notice._oldErrorNotice = app.render.errorNotice;
-    app.render.notice = (message, options)=>app.notice.show(message, options);
-    app.render.error = (message, options={})=>app.notice.show(message, {...options, 'b-theme': options['b-theme']||'alert'});
-  },
+//         props.in = false;
+//         props.onTransitionFinished = ()=>{ 
+//           app.router.removePopLayer(app.notice._id); 
+//           app.notice._id = undefined; 
+//         }
 
-  onPluginUnmount(app) {
-    app.render.notice = app.notice._oldNotice;
-    app.render.error = app.notice._oldErrorNotice;
-    delete app.notice;
-  },
-}
+//         return app.router.addPopLayer(content, props, options);
+//       },
+//     };
+
+//     app.notice._oldNotice = app.render.notice;
+//     app.notice._oldErrorNotice = app.render.errorNotice;
+//     app.render.notice = (message, options)=>app.notice.show(message, options);
+//     app.render.error = (message, options={})=>app.notice.show(message, {...options, 'b-theme': options['b-theme']||'alert'});
+//   },
+
+//   onPluginUnmount(app) {
+//     app.render.notice = app.notice._oldNotice;
+//     app.render.error = app.notice._oldErrorNotice;
+//     delete app.notice;
+//   },
+// }

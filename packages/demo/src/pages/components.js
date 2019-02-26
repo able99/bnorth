@@ -13,6 +13,8 @@ import Icon, { PanelIcon } from '@bnorth/components/lib/Icon'
 import Landscape from '@bnorth/components/lib/Landscape'
 import List from '@bnorth/components/lib/List'
 import Loader, { PanelLoader } from '@bnorth/components/lib/Loader'
+import { Modal } from '@bnorth/components/lib/modal'
+import { Notice } from '@bnorth/components/lib/notice'
 import NavBar from '@bnorth/components/lib/NavBar'
 import Panel, { PanelContainer } from '@bnorth/components/lib/Panel'
 import Popover from '@bnorth/components/lib/Popover'
@@ -186,6 +188,22 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
+      <Groups.Group title="Modal" desc="对话框">
+        <Groups.Show>
+          <div style={{height: 500}} className="position-relative">
+            <Modal title="title" role="prompt" close>body</Modal>
+          </div>
+        </Groups.Show>
+      </Groups.Group>
+
+      <Groups.Group title="Notice" desc="通知栏">
+        <Groups.Show>
+          <div style={{height: 300}} className="position-relative">
+            <Notice>notice</Notice>
+          </div>
+        </Groups.Show>
+      </Groups.Group>
+
       <Groups.Group title="NavBar" desc="标题栏">
         <Groups.Show>
           <NavBar>
@@ -214,7 +232,24 @@ let Component = aprops=>{
           </PanelContainer>
         </Groups.Show>
       </Groups.Group>
-     
+
+      <Groups.Group title="Popover" desc="弹出框">
+        <Groups.Props data={{
+          placement: ['bottom-auto-full','right-auto-center'],
+        }}/>
+        <Groups.Show>
+          <Popover inline overlay={listComponent()} container>popover</Popover>
+        </Groups.Show>
+      </Groups.Group>
+
+      <Groups.Group title="PullRefresh" desc="下拉刷新">
+        <Groups.Show>
+          <Panel bc-width-full bs-height="150px" bc-scrollable-y->
+            <PullRefresh>{listComponent(20)}</PullRefresh>
+          </Panel>
+        </Groups.Show>
+      </Groups.Group>
+
       <Groups.Group title="ScrollSpy" desc="滚动监控">
         <Groups.Show>
           {props=><Panel bc-position-relative bc-width-full bs-height="100px" bc-scrollable-y->
@@ -237,7 +272,23 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Touchable" desc="!触摸">
+      <Groups.Group title="TabBar" desc="标签页">
+        <Groups.Props data={{
+          'bp-nav-separator': undefined, 
+          'bp-nav-bp-item-b-style': ['underline'],
+          position: ['bottom'], 
+          'bp-nav-bp-item-position': ['top', 'left'],
+        }} />
+        <Groups.Show>
+          <TabBar bs-height={150} bp-container-bp-item-className="scrollable-y-">
+            <TabBar.Item title="title1" name="view_comfy">{Array.from({length:20},(k,i)=>i).map(v=><div>tab1-{v+1}</div>)}</TabBar.Item>
+            <TabBar.Item title="title2" name="settings">{Array.from({length:20},(k,i)=>i).map(v=><div>tab2-{v+1}</div>)}</TabBar.Item>
+            <TabBar.Item title="title3" name="extension">{Array.from({length:20},(k,i)=>i).map(v=><div>tab3-{v+1}</div>)}</TabBar.Item>
+          </TabBar>
+        </Groups.Show>
+      </Groups.Group>
+
+      <Groups.Group title="Touchable" desc="触控">
         <Groups.Show>
           <Touchable onPanStart={()=>page.stateLog.update(['onPanStart'], {append: true})} bs-height={50} bc-bg-color-primary />
         </Groups.Show>
@@ -248,55 +299,12 @@ let Component = aprops=>{
   );
 };
 
+
 Component.controller = app=>({
   stateLog: {initialization: []},
   stateCommonProps: app.plugins.getPluginById().stateCommonProps._id,
   stateComponentProps: app.plugins.getPluginById().stateComponentProps._id,
 })
 
+
 export default Component;
-
-
-
-
-/* 
-      <Group title="TabBar" {...groupProps}>
-        <Group.Item title="滚动">
-          <TabBar 
-            bs-height={150} bp-container-bp-item-className="scrollable-y-"
-            bp-nav-itemProps={toSub?stateCommonProps:{}} {...toSub?{}:stateCommonProps}>
-            <TabBar.Item title="title1" name="view_comfy">{Array.from({length:20},(k,i)=>i).map(v=><div>tab1-{v+1}</div>)}</TabBar.Item>
-            <TabBar.Item title="title2" name="settings">{Array.from({length:20},(k,i)=>i).map(v=><div>tab2-{v+1}</div>)}</TabBar.Item>
-            <TabBar.Item title="title3" name="extension">{Array.from({length:20},(k,i)=>i).map(v=><div>tab3-{v+1}</div>)}</TabBar.Item>
-          </TabBar>
-        </Group.Item>
-        <Group.Item title="特殊样式">
-          <TabBar 
-            bs-height={150} bp-nav-separator bp-nav-bp-item-b-style="underline" bp-container-bp-item-className="scrollable-y-"
-            bp-nav-itemProps={toSub?stateCommonProps:{}} {...toSub?{}:stateCommonProps}>
-            <TabBar.Item title="title1" name="view_comfy">{Array.from({length:20},(k,i)=>i).map(v=><div>tab1-{v+1}</div>)}</TabBar.Item>
-            <TabBar.Item title="title2" name="settings">{Array.from({length:20},(k,i)=>i).map(v=><div>tab2-{v+1}</div>)}</TabBar.Item>
-            <TabBar.Item title="title3" name="extension">{Array.from({length:20},(k,i)=>i).map(v=><div>tab3-{v+1}</div>)}</TabBar.Item>
-          </TabBar>
-        </Group.Item>
-        <Group.Item title="底部">
-          <TabBar 
-            position="bottom" bs-height={150} bp-nav-bp-item-position="top" bp-container-bp-item-className="scrollable-y-"
-            bp-nav-itemProps={toSub?stateCommonProps:{}} {...toSub?{}:stateCommonProps}>
-            <TabBar.Item title="title1" name="view_comfy">{Array.from({length:20},(k,i)=>i).map(v=><div>tab1-{v+1}</div>)}</TabBar.Item>
-            <TabBar.Item title="title2" name="settings">{Array.from({length:20},(k,i)=>i).map(v=><div>tab2-{v+1}</div>)}</TabBar.Item>
-            <TabBar.Item title="title3" name="extension">{Array.from({length:20},(k,i)=>i).map(v=><div>tab3-{v+1}</div>)}</TabBar.Item>
-          </TabBar>
-        </Group.Item>
-      </Group>
-
-      <Group title="Popover" {...groupProps}>
-        <Group.Prop>
-          <Prop 
-            title="placement" sub="Popover" 
-            option={['bottom-auto-full','right-auto-center']} 
-            state={page.stateComponentProps} stateData={stateComponentProps}/>
-        </Group.Prop>
-        <Popover inline {...stateCommonProps} overlay={<div>123<br/>123<br/>123<br/></div>} container {...stateComponentProps.Popover}>popover</Popover>
-      </Group> 
-*/

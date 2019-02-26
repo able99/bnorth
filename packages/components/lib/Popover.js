@@ -56,8 +56,6 @@ var _Backdrop = _interopRequireDefault(require("./Backdrop"));
  * @param {string} main - 弹出内容的主轴布局方式，full：填满 center：居中 equal：与目标组件相同 auto：默认
  * @param {string} cross - 弹出内容的侧轴布局方式，参见主轴
  */
-// Popover
-// --------------------
 
 /**
  * 可弹出内容组件，可设置弹出内容相对于当前组件的位置
@@ -70,21 +68,17 @@ var Popover =
 function (_React$Component) {
   (0, _inherits2.default)(Popover, _React$Component);
 
-  function Popover(props, context) {
-    var _this;
-
+  function Popover() {
     (0, _classCallCheck2.default)(this, Popover);
-    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Popover).call(this, props, context));
-    _this.state = {};
-    return _this;
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Popover).apply(this, arguments));
   }
-  /**
-   * 显示弹出内容
-   */
-
 
   (0, _createClass2.default)(Popover, [{
     key: "show",
+
+    /**
+     * 显示弹出内容
+     */
     value: function show() {
       this.setState({
         show: true,
@@ -107,17 +101,17 @@ function (_React$Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this2 = this;
+      var _this = this;
 
       this.container = (0, _BaseComponent3.domFindContainer)(this, this.props.container);
       if (this.props.defaultIsShow) Promise.resolve().then(function () {
-        return _this2.show();
+        return _this.show();
       });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       var _BaseComponent = (0, _BaseComponent3.default)(this.props, Popover),
           defaultIsShow = _BaseComponent.defaultIsShow,
@@ -126,57 +120,56 @@ function (_React$Component) {
           onMouseOver = _BaseComponent.onMouseOver,
           overlay = _BaseComponent.overlay,
           overlayProps = _BaseComponent.overlayProps,
-          mask = _BaseComponent.mask,
-          maskProps = _BaseComponent.maskProps,
+          backdropProps = _BaseComponent.backdropProps,
           _BaseComponent$calcPo = _BaseComponent.calcPosition,
           calcPosition = _BaseComponent$calcPo === void 0 ? Popover.calcPosition : _BaseComponent$calcPo,
           placement = _BaseComponent.placement,
           container = _BaseComponent.container,
-          Component = _BaseComponent.component,
-          componentPanel = _BaseComponent.componentPanel,
           children = _BaseComponent.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["defaultIsShow", "trigger", "onClick", "onMouseOver", "overlay", "overlayProps", "mask", "maskProps", "calcPosition", "placement", "container", "component", "componentPanel", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["defaultIsShow", "trigger", "onClick", "onMouseOver", "overlay", "overlayProps", "backdropProps", "calcPosition", "placement", "container", "children"]);
 
-      var _this$state = this.state,
-          show = _this$state.show,
-          offsetOverlay = _this$state.offsetOverlay,
-          offsetTarget = _this$state.offsetTarget;
+      var _ref = this.state || {},
+          show = _ref.show,
+          offsetOverlay = _ref.offsetOverlay,
+          offsetTarget = _ref.offsetTarget;
+
+      children = typeof children === 'function' ? children(show, this.state, this.props, this) : children;
+      overlay = typeof overlay === 'function' ? overlay(this) : overlay;
       var triggerByTouch = trigger ? trigger === 'click' : _BaseComponent3.domIsTouch;
       var triggerByHover = trigger ? trigger === 'hover' : !_BaseComponent3.domIsTouch;
       var triggerProps = {
         onClick: triggerByTouch ? (0, _BaseComponent3.chainedFuncs)(onClick, function () {
-          return _this3.state.show ? _this3.hide() : _this3.show();
+          return _this2.state.show ? _this2.hide() : _this2.show();
         }) : onClick,
         onMouseOver: triggerByHover ? (0, _BaseComponent3.chainedFuncs)(onMouseOver, function (e) {
-          return _this3.show();
+          return _this2.show();
         }) : onMouseOver
       };
       var closeProps = {
         onClick: triggerByTouch ? function () {
-          return _this3.hide();
+          return _this2.hide();
         } : null,
         onMouseMove: triggerByHover ? function (e) {
           var x = e.clientX;
           var y = e.clientY;
-          var toffset = _this3.state.offsetTarget || {};
-          console.log(1111, x, y, toffset); // if(!(toffset.left <= x && x <= toffset.left+toffset.width && toffset.top <= y && y <= toffset.top+toffset.height)) this.hide();
+          var toffset = _this2.state.offsetTarget || {};
+          console.log(1111, x, y, toffset);
+          if (!(toffset.left <= x && x <= toffset.left + toffset.width && toffset.top <= y && y <= toffset.top + toffset.height)) _this2.hide();
         } : null
       };
-      return _react.default.createElement(Component, (0, _extends2.default)({
-        component: componentPanel
-      }, triggerProps, props), typeof children === 'function' ? children(show, this.state, this.props, this) : children, !show ? null : (0, _BaseComponent3.domCreatePortal)(_react.default.createElement(_Backdrop.default, (0, _extends2.default)({
-        mask: mask
-      }, closeProps, maskProps), _react.default.createElement(_Overlay, (0, _extends2.default)({
+      return _react.default.createElement(_Panel.default, (0, _extends2.default)({}, triggerProps, props), children, !show ? null : (0, _BaseComponent3.domCreatePortal)(_react.default.createElement(_Panel.default, (0, _extends2.default)({
+        componentTranform: _Backdrop.default
+      }, closeProps, backdropProps), _react.default.createElement(_Overlay, (0, _extends2.default)({
         calcPosition: calcPosition,
         placement: placement,
         offsetTarget: offsetTarget,
         offsetOverlay: offsetOverlay,
         ref: function ref(e) {
-          return e && !offsetOverlay && _this3.setState({
-            offsetOverlay: (0, _BaseComponent3.domOffset)(e, _this3.container)
+          return e && !offsetOverlay && _this2.setState({
+            offsetOverlay: (0, _BaseComponent3.domOffset)(e, _this2.container)
           });
         }
-      }, overlayProps), typeof overlay === 'function' ? overlay(this) : overlay)), this.container));
+      }, overlayProps), overlay)), this.container));
     }
   }]);
   return Popover;
@@ -240,18 +233,8 @@ Popover.defaultProps.calcPosition = Popover.calcPosition;
  */
 
 /**
- * 参见 BaseComponent
- */
-
-Popover.defaultProps.component = _Panel.default;
-var _default = Popover; // Calc Position
-// --------------------
-
-/**
  * 弹出层位置计算函数
  */
-
-exports.default = _default;
 
 Popover.calcPosition = function (offsetTarget, offsetOverlay, placement, main, cross) {
   var classSet = {
@@ -331,9 +314,17 @@ Popover.calcPosition = function (offsetTarget, offsetOverlay, placement, main, c
   }
 
   return [classSet, styleSet];
-}; // Overlay
-// --------------------
+};
 
+Object.defineProperty(Popover, "Popover", {
+  get: function get() {
+    return Popover;
+  },
+  set: function set(val) {
+    Popover = val;
+  }
+});
+var _default = Popover;
 /**
  * 弹出层组件
  * @component
@@ -342,6 +333,7 @@ Popover.calcPosition = function (offsetTarget, offsetOverlay, placement, main, c
  * @private
  */
 
+exports.default = _default;
 
 var _Overlay =
 /*#__PURE__*/
@@ -361,32 +353,27 @@ function (_React$Component2) {
           offsetTarget = _BaseComponent2.offsetTarget,
           offsetOverlay = _BaseComponent2.offsetOverlay,
           placement = _BaseComponent2.placement,
-          _BaseComponent2$compo = _BaseComponent2.component,
-          Component = _BaseComponent2$compo === void 0 ? _Panel.default : _BaseComponent2$compo,
-          componentPanel = _BaseComponent2.componentPanel,
-          style = _BaseComponent2.style,
-          className = _BaseComponent2.className,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["calcPosition", "offsetTarget", "offsetOverlay", "placement", "component", "componentPanel", "style", "className"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["calcPosition", "offsetTarget", "offsetOverlay", "placement"]);
 
-      var classStr = 'position-absolute bg-color-white border-set-a-';
-      var styleSet = {
-        boxSizing: 'content-box'
-      };
-
-      var _ref = offsetOverlay ? calcPosition.apply(void 0, [offsetTarget, offsetOverlay].concat((0, _toConsumableArray2.default)(placement && placement.split('-') || []))) : [{
+      var _ref2 = offsetOverlay ? calcPosition.apply(void 0, [offsetTarget, offsetOverlay].concat((0, _toConsumableArray2.default)(placement && placement.split('-') || []))) : [{
         'visibility-hidden': true
       }, {}],
-          _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-          classSetPosition = _ref2[0],
-          styleSetPosition = _ref2[1];
+          _ref3 = (0, _slicedToArray2.default)(_ref2, 2),
+          classNamePosition = _ref3[0],
+          stylePosition = _ref3[1];
 
-      return _react.default.createElement(Component, (0, _extends2.default)({
-        component: componentPanel,
+      var classNamePre = (0, _objectSpread2.default)({
+        'position-absolute bg-color-white border-set-a-': true
+      }, classNamePosition);
+      var stylePre = (0, _objectSpread2.default)({
+        boxSizing: 'content-box'
+      }, stylePosition);
+      return _react.default.createElement(_Panel.default, (0, _extends2.default)({
         onMouseMove: function onMouseMove(e) {
           return e.stopPropagation();
         },
-        style: (0, _objectSpread2.default)({}, styleSet, styleSetPosition, style),
-        className: (0, _classes.default)(classStr, classSetPosition, className)
+        classNamePre: classNamePre,
+        stylePre: stylePre
       }, props));
     }
   }]);
@@ -414,11 +401,6 @@ _Overlay.defaultProps = {};
  * @attribute module:Popover~Overlay.placement
  */
 
-/**
- * 参见 BaseComponent
- */
-
-_Overlay.defaultProps.component = _Panel.default;
 Object.defineProperty(Popover, "Overlay", {
   get: function get() {
     return _Overlay;

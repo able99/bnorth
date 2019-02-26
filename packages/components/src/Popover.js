@@ -18,8 +18,6 @@ import Backdrop from './Backdrop';
  * @param {string} cross - 弹出内容的侧轴布局方式，参见主轴
  */
 
-// Popover
-// --------------------
 
 /**
  * 可弹出内容组件，可设置弹出内容相对于当前组件的位置
@@ -28,11 +26,6 @@ import Backdrop from './Backdrop';
  * @exportdefault
  */
 class Popover extends React.Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {};
-  }
-
   /**
    * 显示弹出内容
    */
@@ -52,14 +45,15 @@ class Popover extends React.Component {
   }
 
   render() {
-    const {
+    let {
       defaultIsShow, trigger, onClick, onMouseOver,
-      overlay, overlayProps, mask, maskProps,
+      overlay, overlayProps, backdropProps,
       calcPosition=Popover.calcPosition, placement, container,
-      component:Component, componentPanel, children, ...props
+      children, ...props
     } = BaseComponent(this.props, Popover);
-    const { show, offsetOverlay, offsetTarget } = this.state;
-
+    let { show, offsetOverlay, offsetTarget } = this.state||{};
+    children = typeof(children)==='function'?children(show, this.state, this.props, this):children;
+    overlay = typeof overlay==='function'?overlay(this):overlay;
 
     let triggerByTouch = trigger?trigger==='click':domIsTouch;
     let triggerByHover = trigger?trigger==='hover':!domIsTouch;
@@ -73,25 +67,24 @@ class Popover extends React.Component {
         let x = e.clientX; let y = e.clientY;
         let toffset = this.state.offsetTarget||{};
         console.log(1111,x,y,toffset);
-        // if(!(toffset.left <= x && x <= toffset.left+toffset.width && toffset.top <= y && y <= toffset.top+toffset.height)) this.hide();
+        if(!(toffset.left <= x && x <= toffset.left+toffset.width && toffset.top <= y && y <= toffset.top+toffset.height)) this.hide();
       }:null,
     };
-    
 
     return (
-      <Component component={componentPanel} {...triggerProps} {...props}>
-        {typeof(children)==='function'?children(show, this.state, this.props, this):children}
+      <Panel {...triggerProps} {...props}>
+        {children}
         {!show?null:domCreatePortal((
-          <Backdrop mask={mask} {...closeProps} {...maskProps}>
+          <Panel componentTranform={Backdrop} {...closeProps} {...backdropProps}>
             <Overlay 
               calcPosition={calcPosition} placement={placement} offsetTarget={offsetTarget} offsetOverlay={offsetOverlay} 
               ref={e=>e&&(!offsetOverlay)&&this.setState({offsetOverlay:domOffset(e, this.container)})} 
               {...overlayProps}>
-              {typeof overlay==='function'?overlay(this):overlay}
+              {overlay}
             </Overlay>
-          </Backdrop>
+          </Panel>
         ), this.container)}
-      </Component>
+      </Panel>
     );
   }
 }
@@ -144,16 +137,7 @@ Popover.defaultProps.calcPosition = Popover.calcPosition;
  * @attribute module:Popover.Popover.container
  * @type {boolean}
  */
-/**
- * 参见 BaseComponent
- */
-Popover.defaultProps.component = Panel;
 
-
-export default Popover;
-
-// Calc Position
-// --------------------
 
 /**
  * 弹出层位置计算函数
@@ -232,8 +216,14 @@ Popover.calcPosition = function(offsetTarget, offsetOverlay, placement, main, cr
   return [classSet, styleSet];
 }
 
-// Overlay
-// --------------------
+Object.defineProperty(Popover,"Popover",{ get:function(){ return Popover }, set:function(val){ Popover = val }})
+export default Popover;
+
+
+
+
+
+
 
 /**
  * 弹出层组件
@@ -246,19 +236,21 @@ let Overlay = class extends React.Component {
   render() {
     let {
       calcPosition, offsetTarget, offsetOverlay, placement,
-      component:Component=Panel, componentPanel, style, className, ...props
+      ...props
     } = BaseComponent(this.props, Overlay);
 
-    let classStr = 'position-absolute bg-color-white border-set-a-';
-    let styleSet = {boxSizing: 'content-box'};
-    let [classSetPosition, styleSetPosition] = offsetOverlay?calcPosition(offsetTarget,offsetOverlay, ...((placement&&placement.split('-'))||[])) : [{'visibility-hidden':true},{}];
+    
+    let [classNamePosition, stylePosition] = offsetOverlay?calcPosition(offsetTarget,offsetOverlay, ...((placement&&placement.split('-'))||[])) : [{'visibility-hidden':true},{}];
+    let classNamePre = {
+      'position-absolute bg-color-white border-set-a-': true,
+      ...classNamePosition
+    }
+    let stylePre = {
+      boxSizing: 'content-box',
+      ...stylePosition,
+    };
 
-    return (
-      <Component 
-        component={componentPanel} 
-        onMouseMove={e=>e.stopPropagation()} 
-        style={{...styleSet,...styleSetPosition,...style}} className={classes(classStr, classSetPosition, className)} {...props} />
-    );
+    return <Panel onMouseMove={e=>e.stopPropagation()} classNamePre={classNamePre} stylePre={stylePre} {...props} />
   }
 }
 Overlay.defaultProps = {};
@@ -278,9 +270,5 @@ Overlay.defaultProps = {};
  * 参见 calcPositionCallBack
  * @attribute module:Popover~Overlay.placement
  */
-/**
- * 参见 BaseComponent
- */
-Overlay.defaultProps.component = Panel;
 
 Object.defineProperty(Popover,"Overlay",{ get:function(){ return Overlay }, set:function(val){ Overlay = val }})

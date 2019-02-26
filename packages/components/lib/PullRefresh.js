@@ -35,7 +35,7 @@ var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _Touchable = _interopRequireDefault(require("./Touchable"));
 
-require("./Loader");
+var _Loader = require("./Loader");
 
 /**
  * @module
@@ -74,7 +74,10 @@ function (_React$Component) {
       var _this$props = this.props,
           triggerOffset = _this$props.triggerOffset,
           onLoad = _this$props.onLoad;
-      var offset = this.state && this.state.offset || 0;
+
+      var _ref = this.state || {},
+          _ref$offset = _ref.offset,
+          offset = _ref$offset === void 0 ? 0 : _ref$offset;
 
       if (offset) {
         this.setState({
@@ -106,15 +109,22 @@ function (_React$Component) {
           onLoad = _BaseComponent.onLoad,
           triggerOffset = _BaseComponent.triggerOffset,
           loaderProps = _BaseComponent.loaderProps,
-          titleLoading = _BaseComponent.titleLoading,
-          Touchable = _BaseComponent.touchable,
-          className = _BaseComponent.className,
           children = _BaseComponent.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["isLoading", "onLoad", "triggerOffset", "loaderProps", "titleLoading", "touchable", "className", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["isLoading", "onLoad", "triggerOffset", "loaderProps", "children"]);
 
-      var offset = this.state && this.state.offset || 0;
-      var classStr = 'scrollable-y-';
-      return _react.default.createElement(Touchable, (0, _extends2.default)({
+      var _ref2 = this.state || {},
+          _ref2$offset = _ref2.offset,
+          offset = _ref2$offset === void 0 ? 0 : _ref2$offset;
+
+      var classNamePre = 'scrollable-y-';
+      var classNamePreLoader = 'overflow-a-hidden transition-property-height';
+      var stylePreLoader = {
+        height: 0
+      };
+      if (offset > 0) stylePreLoader.height = offset;
+      if (isLoading) stylePreLoader.height = triggerOffset;
+      return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+        componentTranform: _Touchable.default,
         recognizers: {
           pan: {
             enable: true
@@ -131,19 +141,21 @@ function (_React$Component) {
         onPanEnd: function onPanEnd(el, e) {
           return _this2.handleEnd(el, e);
         },
-        className: (0, _classes.default)(classStr, className)
-      }, props), _react.default.createElement(_Refresh, (0, _extends2.default)({
-        isLoading: isLoading,
-        offset: offset,
-        triggerOffset: triggerOffset
-      }, loaderProps), titleLoading), children);
+        classNamePre: classNamePre
+      }, props), _react.default.createElement(_Panel.default, (0, _extends2.default)({
+        componentTranform: _Loader.PanelLoader,
+        position: "top",
+        isProgress: !isLoading,
+        progress: offset * 100 / triggerOffset,
+        classNamePre: classNamePreLoader,
+        stylePre: stylePreLoader
+      }, loaderProps)), children);
     }
   }]);
   return PullRefresh;
 }(_react.default.Component);
 
 PullRefresh.defaultProps = {};
-PullRefresh.defaultProps.touchable = _Touchable.default;
 /**
  * 下拉触发刷新的长度
  * @type {number}
@@ -166,12 +178,6 @@ PullRefresh.defaultProps.triggerOffset = 60;
  * 点击事件处理函数，对应手势 tap
  * @attribute Panel.module:PullRefresh~PullRefresh.loaderProps
  * @type {object}
- */
-
-/**
- * 点击事件处理函数，对应手势 tap
- * @attribute Panel.module:PullRefresh~PullRefresh.titleLoading
- * @type {string|number|component|element}
  */
 
 var _default = PullRefresh; // Panel PushRefresh Refresh

@@ -35,3 +35,5 @@ bnorth 解决方案 demo
 1. rich.css 支持 transform-origin ,支持 animation keyframe 配置和兼容性处理
 1. field 判断是否更新，应该是和this.input.value 比较；增加 pattern 自行处理
 1. panel.pullrefresh 应该自带 scrollable-y-
+1. 统一修改 rich.css status- 和其他状态，并删除 - 结尾的非默认值类
+1. 扁平化组件里面的子组件，xxxProps, 支持对子组件的属性追加

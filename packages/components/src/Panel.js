@@ -178,7 +178,7 @@ export let PanelContainer = class extends React.Component {
     let {
       type, inline, position, direction, justify, align, wrap,
       selectedIndex=0, countToShow=1, onSelectedChange, 
-      separator:SeparatorComponent, separatorProps, noOverlay,
+      separator:SeparatorComponent, separatorProps, noOverlap,
       itemProps, itemGetProps, itemGetClassName, itemGetStyle,
       component:Component, className, children, ...props
     } = BaseComponent(this.props, PanelContainer);
@@ -406,7 +406,7 @@ export let PanelContainerItem = aprops=>{
   if(type==='justify') classSet.push('flex-sub-flex-extend');
   if(type==='primary') classSet.push(itemSelected?'flex-sub-flex-extend':'flex-sub-flex-none');
   if(type==='scroll') classSet.push('flex-sub-flex-extend height-full');
-  if(containerProps.noOverlay&&itemIndex<itemCount-1) classSet.push('border-none-right-');
+  if(containerProps.noOverlap&&itemIndex<itemCount-1) classSet.push('border-none-right-');
   if(containerProps.separator) classSet.push('border-none-a- bg-none-');
 
   return cloneElement(children, {className: classes(classSet, className), containerProps, itemIndex, itemCount, itemSelected, itemPlain, ...props});
