@@ -2,7 +2,6 @@
  * @module
  */
 import React from 'react';
-import classes from '@bnorth/rich.css/lib/classes'; 
 import BaseComponent, { domFindNode } from './BaseComponent';
 import Panel, { PanelContainer } from './Panel';
 import Icon from './Icon';
@@ -15,23 +14,18 @@ import Icon from './Icon';
  * @exportdefault
  */
 let Field = aprops=>{
-  let { before, after, label, beforeProps, afterProps, containerProps, ...props } = aprops;
+  let { types, before, after, label, beforeProps, afterProps, containerProps, ...props } = aprops;
   if(props.hasOwnProperty('value')&&props.value===undefined) props.value = '';
-  let ComponentField = Field[aprops.type]||Field.text;
+  let ComponentField = types[aprops.type]||types.text;
   if(!ComponentField) return null;
 
   let component = <ComponentField b-style={(before||after)&&'plain'} itemSelected={Boolean(before||after)} {...props} />
   if(!before&&!after) return component;
 
-  return (
-    <PanelContainer component={label&&'label'} type="primary" {...containerProps}>
-      {before?<Panel {...beforeProps}>{before}</Panel>:null}
-      {component}
-      {after?<Panel {...afterProps}>{after}</Panel>:null}
-    </PanelContainer>
-  );
+  return <PanelContainer component={label&&'label'} type="primary" {...containerProps}>{before?<Panel {...beforeProps}>{before}</Panel>:null}{component}{after?<Panel {...afterProps}>{after}</Panel>:null}</PanelContainer>
 }
 
+Field.defaultProps = {}
 /**
  * 设置控件组件的类型，支持 html input type 以及自定义的类型，参见 Field 的成员，默认使用 text 对应的类型
  * @attribute module:Field.Field.type
@@ -68,6 +62,8 @@ let Field = aprops=>{
  * @type {object}
  */
 
+
+Object.defineProperty(Field,"Field",{ get:function(){ return Field }, set:function(val){ Field = val }})
 export default Field;
 
 
@@ -80,75 +76,55 @@ export default Field;
  * 表单控件的一般类型组件
  * @component
  * @mount Field.Normal
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel.Panel
+ * @augments input
  * @private
  */
 let Normal = class extends React.Component {
-  _updateValue() {
-    this.input.value = this.props.value||'';
-  }
-
-  handleKeyPress(e) {
-    let { onPressEnter, onKeyPress } = this.props;
-
-    if(onPressEnter&&e.charCode===13){
-      e.stopPropagation();
-      e.preventDefault();
-      onPressEnter(e.target.value); 
-    }else{
-      onKeyPress&&onKeyPress(e);
-    }
-  }
-
   componentDidMount() {
     this.input = domFindNode(this);
-    this._updateValue();
+    this.input.value = this.props.value||'';
   }
   
   componentDidUpdate(prevProps, prevState) {
-    if(this.props.value !== prevProps.value) this._updateValue();
+    if(this.props.value !== prevProps.value) this.input.value = this.props.value||'';
   }
   
   render() { 
     let {
-      type, value,
+      type, value, typesToElement,
       onPressEnter, onKeyPress, 
-      component, children, ...props
+      component="input", children, ...props
     } = BaseComponent(this.props, Normal);
+    if(typesToElement.includes(type)) { component = type; type = null }else{ children = undefined }
 
     let classNamePre = {
       'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle': true,
       'bg-none- border-none-a-': !this.props['b-style'],
     }
 
-    if(Normal.typesToElement&&Normal.typesToElement.includes(type)) { component = type; type=null }else{ children = undefined }
-    return <Panel component={component} type={type} onKeyPress={this.handleKeyPress} classNamePre={classNamePre} {...props}>{children}</Panel>
+    return <Panel 
+      component={component} type={type} 
+      onKeyPress={e=>{ if(onPressEnter&&e.charCode===13){ e.stopPropagation(); e.preventDefault(); onPressEnter(e.target.value) }else{ onKeyPress&&onKeyPress(e) } }} 
+      classNamePre={classNamePre} {...props}>
+      {children}
+    </Panel>
   }
 }
 
 Normal.defaultProps = {};
 /**
- * 参见 Field
- * @attribute module:Field~Normal.type
- */
-/**
- * 控件的值
- * @attribute module:Field~Normal.value
- * @type {string}
- */
-/**
  * 当控件在焦点情况下输入回车时触发
  * @attribute module:Field~Normal.onPressEnter
  * @type {function}
  */
-Normal.defaultProps.component = 'input';
       
 /**
  * 映射数组，数组内的 input type 直接映射为对应元素，例如：
  * <Field type="textarea" /> => <textarea></textarea>
- * @member
  */
-Normal.typesToElement = ['progress', 'select', 'textarea'];
+Normal.defaultProps.typesToElement = ['progress', 'select', 'textarea'];
 
 Object.defineProperty(Field,"Normal",{ get:function(){ return Normal }, set:function(val){ Normal = val }})
 
@@ -162,37 +138,27 @@ Object.defineProperty(Field,"Normal",{ get:function(){ return Normal }, set:func
  * 表单控件的显示静态文本的组件，用于与其他表单组件达到一致样式
  * @component
  * @mount Field.Static
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel.Panel
+ * @augments input
  * @private
  */
 let Static = aprops=>{
-  let {
-    type, value,
-    ...props
-  } = BaseComponent(aprops, Static);
+  let { type, value, ...props } = BaseComponent(aprops, Static);
 
   let classNamePre = 'line-height-1 vertical-align-middle';
 
   return (
-    <Panel classNamePre={classNamePre} {...props}>
+    <Panel component="span" classNamePre={classNamePre} {...props}>
       {value||<pre className="margin-a-0 padding-a-0"> </pre>}
     </Panel>
   );
 }
 
+Static.defaultProps = {};
+
 Object.defineProperty(Field,"Static",{ get:function(){ return Static }, set:function(val){ Static = val }})
 
-Static.defaultProps = {};
-/**
- * 参见 Field
- * @attribute module:Field~Static.type
- */
-/**
- * 显示的静态文本
- * @attribute module:Field~Static.value
- * @type {string}
- */
-Static.defaultProps.component = 'span';
 
 
 
@@ -215,7 +181,6 @@ let HiddenInput = aprops=>{
 }
 
 HiddenInput.defaultProps = {};
-HiddenInput.defaultProps.component = 'input';
 
 Object.defineProperty(Field,"HiddenInput",{ get:function(){ return HiddenInput }, set:function(val){ HiddenInput = val }})
 
@@ -233,15 +198,14 @@ Object.defineProperty(Field,"HiddenInput",{ get:function(){ return HiddenInput }
  */
 let File = aprops=>{
   let {
-    type, value, 
-    inputProps, disabled, onClick, onChange, 
+    type, value, inputProps, disabled, onClick, onChange, 
     children, ...props
   } = BaseComponent(aprops, File);
 
   let classNamePre = 'line-height-1 vertical-align-middle';
 
   return (
-    <Panel classNamePre={classNamePre} disabled={disabled} {...props}>
+    <Panel component="label" classNamePre={classNamePre} disabled={disabled} {...props}>
       <HiddenInput type={type} value={value} disabled={disabled} onClick={onClick} onChange={onChange} {...inputProps} />
       {children}
     </Panel>
@@ -250,17 +214,10 @@ let File = aprops=>{
 
 File.defaultProps = {};
 /**
- * 浏览器的文件对象
- * @attribute module:Field~File.value
- * @type {file}
- */
-/**
  * 设置隐藏的 input 的容器的属性
  * @attribute module:Field~File.inputProps
  * @type {object}
  */
-File.defaultProps = {};
-File.defaultProps.component = 'label';
 
 Object.defineProperty(Field,"File",{ get:function(){ return File }, set:function(val){ File = val }})
 
@@ -281,22 +238,20 @@ Object.defineProperty(Field,"File",{ get:function(){ return File }, set:function
  */
 let CheckState = aprops=>{
   let {
-    type, value, defaultValue, content, 
-    domValue, disabled, onClick, onChange, 
-    CheckStateProps, statusCheckedProps, statusUncheckedProps, inputProps, innerProps,
+    type, value, defaultValue, domValue, disabled, onClick, onChange, 
+    inputProps, innerProps, statusProps, statusCheckedProps, statusUncheckedProps, 
     children, ...props
   } = BaseComponent(aprops, CheckState);
 
-  let classNamePre = 'check-status line-height-1 vertical-align-middle bg-none-';
-  let classNamePreInner = 'check-status-inner position-relative';
-  let classNamePreContent = 'position-relative';
+  let classNamePre = 'check-status line-height-0 display-inlineblock vertical-align-middle bg-none-';
+  let classNamePreInner = 'check-status-inner position-relative line-height-0 display-inlineblock';
 
   return (
-    <Panel component="label" classNamePre={classNamePre} {...CheckStateProps}>
+    <Panel component="label" classNamePre={classNamePre} {...props}>
       <HiddenInput type={type} checked={value} defaultChecked={defaultValue} value={domValue} disabled={disabled} onChange={onChange} {...inputProps} />
       <Panel component="span" classNamePre={classNamePreInner} {...innerProps}>
-        <Panel type={type} disabled={disabled} classNamePre={classNamePreContent} classNameExt="check-status-checked" children="X1" {...props} {...statusCheckedProps} />
-        <Panel type={type} disabled={disabled} classNamePre={classNamePreContent} classNameExt="check-status-unchecked" children="-1" {...props} {...statusUncheckedProps} />
+        <Panel type={type} disabled={disabled} classNameExt="check-status-checked" {...statusProps} {...statusCheckedProps} />
+        <Panel type={type} disabled={disabled} classNameExt="check-status-unchecked" {...statusProps} {...statusUncheckedProps} />
       </Panel>
       {children}
     </Panel>
@@ -318,16 +273,6 @@ CheckState.defaultProps = {};
  * 设置 input dom 的 value 属性
  * @attribute module:Field~CheckState.domValue
  * @type {string}
- */
-/**
- * 设置2态内容
- * @attribute module:Field~CheckState.content
- * @type {string}
- */
-/**
- * 设置设置2态组件的属性
- * @attribute module:Field~CheckState.labelProps
- * @type {object}
  */
 /**
  * 设置隐藏的 input 的容器的属性
@@ -357,14 +302,10 @@ Object.defineProperty(Field,"CheckState",{ get:function(){ return CheckState }, 
 let Checkbox = aprops=>{
   let { disabled, ...props } = BaseComponent(aprops, Checkbox);
 
-  props.component = Icon;
-  props.CheckStateProps = {
-    'b-style': 'hollow',
-    'bc-bg-color-component': disabled,
-  };
-  props['bp-statusChecked-name'] = 'check';
-  props['bp-statusUnchecked-name'] = ' ';
-  return <CheckState disabled={disabled} {...props} />
+  return <CheckState 
+    b-style="hollow" bg-color-component={disabled}
+    bp-status-component={Icon} bp-statusChecked-name="check:X" bp-statusUnchecked-name=" "
+    disabled={disabled} {...props} />
 };
 
 Object.defineProperty(Field,"Checkbox",{ get:function(){ return Checkbox }, set:function(val){ Checkbox = val }})
@@ -380,15 +321,10 @@ Object.defineProperty(Field,"Checkbox",{ get:function(){ return Checkbox }, set:
 let Radio = aprops=>{
   let { disabled, ...props } = BaseComponent(aprops, Radio);
 
-  props.component = Icon;
-  props.CheckStateProps = {
-    'b-style': 'hollow',
-    'bc-bg-color-component': disabled,
-    'bc-border-radius-rounded': true,
-  };
-  props['bp-statusChecked-name'] = 'check';
-  props['bp-statusUnchecked-name'] = ' ';
-  return <CheckState disabled={disabled} {...props} />
+  return <CheckState 
+    b-style="hollow" bg-color-component={disabled} bc-border-radius-rounded
+    bp-status-component={Icon} bp-statusChecked-name="check:X" bp-statusUnchecked-name=" "
+    disabled={disabled} {...props} />
 };
 
 Object.defineProperty(Field,"Radio",{ get:function(){ return Radio }, set:function(val){ Radio = val }})
@@ -408,31 +344,23 @@ Object.defineProperty(Field,"Radio",{ get:function(){ return Radio }, set:functi
 let Switch = aprops=>{
   let { disabled, 'b-theme':bTheme='component', ...props } = BaseComponent(aprops, Switch);
 
-  props.CheckStateProps = {
-    'b-style': 'hollow',
-    'bc-bg-color-component': disabled,
-    'bc-border-radius-rounded': true,
-    'line-height-0': true,
-  };
+  let classNamePreItem = 'border-radius-rounded width-1em height-1em';
 
-  let classNamePre = 'border-radius-rounded width-1em height-1em';
-  props.statusCheckedProps = {
-    children: (
+  return <CheckState 
+    b-style="hollow" bg-color-component={disabled} bc-border-radius-rounded
+    bp-statusChecked-children={
       <React.Fragment>
-        <Panel inline b-style="solid" b-theme={bTheme} classNamePre={classNamePre} />
-        <Panel inline b-style="solid" b-theme="white" classNamePre={classNamePre} />
+        <Panel inline b-style="solid" b-theme={bTheme} classNamePre={classNamePreItem} />
+        <Panel inline b-style="solid" b-theme="white" classNamePre={classNamePreItem} />
       </React.Fragment>
-    )
-  };
-  props.statusUncheckedProps = {
-    children: (
+    }
+    bp-statusUnchecked-children={
       <React.Fragment>
-        <Panel inline b-style="solid" b-theme="white" classNamePre={classNamePre} />
-        <Panel inline b-style="solid" b-theme={bTheme} classNamePre={classNamePre} />
+        <Panel inline b-style="solid" b-theme="white" classNamePre={classNamePreItem} />
+        <Panel inline b-style="solid" b-theme="component" classNamePre={classNamePreItem} />
       </React.Fragment>
-    )
-  };
-  return <CheckState disabled={disabled} {...props} type="checkbox" />
+    }
+    disabled={disabled} {...props} type="checkbox" />
 };
 
 Object.defineProperty(Field,"Switch",{ get:function(){ return Switch }, set:function(val){ Switch = val }})
@@ -440,39 +368,13 @@ Object.defineProperty(Field,"Switch",{ get:function(){ return Switch }, set:func
 
 
 
-/**
- * 控件组件支持的的类型，对应一般的类型以及默认类型
- * @member module:Field.Field.text
- * @default Field.Normal
- */
-Object.defineProperty(Field,"text",{ get:function(){ return Field.Normal }})
-/**
- * 控件组件支持的的类型，对应静态类型，该类型为表单组提供一致的组件和样式
- * @member module:Field.Field.static
- * @default Field.Static
- */
-Object.defineProperty(Field,"static",{ get:function(){ return Field.Static }})
-/**
- * 控件组件支持的的类型，对应 input checkbox 标准类型
- * @member module:Field.Field.checkbox
- * @default Field.Checkbox
- */
-Object.defineProperty(Field,"checkbox",{ get:function(){ return Field.Checkbox }})
-/**
- * 控件组件支持的的类型，对应 switch 类型，实现了开关按钮
- * @member module:Field.Field.radio
- * @default Field.Radio
- */
-Object.defineProperty(Field,"radio",{ get:function(){ return Field.Radio }})
-/**
- * 控件组件支持的的类型，对应 input switch 标准类型
- * @member module:Field.Field.switch
- * @default Field.Switch
- */
-Object.defineProperty(Field,"switch",{ get:function(){ return Field.Switch }})
-/**
- * 控件组件支持的的类型，对应 input file 标准类型
- * @member module:Field.Field.file
- * @default Field.File
- */
-Object.defineProperty(Field,"file",{ get:function(){ return Field.File }})
+
+
+Field.defaultProps.types = {
+  text: Normal,
+  static: Static,
+  file: File,
+  checkbox: Checkbox,
+  radio: Radio,
+  switch: Switch,
+}

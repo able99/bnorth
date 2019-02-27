@@ -23,15 +23,13 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _react = _interopRequireDefault(require("react"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
-
 var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
-
-var _ScrollSpy = _interopRequireDefault(require("./ScrollSpy"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
-require("./Loader");
+var _ScrollSpy = _interopRequireDefault(require("./ScrollSpy"));
+
+var _Loader = require("./Loader");
 
 /**
  * @module
@@ -55,45 +53,37 @@ function (_React$Component) {
   }
 
   (0, _createClass2.default)(Dropload, [{
-    key: "_handlePosChange",
-    value: function _handlePosChange(event, target) {
-      var _this$props = this.props,
-          isLoading = _this$props.isLoading,
-          onLoad = _this$props.onLoad,
-          _this$props$offset = _this$props.offset,
-          offset = _this$props$offset === void 0 ? 35 : _this$props$offset;
-      if (isLoading || !onLoad) return;
-      var distance = Math.abs(target.scrollTop + target.clientHeight - target.scrollHeight);
-
-      if (distance < offset) {
-        !this.trigger && onLoad();
-        this.trigger = true;
-      } else {
-        this.trigger = false;
-      }
-    }
-  }, {
     key: "render",
     value: function render() {
+      var _this = this;
+
       var _BaseComponent = (0, _BaseComponent2.default)(this.props, Dropload),
           disabled = _BaseComponent.disabled,
           isLoading = _BaseComponent.isLoading,
           onLoad = _BaseComponent.onLoad,
           offset = _BaseComponent.offset,
-          _BaseComponent$compon = _BaseComponent.component,
-          Component = _BaseComponent$compon === void 0 ? _Panel.default.Loader : _BaseComponent$compon,
-          className = _BaseComponent.className,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["disabled", "isLoading", "onLoad", "offset", "component", "className"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["disabled", "isLoading", "onLoad", "offset"]);
 
       if (disabled) return null;
-      var classStr = 'padding-a-';
+      var classNamePre = 'padding-a-';
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_ScrollSpy.default, {
-        onPosChange: this._handlePosChange.bind(this)
-      }), _react.default.createElement(Component, (0, _extends2.default)({
+        onPosChange: function onPosChange(event, target) {
+          if (isLoading || !onLoad) return;
+          var distance = Math.abs(target.scrollTop + target.clientHeight - target.scrollHeight);
+
+          if (distance < offset) {
+            !_this.trigger && onLoad();
+            _this.trigger = true;
+          } else {
+            _this.trigger = false;
+          }
+        }
+      }), _react.default.createElement(_Panel.default, (0, _extends2.default)({
+        componentTransform: _Loader.PanelLoader,
         position: "top",
         isProgress: false,
         "bc-visibility-hide": !isLoading,
-        className: (0, _classes.default)(classStr, className)
+        classNamePre: classNamePre
       }, props)));
     }
   }]);
@@ -125,10 +115,13 @@ Dropload.defaultProps = {};
  */
 
 Dropload.defaultProps.offset = 35;
-/**
- * 参见 BaseComponent
- */
-
-Dropload.defaultProps.component = _Panel.default.Loader;
+Object.defineProperty(Dropload, "Dropload", {
+  get: function get() {
+    return Dropload;
+  },
+  set: function set(val) {
+    Dropload = val;
+  }
+});
 var _default = Dropload;
 exports.default = _default;

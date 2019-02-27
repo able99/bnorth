@@ -13,16 +13,13 @@ import Panel from './Panel';
  * @exportdefault
  */
 let Space = (aprops)=>{
-  let {
-    count, stacked,
-    component:Component=Panel, children, ...props
-  } = BaseComponent(aprops, Space);
+  let { count, stacked, children, ...props } = BaseComponent(aprops, Space);
 
   return (
-    <Component inline {...props}>
+    <Panel inline {...props}>
       <pre className="margin-a-0 padding-a-0">{Array(Number(count)).fill(stacked?'\n':' ')}</pre>
       {children}
-    </Component>
+    </Panel>
   );
 }
 
@@ -38,4 +35,6 @@ Space.defaultProps.count = 1;
  * @type {boolean}
  */
 
+
+Object.defineProperty(Space,"Space",{ get:function(){ return Space }, set:function(val){ Space = val }})
 export default Space;

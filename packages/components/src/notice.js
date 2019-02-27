@@ -1,5 +1,4 @@
 import React from 'react';
-import classes from '@bnorth/rich.css/lib/classes'; 
 import BaseComponent from './BaseComponent';
 import Animation from './Animation';
 import Panel from './Panel';
@@ -33,6 +32,10 @@ export let Notice = aprops=>{
     </Panel>
   );
 }
+
+Notice.defaultProps = {}
+
+Object.defineProperty(Notice,"Notice",{ get:function(){ return Notice }, set:function(val){ Notice = val }})
 
 
 

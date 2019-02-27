@@ -23,11 +23,13 @@ class Fab extends React.Component{
 
     if((container===true||typeof container==='string')&&!this.container) {
       return (
-        <span ref={e=>{
-          if(!e) return;
-          this.container = domFindContainer(e, this.props.container);
-          this.forceUpdate();
-        }} style={{fontSize:0}} />
+        <span 
+          ref={e=>{
+            if(!e) return;
+            this.container = domFindContainer(e, this.props.container);
+            this.forceUpdate();
+          }} 
+          style={{fontSize:0}} />
       )
     }
 
@@ -48,7 +50,7 @@ class Fab extends React.Component{
       'offset-bottom-start': v==='end',
     }
 
-    let component = <Panel classNamePre={classNamePre}  {...props} />;
+    let component = <Panel component={Button} classNamePre={classNamePre}  {...props} />;
     return this.container?domCreatePortal(component, this.container):component;
   }
 }
@@ -77,7 +79,8 @@ Fab.defaultProps.margin = true;
  * @attribute module:Fab.Fab.container
  * @type {boolean|string}
  */
-Fab.defaultProps.component = Button; 
 
+
+Object.defineProperty(Fab,"Fab",{ get:function(){ return Fab }, set:function(val){ Fab = val }})
 export default Fab;
 

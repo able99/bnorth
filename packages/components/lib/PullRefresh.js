@@ -25,8 +25,6 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _react = _interopRequireDefault(require("react"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
-
 var _BaseComponent2 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
@@ -38,8 +36,6 @@ var _Loader = require("./Loader");
 /**
  * @module
  */
-// PullRefresh
-// ------------------------
 
 /**
  * 支持滚动与下拉刷新的小面板
@@ -58,34 +54,6 @@ function (_React$Component) {
   }
 
   (0, _createClass2.default)(PullRefresh, [{
-    key: "handleMove",
-    value: function handleMove(event, element) {
-      if (element.scrollTop > 0) return;
-      this.setState({
-        offset: Math.max(event.deltaY, 0)
-      });
-      !this.props.isLoading && this.state.offset && event.preventDefault();
-    }
-  }, {
-    key: "handleEnd",
-    value: function handleEnd(event, element) {
-      var _this$props = this.props,
-          triggerOffset = _this$props.triggerOffset,
-          onLoad = _this$props.onLoad;
-
-      var _ref = this.state || {},
-          _ref$offset = _ref.offset,
-          offset = _ref$offset === void 0 ? 0 : _ref$offset;
-
-      if (offset) {
-        this.setState({
-          offset: 0
-        });
-        if (offset >= triggerOffset && onLoad) onLoad();
-        this.mark = true;
-      }
-    }
-  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this = this;
@@ -110,9 +78,9 @@ function (_React$Component) {
           children = _BaseComponent.children,
           props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["isLoading", "onLoad", "triggerOffset", "loaderProps", "children"]);
 
-      var _ref2 = this.state || {},
-          _ref2$offset = _ref2.offset,
-          offset = _ref2$offset === void 0 ? 0 : _ref2$offset;
+      var _ref = this.state || {},
+          _ref$offset = _ref.offset,
+          offset = _ref$offset === void 0 ? 0 : _ref$offset;
 
       var classNamePre = 'scrollable-y-';
       var classNamePreLoader = 'overflow-a-hidden transition-property-height';
@@ -132,12 +100,36 @@ function (_React$Component) {
         options: {
           touchAction: 'pan-y'
         },
-        onPan: this.handleMove.bind(this),
-        onPanCancel: function onPanCancel(el, e) {
-          return _this2.handleEnd(el, e);
+        onPan: function onPan(event, element) {
+          if (element.scrollTop > 0) return;
+
+          _this2.setState({
+            offset: Math.max(event.deltaY, 0)
+          });
+
+          !_this2.props.isLoading && _this2.state.offset && event.preventDefault();
         },
-        onPanEnd: function onPanEnd(el, e) {
-          return _this2.handleEnd(el, e);
+        onPanEnd: function onPanEnd() {
+          if (offset) {
+            _this2.setState({
+              offset: 0
+            }, function () {
+              return offset >= triggerOffset && onLoad && onLoad();
+            });
+
+            _this2.mark = true;
+          }
+        },
+        onPanCancel: function onPanCancel() {
+          if (offset) {
+            _this2.setState({
+              offset: 0
+            }, function () {
+              return offset >= triggerOffset && onLoad && onLoad();
+            });
+
+            _this2.mark = true;
+          }
         },
         classNamePre: classNamePre
       }, props), _react.default.createElement(_Panel.default, (0, _extends2.default)({
@@ -178,5 +170,13 @@ PullRefresh.defaultProps.triggerOffset = 60;
  * @type {object}
  */
 
+Object.defineProperty(PullRefresh, "PullRefresh", {
+  get: function get() {
+    return PullRefresh;
+  },
+  set: function set(val) {
+    PullRefresh = val;
+  }
+});
 var _default = PullRefresh;
 exports.default = _default;

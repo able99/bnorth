@@ -31,8 +31,6 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
-
 var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _BaseComponent3 = _interopRequireDefault(require("./BaseComponent"));
@@ -52,15 +50,18 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @augments module:BaseComponent.BaseComponent
  * @augments module:Panel.Panel
  */
-var Icon = function Icon(aprops) {
-  var _BaseComponent = (0, _BaseComponent3.default)(aprops, Icon),
+var _Icon = function Icon(aprops) {
+  var _BaseComponent = (0, _BaseComponent3.default)(aprops, _Icon),
+      names = _BaseComponent.names,
+      nameMaps = _BaseComponent.nameMaps,
+      shapes = _BaseComponent.shapes,
       name = _BaseComponent.name,
       src = _BaseComponent.src,
       char = _BaseComponent.char,
       shape = _BaseComponent.shape,
       rotate = _BaseComponent.rotate,
       component = _BaseComponent.component,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["name", "src", "char", "shape", "rotate", "component"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["names", "nameMaps", "shapes", "name", "src", "char", "shape", "rotate", "component"]);
 
   var classNamePre = ['display-inline', 'width-1em', 'height-1em'];
   var stylePre = rotate ? (0, _animation.transform)('rotate', String(rotate) + 'deg') : {};
@@ -71,9 +72,9 @@ var Icon = function Icon(aprops) {
         nameSvg = _name$split2[0],
         defaultNameSvg = _name$split2[1];
 
-    nameSvg = Icon._maps[nameSvg] || nameSvg;
+    nameSvg = nameMaps[nameSvg] || nameSvg;
 
-    if (!Icon._names.includes(nameSvg)) {
+    if (!names.includes(nameSvg)) {
       char = defaultNameSvg || nameSvg;
       nameSvg = undefined;
     }
@@ -82,7 +83,7 @@ var Icon = function Icon(aprops) {
   }
 
   if (shape) {
-    shape = Icon._shapes[shape] || shape;
+    shape = shapes[shape] || shape;
   }
 
   if (name) {
@@ -123,7 +124,7 @@ var Icon = function Icon(aprops) {
   }, props));
 };
 
-Icon.defaultProps = {};
+_Icon.defaultProps = {};
 /**
  * 设置 svg 字体库图标的图标映射名称，如果设置没有 svg 图标时的默认字符，使用 : 分隔符，比如 name="star:^"
  * @attribute module:Icon.Icon.name
@@ -156,19 +157,22 @@ Icon.defaultProps = {};
 
 /**
  * svg 图标名字数组
+ * @type {string[]}
  */
 
-Icon._names = [];
+_Icon.defaultProps.names = [];
 /**
  * svg 图标的名称映射
+ * @type {object}
  */
 
-Icon._maps = {};
+_Icon.defaultProps.nameMaps = {};
 /**
  * 图形图标的图形函数与图形路径映射
+ * @type {object}
  */
 
-Icon._shapes = {
+_Icon.defaultProps.shapes = {
   triangle: 'M50 10 L90 90 L10 90 Z'
 };
 /**
@@ -176,12 +180,12 @@ Icon._shapes = {
  * @param {string} - svg 字体库文件内容
  */
 
-Icon.appendSvgIcons = function (svgStr) {
+_Icon.appendSvgIcons = function (svgStr) {
   var x = document.createElement('x');
   x.innerHTML = svgStr;
   var svg = x.querySelector('svg');
   if (!svg) return;
-  Icon._names = (0, _toConsumableArray2.default)(Icon._names).concat((0, _toConsumableArray2.default)(Array.from(svg.querySelectorAll('defs symbol')).map(function (v) {
+  _Icon.defaultProps.names = (0, _toConsumableArray2.default)(_Icon.defaultProps.names).concat((0, _toConsumableArray2.default)(Array.from(svg.querySelectorAll('defs symbol')).map(function (v) {
     return v.id;
   })));
   return document.body.appendChild(svg);
@@ -193,17 +197,25 @@ Icon.appendSvgIcons = function (svgStr) {
  */
 
 
-Icon.appendMap = function (val, name) {
+_Icon.appendMap = function (val, name) {
   if (!val) return;
 
   if ((0, _typeof2.default)(val) === 'object') {
-    Icon._maps = (0, _objectSpread2.default)({}, Icon._maps, val);
+    _Icon.defaultProps.nameMaps = (0, _objectSpread2.default)({}, _Icon.defaultProps.nameMaps, val);
   } else {
-    Icon._maps[name] = val;
+    _Icon.defaultProps.nameMaps[name] = val;
   }
 };
 
-var _default = Icon;
+Object.defineProperty(_Icon, "Icon", {
+  get: function get() {
+    return _Icon;
+  },
+  set: function set(val) {
+    _Icon = val;
+  }
+});
+var _default = _Icon;
 /**
  * 图标小面板组件，扩展小面板组件，提供图标组件与面板内容混排的能力
  * @component
@@ -213,8 +225,8 @@ var _default = Icon;
 
 exports.default = _default;
 
-var PanelIcon = function PanelIcon(aprops) {
-  var _BaseComponent2 = (0, _BaseComponent3.default)(aprops, PanelIcon, {
+var _PanelIcon = function PanelIcon(aprops) {
+  var _BaseComponent2 = (0, _BaseComponent3.default)(aprops, _PanelIcon, {
     isContainer: true
   }),
       selected = _BaseComponent2.selected,
@@ -236,7 +248,7 @@ var PanelIcon = function PanelIcon(aprops) {
     justify: "center",
     align: "center",
     selected: selected
-  }, props), _react.default.createElement(Icon, (0, _extends2.default)({
+  }, props), _react.default.createElement(_Icon, (0, _extends2.default)({
     name: name && (selected && iconSelected ? iconSelected : name),
     src: src && (selected && iconSelected ? iconSelected : src),
     char: char && (selected && iconSelected ? iconSelected : char),
@@ -247,8 +259,8 @@ var PanelIcon = function PanelIcon(aprops) {
   }, titleProps), title, children) : null);
 };
 
-exports.PanelIcon = PanelIcon;
-PanelIcon.defaultProps = {};
+exports.PanelIcon = _PanelIcon;
+_PanelIcon.defaultProps = {};
 /**
  * Icon 的属性，参见 Icon
  * @attribute module:Icon~PanelIcon.icon*
@@ -278,3 +290,12 @@ PanelIcon.defaultProps = {};
  * @attribute module:Icon~PanelIcon.titleProps
  * @type {object}
  */
+
+Object.defineProperty(_Icon, "PanelIcon", {
+  get: function get() {
+    return _PanelIcon;
+  },
+  set: function set(val) {
+    exports.PanelIcon = _PanelIcon = val;
+  }
+});

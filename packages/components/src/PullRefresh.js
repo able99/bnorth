@@ -2,15 +2,11 @@
  * @module
  */
 import React from 'react';
-import classes from '@bnorth/rich.css/lib/classes'; 
 import BaseComponent, { domIsMouse, domFindNode } from './BaseComponent';
 import Panel from './Panel';
 import Touchable from './Touchable';
 import { PanelLoader } from './Loader';
 
-
-// PullRefresh
-// ------------------------
 
 /**
  * 支持滚动与下拉刷新的小面板
@@ -19,29 +15,9 @@ import { PanelLoader } from './Loader';
  * @augments BaseComponent
  */
 class PullRefresh extends React.Component {
-  handleMove(event, element) {
-    if(element.scrollTop>0) return;
-    this.setState({offset: Math.max(event.deltaY, 0)});
-    !this.props.isLoading&&this.state.offset&&event.preventDefault();
-  }
-
-  handleEnd(event, element) {
-    let { triggerOffset, onLoad } = this.props;
-    let { offset=0 } = this.state||{};
-
-    if(offset) {
-      this.setState({offset: 0});
-      if(offset>=triggerOffset&&onLoad) onLoad();
-      this.mark = true;
-    }
-  }
-
   componentDidMount() {
     domIsMouse && domFindNode(this).addEventListener("click", event=>{
-      if(this.mark) {
-        event.stopPropagation();
-        this.mark = false;
-      }
+      if(this.mark) { event.stopPropagation(); this.mark = false }
     },true)
   }
 
@@ -61,7 +37,23 @@ class PullRefresh extends React.Component {
     return (
       <Panel 
         componentTransform={Touchable} recognizers={{pan: {enable: true}}} direction="vertical" options={{touchAction:'pan-y'}} 
-        onPan={this.handleMove.bind(this)} onPanCancel={(el,e)=>this.handleEnd(el,e)} onPanEnd={(el,e)=>this.handleEnd(el,e)}
+        onPan={(event, element)=>{
+          if(element.scrollTop>0) return;
+          this.setState({offset: Math.max(event.deltaY, 0)});
+          !this.props.isLoading&&this.state.offset&&event.preventDefault();
+        }} 
+        onPanEnd={()=>{
+          if(offset){ 
+            this.setState({offset: 0}, ()=>offset>=triggerOffset&&onLoad&&onLoad()); 
+            this.mark = true 
+          }
+        }}
+        onPanCancel={()=>{
+          if(offset){ 
+            this.setState({offset: 0}, ()=>offset>=triggerOffset&&onLoad&&onLoad()); 
+            this.mark = true 
+          }
+        }}
         classNamePre={classNamePre} {...props}>
         <Panel 
           componentTransform={PanelLoader} position="top" isProgress={!isLoading} progress={offset*100/triggerOffset} 
@@ -95,5 +87,6 @@ PullRefresh.defaultProps.triggerOffset = 60;
  */
 
 
+Object.defineProperty(PullRefresh,"PullRefresh",{ get:function(){ return PullRefresh }, set:function(val){ PullRefresh = val }})
 export default PullRefresh;
 

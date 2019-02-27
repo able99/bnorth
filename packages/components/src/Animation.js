@@ -14,14 +14,16 @@ import Panel from './Panel';
  * @exportdefault
  * @augments module:BaseComponent.BaseComponent
  * @augments module:Panel.Panel
+ * @see {@link https://reactcommunity.org/react-transition-group/transition} react-transition-group
  */
 let Animation = aprops=>{
   let { 
-    type, onFinished, 
+    type, types, onFinished, 
     transitionProps:{onEnter, onEntering, onEntered, onExit, onExiting, onExited, ...transitionProps}={}, 
     ...props 
   } = BaseComponent(aprops, Animation);
-  type = Animation.types[type]||Animation.types['none'];
+  type = types[type]||types['none'];
+
   return (
     <Transition 
       appear={true} in={props.in} timeout={props.timeout} 
@@ -66,11 +68,10 @@ Animation.defaultProps.dimension="height";
 /**
  * 设置动画组件的属性
  * @attribute module:Animation.Animation.transitionProps
- * @see {@link https://reactcommunity.org/react-transition-group/transition} react-transition-group
  * @type {object}
  */
 
-Animation.types = {
+Animation.defaultProps.types = {
   none: {
     getProps: (state, props)=>{
       delete props.in;
@@ -122,4 +123,5 @@ Animation.types = {
 }
 
 
+Object.defineProperty(Animation,"Animation",{ get:function(){ return Animation }, set:function(val){ Animation = val }})
 export default Animation;

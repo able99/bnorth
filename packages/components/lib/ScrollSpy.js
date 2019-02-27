@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -8,10 +10,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
-
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -25,7 +23,9 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _react = _interopRequireDefault(require("react"));
 
-var _BaseComponent = require("./BaseComponent");
+var _BaseComponent = _interopRequireWildcard(require("./BaseComponent"));
+
+var _Panel = _interopRequireDefault(require("./Panel"));
 
 /**
  * @module
@@ -41,13 +41,9 @@ var ScrollSpy =
 function (_React$Component) {
   (0, _inherits2.default)(ScrollSpy, _React$Component);
 
-  function ScrollSpy(props) {
-    var _this;
-
+  function ScrollSpy() {
     (0, _classCallCheck2.default)(this, ScrollSpy);
-    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(ScrollSpy).call(this, props));
-    _this.relative = '';
-    return _this;
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(ScrollSpy).apply(this, arguments));
   }
 
   (0, _createClass2.default)(ScrollSpy, [{
@@ -110,6 +106,7 @@ function (_React$Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
+      this.relative = '';
       this.container = (0, _BaseComponent.domFindScrollContainer)(this, this.props.container, this.props.horizontal);
 
       this._getTargetOffset();
@@ -154,14 +151,12 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props3 = this.props,
-          Component = _this$props3.component,
-          style = _this$props3.style,
-          props = (0, _objectWithoutProperties2.default)(_this$props3, ["component", "style"]);
-      return _react.default.createElement(Component, (0, _extends2.default)({
-        style: (0, _objectSpread2.default)({
+      var props = (0, _BaseComponent.default)(this.props, ScrollSpy);
+      return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+        component: "span",
+        stylePre: {
           fontSize: 0
-        }, style)
+        }
       }, props));
     }
   }]);
@@ -228,10 +223,13 @@ ScrollSpy.defaultProps.target = true;
  * @type {module:ScrollSpy~onPosChangeCallback}
  */
 
-/**
- * 参见 BaseComponent
- */
-
-ScrollSpy.defaultProps.component = 'span';
+Object.defineProperty(ScrollSpy, "ScrollSpy", {
+  get: function get() {
+    return ScrollSpy;
+  },
+  set: function set(val) {
+    ScrollSpy = val;
+  }
+});
 var _default = ScrollSpy;
 exports.default = _default;

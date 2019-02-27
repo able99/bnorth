@@ -2,21 +2,9 @@
  * @module
  */
 import React from 'react';
-import classes from '@bnorth/rich.css/lib/classes'; 
 import BaseComponent, { domIsTouch, domOffset, chainedFuncs, domFindContainer, domCreatePortal } from './BaseComponent';
 import Panel from './Panel';
 import Backdrop from './Backdrop';
-
-
-/**
- * 弹出内容与目标组件的位置计算回调函数
- * @callback calcPositionCallBack
- * @param {module:utils/dom~ElementOffset} offsetTarget - 目标组件的坐标与尺寸
- * @param {module:utils/dom~ElementOffset} offsetOverlay - 弹出内容的坐标与尺寸
- * @param {string} placement - 弹出内容的位置，包括：left，right，top，bottom
- * @param {string} main - 弹出内容的主轴布局方式，full：填满 center：居中 equal：与目标组件相同 auto：默认
- * @param {string} cross - 弹出内容的侧轴布局方式，参见主轴
- */
 
 
 /**
@@ -48,7 +36,7 @@ class Popover extends React.Component {
     let {
       defaultIsShow, trigger, onClick, onMouseOver,
       overlay, overlayProps, backdropProps,
-      calcPosition=Popover.calcPosition, placement, container,
+      calcPosition, placement, container,
       children, ...props
     } = BaseComponent(this.props, Popover);
     let { show, offsetOverlay, offsetTarget } = this.state||{};
@@ -122,27 +110,20 @@ Popover.defaultProps = {};
  * @type {object}
  */
 /**
+ * 弹出内容与目标组件的位置计算回调函数
+ * @callback calcPositionCallBack
+ * @param {module:utils/dom~ElementOffset} offsetTarget - 目标组件的坐标与尺寸
+ * @param {module:utils/dom~ElementOffset} offsetOverlay - 弹出内容的坐标与尺寸
+ * @param {string} placement - 弹出内容的位置，包括：left，right，top，bottom
+ * @param {string} main - 弹出内容的主轴布局方式，full：填满 center：居中 equal：与目标组件相同 auto：默认
+ * @param {string} cross - 弹出内容的侧轴布局方式，参见主轴
+ */
+/**
  * 弹出内容与组件的相对位置计算函数
  * @attribute module:Popover.Popover.calcPosition
  * @type {module:Popover~calcPositionCallBack}
  */
-Popover.defaultProps.calcPosition = Popover.calcPosition;
-/**
- * 设置弹出内容与目标组件的相对位置与布局，格式为 placement-main-cross，参见 calcPositionCallBack
- * @attribute module:Popover.Popover.placement
- * @type {string}
- */
-/**
- * 设置弹出内容的容器
- * @attribute module:Popover.Popover.container
- * @type {boolean}
- */
-
-
-/**
- * 弹出层位置计算函数
- */
-Popover.calcPosition = function(offsetTarget, offsetOverlay, placement, main, cross) {
+Popover.defaultProps.calcPosition = function(offsetTarget, offsetOverlay, placement, main, cross) {
   let classSet = {'position-absolute': true};
   let styleSet = {};
 
@@ -214,7 +195,19 @@ Popover.calcPosition = function(offsetTarget, offsetOverlay, placement, main, cr
   }
 
   return [classSet, styleSet];
-}
+};
+/**
+ * 设置弹出内容与目标组件的相对位置与布局，格式为 placement-main-cross，参见 calcPositionCallBack
+ * @attribute module:Popover.Popover.placement
+ * @type {string}
+ */
+/**
+ * 设置弹出内容的容器
+ * @attribute module:Popover.Popover.container
+ * @type {boolean}
+ */
+
+
 
 Object.defineProperty(Popover,"Popover",{ get:function(){ return Popover }, set:function(val){ Popover = val }})
 export default Popover;
@@ -253,6 +246,7 @@ let Overlay = class extends React.Component {
     return <Panel onMouseMove={e=>e.stopPropagation()} classNamePre={classNamePre} stylePre={stylePre} {...props} />
   }
 }
+
 Overlay.defaultProps = {};
 /**
  * 参见 calcPositionCallBack

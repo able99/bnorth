@@ -28,8 +28,8 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @augments button
  * @exportdefault
  */
-var Button = function Button(aprops) {
-  var props = (0, _BaseComponent.default)(aprops, Button);
+var _Button = function Button(aprops) {
+  var props = (0, _BaseComponent.default)(aprops, _Button);
   var classNamePre = 'outline-none- appearance-none- font-smoothing-antialiased- transition-set- vertical-align-middle position-relative line-height-1 cursor-pointer text-align-center padding-a-';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "b-style": "solid",
@@ -37,7 +37,15 @@ var Button = function Button(aprops) {
   }, props));
 };
 
-Button.defaultProps = {};
-Button.defaultProps.component = 'button';
-var _default = Button;
+_Button.defaultProps = {};
+_Button.defaultProps.component = 'button';
+Object.defineProperty(_Button, "Button", {
+  get: function get() {
+    return _Button;
+  },
+  set: function set(val) {
+    _Button = val;
+  }
+});
+var _default = _Button;
 exports.default = _default;

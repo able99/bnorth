@@ -22,7 +22,11 @@ let Button = aprops=>{
   
   return <Panel b-style="solid" classNamePre={classNamePre} {...props} />
 }
+
+
 Button.defaultProps = {}
 Button.defaultProps.component = 'button';
 
+
+Object.defineProperty(Button,"Button",{ get:function(){ return Button }, set:function(val){ Button = val }})
 export default Button;

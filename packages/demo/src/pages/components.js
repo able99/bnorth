@@ -62,11 +62,11 @@ let Component = aprops=>{
           mask: [true, 'primary'],
         }}/>
         <Groups.Show>
-          {props=><Panel>{listComponent()}<Backdrop {...props}/></Panel>}
+          {props=><Panel>{listComponent()}<Backdrop children="Backdrop" {...props}/></Panel>}
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="BackTop" desc="*返回顶部按钮">
+      <Groups.Group title="BackTop" desc="返回顶部按钮">
         <Groups.Show>
           {props=><Panel data-container><Panel bc-width-full bs-height="150px" bc-scrollable-y->{listComponent(40)}<BackTop param="100%" container {...props} /></Panel></Panel>}
         </Groups.Show>
@@ -78,7 +78,7 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Carousel" desc="!轮播">
+      <Groups.Group title="Carousel" desc="轮播-分页显示错误">
         <Groups.Props data={{
           controller: undefined,
           pager: undefined,
@@ -95,13 +95,16 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Dropload" desc="！上拉刷新">
+      <Groups.Group title="Dropload" desc="上拉刷新">
         <Groups.Show>
-          {props=><Panel bc-position-relative bc-scrollable-y- bs-height="150px">{listComponent(stateData.count||10)}<Dropload onLoad={()=>page.stateData.update({count: (stateData.count||10)+10})} {...props}>fab</Dropload></Panel>}
+          {props=><Panel bc-position-relative bc-scrollable-y- bs-height="150px">
+            {listComponent(stateData.count||10)}
+            <Dropload onLoad={()=>{page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({count: (stateData.count||10)+10, isLoading: false}), 3000)}} {...props} isLoading={stateData.isLoading}>loadding</Dropload>
+          </Panel>}
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Fab" desc="浮动按钮">
+      <Groups.Group title="Fab" desc="浮动按钮-不能使用 transform component">
         <Groups.Props data={{
           h: ['start','center','end'],
           v: ['start','center','end'],
@@ -113,10 +116,12 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Field" desc="!输入域">
+      <Groups.Group title="Field" desc="输入域-样式风格">
         <Groups.Show>
           <Groups.Sep title="text" />
           <Field type="text" />
+          <Groups.Sep title="text controlled" />
+          <Field type="text" onChange={e=>page.stateData.update({text: e.target.value})} value={stateData.text}/>
           <Groups.Sep title="static 空值" />
           <Field type="static" />
           <Groups.Sep title="static" />
@@ -126,7 +131,8 @@ let Component = aprops=>{
           <Groups.Sep title="checkbox" />
           <Field type="checkbox" />
           <Groups.Sep title="radio" />
-          <Field type="radio" />
+          <Field type="radio" bp-input-name="r1" />
+          <Field type="radio" bp-input-name="r1" />
           <Groups.Sep title="switch" />
           <Field type="switch" />
           <Groups.Sep title="file" />
@@ -155,10 +161,7 @@ let Component = aprops=>{
       </Groups.Group>
 
       <Groups.Group title="Landscape" desc="横屏">
-        <Groups.Sep title="容器宽度大于高度" />
-        <Groups.Show><Panel b-style="solid" b-theme="primary" bs-width={200} bs-height={100} data-container><Landscape>{listComponent()}</Landscape></Panel></Groups.Show>
-        <Groups.Sep title="容器高度大于宽度" />
-        <Groups.Show><Panel b-style="solid" b-theme="primary" bs-width={100} bs-height={200} data-container><Landscape>{listComponent()}</Landscape></Panel></Groups.Show>
+        <Groups.Show><Panel b-style="solid" b-theme="primary" bs-height={500} data-container><Landscape>{listComponent()}</Landscape></Panel></Groups.Show>
       </Groups.Group>
       
       <Groups.Group title="List" desc="列表">
@@ -175,7 +178,7 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Loader" desc="加载中">
+      <Groups.Group title="Loader" desc="加载中-动画改未非 svg 动画, loading 需要改名">
         <Groups.Props data={{
           type: ['circle','line'],
           isProgress: undefined,
@@ -191,25 +194,13 @@ let Component = aprops=>{
 
       <Groups.Group title="Mask" desc="蒙层">
         <Groups.Show>
-          <div style={{height: 500}} className="position-relative">
-            <Mask>body</Mask>
-          </div>
+          {props=><div style={{height: 500}} className="position-relative"><Mask {...props}>body</Mask></div>}
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Modal" desc="对话框">
+      <Groups.Group title="Modal" desc="对话框-关闭按钮封装">
         <Groups.Show>
-          <div style={{height: 500}} className="position-relative">
-            <Modal title="title" role="prompt" close>body</Modal>
-          </div>
-        </Groups.Show>
-      </Groups.Group>
-
-      <Groups.Group title="Notice" desc="通知栏">
-        <Groups.Show>
-          <div style={{height: 300}} className="position-relative">
-            <Notice>notice</Notice>
-          </div>
+          {props=><div style={{height: 500}} className="position-relative"><Modal title="title" role="prompt" close {...props}>body</Modal></div>}
         </Groups.Show>
       </Groups.Group>
 
@@ -219,6 +210,12 @@ let Component = aprops=>{
             <NavBar.Item icon="left" iconProps={{defaultName: '<'}}>back</NavBar.Item>
             <NavBar.Title>NavBar.Title</NavBar.Title>
           </NavBar>
+        </Groups.Show>
+      </Groups.Group>
+
+      <Groups.Group title="Notice" desc="通知栏">
+        <Groups.Show>
+          {props=><div style={{height: 300}} className="position-relative"><Notice {...props}>notice</Notice></div>}
         </Groups.Show>
       </Groups.Group>
 
@@ -253,9 +250,9 @@ let Component = aprops=>{
 
       <Groups.Group title="PullRefresh" desc="下拉刷新">
         <Groups.Show>
-          <Panel bc-width-full bs-height="150px" bc-scrollable-y->
-            <PullRefresh>{listComponent(20)}</PullRefresh>
-          </Panel>
+          {props=><div style={{height: 150}} className="scrollable-y-">
+            <PullRefresh onLoad={()=>{page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({isLoading: false}), 3000)}} isLoading={stateData.isLoading} {...props}>{listComponent(20)}</PullRefresh>
+          </div>}
         </Groups.Show>
       </Groups.Group>
 
@@ -299,7 +296,7 @@ let Component = aprops=>{
 
       <Groups.Group title="Touchable" desc="触控">
         <Groups.Show>
-          <Touchable onPanStart={()=>page.stateLog.update(['onPanStart'], {append: true})} bs-height={50} bc-bg-color-primary />
+          <Touchable recognizers={{'pan':{enable: true}}} onPan={()=>page.stateLog.update(['onPan'], {append: true})} bs-height={50} b-style="solid" b-theme="primary" />
         </Groups.Show>
         <Groups.Log logs={stateLog} />
       </Groups.Group>

@@ -13,8 +13,6 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
-
 var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
 
 var _Animation = _interopRequireDefault(require("./Animation"));
@@ -23,8 +21,8 @@ var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _Icon = require("./Icon");
 
-var Notice = function Notice(aprops) {
-  var _BaseComponent = (0, _BaseComponent2.default)(aprops, Notice),
+var _Notice = function Notice(aprops) {
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Notice),
       containerProps = _BaseComponent.containerProps,
       onDoClose = _BaseComponent.onDoClose,
       onFinished = _BaseComponent.onFinished,
@@ -62,7 +60,18 @@ var Notice = function Notice(aprops) {
     name: "close",
     defaultName: "x"
   }, closeProps), close === true ? undefined : close) : null)));
-}; // export default {
+};
+
+exports.Notice = _Notice;
+_Notice.defaultProps = {};
+Object.defineProperty(_Notice, "Notice", {
+  get: function get() {
+    return _Notice;
+  },
+  set: function set(val) {
+    exports.Notice = _Notice = val;
+  }
+}); // export default {
 //   _id: 'notice',
 //   onPluginMount(app) {
 //     app.notice = {
@@ -103,6 +112,3 @@ var Notice = function Notice(aprops) {
 //     delete app.notice;
 //   },
 // }
-
-
-exports.Notice = Notice;

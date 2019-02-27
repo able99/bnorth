@@ -40,4 +40,6 @@ AspectRatio.defaultProps = {};
  * @type {object}
  */
 
+
+Object.defineProperty(AspectRatio,"AspectRatio",{ get:function(){ return AspectRatio }, set:function(val){ AspectRatio = val }})
 export default AspectRatio;

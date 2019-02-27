@@ -29,12 +29,10 @@ var _Icon = require("./Icon");
 
 var _this = void 0;
 
-var Modal = function Modal(aprops) {
-  var _BaseComponent = (0, _BaseComponent2.default)(aprops, Modal),
+var _Modal = function Modal(aprops) {
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Modal),
       role = _BaseComponent.role,
       handleAction = _BaseComponent.handleAction,
-      _BaseComponent$in = _BaseComponent.in,
-      isIn = _BaseComponent$in === void 0 ? true : _BaseComponent$in,
       onFinished = _BaseComponent.onFinished,
       containerProps = _BaseComponent.containerProps,
       headerProps = _BaseComponent.headerProps,
@@ -44,14 +42,14 @@ var Modal = function Modal(aprops) {
       closeProps = _BaseComponent.closeProps,
       bodyProps = _BaseComponent.bodyProps,
       footerProps = _BaseComponent.footerProps,
-      _BaseComponent$button = _BaseComponent.buttons,
-      buttons = _BaseComponent$button === void 0 ? Modal.buttons[aprops.role] || [] : _BaseComponent$button,
+      buttons = _BaseComponent.buttons,
       children = _BaseComponent.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["role", "handleAction", "in", "onFinished", "containerProps", "headerProps", "title", "titleProps", "close", "closeProps", "bodyProps", "footerProps", "buttons", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["role", "handleAction", "onFinished", "containerProps", "headerProps", "title", "titleProps", "close", "closeProps", "bodyProps", "footerProps", "buttons", "children"]);
 
+  buttons = buttons[role] || [];
   children = typeof children === 'function' ? children(_this) : children;
   var classNamePre = {
-    'position-relative backface-hidden overflow-a-hidden bg-color-white': true,
+    'position-relative backface-hidden overflow-a-hidden': true,
     'square-full': role === 'popup',
     'border-radius-': role !== 'popup' && role !== 'document'
   };
@@ -63,21 +61,20 @@ var Modal = function Modal(aprops) {
     'flex-justify-center': role !== 'document',
     'flex-align-center': role !== 'document'
   };
-  var classNamePreHeader = 'width-full padding-a- border-set-bottom- flex-display-block flex-justify-between flex-align-center';
+  var classNamePreHeader = 'padding-a- flex-display-block flex-justify-between flex-align-center';
   var classNamePreTitle = {
     'flex-sub-flex-grow text-weight-bold text-size-lg': true,
     'text-align-center': !close
-  };
-  var classNamePreFooter = {
-    'border-set-top-': children
   };
   children = _react.default.createElement(_Panel.default, (0, _extends2.default)({
     onClick: function onClick(e) {
       return e.stopPropagation();
     },
+    "b-style": "white",
     stylePre: role !== 'document' && stylePre,
     classNamePre: role !== 'document' && classNamePre
   }, props), role === 'document' ? children : null, role !== 'document' && (title || close) ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    "bc-border-set-bottom-": Boolean(children || buttons.length),
     classNamePre: classNamePreHeader
   }, headerProps), title ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
     classNamePre: classNamePreTitle
@@ -88,17 +85,17 @@ var Modal = function Modal(aprops) {
     name: "close",
     defaultName: "x"
   }, closeProps), close === true ? undefined : close) : null) : null, role !== 'document' && children ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    "bc-padding-a-": true
+    "bc-padding-a-": true,
+    "bc-border-set-bottom-": Boolean(buttons.length)
   }, bodyProps), children) : null, role !== 'document' && buttons.length ? _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
-    type: "justify",
-    noOverlap: true,
-    classNamePre: classNamePreFooter
+    type: "justify"
   }, footerProps), buttons.map(function (v, i) {
     return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-      component: _Button.default,
       key: i,
-      "b-style": "hollow",
-      "bc-bg-none-": true,
+      component: _Button.default,
+      "b-style": "plain",
+      "bc-border-none-left--": Boolean(i),
+      "bc-border-set-left-": Boolean(i),
       onClick: function onClick() {
         return handleAction && handleAction(i);
       }
@@ -107,14 +104,14 @@ var Modal = function Modal(aprops) {
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     componentTransform: _Backdrop.default,
     handleAction: handleAction,
-    in: isIn,
     onFinished: onFinished,
     classNamePre: classNamePreContainer
   }, containerProps), children);
 };
 
-exports.Modal = Modal;
-Modal.buttons = {
+exports.Modal = _Modal;
+_Modal.defaultProps = {};
+_Modal.defaultProps.buttons = {
   alert: [{
     children: '确定'
   }],
@@ -124,6 +121,14 @@ Modal.buttons = {
     children: '确定'
   }]
 };
+Object.defineProperty(_Modal, "Modal", {
+  get: function get() {
+    return _Modal;
+  },
+  set: function set(val) {
+    exports.Modal = _Modal = val;
+  }
+});
 var _default = {
   pluginName: 'modal',
   pluginDependence: [],
@@ -179,7 +184,7 @@ var _default = {
         };
 
         props.children = app.modal._createContent(_id, Content, state);
-        return app.router.addPopLayer(_react.default.createElement(Modal, null), props, options);
+        return app.router.addPopLayer(_react.default.createElement(_Modal, null), props, options);
       },
       update: function update(_id, Content) {
         var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},

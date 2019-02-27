@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { transform } from '@bnorth/rich.css/lib/styles/animation'
-import BaseComponent, { domFindContainer } from './BaseComponent';
+import BaseComponent, { listen, domFindContainer } from './BaseComponent';
 import Panel from './Panel';
 
 
@@ -19,6 +19,11 @@ class Landscape extends React.Component
   componentDidMount() {
     this.container = domFindContainer(this, this.props.container);
     this.forceUpdate();
+    this.offResizeListener = listen( window, 'resize', ()=>this.forceUpdate(), true);
+  }
+
+  componentWillUnmount() {
+    this.offResizeListener&&this.offResizeListener();
   }
 
   render() {
@@ -46,4 +51,6 @@ Landscape.defaultProps = {}
  */
 Landscape.defaultProps.container = true;
 
+
+Object.defineProperty(Landscape,"Landscape",{ get:function(){ return Landscape }, set:function(val){ Landscape = val }})
 export default Landscape;

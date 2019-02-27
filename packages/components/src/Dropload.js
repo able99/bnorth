@@ -2,11 +2,10 @@
  * @module
  */
 import React from 'react';
-import classes from '@bnorth/rich.css/lib/classes'; 
 import BaseComponent from './BaseComponent';
-import ScrollSpy from './ScrollSpy';
 import Panel from './Panel';
-import './Loader';
+import ScrollSpy from './ScrollSpy';
+import { PanelLoader } from './Loader';
 
 
 /**
@@ -17,35 +16,20 @@ import './Loader';
  * @augments BaseComponent
  */
 class Dropload extends React.Component{
-  _handlePosChange(event, target) {
-    let { isLoading, onLoad, offset=35 } = this.props;
-    if(isLoading||!onLoad) return;
-
-    let distance = Math.abs(target.scrollTop+target.clientHeight-target.scrollHeight);
-    
-    if(distance<offset){
-      !this.trigger&&onLoad();
-      this.trigger = true;
-    }else {
-      this.trigger = false;
-    }
-  }
-
   render() {
-    let { 
-      disabled, isLoading, onLoad, offset,
-      component:Component=Panel.Loader, className, ...props 
-    } = BaseComponent(this.props, Dropload);
+    let { disabled, isLoading, onLoad, offset, ...props } = BaseComponent(this.props, Dropload);
     if(disabled) return null;
   
-    let classStr = 'padding-a-';
+    let classNamePre = 'padding-a-';
     
     return (
       <React.Fragment>
-        <ScrollSpy onPosChange={this._handlePosChange.bind(this)} />
-        <Component 
-          position='top' isProgress={false} bc-visibility-hide={!isLoading}
-          className={classes(classStr, className)} {...props} />
+        <ScrollSpy onPosChange={(event, target)=>{
+          if(isLoading||!onLoad) return;
+          let distance = Math.abs(target.scrollTop+target.clientHeight-target.scrollHeight);
+          if(distance<offset){ !this.trigger&&onLoad(); this.trigger = true }else { this.trigger = false }
+        }} />
+        <Panel componentTransform={PanelLoader} position='top' isProgress={false} bc-visibility-hide={!isLoading} classNamePre={classNamePre} {...props} />
       </React.Fragment>
     );
   }
@@ -73,12 +57,9 @@ Dropload.defaultProps = {};
  * @type {number|string}
  */
 Dropload.defaultProps.offset = 35;
-/**
- * 参见 BaseComponent
- */
-Dropload.defaultProps.component = Panel.Loader;
 
 
+Object.defineProperty(Dropload,"Dropload",{ get:function(){ return Dropload }, set:function(val){ Dropload = val }})
 export default Dropload;
 
 

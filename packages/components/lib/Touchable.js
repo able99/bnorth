@@ -1,13 +1,13 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -35,7 +35,7 @@ var _react = _interopRequireDefault(require("react"));
 
 var _hammerjs = _interopRequireDefault(require("hammerjs"));
 
-var _BaseComponent = require("./BaseComponent");
+var _BaseComponent = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -49,12 +49,6 @@ _hammerjs.default.defaults.preset.forEach(function (v) {
   v[1].enable = false;
 });
 
-var privateProps = {
-  direction: true,
-  options: true,
-  recognizers: true,
-  recognizeWith: true
-};
 var handlerToEvent = {
   action: 'tap press',
   onDoubleTap: 'doubletap',
@@ -81,6 +75,12 @@ var handlerToEvent = {
   onSwipeUp: 'swipeup',
   onSwipeDown: 'swipedown',
   onTap: 'tap'
+};
+var privateProps = {
+  direction: true,
+  options: true,
+  recognizers: true,
+  recognizeWith: true
 };
 Object.keys(handlerToEvent).forEach(function (v) {
   privateProps[v] = true;
@@ -142,9 +142,7 @@ function updateHammer(hammer, props) {
       });
     }
   });
-} // Touchable
-// ------------------------
-
+}
 /**
  * 支持手势的小面板
  * @component
@@ -185,14 +183,11 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props = this.props,
-          _this$props$component = _this$props.component,
-          Component = _this$props$component === void 0 ? _Panel.default : _this$props$component,
-          props = (0, _objectWithoutProperties2.default)(_this$props, ["component"]);
+      var props = (0, _BaseComponent.default)(this.props, Touchable);
       Object.keys(props).forEach(function (v) {
         if (privateProps[v]) delete props[v];
       });
-      return _react.default.createElement(Component, props);
+      return _react.default.createElement(_Panel.default, props);
     }
   }]);
   return Touchable;
@@ -398,6 +393,13 @@ Touchable.defaultProps = {};
  * @type {Panel.module:Touchable~RecognizerCallback}
  */
 
-Touchable.defaultProps.component = _Panel.default;
+Object.defineProperty(Touchable, "Touchable", {
+  get: function get() {
+    return Touchable;
+  },
+  set: function set(val) {
+    Touchable = val;
+  }
+});
 var _default = Touchable;
 exports.default = _default;

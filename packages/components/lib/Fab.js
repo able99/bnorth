@@ -89,6 +89,7 @@ function (_React$Component) {
       }, (0, _defineProperty2.default)(_classNamePre, "margin-top-".concat(margin !== true ? margin : ''), margin && v === 'start'), (0, _defineProperty2.default)(_classNamePre, "margin-left-".concat(margin !== true ? margin : ''), margin && h === 'start'), (0, _defineProperty2.default)(_classNamePre, "margin-bottom-".concat(margin !== true ? margin : ''), margin && v === 'end'), (0, _defineProperty2.default)(_classNamePre, "margin-right-".concat(margin !== true ? margin : ''), margin && h === 'end'), (0, _defineProperty2.default)(_classNamePre, 'translate-center-x', h === 'center' && v !== 'center'), (0, _defineProperty2.default)(_classNamePre, 'translate-center-y', h !== 'center' && v === 'center'), (0, _defineProperty2.default)(_classNamePre, 'translate-center-a', h === 'center' && v === 'center'), (0, _defineProperty2.default)(_classNamePre, 'offset-left-center', h === 'center'), (0, _defineProperty2.default)(_classNamePre, 'offset-top-center', v === 'center'), (0, _defineProperty2.default)(_classNamePre, 'offset-left-start', h === 'start'), (0, _defineProperty2.default)(_classNamePre, 'offset-right-start', h === 'end'), (0, _defineProperty2.default)(_classNamePre, 'offset-top-start', v === 'start'), (0, _defineProperty2.default)(_classNamePre, 'offset-bottom-start', v === 'end'), _classNamePre);
 
       var component = _react.default.createElement(_Panel.default, (0, _extends2.default)({
+        component: _Button.default,
         classNamePre: classNamePre
       }, props));
 
@@ -126,6 +127,13 @@ Fab.defaultProps.margin = true;
  * @type {boolean|string}
  */
 
-Fab.defaultProps.component = _Button.default;
+Object.defineProperty(Fab, "Fab", {
+  get: function get() {
+    return Fab;
+  },
+  set: function set(val) {
+    Fab = val;
+  }
+});
 var _default = Fab;
 exports.default = _default;

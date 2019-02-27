@@ -155,6 +155,8 @@ var _Item = function Item(aprops) {
     classNamePre: classNamePre,
     onClick: onClick
   }, props), media ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    "bc-display-inline-block": true,
+    "bc-line-height-0": true,
     "bc-margin-right-": true
   }, mediaProps), media === true ? undefined : media) : null, _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
     itemSelected: true
@@ -164,6 +166,8 @@ var _Item = function Item(aprops) {
     "b-size": hasTheme && "sm",
     "b-theme": hasTheme && "light"
   }, descProps), desc === true ? undefined : desc) : null, children), after ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    "bc-display-inline-block": true,
+    "bc-line-height-0": true,
     "b-size": hasTheme && "sm",
     "b-theme": hasTheme && "light"
   }, afterProps), after === true ? undefined : after) : null, arrow || autoArrow && onClick ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
@@ -175,14 +179,6 @@ var _Item = function Item(aprops) {
   }, arrowProps), arrow === true ? undefined : arrow) : null);
 };
 
-Object.defineProperty(_List, "Item", {
-  get: function get() {
-    return _Item;
-  },
-  set: function set(val) {
-    _Item = val;
-  }
-});
 _Item.defaultProps = {};
 /**
  * 参见 List
@@ -273,3 +269,11 @@ _Item.defaultProps = {};
  */
 
 _Item.defaultProps.autoArrow = true;
+Object.defineProperty(_List, "Item", {
+  get: function get() {
+    return _Item;
+  },
+  set: function set(val) {
+    _Item = val;
+  }
+});

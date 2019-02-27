@@ -3,45 +3,31 @@
  */
 import React from 'react';
 import BaseComponent from './BaseComponent';
+import Panel from './Panel';
 import Animation from './Animation';
 
 
 /**
  * 背景组件
  * 
- * Backdrop 会填满具有 relative，absolute 或 fixed 位置属性的父元素，并提供背景样式和点击操作等
+ * Backdrop 会填满第一个具有 relative，absolute 或 fixed 位置属性的上级元素，并提供背景样式和点击操作等
  * @component 
  * @exportdefault
  * @augments module:BaseComponent.BaseComponent
  * @augments module:Panel.Panel
+ * @augments module:Animation.Animation
  */
 let Backdrop = aprops=>{
-  let { mask, transition:Transition, ...props } = BaseComponent(aprops, Backdrop);
+  let props = BaseComponent(aprops, Backdrop);
 
   let classNamePre = {
-    'position-absolute square-full offset-a-start overflow-a-hidden': true,
-    ['bg-color-'+(mask===true?'mask':mask)]: mask,
+    'position-absolute square-full offset-a-start overflow-a-hidden bg-color-mask': true,
   }
 
-  return <Transition type="fade" classNamePre={classNamePre} {...props} />;
+  return <Panel componentTransform={Animation} type="fade" classNamePre={classNamePre} {...props} />;
 }
 
 Backdrop.defaultProps = {};
-/**
- * 设置背景的主题色，true 表示设置默认主题 mask
- * @type {boolean|string}
- */
-Backdrop.defaultProps.mask = true;
-/**
- * 设置背景显示的进入和离开动画组件
- * @type {component}
- */
-Backdrop.defaultProps.transition = Animation;
-/**
- * 动画参数，参见 Animation
- * @attribute module:Backdrop.Backdrop.transition*
- */
 
-
-
+Object.defineProperty(Backdrop,"Backdrop",{ get:function(){ return Backdrop }, set:function(val){ Backdrop = val }})
 export default Backdrop;

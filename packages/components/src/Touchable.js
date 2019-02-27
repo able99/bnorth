@@ -3,19 +3,12 @@
  */
 import React from 'react';
 import Hammer from 'hammerjs';
-import { domIsTouch, domFindNode } from './BaseComponent';
+import BaseComponent, { domIsTouch, domFindNode } from './BaseComponent';
 import Panel from './Panel';
 
 
 Hammer.defaults.inputClass = domIsTouch?Hammer.TouchInput:Hammer.TouchMouseInput;
 Hammer.defaults.preset.forEach(v=>{ !v[1]&&v.push({}); v[1].enable = false });
-
-let privateProps = {
-  direction: true,
-  options: true,
-  recognizers: true,
-  recognizeWith: true,
-};
 
 const handlerToEvent = {
   action: 'tap press',
@@ -45,10 +38,15 @@ const handlerToEvent = {
   onTap: 'tap',
 };
 
+let privateProps = {
+  direction: true,
+  options: true,
+  recognizers: true,
+  recognizeWith: true,
+};
 Object.keys(handlerToEvent).forEach(v=>{
   privateProps[v] = true;
 });
-
 
 function updateHammer(hammer, props) {
   Object.entries(props).forEach(([k,v])=>{
@@ -82,9 +80,6 @@ function updateHammer(hammer, props) {
 }
 
 
-// Touchable
-// ------------------------
-
 /**
  * 支持手势的小面板
  * @component
@@ -109,9 +104,10 @@ class Touchable extends React.Component{
   }
 
   render() {
-    let {component:Component=Panel, ...props} = this.props;
+    let props = BaseComponent(this.props, Touchable);
     Object.keys(props).forEach(v=>{ if(privateProps[v]) delete props[v] });
-    return <Component {...props} />
+
+    return <Panel {...props} />
   }
 }
 
@@ -287,6 +283,7 @@ Touchable.defaultProps = {};
  * @attribute Panel.module:Touchable~Touchable.onTap
  * @type {Panel.module:Touchable~RecognizerCallback}
  */
-Touchable.defaultProps.component = Panel;
 
+
+Object.defineProperty(Touchable,"Touchable",{ get:function(){ return Touchable }, set:function(val){ Touchable = val }})
 export default Touchable;

@@ -28,8 +28,8 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @augments module:BaseComponent.BaseComponent
  * @augments module:Panel.Panel
  */
-var AspectRatio = function AspectRatio(aprops) {
-  var _BaseComponent = (0, _BaseComponent2.default)(aprops, AspectRatio),
+var _AspectRatio = function AspectRatio(aprops) {
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, _AspectRatio),
       ratio = _BaseComponent.ratio,
       innerProps = _BaseComponent.innerProps,
       children = _BaseComponent.children,
@@ -46,7 +46,7 @@ var AspectRatio = function AspectRatio(aprops) {
   }, innerProps), children));
 };
 
-AspectRatio.defaultProps = {};
+_AspectRatio.defaultProps = {};
 /**
  * 设置纵横比
  * @attribute module:AspectRatio.AspectRatio.ratio
@@ -59,5 +59,13 @@ AspectRatio.defaultProps = {};
  * @type {object}
  */
 
-var _default = AspectRatio;
+Object.defineProperty(_AspectRatio, "AspectRatio", {
+  get: function get() {
+    return _AspectRatio;
+  },
+  set: function set(val) {
+    _AspectRatio = val;
+  }
+});
+var _default = _AspectRatio;
 exports.default = _default;

@@ -8,17 +8,18 @@ import { PanelIcon } from './Icon';
 
 export let Modal = aprops=>{
   let {
-    role, handleAction, in:isIn=true, onFinished,
+    role, handleAction, onFinished,
     containerProps, 
     headerProps, title, titleProps, close, closeProps, 
     bodyProps, 
-    footerProps, buttons=Modal.buttons[aprops.role]||[],
+    footerProps, buttons,
     children, ...props
   } = BaseComponent(aprops, Modal);
+  buttons = buttons[role]||[];
   children = typeof(children)==='function'?children(this):children;
 
   let classNamePre = {
-    'position-relative backface-hidden overflow-a-hidden bg-color-white': true,
+    'position-relative backface-hidden overflow-a-hidden': true,
     'square-full': role==='popup',
     'border-radius-': role!=='popup'&&role!=='document',
   };
@@ -26,40 +27,45 @@ export let Modal = aprops=>{
     width: role!=='popup'?'80%':undefined,
   };
   let classNamePreContainer = { 'flex-display-block': role!=='document', 'flex-justify-center': role!=='document', 'flex-align-center': role!=='document', }
-  let classNamePreHeader = 'width-full padding-a- border-set-bottom- flex-display-block flex-justify-between flex-align-center';
+  let classNamePreHeader = 'padding-a- flex-display-block flex-justify-between flex-align-center';
   let classNamePreTitle = {
     'flex-sub-flex-grow text-weight-bold text-size-lg': true,
     'text-align-center': !close,  
   }
-  let classNamePreFooter = {
-    'border-set-top-': children,
-  }
 
   children = (
-    <Panel onClick={e=>e.stopPropagation()} stylePre={role!=='document'&&stylePre} classNamePre={role!=='document'&&classNamePre} {...props}>
+    <Panel onClick={e=>e.stopPropagation()} b-style="white" stylePre={role!=='document'&&stylePre} classNamePre={role!=='document'&&classNamePre} {...props}>
       {role==='document'?children:null}
       {role!=='document'&&(title||close)?(
-        <Panel classNamePre={classNamePreHeader} {...headerProps}>
+        <Panel bc-border-set-bottom-={Boolean(children||buttons.length)} classNamePre={classNamePreHeader} {...headerProps}>
           {title?<Panel classNamePre={classNamePreTitle} {...titleProps}>{title}</Panel>:null}
           {close?<PanelIcon inline bc-cursor-pointer onClick={handleAction} name="close" defaultName="x" {...closeProps}>{close===true?undefined:close}</PanelIcon>:null}
         </Panel>
       ):null}
-      {role!=='document'&&children?(<Panel bc-padding-a- {...bodyProps}>{children}</Panel>):null}
+      {role!=='document'&&children?(<Panel bc-padding-a- bc-border-set-bottom-={Boolean(buttons.length)} {...bodyProps}>{children}</Panel>):null}
       {role!=='document'&&buttons.length?(
-        <PanelContainer type="justify" noOverlap classNamePre={classNamePreFooter} {...footerProps}>
-          {buttons.map((v,i)=><Panel component={Button} key={i} b-style="hollow" bc-bg-none- onClick={()=>handleAction&&handleAction(i)} {...v} />)}
+        <PanelContainer type="justify" {...footerProps}>
+          {buttons.map((v,i)=><Panel key={i} component={Button} b-style="plain" bc-border-none-left--={Boolean(i)} bc-border-set-left-={Boolean(i)} onClick={()=>handleAction&&handleAction(i)} {...v} />)}
         </PanelContainer>
       ):null}
     </Panel>
   )
   
-  return <Panel componentTransform={Backdrop} handleAction={handleAction} in={isIn} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
+  return <Panel componentTransform={Backdrop} handleAction={handleAction} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
 }
 
-Modal.buttons = {
+Modal.defaultProps = {}
+Modal.defaultProps.buttons = {
   alert: [{children: '确定'}], 
   prompt: [{children: '取消'},{children: '确定'}],
 }
+
+Object.defineProperty(Modal,"Modal",{ get:function(){ return Modal }, set:function(val){ Modal = val }})
+
+
+
+
+
 
 
 export default {

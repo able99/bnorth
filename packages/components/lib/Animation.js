@@ -35,10 +35,12 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @exportdefault
  * @augments module:BaseComponent.BaseComponent
  * @augments module:Panel.Panel
+ * @see {@link https://reactcommunity.org/react-transition-group/transition} react-transition-group
  */
-var Animation = function Animation(aprops) {
-  var _BaseComponent = (0, _BaseComponent2.default)(aprops, Animation),
+var _Animation = function Animation(aprops) {
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Animation),
       type = _BaseComponent.type,
+      types = _BaseComponent.types,
       onFinished = _BaseComponent.onFinished,
       _BaseComponent$transi = _BaseComponent.transitionProps;
 
@@ -50,8 +52,8 @@ var Animation = function Animation(aprops) {
       onExiting = _BaseComponent$transi.onExiting,
       onExited = _BaseComponent$transi.onExited,
       transitionProps = (0, _objectWithoutProperties2.default)(_BaseComponent$transi, ["onEnter", "onEntering", "onEntered", "onExit", "onExiting", "onExited"]),
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "onFinished", "transitionProps"]);
-  type = Animation.types[type] || Animation.types['none'];
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "types", "onFinished", "transitionProps"]);
+  type = types[type] || types['none'];
   return _react.default.createElement(_Transition.default, (0, _extends2.default)({
     appear: true,
     in: props.in,
@@ -67,31 +69,31 @@ var Animation = function Animation(aprops) {
   });
 };
 
-Animation.defaultProps = {};
+_Animation.defaultProps = {};
 /**
  * 设置动画的类型
  * @type {boolean}
  */
 
-Animation.defaultProps.type = 'fade';
+_Animation.defaultProps.type = 'fade';
 /**
  * 设置是否进入动画
  * @type {boolean}
  */
 
-Animation.defaultProps.in = true;
+_Animation.defaultProps.in = true;
 /**
  * 设置动画时间，单位是毫秒
  * @type {number}
  */
 
-Animation.defaultProps.timeout = 350;
+_Animation.defaultProps.timeout = 350;
 /**
  * 设置折叠动画的方向，width 与 height
  * @type {string}
  */
 
-Animation.defaultProps.dimension = "height";
+_Animation.defaultProps.dimension = "height";
 /**
  * 设置动画完成时的回调函数
  * @attribute module:Animation.Animation.onFinished
@@ -101,11 +103,10 @@ Animation.defaultProps.dimension = "height";
 /**
  * 设置动画组件的属性
  * @attribute module:Animation.Animation.transitionProps
- * @see {@link https://reactcommunity.org/react-transition-group/transition} react-transition-group
  * @type {object}
  */
 
-Animation.types = {
+_Animation.defaultProps.types = {
   none: {
     getProps: function getProps(state, props) {
       delete props.in;
@@ -164,5 +165,13 @@ Animation.types = {
     }
   }
 };
-var _default = Animation;
+Object.defineProperty(_Animation, "Animation", {
+  get: function get() {
+    return _Animation;
+  },
+  set: function set(val) {
+    _Animation = val;
+  }
+});
+var _default = _Animation;
 exports.default = _default;

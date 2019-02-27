@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -29,15 +31,13 @@ var _react = _interopRequireDefault(require("react"));
 
 var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
 
-var _Panel = _interopRequireDefault(require("./Panel"));
+var _Panel = _interopRequireWildcard(require("./Panel"));
 
 var _Icon = require("./Icon");
 
 /**
  * @module
  */
-// TabBar
-// -------------------
 
 /**
  * 标签页组件
@@ -93,20 +93,17 @@ function (_React$Component) {
           onAction = _BaseComponent.onAction,
           navProps = _BaseComponent.navProps,
           containerProps = _BaseComponent.containerProps,
-          Component = _BaseComponent.component,
-          componentPanel = _BaseComponent.componentPanel,
           children = _BaseComponent.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["selectedIndex", "selectedIndexDefault", "onAction", "navProps", "containerProps", "component", "componentPanel", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["selectedIndex", "selectedIndexDefault", "onAction", "navProps", "containerProps", "children"]);
 
       children = _react.default.Children.toArray(children).filter(function (v) {
         return v;
       });
-      return _react.default.createElement(Component, (0, _extends2.default)({
-        component: componentPanel,
+      return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
         type: "primary",
-        position: "top",
+        direction: "v",
         align: "stretch"
-      }, props), _react.default.createElement(_Panel.default.Container, (0, _extends2.default)({
+      }, props), _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
         type: "justify",
         selectedIndex: selectedIndex
       }, navProps), children.map(function (v, i) {
@@ -115,27 +112,32 @@ function (_React$Component) {
             _onClick = _v$props.onClick,
             children = _v$props.children,
             props = (0, _objectWithoutProperties2.default)(_v$props, ["event", "onClick", "children"]);
-        return _react.default.createElement(_Icon.PanelIcon, (0, _extends2.default)({
+        return _react.default.createElement(_Panel.default, (0, _extends2.default)({
           key: v.key || i,
+          componentTransform: _Icon.PanelIcon,
           selected: selectedIndex === i,
           hasSelection: true,
           onClick: function onClick(e) {
-            _this2._handleAction(i);
-
-            _onClick && _onClick(e);
+            return _this2.setState({
+              selectedIndex: i
+            }, function () {
+              if (onAction) onAction(i, v.props, event);
+              if (_onClick) _onClick(e);
+            });
           }
         }, props));
-      })), _react.default.createElement(_Panel.default.Container, (0, _extends2.default)({
+      })), _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
         itemSelected: true,
+        type: "scroll",
         selectedIndex: selectedIndex,
-        onSelect: function onSelect(index) {
-          return _this2._handleAction(index);
+        onSelectedChange: function onSelectedChange(i, props) {
+          return _this2.setState({
+            selectedIndex: i
+          }, function () {
+            if (onAction) onAction(i, props, props && props.event);
+          });
         }
-      }, containerProps), children.map(function (v, i) {
-        return _react.default.createElement(_Panel.default, {
-          key: v.key || i
-        }, v.props.children);
-      })));
+      }, containerProps), children));
     }
   }]);
   return TabBar;
@@ -180,10 +182,23 @@ TabBar.defaultProps = {};
  * @type {object}
  */
 
-/**
- * 设置映射组件，采用 Panel.Container 类型为 primary
- */
-
-TabBar.defaultProps.component = _Panel.default.Container;
+Object.defineProperty(TabBar, "TabBar", {
+  get: function get() {
+    return TabBar;
+  },
+  set: function set(val) {
+    TabBar = val;
+  }
+});
 var _default = TabBar;
 exports.default = _default;
+Object.defineProperty(TabBar, "Item", {
+  get: function get() {
+    return _Panel.default;
+  },
+  set: function set(val) {
+    _Panel.default = (val, function () {
+      throw new Error('"' + "Panel" + '" is read-only.');
+    }());
+  }
+});

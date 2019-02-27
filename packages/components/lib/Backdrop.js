@@ -9,13 +9,11 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
-
 var _react = _interopRequireDefault(require("react"));
 
-var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
+var _BaseComponent = _interopRequireDefault(require("./BaseComponent"));
+
+var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _Animation = _interopRequireDefault(require("./Animation"));
 
@@ -26,44 +24,33 @@ var _Animation = _interopRequireDefault(require("./Animation"));
 /**
  * 背景组件
  * 
- * Backdrop 会填满具有 relative，absolute 或 fixed 位置属性的父元素，并提供背景样式和点击操作等
+ * Backdrop 会填满第一个具有 relative，absolute 或 fixed 位置属性的上级元素，并提供背景样式和点击操作等
  * @component 
  * @exportdefault
  * @augments module:BaseComponent.BaseComponent
  * @augments module:Panel.Panel
+ * @augments module:Animation.Animation
  */
-var Backdrop = function Backdrop(aprops) {
-  var _BaseComponent = (0, _BaseComponent2.default)(aprops, Backdrop),
-      mask = _BaseComponent.mask,
-      Transition = _BaseComponent.transition,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["mask", "transition"]);
-
-  var classNamePre = (0, _defineProperty2.default)({
-    'position-absolute square-full offset-a-start overflow-a-hidden': true
-  }, 'bg-color-' + (mask === true ? 'mask' : mask), mask);
-  return _react.default.createElement(Transition, (0, _extends2.default)({
+var _Backdrop = function Backdrop(aprops) {
+  var props = (0, _BaseComponent.default)(aprops, _Backdrop);
+  var classNamePre = {
+    'position-absolute square-full offset-a-start overflow-a-hidden bg-color-mask': true
+  };
+  return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    componentTransform: _Animation.default,
     type: "fade",
     classNamePre: classNamePre
   }, props));
 };
 
-Backdrop.defaultProps = {};
-/**
- * 设置背景的主题色，true 表示设置默认主题 mask
- * @type {boolean|string}
- */
-
-Backdrop.defaultProps.mask = true;
-/**
- * 设置背景显示的进入和离开动画组件
- * @type {component}
- */
-
-Backdrop.defaultProps.transition = _Animation.default;
-/**
- * 动画参数，参见 Animation
- * @attribute module:Backdrop.Backdrop.transition*
- */
-
-var _default = Backdrop;
+_Backdrop.defaultProps = {};
+Object.defineProperty(_Backdrop, "Backdrop", {
+  get: function get() {
+    return _Backdrop;
+  },
+  set: function set(val) {
+    _Backdrop = val;
+  }
+});
+var _default = _Backdrop;
 exports.default = _default;

@@ -2,7 +2,8 @@
  * @module
  */
 import React from 'react';
-import { listen, domOffset, domFindNode, domFindScrollContainer } from './BaseComponent';
+import BaseComponent, { listen, domOffset, domFindNode, domFindScrollContainer } from './BaseComponent';
+import Panel from './Panel';
 
 
 /**
@@ -11,11 +12,6 @@ import { listen, domOffset, domFindNode, domFindScrollContainer } from './BaseCo
  * @exportdefault
  */
 class ScrollSpy extends React.Component {
-  constructor(props) {
-    super(props);
-    this.relative = '';
-  }
-
   _getTargetOffset() {
     this.targetOffset = null;
     let { target=true, onRelativeChange } = this.props;
@@ -63,6 +59,7 @@ class ScrollSpy extends React.Component {
   }
 
   componentDidMount() {
+    this.relative = '';
     this.container = domFindScrollContainer(this, this.props.container, this.props.horizontal);
     this._getTargetOffset();
 
@@ -98,8 +95,8 @@ class ScrollSpy extends React.Component {
   }
 
   render() {
-    let { component:Component, style, ...props} = this.props;
-    return <Component style={{ fontSize: 0, ...style}} {...props} />;
+    let props = BaseComponent(this.props, ScrollSpy);
+    return <Panel component="span" stylePre={{ fontSize: 0}} {...props} />;
   }
 }
 
@@ -155,9 +152,7 @@ ScrollSpy.defaultProps.target = true;
  * @attribute module:ScrollSpy.ScrollSpy.onPosChange
  * @type {module:ScrollSpy~onPosChangeCallback}
  */
-/**
- * 参见 BaseComponent
- */
-ScrollSpy.defaultProps.component = 'span';
 
+
+Object.defineProperty(ScrollSpy,"ScrollSpy",{ get:function(){ return ScrollSpy }, set:function(val){ ScrollSpy = val }})
 export default ScrollSpy;

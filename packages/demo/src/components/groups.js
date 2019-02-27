@@ -133,7 +133,7 @@ Groups.Log = aprops=>{
   return (
     <div>
       <div className="border-set-bottom- padding-a-"><strong>日志</strong></div>
-      <div className="border-set-bottom- padding-a-">{logs.map(v=><div>{v}</div>)}</div>
+      <div className="border-set-bottom- padding-a- scrollable-y-" style={{height: 100}}>{logs.map(v=><div>{v}</div>)}</div>
     </div>
   )
 }

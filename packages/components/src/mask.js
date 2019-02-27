@@ -3,7 +3,6 @@
  * @module
  */
 import React from 'react';
-import classes from '@bnorth/rich.css/lib/classes'; 
 import BaseComponent from './BaseComponent'
 import Panel from './Panel';
 import Backdrop from './Backdrop';
@@ -17,12 +16,9 @@ import { PanelLoader } from './Loader';
  * @export
  */
 export let Mask = aprops=>{
-  let {
-    loaderProps,
-    children, ...props
-  } = BaseComponent(aprops, Mask);
+  let { loaderProps, children, ...props } = BaseComponent(aprops, Mask);
 
-  let classNamePre = 'flex-display-block flex-direction-v flex-justify-center flex-align-center text-color-white';
+  let classNamePre = 'flex-display-block flex-direction-v flex-justify-center flex-align-center';
 
   return (
     <Panel componentTransform={Backdrop} classNamePre={classNamePre} {...props}>
@@ -37,6 +33,8 @@ Mask.defaultProps = {};
  * @attribute module:mask.Mask.loaderProps
  * @type {object}
  */
+
+Object.defineProperty(Mask,"Mask",{ get:function(){ return Mask }, set:function(val){ Mask = val }})
 
 
 /**

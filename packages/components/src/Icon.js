@@ -2,7 +2,6 @@
  * @module
  */
 import React from 'react';
-import classes from '@bnorth/rich.css/lib/classes'; 
 import { transform } from '@bnorth/rich.css/lib/styles/animation'
 import BaseComponent from './BaseComponent';
 import Panel from './Panel';
@@ -19,6 +18,7 @@ import Panel from './Panel';
  */
 let Icon = aprops=>{
   let {
+    names, nameMaps, shapes,
     name, src, char, shape, rotate,
     component, ...props
   } = BaseComponent(aprops, Icon);
@@ -28,13 +28,12 @@ let Icon = aprops=>{
 
   if(name) {
     let [nameSvg, defaultNameSvg] = name.split(':');
-    nameSvg = Icon._maps[nameSvg]||nameSvg;
-    if(!Icon._names.includes(nameSvg)) { char = defaultNameSvg||nameSvg; nameSvg = undefined }
+    nameSvg = nameMaps[nameSvg]||nameSvg;
+    if(!names.includes(nameSvg)) { char = defaultNameSvg||nameSvg; nameSvg = undefined }
     name = nameSvg;
   }
-  
   if(shape) {
-    shape = Icon._shapes[shape]||shape;
+    shape = shapes[shape]||shape;
   }
 
   if(name) {
@@ -96,16 +95,19 @@ Icon.defaultProps = {};
 
 /**
  * svg 图标名字数组
+ * @type {string[]}
  */
-Icon._names = [];
+Icon.defaultProps.names = [];
 /**
  * svg 图标的名称映射
+ * @type {object}
  */
-Icon._maps = {};
+Icon.defaultProps.nameMaps = {};
 /**
  * 图形图标的图形函数与图形路径映射
+ * @type {object}
  */
-Icon._shapes = {
+Icon.defaultProps.shapes = {
   triangle: 'M50 10 L90 90 L10 90 Z',
 };
 
@@ -118,7 +120,7 @@ Icon.appendSvgIcons = function(svgStr) {
   x.innerHTML = svgStr;
   let svg = x.querySelector('svg');
   if(!svg) return;
-  Icon._names = [...Icon._names, ...Array.from(svg.querySelectorAll('defs symbol')).map(v=>v.id)];
+  Icon.defaultProps.names = [...Icon.defaultProps.names, ...Array.from(svg.querySelectorAll('defs symbol')).map(v=>v.id)];
   return document.body.appendChild(svg);
 }
 /**
@@ -130,12 +132,13 @@ Icon.appendMap = function(val, name) {
   if(!val) return;
 
   if(typeof val==='object') {
-    Icon._maps = {...Icon._maps, ...val}
+    Icon.defaultProps.nameMaps = {...Icon.defaultProps.nameMaps, ...val}
   }else{
-    Icon._maps[name] = val;
+    Icon.defaultProps.nameMaps[name] = val;
   }
 }
 
+Object.defineProperty(Icon,"Icon",{ get:function(){ return Icon }, set:function(val){ Icon = val }})
 export default Icon;
 
 
@@ -147,7 +150,7 @@ export default Icon;
  * @augments module:BaseComponent.BaseComponent
  * @augments module:Container~Container
  */
-let PanelIcon = aprops=>{
+export let PanelIcon = aprops=>{
   let {
     selected, 
     name, src, char, shape, iconSelected, rotate, iconProps, 
@@ -196,4 +199,4 @@ PanelIcon.defaultProps = {};
  * @type {object}
  */
 
-export { PanelIcon };
+Object.defineProperty(Icon,"PanelIcon",{ get:function(){ return PanelIcon }, set:function(val){ PanelIcon = val }})

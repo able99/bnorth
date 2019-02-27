@@ -57,8 +57,18 @@ function (_React$Component) {
   (0, _createClass2.default)(Landscape, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      var _this = this;
+
       this.container = (0, _BaseComponent2.domFindContainer)(this, this.props.container);
       this.forceUpdate();
+      this.offResizeListener = (0, _BaseComponent2.listen)(window, 'resize', function () {
+        return _this.forceUpdate();
+      }, true);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      this.offResizeListener && this.offResizeListener();
     }
   }, {
     key: "render",
@@ -97,5 +107,13 @@ Landscape.defaultProps = {};
  */
 
 Landscape.defaultProps.container = true;
+Object.defineProperty(Landscape, "Landscape", {
+  get: function get() {
+    return Landscape;
+  },
+  set: function set(val) {
+    Landscape = val;
+  }
+});
 var _default = Landscape;
 exports.default = _default;

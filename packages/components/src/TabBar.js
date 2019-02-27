@@ -3,12 +3,9 @@
  */
 import React from 'react';
 import BaseComponent from './BaseComponent';
-import Panel from './Panel';
+import Panel, { PanelContainer } from './Panel';
 import { PanelIcon } from './Icon';
 
-
-// TabBar
-// -------------------
 
 /**
  * 标签页组件
@@ -37,27 +34,28 @@ class TabBar extends React.Component {
     let {
       selectedIndex=this.state.selectedIndex, selectedIndexDefault, onAction, 
       navProps, containerProps, 
-      component:Component, componentPanel, children, ...props
+      children, ...props
     } = BaseComponent(this.props, TabBar, {isContainer: true});
-
     children = React.Children.toArray(children).filter(v=>v);
 
     return (
-      <Component component={componentPanel} type="primary" position="top" align="stretch" {...props}>
-        <Panel.Container type="justify" selectedIndex={selectedIndex} {...navProps}>
+      <PanelContainer type="primary" direction="v" align="stretch" {...props}>
+        <PanelContainer type="justify" selectedIndex={selectedIndex} {...navProps}>
           {children.map((v,i)=>{
             let {event, onClick, children, ...props} = v.props;
-            return (
-              <PanelIcon
-                key={v.key||i} selected={selectedIndex===i} hasSelection
-                onClick={e=>{this._handleAction(i);onClick&&onClick(e)}} {...props} />
-            )
+            return <Panel 
+              key={v.key||i} componentTransform={PanelIcon} selected={selectedIndex===i} hasSelection
+              onClick={e=>this.setState({selectedIndex: i}, ()=>{ if(onAction) onAction(i, v.props, event); if(onClick) onClick(e) })}
+              {...props} />
           })}
-        </Panel.Container>
-        <Panel.Container itemSelected selectedIndex={selectedIndex} onSelect={index=>this._handleAction(index)}  {...containerProps}>
-          {children.map((v,i)=><Panel key={v.key||i}>{v.props.children}</Panel>)}
-        </Panel.Container>
-      </Component>
+        </PanelContainer>
+        <PanelContainer 
+          itemSelected type="scroll" selectedIndex={selectedIndex} 
+          onSelectedChange={(i,props)=>this.setState({selectedIndex: i}, ()=>{ if(onAction) onAction(i, props, props&&props.event)})}
+          {...containerProps}>
+          {children}
+        </PanelContainer>
+      </PanelContainer>
     );
   }
 }
@@ -95,9 +93,10 @@ TabBar.defaultProps = {}
  * @attribute module:TabBar.TabBar.containerProps
  * @type {object}
  */
-/**
- * 设置映射组件，采用 Panel.Container 类型为 primary
- */
-TabBar.defaultProps.component = Panel.Container;
 
+Object.defineProperty(TabBar,"TabBar",{ get:function(){ return TabBar }, set:function(val){ TabBar = val }})
 export default TabBar;
+
+
+
+Object.defineProperty(TabBar,"Item",{ get:function(){ return Panel }, set:function(val){ Panel = val }})

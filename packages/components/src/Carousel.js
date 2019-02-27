@@ -72,24 +72,42 @@ class Carousel extends React.Component {
   render() {
     let {
       selectedIndexDefault, interval, autoPlay, pauseOnHover,
-      controller:ControllerComponent, pager:PagerComponent, pagerProps, controllerPrevProps, controllerNextProps,
-      component:Component, children, ...props
+      controller, pager, pagerProps, controllerProps, controllerPrevProps, controllerNextProps,
+      children, ...props
     } = BaseComponent(this.props, Carousel);
     let { selectedIndex } = this.state;
     children = React.Children.toArray(children).filter(v=>v);
-    if(ControllerComponent===true) ControllerComponent = Controller;
-    if(PagerComponent===true) PagerComponent = Pager;
+
+    let classNameStrController = 'position-absolute cursor-pointer margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border';
+    let classNamePreControllerPrev = {
+      [classNameStrController]: true,
+      [`offset-left-start`]: true,
+    }
+    let classNamePreControllerNext = {
+      [classNameStrController]: true,
+      [`offset-right-start`]: true,
+    }
+    let classNamePrePager = 'position-absolute padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
 
     return (
-      <Component 
-        type="scroll" selectedIndex={selectedIndex} onSelect={selectedIndex=>this.setState({selectedIndex}, ()=>this.go())}
-        onMouseOver={e=>pauseOnHover&&this.pause()} onMouseOut={e=>this.isPaused&&this.play()}
-        {...props}>
+      <PanelContainer type="scroll" selectedIndex={selectedIndex} onSelect={selectedIndex=>this.setState({selectedIndex}, ()=>this.go())} onMouseOver={e=>pauseOnHover&&this.pause()} onMouseOut={e=>this.isPaused&&this.play()} {...props}>
         {children}
-        {Controller?<Controller onClick={e=>this.prev()} {...controllerPrevProps} itemPlain />:null}
-        {Controller?<Controller onClick={e=>this.next()} {...controllerNextProps} itemPlain isNext />:null}
-        {Pager?<Pager onClick={selectedIndex=>this.setState({selectedIndex}, ()=>this.go())} itemCount={children.length} selectedIndex={selectedIndex} {...pagerProps} itemPlain />:null}
-      </Component>
+        {controller?<Panel 
+          componentTransform={Icon} classNamePre={classNamePreControllerPrev} b-size="xl" b-style="solid" b-theme="mask" name="left:<"
+          onClick={e=>this.prev()} 
+          itemPlain {...controllerProps} {...controllerPrevProps}  />:null}
+        {controller?<Panel 
+          componentTransform={Icon} classNamePre={classNamePreControllerNext} b-size="xl" b-style="solid" b-theme="mask" name="right:>"
+          onClick={e=>this.next()} 
+          itemPlain {...controllerProps} {...controllerPrevProps}  />:null}
+        {pager?<PanelContainer 
+          component="ol" type="flex" selectedIndex={selectedIndex}
+          itemPlain classNamePre={classNamePrePager} b-theme="mask" b-style="solid" {...pagerProps}>
+          {Array.from({length:children.length},(v,k)=>k).map(v=>
+            <Panel key={v} component="li" onClick={()=>this.setState({selectedIndex: v}, ()=>this.go())} />
+          )}
+        </PanelContainer>:null}
+      </PanelContainer>
     );
   }
 }
@@ -140,118 +158,23 @@ Carousel.defaultProps.pager = true;
  * @attribute module:Carousel.Carousel.pagerProps
  * @type {Object}
  */
-Carousel.defaultProps.component = PanelContainer;
-
-export default Carousel;
-
-
-
-
-// Carousel Item
-// ------------------------------
-Carousel.Item = Panel;
-
-
-
-
-// Carousel Controller
-// ------------------------------
-
-/**
- * 轮播组件内部使用的翻页控制组件
- * @component 
- * @private
- * @augments module:BaseComponent.BaseComponent
- * @augments module:ICon.Icon
- */
-let Controller = aprops=>{
-  let {
-    isNext, mask, icon, iconNext, defaultIcon, defaultIconNext,
-    component:Component, ...props
-  } = BaseComponent(aprops, Controller);
-
-  let classNamePre = {
-    'position-absolute text-color-white cursor-pointer margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border': true,
-    [`offset-${isNext?'right':'left'}-start`]: true,
-    ['bg-color-'+(mask===true?'overlay':mask)]: mask,
-  }
-
-  return <Component b-size="xl" name={isNext?iconNext:icon} defaultName={isNext?defaultIconNext:defaultIcon} classNamePre={classNamePre} {...props} />
-}
-
-Object.defineProperty(Carousel,"Controller",{ get:function(){ return Controller }, set:function(val){ Controller = val }})
-
-Controller.defaultProps = {};
-/**
- * 是否是指示显示下一页的控制器
- * @attribute module:Carousel~Controller.isNext
- * @type {boolean}
- */
-/**
- * 设置组件是否具有蒙层背景或者指定蒙层的主题，true 表示使用默认的 mask 主题蒙层
- * @attribute module:Carousel~Controller.mask
- * @type {boolean|string}
- */
-/**
- * 设置控制器的图标
- * @type {string}
- */
-Controller.defaultProps.icon = 'left';
-/**
- * 设置控制器为指向下一页时的图标
- * @type {string}
- */
-Controller.defaultProps.iconNext = 'right'; 
-/**
- * 设置控制器的默认图标
- * @type {string}
- */
-Controller.defaultProps.defaultIcon = '<';
-/**
- * 设置控制器为指向下一页时的默认图标
- * @type {string}
- */
-Controller.defaultProps.defaultIconNext = '>';
-Controller.defaultProps.component = Icon;
-
-
-
-// Carousel Pager
-// ------------------------------
-
-/**
- * 轮播组件内部使用的分页控制器
- * @component 
- * @private
- * @augments module:BaseComponent.BaseComponent
- * @augments module:Panel~PanelContainer
- */
-let Pager = aprops=>{
-  let { itemCount, onClick, mask, ...props } = BaseComponent(aprops, Pager, {isContainer: true});
-
-  let classNamePre = {
-    'position-absolute padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x': true,
-    ['bg-color-'+(mask===true?'overlay':mask)]: mask,
-  };
-  
-  return (
-    <PanelContainer type="flex" itemCount={itemCount} classNamePre={classNamePre} {...props}>
-      {Array.from({length:itemCount},(v,k)=>k).map(v=><Panel component="li" key={v} onClick={onClick} />)}
-    </PanelContainer>
-  );
-}
-
-Object.defineProperty(Carousel,"Pager",{ get:function(){ return Pager }, set:function(val){ Pager = val }})
-
-Pager.defaultProps = {};
-Pager.defaultProps.component = 'ol';
-
-Pager.itemGetClassName = (itemProps, containerProps)=>{
+Carousel.defaultProps['bp-pager-itemGetProps'] = (itemProps, containerProps)=>{
   return {
-    'cursor-pointer width-0em5 height-0em5 border-radius-rounded border-set-a-white': true,
-    'bg-color-white': itemProps.itemSelected,
-    'bg-color-component': itemProps.itemSelected,
+    'b-theme': 'white',
+    'b-style': itemProps.itemSelected?'solid':'hollow',
+  }
+}
+Carousel.defaultProps['bp-pager-itemGetClassName'] = (itemProps, containerProps)=>{
+  return {
+    'cursor-pointer width-0em5 height-0em5 border-radius-rounded': true,
     'margin-left-xxs': itemProps.itemIndex>0,
   }
 }
 
+
+Object.defineProperty(Carousel,"Carousel",{ get:function(){ return Carousel }, set:function(val){ Carousel = val }})
+export default Carousel;
+
+
+
+Carousel.Item = Panel;

@@ -61,6 +61,7 @@ List.defaultProps = {};
  */
 List.defaultProps.hasTheme = true;
 
+
 Object.defineProperty(List,"List",{ get:function(){ return List }, set:function(val){ List = val }})
 export default List;
 
@@ -94,20 +95,19 @@ let Item = aprops=>{
 
   return (
     <PanelContainer type="primary" align="center" classNamePre={classNamePre} onClick={onClick} {...props}>
-      {media?(<Panel bc-margin-right- {...mediaProps}>{media===true?undefined:media}</Panel>):null}
+      {media?(<Panel bc-display-inline-block bc-line-height-0 bc-margin-right- {...mediaProps}>{media===true?undefined:media}</Panel>):null}
       <PanelContainer itemSelected {...mainProps}>
         {title?(<Panel {...titleProps}>{title===true?undefined:title}</Panel>):null}
         {subTitle?(<Panel b-size={hasTheme&&"sm"} {...subTitleProps}>{subTitle===true?undefined:subTitle}</Panel>):null}
         {desc?(<Panel b-size={hasTheme&&"sm"} b-theme={hasTheme&&"light"} {...descProps}>{desc===true?undefined:desc}</Panel>):null}
         {children}
       </PanelContainer>
-      {after?(<Panel b-size={hasTheme&&"sm"} b-theme={hasTheme&&"light"} {...afterProps}>{after===true?undefined:after}</Panel>):null}
+      {after?(<Panel bc-display-inline-block bc-line-height-0 b-size={hasTheme&&"sm"} b-theme={hasTheme&&"light"} {...afterProps}>{after===true?undefined:after}</Panel>):null}
       {arrow||(autoArrow&&onClick)?(<Panel component={Icon} name="right" nameDefault=">" b-size={hasTheme&&"sm"} b-theme={hasTheme&&"light"} {...arrowProps}>{arrow===true?undefined:arrow}</Panel>):null}
     </PanelContainer>
   );
 }
 
-Object.defineProperty(List,"Item",{ get:function(){ return Item }, set:function(val){ Item = val }})
 
 Item.defaultProps = {};
 /**
@@ -184,3 +184,5 @@ Item.defaultProps = {};
  * @type {boolean}
  */
 Item.defaultProps.autoArrow = true; 
+
+Object.defineProperty(List,"Item",{ get:function(){ return Item }, set:function(val){ Item = val }})

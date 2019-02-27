@@ -62,6 +62,8 @@ let Panel = aprops=>{
     classSet['border-width-bottom-2'] = true;
     classSet['border-set-bottom-'+theme] = theme!==false;
     if(!selected) styleSet['borderColor'] = 'transparent';
+  }else if(bStyle==='white') {
+    classSet['bg-color-white'] = true;
   }else if(bStyle==='plain') {
     classSet['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
   }
@@ -482,7 +484,7 @@ let InnerScroll = class extends React.Component {
         let aindex = selectedIndex - Math.round((event.deltaX*children.length)/(countToShow*element.clientWidth));
         aindex = Math.min(aindex, children.length-1);
         aindex = Math.max(aindex, 0);
-        if(selectedIndex!==aindex) onSelectedChange(aindex);
+        if(selectedIndex!==aindex) onSelectedChange(aindex, children[aindex].props);
       }
     });
   }

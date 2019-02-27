@@ -29,8 +29,6 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
-
 var _BaseComponent8 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Panel = _interopRequireWildcard(require("./Panel"));
@@ -48,15 +46,16 @@ var _Icon = _interopRequireDefault(require("./Icon"));
  * @exportdefault
  */
 var Field = function Field(aprops) {
-  var before = aprops.before,
+  var types = aprops.types,
+      before = aprops.before,
       after = aprops.after,
       label = aprops.label,
       beforeProps = aprops.beforeProps,
       afterProps = aprops.afterProps,
       containerProps = aprops.containerProps,
-      props = (0, _objectWithoutProperties2.default)(aprops, ["before", "after", "label", "beforeProps", "afterProps", "containerProps"]);
+      props = (0, _objectWithoutProperties2.default)(aprops, ["types", "before", "after", "label", "beforeProps", "afterProps", "containerProps"]);
   if (props.hasOwnProperty('value') && props.value === undefined) props.value = '';
-  var ComponentField = Field[aprops.type] || Field.text;
+  var ComponentField = types[aprops.type] || types.text;
   if (!ComponentField) return null;
 
   var component = _react.default.createElement(ComponentField, (0, _extends2.default)({
@@ -70,6 +69,8 @@ var Field = function Field(aprops) {
     type: "primary"
   }, containerProps), before ? _react.default.createElement(_Panel.default, beforeProps, before) : null, component, after ? _react.default.createElement(_Panel.default, afterProps, after) : null);
 };
+
+Field.defaultProps = {};
 /**
  * 设置控件组件的类型，支持 html input type 以及自定义的类型，参见 Field 的成员，默认使用 text 对应的类型
  * @attribute module:Field.Field.type
@@ -112,13 +113,22 @@ var Field = function Field(aprops) {
  * @type {object}
  */
 
-
+Object.defineProperty(Field, "Field", {
+  get: function get() {
+    return Field;
+  },
+  set: function set(val) {
+    Field = val;
+  }
+});
 var _default = Field;
 /**
  * 表单控件的一般类型组件
  * @component
  * @mount Field.Normal
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel.Panel
+ * @augments input
  * @private
  */
 
@@ -135,36 +145,15 @@ function (_React$Component) {
   }
 
   (0, _createClass2.default)(Normal, [{
-    key: "_updateValue",
-    value: function _updateValue() {
-      this.input.value = this.props.value || '';
-    }
-  }, {
-    key: "handleKeyPress",
-    value: function handleKeyPress(e) {
-      var _this$props = this.props,
-          onPressEnter = _this$props.onPressEnter,
-          onKeyPress = _this$props.onKeyPress;
-
-      if (onPressEnter && e.charCode === 13) {
-        e.stopPropagation();
-        e.preventDefault();
-        onPressEnter(e.target.value);
-      } else {
-        onKeyPress && onKeyPress(e);
-      }
-    }
-  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.input = (0, _BaseComponent8.domFindNode)(this);
-
-      this._updateValue();
+      this.input.value = this.props.value || '';
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
-      if (this.props.value !== prevProps.value) this._updateValue();
+      if (this.props.value !== prevProps.value) this.input.value = this.props.value || '';
     }
   }, {
     key: "render",
@@ -172,28 +161,37 @@ function (_React$Component) {
       var _BaseComponent = (0, _BaseComponent8.default)(this.props, _Normal),
           type = _BaseComponent.type,
           value = _BaseComponent.value,
+          typesToElement = _BaseComponent.typesToElement,
           onPressEnter = _BaseComponent.onPressEnter,
-          onKeyPress = _BaseComponent.onKeyPress,
-          component = _BaseComponent.component,
+          _onKeyPress = _BaseComponent.onKeyPress,
+          _BaseComponent$compon = _BaseComponent.component,
+          component = _BaseComponent$compon === void 0 ? "input" : _BaseComponent$compon,
           children = _BaseComponent.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "value", "onPressEnter", "onKeyPress", "component", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "value", "typesToElement", "onPressEnter", "onKeyPress", "component", "children"]);
 
-      var classNamePre = {
-        'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle': true,
-        'bg-none- border-none-a-': !this.props['b-style']
-      };
-
-      if (_Normal.typesToElement && _Normal.typesToElement.includes(type)) {
+      if (typesToElement.includes(type)) {
         component = type;
         type = null;
       } else {
         children = undefined;
       }
 
+      var classNamePre = {
+        'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle': true,
+        'bg-none- border-none-a-': !this.props['b-style']
+      };
       return _react.default.createElement(_Panel.default, (0, _extends2.default)({
         component: component,
         type: type,
-        onKeyPress: this.handleKeyPress,
+        onKeyPress: function onKeyPress(e) {
+          if (onPressEnter && e.charCode === 13) {
+            e.stopPropagation();
+            e.preventDefault();
+            onPressEnter(e.target.value);
+          } else {
+            _onKeyPress && _onKeyPress(e);
+          }
+        },
         classNamePre: classNamePre
       }, props), children);
     }
@@ -203,30 +201,17 @@ function (_React$Component) {
 
 _Normal.defaultProps = {};
 /**
- * 参见 Field
- * @attribute module:Field~Normal.type
- */
-
-/**
- * 控件的值
- * @attribute module:Field~Normal.value
- * @type {string}
- */
-
-/**
  * 当控件在焦点情况下输入回车时触发
  * @attribute module:Field~Normal.onPressEnter
  * @type {function}
  */
 
-_Normal.defaultProps.component = 'input';
 /**
  * 映射数组，数组内的 input type 直接映射为对应元素，例如：
  * <Field type="textarea" /> => <textarea></textarea>
- * @member
  */
 
-_Normal.typesToElement = ['progress', 'select', 'textarea'];
+_Normal.defaultProps.typesToElement = ['progress', 'select', 'textarea'];
 Object.defineProperty(Field, "Normal", {
   get: function get() {
     return _Normal;
@@ -239,7 +224,9 @@ Object.defineProperty(Field, "Normal", {
  * 表单控件的显示静态文本的组件，用于与其他表单组件达到一致样式
  * @component
  * @mount Field.Static
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
+ * @augments module:Panel.Panel
+ * @augments input
  * @private
  */
 
@@ -251,12 +238,14 @@ var _Static = function Static(aprops) {
 
   var classNamePre = 'line-height-1 vertical-align-middle';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    component: "span",
     classNamePre: classNamePre
   }, props), value || _react.default.createElement("pre", {
     className: "margin-a-0 padding-a-0"
   }, " "));
 };
 
+_Static.defaultProps = {};
 Object.defineProperty(Field, "Static", {
   get: function get() {
     return _Static;
@@ -265,19 +254,6 @@ Object.defineProperty(Field, "Static", {
     _Static = val;
   }
 });
-_Static.defaultProps = {};
-/**
- * 参见 Field
- * @attribute module:Field~Static.type
- */
-
-/**
- * 显示的静态文本
- * @attribute module:Field~Static.value
- * @type {string}
- */
-
-_Static.defaultProps.component = 'span';
 /**
  * 表单控件的隐藏组件，使用 label 组件套住该组件，用于改变默认组件的样式
  * @component
@@ -296,7 +272,6 @@ var _HiddenInput = function HiddenInput(aprops) {
 };
 
 _HiddenInput.defaultProps = {};
-_HiddenInput.defaultProps.component = 'input';
 Object.defineProperty(Field, "HiddenInput", {
   get: function get() {
     return _HiddenInput;
@@ -326,6 +301,7 @@ var _File = function File(aprops) {
 
   var classNamePre = 'line-height-1 vertical-align-middle';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    component: "label",
     classNamePre: classNamePre,
     disabled: disabled
   }, props), _react.default.createElement(_HiddenInput, (0, _extends2.default)({
@@ -339,19 +315,11 @@ var _File = function File(aprops) {
 
 _File.defaultProps = {};
 /**
- * 浏览器的文件对象
- * @attribute module:Field~File.value
- * @type {file}
- */
-
-/**
  * 设置隐藏的 input 的容器的属性
  * @attribute module:Field~File.inputProps
  * @type {object}
  */
 
-_File.defaultProps = {};
-_File.defaultProps.component = 'label';
 Object.defineProperty(Field, "File", {
   get: function get() {
     return _File;
@@ -375,26 +343,24 @@ var _CheckState = function CheckState(aprops) {
       type = _BaseComponent4.type,
       value = _BaseComponent4.value,
       defaultValue = _BaseComponent4.defaultValue,
-      content = _BaseComponent4.content,
       domValue = _BaseComponent4.domValue,
       disabled = _BaseComponent4.disabled,
       onClick = _BaseComponent4.onClick,
       onChange = _BaseComponent4.onChange,
-      CheckStateProps = _BaseComponent4.CheckStateProps,
-      statusCheckedProps = _BaseComponent4.statusCheckedProps,
-      statusUncheckedProps = _BaseComponent4.statusUncheckedProps,
       inputProps = _BaseComponent4.inputProps,
       innerProps = _BaseComponent4.innerProps,
+      statusProps = _BaseComponent4.statusProps,
+      statusCheckedProps = _BaseComponent4.statusCheckedProps,
+      statusUncheckedProps = _BaseComponent4.statusUncheckedProps,
       children = _BaseComponent4.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["type", "value", "defaultValue", "content", "domValue", "disabled", "onClick", "onChange", "CheckStateProps", "statusCheckedProps", "statusUncheckedProps", "inputProps", "innerProps", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["type", "value", "defaultValue", "domValue", "disabled", "onClick", "onChange", "inputProps", "innerProps", "statusProps", "statusCheckedProps", "statusUncheckedProps", "children"]);
 
-  var classNamePre = 'check-status line-height-1 vertical-align-middle bg-none-';
-  var classNamePreInner = 'check-status-inner position-relative';
-  var classNamePreContent = 'position-relative';
+  var classNamePre = 'check-status line-height-0 display-inlineblock vertical-align-middle bg-none-';
+  var classNamePreInner = 'check-status-inner position-relative line-height-0 display-inlineblock';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: "label",
     classNamePre: classNamePre
-  }, CheckStateProps), _react.default.createElement(_HiddenInput, (0, _extends2.default)({
+  }, props), _react.default.createElement(_HiddenInput, (0, _extends2.default)({
     type: type,
     checked: value,
     defaultChecked: defaultValue,
@@ -407,16 +373,12 @@ var _CheckState = function CheckState(aprops) {
   }, innerProps), _react.default.createElement(_Panel.default, (0, _extends2.default)({
     type: type,
     disabled: disabled,
-    classNamePre: classNamePreContent,
-    classNameExt: "check-status-checked",
-    children: "X1"
-  }, props, statusCheckedProps)), _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    classNameExt: "check-status-checked"
+  }, statusProps, statusCheckedProps)), _react.default.createElement(_Panel.default, (0, _extends2.default)({
     type: type,
     disabled: disabled,
-    classNamePre: classNamePreContent,
-    classNameExt: "check-status-unchecked",
-    children: "-1"
-  }, props, statusUncheckedProps))), children);
+    classNameExt: "check-status-unchecked"
+  }, statusProps, statusUncheckedProps))), children);
 };
 
 _CheckState.defaultProps = {};
@@ -436,18 +398,6 @@ _CheckState.defaultProps = {};
  * 设置 input dom 的 value 属性
  * @attribute module:Field~CheckState.domValue
  * @type {string}
- */
-
-/**
- * 设置2态内容
- * @attribute module:Field~CheckState.content
- * @type {string}
- */
-
-/**
- * 设置设置2态组件的属性
- * @attribute module:Field~CheckState.labelProps
- * @type {object}
  */
 
 /**
@@ -483,14 +433,12 @@ var _Checkbox = function Checkbox(aprops) {
       disabled = _BaseComponent5.disabled,
       props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["disabled"]);
 
-  props.component = _Icon.default;
-  props.CheckStateProps = {
-    'b-style': 'hollow',
-    'bc-bg-color-component': disabled
-  };
-  props['bp-statusChecked-name'] = 'check';
-  props['bp-statusUnchecked-name'] = ' ';
   return _react.default.createElement(_CheckState, (0, _extends2.default)({
+    "b-style": "hollow",
+    "bg-color-component": disabled,
+    "bp-status-component": _Icon.default,
+    "bp-statusChecked-name": "check:X",
+    "bp-statusUnchecked-name": " ",
     disabled: disabled
   }, props));
 };
@@ -516,15 +464,13 @@ var _Radio = function Radio(aprops) {
       disabled = _BaseComponent6.disabled,
       props = (0, _objectWithoutProperties2.default)(_BaseComponent6, ["disabled"]);
 
-  props.component = _Icon.default;
-  props.CheckStateProps = {
-    'b-style': 'hollow',
-    'bc-bg-color-component': disabled,
-    'bc-border-radius-rounded': true
-  };
-  props['bp-statusChecked-name'] = 'check';
-  props['bp-statusUnchecked-name'] = ' ';
   return _react.default.createElement(_CheckState, (0, _extends2.default)({
+    "b-style": "hollow",
+    "bg-color-component": disabled,
+    "bc-border-radius-rounded": true,
+    "bp-status-component": _Icon.default,
+    "bp-statusChecked-name": "check:X",
+    "bp-statusUnchecked-name": " ",
     disabled: disabled
   }, props));
 };
@@ -552,40 +498,33 @@ var _Switch = function Switch(aprops) {
       bTheme = _BaseComponent7$bThe === void 0 ? 'component' : _BaseComponent7$bThe,
       props = (0, _objectWithoutProperties2.default)(_BaseComponent7, ["disabled", 'b-theme']);
 
-  props.CheckStateProps = {
-    'b-style': 'hollow',
-    'bc-bg-color-component': disabled,
-    'bc-border-radius-rounded': true,
-    'line-height-0': true
-  };
-  var classNamePre = 'border-radius-rounded width-1em height-1em';
-  props.statusCheckedProps = {
-    children: _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Panel.default, {
-      inline: true,
-      "b-style": "solid",
-      "b-theme": bTheme,
-      classNamePre: classNamePre
-    }), _react.default.createElement(_Panel.default, {
-      inline: true,
-      "b-style": "solid",
-      "b-theme": "white",
-      classNamePre: classNamePre
-    }))
-  };
-  props.statusUncheckedProps = {
-    children: _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Panel.default, {
-      inline: true,
-      "b-style": "solid",
-      "b-theme": "white",
-      classNamePre: classNamePre
-    }), _react.default.createElement(_Panel.default, {
-      inline: true,
-      "b-style": "solid",
-      "b-theme": bTheme,
-      classNamePre: classNamePre
-    }))
-  };
+  var classNamePreItem = 'border-radius-rounded width-1em height-1em';
   return _react.default.createElement(_CheckState, (0, _extends2.default)({
+    "b-style": "hollow",
+    "bg-color-component": disabled,
+    "bc-border-radius-rounded": true,
+    "bp-statusChecked-children": _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Panel.default, {
+      inline: true,
+      "b-style": "solid",
+      "b-theme": bTheme,
+      classNamePre: classNamePreItem
+    }), _react.default.createElement(_Panel.default, {
+      inline: true,
+      "b-style": "solid",
+      "b-theme": "white",
+      classNamePre: classNamePreItem
+    })),
+    "bp-statusUnchecked-children": _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Panel.default, {
+      inline: true,
+      "b-style": "solid",
+      "b-theme": "white",
+      classNamePre: classNamePreItem
+    }), _react.default.createElement(_Panel.default, {
+      inline: true,
+      "b-style": "solid",
+      "b-theme": "component",
+      classNamePre: classNamePreItem
+    })),
     disabled: disabled
   }, props, {
     type: "checkbox"
@@ -600,69 +539,11 @@ Object.defineProperty(Field, "Switch", {
     _Switch = val;
   }
 });
-/**
- * 控件组件支持的的类型，对应一般的类型以及默认类型
- * @member module:Field.Field.text
- * @default Field.Normal
- */
-
-Object.defineProperty(Field, "text", {
-  get: function get() {
-    return Field.Normal;
-  }
-});
-/**
- * 控件组件支持的的类型，对应静态类型，该类型为表单组提供一致的组件和样式
- * @member module:Field.Field.static
- * @default Field.Static
- */
-
-Object.defineProperty(Field, "static", {
-  get: function get() {
-    return Field.Static;
-  }
-});
-/**
- * 控件组件支持的的类型，对应 input checkbox 标准类型
- * @member module:Field.Field.checkbox
- * @default Field.Checkbox
- */
-
-Object.defineProperty(Field, "checkbox", {
-  get: function get() {
-    return Field.Checkbox;
-  }
-});
-/**
- * 控件组件支持的的类型，对应 switch 类型，实现了开关按钮
- * @member module:Field.Field.radio
- * @default Field.Radio
- */
-
-Object.defineProperty(Field, "radio", {
-  get: function get() {
-    return Field.Radio;
-  }
-});
-/**
- * 控件组件支持的的类型，对应 input switch 标准类型
- * @member module:Field.Field.switch
- * @default Field.Switch
- */
-
-Object.defineProperty(Field, "switch", {
-  get: function get() {
-    return Field.Switch;
-  }
-});
-/**
- * 控件组件支持的的类型，对应 input file 标准类型
- * @member module:Field.Field.file
- * @default Field.File
- */
-
-Object.defineProperty(Field, "file", {
-  get: function get() {
-    return Field.File;
-  }
-});
+Field.defaultProps.types = {
+  text: _Normal,
+  static: _Static,
+  file: _File,
+  checkbox: _Checkbox,
+  radio: _Radio,
+  switch: _Switch
+};

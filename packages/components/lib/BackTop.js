@@ -45,8 +45,9 @@ var _Icon = require("./Icon");
  * 返回顶部的小组件
  * @component 
  * @exportdefault
- * @augments BaseComponent
+ * @augments module:BaseComponent.BaseComponent
  * @augments module:Fab.Fab
+ * @augments module:PanelIcon~PanelIcon
  */
 var BackTop =
 /*#__PURE__*/
@@ -61,7 +62,7 @@ function (_React$Component) {
   (0, _createClass2.default)(BackTop, [{
     key: "scrollToTop",
     value: function scrollToTop() {
-      this.container && this.container.scrollTop && (this.container.scrollTop = 0);
+      if (this.container) this.container.scrollTop = 0;
     }
   }, {
     key: "isShow",
@@ -88,37 +89,31 @@ function (_React$Component) {
       });
     }
   }, {
-    key: "_handlePosChange",
-    value: function _handlePosChange(event, el) {
-      this.container = el;
-      var _this$props = this.props,
-          _this$props$calc = _this$props.calc,
-          calc = _this$props$calc === void 0 ? BackTop.calc : _this$props$calc,
-          param = _this$props.param;
-      calc(param, this.container) ? this.show() : this.hide();
-    }
-  }, {
     key: "render",
     value: function render() {
       var _this = this;
 
       var _BaseComponent = (0, _BaseComponent2.default)(this.props, BackTop),
           onClick = _BaseComponent.onClick,
-          calc = _BaseComponent.calc,
-          param = _BaseComponent.param,
+          checkFunc = _BaseComponent.checkFunc,
+          checkParam = _BaseComponent.checkParam,
           scrollSpyProps = _BaseComponent.scrollSpyProps,
-          Content = _BaseComponent.content,
           contentProps = _BaseComponent.contentProps,
           children = _BaseComponent.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["onClick", "calc", "param", "scrollSpyProps", "content", "contentProps", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["onClick", "checkFunc", "checkParam", "scrollSpyProps", "contentProps", "children"]);
 
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_ScrollSpy.default, (0, _extends2.default)({
-        onPosChange: this._handlePosChange.bind(this)
+        onPosChange: function onPosChange(event, el) {
+          _this.container = el;
+          checkFunc(checkParam, _this.container) ? _this.show() : _this.hide();
+        }
       }, scrollSpyProps)), this.isShow() ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
+        componentTransform: _Fab.default,
         onClick: (0, _BaseComponent2.chainedFuncs)(function () {
           return _this.scrollToTop();
         }, onClick)
-      }, props), _react.default.createElement(Content, (0, _extends2.default)({
+      }, props), _react.default.createElement(_Panel.default, (0, _extends2.default)({
+        componentTransform: _Icon.PanelIcon,
         name: "backTop:^"
       }, contentProps), children)) : null);
     }
@@ -126,21 +121,26 @@ function (_React$Component) {
   return BackTop;
 }(_react.default.Component);
 
-exports.default = BackTop;
 BackTop.defaultProps = {};
 /**
  * 设置出现时机的计算函数
- * @attribute module:BackTop.calc
  * @type {function}
- * @default module:BackTop.calc
  */
 
+BackTop.defaultProps.checkFunc = function (checkParam, container) {
+  if (!isNaN(checkParam)) {
+    return container.scrollTop >= checkParam;
+  } else if (typeof checkParam === 'string' && /\d*%/.test(checkParam)) {
+    return container.scrollTop >= (container ? (0, _BaseComponent2.domOffset)(container).height * Number(checkParam.slice(0, -1)) / 100 : 0);
+  }
+};
 /**
  * 设置出现时机的计算参数
  * @type {number|string}
  */
 
-BackTop.defaultProps.param = "100%";
+
+BackTop.defaultProps.checkParam = "100%";
 /**
  * 设置滚动监控组件的属性
  * @attribute module:BackTop.scrollSpyProps
@@ -148,26 +148,18 @@ BackTop.defaultProps.param = "100%";
  */
 
 /**
- * 设置内容的组件
- */
-
-BackTop.defaultProps.content = _Icon.PanelIcon;
-/**
- * 设置图标子组件的属性
+ * 设置内容的属性
  * @attribute module:BackTop.contentProps
- * @type {function}
+ * @type {object}
  */
 
-BackTop.defaultProps.componentTransform = _Fab.default;
-/**
- * 默认的计算是否出现回到顶部按钮的函数
- * @member
- */
-
-BackTop.calc = function (param, container) {
-  if (!isNaN(param)) {
-    return container.scrollTop >= param;
-  } else if (typeof param === 'string' && /\d*%/.test(param)) {
-    return container.scrollTop >= (container ? (0, _BaseComponent2.domOffset)(container).height * Number(param.slice(0, -1)) / 100 : 0);
+Object.defineProperty(BackTop, "BackTop", {
+  get: function get() {
+    return BackTop;
+  },
+  set: function set(val) {
+    BackTop = val;
   }
-};
+});
+var _default = BackTop;
+exports.default = _default;
