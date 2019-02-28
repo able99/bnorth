@@ -55,9 +55,10 @@ function classes() {
 
   var merge = function merge(arr) {
     return arr.filter(function (v, i, a) {
-      var key = v.substr(0, v.lastIndexOf('-'));
+      var index = v.lastIndexOf('-');
+      var key = v.substr(0, index > 0 ? index : v.length);
       return !a.slice(i + 1).find(function (vv) {
-        return vv.startsWith(key);
+        return vv.startsWith(key) || key === 'bg-none' && vv.startsWith('bg-color') || key === 'bg-color' && vv.startsWith('bg-none');
       });
     });
   };

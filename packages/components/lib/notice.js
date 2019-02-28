@@ -27,39 +27,30 @@ var _Notice = function Notice(aprops) {
       onDoClose = _BaseComponent.onDoClose,
       onFinished = _BaseComponent.onFinished,
       transitionProps = _BaseComponent.transitionProps,
-      contentProps = _BaseComponent.contentProps,
-      closeProps = _BaseComponent.closeProps,
-      close = _BaseComponent.close,
-      children = _BaseComponent.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["containerProps", "onDoClose", "onFinished", "transitionProps", "contentProps", "closeProps", "close", "children"]);
+      animationProps = _BaseComponent.animationProps,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["containerProps", "onDoClose", "onFinished", "transitionProps", "animationProps"]);
 
   var classNamePreContainer = 'position-absolute offset-top-start offset-left-top width-full';
-  var classNamePre = 'flex-display-block flex-align-center width-full';
-  var classNamePreInner = 'padding-a-';
-  var classNamePreContent = 'text-weight- text-size-lg flex-sub-flex-extend';
-  var classNamePreClose = 'padding-h-sm padding-v-0 flex-sub-flex-none';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     className: classNamePreContainer
   }, containerProps), _react.default.createElement(_Animation.default, (0, _extends2.default)({
     type: "collapse",
-    transitionProps: transitionProps,
+    "bc-width-full": true,
     onFinished: onFinished,
+    transitionProps: transitionProps
+  }, animationProps), _react.default.createElement(_Icon.PanelIcon, (0, _extends2.default)({
+    "bp-title-bc-flex-sub-flex-extend": true,
+    "bp-title-bc-text-weight-": true,
+    "bp-title-bc-text-size-lg": true,
+    name: "close:x",
+    "bp-icon-onClick": onDoClose,
+    "b-icon-bc-padding-a-xs": true,
+    "bc-width-full": true,
+    "bc-padding-a-": true,
+    position: "right",
     "b-style": "solid",
-    "b-theme": "mask",
-    classNamePre: classNamePre
-  }, props), _react.default.createElement(_Panel.default, {
-    classNamePre: classNamePreInner
-  }, children ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    classNamePre: classNamePreContent
-  }, contentProps), children) : null, close ? _react.default.createElement(_Icon.PanelIcon, (0, _extends2.default)({
-    "b-style": "plain",
-    "b-theme": "white",
-    inline: true,
-    "bc-cursor-pointer": true,
-    onClick: onDoClose,
-    name: "close",
-    defaultName: "x"
-  }, closeProps), close === true ? undefined : close) : null)));
+    "b-theme": "mask"
+  }, props))));
 };
 
 exports.Notice = _Notice;

@@ -15,36 +15,22 @@ import { triangleImage } from '../styles/shape'
  */
 function genFuncControl({textColors, mainColors, stateOpacityDisabled, stateOpacityActive}) {
   return Object.assign(
-    genClassObjects('button:disabled, button[disabled], button.disabled', {
+    /**
+     * 支持点击状态
+     * @classname btn
+     */
+    genClassObjects('.btn:disabled, .btn[disabled], .btn.disabled', {
       styleObjectMap: {
         'opacity': stateOpacityDisabled,
         'cursor': 'not-allowed',
         'pointer-events': 'none',
       },
     }), 
-    genClassObjects('.status-:disabled, .status-[disabled], .status-.disabled', {
-      styleObjectMap: {
-        'opacity': stateOpacityDisabled,
-        'cursor': 'not-allowed',
-        'pointer-events': 'none',
-      },
-    }), 
-    genClassObjects('button:active, button[active], button.active', {
+    genClassObjects('.btn:active, .btn[active], .btn.active', {
       styleObjectMap: {
         'opacity': stateOpacityActive,
       },
     }), 
-    genClassObjects('.status-:active, .status-[active], .status-.active', {
-      styleObjectMap: {
-        'opacity': stateOpacityActive,
-      },
-    }), 
-    genClassObjects('.button-active:not(.selected)', {
-      styleObjectMap: {
-        'color': textColors.normal,
-      },
-    }), 
-
 
     /**
      * 支持基于 input check 状态的双态

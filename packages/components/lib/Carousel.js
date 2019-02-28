@@ -161,7 +161,7 @@ function (_React$Component) {
       children = _react.default.Children.toArray(children).filter(function (v) {
         return v;
       });
-      var classNameStrController = 'position-absolute cursor-pointer margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border';
+      var classNameStrController = 'position-absolute margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border';
       var classNamePreControllerPrev = (_classNamePreControll = {}, (0, _defineProperty2.default)(_classNamePreControll, classNameStrController, true), (0, _defineProperty2.default)(_classNamePreControll, "offset-left-start", true), _classNamePreControll);
       var classNamePreControllerNext = (_classNamePreControll2 = {}, (0, _defineProperty2.default)(_classNamePreControll2, classNameStrController, true), (0, _defineProperty2.default)(_classNamePreControll2, "offset-right-start", true), _classNamePreControll2);
       var classNamePrePager = 'position-absolute padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
@@ -219,6 +219,11 @@ function (_React$Component) {
         return _react.default.createElement(_Panel.default, {
           key: v,
           component: "li",
+          classNamePre: "width-0em5 height-0em5 border-radius-rounded",
+          "bc-margin-left-xxs": Boolean(v),
+          "b-theme": "white",
+          "b-style": selectedIndex === v ? 'solid' : 'hollow',
+          bgThemeOnHollow: false,
           onClick: function onClick() {
             return _this3.setState({
               selectedIndex: v
@@ -287,20 +292,6 @@ Carousel.defaultProps.pager = true;
  * @attribute module:Carousel.Carousel.pagerProps
  * @type {Object}
  */
-
-Carousel.defaultProps['bp-pager-itemGetProps'] = function (itemProps, containerProps) {
-  return {
-    'b-theme': 'white',
-    'b-style': itemProps.itemSelected ? 'solid' : 'hollow'
-  };
-};
-
-Carousel.defaultProps['bp-pager-itemGetClassName'] = function (itemProps, containerProps) {
-  return {
-    'cursor-pointer width-0em5 height-0em5 border-radius-rounded': true,
-    'margin-left-xxs': itemProps.itemIndex > 0
-  };
-};
 
 Object.defineProperty(Carousel, "Carousel", {
   get: function get() {

@@ -87,7 +87,7 @@ Object.defineProperty(NavBar,"Title",{ get:function(){ return Title }, set:funct
 let Item = aprops=>{
   let props = BaseComponent(aprops, Item);
 
-  let classNamePre = 'padding-h-sm flex-sub-flex-none cursor-pointer status-';
+  let classNamePre = 'padding-h-sm flex-sub-flex-none';
 
   return <Panel componentTransform={PanelIcon} classNamePre={classNamePre} {...props} />;
 }

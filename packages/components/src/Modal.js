@@ -1,18 +1,15 @@
 import React from 'react';
 import BaseComponent from './BaseComponent';
-import Backdrop from './Backdrop';
 import Panel, { PanelContainer } from './Panel';
-import Button from './Button';
+import Backdrop from './Backdrop';
 import { PanelIcon } from './Icon';
+import Button from './Button';
 
 
 export let Modal = aprops=>{
   let {
     role, handleAction, onFinished,
-    containerProps, 
-    headerProps, title, titleProps, close, closeProps, 
-    bodyProps, 
-    footerProps, buttons,
+    containerProps, headerProps, title, close, bodyProps, footerProps, buttons,
     children, ...props
   } = BaseComponent(aprops, Modal);
   buttons = buttons[role]||[];
@@ -23,29 +20,24 @@ export let Modal = aprops=>{
     'square-full': role==='popup',
     'border-radius-': role!=='popup'&&role!=='document',
   };
-  let stylePre = {
-    width: role!=='popup'?'80%':undefined,
-  };
-  let classNamePreContainer = { 'flex-display-block': role!=='document', 'flex-justify-center': role!=='document', 'flex-align-center': role!=='document', }
-  let classNamePreHeader = 'padding-a- flex-display-block flex-justify-between flex-align-center';
-  let classNamePreTitle = {
-    'flex-sub-flex-grow text-weight-bold text-size-lg': true,
-    'text-align-center': !close,  
-  }
+  let stylePre = { width: role!=='popup'?'80%':undefined };
+  let classNamePreContainer = { 'flex-display-block': role!=='document', 'flex-justify-center': role!=='document', 'flex-align-center': role!=='document' }
 
   children = (
     <Panel onClick={e=>e.stopPropagation()} b-style="white" stylePre={role!=='document'&&stylePre} classNamePre={role!=='document'&&classNamePre} {...props}>
       {role==='document'?children:null}
       {role!=='document'&&(title||close)?(
-        <Panel bc-border-set-bottom-={Boolean(children||buttons.length)} classNamePre={classNamePreHeader} {...headerProps}>
-          {title?<Panel classNamePre={classNamePreTitle} {...titleProps}>{title}</Panel>:null}
-          {close?<PanelIcon inline bc-cursor-pointer onClick={handleAction} name="close" defaultName="x" {...closeProps}>{close===true?undefined:close}</PanelIcon>:null}
-        </Panel>
+        <PanelIcon 
+          bp-title-bc-flex-sub-flex-extend bp-title-bc-text-weight-bold bp-title-bc-text-size-lg bp-title-bc-text-align-center={!close}
+          name={close===true?"close:x":close} bp-icon-onClick={handleAction} b-icon-bc-padding-a-xs
+          bc-border-set-bottom-={Boolean(children||buttons.length)} bc-width-full bc-padding-a- position="right" {...headerProps}>
+          {title}
+        </PanelIcon>
       ):null}
       {role!=='document'&&children?(<Panel bc-padding-a- bc-border-set-bottom-={Boolean(buttons.length)} {...bodyProps}>{children}</Panel>):null}
       {role!=='document'&&buttons.length?(
         <PanelContainer type="justify" {...footerProps}>
-          {buttons.map((v,i)=><Panel key={i} component={Button} b-style="plain" bc-border-none-left--={Boolean(i)} bc-border-set-left-={Boolean(i)} onClick={()=>handleAction&&handleAction(i)} {...v} />)}
+          {buttons.map((v,i)=><Panel key={i} component={Button} b-style="plain" bc-border-none-left-={Boolean(i)} bc-border-set-left-={Boolean(i)} onClick={()=>handleAction&&handleAction(i)} {...v} />)}
         </PanelContainer>
       ):null}
     </Panel>

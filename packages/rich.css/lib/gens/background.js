@@ -41,9 +41,9 @@ function genFuncBackground(_ref) {
   }),
   /**
    * 设置无背景
-   * @classname bg-none-
+   * @classname bg-none
    */
-  (0, _utils.genClassObjects)('.bg-none-', {
+  (0, _utils.genClassObjects)('.bg-none', {
     styleObjectMap: {
       'background': 'none'
     }

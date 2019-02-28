@@ -78,18 +78,18 @@ function genFuncBase({ textColors, utilColors, textSize, hMapTextSize, textFontF
     }), 
     /**
      * 设置不显示轮廓
-     * @classname outline-none-
+     * @classname outline-none
      */
-    genClassObjects('.outline-none-', {
+    genClassObjects('.outline-none', {
       styleObjectMap: {
         'outline': 'none',
       },
     }), 
     /**
      * 设置不显示特殊元素的浏览器默认样式
-     * @classname appearance-none-
+     * @classname appearance-none
      */
-    genClassObjects('.appearance-none-', {
+    genClassObjects('.appearance-none', {
       styleObjectMap: {
         'appearance': 'none',
         '-webkit-appearance': 'none',
@@ -98,18 +98,18 @@ function genFuncBase({ textColors, utilColors, textSize, hMapTextSize, textFontF
     }), 
     /**
      * 设置元素旋转时不显示背面
-     * @classname backface-hidden-
+     * @classname backface-hidden
      */
-    genClassObjects('.backface-hidden-', {
+    genClassObjects('.backface-hidden', {
       styleObjectMap: {
         'backface-visibility': 'hidden',
       },
     }), 
     /**
      * 设置强制使用硬件加速绘制
-     * @classname force-hardware-acceleration-
+     * @classname force-hardware-acceleration
      */
-    genClassObjects('.force-hardware-acceleration-', {
+    genClassObjects('.force-hardware-acceleration', {
       styleObjectMap: {
         'transform': 'translateZ(0)',
         'backface-visibility': 'hidden',
@@ -119,9 +119,9 @@ function genFuncBase({ textColors, utilColors, textSize, hMapTextSize, textFontF
     }), 
     /**
      * 设置文字反锯齿
-     * @classname font-smoothing-antialiased-
+     * @classname font-smoothing-antialiased
      */
-    genClassObjects('.font-smoothing-antialiased-', {
+    genClassObjects('.font-smoothing-antialiased', {
       styleObjectMap: {
         '-webkit-font-smoothing': 'antialiased',
         '-moz-osx-font-smoothing': 'grayscale',

@@ -46,10 +46,8 @@ function genFuncDisplay({directionAxis, display, visibility, opacity, pointerEve
      * 设置滚动
      * @classname scrollable
      * @param {module:config~GenConfig#directionAxis} direction - 坐标轴方向
-     * @param {module:config~gen#StyleSwitcher} switcher - 样式开关
      */
     genClassObjects('.scrollable', {
-      selectorExt: '-',
       styleKeySet: getStyleValueSet(directionAxis),
       styleObjectMap: (styleKeySetKey, styleKeySetValue, styleValueSetKey, styleValueSetValue)=>({
         'max-width': styleKeySetKey!=='y'?'100%':undefined,

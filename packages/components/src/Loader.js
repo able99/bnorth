@@ -8,9 +8,6 @@ import BaseComponent from './BaseComponent';
 import Panel from './Panel';
 
  
-// Loader
-// -------------------
-
 /**
  * 进度显示组件
  * @component 
@@ -18,20 +15,14 @@ import Panel from './Panel';
  * @augments BaseComponent
  */
 let Loader = aprops=>{
-  let {
-    type, timeoutTransition, timeoutAnimation, isProgress, progress, color, colorReverse,
-    ...props
-  } = BaseComponent(aprops, Loader);
-
-  let Component = Loader[type];
-  if(!Component) return null;
+  let { type, types, timeoutTransition, timeoutAnimation, isProgress, progress, color, colorReverse, ...props } = BaseComponent(aprops, Loader);
+  let component = types[type];
+  if(!component) return null;
 
   return (
     <Panel 
-      timeout={isProgress?timeoutTransition:timeoutAnimation}
-      isProgress={isProgress} progress={progress} 
-      color={color} colorReverse={colorReverse}
-      component={Component} {...props} />
+      timeout={isProgress?timeoutTransition:timeoutAnimation} isProgress={isProgress} progress={progress} color={color} colorReverse={colorReverse}
+      componentTransform={component} {...props} />
   );
 }
 
@@ -72,11 +63,12 @@ Loader.defaultProps.color = 'currentColor';
  */
 Loader.defaultProps.colorReverse = 'lightgray';
 
+
+Object.defineProperty(Loader,"Loader",{ get:function(){ return Loader }, set:function(val){ Loader = val }})
 export default Loader;
 
 
-// Loader Line
-// -------------------
+
 
 /**
  * 进度显示组件的线性样式
@@ -85,11 +77,11 @@ export default Loader;
  * @augments BaseComponent
  * @augments module:Loader.Loader
  */
-Loader.line = aprops=>{
+let Line = aprops=>{
   let {
     isProgress, progress, timeout, color, colorReverse,
     className, children, ...props
-  } = BaseComponent(aprops, Loader.line);
+  } = BaseComponent(aprops, Line);
 
   let classStr = 'width-full height-1em';
 
@@ -108,9 +100,11 @@ Loader.line = aprops=>{
   );
 }
 
+Line.defaultProps = {};
 
-// Loader Circle
-// -------------------
+Object.defineProperty(Loader,"Line",{ get:function(){ return Line }, set:function(val){ Line = val }})
+
+
 
 /**
  * 进度显示组件的圆环样式
@@ -119,11 +113,11 @@ Loader.line = aprops=>{
  * @augments BaseComponent
  * @augments module:Loader.Loader
  */
-Loader.circle = aprops=>{
+let Circle = aprops=>{
   let {
     isProgress, progress, timeout, color, colorReverse,
     className, children, ...props
-  } = BaseComponent(aprops, Loader.circle);
+  } = BaseComponent(aprops, Circle);
 
   let classStr = 'width-1em height-1em';
 
@@ -143,10 +137,21 @@ Loader.circle = aprops=>{
   );
 }
 
+Object.defineProperty(Loader,"Circle",{ get:function(){ return Circle }, set:function(val){ Circle = val }})
+
+Circle.defaultProps = {};
 
 
-// Panel Loader
-// ---------------------
+
+
+Loader.defaultProps.types = {
+  line: Line,
+  circle: Circle,
+}
+
+
+
+
 
 /**
  * 加载动画小面板组件，扩展小面板组件，提供加载动画组件与面板内容混排的能力
@@ -155,18 +160,13 @@ Loader.circle = aprops=>{
  * @augments BaseComponent
  * @augments Panel.module:Container~Container
  */
-let PanelLoader = aprops=>{
-  let {
-    isProgress, progress, loaderProps, 
-    title, titleProps, 
-    children, ...props
-  } = BaseComponent(aprops, PanelLoader, {isContainer: true});
-
+export let PanelLoader = aprops=>{
+  let { isProgress, progress, loaderProps, title, titleProps, children, ...props } = BaseComponent(aprops, PanelLoader, {isContainer: true});
 
   return (
     <Panel.Container type="flex"  position="left" justify="center" align="center" {...props}>
       <Loader isProgress={isProgress} progress={progress} {...loaderProps} />
-      {title||children?<Panel bc-text-truncate-1- {...titleProps} >{title}{children}</Panel>:null}
+      {title||children?<Panel bc-text-truncate-1 {...titleProps} >{title}{children}</Panel>:null}
     </Panel.Container>
   );
 }
@@ -193,4 +193,4 @@ PanelLoader.defaultProps = {};
  * @type {object}
  */
 
-export { PanelLoader };
+Object.defineProperty(Loader,"PanelLoader",{ get:function(){ return PanelLoader }, set:function(val){ PanelLoader = val }})

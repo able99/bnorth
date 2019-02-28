@@ -255,7 +255,7 @@ var _PanelIcon = function PanelIcon(aprops) {
     shape: shape && (selected && iconSelected ? iconSelected : shape),
     rotate: rotate
   }, iconProps)), title || children ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    "bc-text-truncate-1-": true
+    "bc-text-truncate-1": true
   }, titleProps), title, children) : null);
 };
 

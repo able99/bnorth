@@ -167,7 +167,7 @@ export let PanelIcon = aprops=>{
         shape={shape&&(selected&&iconSelected?iconSelected:shape)}
         rotate={rotate}
         {...iconProps} />
-      {title||children?<Panel bc-text-truncate-1- {...titleProps}>{title}{children}</Panel>:null}
+      {title||children?<Panel bc-text-truncate-1 {...titleProps}>{title}{children}</Panel>:null}
     </Panel.Container>
   );
 }

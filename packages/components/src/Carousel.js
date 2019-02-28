@@ -78,7 +78,7 @@ class Carousel extends React.Component {
     let { selectedIndex } = this.state;
     children = React.Children.toArray(children).filter(v=>v);
 
-    let classNameStrController = 'position-absolute cursor-pointer margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border';
+    let classNameStrController = 'position-absolute margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border';
     let classNamePreControllerPrev = {
       [classNameStrController]: true,
       [`offset-left-start`]: true,
@@ -104,7 +104,10 @@ class Carousel extends React.Component {
           component="ol" type="flex" selectedIndex={selectedIndex}
           itemPlain classNamePre={classNamePrePager} b-theme="mask" b-style="solid" {...pagerProps}>
           {Array.from({length:children.length},(v,k)=>k).map(v=>
-            <Panel key={v} component="li" onClick={()=>this.setState({selectedIndex: v}, ()=>this.go())} />
+            <Panel 
+              key={v} component="li" 
+              classNamePre="width-0em5 height-0em5 border-radius-rounded" bc-margin-left-xxs={Boolean(v)} b-theme='white' b-style={selectedIndex===v?'solid':'hollow'} bgThemeOnHollow={false}
+              onClick={()=>this.setState({selectedIndex: v}, ()=>this.go())} />
           )}
         </PanelContainer>:null}
       </PanelContainer>
@@ -158,18 +161,6 @@ Carousel.defaultProps.pager = true;
  * @attribute module:Carousel.Carousel.pagerProps
  * @type {Object}
  */
-Carousel.defaultProps['bp-pager-itemGetProps'] = (itemProps, containerProps)=>{
-  return {
-    'b-theme': 'white',
-    'b-style': itemProps.itemSelected?'solid':'hollow',
-  }
-}
-Carousel.defaultProps['bp-pager-itemGetClassName'] = (itemProps, containerProps)=>{
-  return {
-    'cursor-pointer width-0em5 height-0em5 border-radius-rounded': true,
-    'margin-left-xxs': itemProps.itemIndex>0,
-  }
-}
 
 
 Object.defineProperty(Carousel,"Carousel",{ get:function(){ return Carousel }, set:function(val){ Carousel = val }})

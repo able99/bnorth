@@ -69,10 +69,8 @@ function genFuncBorder({ utilColors, mainColors, directionEdge, directionCorner,
      * 设置无边框
      * @classname border-none
      * @param {module:config~GenConfig#directionEdge} edge - 位置
-     * @param {module:config~gen#StyleSwitcher} switcher - 样式开关
      */
     genClassObjects('.border-none', {
-      selectorExt: '-',
       styleKey: 'border',
       styleKeySet: directionEdge,
       styleValueMap: ()=>'none',

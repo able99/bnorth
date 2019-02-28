@@ -276,6 +276,8 @@ function BaseComponent(aprops, Component) {
       active = _aprops.active,
       selected = _aprops.selected,
       disabled = _aprops.disabled,
+      onClick = _aprops.onClick,
+      btn = _aprops.btn,
       classNamePre = _aprops.classNamePre,
       classNameExt = _aprops.classNameExt,
       stylePre = _aprops.stylePre,
@@ -283,7 +285,7 @@ function BaseComponent(aprops, Component) {
       className = _aprops.className,
       style = _aprops.style,
       refWrap = _aprops.refWrap,
-      props = (0, _objectWithoutProperties2.default)(_aprops, ["active", "selected", "disabled", "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "refWrap"]);
+      props = (0, _objectWithoutProperties2.default)(_aprops, ["active", "selected", "disabled", "onClick", "btn", "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "refWrap"]);
   var classSet = {};
   var styleSet = {};
 
@@ -378,12 +380,15 @@ function BaseComponent(aprops, Component) {
   if (active) classSet['active'] = true;
   if (selected) classSet['selected'] = true;
   if (disabled) classSet['disabled'] = true;
+  if (onClick) classSet['cursor-pointer'] = true;
+  if (onClick || btn) classSet['btn'] = true;
   return (0, _objectSpread2.default)({}, props, {
     className: (0, _classes.default)(classNamePre, classSet, className, classNameExt),
     style: (0, _objectSpread2.default)({}, stylePre, styleSet, style, styleExt),
     selected: selected,
     active: active,
     disabled: disabled,
+    onClick: onClick,
     ref: refWrap
   });
 }

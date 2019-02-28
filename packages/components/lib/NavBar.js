@@ -121,7 +121,7 @@ Object.defineProperty(_NavBar, "Title", {
 
 var _Item = function Item(aprops) {
   var props = (0, _BaseComponent3.default)(aprops, _Item);
-  var classNamePre = 'padding-h-sm flex-sub-flex-none cursor-pointer status-';
+  var classNamePre = 'padding-h-sm flex-sub-flex-none';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     componentTransform: _Icon.PanelIcon,
     classNamePre: classNamePre

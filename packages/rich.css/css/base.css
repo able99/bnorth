@@ -89,21 +89,21 @@ hr {
   line-height: 1em;
 }
 
-.outline-none- {
+.outline-none {
   outline: none;
 }
 
-.appearance-none- {
+.appearance-none {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
-.backface-hidden- {
+.backface-hidden {
   backface-visibility: hidden;
 }
 
-.force-hardware-acceleration- {
+.force-hardware-acceleration {
   transform: translateZ(0);
   -moz-transform: translateZ(0);
   -ms-transform: translateZ(0);
@@ -112,7 +112,7 @@ hr {
   perspective: 1000;
 }
 
-.font-smoothing-antialiased- {
+.font-smoothing-antialiased {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

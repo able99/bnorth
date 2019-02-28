@@ -1,21 +1,24 @@
 import React from 'react';
-import classes from '@bnorth/rich.css/lib/classes'; 
 import BaseComponent from './BaseComponent';
+import Panel from './Panel';
 import Loader from './Loader';
 
 
 export let Loading = aprops=>{
-  let { 
-    progress, height=3,
-    component:Component=Loader, className, ...props 
-  } = BaseComponent(aprops, Loading);
+  let { progress, height, ...props } = BaseComponent(aprops, Loading);
 
-  let classStr = 'position-absolute offset-left-start offset-top-start offset-right-start width-full';
+  let classNamePre = 'position-absolute offset-left-start offset-top-start offset-right-start width-full';
 
-  return (
-    <Component type="line" isProgress progress={progress} className={classes(classStr,className)} bs-height={height} {...props} />
-  )
+  return <Panel component={Loader} type="line" isProgress progress={progress} classNamePre={classNamePre} bs-height={height} {...props} />
 }
+
+Loading.defaultProps = {}
+Loading.defaultProps.height = 3;
+
+Object.defineProperty(Loading,"Loading",{ get:function(){ return Loading }, set:function(val){ Loading = val }})
+
+
+
 
 export default {
   // plugin 

@@ -97,18 +97,18 @@ function genFuncBase(_ref) {
   }),
   /**
    * 设置不显示轮廓
-   * @classname outline-none-
+   * @classname outline-none
    */
-  (0, _utils.genClassObjects)('.outline-none-', {
+  (0, _utils.genClassObjects)('.outline-none', {
     styleObjectMap: {
       'outline': 'none'
     }
   }),
   /**
    * 设置不显示特殊元素的浏览器默认样式
-   * @classname appearance-none-
+   * @classname appearance-none
    */
-  (0, _utils.genClassObjects)('.appearance-none-', {
+  (0, _utils.genClassObjects)('.appearance-none', {
     styleObjectMap: {
       'appearance': 'none',
       '-webkit-appearance': 'none',
@@ -117,18 +117,18 @@ function genFuncBase(_ref) {
   }),
   /**
    * 设置元素旋转时不显示背面
-   * @classname backface-hidden-
+   * @classname backface-hidden
    */
-  (0, _utils.genClassObjects)('.backface-hidden-', {
+  (0, _utils.genClassObjects)('.backface-hidden', {
     styleObjectMap: {
       'backface-visibility': 'hidden'
     }
   }),
   /**
    * 设置强制使用硬件加速绘制
-   * @classname force-hardware-acceleration-
+   * @classname force-hardware-acceleration
    */
-  (0, _utils.genClassObjects)('.force-hardware-acceleration-', {
+  (0, _utils.genClassObjects)('.force-hardware-acceleration', {
     styleObjectMap: {
       'transform': 'translateZ(0)',
       'backface-visibility': 'hidden',
@@ -138,9 +138,9 @@ function genFuncBase(_ref) {
   }),
   /**
    * 设置文字反锯齿
-   * @classname font-smoothing-antialiased-
+   * @classname font-smoothing-antialiased
    */
-  (0, _utils.genClassObjects)('.font-smoothing-antialiased-', {
+  (0, _utils.genClassObjects)('.font-smoothing-antialiased', {
     styleObjectMap: {
       '-webkit-font-smoothing': 'antialiased',
       '-moz-osx-font-smoothing': 'grayscale'

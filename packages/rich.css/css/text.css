@@ -268,7 +268,7 @@
   white-space: nowrap;
 }
 
-.text-truncate-1- {
+.text-truncate-1 {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -278,7 +278,7 @@
   max-height: 1.4em;
 }
 
-.text-truncate-2- {
+.text-truncate-2 {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -288,7 +288,7 @@
   max-height: 2.8em;
 }
 
-.text-truncate-3- {
+.text-truncate-3 {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -298,7 +298,7 @@
   max-height: 4.2em;
 }
 
-.text-truncate-1-placeholder- {
+.text-truncate-1-placeholder {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -309,7 +309,7 @@
   min-height: 1.4em;
 }
 
-.text-truncate-2-placeholder- {
+.text-truncate-2-placeholder {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -320,7 +320,7 @@
   min-height: 2.8em;
 }
 
-.text-truncate-3-placeholder- {
+.text-truncate-3-placeholder {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;

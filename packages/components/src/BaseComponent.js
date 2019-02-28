@@ -194,7 +194,7 @@ export default function BaseComponent(aprops, Component, {isContainer}={}) {
   aprops = {...componentProps, ...aprops};
 
   let {
-    active, selected, disabled,
+    active, selected, disabled, onClick, btn,
     classNamePre, classNameExt, stylePre, styleExt, className, style, refWrap, ...props
   } = aprops;
 
@@ -278,12 +278,14 @@ export default function BaseComponent(aprops, Component, {isContainer}={}) {
   if(active) classSet['active'] = true;
   if(selected) classSet['selected'] = true;
   if(disabled) classSet['disabled'] = true;
+  if(onClick) classSet['cursor-pointer'] = true;
+  if(onClick||btn) classSet['btn'] = true;
   
   return {
     ...props,
     className: classes(classNamePre, classSet, className, classNameExt),
     style: {...stylePre, ...styleSet, ...style, ...styleExt},
-    selected, active, disabled,
+    selected, active, disabled, onClick,
     ref: refWrap,
   };
 }

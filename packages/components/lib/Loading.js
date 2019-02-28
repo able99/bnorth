@@ -15,33 +15,40 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
-
 var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
+
+var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _Loader = _interopRequireDefault(require("./Loader"));
 
-var Loading = function Loading(aprops) {
-  var _BaseComponent = (0, _BaseComponent2.default)(aprops, Loading),
+var _Loading = function Loading(aprops) {
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Loading),
       progress = _BaseComponent.progress,
-      _BaseComponent$height = _BaseComponent.height,
-      height = _BaseComponent$height === void 0 ? 3 : _BaseComponent$height,
-      _BaseComponent$compon = _BaseComponent.component,
-      Component = _BaseComponent$compon === void 0 ? _Loader.default : _BaseComponent$compon,
-      className = _BaseComponent.className,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["progress", "height", "component", "className"]);
+      height = _BaseComponent.height,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["progress", "height"]);
 
-  var classStr = 'position-absolute offset-left-start offset-top-start offset-right-start width-full';
-  return _react.default.createElement(Component, (0, _extends2.default)({
+  var classNamePre = 'position-absolute offset-left-start offset-top-start offset-right-start width-full';
+  return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    component: _Loader.default,
     type: "line",
     isProgress: true,
     progress: progress,
-    className: (0, _classes.default)(classStr, className),
+    classNamePre: classNamePre,
     "bs-height": height
   }, props));
 };
 
-exports.Loading = Loading;
+exports.Loading = _Loading;
+_Loading.defaultProps = {};
+_Loading.defaultProps.height = 3;
+Object.defineProperty(_Loading, "Loading", {
+  get: function get() {
+    return _Loading;
+  },
+  set: function set(val) {
+    exports.Loading = _Loading = val;
+  }
+});
 var _default = {
   // plugin 
   // --------------------------------
@@ -65,7 +72,7 @@ var _default = {
             options = _ref$options === void 0 ? {} : _ref$options;
 
         if (!content) {
-          app.loading._id = app.router.addPopLayer(_react.default.createElement(Loading, {
+          app.loading._id = app.router.addPopLayer(_react.default.createElement(_Loading, {
             timeout: app.loading.timeoutSet,
             isProgress: true,
             progress: progress

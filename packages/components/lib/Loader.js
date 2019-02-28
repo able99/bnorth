@@ -24,8 +24,6 @@ var _Panel = _interopRequireDefault(require("./Panel"));
 /**
  * @module
  */
-// Loader
-// -------------------
 
 /**
  * 进度显示组件
@@ -33,75 +31,82 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @exportdefault
  * @augments BaseComponent
  */
-var Loader = function Loader(aprops) {
-  var _BaseComponent = (0, _BaseComponent5.default)(aprops, Loader),
+var _Loader = function Loader(aprops) {
+  var _BaseComponent = (0, _BaseComponent5.default)(aprops, _Loader),
       type = _BaseComponent.type,
+      types = _BaseComponent.types,
       timeoutTransition = _BaseComponent.timeoutTransition,
       timeoutAnimation = _BaseComponent.timeoutAnimation,
       isProgress = _BaseComponent.isProgress,
       progress = _BaseComponent.progress,
       color = _BaseComponent.color,
       colorReverse = _BaseComponent.colorReverse,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "timeoutTransition", "timeoutAnimation", "isProgress", "progress", "color", "colorReverse"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "types", "timeoutTransition", "timeoutAnimation", "isProgress", "progress", "color", "colorReverse"]);
 
-  var Component = Loader[type];
-  if (!Component) return null;
+  var component = types[type];
+  if (!component) return null;
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     timeout: isProgress ? timeoutTransition : timeoutAnimation,
     isProgress: isProgress,
     progress: progress,
     color: color,
     colorReverse: colorReverse,
-    component: Component
+    componentTransform: component
   }, props));
 };
 
-Loader.defaultProps = {};
+_Loader.defaultProps = {};
 /**
  * 显示的样式，默认支持 line 和 circle，可以通过给 Loader.xxx 赋值，增加新的样式
  * @type {string}
  */
 
-Loader.defaultProps.type = 'circle';
+_Loader.defaultProps.type = 'circle';
 /**
  * 作为进度条时，进度改变时的渐变动画时间
  * @type {string}
  */
 
-Loader.defaultProps.timeoutTransition = '250ms';
+_Loader.defaultProps.timeoutTransition = '250ms';
 /**
  * 作为加载中等待动画时，帧动画时间
  * @type {string}
  */
 
-Loader.defaultProps.timeoutAnimation = '2s';
+_Loader.defaultProps.timeoutAnimation = '2s';
 /**
  * 设置为进度条或者是加载中等待动画
  * @type {boolean}
  */
 
-Loader.defaultProps.isProgress = false;
+_Loader.defaultProps.isProgress = false;
 /**
  * 作为进度条时，进度的百分比， 0-100
  * @type {number}
  */
 
-Loader.defaultProps.progress = 0;
+_Loader.defaultProps.progress = 0;
 /**
  * 设置主颜色，一般不用设置，可以设置主题色
  * @type {string}
  */
 
-Loader.defaultProps.color = 'currentColor';
+_Loader.defaultProps.color = 'currentColor';
 /**
  * 设置辅助色，进度条的反色颜色，取值为 css 颜色
  * @type {string}
  */
 
-Loader.defaultProps.colorReverse = 'lightgray';
-var _default = Loader; // Loader Line
-// -------------------
-
+_Loader.defaultProps.colorReverse = 'lightgray';
+Object.defineProperty(_Loader, "Loader", {
+  get: function get() {
+    return _Loader;
+  },
+  set: function set(val) {
+    _Loader = val;
+  }
+});
+var _default = _Loader;
 /**
  * 进度显示组件的线性样式
  * @component 
@@ -112,8 +117,8 @@ var _default = Loader; // Loader Line
 
 exports.default = _default;
 
-Loader.line = function (aprops) {
-  var _BaseComponent2 = (0, _BaseComponent5.default)(aprops, Loader.line),
+var _Line = function Line(aprops) {
+  var _BaseComponent2 = (0, _BaseComponent5.default)(aprops, _Line),
       isProgress = _BaseComponent2.isProgress,
       progress = _BaseComponent2.progress,
       timeout = _BaseComponent2.timeout,
@@ -152,9 +157,17 @@ Loader.line = function (aprops) {
     dur: timeout,
     repeatCount: "indefinite"
   }) : null), children);
-}; // Loader Circle
-// -------------------
+};
 
+_Line.defaultProps = {};
+Object.defineProperty(_Loader, "Line", {
+  get: function get() {
+    return _Line;
+  },
+  set: function set(val) {
+    _Line = val;
+  }
+});
 /**
  * 进度显示组件的圆环样式
  * @component 
@@ -163,9 +176,8 @@ Loader.line = function (aprops) {
  * @augments module:Loader.Loader
  */
 
-
-Loader.circle = function (aprops) {
-  var _BaseComponent3 = (0, _BaseComponent5.default)(aprops, Loader.circle),
+var _Circle = function Circle(aprops) {
+  var _BaseComponent3 = (0, _BaseComponent5.default)(aprops, _Circle),
       isProgress = _BaseComponent3.isProgress,
       progress = _BaseComponent3.progress,
       timeout = _BaseComponent3.timeout,
@@ -203,20 +215,32 @@ Loader.circle = function (aprops) {
     dur: timeout,
     repeatCount: "indefinite"
   }) : null), children);
-}; // Panel Loader
-// ---------------------
+};
 
-/**
- * 加载动画小面板组件，扩展小面板组件，提供加载动画组件与面板内容混排的能力
- * @component
- * @mount Panel.Loader
- * @augments BaseComponent
- * @augments Panel.module:Container~Container
- */
+Object.defineProperty(_Loader, "Circle", {
+  get: function get() {
+    return _Circle;
+  },
+  set: function set(val) {
+    _Circle = val;
+  }
+});
+_Circle.defaultProps = {};
+_Loader.defaultProps.types = {
+  line: _Line,
+  circle: _Circle
+  /**
+   * 加载动画小面板组件，扩展小面板组件，提供加载动画组件与面板内容混排的能力
+   * @component
+   * @mount Panel.Loader
+   * @augments BaseComponent
+   * @augments Panel.module:Container~Container
+   */
 
+};
 
-var PanelLoader = function PanelLoader(aprops) {
-  var _BaseComponent4 = (0, _BaseComponent5.default)(aprops, PanelLoader, {
+var _PanelLoader = function PanelLoader(aprops) {
+  var _BaseComponent4 = (0, _BaseComponent5.default)(aprops, _PanelLoader, {
     isContainer: true
   }),
       isProgress = _BaseComponent4.isProgress,
@@ -232,16 +256,16 @@ var PanelLoader = function PanelLoader(aprops) {
     position: "left",
     justify: "center",
     align: "center"
-  }, props), _react.default.createElement(Loader, (0, _extends2.default)({
+  }, props), _react.default.createElement(_Loader, (0, _extends2.default)({
     isProgress: isProgress,
     progress: progress
   }, loaderProps)), title || children ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    "bc-text-truncate-1-": true
+    "bc-text-truncate-1": true
   }, titleProps), title, children) : null);
 };
 
-exports.PanelLoader = PanelLoader;
-PanelLoader.defaultProps = {};
+exports.PanelLoader = _PanelLoader;
+_PanelLoader.defaultProps = {};
 /**
  * Loader 的属性, 参见 Loader
  * @attribute Panel.module:Loader~PanelLoader.loader*
@@ -265,3 +289,12 @@ PanelLoader.defaultProps = {};
  * @attribute Panel.module:Loader~PanelLoader.titleProps
  * @type {object}
  */
+
+Object.defineProperty(_Loader, "PanelLoader", {
+  get: function get() {
+    return _PanelLoader;
+  },
+  set: function set(val) {
+    exports.PanelLoader = _PanelLoader = val;
+  }
+});

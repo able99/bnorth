@@ -19,7 +19,8 @@ let Field = aprops=>{
   let ComponentField = types[aprops.type]||types.text;
   if(!ComponentField) return null;
 
-  let component = <ComponentField b-style={(before||after)&&'plain'} itemSelected={Boolean(before||after)} {...props} />
+  if(before||after) { props['b-style'] = 'plain'; props['itemSelected'] = true }
+  let component = <ComponentField {...props} />
   if(!before&&!after) return component;
 
   return <PanelContainer component={label&&'label'} type="primary" {...containerProps}>{before?<Panel {...beforeProps}>{before}</Panel>:null}{component}{after?<Panel {...afterProps}>{after}</Panel>:null}</PanelContainer>
@@ -100,8 +101,8 @@ let Normal = class extends React.Component {
     if(typesToElement.includes(type)) { component = type; type = null }else{ children = undefined }
 
     let classNamePre = {
-      'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle': true,
-      'bg-none- border-none-a-': !this.props['b-style'],
+      'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle': true,
+      'bg-none border-none-a': !this.props['b-style'],
     }
 
     return <Panel 
@@ -243,7 +244,7 @@ let CheckState = aprops=>{
     children, ...props
   } = BaseComponent(aprops, CheckState);
 
-  let classNamePre = 'check-status line-height-0 display-inlineblock vertical-align-middle bg-none-';
+  let classNamePre = 'check-status line-height-0 display-inlineblock vertical-align-middle';
   let classNamePreInner = 'check-status-inner position-relative line-height-0 display-inlineblock';
 
   return (
@@ -350,14 +351,14 @@ let Switch = aprops=>{
     b-style="hollow" bg-color-component={disabled} bc-border-radius-rounded
     bp-statusChecked-children={
       <React.Fragment>
-        <Panel inline b-style="solid" b-theme={bTheme} classNamePre={classNamePreItem} />
-        <Panel inline b-style="solid" b-theme="white" classNamePre={classNamePreItem} />
+        <Panel inline b-style="solid" b-theme={bTheme} classNamePre={classNamePreItem} bs-z-index="10" />
+        <Panel inline b-style="solid" b-theme="white" classNamePre={classNamePreItem} bs-margin-left="-0.3em" />
       </React.Fragment>
     }
     bp-statusUnchecked-children={
       <React.Fragment>
         <Panel inline b-style="solid" b-theme="white" classNamePre={classNamePreItem} />
-        <Panel inline b-style="solid" b-theme="component" classNamePre={classNamePreItem} />
+        <Panel inline b-style="solid" b-theme="component" classNamePre={classNamePreItem} bs-margin-left="-0.3em" />
       </React.Fragment>
     }
     disabled={disabled} {...props} type="checkbox" />

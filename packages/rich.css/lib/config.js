@@ -322,7 +322,8 @@ var genConfig = {
     'initial': true,
     'relative': true,
     'absolute': true,
-    'fixed': true
+    'fixed': true,
+    'sticky': true
   },
   // size
   // -------------------

@@ -22,7 +22,7 @@ let Panel = aprops=>{
   let {
     main, page, full, inline, 
     itemIndex, itemCount, itemSelected, itemPlain, containerProps,
-    selected, status, hasBg, hasSelection, textThemeOnBg, bgThemeOnHollow, textThemeOnBgSelected, textThemeOnBgUnselected, textThemeUnselected, 
+    selected, hasBg, hasSelection, textThemeOnBg, bgThemeOnHollow, textThemeOnBgSelected, textThemeOnBgUnselected, textThemeUnselected, 
     'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, 
     component:Component="div", className, style, ...props
   } = BaseComponent(aprops, Panel);
@@ -36,8 +36,7 @@ let Panel = aprops=>{
     'offset-a-start square-full overflow-a-hidden': full,
     'display-inlineblock': inline,
     'flex-display-block flex-direction-v bg-color-view': page,
-    'scrollable-a- flex-sub-flex-extend': main,
-    'status-': status,
+    'scrollable-a flex-sub-flex-extend': main,
   }
   let styleSet = {};
 
@@ -55,17 +54,17 @@ let Panel = aprops=>{
   }else if(bStyle==='hollow') {
     let theme = bTheme?(bTheme===true?'':bTheme):(bTheme===false?false:'');
     classSet['border-set-a-'+theme] = theme!==false;
-    classSet[bgThemeOnHollow===false?'bg-none-':('bg-color-'+(bgThemeOnHollow===true?'':bgThemeOnHollow))] = true;
+    classSet[bgThemeOnHollow===false?'bg-none':('bg-color-'+(bgThemeOnHollow===true?'':bgThemeOnHollow))] = true;
   }else if(bStyle==='underline') {
     let theme = bTheme?(bTheme===true?'':bTheme):(bTheme===false?false:'');
-    classSet['border-none-top- border-none-left- border-none-right- bg-none-'] = true;
+    classSet['border-none-top border-none-left border-none-right bg-none'] = true;
     classSet['border-width-bottom-2'] = true;
     classSet['border-set-bottom-'+theme] = theme!==false;
     if(!selected) styleSet['borderColor'] = 'transparent';
   }else if(bStyle==='white') {
     classSet['bg-color-white'] = true;
   }else if(bStyle==='plain') {
-    classSet['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
+    classSet['border-none-top border-none-bottom border-none-left border-none-right bg-none'] = true;
   }
 
   return <Component className={classes(classSet, className)} style={{...styleSet, ...style}} {...props} />
@@ -95,11 +94,6 @@ Panel.defaultProps = {};
 /**
  * 设置为选中状态，
  * @attribute module:Panel.Panel.selected
- * @type {boolean}
- */
-/**
- * 设置为响应点击状态
- * @attribute module:Panel.Panel.status
  * @type {boolean}
  */
 /**
@@ -408,8 +402,8 @@ export let PanelContainerItem = aprops=>{
   if(type==='justify') classSet.push('flex-sub-flex-extend');
   if(type==='primary') classSet.push(itemSelected?'flex-sub-flex-extend':'flex-sub-flex-none');
   if(type==='scroll') classSet.push('flex-sub-flex-extend height-full');
-  if(containerProps.noOverlap&&itemIndex<itemCount-1) classSet.push('border-none-right-');
-  if(containerProps.separator) classSet.push('border-none-a- bg-none-');
+  if(containerProps.noOverlap&&itemIndex<itemCount-1) classSet.push('border-none-right');
+  if(containerProps.separator) classSet.push('border-none-a bg-none');
 
   return cloneElement(children, {className: classes(classSet, className), containerProps, itemIndex, itemCount, itemSelected, itemPlain, ...props});
 }

@@ -130,8 +130,7 @@ function genFuncText(_ref) {
    * 设置文本溢出时省略显示
    * @classname text-truncate-
    */
-  (0, _utils.genClassObjects)('.text-truncate', {
-    selectorExt: '-',
+  (0, _utils.genClassObjects)('.text-truncate-', {
     styleObjectMap: {
       'overflow': 'hidden',
       'text-overflow': 'ellipsis',
@@ -142,10 +141,8 @@ function genFuncText(_ref) {
    * 设置文本溢出时省略显示，line-clamp 方式，可设置行数，但是 ie 不兼容
    * @classname text-decoration
    * @param {module:config~GenConfig#textTruncate} line - 文本行数
-   * @param {module:config~gen#StyleSwitcher} switcher - 样式开关
    */
   (0, _utils.genClassObjects)('.text-truncate', {
-    selectorExt: '-',
     styleValueSet: (0, _utils.getStyleValueSet)(textTruncate),
     styleObjectMap: function styleObjectMap(styleKeySetKey, styleKeySetValue, styleValueSetKey, styleValueSetValue) {
       return {
@@ -164,10 +161,9 @@ function genFuncText(_ref) {
    * @classname text-truncate
    * @classnameext placeholder
    * @param {module:config~GenConfig#textTruncate} line - 文本行数
-   * @param {module:config~gen#StyleSwitcher} switcher - 样式开关
    */
   (0, _utils.genClassObjects)('.text-truncate', {
-    selectorExt: 'placeholder-',
+    selectorExt: 'placeholder',
     styleValueSet: (0, _utils.getStyleValueSet)(textTruncate),
     styleObjectMap: function styleObjectMap(styleKeySetKey, styleKeySetValue, styleValueSetKey, styleValueSetValue) {
       return {

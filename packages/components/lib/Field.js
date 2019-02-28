@@ -58,10 +58,12 @@ var Field = function Field(aprops) {
   var ComponentField = types[aprops.type] || types.text;
   if (!ComponentField) return null;
 
-  var component = _react.default.createElement(ComponentField, (0, _extends2.default)({
-    "b-style": (before || after) && 'plain',
-    itemSelected: Boolean(before || after)
-  }, props));
+  if (before || after) {
+    props['b-style'] = 'plain';
+    props['itemSelected'] = true;
+  }
+
+  var component = _react.default.createElement(ComponentField, props);
 
   if (!before && !after) return component;
   return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
@@ -177,8 +179,8 @@ function (_React$Component) {
       }
 
       var classNamePre = {
-        'field transition outline-none appearance-none- line-height-1 font-smoothing-antialiased vertical-align-middle': true,
-        'bg-none- border-none-a-': !this.props['b-style']
+        'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle': true,
+        'bg-none border-none-a': !this.props['b-style']
       };
       return _react.default.createElement(_Panel.default, (0, _extends2.default)({
         component: component,
@@ -355,7 +357,7 @@ var _CheckState = function CheckState(aprops) {
       children = _BaseComponent4.children,
       props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["type", "value", "defaultValue", "domValue", "disabled", "onClick", "onChange", "inputProps", "innerProps", "statusProps", "statusCheckedProps", "statusUncheckedProps", "children"]);
 
-  var classNamePre = 'check-status line-height-0 display-inlineblock vertical-align-middle bg-none-';
+  var classNamePre = 'check-status line-height-0 display-inlineblock vertical-align-middle';
   var classNamePreInner = 'check-status-inner position-relative line-height-0 display-inlineblock';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: "label",
@@ -507,12 +509,14 @@ var _Switch = function Switch(aprops) {
       inline: true,
       "b-style": "solid",
       "b-theme": bTheme,
-      classNamePre: classNamePreItem
+      classNamePre: classNamePreItem,
+      "bs-z-index": "10"
     }), _react.default.createElement(_Panel.default, {
       inline: true,
       "b-style": "solid",
       "b-theme": "white",
-      classNamePre: classNamePreItem
+      classNamePre: classNamePreItem,
+      "bs-margin-left": "-0.3em"
     })),
     "bp-statusUnchecked-children": _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Panel.default, {
       inline: true,
@@ -523,7 +527,8 @@ var _Switch = function Switch(aprops) {
       inline: true,
       "b-style": "solid",
       "b-theme": "component",
-      classNamePre: classNamePreItem
+      classNamePre: classNamePreItem,
+      "bs-margin-left": "-0.3em"
     })),
     disabled: disabled
   }, props, {

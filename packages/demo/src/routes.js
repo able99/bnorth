@@ -5,7 +5,7 @@ let PageInfo = props=>{
   let { app, route } = props;
 
   return (
-    <div className="scrollable-y- padding-a-">
+    <div className="scrollable-y padding-a-">
       <h3><button onClick={()=>app.router.back()}>back</button>page info</h3>
       <hr />
       {Object.entries(route).map(([k,v])=>{

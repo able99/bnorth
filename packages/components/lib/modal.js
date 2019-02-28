@@ -19,13 +19,13 @@ var _react = _interopRequireDefault(require("react"));
 
 var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
 
-var _Backdrop = _interopRequireDefault(require("./Backdrop"));
-
 var _Panel = _interopRequireWildcard(require("./Panel"));
 
-var _Button = _interopRequireDefault(require("./Button"));
+var _Backdrop = _interopRequireDefault(require("./Backdrop"));
 
 var _Icon = require("./Icon");
+
+var _Button = _interopRequireDefault(require("./Button"));
 
 var _this = void 0;
 
@@ -37,14 +37,12 @@ var _Modal = function Modal(aprops) {
       containerProps = _BaseComponent.containerProps,
       headerProps = _BaseComponent.headerProps,
       title = _BaseComponent.title,
-      titleProps = _BaseComponent.titleProps,
       close = _BaseComponent.close,
-      closeProps = _BaseComponent.closeProps,
       bodyProps = _BaseComponent.bodyProps,
       footerProps = _BaseComponent.footerProps,
       buttons = _BaseComponent.buttons,
       children = _BaseComponent.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["role", "handleAction", "onFinished", "containerProps", "headerProps", "title", "titleProps", "close", "closeProps", "bodyProps", "footerProps", "buttons", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["role", "handleAction", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "children"]);
 
   buttons = buttons[role] || [];
   children = typeof children === 'function' ? children(_this) : children;
@@ -61,11 +59,6 @@ var _Modal = function Modal(aprops) {
     'flex-justify-center': role !== 'document',
     'flex-align-center': role !== 'document'
   };
-  var classNamePreHeader = 'padding-a- flex-display-block flex-justify-between flex-align-center';
-  var classNamePreTitle = {
-    'flex-sub-flex-grow text-weight-bold text-size-lg': true,
-    'text-align-center': !close
-  };
   children = _react.default.createElement(_Panel.default, (0, _extends2.default)({
     onClick: function onClick(e) {
       return e.stopPropagation();
@@ -73,18 +66,19 @@ var _Modal = function Modal(aprops) {
     "b-style": "white",
     stylePre: role !== 'document' && stylePre,
     classNamePre: role !== 'document' && classNamePre
-  }, props), role === 'document' ? children : null, role !== 'document' && (title || close) ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
+  }, props), role === 'document' ? children : null, role !== 'document' && (title || close) ? _react.default.createElement(_Icon.PanelIcon, (0, _extends2.default)({
+    "bp-title-bc-flex-sub-flex-extend": true,
+    "bp-title-bc-text-weight-bold": true,
+    "bp-title-bc-text-size-lg": true,
+    "bp-title-bc-text-align-center": !close,
+    name: close === true ? "close:x" : close,
+    "bp-icon-onClick": handleAction,
+    "b-icon-bc-padding-a-xs": true,
     "bc-border-set-bottom-": Boolean(children || buttons.length),
-    classNamePre: classNamePreHeader
-  }, headerProps), title ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    classNamePre: classNamePreTitle
-  }, titleProps), title) : null, close ? _react.default.createElement(_Icon.PanelIcon, (0, _extends2.default)({
-    inline: true,
-    "bc-cursor-pointer": true,
-    onClick: handleAction,
-    name: "close",
-    defaultName: "x"
-  }, closeProps), close === true ? undefined : close) : null) : null, role !== 'document' && children ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    "bc-width-full": true,
+    "bc-padding-a-": true,
+    position: "right"
+  }, headerProps), title) : null, role !== 'document' && children ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "bc-padding-a-": true,
     "bc-border-set-bottom-": Boolean(buttons.length)
   }, bodyProps), children) : null, role !== 'document' && buttons.length ? _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
@@ -94,7 +88,7 @@ var _Modal = function Modal(aprops) {
       key: i,
       component: _Button.default,
       "b-style": "plain",
-      "bc-border-none-left--": Boolean(i),
+      "bc-border-none-left-": Boolean(i),
       "bc-border-set-left-": Boolean(i),
       onClick: function onClick() {
         return handleAction && handleAction(i);

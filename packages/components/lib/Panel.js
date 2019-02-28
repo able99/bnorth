@@ -72,7 +72,6 @@ var _Panel = function Panel(aprops) {
       itemPlain = _BaseComponent.itemPlain,
       containerProps = _BaseComponent.containerProps,
       selected = _BaseComponent.selected,
-      status = _BaseComponent.status,
       hasBg = _BaseComponent.hasBg,
       hasSelection = _BaseComponent.hasSelection,
       textThemeOnBg = _BaseComponent.textThemeOnBg,
@@ -87,7 +86,7 @@ var _Panel = function Panel(aprops) {
       Component = _BaseComponent$compon === void 0 ? "div" : _BaseComponent$compon,
       className = _BaseComponent.className,
       style = _BaseComponent.style,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["main", "page", "full", "inline", "itemIndex", "itemCount", "itemSelected", "itemPlain", "containerProps", "selected", "status", "hasBg", "hasSelection", "textThemeOnBg", "bgThemeOnHollow", "textThemeOnBgSelected", "textThemeOnBgUnselected", "textThemeUnselected", 'b-theme', 'b-style', 'b-size', "component", "className", "style"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["main", "page", "full", "inline", "itemIndex", "itemCount", "itemSelected", "itemPlain", "containerProps", "selected", "hasBg", "hasSelection", "textThemeOnBg", "bgThemeOnHollow", "textThemeOnBgSelected", "textThemeOnBgUnselected", "textThemeUnselected", 'b-theme', 'b-style', 'b-size', "component", "className", "style"]);
 
   if (hasBg === undefined) hasBg = bStyle === 'solid' && bTheme;
   if (hasSelection === undefined) hasSelection = bStyle === 'underline';
@@ -97,8 +96,7 @@ var _Panel = function Panel(aprops) {
     'offset-a-start square-full overflow-a-hidden': full,
     'display-inlineblock': inline,
     'flex-display-block flex-direction-v bg-color-view': page,
-    'scrollable-a- flex-sub-flex-extend': main,
-    'status-': status
+    'scrollable-a flex-sub-flex-extend': main
   };
   var styleSet = {};
   var textTheme;
@@ -116,18 +114,18 @@ var _Panel = function Panel(aprops) {
     var _theme = bTheme ? bTheme === true ? '' : bTheme : bTheme === false ? false : '';
 
     classSet['border-set-a-' + _theme] = _theme !== false;
-    classSet[bgThemeOnHollow === false ? 'bg-none-' : 'bg-color-' + (bgThemeOnHollow === true ? '' : bgThemeOnHollow)] = true;
+    classSet[bgThemeOnHollow === false ? 'bg-none' : 'bg-color-' + (bgThemeOnHollow === true ? '' : bgThemeOnHollow)] = true;
   } else if (bStyle === 'underline') {
     var _theme2 = bTheme ? bTheme === true ? '' : bTheme : bTheme === false ? false : '';
 
-    classSet['border-none-top- border-none-left- border-none-right- bg-none-'] = true;
+    classSet['border-none-top border-none-left border-none-right bg-none'] = true;
     classSet['border-width-bottom-2'] = true;
     classSet['border-set-bottom-' + _theme2] = _theme2 !== false;
     if (!selected) styleSet['borderColor'] = 'transparent';
   } else if (bStyle === 'white') {
     classSet['bg-color-white'] = true;
   } else if (bStyle === 'plain') {
-    classSet['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
+    classSet['border-none-top border-none-bottom border-none-left border-none-right bg-none'] = true;
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -164,12 +162,6 @@ _Panel.defaultProps = {};
 /**
  * 设置为选中状态，
  * @attribute module:Panel.Panel.selected
- * @type {boolean}
- */
-
-/**
- * 设置为响应点击状态
- * @attribute module:Panel.Panel.status
  * @type {boolean}
  */
 
@@ -551,8 +543,8 @@ var _PanelContainerItem = function PanelContainerItem(aprops) {
   if (type === 'justify') classSet.push('flex-sub-flex-extend');
   if (type === 'primary') classSet.push(itemSelected ? 'flex-sub-flex-extend' : 'flex-sub-flex-none');
   if (type === 'scroll') classSet.push('flex-sub-flex-extend height-full');
-  if (containerProps.noOverlap && itemIndex < itemCount - 1) classSet.push('border-none-right-');
-  if (containerProps.separator) classSet.push('border-none-a- bg-none-');
+  if (containerProps.noOverlap && itemIndex < itemCount - 1) classSet.push('border-none-right');
+  if (containerProps.separator) classSet.push('border-none-a bg-none');
   return (0, _react.cloneElement)(children, (0, _objectSpread6.default)({
     className: (0, _classes.default)(classSet, className),
     containerProps: containerProps,

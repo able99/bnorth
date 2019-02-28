@@ -27,9 +27,10 @@ function classes(...args) {
   let ret = [];
   let merge = function(arr) {
     return arr.filter((v,i,a)=>{
-      let key = v.substr(0, v.lastIndexOf('-')); 
+      let index = v.lastIndexOf('-');
+      let key = v.substr(0, index>0?index:v.length); 
       return !a.slice(i+1).find(vv=>{
-        return vv.startsWith(key);
+        return vv.startsWith(key) || (key==='bg-none'&&vv.startsWith('bg-color')) || (key==='bg-color'&&vv.startsWith('bg-none'));
       });
     })
   };  

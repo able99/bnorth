@@ -28,29 +28,20 @@ function genFuncControl(_ref) {
       mainColors = _ref.mainColors,
       stateOpacityDisabled = _ref.stateOpacityDisabled,
       stateOpacityActive = _ref.stateOpacityActive;
-  return Object.assign((0, _utils.genClassObjects)('button:disabled, button[disabled], button.disabled', {
+  return Object.assign(
+  /**
+   * 支持点击状态
+   * @classname btn
+   */
+  (0, _utils.genClassObjects)('.btn:disabled, .btn[disabled], .btn.disabled', {
     styleObjectMap: {
       'opacity': stateOpacityDisabled,
       'cursor': 'not-allowed',
       'pointer-events': 'none'
     }
-  }), (0, _utils.genClassObjects)('.status-:disabled, .status-[disabled], .status-.disabled', {
-    styleObjectMap: {
-      'opacity': stateOpacityDisabled,
-      'cursor': 'not-allowed',
-      'pointer-events': 'none'
-    }
-  }), (0, _utils.genClassObjects)('button:active, button[active], button.active', {
+  }), (0, _utils.genClassObjects)('.btn:active, .btn[active], .btn.active', {
     styleObjectMap: {
       'opacity': stateOpacityActive
-    }
-  }), (0, _utils.genClassObjects)('.status-:active, .status-[active], .status-.active', {
-    styleObjectMap: {
-      'opacity': stateOpacityActive
-    }
-  }), (0, _utils.genClassObjects)('.button-active:not(.selected)', {
-    styleObjectMap: {
-      'color': textColors.normal
     }
   }),
   /**
@@ -64,13 +55,13 @@ function genFuncControl(_ref) {
    */
 
   /**
-   * 基于 input check 状态的双态的
-   * @classname on-
+   * 基于 input check 状态的双态的选中状态
+   * @classname check-status-checked
    */
 
   /**
-   * 基于 input check 状态的双态的容器
-   * @classname off-
+   * 基于 input check 状态的双态的未选中状态
+   * @classname check-status-unchecked
    */
   (0, _utils.genClassObjects)('.check-status input + .check-status-inner .check-status-checked', {
     styleObjectMap: {

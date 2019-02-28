@@ -18,6 +18,10 @@
   position: fixed;
 }
 
+.position-sticky {
+  position: sticky;
+}
+
 .offset-a-start {
   left: 0;
   right: 0;

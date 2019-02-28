@@ -9,7 +9,7 @@ export default props=>{
   return (
     <div className="bg-color-white width-full height-full flex-display-block flex-direction-v">
       <NavBar title="bnorth demo" />
-      <div className="scrollable-y- flex-sub-flex-extend">
+      <div className="scrollable-y flex-sub-flex-extend">
         <List>
           <List.Item 
             title="组件列表" 

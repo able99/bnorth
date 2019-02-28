@@ -25,9 +25,9 @@ function genFuncBackground({utilColors, mainColors, opacityColors}) {
     }), 
     /**
      * 设置无背景
-     * @classname bg-none-
+     * @classname bg-none
      */
-    genClassObjects('.bg-none-', {
+    genClassObjects('.bg-none', {
       styleObjectMap: {
         'background': 'none',
       },

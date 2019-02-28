@@ -8,26 +8,19 @@ import { PanelIcon } from './Icon';
 export let Notice = aprops=>{
   let {
     containerProps,
-    onDoClose, onFinished, transitionProps, 
-    contentProps, closeProps, close, 
-    children, ...props
+    onDoClose, onFinished, transitionProps, animationProps,
+    ...props
   } = BaseComponent(aprops, Notice);
 
   let classNamePreContainer = 'position-absolute offset-top-start offset-left-top width-full';
-  let classNamePre = 'flex-display-block flex-align-center width-full';
-  let classNamePreInner = 'padding-a-';
-  let classNamePreContent = 'text-weight- text-size-lg flex-sub-flex-extend';
-  let classNamePreClose = 'padding-h-sm padding-v-0 flex-sub-flex-none';
 
   return (
     <Panel className={classNamePreContainer} {...containerProps}>
-      <Animation
-        type="collapse" transitionProps={transitionProps} onFinished={onFinished} 
-        b-style="solid" b-theme="mask" classNamePre={classNamePre} {...props}>
-        <Panel classNamePre={classNamePreInner}>
-          {children?<Panel classNamePre={classNamePreContent} {...contentProps}>{children}</Panel>:null}
-          {close?<PanelIcon b-style="plain" b-theme="white" inline bc-cursor-pointer onClick={onDoClose} name="close" defaultName="x" {...closeProps}>{close===true?undefined:close}</PanelIcon>:null}
-        </Panel>
+      <Animation type="collapse" bc-width-full onFinished={onFinished} transitionProps={transitionProps} {...animationProps}>
+        <PanelIcon 
+          bp-title-bc-flex-sub-flex-extend bp-title-bc-text-weight- bp-title-bc-text-size-lg
+          name="close:x" bp-icon-onClick={onDoClose} b-icon-bc-padding-a-xs
+          bc-width-full bc-padding-a- position="right" b-style="solid" b-theme="mask" {...props} />
       </Animation>
     </Panel>
   );

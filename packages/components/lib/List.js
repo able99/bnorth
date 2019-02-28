@@ -146,9 +146,8 @@ var _Item = function Item(aprops) {
 
   var classNamePre = (_classNamePre = {
     'padding-a-': true,
-    'bg-color-white': hasTheme,
-    'status-': Boolean(onClick)
-  }, (0, _defineProperty2.default)(_classNamePre, "margin-left-".concat(separatorInset && separatorInset !== true ? '-' + separatorInset : ''), separatorInset), (0, _defineProperty2.default)(_classNamePre, 'padding-left-0', separatorInset), (0, _defineProperty2.default)(_classNamePre, 'cursor-pointer', onClick || arrow), (0, _defineProperty2.default)(_classNamePre, 'border-set-bottom-', itemIndex < itemCount - 1), _classNamePre);
+    'bg-color-white': hasTheme
+  }, (0, _defineProperty2.default)(_classNamePre, "margin-left-".concat(separatorInset && separatorInset !== true ? '-' + separatorInset : ''), separatorInset), (0, _defineProperty2.default)(_classNamePre, 'padding-left-0', separatorInset), (0, _defineProperty2.default)(_classNamePre, 'border-set-bottom-', itemIndex < itemCount - 1), _classNamePre);
   return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
     type: "primary",
     align: "center",

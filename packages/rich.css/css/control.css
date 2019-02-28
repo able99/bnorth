@@ -1,25 +1,11 @@
-button:disabled, button[disabled], button.disabled {
+.btn:disabled, .btn[disabled], .btn.disabled {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-.status-:disabled, .status-[disabled], .status-.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-button:active, button[active], button.active {
+.btn:active, .btn[active], .btn.active {
   opacity: 0.8;
-}
-
-.status-:active, .status-[active], .status-.active {
-  opacity: 0.8;
-}
-
-.button-active:not(.selected) {
-  color: #383838;
 }
 
 .check-status input + .check-status-inner .check-status-checked {

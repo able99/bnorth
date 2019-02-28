@@ -68,7 +68,7 @@ let Component = aprops=>{
 
       <Groups.Group title="BackTop" desc="返回顶部按钮">
         <Groups.Show>
-          {props=><Panel data-container><Panel bc-width-full bs-height="150px" bc-scrollable-y->{listComponent(40)}<BackTop param="100%" container {...props} /></Panel></Panel>}
+          {props=><Panel data-container><Panel bc-width-full bs-height="150px" bc-scrollable-y>{listComponent(40)}<BackTop param="100%" container {...props} /></Panel></Panel>}
         </Groups.Show>
       </Groups.Group>
 
@@ -78,7 +78,7 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Carousel" desc="轮播-分页显示错误">
+      <Groups.Group title="Carousel" desc="轮播">
         <Groups.Props data={{
           controller: undefined,
           pager: undefined,
@@ -97,14 +97,14 @@ let Component = aprops=>{
 
       <Groups.Group title="Dropload" desc="上拉刷新">
         <Groups.Show>
-          {props=><Panel bc-position-relative bc-scrollable-y- bs-height="150px">
+          {props=><Panel bc-position-relative bc-scrollable-y bs-height="150px">
             {listComponent(stateData.count||10)}
             <Dropload onLoad={()=>{page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({count: (stateData.count||10)+10, isLoading: false}), 3000)}} {...props} isLoading={stateData.isLoading}>loadding</Dropload>
           </Panel>}
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Fab" desc="浮动按钮-不能使用 transform component">
+      <Groups.Group title="Fab" desc="浮动按钮">
         <Groups.Props data={{
           h: ['start','center','end'],
           v: ['start','center','end'],
@@ -112,11 +112,11 @@ let Component = aprops=>{
           container: [true, false],
         }}/>
         <Groups.Show>
-          {props=><Panel data-container><Panel bc-scrollable-y- bs-height="150px">{listComponent(20)}<Fab {...props}>fab</Fab></Panel></Panel>}
+          {props=><Panel data-container><Panel bc-scrollable-y bs-height="150px">{listComponent(20)}<Fab {...props}>fab</Fab></Panel></Panel>}
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Field" desc="输入域-样式风格">
+      <Groups.Group title="Field" desc="输入域">
         <Groups.Show>
           <Groups.Sep title="text" />
           <Field type="text" />
@@ -138,7 +138,7 @@ let Component = aprops=>{
           <Groups.Sep title="file" />
           <Field type="file">open</Field>
           <Groups.Sep title="container" />
-          <Field containerProps={stateCommonProps} before="b" after="a" />
+          {props=><Field containerProps={props} before="b" after="a" />}
         </Groups.Show>
       </Groups.Group>
 
@@ -178,7 +178,7 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Loader" desc="加载中-动画改未非 svg 动画, loading 需要改名">
+      <Groups.Group title="Loader" desc="加载中">
         <Groups.Props data={{
           type: ['circle','line'],
           isProgress: undefined,
@@ -198,7 +198,7 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Modal" desc="对话框-关闭按钮封装">
+      <Groups.Group title="Modal" desc="对话框">
         <Groups.Show>
           {props=><div style={{height: 500}} className="position-relative"><Modal title="title" role="prompt" close {...props}>body</Modal></div>}
         </Groups.Show>
@@ -215,7 +215,7 @@ let Component = aprops=>{
 
       <Groups.Group title="Notice" desc="通知栏">
         <Groups.Show>
-          {props=><div style={{height: 300}} className="position-relative"><Notice {...props}>notice</Notice></div>}
+          {props=><div style={{height: 300}} className="position-relative"><Notice onDoClose={()=>alert(1)} {...props}>notice</Notice></div>}
         </Groups.Show>
       </Groups.Group>
 
@@ -250,7 +250,7 @@ let Component = aprops=>{
 
       <Groups.Group title="PullRefresh" desc="下拉刷新">
         <Groups.Show>
-          {props=><div style={{height: 150}} className="scrollable-y-">
+          {props=><div style={{height: 150}} className="scrollable-y">
             <PullRefresh onLoad={()=>{page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({isLoading: false}), 3000)}} isLoading={stateData.isLoading} {...props}>{listComponent(20)}</PullRefresh>
           </div>}
         </Groups.Show>
@@ -258,7 +258,7 @@ let Component = aprops=>{
 
       <Groups.Group title="ScrollSpy" desc="滚动监控">
         <Groups.Show>
-          {props=><Panel bc-position-relative bc-width-full bs-height="100px" bc-scrollable-y->
+          {props=><Panel bc-position-relative bc-width-full bs-height="100px" bc-scrollable-y>
             {Array.from({length: 20}, (v,i)=>i).map(v=>(v===5
               ?<ScrollSpy onRelativeChange={(p)=>page.stateLog.update([p], {append: true})} {...props} />
               :<div>{v}</div>
@@ -286,7 +286,7 @@ let Component = aprops=>{
           'bp-nav-bp-item-position': ['top', 'left'],
         }} />
         <Groups.Show>
-          <TabBar bs-height={150} bp-container-bp-item-className="scrollable-y-">
+          <TabBar bs-height={150} bp-container-bp-item-className="scrollable-y">
             <TabBar.Item title="title1" name="view_comfy">{Array.from({length:20},(k,i)=>i).map(v=><div>tab1-{v+1}</div>)}</TabBar.Item>
             <TabBar.Item title="title2" name="settings">{Array.from({length:20},(k,i)=>i).map(v=><div>tab2-{v+1}</div>)}</TabBar.Item>
             <TabBar.Item title="title3" name="extension">{Array.from({length:20},(k,i)=>i).map(v=><div>tab3-{v+1}</div>)}</TabBar.Item>

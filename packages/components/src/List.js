@@ -86,10 +86,8 @@ let Item = aprops=>{
   let classNamePre = {
     'padding-a-': true,
     'bg-color-white': hasTheme,
-    'status-': Boolean(onClick),
     [`margin-left-${separatorInset&&separatorInset!==true?('-'+separatorInset):''}`]: separatorInset,
     'padding-left-0': separatorInset,
-    'cursor-pointer': onClick||arrow,
     'border-set-bottom-': itemIndex<itemCount-1,
   };
 
