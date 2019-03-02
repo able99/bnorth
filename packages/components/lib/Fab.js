@@ -41,6 +41,8 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * 浮动按钮组件
  * 
  * 浮动按钮组件是浮动在指定容器上的组件，可设置浮动的位置，边缘距离和浮动的映射组件
+ * 
+ * 对于滚动组件上的浮动按钮，需要设置滚动组件父组件的 dock 属性，使浮动组件悬浮在 dock 上保持滚动时位置固定
  * @component 
  * @exportdefault
  * @augments module:BaseComponent.BaseComponent
@@ -58,6 +60,14 @@ function (_React$Component) {
   }
 
   (0, _createClass2.default)(Fab, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevProps.dock !== this.props.dock) {
+        this.dock = undefined;
+        this.forceUpdate();
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this = this,
@@ -67,14 +77,14 @@ function (_React$Component) {
           h = _BaseComponent.h,
           v = _BaseComponent.v,
           margin = _BaseComponent.margin,
-          container = _BaseComponent.container,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["h", "v", "margin", "container"]);
+          dock = _BaseComponent.dock,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["h", "v", "margin", "dock"]);
 
-      if ((container === true || typeof container === 'string') && !this.container) {
+      if ((dock === true || typeof dock === 'string') && !this.dock) {
         return _react.default.createElement("span", {
           ref: function ref(e) {
             if (!e) return;
-            _this.container = (0, _BaseComponent2.domFindContainer)(e, _this.props.container);
+            _this.dock = (0, _BaseComponent2.domFindDock)(e, dock);
 
             _this.forceUpdate();
           },
@@ -93,7 +103,7 @@ function (_React$Component) {
         classNamePre: classNamePre
       }, props));
 
-      return this.container ? (0, _BaseComponent2.domCreatePortal)(component, this.container) : component;
+      return this.dock ? (0, _BaseComponent2.domCreatePortal)(component, this.dock) : component;
     }
   }]);
   return Fab;
@@ -122,8 +132,8 @@ Fab.defaultProps.margin = true;
  * 设置浮动的容器。
  * 
  * 不设置表示相对具有 relative，absolute 或 fixed 的 css position 属性的父元素。
- * 设置则作为 container 参数获取指定 container，参见 domFindContainer 函数
- * @attribute module:Fab.Fab.container
+ * 设置则作为 dock 参数获取指定 dock，参见 domFindDock 函数
+ * @attribute module:Fab.Fab.dock
  * @type {boolean|string}
  */
 

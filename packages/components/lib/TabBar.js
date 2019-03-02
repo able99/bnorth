@@ -23,10 +23,6 @@ var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/ge
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
-var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/helpers/assertThisInitialized"));
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _react = _interopRequireDefault(require("react"));
 
 var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
@@ -51,30 +47,13 @@ var TabBar =
 function (_React$Component) {
   (0, _inherits2.default)(TabBar, _React$Component);
 
-  function TabBar(_props) {
+  function TabBar(props) {
     var _this;
 
     (0, _classCallCheck2.default)(this, TabBar);
-    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(TabBar).call(this, _props));
-    (0, _defineProperty2.default)((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), "_handleAction", function (i) {
-      var _this$props = _this.props,
-          onAction = _this$props.onAction,
-          children = _this$props.children;
-
-      _this.setState({
-        selectedIndex: i
-      });
-
-      if (onAction) {
-        children = _react.default.Children.toArray(children).filter(function (v) {
-          return v;
-        });
-        var props = children[i] && children[i].props;
-        onAction(i, props, props && props.event);
-      }
-    });
+    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(TabBar).call(this, props));
     _this.state = {
-      selectedIndex: _props.selectedIndexDefault || 0
+      selectedIndex: props.selectedIndexDefault || 0
     };
     return _this;
   }
@@ -84,9 +63,7 @@ function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var _BaseComponent = (0, _BaseComponent2.default)(this.props, TabBar, {
-        isContainer: true
-      }),
+      var _BaseComponent = (0, _BaseComponent2.default)(this.props),
           _BaseComponent$select = _BaseComponent.selectedIndex,
           selectedIndex = _BaseComponent$select === void 0 ? this.state.selectedIndex : _BaseComponent$select,
           selectedIndexDefault = _BaseComponent.selectedIndexDefault,
@@ -100,10 +77,12 @@ function (_React$Component) {
         return v;
       });
       return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
+        _containerProps: this.props,
         type: "primary",
         direction: "v",
         align: "stretch"
       }, props), _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
+        _containerProps: navProps,
         type: "justify",
         selectedIndex: selectedIndex
       }, navProps), children.map(function (v, i) {
@@ -127,6 +106,7 @@ function (_React$Component) {
           }
         }, props));
       })), _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
+        _containerProps: containerProps,
         itemSelected: true,
         type: "scroll",
         selectedIndex: selectedIndex,

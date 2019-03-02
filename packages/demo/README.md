@@ -20,20 +20,14 @@ bnorth 解决方案 demo
 
 ### demo 反馈给 bnorth 需要解决的问题
 
-1. 整理 container
-1. classNamePre className b-style 优先级问题
-1. test 刷新时报路由无法找到
+1. panelcontainer 和 plain 的属性改为 _ 开头
 1. Fab - 不能使用 transformComponent； style plain 时，还有边框
 1. rich.css 支持 transform-origin ,支持 animation keyframe 配置和兼容性处理
-1. field 判断是否更新，应该是和this.input.value 比较；增加 pattern 自行处理
-1. popover 滚动后，显示位置不准去
-1. pullrefresh 解决了 pc 滚动不触发点击，但是 panel container sroll 还有问题
 1. loader 动画改未非 svg 动画, loading 需要改名
-1. modal 如何不使用 style white，Backdrop 不使用 bg-color-mask
-1. border-none 与 border-set 和其他的互斥判断
-1. demo 属性设置为 none 时，应该删除属性，而不是设置为 undefined
-1. panel container sroll 滑动 index 临界值不好，应该能分方向
 1. loader 没有处理 b-theme 等，Line 等应该是基于 Panel 的
-1. navbar 或者 notice 和 modal title 设置了字体导致无法跟随外面字体改变，navbar 设置了下边框，导致无法跟随边框设置
+1. field 增加 pattern 自行处理
+1. border-none 与 border-set 和其他的互斥判断
 1. component plugin refine
-1. tabbar nav 的大小不对
+1. weshare 工程上，/:fivorate 本来是 首页的切换 tabbar 的参数，结果被 /|favorite 当成自己的参数了
+1. !popover 滚动后，显示位置不准去
+1. demo 属性设置为 none 时，应该删除属性，而不是设置为 undefined

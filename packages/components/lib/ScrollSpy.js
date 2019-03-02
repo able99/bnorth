@@ -57,13 +57,13 @@ function (_React$Component) {
       if (!target || !onRelativeChange) return;
 
       if (target === true) {
-        this.targetOffset = (0, _BaseComponent.domOffset)(this, this.container);
+        this.targetOffset = (0, _BaseComponent.domOffset)(this, this.dock);
       } else if (target === 'parent') {
         var dom = (0, _BaseComponent.domFindNode)(this);
         if (!dom) return;
         dom = dom.parentNode;
         if (!dom) return;
-        this.targetOffset = (0, _BaseComponent.domOffset)(dom, this.container);
+        this.targetOffset = (0, _BaseComponent.domOffset)(dom, this.dock);
       }
 
       if (this.targetOffset) this.targetOffset.bottom = this.targetOffset.top + this.targetOffset.height;
@@ -71,10 +71,10 @@ function (_React$Component) {
   }, {
     key: "_getScrollOffset",
     value: function _getScrollOffset() {
-      if (!this.container) return {};
+      if (!this.dock) return {};
       return {
-        top: this.container.scrollTop,
-        bottom: this.container.scrollTop + this.container.offsetHeight
+        top: this.dock.scrollTop,
+        bottom: this.dock.scrollTop + this.dock.offsetHeight
       };
     }
   }, {
@@ -107,11 +107,11 @@ function (_React$Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.relative = '';
-      this.container = (0, _BaseComponent.domFindScrollContainer)(this, this.props.container, this.props.horizontal);
+      this.dock = (0, _BaseComponent.domFindScrollDock)(this, this.props.dock, this.props.horizontal);
 
       this._getTargetOffset();
 
-      this.offScrollListener = (0, _BaseComponent.listen)(this.container, 'scroll', this._handlePosChange.bind(this), true);
+      this.offScrollListener = (0, _BaseComponent.listen)(this.dock, 'scroll', this._handlePosChange.bind(this), true);
       this.offResizeListener = (0, _BaseComponent.listen)(window, 'resize', this._handlePosChange.bind(this), true);
 
       this._handlePosChange();
@@ -135,7 +135,7 @@ function (_React$Component) {
       var _this$props2 = this.props,
           onPosChange = _this$props2.onPosChange,
           onRelativeChange = _this$props2.onRelativeChange;
-      onPosChange && onPosChange(event, this.container);
+      onPosChange && onPosChange(event, this.dock);
       if (!onRelativeChange || !this.targetOffset) return;
       var targetOffset = this.targetOffset;
 
@@ -144,7 +144,7 @@ function (_React$Component) {
       var relative = this._getRelative(targetOffset, scrollOffset);
 
       if (relative !== this.relative) {
-        onRelativeChange(relative, this.relative, event, this.container);
+        onRelativeChange(relative, this.relative, event, this.dock);
         this.relative = relative;
       }
     }
@@ -172,7 +172,7 @@ ScrollSpy.defaultProps = {};
 ScrollSpy.defaultProps.target = true;
 /**
  * TODO
- * @attribute module:ScrollSpy.ScrollSpy.container
+ * @attribute module:ScrollSpy.ScrollSpy.dock
  * @type {boolean}
  */
 
@@ -201,7 +201,7 @@ ScrollSpy.defaultProps.target = true;
  * @param {module:ScrollSpy~RelativeType} relative - 相对位置
  * @param {module:ScrollSpy~RelativeType} preRelative - 改变前的相对位置
  * @param {event} event - 引起改变的滚动事件
- * @param {element} container - 滚动对象的 dom 元素
+ * @param {element} dock - 滚动对象的 dom 元素
  */
 
 /**
@@ -214,7 +214,7 @@ ScrollSpy.defaultProps.target = true;
  * 滚动位置改变回调函数
  * @callback onPosChangeCallback
  * @param {event} event - 引起改变的滚动事件
- * @param {element} container - 滚动对象的 dom 元素
+ * @param {element} dock - 滚动对象的 dom 元素
  */
 
 /**

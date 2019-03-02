@@ -18,10 +18,10 @@ let List = aprops=>{
   let {
     separatorInset, hasTheme, header, footer, headerProps, footerProps, 
     children, ...props
-  } = BaseComponent(aprops, List, {isContainer: true});
+  } = BaseComponent(aprops);
 
   return (
-    <PanelContainer {...props}>
+    <PanelContainer _containerProps={aprops} {...props}>
       {header?<Panel bc-border-set-bottom- bc-padding-a- itemPlain {...headerProps}>{header}</Panel>:null}
       {children}
       {footer?<Panel bc-border-set-top- bc-padding-a- itemPlain {...footerProps}>{footer}</Panel>:null}
@@ -78,36 +78,43 @@ export default List;
  */
 let Item = aprops=>{
   let {
-    itemIndex, itemCount, containerProps:{separatorInset, hasTheme}, onClick, 
+    itemIndex, itemCount, _containerProps:{separatorInset}, onClick, 
     media, mediaProps, mainProps, title, titleProps, subTitle, subTitleProps, desc, descProps, after, afterProps, arrow, arrowProps, autoArrow=true, 
     children, ...props
   } = BaseComponent(aprops, Item);
 
   let classNamePre = {
     'padding-a-': true,
-    'bg-color-white': hasTheme,
     [`margin-left-${separatorInset&&separatorInset!==true?('-'+separatorInset):''}`]: separatorInset,
     'padding-left-0': separatorInset,
     'border-set-bottom-': itemIndex<itemCount-1,
   };
 
   return (
-    <PanelContainer type="primary" align="center" classNamePre={classNamePre} onClick={onClick} {...props}>
-      {media?(<Panel bc-display-inline-block bc-line-height-0 bc-margin-right- {...mediaProps}>{media===true?undefined:media}</Panel>):null}
+    <PanelContainer type="primary" align="center" b-style="white" classNamePre={classNamePre} onClick={onClick} {...props}>
+      {media?(<Panel bc-line-height-0 bc-margin-right- {...mediaProps}>{media===true?undefined:media}</Panel>):null}
       <PanelContainer itemSelected {...mainProps}>
         {title?(<Panel {...titleProps}>{title===true?undefined:title}</Panel>):null}
-        {subTitle?(<Panel b-size={hasTheme&&"sm"} {...subTitleProps}>{subTitle===true?undefined:subTitle}</Panel>):null}
-        {desc?(<Panel b-size={hasTheme&&"sm"} b-theme={hasTheme&&"light"} {...descProps}>{desc===true?undefined:desc}</Panel>):null}
+        {subTitle?(<Panel {...subTitleProps}>{subTitle===true?undefined:subTitle}</Panel>):null}
+        {desc?(<Panel {...descProps}>{desc===true?undefined:desc}</Panel>):null}
         {children}
       </PanelContainer>
-      {after?(<Panel bc-display-inline-block bc-line-height-0 b-size={hasTheme&&"sm"} b-theme={hasTheme&&"light"} {...afterProps}>{after===true?undefined:after}</Panel>):null}
-      {arrow||(autoArrow&&onClick)?(<Panel component={Icon} name="right" nameDefault=">" b-size={hasTheme&&"sm"} b-theme={hasTheme&&"light"} {...arrowProps}>{arrow===true?undefined:arrow}</Panel>):null}
+      {after?(<Panel bc-line-height-0 {...afterProps}>{after===true?undefined:after}</Panel>):null}
+      {arrow||(autoArrow&&onClick)?(<Panel component={Icon} name="right" nameDefault=">" {...arrowProps}>{arrow===true?undefined:arrow}</Panel>):null}
     </PanelContainer>
   );
 }
 
 
-Item.defaultProps = {};
+Item.defaultProps = {}
+Item.defaultProps['b-precast'] = {
+  'bp-subTitle-bc-text-size': 'sm',
+  'bp-desc-bc-text-size': 'sm',
+  'bp-desc-bc-text-color': 'light',
+  'bp-after-bc-text-size': 'sm',
+  'bp-after-bc-text-color': 'light',
+  'bp-arrow-bc-text-color': 'light',
+}
 /**
  * 参见 List
  * @attribute module:List~Item.separatorInset

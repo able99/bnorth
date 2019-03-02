@@ -39,7 +39,7 @@ var _NavBar = function NavBar(aprops) {
       props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["overlay", "hidden"]);
 
   if (hidden) return null;
-  var classNamePre = 'flex-display-block flex-justify-around flex-align-center width-full padding-v-sm border-set-bottom-';
+  var classNamePre = 'flex-display-block flex-justify-around flex-align-center width-full padding-v-sm';
   var stylePre = {};
   if (overlay) stylePre.paddingTop = overlay === true ? 20 : overlay;
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
@@ -85,7 +85,7 @@ var _Title = function Title(aprops) {
       isFullOrCenter = _BaseComponent2.isFullOrCenter,
       props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isFullOrCenter"]);
 
-  var classNamePre = 'text-align-center flex-sub-flex-extend text-weight-bold text-size-xl';
+  var classNamePre = 'text-align-center flex-sub-flex-extend';
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Panel.default, (0, _extends2.default)({
     inline: true,
     classNamePre: classNamePre,
@@ -98,12 +98,16 @@ var _Title = function Title(aprops) {
 };
 
 _Title.defaultProps = {};
-/**
- * 设置标题组件铺满小组件之外空间，或者按需设置宽度并居中
- * @attribute module:NavBar~Title.isFullOrCenter
- * @type {boolean}
- */
+_Title.defaultProps['b-precast'] = {
+  'bc-text-weight': 'bold',
+  'bc-text-size': 'xl'
+  /**
+   * 设置标题组件铺满小组件之外空间，或者按需设置宽度并居中
+   * @attribute module:NavBar~Title.isFullOrCenter
+   * @type {boolean}
+   */
 
+};
 Object.defineProperty(_NavBar, "Title", {
   get: function get() {
     return _Title;

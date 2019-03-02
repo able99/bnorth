@@ -68,6 +68,7 @@ function (_React$Component) {
     key: "prev",
     value: function prev() {
       var selectedIndex = this.state.selectedIndex;
+      selectedIndex--;
       if (selectedIndex < 0) selectedIndex = _react.default.Children.toArray(this.props.children).filter(function (v) {
         return v;
       }).length - 1;
@@ -168,7 +169,7 @@ function (_React$Component) {
       return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
         type: "scroll",
         selectedIndex: selectedIndex,
-        onSelect: function onSelect(selectedIndex) {
+        onSelectedChange: function onSelectedChange(selectedIndex) {
           return _this3.setState({
             selectedIndex: selectedIndex
           }, function () {

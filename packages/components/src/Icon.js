@@ -4,7 +4,7 @@
 import React from 'react';
 import { transform } from '@bnorth/rich.css/lib/styles/animation'
 import BaseComponent from './BaseComponent';
-import Panel from './Panel';
+import Panel, { PanelContainer } from './Panel';
 
 
 /**
@@ -156,10 +156,10 @@ export let PanelIcon = aprops=>{
     name, src, char, shape, iconSelected, rotate, iconProps, 
     title, titleProps, 
     children, ...props
-  } = BaseComponent(aprops, PanelIcon, {isContainer: true});
+  } = BaseComponent(aprops);
 
   return (
-    <Panel.Container type="flex"  position="left" justify="center" align="center" selected={selected} {...props}>
+    <PanelContainer _containerProps={aprops} type="flex"  position="left" justify="center" align="center" selected={selected} {...props}>
       <Icon 
         name={name&&(selected&&iconSelected?iconSelected:name)}
         src={src&&(selected&&iconSelected?iconSelected:src)}
@@ -168,7 +168,7 @@ export let PanelIcon = aprops=>{
         rotate={rotate}
         {...iconProps} />
       {title||children?<Panel bc-text-truncate-1 {...titleProps}>{title}{children}</Panel>:null}
-    </Panel.Container>
+    </PanelContainer>
   );
 }
 

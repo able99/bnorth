@@ -9,8 +9,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.PanelContainerItem = exports.PanelContainer = exports.default = void 0;
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 require("core-js/modules/es6.array.find-index");
@@ -27,6 +25,8 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _objectSpread6 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
@@ -37,7 +37,7 @@ var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
 var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
-var _BaseComponent6 = _interopRequireDefault(require("./BaseComponent"));
+var _BaseComponent5 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Touchable = _interopRequireDefault(require("./Touchable"));
 
@@ -54,6 +54,8 @@ var _Touchable = _interopRequireDefault(require("./Touchable"));
  * @augments module:BaseComponent.BaseComponent
  */
 var _Panel = function Panel(aprops) {
+  var _classSet;
+
   if (aprops.componentTransform) {
     var ComponentTransform = aprops.componentTransform;
     return _react.default.createElement(ComponentTransform, (0, _objectSpread6.default)({}, aprops, {
@@ -61,7 +63,7 @@ var _Panel = function Panel(aprops) {
     }));
   }
 
-  var _BaseComponent = (0, _BaseComponent6.default)(aprops, _Panel),
+  var _BaseComponent = (0, _BaseComponent5.default)(aprops, _Panel),
       main = _BaseComponent.main,
       page = _BaseComponent.page,
       full = _BaseComponent.full,
@@ -70,7 +72,7 @@ var _Panel = function Panel(aprops) {
       itemCount = _BaseComponent.itemCount,
       itemSelected = _BaseComponent.itemSelected,
       itemPlain = _BaseComponent.itemPlain,
-      containerProps = _BaseComponent.containerProps,
+      _containerProps = _BaseComponent._containerProps,
       selected = _BaseComponent.selected,
       hasBg = _BaseComponent.hasBg,
       hasSelection = _BaseComponent.hasSelection,
@@ -86,18 +88,15 @@ var _Panel = function Panel(aprops) {
       Component = _BaseComponent$compon === void 0 ? "div" : _BaseComponent$compon,
       className = _BaseComponent.className,
       style = _BaseComponent.style,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["main", "page", "full", "inline", "itemIndex", "itemCount", "itemSelected", "itemPlain", "containerProps", "selected", "hasBg", "hasSelection", "textThemeOnBg", "bgThemeOnHollow", "textThemeOnBgSelected", "textThemeOnBgUnselected", "textThemeUnselected", 'b-theme', 'b-style', 'b-size', "component", "className", "style"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["main", "page", "full", "inline", "itemIndex", "itemCount", "itemSelected", "itemPlain", "_containerProps", "selected", "hasBg", "hasSelection", "textThemeOnBg", "bgThemeOnHollow", "textThemeOnBgSelected", "textThemeOnBgUnselected", "textThemeUnselected", 'b-theme', 'b-style', 'b-size', "component", "className", "style"]);
 
   if (hasBg === undefined) hasBg = bStyle === 'solid' && bTheme;
   if (hasSelection === undefined) hasSelection = bStyle === 'underline';
-  if (page) props['data-container'] = true;
-  var classSet = {
+  if (page) props['data-dock'] = true;
+  var classSet = (_classSet = {
     'position-relative': true,
-    'offset-a-start square-full overflow-a-hidden': full,
-    'display-inlineblock': inline,
-    'flex-display-block flex-direction-v bg-color-view': page,
-    'scrollable-a flex-sub-flex-extend': main
-  };
+    'offset-a-start square-full overflow-a-hidden': full
+  }, (0, _defineProperty2.default)(_classSet, page ? 'flex-display-inline' : 'display-inlineblock', inline), (0, _defineProperty2.default)(_classSet, (!inline ? 'flex-display-block' : '') + ' flex-direction-v bg-color-view', page), (0, _defineProperty2.default)(_classSet, 'scrollable-a flex-sub-flex-extend', main), _classSet);
   var styleSet = {};
   var textTheme;
   if (hasSelection) textTheme = hasBg ? selected ? textThemeOnBgSelected : textThemeOnBgUnselected : selected ? bTheme || false : textThemeUnselected;
@@ -124,6 +123,8 @@ var _Panel = function Panel(aprops) {
     if (!selected) styleSet['borderColor'] = 'transparent';
   } else if (bStyle === 'white') {
     classSet['bg-color-white'] = true;
+  } else if (bStyle === 'mask') {
+    classSet['bg-color-mask'] = true;
   } else if (bStyle === 'plain') {
     classSet['border-none-top border-none-bottom border-none-left border-none-right bg-none'] = true;
   }
@@ -269,7 +270,7 @@ function (_React$Component) {
       var _this = this,
           _objectSpread5;
 
-      var _BaseComponent2 = (0, _BaseComponent6.default)(this.props, _PanelContainer),
+      var _BaseComponent2 = (0, _BaseComponent5.default)(this.props, _PanelContainer),
           type = _BaseComponent2.type,
           inline = _BaseComponent2.inline,
           position = _BaseComponent2.position,
@@ -282,7 +283,7 @@ function (_React$Component) {
           _BaseComponent2$count = _BaseComponent2.countToShow,
           countToShow = _BaseComponent2$count === void 0 ? 1 : _BaseComponent2$count,
           onSelectedChange = _BaseComponent2.onSelectedChange,
-          SeparatorComponent = _BaseComponent2.separator,
+          separator = _BaseComponent2.separator,
           separatorProps = _BaseComponent2.separatorProps,
           noOverlap = _BaseComponent2.noOverlap,
           itemProps = _BaseComponent2.itemProps,
@@ -294,19 +295,21 @@ function (_React$Component) {
           children = _BaseComponent2.children,
           props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["type", "inline", "position", "direction", "justify", "align", "wrap", "selectedIndex", "countToShow", "onSelectedChange", "separator", "separatorProps", "noOverlap", "itemProps", "itemGetProps", "itemGetClassName", "itemGetStyle", "component", "className", "children"]);
 
-      if (SeparatorComponent === true) SeparatorComponent = _Separator;
       var classSet = {
         'position-relative overflow-a-hidden': true
       };
       children = _react.default.Children.toArray(children).filter(function (v) {
         return v;
       });
-      children = !SeparatorComponent ? children : children.reduce(function (v1, v2, i, a) {
-        if (!SeparatorComponent) return a;
-        if (i > 0) v1.push(_react.default.createElement(SeparatorComponent, (0, _extends2.default)({
+      children = !separator ? children : children.reduce(function (v1, v2, i, a) {
+        if (i > 0) v1.push(_react.default.createElement(_Panel, (0, _extends2.default)({
           key: 'sep' + i,
-          itemPlain: true
-        }, separatorProps)));
+          itemPlain: true,
+          inline: true,
+          "b-theme": "border",
+          "b-size": "lg",
+          classNamePre: 'flex-sub-flex-none flex-display-inline flex-align-center flex-justify-center'
+        }, separatorProps), _react.default.createElement("span", null, "|")));
         v1.push(v2);
         return v1;
       }, []);
@@ -498,8 +501,8 @@ _PanelContainer.genSubProps = function (type, selectedIndex, containerProps, ite
   var itemGetProps = arguments.length > 9 ? arguments[9] : undefined;
   var ret = (0, _objectSpread6.default)({
     key: key || itemIndex,
-    type: type,
-    containerProps: containerProps.containerProps,
+    _type: type,
+    _containerProps: containerProps._containerProps,
     itemIndex: itemIndex,
     itemCount: itemCount,
     itemSelected: selectedIndex === itemIndex
@@ -525,29 +528,29 @@ Object.defineProperty(_Panel, "Container", {
  */
 
 var _PanelContainerItem = function PanelContainerItem(aprops) {
-  var _BaseComponent3 = (0, _BaseComponent6.default)(aprops, _PanelContainerItem),
-      type = _BaseComponent3.type,
-      _BaseComponent3$conta = _BaseComponent3.containerProps,
-      containerProps = _BaseComponent3$conta === void 0 ? {} : _BaseComponent3$conta,
+  var _BaseComponent3 = (0, _BaseComponent5.default)(aprops, _PanelContainerItem),
+      _type = _BaseComponent3._type,
+      _BaseComponent3$_cont = _BaseComponent3._containerProps,
+      _containerProps = _BaseComponent3$_cont === void 0 ? {} : _BaseComponent3$_cont,
       itemIndex = _BaseComponent3.itemIndex,
       itemCount = _BaseComponent3.itemCount,
       itemSelected = _BaseComponent3.itemSelected,
       itemPlain = _BaseComponent3.itemPlain,
       className = _BaseComponent3.className,
       children = _BaseComponent3.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["type", "containerProps", "itemIndex", "itemCount", "itemSelected", "itemPlain", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["_type", "_containerProps", "itemIndex", "itemCount", "itemSelected", "itemPlain", "className", "children"]);
 
   if (itemPlain) return children;
   var classSet = [];
-  if (type === 'single') classSet.push('position-relative offset-a-start square-full overflow-a-hidden');
-  if (type === 'justify') classSet.push('flex-sub-flex-extend');
-  if (type === 'primary') classSet.push(itemSelected ? 'flex-sub-flex-extend' : 'flex-sub-flex-none');
-  if (type === 'scroll') classSet.push('flex-sub-flex-extend height-full');
-  if (containerProps.noOverlap && itemIndex < itemCount - 1) classSet.push('border-none-right');
-  if (containerProps.separator) classSet.push('border-none-a bg-none');
+  if (_type === 'single') classSet.push('position-relative offset-a-start square-full overflow-a-hidden');
+  if (_type === 'justify') classSet.push('flex-sub-flex-extend');
+  if (_type === 'primary') classSet.push(itemSelected ? 'flex-sub-flex-extend' : 'flex-sub-flex-none');
+  if (_type === 'scroll') classSet.push('flex-sub-flex-extend height-full');
+  if (_containerProps.noOverlap && itemIndex < itemCount - 1) classSet.push('border-none-right');
+  if (_containerProps.separator) classSet.push('border-none-a bg-none');
   return (0, _react.cloneElement)(children, (0, _objectSpread6.default)({
     className: (0, _classes.default)(classSet, className),
-    containerProps: containerProps,
+    _containerProps: _containerProps,
     itemIndex: itemIndex,
     itemCount: itemCount,
     itemSelected: itemSelected,
@@ -627,6 +630,18 @@ function (_React$Component2) {
   }
 
   (0, _createClass2.default)(InnerScroll, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      _BaseComponent5.domIsMouse && (0, _BaseComponent5.domFindNode)(this).addEventListener("click", function (event) {
+        if (_this2.mark) {
+          event.stopPropagation();
+          _this2.mark = false;
+        }
+      }, true);
+    }
+  }, {
     key: "handlePanStart",
     value: function handlePanStart(event, element) {
       var _this$props = this.props,
@@ -659,11 +674,12 @@ function (_React$Component2) {
           if (selectedIndex !== aindex) onSelectedChange(aindex, children[aindex].props);
         }
       });
+      this.mark = true;
     }
   }, {
     key: "render",
     value: function render() {
-      var _BaseComponent4 = (0, _BaseComponent6.default)(this.props, _InnerScroll),
+      var _BaseComponent4 = (0, _BaseComponent5.default)(this.props, _InnerScroll),
           countToShow = _BaseComponent4.countToShow,
           selectedIndex = _BaseComponent4.selectedIndex,
           Component = _BaseComponent4.component,
@@ -707,37 +723,5 @@ Object.defineProperty(_Panel, "InnerScroll", {
   },
   set: function set(val) {
     _InnerScroll = val;
-  }
-}); // Separator
-// -------------------------
-
-/**
- * 分隔条组件
- * @component
- * @augments module:BaseComponent.BaseComponent
- * @augments module:Panel.Panel
- * @private
- */
-
-var _Separator = function Separator(aprops) {
-  var _BaseComponent5 = (0, _BaseComponent6.default)(aprops, _Separator),
-      Component = _BaseComponent5.component,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["component"]);
-
-  var classNamePre = 'flex-sub-flex-none flex-display-inline flex-align-center flex-justify-center';
-  return _react.default.createElement(_Panel, (0, _extends2.default)({
-    inline: true,
-    "b-theme": "border",
-    "b-size": "lg",
-    classNamePre: classNamePre
-  }, props), _react.default.createElement("span", null, "|"));
-};
-
-Object.defineProperty(_Panel, "Separator", {
-  get: function get() {
-    return _Separator;
-  },
-  set: function set(val) {
-    _Separator = val;
   }
 });

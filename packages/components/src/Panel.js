@@ -4,7 +4,7 @@
 import React, { cloneElement } from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import { transform } from '@bnorth/rich.css/lib/styles/animation'; 
-import BaseComponent from './BaseComponent';
+import BaseComponent, { domIsMouse, domFindNode } from './BaseComponent';
 import Touchable from './Touchable';
 
 // Panel
@@ -21,7 +21,7 @@ let Panel = aprops=>{
 
   let {
     main, page, full, inline, 
-    itemIndex, itemCount, itemSelected, itemPlain, containerProps,
+    itemIndex, itemCount, itemSelected, itemPlain, _containerProps,
     selected, hasBg, hasSelection, textThemeOnBg, bgThemeOnHollow, textThemeOnBgSelected, textThemeOnBgUnselected, textThemeUnselected, 
     'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, 
     component:Component="div", className, style, ...props
@@ -29,13 +29,13 @@ let Panel = aprops=>{
   if(hasBg===undefined) hasBg = bStyle==='solid'&&bTheme;
   if(hasSelection===undefined) hasSelection = bStyle==='underline';
 
-  if(page) props['data-container'] = true;
+  if(page) props['data-dock'] = true;
 
   let classSet = {
     'position-relative': true,
     'offset-a-start square-full overflow-a-hidden': full,
-    'display-inlineblock': inline,
-    'flex-display-block flex-direction-v bg-color-view': page,
+    [page?'flex-display-inline':'display-inlineblock']: inline,
+    [(!inline?'flex-display-block':'') + ' flex-direction-v bg-color-view']: page,
     'scrollable-a flex-sub-flex-extend': main,
   }
   let styleSet = {};
@@ -63,6 +63,8 @@ let Panel = aprops=>{
     if(!selected) styleSet['borderColor'] = 'transparent';
   }else if(bStyle==='white') {
     classSet['bg-color-white'] = true;
+  }else if(bStyle==='mask') {
+    classSet['bg-color-mask'] = true;
   }else if(bStyle==='plain') {
     classSet['border-none-top border-none-bottom border-none-left border-none-right bg-none'] = true;
   }
@@ -174,20 +176,18 @@ export let PanelContainer = class extends React.Component {
     let {
       type, inline, position, direction, justify, align, wrap,
       selectedIndex=0, countToShow=1, onSelectedChange, 
-      separator:SeparatorComponent, separatorProps, noOverlap,
+      separator, separatorProps, noOverlap,
       itemProps, itemGetProps, itemGetClassName, itemGetStyle,
       component:Component, className, children, ...props
     } = BaseComponent(this.props, PanelContainer);
-    if(SeparatorComponent===true) SeparatorComponent = Separator;
 
     let classSet = {
       'position-relative overflow-a-hidden': true,
     };
 
     children = React.Children.toArray(children).filter(v=>v);
-    children = !SeparatorComponent?children:children.reduce((v1,v2,i,a)=>{
-      if(!SeparatorComponent) return a;
-      if(i>0)v1.push(<SeparatorComponent key={'sep'+i} itemPlain {...separatorProps} />)
+    children = !separator?children:children.reduce((v1,v2,i,a)=>{
+      if(i>0)v1.push(<Panel key={'sep'+i} itemPlain inline b-theme='border' b-size='lg' classNamePre={'flex-sub-flex-none flex-display-inline flex-align-center flex-justify-center'} {...separatorProps}><span>|</span></Panel>)
       v1.push(v2);
       return v1;
     },[])
@@ -355,7 +355,7 @@ PanelContainer.genSubProps = function(
 ){
   let ret = {
     key:key||itemIndex, 
-    type, containerProps: containerProps.containerProps, itemIndex, itemCount, itemSelected: selectedIndex===itemIndex,
+    _type: type, _containerProps: containerProps._containerProps, itemIndex, itemCount, itemSelected: selectedIndex===itemIndex,
     ...componentProps,
     ...itemProps,
   }
@@ -391,21 +391,21 @@ Object.defineProperty(Panel,"Container",{ get:function(){ return PanelContainer 
  */
 export let PanelContainerItem = aprops=>{
   let {
-    type, containerProps={}, itemIndex, itemCount, itemSelected, itemPlain, 
+    _type, _containerProps={}, itemIndex, itemCount, itemSelected, itemPlain, 
     className, children, ...props
   } = BaseComponent(aprops, PanelContainerItem);
 
   if(itemPlain) return children;
 
   let classSet = [];
-  if(type==='single') classSet.push('position-relative offset-a-start square-full overflow-a-hidden');
-  if(type==='justify') classSet.push('flex-sub-flex-extend');
-  if(type==='primary') classSet.push(itemSelected?'flex-sub-flex-extend':'flex-sub-flex-none');
-  if(type==='scroll') classSet.push('flex-sub-flex-extend height-full');
-  if(containerProps.noOverlap&&itemIndex<itemCount-1) classSet.push('border-none-right');
-  if(containerProps.separator) classSet.push('border-none-a bg-none');
+  if(_type==='single') classSet.push('position-relative offset-a-start square-full overflow-a-hidden');
+  if(_type==='justify') classSet.push('flex-sub-flex-extend');
+  if(_type==='primary') classSet.push(itemSelected?'flex-sub-flex-extend':'flex-sub-flex-none');
+  if(_type==='scroll') classSet.push('flex-sub-flex-extend height-full');
+  if(_containerProps.noOverlap&&itemIndex<itemCount-1) classSet.push('border-none-right');
+  if(_containerProps.separator) classSet.push('border-none-a bg-none');
 
-  return cloneElement(children, {className: classes(classSet, className), containerProps, itemIndex, itemCount, itemSelected, itemPlain, ...props});
+  return cloneElement(children, {className: classes(classSet, className), _containerProps, itemIndex, itemCount, itemSelected, itemPlain, ...props});
 }
 
 PanelContainerItem.defaultProps = {}
@@ -463,6 +463,12 @@ Object.defineProperty(Panel,"ContainerItem",{ get:function(){ return PanelContai
  * @augments module:Touchable.Touchable
  */
 let InnerScroll = class extends React.Component {
+  componentDidMount() {
+    domIsMouse && domFindNode(this).addEventListener("click", event=>{
+      if(this.mark) { event.stopPropagation(); this.mark = false }
+    },true)
+  }
+
   handlePanStart(event, element) {
     let { countToShow, children } = this.props;
     this.size = element.clientWidth*countToShow/children.length;
@@ -481,6 +487,7 @@ let InnerScroll = class extends React.Component {
         if(selectedIndex!==aindex) onSelectedChange(aindex, children[aindex].props);
       }
     });
+    this.mark = true 
   }
 
   render() {
@@ -517,29 +524,3 @@ InnerScroll.defaultProps = {};
 InnerScroll.defaultProps.component = Touchable;
 
 Object.defineProperty(Panel,"InnerScroll",{ get:function(){ return InnerScroll }, set:function(val){ InnerScroll = val }})
-
-
-
-
-
-
-
-// Separator
-// -------------------------
-
-/**
- * 分隔条组件
- * @component
- * @augments module:BaseComponent.BaseComponent
- * @augments module:Panel.Panel
- * @private
- */
-let Separator = aprops=>{
-  let { component:Component, ...props } = BaseComponent(aprops, Separator);
-  let classNamePre = 'flex-sub-flex-none flex-display-inline flex-align-center flex-justify-center';
-  return <Panel inline b-theme='border' b-size='lg' classNamePre={classNamePre} {...props}><span>|</span></Panel>;
-}
-
-Object.defineProperty(Panel,"Separator",{ get:function(){ return Separator }, set:function(val){ Separator = val }})
-
-

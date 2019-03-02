@@ -239,10 +239,8 @@ _Loader.defaultProps.types = {
 
 };
 
-var _PanelLoader = function PanelLoader(aprops) {
-  var _BaseComponent4 = (0, _BaseComponent5.default)(aprops, _PanelLoader, {
-    isContainer: true
-  }),
+var PanelLoader = function PanelLoader(aprops) {
+  var _BaseComponent4 = (0, _BaseComponent5.default)(aprops),
       isProgress = _BaseComponent4.isProgress,
       progress = _BaseComponent4.progress,
       loaderProps = _BaseComponent4.loaderProps,
@@ -252,6 +250,7 @@ var _PanelLoader = function PanelLoader(aprops) {
       props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["isProgress", "progress", "loaderProps", "title", "titleProps", "children"]);
 
   return _react.default.createElement(_Panel.default.Container, (0, _extends2.default)({
+    _containerProps: aprops,
     type: "flex",
     position: "left",
     justify: "center",
@@ -264,8 +263,8 @@ var _PanelLoader = function PanelLoader(aprops) {
   }, titleProps), title, children) : null);
 };
 
-exports.PanelLoader = _PanelLoader;
-_PanelLoader.defaultProps = {};
+exports.PanelLoader = PanelLoader;
+PanelLoader.defaultProps = {};
 /**
  * Loader 的属性, 参见 Loader
  * @attribute Panel.module:Loader~PanelLoader.loader*
@@ -292,9 +291,9 @@ _PanelLoader.defaultProps = {};
 
 Object.defineProperty(_Loader, "PanelLoader", {
   get: function get() {
-    return _PanelLoader;
+    return PanelLoader;
   },
   set: function set(val) {
-    exports.PanelLoader = _PanelLoader = val;
+    exports.PanelLoader = PanelLoader = val;
   }
 });

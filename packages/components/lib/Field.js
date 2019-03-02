@@ -155,7 +155,7 @@ function (_React$Component) {
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
-      if (this.props.value !== prevProps.value) this.input.value = this.props.value || '';
+      if (this.props.value !== this.input.value) this.input.value = this.props.value || '';
     }
   }, {
     key: "render",

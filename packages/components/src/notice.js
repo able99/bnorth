@@ -1,7 +1,7 @@
 import React from 'react';
 import BaseComponent from './BaseComponent';
-import Animation from './Animation';
 import Panel from './Panel';
+import Animation from './Animation';
 import { PanelIcon } from './Icon';
 
 
@@ -18,7 +18,7 @@ export let Notice = aprops=>{
     <Panel className={classNamePreContainer} {...containerProps}>
       <Animation type="collapse" bc-width-full onFinished={onFinished} transitionProps={transitionProps} {...animationProps}>
         <PanelIcon 
-          bp-title-bc-flex-sub-flex-extend bp-title-bc-text-weight- bp-title-bc-text-size-lg
+          bp-title-bc-flex-sub-flex-extend
           name="close:x" bp-icon-onClick={onDoClose} b-icon-bc-padding-a-xs
           bc-width-full bc-padding-a- position="right" b-style="solid" b-theme="mask" {...props} />
       </Animation>
@@ -27,6 +27,10 @@ export let Notice = aprops=>{
 }
 
 Notice.defaultProps = {}
+Notice.defaultProps['b-precast'] = {
+  'bp-title-bc-text-weight-': true,
+  'bp-title-bc-text-size': 'lg',
+}
 
 Object.defineProperty(Notice,"Notice",{ get:function(){ return Notice }, set:function(val){ Notice = val }})
 

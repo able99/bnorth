@@ -18,7 +18,7 @@ import { PanelIcon } from './Icon';
  * @augments module:PanelIcon~PanelIcon
  */
 class BackTop extends React.Component {
-  scrollToTop() { if(this.container)this.container.scrollTop=0 }
+  scrollToTop() { if(this.dock)this.dock.scrollTop=0 }
   isShow() { return this.state&&this.state.isShow; }
   toggle() { this.isShow()?this.hide():this.show(); }
   show() { !this.isShow()&&this.setState({isShow: true}) }
@@ -34,8 +34,8 @@ class BackTop extends React.Component {
       <React.Fragment>
         <ScrollSpy 
           onPosChange={(event, el)=>{
-            this.container = el;
-            checkFunc(checkParam, this.container)?this.show():this.hide();
+            this.dock = el;
+            checkFunc(checkParam, this.dock)?this.show():this.hide();
           }} 
           {...scrollSpyProps} />
         {this.isShow()?(
@@ -53,11 +53,11 @@ BackTop.defaultProps = {};
  * 设置出现时机的计算函数
  * @type {function}
  */
-BackTop.defaultProps.checkFunc = function(checkParam, container) {
+BackTop.defaultProps.checkFunc = function(checkParam, dock) {
   if(!isNaN(checkParam)){
-    return container.scrollTop>=(checkParam);
+    return dock.scrollTop>=(checkParam);
   }else if(typeof(checkParam)==='string'&&/\d*%/.test(checkParam)){
-    return container.scrollTop>=(container?domOffset(container).height*Number(checkParam.slice(0,-1))/100:0);
+    return dock.scrollTop>=(dock?domOffset(dock).height*Number(checkParam.slice(0,-1))/100:0);
   }
 }
 /**

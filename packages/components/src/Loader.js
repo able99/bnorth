@@ -161,10 +161,10 @@ Loader.defaultProps.types = {
  * @augments Panel.module:Container~Container
  */
 export let PanelLoader = aprops=>{
-  let { isProgress, progress, loaderProps, title, titleProps, children, ...props } = BaseComponent(aprops, PanelLoader, {isContainer: true});
+  let { isProgress, progress, loaderProps, title, titleProps, children, ...props } = BaseComponent(aprops);
 
   return (
-    <Panel.Container type="flex"  position="left" justify="center" align="center" {...props}>
+    <Panel.Container _containerProps={aprops} type="flex"  position="left" justify="center" align="center" {...props}>
       <Loader isProgress={isProgress} progress={progress} {...loaderProps} />
       {title||children?<Panel bc-text-truncate-1 {...titleProps} >{title}{children}</Panel>:null}
     </Panel.Container>

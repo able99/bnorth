@@ -2,7 +2,7 @@
  * @module
  */
 import React from 'react';
-import BaseComponent, { domFindContainer, domCreatePortal } from './BaseComponent';
+import BaseComponent, { domFindDock, domCreatePortal } from './BaseComponent';
 import Button from './Button';
 import Panel from './Panel';
 
@@ -11,6 +11,8 @@ import Panel from './Panel';
  * 浮动按钮组件
  * 
  * 浮动按钮组件是浮动在指定容器上的组件，可设置浮动的位置，边缘距离和浮动的映射组件
+ * 
+ * 对于滚动组件上的浮动按钮，需要设置滚动组件父组件的 dock 属性，使浮动组件悬浮在 dock 上保持滚动时位置固定
  * @component 
  * @exportdefault
  * @augments module:BaseComponent.BaseComponent
@@ -18,19 +20,15 @@ import Panel from './Panel';
  * @augments module:Button.Button
  */
 class Fab extends React.Component{
-  render() {
-    let { h, v, margin, container, ...props } = BaseComponent(this.props, Fab);
+  componentDidUpdate(prevProps, prevState) {
+    if(prevProps.dock !== this.props.dock) { this.dock = undefined; this.forceUpdate() }
+  }
 
-    if((container===true||typeof container==='string')&&!this.container) {
-      return (
-        <span 
-          ref={e=>{
-            if(!e) return;
-            this.container = domFindContainer(e, this.props.container);
-            this.forceUpdate();
-          }} 
-          style={{fontSize:0}} />
-      )
+  render() {
+    let { h, v, margin, dock, ...props } = BaseComponent(this.props, Fab);
+
+    if((dock===true||typeof dock==='string')&&!this.dock) {
+      return <span ref={e=>{ if(!e) return;this.dock = domFindDock(e, dock);this.forceUpdate() }} style={{fontSize:0}} />
     }
 
     let classNamePre = {
@@ -51,7 +49,7 @@ class Fab extends React.Component{
     }
 
     let component = <Panel component={Button} classNamePre={classNamePre}  {...props} />;
-    return this.container?domCreatePortal(component, this.container):component;
+    return this.dock?domCreatePortal(component, this.dock):component;
   }
 }
 
@@ -75,8 +73,8 @@ Fab.defaultProps.margin = true;
  * 设置浮动的容器。
  * 
  * 不设置表示相对具有 relative，absolute 或 fixed 的 css position 属性的父元素。
- * 设置则作为 container 参数获取指定 container，参见 domFindContainer 函数
- * @attribute module:Fab.Fab.container
+ * 设置则作为 dock 参数获取指定 dock，参见 domFindDock 函数
+ * @attribute module:Fab.Fab.dock
  * @type {boolean|string}
  */
 

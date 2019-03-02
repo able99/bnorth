@@ -28,7 +28,7 @@ export let Modal = aprops=>{
       {role==='document'?children:null}
       {role!=='document'&&(title||close)?(
         <PanelIcon 
-          bp-title-bc-flex-sub-flex-extend bp-title-bc-text-weight-bold bp-title-bc-text-size-lg bp-title-bc-text-align-center={!close}
+          bp-title-bc-flex-sub-flex-extend bp-title-bc-text-align-center={!close}
           name={close===true?"close:x":close} bp-icon-onClick={handleAction} b-icon-bc-padding-a-xs
           bc-border-set-bottom-={Boolean(children||buttons.length)} bc-width-full bc-padding-a- position="right" {...headerProps}>
           {title}
@@ -47,6 +47,9 @@ export let Modal = aprops=>{
 }
 
 Modal.defaultProps = {}
+Modal.defaultProps['b-precast'] = {
+  'bp-header-bp-title-bc-text-weight': 'bold',
+}
 Modal.defaultProps.buttons = {
   alert: [{children: '确定'}], 
   prompt: [{children: '取消'},{children: '确定'}],

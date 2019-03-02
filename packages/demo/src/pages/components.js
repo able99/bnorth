@@ -68,7 +68,7 @@ let Component = aprops=>{
 
       <Groups.Group title="BackTop" desc="返回顶部按钮">
         <Groups.Show>
-          {props=><Panel data-container><Panel bc-width-full bs-height="150px" bc-scrollable-y>{listComponent(40)}<BackTop param="100%" container {...props} /></Panel></Panel>}
+          {props=><Panel data-dock><Panel bc-width-full bs-height="150px" bc-scrollable-y>{listComponent(40)}<BackTop param="100%" dock {...props} /></Panel></Panel>}
         </Groups.Show>
       </Groups.Group>
 
@@ -109,10 +109,10 @@ let Component = aprops=>{
           h: ['start','center','end'],
           v: ['start','center','end'],
           margin: [true, false],
-          container: [true, false],
+          dock: [true, false],
         }}/>
         <Groups.Show>
-          {props=><Panel data-container><Panel bc-scrollable-y bs-height="150px">{listComponent(20)}<Fab {...props}>fab</Fab></Panel></Panel>}
+          {props=><Panel data-dock><Panel bc-scrollable-y bs-height="150px">{listComponent(20)}<Fab {...props}>fab</Fab></Panel></Panel>}
         </Groups.Show>
       </Groups.Group>
 
@@ -161,7 +161,7 @@ let Component = aprops=>{
       </Groups.Group>
 
       <Groups.Group title="Landscape" desc="横屏">
-        <Groups.Show><Panel b-style="solid" b-theme="primary" bs-height={500} data-container><Landscape>{listComponent()}</Landscape></Panel></Groups.Show>
+        <Groups.Show><Panel b-style="solid" b-theme="primary" bs-height={500} data-dock><Landscape>{listComponent()}</Landscape></Panel></Groups.Show>
       </Groups.Group>
       
       <Groups.Group title="List" desc="列表">
@@ -200,7 +200,7 @@ let Component = aprops=>{
 
       <Groups.Group title="Modal" desc="对话框">
         <Groups.Show>
-          {props=><div style={{height: 500}} className="position-relative"><Modal title="title" role="prompt" close {...props}>body</Modal></div>}
+          {props=><div style={{height: 500}} className="position-relative"><Modal title="title" role="prompt" _precast={{a:1}} close {...props}>body</Modal></div>}
         </Groups.Show>
       </Groups.Group>
 
@@ -244,14 +244,14 @@ let Component = aprops=>{
           placement: ['bottom-auto-full','right-auto-center'],
         }}/>
         <Groups.Show>
-          <Popover inline overlay={listComponent()} container>popover</Popover>
+          {props=><div className="scrollable-y" style={{height: 50}}>{listComponent()}<Popover inline overlay={listComponent()}  {...props}>popover</Popover></div>}
         </Groups.Show>
       </Groups.Group>
 
       <Groups.Group title="PullRefresh" desc="下拉刷新">
         <Groups.Show>
           {props=><div style={{height: 150}} className="scrollable-y">
-            <PullRefresh onLoad={()=>{page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({isLoading: false}), 3000)}} isLoading={stateData.isLoading} {...props}>{listComponent(20)}</PullRefresh>
+            <PullRefresh onLoad={()=>{page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({isLoading: false}), 3000)}} isLoading={stateData.isLoading} {...props}>{listComponent(20, undefined, undefined, undefined, {onClick: ()=>alert(1)})}</PullRefresh>
           </div>}
         </Groups.Show>
       </Groups.Group>

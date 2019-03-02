@@ -570,6 +570,7 @@ class Router {
     if(!name||!route) return;
     this._routes[name] = route;
     route.for&&this.addNavigatorFunction(name, route.for);
+    this._handleLocationChange(this._history.location, this._history.action);
     this._updateRouterInfo(this._history.location);
   }
 
@@ -583,6 +584,7 @@ class Router {
   setRoutes(routes) {
     this._routes = routes;
     Object.entries(this._routes||{}).forEach(([k,v])=>v.for&&this.addNavigatorFunction(k, v.for));
+    this._handleLocationChange(this._history.location, this._history.action);
     this._updateRouterInfo(this._history.location);
   }
 

@@ -89,7 +89,7 @@ let Normal = class extends React.Component {
   }
   
   componentDidUpdate(prevProps, prevState) {
-    if(this.props.value !== prevProps.value) this.input.value = this.props.value||'';
+    if(this.props.value !== this.input.value) this.input.value = this.props.value||'';
   }
   
   render() { 

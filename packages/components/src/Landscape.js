@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { transform } from '@bnorth/rich.css/lib/styles/animation'
-import BaseComponent, { listen, domFindContainer } from './BaseComponent';
+import BaseComponent, { listen, domFindDock } from './BaseComponent';
 import Panel from './Panel';
 
 
@@ -17,7 +17,7 @@ import Panel from './Panel';
 class Landscape extends React.Component
 {
   componentDidMount() {
-    this.container = domFindContainer(this, this.props.container);
+    this.dock = domFindDock(this, this.props.dock);
     this.forceUpdate();
     this.offResizeListener = listen( window, 'resize', ()=>this.forceUpdate(), true);
   }
@@ -27,12 +27,12 @@ class Landscape extends React.Component
   }
 
   render() {
-    if(!this.container) return <span style={{ fontSize: 0 }} />;
-    let { container, ...props } = BaseComponent(this.props, Landscape);
-    let width = this.container.clientWidth;
-    let height = this.container.clientHeight;
+    if(!this.dock) return <span style={{ fontSize: 0 }} />;
+    let { dock, ...props } = BaseComponent(this.props, Landscape);
+    let width = this.dock.clientWidth;
+    let height = this.dock.clientHeight;
 
-    let stylePre = (this.container&&height>width)?{ 
+    let stylePre = (this.dock&&height>width)?{ 
       width: height,
       height: width,
       top: (height - width) / 2,
@@ -49,7 +49,7 @@ Landscape.defaultProps = {}
  * 设置容器，横屏时以容器为参照横屏旋转
  * @type {element}
  */
-Landscape.defaultProps.container = true;
+Landscape.defaultProps.dock = true;
 
 
 Object.defineProperty(Landscape,"Landscape",{ get:function(){ return Landscape }, set:function(val){ Landscape = val }})

@@ -59,7 +59,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this = this;
 
-      this.container = (0, _BaseComponent2.domFindContainer)(this, this.props.container);
+      this.dock = (0, _BaseComponent2.domFindDock)(this, this.props.dock);
       this.forceUpdate();
       this.offResizeListener = (0, _BaseComponent2.listen)(window, 'resize', function () {
         return _this.forceUpdate();
@@ -73,19 +73,19 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      if (!this.container) return _react.default.createElement("span", {
+      if (!this.dock) return _react.default.createElement("span", {
         style: {
           fontSize: 0
         }
       });
 
       var _BaseComponent = (0, _BaseComponent2.default)(this.props, Landscape),
-          container = _BaseComponent.container,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["container"]);
+          dock = _BaseComponent.dock,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["dock"]);
 
-      var width = this.container.clientWidth;
-      var height = this.container.clientHeight;
-      var stylePre = this.container && height > width ? (0, _objectSpread2.default)({
+      var width = this.dock.clientWidth;
+      var height = this.dock.clientHeight;
+      var stylePre = this.dock && height > width ? (0, _objectSpread2.default)({
         width: height,
         height: width,
         top: (height - width) / 2,
@@ -106,7 +106,7 @@ Landscape.defaultProps = {};
  * @type {element}
  */
 
-Landscape.defaultProps.container = true;
+Landscape.defaultProps.dock = true;
 Object.defineProperty(Landscape, "Landscape", {
   get: function get() {
     return Landscape;

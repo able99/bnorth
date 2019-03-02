@@ -34,11 +34,12 @@ var _Animation = _interopRequireDefault(require("./Animation"));
 var _Backdrop = function Backdrop(aprops) {
   var props = (0, _BaseComponent.default)(aprops, _Backdrop);
   var classNamePre = {
-    'position-absolute square-full offset-a-start overflow-a-hidden bg-color-mask': true
+    'position-absolute square-full offset-a-start overflow-a-hidden': true
   };
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     componentTransform: _Animation.default,
     type: "fade",
+    "b-style": "mask",
     classNamePre: classNamePre
   }, props));
 };

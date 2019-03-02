@@ -13,8 +13,8 @@ var _exportNames = {
   domIsTouch: true,
   domIsMouse: true,
   domFindNode: true,
-  domFindContainer: true,
-  domFindScrollContainer: true,
+  domFindDock: true,
+  domFindScrollDock: true,
   domCreatePortal: true,
   domOffset: true,
   domGetDimensionValue: true,
@@ -24,8 +24,8 @@ var _exportNames = {
 exports.domCapitalize = domCapitalize;
 exports.domTriggerBrowserReflow = domTriggerBrowserReflow;
 exports.domFindNode = domFindNode;
-exports.domFindContainer = domFindContainer;
-exports.domFindScrollContainer = domFindScrollContainer;
+exports.domFindDock = domFindDock;
+exports.domFindScrollDock = domFindScrollDock;
 exports.domCreatePortal = domCreatePortal;
 exports.domOffset = domOffset;
 exports.domGetDimensionValue = domGetDimensionValue;
@@ -128,22 +128,23 @@ function domFindNode(node) {
  * 
  * 1. 如果父元素为 body 则返回 body
  * 1. 如果父元素是 page 则返回页面元素
- * 1. 返回具有参数 container 指定的，具有 data-container 响应名称属性的元素
+ * 1. 返回具有参数 dock 指定的，具有 data-dock 响应名称属性的元素
  * @param {element|component} - 组件或元素
  * @param {true|string} - 查找模式
- * @returns {element} 所在的 container
+ * @returns {element} 所在的 dock
  */
 
 
-function domFindContainer(node, container) {
+function domFindDock(node, dockParam) {
   var el = domFindNode(node);
   if (!el) return document.body;
+  if (dockParam === 'parent') return el.parentElement;
 
   while (el = el.parentElement) {
     if (el === document.body) return el;
     if (el.getAttribute('data-page')) return el;
-    if (container === true && el.getAttribute('data-container') === 'true') return el;
-    if (container && el.getAttribute('data-container') === container) return el;
+    if (dockParam === true && el.getAttribute('data-dock') === 'true') return el;
+    if (dockParam && el.getAttribute('data-dock') === dockParam) return el;
   }
 
   return document.body;
@@ -157,8 +158,8 @@ function domFindContainer(node, container) {
  */
 
 
-function domFindScrollContainer(node, container, horizontal) {
-  if (container) return _reactDom.default.findDOMNode(container);
+function domFindScrollDock(node, dock, horizontal) {
+  if (dock) return _reactDom.default.findDOMNode(dock);
   node = _reactDom.default.findDOMNode(node);
 
   while (node.parentNode) {
@@ -180,8 +181,8 @@ function domFindScrollContainer(node, container, horizontal) {
  */
 
 
-function domCreatePortal(component, container) {
-  return _reactDom.default.createPortal(component, container || document.body);
+function domCreatePortal(component, dock) {
+  return _reactDom.default.createPortal(component, dock || document.body);
 } // dom offset
 // -------------------
 
@@ -202,9 +203,9 @@ function domCreatePortal(component, container) {
  */
 
 
-function domOffset(node, container) {
+function domOffset(node, dock) {
   node = domFindNode(node);
-  return container ? (0, _position.default)(node, container) : (0, _offset.default)(node);
+  return dock ? (0, _position.default)(node, dock) : (0, _offset.default)(node);
 }
 
 function domGetDimensionValue(elem) {
@@ -264,14 +265,10 @@ function chainedFuncs() {
  * @exportdefault
  * @name BaseComponent
  */
-function BaseComponent(aprops, Component) {
-  var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
-      isContainer = _ref.isContainer;
-
-  if (!Component) return null;
-  var componentProps = Component.props;
-  if (typeof componentProps === 'function') componentProps(aprops, Component);
-  aprops = (0, _objectSpread2.default)({}, componentProps, aprops);
+function BaseComponent(aprops) {
+  aprops = (0, _objectSpread2.default)({}, typeof aprops['b-precast'] === 'function' ? aprops['b-precast'](aprops) : aprops['b-precast'], typeof aprops['b-dynamic'] === 'function' ? aprops['b-dynamic'](aprops) : aprops['b-dynamic'], aprops);
+  delete aprops['b-precast'];
+  delete aprops['b-dynamic'];
   var _aprops = aprops,
       active = _aprops.active,
       selected = _aprops.selected,
@@ -288,19 +285,10 @@ function BaseComponent(aprops, Component) {
       props = (0, _objectWithoutProperties2.default)(_aprops, ["active", "selected", "disabled", "onClick", "btn", "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "refWrap"]);
   var classSet = {};
   var styleSet = {};
-
-  if (isContainer) {
-    if (!props.containerProps) props.containerProps = aprops;
-    if (Component.itemGetClassName && !props.itemGetClassName) props.itemGetClassName = Component.itemGetClassName;
-    if (Component.itemGetStyle && !props.itemGetStyle) props.itemGetStyle = Component.itemGetStyle;
-    if (Component.itemGetProps && !props.itemGetProps) props.itemGetProps = Component.itemGetProps;
-    if (!props.itemProps) props.itemProps = {};
-  }
-
-  Object.entries(props).forEach(function (_ref2) {
-    var _ref3 = (0, _slicedToArray2.default)(_ref2, 2),
-        k = _ref3[0],
-        v = _ref3[1];
+  Object.entries(props).forEach(function (_ref) {
+    var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+        k = _ref2[0],
+        v = _ref2[1];
 
     /**
      * 设置组件的样式对象，将属性名去掉 bs- 前缀，和属性值，追加到组件的样式对象中

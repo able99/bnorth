@@ -21,7 +21,7 @@ let NavBar = aprops=>{
   let { overlay, hidden, ...props } = BaseComponent(aprops, NavBar);
   if(hidden) return null;
 
-  let classNamePre = 'flex-display-block flex-justify-around flex-align-center width-full padding-v-sm border-set-bottom-';
+  let classNamePre = 'flex-display-block flex-justify-around flex-align-center width-full padding-v-sm';
   let stylePre = {};
   if(overlay) stylePre.paddingTop = overlay===true?20:overlay;
 
@@ -55,7 +55,7 @@ export default NavBar;
 let Title = aprops=>{
   let { isFullOrCenter, ...props } = BaseComponent(aprops, Title);
 
-  let classNamePre = 'text-align-center flex-sub-flex-extend text-weight-bold text-size-xl';
+  let classNamePre = 'text-align-center flex-sub-flex-extend';
 
   return (
     <React.Fragment>
@@ -66,6 +66,10 @@ let Title = aprops=>{
 }
 
 Title.defaultProps = {};
+Title.defaultProps['b-precast'] = {
+  'bc-text-weight': 'bold',
+  'bc-text-size': 'xl',
+}
 /**
  * 设置标题组件铺满小组件之外空间，或者按需设置宽度并居中
  * @attribute module:NavBar~Title.isFullOrCenter

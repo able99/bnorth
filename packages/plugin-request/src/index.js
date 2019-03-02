@@ -85,7 +85,7 @@ let getClass = (app, aoptions={})=>class Request extends app.State {
     delete result.data;
     result.fetching = false;
     this.stateUpdate(result);
-    this.update(data, {append});
+    this.update(data, {append: append||false});
   };
 
   _requestError(error, {noNotice, isSubmit}) {

@@ -62,7 +62,7 @@ function (_React$Component) {
   (0, _createClass2.default)(BackTop, [{
     key: "scrollToTop",
     value: function scrollToTop() {
-      if (this.container) this.container.scrollTop = 0;
+      if (this.dock) this.dock.scrollTop = 0;
     }
   }, {
     key: "isShow",
@@ -104,8 +104,8 @@ function (_React$Component) {
 
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_ScrollSpy.default, (0, _extends2.default)({
         onPosChange: function onPosChange(event, el) {
-          _this.container = el;
-          checkFunc(checkParam, _this.container) ? _this.show() : _this.hide();
+          _this.dock = el;
+          checkFunc(checkParam, _this.dock) ? _this.show() : _this.hide();
         }
       }, scrollSpyProps)), this.isShow() ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
         componentTransform: _Fab.default,
@@ -127,11 +127,11 @@ BackTop.defaultProps = {};
  * @type {function}
  */
 
-BackTop.defaultProps.checkFunc = function (checkParam, container) {
+BackTop.defaultProps.checkFunc = function (checkParam, dock) {
   if (!isNaN(checkParam)) {
-    return container.scrollTop >= checkParam;
+    return dock.scrollTop >= checkParam;
   } else if (typeof checkParam === 'string' && /\d*%/.test(checkParam)) {
-    return container.scrollTop >= (container ? (0, _BaseComponent2.domOffset)(container).height * Number(checkParam.slice(0, -1)) / 100 : 0);
+    return dock.scrollTop >= (dock ? (0, _BaseComponent2.domOffset)(dock).height * Number(checkParam.slice(0, -1)) / 100 : 0);
   }
 };
 /**

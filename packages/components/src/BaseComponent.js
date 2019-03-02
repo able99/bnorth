@@ -57,20 +57,21 @@ export function domFindNode(node) {
  * 
  * 1. 如果父元素为 body 则返回 body
  * 1. 如果父元素是 page 则返回页面元素
- * 1. 返回具有参数 container 指定的，具有 data-container 响应名称属性的元素
+ * 1. 返回具有参数 dock 指定的，具有 data-dock 响应名称属性的元素
  * @param {element|component} - 组件或元素
  * @param {true|string} - 查找模式
- * @returns {element} 所在的 container
+ * @returns {element} 所在的 dock
  */
-export function domFindContainer(node, container) {
+export function domFindDock(node, dockParam) {
   let el=domFindNode(node);
   if(!el) return document.body;
+  if(dockParam==='parent') return el.parentElement;
 
   while((el=el.parentElement)) {
     if(el===document.body) return el;
     if(el.getAttribute('data-page')) return el;
-    if(container===true&&el.getAttribute('data-container')==='true') return el;
-    if(container&&el.getAttribute('data-container')===container) return el;
+    if(dockParam===true&&el.getAttribute('data-dock')==='true') return el;
+    if(dockParam&&el.getAttribute('data-dock')===dockParam) return el;
   }
 
   return document.body;
@@ -83,8 +84,8 @@ export function domFindContainer(node, container) {
  * @param {boolean} - 是否是横向滚动 
  * @returns {element} 滚动父元素
  */
-export function domFindScrollContainer(node, container, horizontal) {
-  if (container) return ReactDOM.findDOMNode(container); 
+export function domFindScrollDock(node, dock, horizontal) {
+  if (dock) return ReactDOM.findDOMNode(dock); 
   node = ReactDOM.findDOMNode(node);
 
   while (node.parentNode) {
@@ -106,8 +107,8 @@ export function domFindScrollContainer(node, container, horizontal) {
  * @param {component} - 将 render 的组件 
  * @param {element} - render 到的元素
  */
-export function domCreatePortal(component, container) {
-  return ReactDOM.createPortal(component, container||document.body)
+export function domCreatePortal(component, dock) {
+  return ReactDOM.createPortal(component, dock||document.body)
 }
 
 // dom offset
@@ -126,9 +127,9 @@ export function domCreatePortal(component, container) {
  * @param {element} - 相对于该元素的相对坐标，为空时是相对于浏览器的绝对坐标 
  * @returns {module:utils/dom~ElementOffset} - x,y 坐标，width,height 尺寸
  */
-export function domOffset(node, container) {
+export function domOffset(node, dock) {
   node = domFindNode(node);
-  return container?position(node, container):offset(node);
+  return dock?position(node, dock):offset(node);
 }
 
 export function domGetDimensionValue(elem, dimension="height") {
@@ -187,11 +188,14 @@ export * from 'dom-helpers/events/'
  * @exportdefault
  * @name BaseComponent
  */
-export default function BaseComponent(aprops, Component, {isContainer}={}) {
-  if(!Component) return null;
-  let componentProps = Component.props;
-  if(typeof componentProps === 'function') componentProps(aprops, Component);
-  aprops = {...componentProps, ...aprops};
+export default function BaseComponent(aprops) {
+  aprops = {
+    ...(typeof aprops['b-precast']==='function'?aprops['b-precast'](aprops):aprops['b-precast']), 
+    ...(typeof aprops['b-dynamic']==='function'?aprops['b-dynamic'](aprops):aprops['b-dynamic']),
+    ...aprops
+  }
+  delete aprops['b-precast'];
+  delete aprops['b-dynamic'];
 
   let {
     active, selected, disabled, onClick, btn,
@@ -200,14 +204,6 @@ export default function BaseComponent(aprops, Component, {isContainer}={}) {
 
   let classSet = {};
   let styleSet = {};
-
-  if(isContainer){
-    if(!props.containerProps) props.containerProps = aprops;
-    if(Component.itemGetClassName&&!props.itemGetClassName) props.itemGetClassName = Component.itemGetClassName;
-    if(Component.itemGetStyle&&!props.itemGetStyle) props.itemGetStyle = Component.itemGetStyle;
-    if(Component.itemGetProps&&!props.itemGetProps) props.itemGetProps = Component.itemGetProps;
-    if(!props.itemProps) props.itemProps = {};
-  }
 
   Object.entries(props).forEach(([k,v])=>{
     /**

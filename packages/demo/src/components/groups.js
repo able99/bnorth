@@ -108,12 +108,12 @@ Groups.Props = aprops=>{
 
 Groups.Show = aprops=>{
   let { children, stateComponentProps, stateCommonProps } = aprops;
-  if(typeof children === 'function')
+  if(typeof children === 'function') {
     children = [children]
-  else if(Array.isArray(children))
-    children = children
-  else
+  }else if(Array.isArray(children)) {
+  }else{
     children = React.Children.toArray(children);
+  }
 
   return (
     <div>

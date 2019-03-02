@@ -15,9 +15,9 @@ var _react = _interopRequireDefault(require("react"));
 
 var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
 
-var _Animation = _interopRequireDefault(require("./Animation"));
-
 var _Panel = _interopRequireDefault(require("./Panel"));
+
+var _Animation = _interopRequireDefault(require("./Animation"));
 
 var _Icon = require("./Icon");
 
@@ -40,8 +40,6 @@ var _Notice = function Notice(aprops) {
     transitionProps: transitionProps
   }, animationProps), _react.default.createElement(_Icon.PanelIcon, (0, _extends2.default)({
     "bp-title-bc-flex-sub-flex-extend": true,
-    "bp-title-bc-text-weight-": true,
-    "bp-title-bc-text-size-lg": true,
     name: "close:x",
     "bp-icon-onClick": onDoClose,
     "b-icon-bc-padding-a-xs": true,
@@ -55,6 +53,10 @@ var _Notice = function Notice(aprops) {
 
 exports.Notice = _Notice;
 _Notice.defaultProps = {};
+_Notice.defaultProps['b-precast'] = {
+  'bp-title-bc-text-weight-': true,
+  'bp-title-bc-text-size': 'lg'
+};
 Object.defineProperty(_Notice, "Notice", {
   get: function get() {
     return _Notice;

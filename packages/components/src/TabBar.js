@@ -20,27 +20,17 @@ class TabBar extends React.Component {
     this.state = {selectedIndex: props.selectedIndexDefault||0};
   }
 
-  _handleAction = i=>{
-    let { onAction, children } = this.props;
-    this.setState({selectedIndex: i});
-    if(onAction) {
-      children = React.Children.toArray(children).filter(v=>v);
-      let props = children[i]&&children[i].props;
-      onAction(i, props, props&&props.event);
-    }
-  }
-
   render() {
     let {
       selectedIndex=this.state.selectedIndex, selectedIndexDefault, onAction, 
       navProps, containerProps, 
       children, ...props
-    } = BaseComponent(this.props, TabBar, {isContainer: true});
+    } = BaseComponent(this.props);
     children = React.Children.toArray(children).filter(v=>v);
 
     return (
-      <PanelContainer type="primary" direction="v" align="stretch" {...props}>
-        <PanelContainer type="justify" selectedIndex={selectedIndex} {...navProps}>
+      <PanelContainer _containerProps={this.props} type="primary" direction="v" align="stretch" {...props}>
+        <PanelContainer _containerProps={navProps} type="justify" selectedIndex={selectedIndex} {...navProps}>
           {children.map((v,i)=>{
             let {event, onClick, children, ...props} = v.props;
             return <Panel 
@@ -50,6 +40,7 @@ class TabBar extends React.Component {
           })}
         </PanelContainer>
         <PanelContainer 
+          _containerProps={containerProps}
           itemSelected type="scroll" selectedIndex={selectedIndex} 
           onSelectedChange={(i,props)=>this.setState({selectedIndex: i}, ()=>{ if(onAction) onAction(i, props, props&&props.event)})}
           {...containerProps}>

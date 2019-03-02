@@ -2,7 +2,7 @@
  * @module
  */
 import React from 'react';
-import BaseComponent, { domIsTouch, domOffset, chainedFuncs, domFindContainer, domCreatePortal } from './BaseComponent';
+import BaseComponent, { domIsTouch, domOffset, chainedFuncs, domFindDock, domCreatePortal } from './BaseComponent';
 import Panel from './Panel';
 import Backdrop from './Backdrop';
 
@@ -18,7 +18,7 @@ class Popover extends React.Component {
    * 显示弹出内容
    */
   show() {
-    this.setState({ show: true, offsetTarget: domOffset(this, this.container) });
+    this.setState({ show: true, offsetTarget: domOffset(this, this.dock) });
   }
   /**
    * 关闭弹出内容
@@ -28,7 +28,7 @@ class Popover extends React.Component {
   }
 
   componentDidMount() {
-    this.container = domFindContainer(this, this.props.container);
+    this.dock = domFindDock(this, this.props.dock);
     if(this.props.defaultIsShow) Promise.resolve().then(()=>this.show());
   }
 
@@ -36,7 +36,7 @@ class Popover extends React.Component {
     let {
       defaultIsShow, trigger, onClick, onMouseOver,
       overlay, overlayProps, backdropProps,
-      calcPosition, placement, container,
+      calcPosition, placement, dock,
       children, ...props
     } = BaseComponent(this.props, Popover);
     let { show, offsetOverlay, offsetTarget } = this.state||{};
@@ -66,12 +66,12 @@ class Popover extends React.Component {
           <Panel componentTransform={Backdrop} {...closeProps} {...backdropProps}>
             <Overlay 
               calcPosition={calcPosition} placement={placement} offsetTarget={offsetTarget} offsetOverlay={offsetOverlay} 
-              ref={e=>e&&(!offsetOverlay)&&this.setState({offsetOverlay:domOffset(e, this.container)})} 
+              ref={e=>e&&(!offsetOverlay)&&this.setState({offsetOverlay:domOffset(e, this.dock)})} 
               {...overlayProps}>
               {overlay}
             </Overlay>
           </Panel>
-        ), this.container)}
+        ), this.dock)}
       </Panel>
     );
   }
@@ -203,7 +203,7 @@ Popover.defaultProps.calcPosition = function(offsetTarget, offsetOverlay, placem
  */
 /**
  * 设置弹出内容的容器
- * @attribute module:Popover.Popover.container
+ * @attribute module:Popover.Popover.dock
  * @type {boolean}
  */
 

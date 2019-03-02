@@ -25,6 +25,7 @@ class Carousel extends React.Component {
 
   prev() {
     let { selectedIndex } = this.state;
+    selectedIndex--;
     if(selectedIndex<0) selectedIndex = React.Children.toArray(this.props.children).filter(v=>v).length - 1;
     this.setState({selectedIndex});
     this.go();
@@ -90,7 +91,7 @@ class Carousel extends React.Component {
     let classNamePrePager = 'position-absolute padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
 
     return (
-      <PanelContainer type="scroll" selectedIndex={selectedIndex} onSelect={selectedIndex=>this.setState({selectedIndex}, ()=>this.go())} onMouseOver={e=>pauseOnHover&&this.pause()} onMouseOut={e=>this.isPaused&&this.play()} {...props}>
+      <PanelContainer type="scroll" selectedIndex={selectedIndex} onSelectedChange={selectedIndex=>this.setState({selectedIndex}, ()=>this.go())} onMouseOver={e=>pauseOnHover&&this.pause()} onMouseOut={e=>this.isPaused&&this.play()} {...props}>
         {children}
         {controller?<Panel 
           componentTransform={Icon} classNamePre={classNamePreControllerPrev} b-size="xl" b-style="solid" b-theme="mask" name="left:<"

@@ -70,7 +70,7 @@ function (_React$Component) {
     value: function show() {
       this.setState({
         show: true,
-        offsetTarget: (0, _BaseComponent3.domOffset)(this, this.container)
+        offsetTarget: (0, _BaseComponent3.domOffset)(this, this.dock)
       });
     }
     /**
@@ -91,7 +91,7 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this = this;
 
-      this.container = (0, _BaseComponent3.domFindContainer)(this, this.props.container);
+      this.dock = (0, _BaseComponent3.domFindDock)(this, this.props.dock);
       if (this.props.defaultIsShow) Promise.resolve().then(function () {
         return _this.show();
       });
@@ -111,9 +111,9 @@ function (_React$Component) {
           backdropProps = _BaseComponent.backdropProps,
           calcPosition = _BaseComponent.calcPosition,
           placement = _BaseComponent.placement,
-          container = _BaseComponent.container,
+          dock = _BaseComponent.dock,
           children = _BaseComponent.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["defaultIsShow", "trigger", "onClick", "onMouseOver", "overlay", "overlayProps", "backdropProps", "calcPosition", "placement", "container", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["defaultIsShow", "trigger", "onClick", "onMouseOver", "overlay", "overlayProps", "backdropProps", "calcPosition", "placement", "dock", "children"]);
 
       var _ref = this.state || {},
           show = _ref.show,
@@ -153,10 +153,10 @@ function (_React$Component) {
         offsetOverlay: offsetOverlay,
         ref: function ref(e) {
           return e && !offsetOverlay && _this2.setState({
-            offsetOverlay: (0, _BaseComponent3.domOffset)(e, _this2.container)
+            offsetOverlay: (0, _BaseComponent3.domOffset)(e, _this2.dock)
           });
         }
-      }, overlayProps), overlay)), this.container));
+      }, overlayProps), overlay)), this.dock));
     }
   }]);
   return Popover;
@@ -303,7 +303,7 @@ Popover.defaultProps.calcPosition = function (offsetTarget, offsetOverlay, place
 
 /**
  * 设置弹出内容的容器
- * @attribute module:Popover.Popover.container
+ * @attribute module:Popover.Popover.dock
  * @type {boolean}
  */
 

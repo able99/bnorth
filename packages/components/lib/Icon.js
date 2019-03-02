@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -35,7 +37,7 @@ var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _BaseComponent3 = _interopRequireDefault(require("./BaseComponent"));
 
-var _Panel = _interopRequireDefault(require("./Panel"));
+var _Panel = _interopRequireWildcard(require("./Panel"));
 
 /**
  * @module
@@ -225,10 +227,8 @@ var _default = _Icon;
 
 exports.default = _default;
 
-var _PanelIcon = function PanelIcon(aprops) {
-  var _BaseComponent2 = (0, _BaseComponent3.default)(aprops, _PanelIcon, {
-    isContainer: true
-  }),
+var PanelIcon = function PanelIcon(aprops) {
+  var _BaseComponent2 = (0, _BaseComponent3.default)(aprops),
       selected = _BaseComponent2.selected,
       name = _BaseComponent2.name,
       src = _BaseComponent2.src,
@@ -242,7 +242,8 @@ var _PanelIcon = function PanelIcon(aprops) {
       children = _BaseComponent2.children,
       props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["selected", "name", "src", "char", "shape", "iconSelected", "rotate", "iconProps", "title", "titleProps", "children"]);
 
-  return _react.default.createElement(_Panel.default.Container, (0, _extends2.default)({
+  return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
+    _containerProps: aprops,
     type: "flex",
     position: "left",
     justify: "center",
@@ -259,8 +260,8 @@ var _PanelIcon = function PanelIcon(aprops) {
   }, titleProps), title, children) : null);
 };
 
-exports.PanelIcon = _PanelIcon;
-_PanelIcon.defaultProps = {};
+exports.PanelIcon = PanelIcon;
+PanelIcon.defaultProps = {};
 /**
  * Icon 的属性，参见 Icon
  * @attribute module:Icon~PanelIcon.icon*
@@ -293,9 +294,9 @@ _PanelIcon.defaultProps = {};
 
 Object.defineProperty(_Icon, "PanelIcon", {
   get: function get() {
-    return _PanelIcon;
+    return PanelIcon;
   },
   set: function set(val) {
-    exports.PanelIcon = _PanelIcon = val;
+    exports.PanelIcon = PanelIcon = val;
   }
 });

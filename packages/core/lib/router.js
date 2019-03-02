@@ -999,6 +999,8 @@ function () {
       this._routes[name] = route;
       route.for && this.addNavigatorFunction(name, route.for);
 
+      this._handleLocationChange(this._history.location, this._history.action);
+
       this._updateRouterInfo(this._history.location);
     }
     /**
@@ -1022,6 +1024,8 @@ function () {
 
         return v.for && _this8.addNavigatorFunction(k, v.for);
       });
+
+      this._handleLocationChange(this._history.location, this._history.action);
 
       this._updateRouterInfo(this._history.location);
     }

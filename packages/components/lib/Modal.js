@@ -68,8 +68,6 @@ var _Modal = function Modal(aprops) {
     classNamePre: role !== 'document' && classNamePre
   }, props), role === 'document' ? children : null, role !== 'document' && (title || close) ? _react.default.createElement(_Icon.PanelIcon, (0, _extends2.default)({
     "bp-title-bc-flex-sub-flex-extend": true,
-    "bp-title-bc-text-weight-bold": true,
-    "bp-title-bc-text-size-lg": true,
     "bp-title-bc-text-align-center": !close,
     name: close === true ? "close:x" : close,
     "bp-icon-onClick": handleAction,
@@ -105,6 +103,9 @@ var _Modal = function Modal(aprops) {
 
 exports.Modal = _Modal;
 _Modal.defaultProps = {};
+_Modal.defaultProps['b-precast'] = {
+  'bp-header-bp-title-bc-text-weight': 'bold'
+};
 _Modal.defaultProps.buttons = {
   alert: [{
     children: '确定'
