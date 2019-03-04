@@ -15,7 +15,7 @@ import { PanelLoader } from './Loader';
  * @augments BaseComponent
  * @export
  */
-export let Mask = aprops=>{
+let Mask = aprops=>{
   let { loaderProps, children, ...props } = BaseComponent(aprops, Mask);
 
   let classNamePre = 'flex-display-block flex-direction-v flex-justify-center flex-align-center';
@@ -35,6 +35,11 @@ Mask.defaultProps = {};
  */
 
 Object.defineProperty(Mask,"Mask",{ get:function(){ return Mask }, set:function(val){ Mask = val }})
+export default Mask;
+
+
+
+
 
 
 /**
@@ -42,7 +47,7 @@ Object.defineProperty(Mask,"Mask",{ get:function(){ return Mask }, set:function(
  * @plugin mask
  * @exportdefault
  */
-let mask = {
+export let mask = {
   // plugin 
   // --------------------------------
   _id: 'mask',
@@ -94,6 +99,3 @@ let mask = {
     delete app.mask;
   },
 }
-
-
-export default mask;

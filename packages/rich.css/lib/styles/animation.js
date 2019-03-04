@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.transiton = transiton;
+exports.transformOrigin = transformOrigin;
 exports.animation = animation;
 exports.transform = transform;
 exports.transforms = transforms;
@@ -46,6 +47,23 @@ function transiton() {
 
   return (0, _compatibleAnimation.default)({
     'transition': "".concat(property, " ").concat(isNaN(duration) ? duration : "".concat(duration, "ms"), " ").concat(timeFunction, " ").concat(delay)
+  }, true);
+}
+/**
+ * 生成 transform 的变换原点配置
+ * @param {string} [x='center'] - x 轴或者全部(y,z 为空)
+ * @param {string=} [y] - y 轴
+ * @param {string=} z - z 轴
+ * @returns {object} style inline object
+ */
+
+
+function transformOrigin() {
+  var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'center';
+  var y = arguments.length > 1 ? arguments[1] : undefined;
+  var z = arguments.length > 2 ? arguments[2] : undefined;
+  return (0, _compatibleAnimation.default)({
+    'transform-origin': "".concat(x, " ").concat(y || '', " ").concat(z || '')
   }, true);
 }
 /**

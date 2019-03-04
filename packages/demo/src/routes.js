@@ -28,7 +28,8 @@
 export default {
   '/': require('./pages/home').default,
   '/test': require('./test').default,
-  'components:component?': {component: require('./pages/components').default, title: 'components'},
+  'components:component?': {component: require('./pages/components').default, title: '组件列表'},
+  'cplugins': {component: require('./pages/cplugins').default, title: '组件插件列表'},
   // 'components:tab?': {
   //   title: false,
   //   component: require('./pages/components').default,

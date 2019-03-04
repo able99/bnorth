@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.Mask = void 0;
+exports.mask = exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
@@ -47,7 +47,6 @@ var _Mask = function Mask(aprops) {
   }, loaderProps), children));
 };
 
-exports.Mask = _Mask;
 _Mask.defaultProps = {};
 /**
  * 设置 蒙层中间的 loader 组件的参数
@@ -60,15 +59,17 @@ Object.defineProperty(_Mask, "Mask", {
     return _Mask;
   },
   set: function set(val) {
-    exports.Mask = _Mask = val;
+    _Mask = val;
   }
 });
+var _default = _Mask;
 /**
  * 提供了对蒙层的显示和控制的能力，同时修改了 app.render.mask 的默认行为
  * @plugin mask
  * @exportdefault
  */
 
+exports.default = _default;
 var mask = {
   // plugin 
   // --------------------------------
@@ -138,5 +139,4 @@ var mask = {
     delete app.mask;
   }
 };
-var _default = mask;
-exports.default = _default;
+exports.mask = mask;

@@ -2,8 +2,8 @@
  * @module
  */
 import React from 'react';
-import { transiton } from '@bnorth/rich.css/lib/styles/animation';
-import classes from '@bnorth/rich.css/lib/classes'; 
+import '@bnorth/rich.css/css/kf.spin.css';
+import { animation, transform, transiton, transformOrigin } from '@bnorth/rich.css/lib/styles/animation';
 import BaseComponent from './BaseComponent';
 import Panel from './Panel';
 
@@ -83,12 +83,11 @@ let Line = aprops=>{
     className, children, ...props
   } = BaseComponent(aprops, Line);
 
-  let classStr = 'width-full height-1em';
+  let classNamePre = 'width-full height-1em';
 
   return (
-    <svg preserveAspectRatio="none" viewBox="0 0 100 5" className={classes(classStr, className)} {...props}>
-      <line 
-        x1="0" y1="2" x2="100" y2="2" strokeWidth="5" stroke={colorReverse} fill="none" />
+    <Panel component="svg" preserveAspectRatio="none" viewBox="0 0 100 5" classNamePre={classNamePre} {...props}>
+      <line x1="0" y1="2" x2="100" y2="2" strokeWidth="5" stroke={colorReverse} fill="none" />
       <line 
         x1="0" y1="2" x2="100" y2="2" strokeWidth="5" stroke={color} fill="none" 
         style={isProgress?transiton(timeout):null}
@@ -96,7 +95,7 @@ let Line = aprops=>{
         {!isProgress?<animate attributeName="stroke-dashoffset" values="0;-90;0" dur={timeout} repeatCount="indefinite" />:null}
       </line>
       {children}
-    </svg>
+    </Panel>
   );
 }
 
@@ -116,24 +115,20 @@ Object.defineProperty(Loader,"Line",{ get:function(){ return Line }, set:functio
 let Circle = aprops=>{
   let {
     isProgress, progress, timeout, color, colorReverse,
-    className, children, ...props
+    children, ...props
   } = BaseComponent(aprops, Circle);
 
-  let classStr = 'width-1em height-1em';
+  let classNamePre = 'width-1em height-1em';
 
   return (
-    <svg viewBox="0 0 100 100"  className={classes(classStr, className)} {...props}>
-      <circle 
-        cx="50" cy="50" r="40" strokeWidth="20" stroke={colorReverse} fill="none" />
-      <circle 
-        cx="50" cy="50" r="40" strokeWidth="20" stroke={color} fill="none" 
-        transform="rotate(-90,50,50)" 
-        style={isProgress?transiton(timeout):null}
-        strokeDasharray={isProgress?`${2.51*(progress||0)},251`:"50,251"}>
-        {!isProgress?<animate attributeName="stroke-dashoffset" from="0" to="-251" dur={timeout} repeatCount="indefinite" />:null}
+    <Panel component="svg" viewBox="0 0 100 100" classNamePre={classNamePre} {...props}>
+      <circle cx="50" cy="50" r="40" strokeWidth="20" stroke={colorReverse} fill="none" />
+      <circle cx="50" cy="50" r="40" strokeWidth="20" stroke={color} fill="none" 
+        style={isProgress?{...transiton(timeout),...transform('rotate', '-90deg'),...transformOrigin()}:{...animation('spin'),...transformOrigin()}}
+        strokeDasharray={isProgress?`${2.51*(progress||0)},251`:"150,251"}>
       </circle>
       {children}
-    </svg>
+    </Panel>
   );
 }
 
@@ -194,3 +189,85 @@ PanelLoader.defaultProps = {};
  */
 
 Object.defineProperty(Loader,"PanelLoader",{ get:function(){ return PanelLoader }, set:function(val){ PanelLoader = val }})
+
+
+
+
+
+export let OverlayLoader = aprops=>{
+  let { progress, height, ...props } = BaseComponent(aprops, OverlayLoader);
+
+  let classNamePre = 'position-absolute offset-left-start offset-top-start offset-right-start width-full';
+
+  return <Panel component={Loader} type="line" isProgress progress={progress} classNamePre={classNamePre} bs-height={height} {...props} />
+}
+
+OverlayLoader.defaultProps = {}
+OverlayLoader.defaultProps.height = 3;
+
+Object.defineProperty(Loader,"OverlayLoader",{ get:function(){ return OverlayLoader }, set:function(val){ OverlayLoader = val }})
+
+
+
+
+
+
+export let loader = {
+  _id: 'loader',
+
+  onPluginMount(app) {
+    app.loader = {
+      count: 0, 
+      timeoutPrgress: '20000',
+      timeoutSet: '200',
+      reset: (progress=0, cb, aprops, aoptions)=>{
+        let {content, props={}, options={}} = app.router.getPopLayerInfo(app.loader._id)||{};
+        if(!content){
+          app.loader._id = app.router.addPopLayer(
+            <OverlayLoader timeout={app.loader.timeoutSet} isProgress progress={progress} />, 
+            aprops, aoptions
+          );
+        }else{
+          app.loader._id = app.router.addPopLayer(
+            content, 
+            {...props, ...aprops, progress, timeout: app.loader.timeoutSet}, 
+            {...options, ...aoptions}
+          );
+        }
+
+        setTimeout(()=>{
+          let {content, props={}, options={}} = app.router.getPopLayerInfo(app.loader._id)||{};
+          if(content){
+            props.progress = 100;
+            props.timeout = app.loader.timeoutPrgress;
+            app.loader._id = app.router.addPopLayer(content, props, options);
+            cb&&cb();
+          }
+        }, app.loader.timeoutSet);
+
+        return app.loader._id;
+      },
+      show: ({options, ...props}={})=>{
+        app.loader.count++;
+        return app.loader.reset(0, null, props, options);
+      },
+      close: force=>{
+        app.loader.count = force?0:Math.max(--app.loader.count,0);
+        return app.loader.reset(app.loader.count?10:100, ()=>{
+          if(!app.loader.count) {
+            app.router.removePopLayer(app.loader._id); 
+            app.loader._id = undefined; 
+          }
+        });
+      },
+    };
+
+    app.loader._loader = app.render.loader;
+    app.render.loader = (show, options)=>show?app.loader.show(options):app.loader.close();
+  },
+
+  onPluginUnmount(app) {
+    app.render.loader = app.loader._loader;
+    delete app.loader;
+  },
+}

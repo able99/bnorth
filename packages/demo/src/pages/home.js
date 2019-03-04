@@ -16,6 +16,10 @@ export default props=>{
             desc="组件展示"
             onClick={()=>app.router.push('components')} />
           <List.Item 
+            title="组件插件列表" 
+            desc="组件插件展示"
+            onClick={()=>app.router.push('cplugins')} />
+          <List.Item 
             title="路由管理" 
             desc="路由管理演示"
             onClick={()=>app.router.push('router')} />

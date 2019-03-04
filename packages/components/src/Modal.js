@@ -6,7 +6,7 @@ import { PanelIcon } from './Icon';
 import Button from './Button';
 
 
-export let Modal = aprops=>{
+let Modal = aprops=>{
   let {
     role, handleAction, onFinished,
     containerProps, headerProps, title, close, bodyProps, footerProps, buttons,
@@ -56,14 +56,14 @@ Modal.defaultProps.buttons = {
 }
 
 Object.defineProperty(Modal,"Modal",{ get:function(){ return Modal }, set:function(val){ Modal = val }})
+export default Modal;
 
 
 
 
 
 
-
-export default {
+export let modal = {
   pluginName: 'modal',
   pluginDependence: [],
 

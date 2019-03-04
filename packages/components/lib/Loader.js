@@ -5,7 +5,9 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PanelLoader = exports.default = void 0;
+exports.loader = exports.OverlayLoader = exports.PanelLoader = exports.default = void 0;
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
@@ -13,11 +15,11 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
+require("@bnorth/rich.css/css/kf.spin.css");
+
 var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
-
-var _BaseComponent5 = _interopRequireDefault(require("./BaseComponent"));
+var _BaseComponent6 = _interopRequireDefault(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -32,7 +34,7 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @augments BaseComponent
  */
 var _Loader = function Loader(aprops) {
-  var _BaseComponent = (0, _BaseComponent5.default)(aprops, _Loader),
+  var _BaseComponent = (0, _BaseComponent6.default)(aprops, _Loader),
       type = _BaseComponent.type,
       types = _BaseComponent.types,
       timeoutTransition = _BaseComponent.timeoutTransition,
@@ -118,7 +120,7 @@ var _default = _Loader;
 exports.default = _default;
 
 var _Line = function Line(aprops) {
-  var _BaseComponent2 = (0, _BaseComponent5.default)(aprops, _Line),
+  var _BaseComponent2 = (0, _BaseComponent6.default)(aprops, _Line),
       isProgress = _BaseComponent2.isProgress,
       progress = _BaseComponent2.progress,
       timeout = _BaseComponent2.timeout,
@@ -128,11 +130,12 @@ var _Line = function Line(aprops) {
       children = _BaseComponent2.children,
       props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isProgress", "progress", "timeout", "color", "colorReverse", "className", "children"]);
 
-  var classStr = 'width-full height-1em';
-  return _react.default.createElement("svg", (0, _extends2.default)({
+  var classNamePre = 'width-full height-1em';
+  return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    component: "svg",
     preserveAspectRatio: "none",
     viewBox: "0 0 100 5",
-    className: (0, _classes.default)(classStr, className)
+    classNamePre: classNamePre
   }, props), _react.default.createElement("line", {
     x1: "0",
     y1: "2",
@@ -177,20 +180,20 @@ Object.defineProperty(_Loader, "Line", {
  */
 
 var _Circle = function Circle(aprops) {
-  var _BaseComponent3 = (0, _BaseComponent5.default)(aprops, _Circle),
+  var _BaseComponent3 = (0, _BaseComponent6.default)(aprops, _Circle),
       isProgress = _BaseComponent3.isProgress,
       progress = _BaseComponent3.progress,
       timeout = _BaseComponent3.timeout,
       color = _BaseComponent3.color,
       colorReverse = _BaseComponent3.colorReverse,
-      className = _BaseComponent3.className,
       children = _BaseComponent3.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["isProgress", "progress", "timeout", "color", "colorReverse", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["isProgress", "progress", "timeout", "color", "colorReverse", "children"]);
 
-  var classStr = 'width-1em height-1em';
-  return _react.default.createElement("svg", (0, _extends2.default)({
+  var classNamePre = 'width-1em height-1em';
+  return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    component: "svg",
     viewBox: "0 0 100 100",
-    className: (0, _classes.default)(classStr, className)
+    classNamePre: classNamePre
   }, props), _react.default.createElement("circle", {
     cx: "50",
     cy: "50",
@@ -205,16 +208,9 @@ var _Circle = function Circle(aprops) {
     strokeWidth: "20",
     stroke: color,
     fill: "none",
-    transform: "rotate(-90,50,50)",
-    style: isProgress ? (0, _animation.transiton)(timeout) : null,
-    strokeDasharray: isProgress ? "".concat(2.51 * (progress || 0), ",251") : "50,251"
-  }, !isProgress ? _react.default.createElement("animate", {
-    attributeName: "stroke-dashoffset",
-    from: "0",
-    to: "-251",
-    dur: timeout,
-    repeatCount: "indefinite"
-  }) : null), children);
+    style: isProgress ? (0, _objectSpread2.default)({}, (0, _animation.transiton)(timeout), (0, _animation.transform)('rotate', '-90deg'), (0, _animation.transformOrigin)()) : (0, _objectSpread2.default)({}, (0, _animation.animation)('spin'), (0, _animation.transformOrigin)()),
+    strokeDasharray: isProgress ? "".concat(2.51 * (progress || 0), ",251") : "150,251"
+  }), children);
 };
 
 Object.defineProperty(_Loader, "Circle", {
@@ -240,7 +236,7 @@ _Loader.defaultProps.types = {
 };
 
 var PanelLoader = function PanelLoader(aprops) {
-  var _BaseComponent4 = (0, _BaseComponent5.default)(aprops),
+  var _BaseComponent4 = (0, _BaseComponent6.default)(aprops),
       isProgress = _BaseComponent4.isProgress,
       progress = _BaseComponent4.progress,
       loaderProps = _BaseComponent4.loaderProps,
@@ -297,3 +293,112 @@ Object.defineProperty(_Loader, "PanelLoader", {
     exports.PanelLoader = PanelLoader = val;
   }
 });
+
+var _OverlayLoader = function OverlayLoader(aprops) {
+  var _BaseComponent5 = (0, _BaseComponent6.default)(aprops, _OverlayLoader),
+      progress = _BaseComponent5.progress,
+      height = _BaseComponent5.height,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["progress", "height"]);
+
+  var classNamePre = 'position-absolute offset-left-start offset-top-start offset-right-start width-full';
+  return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    component: _Loader,
+    type: "line",
+    isProgress: true,
+    progress: progress,
+    classNamePre: classNamePre,
+    "bs-height": height
+  }, props));
+};
+
+exports.OverlayLoader = _OverlayLoader;
+_OverlayLoader.defaultProps = {};
+_OverlayLoader.defaultProps.height = 3;
+Object.defineProperty(_Loader, "OverlayLoader", {
+  get: function get() {
+    return _OverlayLoader;
+  },
+  set: function set(val) {
+    exports.OverlayLoader = _OverlayLoader = val;
+  }
+});
+var loader = {
+  _id: 'loader',
+  onPluginMount: function onPluginMount(app) {
+    app.loader = {
+      count: 0,
+      timeoutPrgress: '20000',
+      timeoutSet: '200',
+      reset: function reset() {
+        var progress = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+        var cb = arguments.length > 1 ? arguments[1] : undefined;
+        var aprops = arguments.length > 2 ? arguments[2] : undefined;
+        var aoptions = arguments.length > 3 ? arguments[3] : undefined;
+
+        var _ref = app.router.getPopLayerInfo(app.loader._id) || {},
+            content = _ref.content,
+            _ref$props = _ref.props,
+            props = _ref$props === void 0 ? {} : _ref$props,
+            _ref$options = _ref.options,
+            options = _ref$options === void 0 ? {} : _ref$options;
+
+        if (!content) {
+          app.loader._id = app.router.addPopLayer(_react.default.createElement(_OverlayLoader, {
+            timeout: app.loader.timeoutSet,
+            isProgress: true,
+            progress: progress
+          }), aprops, aoptions);
+        } else {
+          app.loader._id = app.router.addPopLayer(content, (0, _objectSpread2.default)({}, props, aprops, {
+            progress: progress,
+            timeout: app.loader.timeoutSet
+          }), (0, _objectSpread2.default)({}, options, aoptions));
+        }
+
+        setTimeout(function () {
+          var _ref2 = app.router.getPopLayerInfo(app.loader._id) || {},
+              content = _ref2.content,
+              _ref2$props = _ref2.props,
+              props = _ref2$props === void 0 ? {} : _ref2$props,
+              _ref2$options = _ref2.options,
+              options = _ref2$options === void 0 ? {} : _ref2$options;
+
+          if (content) {
+            props.progress = 100;
+            props.timeout = app.loader.timeoutPrgress;
+            app.loader._id = app.router.addPopLayer(content, props, options);
+            cb && cb();
+          }
+        }, app.loader.timeoutSet);
+        return app.loader._id;
+      },
+      show: function show() {
+        var _ref3 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+            options = _ref3.options,
+            props = (0, _objectWithoutProperties2.default)(_ref3, ["options"]);
+
+        app.loader.count++;
+        return app.loader.reset(0, null, props, options);
+      },
+      close: function close(force) {
+        app.loader.count = force ? 0 : Math.max(--app.loader.count, 0);
+        return app.loader.reset(app.loader.count ? 10 : 100, function () {
+          if (!app.loader.count) {
+            app.router.removePopLayer(app.loader._id);
+            app.loader._id = undefined;
+          }
+        });
+      }
+    };
+    app.loader._loader = app.render.loader;
+
+    app.render.loader = function (show, options) {
+      return show ? app.loader.show(options) : app.loader.close();
+    };
+  },
+  onPluginUnmount: function onPluginUnmount(app) {
+    app.render.loader = app.loader._loader;
+    delete app.loader;
+  }
+};
+exports.loader = loader;

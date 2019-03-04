@@ -7,7 +7,7 @@ var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWild
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.Modal = void 0;
+exports.modal = exports.default = void 0;
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
@@ -101,7 +101,6 @@ var _Modal = function Modal(aprops) {
   }, containerProps), children);
 };
 
-exports.Modal = _Modal;
 _Modal.defaultProps = {};
 _Modal.defaultProps['b-precast'] = {
   'bp-header-bp-title-bc-text-weight': 'bold'
@@ -121,10 +120,12 @@ Object.defineProperty(_Modal, "Modal", {
     return _Modal;
   },
   set: function set(val) {
-    exports.Modal = _Modal = val;
+    _Modal = val;
   }
 });
-var _default = {
+var _default = _Modal;
+exports.default = _default;
+var modal = {
   pluginName: 'modal',
   pluginDependence: [],
   onPluginMount: function onPluginMount(app) {
@@ -228,4 +229,4 @@ var _default = {
     delete app.modal;
   }
 };
-exports.default = _default;
+exports.modal = modal;

@@ -26,6 +26,19 @@ export function transiton(duration='300ms', {
 }
 
 /**
+ * 生成 transform 的变换原点配置
+ * @param {string} [x='center'] - x 轴或者全部(y,z 为空)
+ * @param {string=} [y] - y 轴
+ * @param {string=} z - z 轴
+ * @returns {object} style inline object
+ */
+export function transformOrigin(x='center',y,z) {
+  return compatibleAnimation({
+    'transform-origin': `${x} ${y||''} ${z||''}`,
+  }, true);
+}
+
+/**
  * 生成 animation 帧动画属性的 style inline 对象
  * @param {string} name - 规定 @keyframes 动画的名称
  * @param {string} [duration='1s'] - 规定动画完成一个周期所花费的秒或毫秒

@@ -22,9 +22,7 @@ bnorth 解决方案 demo
 
 1. panelcontainer 和 plain 的属性改为 _ 开头
 1. Fab - 不能使用 transformComponent； style plain 时，还有边框
-1. rich.css 支持 transform-origin ,支持 animation keyframe 配置和兼容性处理
-1. loader 动画改未非 svg 动画, loading 需要改名
-1. loader 没有处理 b-theme 等，Line 等应该是基于 Panel 的
+1. loading 需要改名
 1. field 增加 pattern 自行处理
 1. border-none 与 border-set 和其他的互斥判断
 1. component plugin refine
