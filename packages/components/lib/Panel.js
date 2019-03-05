@@ -25,11 +25,11 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _objectSpread6 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
-
-var _objectSpread6 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -57,10 +57,9 @@ var _Panel = function Panel(aprops) {
   var _classSet;
 
   if (aprops.componentTransform) {
-    var ComponentTransform = aprops.componentTransform;
-    return _react.default.createElement(ComponentTransform, (0, _objectSpread6.default)({}, aprops, {
-      componentTransform: undefined
-    }));
+    var ComponentTransform = aprops.componentTransform,
+        tporps = (0, _objectWithoutProperties2.default)(aprops, ["componentTransform"]);
+    return _react.default.createElement(ComponentTransform, tporps);
   }
 
   var _BaseComponent = (0, _BaseComponent5.default)(aprops, _Panel),

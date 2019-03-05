@@ -69,7 +69,7 @@ let Groups = aprops=>{
       {!Component&&(
         <List>
           {children.map(v=>(
-            <List.Item title={v.props.title} desc={v.props.desc} onClick={()=>app.router.push(['components', v.props.title])} />
+            <List.Item key={v.props.title} title={v.props.title} desc={v.props.desc} onClick={()=>app.router.push(['components', v.props.title])} />
           ))}
         </List>
       )}
@@ -101,7 +101,7 @@ Groups.Props = aprops=>{
   return (
     <div className="margin-bottom-">
       <div className="border-set-bottom- padding-a-"><strong>{isCommon?'通用':'组件'}属性</strong></div>
-      {Object.entries(data||{}).map(([k,v])=><PropSel title={k} option={v} state={page.stateComponentProps} stateData={stateComponentProps} />)}
+      {Object.entries(data||{}).map(([k,v])=><PropSel key={k} title={k} option={v} state={page.stateComponentProps} stateData={stateComponentProps} />)}
     </div>
   ) 
 }
@@ -118,9 +118,10 @@ Groups.Show = aprops=>{
   return (
     <div>
       <hr /> <hr /> <hr />
-      {children.map(v=>{
+      {children.map((v,i)=>{
         let props = {...stateCommonProps, ...stateComponentProps}
-        return typeof(v)==='function'?v(props):cloneElement(v, props)
+        props.key = props.key||i;
+        return cloneElement(typeof(v)==='function'?v(props):v, props)
       })}
       <hr /> <hr /> <hr />
     </div>
@@ -133,7 +134,7 @@ Groups.Log = aprops=>{
   return (
     <div>
       <div className="border-set-bottom- padding-a-"><strong>日志</strong></div>
-      <div className="border-set-bottom- padding-a- scrollable-y" style={{height: 100}}>{logs.map(v=><div>{v}</div>)}</div>
+      <div className="border-set-bottom- padding-a- scrollable-y" style={{height: 100}}>{[...logs].reverse().map((v,i,a)=><div key={i}>{a.length-i-1}: {v}</div>)}</div>
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import Groups from '../components/groups'
+import listGener from '../components/listgener'
 import Animation from '@bnorth/components/lib/Animation'
 import AspectRatio from '@bnorth/components/lib/AspectRatio';
 import Backdrop from '@bnorth/components/lib/Backdrop'
@@ -26,9 +27,6 @@ import TabBar from '@bnorth/components/lib/TabBar'
 import Touchable from '@bnorth/components/lib/Touchable';
 import img from '../../res/aboutme.svg';
 
-let listComponent = (length=3, Component='div', pre, ext, props)=>{
-  return Array.from({length}, (v,i)=>i+1).map(v=><Component {...props}>{pre}data-{v}{ext}</Component>)
-}
 
 let Component = aprops=>{
   let { app, page, route:{params:{component}}, stateData, stateLog, stateCommonProps:{toSub, ...stateCommonProps}, stateComponentProps } = aprops;
@@ -43,7 +41,7 @@ let Component = aprops=>{
           dimension: ['width', 'height'],
         }}/>
         <Groups.Show>
-          <Animation>{listComponent()}</Animation>
+          <Animation>{listGener()}</Animation>
         </Groups.Show>
       </Groups.Group>
 
@@ -59,16 +57,15 @@ let Component = aprops=>{
       <Groups.Group title="Backdrop" desc="背景">
         <Groups.Props data={{
           in: [true, false],
-          mask: [true, 'primary'],
         }}/>
         <Groups.Show>
-          {props=><Panel>{listComponent()}<Backdrop children="Backdrop" {...props}/></Panel>}
+          {props=><Panel>{listGener()}<Backdrop children="Backdrop" {...props}/></Panel>}
         </Groups.Show>
       </Groups.Group>
 
       <Groups.Group title="BackTop" desc="返回顶部按钮">
         <Groups.Show>
-          {props=><Panel data-dock><Panel bc-width-full bs-height="150px" bc-scrollable-y>{listComponent(40)}<BackTop param="100%" dock {...props} /></Panel></Panel>}
+          {props=><Panel data-dock><Panel bc-width-full bs-height="150px" bc-scrollable-y>{listGener(40)}<BackTop param="100%" dock {...props} /></Panel></Panel>}
         </Groups.Show>
       </Groups.Group>
 
@@ -98,7 +95,7 @@ let Component = aprops=>{
       <Groups.Group title="Dropload" desc="上拉刷新">
         <Groups.Show>
           {props=><Panel bc-position-relative bc-scrollable-y bs-height="150px">
-            {listComponent(stateData.count||10)}
+            {listGener(stateData.count||10)}
             <Dropload onLoad={()=>{page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({count: (stateData.count||10)+10, isLoading: false}), 3000)}} {...props} isLoading={stateData.isLoading}>loadding</Dropload>
           </Panel>}
         </Groups.Show>
@@ -112,7 +109,7 @@ let Component = aprops=>{
           dock: [true, false],
         }}/>
         <Groups.Show>
-          {props=><Panel data-dock><Panel bc-scrollable-y bs-height="150px">{listComponent(20)}<Fab {...props}>fab</Fab></Panel></Panel>}
+          {props=><Panel data-dock><Panel bc-scrollable-y bs-height="150px">{listGener(20)}<Fab {...props}>fab</Fab></Panel></Panel>}
         </Groups.Show>
       </Groups.Group>
 
@@ -122,6 +119,8 @@ let Component = aprops=>{
           <Field type="text" />
           <Groups.Sep title="text controlled" />
           <Field type="text" onChange={e=>page.stateData.update({text: e.target.value})} value={stateData.text}/>
+          <Groups.Sep title="patternName=number" />
+          <Field type="text" onChange={e=>page.stateData.update({text1: e.target.value})} value={stateData.text1} patternName="number" />
           <Groups.Sep title="static 空值" />
           <Field type="static" />
           <Groups.Sep title="static" />
@@ -161,7 +160,7 @@ let Component = aprops=>{
       </Groups.Group>
 
       <Groups.Group title="Landscape" desc="横屏">
-        <Groups.Show><Panel b-style="solid" b-theme="primary" bs-height={500} data-dock><Landscape>{listComponent()}</Landscape></Panel></Groups.Show>
+        <Groups.Show><Panel b-style="solid" b-theme="primary" bs-height={500} data-dock><Landscape>{listGener()}</Landscape></Panel></Groups.Show>
       </Groups.Group>
       
       <Groups.Group title="List" desc="列表">
@@ -207,7 +206,7 @@ let Component = aprops=>{
       <Groups.Group title="NavBar" desc="标题栏">
         <Groups.Show>
           <NavBar>
-            <NavBar.Item icon="left" iconProps={{defaultName: '<'}}>back</NavBar.Item>
+            <NavBar.Item name="left:<">back</NavBar.Item>
             <NavBar.Title>NavBar.Title</NavBar.Title>
           </NavBar>
         </Groups.Show>
@@ -215,7 +214,7 @@ let Component = aprops=>{
 
       <Groups.Group title="Notice" desc="通知栏">
         <Groups.Show>
-          {props=><div style={{height: 300}} className="position-relative"><Notice onDoClose={()=>alert(1)} {...props}>notice</Notice></div>}
+          {props=><div style={{height: 300}} className="position-relative"><Notice {...props}>notice</Notice></div>}
         </Groups.Show>
       </Groups.Group>
 
@@ -234,7 +233,7 @@ let Component = aprops=>{
         }}/>
         <Groups.Show>
           <PanelContainer {...stateData} onSelectedChange={selectedIndex=>page.stateData.update({selectedIndex})}>
-            {listComponent(5)}
+            {listGener(5)}
           </PanelContainer>
         </Groups.Show>
       </Groups.Group>
@@ -244,14 +243,14 @@ let Component = aprops=>{
           placement: ['bottom-auto-full','right-auto-center'],
         }}/>
         <Groups.Show>
-          {props=><div className="scrollable-y" style={{height: 50}}>{listComponent()}<Popover inline overlay={listComponent()}  {...props}>popover</Popover></div>}
+          {props=><div className="scrollable-y" style={{height: 50}}>{listGener()}<Popover inline overlay={listGener()}  {...props}>popover</Popover></div>}
         </Groups.Show>
       </Groups.Group>
 
       <Groups.Group title="PullRefresh" desc="下拉刷新">
         <Groups.Show>
           {props=><div style={{height: 150}} className="scrollable-y">
-            <PullRefresh onLoad={()=>{page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({isLoading: false}), 3000)}} isLoading={stateData.isLoading} {...props}>{listComponent(20, undefined, undefined, undefined, {onClick: ()=>alert(1)})}</PullRefresh>
+            <PullRefresh onLoad={()=>{page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({isLoading: false}), 3000)}} isLoading={stateData.isLoading} {...props}>{listGener(20, {onClick: ()=>alert(1)})}</PullRefresh>
           </div>}
         </Groups.Show>
       </Groups.Group>
@@ -259,10 +258,9 @@ let Component = aprops=>{
       <Groups.Group title="ScrollSpy" desc="滚动监控">
         <Groups.Show>
           {props=><Panel bc-position-relative bc-width-full bs-height="100px" bc-scrollable-y>
-            {Array.from({length: 20}, (v,i)=>i).map(v=>(v===5
-              ?<ScrollSpy onRelativeChange={(p)=>page.stateLog.update([p], {append: true})} {...props} />
-              :<div>{v}</div>
-            ))}
+            {listGener(10)}
+            <ScrollSpy onRelativeChange={(p)=>page.stateLog.update([p], {append: true})} {...props} />
+            {listGener(10)}
           </Panel>}
         </Groups.Show>
         <Groups.Log logs={stateLog} />
@@ -287,9 +285,9 @@ let Component = aprops=>{
         }} />
         <Groups.Show>
           <TabBar bs-height={150} bp-container-bp-item-className="scrollable-y">
-            <TabBar.Item title="title1" name="view_comfy">{Array.from({length:20},(k,i)=>i).map(v=><div>tab1-{v+1}</div>)}</TabBar.Item>
-            <TabBar.Item title="title2" name="settings">{Array.from({length:20},(k,i)=>i).map(v=><div>tab2-{v+1}</div>)}</TabBar.Item>
-            <TabBar.Item title="title3" name="extension">{Array.from({length:20},(k,i)=>i).map(v=><div>tab3-{v+1}</div>)}</TabBar.Item>
+            <TabBar.Item title="title1" name="view_comfy">{listGener(20, {children: i=>('tab1-'+i)})}</TabBar.Item>
+            <TabBar.Item title="title2" name="settings">{listGener(20, {children: i=>('tab2-'+i)})}</TabBar.Item>
+            <TabBar.Item title="title3" name="extension">{listGener(20, {children: i=>('tab3-'+i)})}</TabBar.Item>
           </TabBar>
         </Groups.Show>
       </Groups.Group>

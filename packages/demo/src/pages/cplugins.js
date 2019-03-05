@@ -8,20 +8,32 @@ export default props=>{
 
   return (
     <div className="bg-color-white width-full height-full flex-display-block flex-direction-v">
-      <NavBar title="bnorth demo" />
+      <NavBar title="组件插件列表" onBack={()=>app.router.back()} />
       <div className="scrollable-y flex-sub-flex-extend">
-        <List className="margin-bottom-2x">
-          <List.Item 
-            title="组件列表" 
-            desc="组件展示"
-            onClick={()=>app.router.push('components')} />
+        <List className="margin-bottom-2x" header="modal">
+          <List.Item title="modal" className="text-weight-bold text-size-lg" />
+          <List.Item title="打开" onClick={()=>app.modal.show('modal')} />
+          <List.Item title="打开 alert" onClick={()=>app.modal.show('modal', {role: 'alert'})} />
+          <List.Item title="打开 prompt" onClick={()=>app.modal.show('modal', {role: 'prompt'})} />
+          <List.Item title="打开 popup" onClick={()=>app.modal.show('modal', {role: 'popup'})} />
+          <List.Item title="打开 带 title 带 close" onClick={()=>app.modal.show('modal', {title: 'title', close: true})} />
         </List>
 
-        <List className="margin-bottom-2x">
-          <List.Item 
-            title="组件列表" 
-            desc="组件展示"
-            onClick={()=>app.router.push('components')} />
+        <List className="margin-bottom-2x" header="modal">
+          <List.Item title="notice" className="text-weight-bold text-size-lg" />
+          <List.Item title="打开" onClick={()=>app.notice.show('notice')} />
+          <List.Item title="关闭" onClick={()=>app.notice.close()} />
+        </List>
+
+        <List className="margin-bottom-2x" header="modal">
+          <List.Item title="mask" className="text-weight-bold text-size-lg" />
+          <List.Item title="打开" onClick={()=>{app.mask.show('3秒后关闭');window.setTimeout(()=>app.mask.close(), 3000)}} />
+        </List>
+
+        <List className="margin-bottom-2x" header="modal">
+          <List.Item title="loader" className="text-weight-bold text-size-lg" />
+          <List.Item title="打开 可多次点击" onClick={()=>app.loader.show()} />
+          <List.Item title="关闭 需多次关闭" onClick={()=>app.loader.close()} />
         </List>
       </div>
     </div>

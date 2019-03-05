@@ -48,7 +48,7 @@ class Fab extends React.Component{
       'offset-bottom-start': v==='end',
     }
 
-    let component = <Panel component={Button} classNamePre={classNamePre}  {...props} />;
+    let component = <Panel componentTransform={Button} classNamePre={classNamePre}  {...props} />;
     return this.dock?domCreatePortal(component, this.dock):component;
   }
 }

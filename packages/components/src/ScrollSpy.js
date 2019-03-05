@@ -95,7 +95,7 @@ class ScrollSpy extends React.Component {
   }
 
   render() {
-    let props = BaseComponent(this.props, ScrollSpy);
+    let { onPosChange, onRelativeChange, horizontal, dock, target, ...props } = BaseComponent(this.props, ScrollSpy);
     return <Panel component="span" stylePre={{ fontSize: 0}} {...props} />;
   }
 }

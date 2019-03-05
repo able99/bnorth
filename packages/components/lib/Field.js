@@ -9,6 +9,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+require("core-js/modules/es6.regexp.constructor");
+
 require("core-js/modules/es7.array.includes");
 
 require("core-js/modules/es6.string.includes");
@@ -164,12 +166,16 @@ function (_React$Component) {
           type = _BaseComponent.type,
           value = _BaseComponent.value,
           typesToElement = _BaseComponent.typesToElement,
+          onChange = _BaseComponent.onChange,
+          pattern = _BaseComponent.pattern,
+          patterns = _BaseComponent.patterns,
+          patternName = _BaseComponent.patternName,
           onPressEnter = _BaseComponent.onPressEnter,
           _onKeyPress = _BaseComponent.onKeyPress,
           _BaseComponent$compon = _BaseComponent.component,
           component = _BaseComponent$compon === void 0 ? "input" : _BaseComponent$compon,
           children = _BaseComponent.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "value", "typesToElement", "onPressEnter", "onKeyPress", "component", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "value", "typesToElement", "onChange", "pattern", "patterns", "patternName", "onPressEnter", "onKeyPress", "component", "children"]);
 
       if (typesToElement.includes(type)) {
         component = type;
@@ -178,6 +184,7 @@ function (_React$Component) {
         children = undefined;
       }
 
+      if (patternName) pattern = patterns[patternName];
       var classNamePre = {
         'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle': true,
         'bg-none border-none-a': !this.props['b-style']
@@ -185,6 +192,10 @@ function (_React$Component) {
       return _react.default.createElement(_Panel.default, (0, _extends2.default)({
         component: component,
         type: type,
+        onChange: this.props.hasOwnProperty('value') && onChange && pattern && function (e) {
+          if (!RegExp(pattern).test(e.target.value)) e.target.value = value;
+          onChange(e);
+        } || undefined,
         onKeyPress: function onKeyPress(e) {
           if (onPressEnter && e.charCode === 13) {
             e.stopPropagation();
@@ -214,6 +225,13 @@ _Normal.defaultProps = {};
  */
 
 _Normal.defaultProps.typesToElement = ['progress', 'select', 'textarea'];
+_Normal.defaultProps.patterns = {
+  number: "^\\d*$",
+  float: '^\\d*(.\\d*)?$',
+  float2: '/^\\d*(.\\d{0,2})?$/'
+};
+/* eslint-disable no-useless-escape */
+
 Object.defineProperty(Field, "Normal", {
   get: function get() {
     return _Normal;
@@ -510,13 +528,13 @@ var _Switch = function Switch(aprops) {
       "b-style": "solid",
       "b-theme": bTheme,
       classNamePre: classNamePreItem,
-      "bs-z-index": "10"
+      "bs-zIndex": "10"
     }), _react.default.createElement(_Panel.default, {
       inline: true,
       "b-style": "solid",
       "b-theme": "white",
       classNamePre: classNamePreItem,
-      "bs-margin-left": "-0.3em"
+      "bs-marginLeft": "-0.3em"
     })),
     "bp-statusUnchecked-children": _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Panel.default, {
       inline: true,
@@ -528,7 +546,7 @@ var _Switch = function Switch(aprops) {
       "b-style": "solid",
       "b-theme": "component",
       classNamePre: classNamePreItem,
-      "bs-margin-left": "-0.3em"
+      "bs-marginLeft": "-0.3em"
     })),
     disabled: disabled
   }, props, {

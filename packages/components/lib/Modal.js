@@ -31,8 +31,9 @@ var _this = void 0;
 
 var _Modal = function Modal(aprops) {
   var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Modal),
+      isIn = _BaseComponent.in,
       role = _BaseComponent.role,
-      handleAction = _BaseComponent.handleAction,
+      onClose = _BaseComponent.onClose,
       onFinished = _BaseComponent.onFinished,
       containerProps = _BaseComponent.containerProps,
       headerProps = _BaseComponent.headerProps,
@@ -42,7 +43,7 @@ var _Modal = function Modal(aprops) {
       footerProps = _BaseComponent.footerProps,
       buttons = _BaseComponent.buttons,
       children = _BaseComponent.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["role", "handleAction", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["in", "role", "onClose", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "children"]);
 
   buttons = buttons[role] || [];
   children = typeof children === 'function' ? children(_this) : children;
@@ -70,8 +71,8 @@ var _Modal = function Modal(aprops) {
     "bp-title-bc-flex-sub-flex-extend": true,
     "bp-title-bc-text-align-center": !close,
     name: close === true ? "close:x" : close,
-    "bp-icon-onClick": handleAction,
-    "b-icon-bc-padding-a-xs": true,
+    "bp-icon-onClick": onClose,
+    "b-icon-bc-padding-a": "xs",
     "bc-border-set-bottom-": Boolean(children || buttons.length),
     "bc-width-full": true,
     "bc-padding-a-": true,
@@ -89,13 +90,14 @@ var _Modal = function Modal(aprops) {
       "bc-border-none-left-": Boolean(i),
       "bc-border-set-left-": Boolean(i),
       onClick: function onClick() {
-        return handleAction && handleAction(i);
+        return onClose && onClose(i);
       }
     }, v));
   })) : null);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     componentTransform: _Backdrop.default,
-    handleAction: handleAction,
+    in: isIn,
+    onClick: onClose,
     onFinished: onFinished,
     classNamePre: classNamePreContainer
   }, containerProps), children);
@@ -173,7 +175,7 @@ var modal = {
 
         props.in = true;
 
-        props.handleAction = function (index) {
+        props.onClose = function (index) {
           return (!onAction || onAction(index, state, function () {
             return app.modal.close(_id);
           }, _id) !== false) && app.modal.close(_id);
@@ -216,7 +218,7 @@ var modal = {
         if (!content) return;
         props.in = false;
 
-        props.onTransitionFinished = function () {
+        props.onFinished = function () {
           app.router.removePopLayer(_id);
           app.context.clear(_id);
         };

@@ -100,7 +100,7 @@ let Item = aprops=>{
         {children}
       </PanelContainer>
       {after?(<Panel bc-line-height-0 {...afterProps}>{after===true?undefined:after}</Panel>):null}
-      {arrow||(autoArrow&&onClick)?(<Panel component={Icon} name="right" nameDefault=">" {...arrowProps}>{arrow===true?undefined:arrow}</Panel>):null}
+      {arrow||(autoArrow&&onClick)?(<Panel component={Icon} name="right:>" {...arrowProps}>{arrow===true?undefined:arrow}</Panel>):null}
     </PanelContainer>
   );
 }

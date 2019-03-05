@@ -126,7 +126,7 @@ function (_React$Component) {
       var triggerByHover = trigger ? trigger === 'hover' : !_BaseComponent3.domIsTouch;
       var triggerProps = {
         onClick: triggerByTouch ? (0, _BaseComponent3.chainedFuncs)(onClick, function () {
-          return _this2.state.show ? _this2.hide() : _this2.show();
+          return show ? _this2.hide() : _this2.show();
         }) : onClick,
         onMouseOver: triggerByHover ? (0, _BaseComponent3.chainedFuncs)(onMouseOver, function (e) {
           return _this2.show();
@@ -140,7 +140,6 @@ function (_React$Component) {
           var x = e.clientX;
           var y = e.clientY;
           var toffset = _this2.state.offsetTarget || {};
-          console.log(1111, x, y, toffset);
           if (!(toffset.left <= x && x <= toffset.left + toffset.width && toffset.top <= y && y <= toffset.top + toffset.height)) _this2.hide();
         } : null
       };

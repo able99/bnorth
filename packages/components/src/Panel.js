@@ -17,7 +17,7 @@ import Touchable from './Touchable';
  * @augments module:BaseComponent.BaseComponent
  */
 let Panel = aprops=>{
-  if(aprops.componentTransform) { let ComponentTransform = aprops.componentTransform; return <ComponentTransform {...{...aprops, componentTransform:undefined}} /> }
+  if(aprops.componentTransform) { let {componentTransform:ComponentTransform, ...tporps} = aprops; return <ComponentTransform {...tporps} /> }
 
   let {
     main, page, full, inline, 

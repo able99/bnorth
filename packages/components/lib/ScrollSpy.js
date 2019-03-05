@@ -11,6 +11,8 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -23,7 +25,7 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _react = _interopRequireDefault(require("react"));
 
-var _BaseComponent = _interopRequireWildcard(require("./BaseComponent"));
+var _BaseComponent2 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -57,13 +59,13 @@ function (_React$Component) {
       if (!target || !onRelativeChange) return;
 
       if (target === true) {
-        this.targetOffset = (0, _BaseComponent.domOffset)(this, this.dock);
+        this.targetOffset = (0, _BaseComponent2.domOffset)(this, this.dock);
       } else if (target === 'parent') {
-        var dom = (0, _BaseComponent.domFindNode)(this);
+        var dom = (0, _BaseComponent2.domFindNode)(this);
         if (!dom) return;
         dom = dom.parentNode;
         if (!dom) return;
-        this.targetOffset = (0, _BaseComponent.domOffset)(dom, this.dock);
+        this.targetOffset = (0, _BaseComponent2.domOffset)(dom, this.dock);
       }
 
       if (this.targetOffset) this.targetOffset.bottom = this.targetOffset.top + this.targetOffset.height;
@@ -107,12 +109,12 @@ function (_React$Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.relative = '';
-      this.dock = (0, _BaseComponent.domFindScrollDock)(this, this.props.dock, this.props.horizontal);
+      this.dock = (0, _BaseComponent2.domFindScrollDock)(this, this.props.dock, this.props.horizontal);
 
       this._getTargetOffset();
 
-      this.offScrollListener = (0, _BaseComponent.listen)(this.dock, 'scroll', this._handlePosChange.bind(this), true);
-      this.offResizeListener = (0, _BaseComponent.listen)(window, 'resize', this._handlePosChange.bind(this), true);
+      this.offScrollListener = (0, _BaseComponent2.listen)(this.dock, 'scroll', this._handlePosChange.bind(this), true);
+      this.offResizeListener = (0, _BaseComponent2.listen)(window, 'resize', this._handlePosChange.bind(this), true);
 
       this._handlePosChange();
     }
@@ -151,7 +153,14 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var props = (0, _BaseComponent.default)(this.props, ScrollSpy);
+      var _BaseComponent = (0, _BaseComponent2.default)(this.props, ScrollSpy),
+          onPosChange = _BaseComponent.onPosChange,
+          onRelativeChange = _BaseComponent.onRelativeChange,
+          horizontal = _BaseComponent.horizontal,
+          dock = _BaseComponent.dock,
+          target = _BaseComponent.target,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["onPosChange", "onRelativeChange", "horizontal", "dock", "target"]);
+
       return _react.default.createElement(_Panel.default, (0, _extends2.default)({
         component: "span",
         stylePre: {

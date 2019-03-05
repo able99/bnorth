@@ -8,7 +8,7 @@ import Button from './Button';
 
 let Modal = aprops=>{
   let {
-    role, handleAction, onFinished,
+    in:isIn, role, onClose, onFinished,
     containerProps, headerProps, title, close, bodyProps, footerProps, buttons,
     children, ...props
   } = BaseComponent(aprops, Modal);
@@ -29,7 +29,7 @@ let Modal = aprops=>{
       {role!=='document'&&(title||close)?(
         <PanelIcon 
           bp-title-bc-flex-sub-flex-extend bp-title-bc-text-align-center={!close}
-          name={close===true?"close:x":close} bp-icon-onClick={handleAction} b-icon-bc-padding-a-xs
+          name={close===true?"close:x":close} bp-icon-onClick={onClose} b-icon-bc-padding-a="xs"
           bc-border-set-bottom-={Boolean(children||buttons.length)} bc-width-full bc-padding-a- position="right" {...headerProps}>
           {title}
         </PanelIcon>
@@ -37,13 +37,13 @@ let Modal = aprops=>{
       {role!=='document'&&children?(<Panel bc-padding-a- bc-border-set-bottom-={Boolean(buttons.length)} {...bodyProps}>{children}</Panel>):null}
       {role!=='document'&&buttons.length?(
         <PanelContainer type="justify" {...footerProps}>
-          {buttons.map((v,i)=><Panel key={i} component={Button} b-style="plain" bc-border-none-left-={Boolean(i)} bc-border-set-left-={Boolean(i)} onClick={()=>handleAction&&handleAction(i)} {...v} />)}
+          {buttons.map((v,i)=><Panel key={i} component={Button} b-style="plain" bc-border-none-left-={Boolean(i)} bc-border-set-left-={Boolean(i)} onClick={()=>onClose&&onClose(i)} {...v} />)}
         </PanelContainer>
       ):null}
     </Panel>
   )
   
-  return <Panel componentTransform={Backdrop} handleAction={handleAction} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
+  return <Panel componentTransform={Backdrop} in={isIn} onClick={onClose} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
 }
 
 Modal.defaultProps = {}
@@ -91,7 +91,7 @@ export let modal = {
         options.onAdd = _id=>app.keyboard.on(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id));
         options.onRemove = _id=>app.keyboard.off(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id));
         props.in = true;
-        props.handleAction = index=>(!onAction || onAction( index, state, ()=>app.modal.close(_id), _id)!==false) && app.modal.close(_id);
+        props.onClose = index=>(!onAction || onAction( index, state, ()=>app.modal.close(_id), _id)!==false) && app.modal.close(_id);
         props.children = app.modal._createContent(_id, Content, state);
 
         return app.router.addPopLayer(<Modal /> , props, options);
@@ -121,7 +121,7 @@ export let modal = {
         if(!content) return;
 
         props.in = false;
-        props.onTransitionFinished = ()=>{
+        props.onFinished = ()=>{
           app.router.removePopLayer(_id);
           app.context.clear(_id);
         }

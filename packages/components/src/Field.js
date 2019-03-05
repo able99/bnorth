@@ -94,11 +94,12 @@ let Normal = class extends React.Component {
   
   render() { 
     let {
-      type, value, typesToElement,
+      type, value, typesToElement, onChange, pattern, patterns, patternName,
       onPressEnter, onKeyPress, 
       component="input", children, ...props
     } = BaseComponent(this.props, Normal);
     if(typesToElement.includes(type)) { component = type; type = null }else{ children = undefined }
+    if(patternName) pattern = patterns[patternName];
 
     let classNamePre = {
       'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle': true,
@@ -107,6 +108,7 @@ let Normal = class extends React.Component {
 
     return <Panel 
       component={component} type={type} 
+      onChange={(this.props.hasOwnProperty('value')&&onChange&&pattern&&(e=>{if(!RegExp(pattern).test(e.target.value)) e.target.value = value; onChange(e)}))||undefined}
       onKeyPress={e=>{ if(onPressEnter&&e.charCode===13){ e.stopPropagation(); e.preventDefault(); onPressEnter(e.target.value) }else{ onKeyPress&&onKeyPress(e) } }} 
       classNamePre={classNamePre} {...props}>
       {children}
@@ -126,6 +128,7 @@ Normal.defaultProps = {};
  * <Field type="textarea" /> => <textarea></textarea>
  */
 Normal.defaultProps.typesToElement = ['progress', 'select', 'textarea'];
+Normal.defaultProps.patterns = {number: "^\\d*$", float: '^\\d*(.\\d*)?$', float2: '/^\\d*(.\\d{0,2})?$/'}; /* eslint-disable no-useless-escape */
 
 Object.defineProperty(Field,"Normal",{ get:function(){ return Normal }, set:function(val){ Normal = val }})
 
@@ -351,14 +354,14 @@ let Switch = aprops=>{
     b-style="hollow" bg-color-component={disabled} bc-border-radius-rounded
     bp-statusChecked-children={
       <React.Fragment>
-        <Panel inline b-style="solid" b-theme={bTheme} classNamePre={classNamePreItem} bs-z-index="10" />
-        <Panel inline b-style="solid" b-theme="white" classNamePre={classNamePreItem} bs-margin-left="-0.3em" />
+        <Panel inline b-style="solid" b-theme={bTheme} classNamePre={classNamePreItem} bs-zIndex="10" />
+        <Panel inline b-style="solid" b-theme="white" classNamePre={classNamePreItem} bs-marginLeft="-0.3em" />
       </React.Fragment>
     }
     bp-statusUnchecked-children={
       <React.Fragment>
         <Panel inline b-style="solid" b-theme="white" classNamePre={classNamePreItem} />
-        <Panel inline b-style="solid" b-theme="component" classNamePre={classNamePreItem} bs-margin-left="-0.3em" />
+        <Panel inline b-style="solid" b-theme="component" classNamePre={classNamePreItem} bs-marginLeft="-0.3em" />
       </React.Fragment>
     }
     disabled={disabled} {...props} type="checkbox" />

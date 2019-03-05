@@ -26,16 +26,18 @@ var _Icon = require("./Icon");
 var _Notice = function Notice(aprops) {
   var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Notice),
       containerProps = _BaseComponent.containerProps,
-      onClickClose = _BaseComponent.onClickClose,
+      isIn = _BaseComponent.in,
+      onClose = _BaseComponent.onClose,
       onFinished = _BaseComponent.onFinished,
       transitionProps = _BaseComponent.transitionProps,
       animationProps = _BaseComponent.animationProps,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["containerProps", "onClickClose", "onFinished", "transitionProps", "animationProps"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["containerProps", "in", "onClose", "onFinished", "transitionProps", "animationProps"]);
 
   var classNamePreContainer = 'position-absolute offset-top-start offset-left-top width-full';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     className: classNamePreContainer
   }, containerProps), _react.default.createElement(_Animation.default, (0, _extends2.default)({
+    in: isIn,
     type: "collapse",
     "bc-width-full": true,
     onFinished: onFinished,
@@ -43,8 +45,8 @@ var _Notice = function Notice(aprops) {
   }, animationProps), _react.default.createElement(_Icon.PanelIcon, (0, _extends2.default)({
     "bp-title-bc-flex-sub-flex-extend": true,
     name: "close:x",
-    "bp-icon-onClick": onClickClose,
-    "b-icon-bc-padding-a-xs": true,
+    "bp-icon-onClick": onClose,
+    "b-icon-bc-padding-a": "xs",
     "bc-width-full": true,
     "bc-padding-a-": true,
     position: "right",
@@ -89,7 +91,7 @@ var notice = {
         options._id = _id;
         props.in = true;
 
-        props.onClickClose = function () {
+        props.onClose = function () {
           return app.notice.close();
         };
 

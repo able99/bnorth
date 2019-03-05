@@ -6,20 +6,16 @@ import { PanelIcon } from './Icon';
 
 
 let Notice = aprops=>{
-  let {
-    containerProps,
-    onClickClose, onFinished, transitionProps, animationProps,
-    ...props
-  } = BaseComponent(aprops, Notice);
+  let { containerProps, in:isIn, onClose, onFinished, transitionProps, animationProps, ...props } = BaseComponent(aprops, Notice);
 
   let classNamePreContainer = 'position-absolute offset-top-start offset-left-top width-full';
 
   return (
     <Panel className={classNamePreContainer} {...containerProps}>
-      <Animation type="collapse" bc-width-full onFinished={onFinished} transitionProps={transitionProps} {...animationProps}>
+      <Animation in={isIn} type="collapse" bc-width-full onFinished={onFinished} transitionProps={transitionProps} {...animationProps}>
         <PanelIcon 
           bp-title-bc-flex-sub-flex-extend
-          name="close:x" bp-icon-onClick={onClickClose} b-icon-bc-padding-a-xs
+          name="close:x" bp-icon-onClick={onClose} b-icon-bc-padding-a="xs"
           bc-width-full bc-padding-a- position="right" b-style="solid" b-theme="mask" {...props} />
       </Animation>
     </Panel>
@@ -51,7 +47,7 @@ export let notice = {
         let _id = app.notice._id || app.router.genPopLayerId(options);
         options._id = _id;
         props.in = true;
-        props.onClickClose = ()=>app.notice.close();
+        props.onClose = ()=>app.notice.close();
         props.children = message;
 
         if(app.notice._timer) window.clearTimeout(app.notice._timer);

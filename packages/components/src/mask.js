@@ -65,10 +65,11 @@ export let mask = {
      * @param {object?} options - 参数
      * @returns {string} 弹出层 id
      */
-    app.mask.show = ({options={}, ...props}={})=>{
+    app.mask.show = (content, {options={}, ...props}={})=>{
       let _id = app.mask._id||app.router.genPopLayerId(options);
       options._id = _id;
       options.isModal = true;
+      props.children = content;
 
       return app.mask._id = app.router.addPopLayer(<Mask /> , props, options);
     }
@@ -82,7 +83,7 @@ export let mask = {
       if(!content) { app.mask._id = undefined; return }
 
       props.in = false;
-      props.onTransitionFinished = ()=>{ 
+      props.onFinished = ()=>{ 
         app.router.removePopLayer(app.mask._id); 
         app.mask._id = undefined; 
       }

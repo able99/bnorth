@@ -160,8 +160,7 @@ var _Item = function Item(aprops) {
     "bc-line-height-0": true
   }, afterProps), after === true ? undefined : after) : null, arrow || autoArrow && onClick ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: _Icon.default,
-    name: "right",
-    nameDefault: ">"
+    name: "right:>"
   }, arrowProps), arrow === true ? undefined : arrow) : null);
 };
 

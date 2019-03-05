@@ -46,7 +46,7 @@ class Popover extends React.Component {
     let triggerByTouch = trigger?trigger==='click':domIsTouch;
     let triggerByHover = trigger?trigger==='hover':!domIsTouch;
     let triggerProps = {
-      onClick: triggerByTouch?chainedFuncs(onClick, ()=>this.state.show?this.hide():this.show()):onClick,
+      onClick: triggerByTouch?chainedFuncs(onClick, ()=>show?this.hide():this.show()):onClick,
       onMouseOver: triggerByHover?chainedFuncs(onMouseOver, (e)=>this.show()):onMouseOver,
     };
     let closeProps = {
@@ -54,7 +54,6 @@ class Popover extends React.Component {
       onMouseMove: triggerByHover?e=>{
         let x = e.clientX; let y = e.clientY;
         let toffset = this.state.offsetTarget||{};
-        console.log(1111,x,y,toffset);
         if(!(toffset.left <= x && x <= toffset.left+toffset.width && toffset.top <= y && y <= toffset.top+toffset.height)) this.hide();
       }:null,
     };
