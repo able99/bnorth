@@ -62,7 +62,7 @@ var Field = function Field(aprops) {
 
   if (before || after) {
     props['b-style'] = 'plain';
-    props['itemSelected'] = true;
+    props['panelItemSelected'] = true;
   }
 
   var component = _react.default.createElement(ComponentField, props);
@@ -70,7 +70,7 @@ var Field = function Field(aprops) {
   if (!before && !after) return component;
   return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
     component: label && 'label',
-    type: "primary"
+    ctype: "primary"
   }, containerProps), before ? _react.default.createElement(_Panel.default, beforeProps, before) : null, component, after ? _react.default.createElement(_Panel.default, afterProps, after) : null);
 };
 

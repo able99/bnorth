@@ -8,25 +8,25 @@ import Button from './Button';
 
 let Modal = aprops=>{
   let {
-    in:isIn, role, onClose, onFinished,
+    in:isIn, type, onClose, onFinished,
     containerProps, headerProps, title, close, bodyProps, footerProps, buttons,
     children, ...props
   } = BaseComponent(aprops, Modal);
-  buttons = buttons[role]||[];
+  buttons = buttons[type]||[];
   children = typeof(children)==='function'?children(this):children;
 
   let classNamePre = {
     'position-relative backface-hidden overflow-a-hidden': true,
-    'square-full': role==='popup',
-    'border-radius-': role!=='popup'&&role!=='document',
+    'square-full': type==='popup',
+    'border-radius-': type!=='popup'&&type!=='document',
   };
-  let stylePre = { width: role!=='popup'?'80%':undefined };
-  let classNamePreContainer = { 'flex-display-block': role!=='document', 'flex-justify-center': role!=='document', 'flex-align-center': role!=='document' }
+  let stylePre = { width: type!=='popup'?'80%':undefined };
+  let classNamePreContainer = { 'flex-display-block': type!=='document', 'flex-justify-center': type!=='document', 'flex-align-center': type!=='document' }
 
   children = (
-    <Panel onClick={e=>e.stopPropagation()} b-style="white" stylePre={role!=='document'&&stylePre} classNamePre={role!=='document'&&classNamePre} {...props}>
-      {role==='document'?children:null}
-      {role!=='document'&&(title||close)?(
+    <Panel onClick={e=>{e.stopPropagation();e.preventDefault()}} btn={false} b-style="white" stylePre={type!=='document'&&stylePre} classNamePre={type!=='document'&&classNamePre} {...props}>
+      {type==='document'?children:null}
+      {type!=='document'&&(title||close)?(
         <PanelIcon 
           bp-title-bc-flex-sub-flex-extend bp-title-bc-text-align-center={!close}
           name={close===true?"close:x":close} bp-icon-onClick={onClose} b-icon-bc-padding-a="xs"
@@ -34,16 +34,16 @@ let Modal = aprops=>{
           {title}
         </PanelIcon>
       ):null}
-      {role!=='document'&&children?(<Panel bc-padding-a- bc-border-set-bottom-={Boolean(buttons.length)} {...bodyProps}>{children}</Panel>):null}
-      {role!=='document'&&buttons.length?(
-        <PanelContainer type="justify" {...footerProps}>
-          {buttons.map((v,i)=><Panel key={i} component={Button} b-style="plain" bc-border-none-left-={Boolean(i)} bc-border-set-left-={Boolean(i)} onClick={()=>onClose&&onClose(i)} {...v} />)}
+      {type!=='document'&&children?(<Panel bc-padding-a- bc-border-set-bottom-={Boolean(buttons.length)} {...bodyProps}>{children}</Panel>):null}
+      {type!=='document'&&buttons.length?(
+        <PanelContainer ctype="justify" {...footerProps}>
+          {buttons.map((v,i)=><Panel key={i} component={Button} b-style="plain" bc-border-none-left-={Boolean(i)} bc-border-set-left-={Boolean(i)} onClick={e=>{e.stopPropagation();onClose&&onClose(i)}} {...v} />)}
         </PanelContainer>
       ):null}
     </Panel>
   )
   
-  return <Panel componentTransform={Backdrop} in={isIn} onClick={onClose} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
+  return <Panel componentTransform={Backdrop} in={isIn} btn={false} onClick={onClose} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
 }
 
 Modal.defaultProps = {}

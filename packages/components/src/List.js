@@ -16,15 +16,15 @@ import Icon from './Icon';
  */
 let List = aprops=>{
   let {
-    separatorInset, hasTheme, header, footer, headerProps, footerProps, 
+    separatorInset, header, footer, headerProps, footerProps, 
     children, ...props
   } = BaseComponent(aprops);
 
   return (
-    <PanelContainer _containerProps={aprops} {...props}>
-      {header?<Panel bc-border-set-bottom- bc-padding-a- itemPlain {...headerProps}>{header}</Panel>:null}
+    <PanelContainer panelContainerProps={aprops} {...props}>
+      {header?<Panel bc-border-set-bottom- bc-padding-a- panelItemPlain {...headerProps}>{header}</Panel>:null}
       {children}
-      {footer?<Panel bc-border-set-top- bc-padding-a- itemPlain {...footerProps}>{footer}</Panel>:null}
+      {footer?<Panel bc-border-set-top- bc-padding-a- panelItemPlain {...footerProps}>{footer}</Panel>:null}
     </PanelContainer>
   );
 }
@@ -55,11 +55,6 @@ List.defaultProps = {};
  * @attribute module:List.List.footerProps
  * @type {object}
  */
-/*
- * 设置是否 List 组件各个部分有主题设置
- * @type {boolean}
- */
-List.defaultProps.hasTheme = true;
 
 
 Object.defineProperty(List,"List",{ get:function(){ return List }, set:function(val){ List = val }})
@@ -78,7 +73,7 @@ export default List;
  */
 let Item = aprops=>{
   let {
-    itemIndex, itemCount, _containerProps:{separatorInset}, onClick, 
+    panelItemIndex, panelItemCount, panelContainerProps:{separatorInset}, onClick, 
     media, mediaProps, mainProps, title, titleProps, subTitle, subTitleProps, desc, descProps, after, afterProps, arrow, arrowProps, autoArrow=true, 
     children, ...props
   } = BaseComponent(aprops, Item);
@@ -87,13 +82,13 @@ let Item = aprops=>{
     'padding-a-': true,
     [`margin-left-${separatorInset&&separatorInset!==true?('-'+separatorInset):''}`]: separatorInset,
     'padding-left-0': separatorInset,
-    'border-set-bottom-': itemIndex<itemCount-1,
+    'border-set-bottom-': panelItemIndex<panelItemCount-1,
   };
 
   return (
-    <PanelContainer type="primary" align="center" b-style="white" classNamePre={classNamePre} onClick={onClick} {...props}>
+    <PanelContainer ctype="primary" align="center" b-style="white" classNamePre={classNamePre} onClick={onClick} {...props}>
       {media?(<Panel bc-line-height-0 bc-margin-right- {...mediaProps}>{media===true?undefined:media}</Panel>):null}
-      <PanelContainer itemSelected {...mainProps}>
+      <PanelContainer panelItemSelected {...mainProps}>
         {title?(<Panel {...titleProps}>{title===true?undefined:title}</Panel>):null}
         {subTitle?(<Panel {...subTitleProps}>{subTitle===true?undefined:subTitle}</Panel>):null}
         {desc?(<Panel {...descProps}>{desc===true?undefined:desc}</Panel>):null}

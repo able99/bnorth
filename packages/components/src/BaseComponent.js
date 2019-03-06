@@ -259,14 +259,14 @@ export default function BaseComponent(aprops) {
       
       Object.assign(styleSet, Array.isArray(v)?name(...v):name(v));
     }else if(k.startsWith('bp-')){
-      delete props[k]; if(!v) return; 
+      delete props[k]; 
       k = k.slice(3);
       let index = k.indexOf('-'); if(index<0) return;
       let objName = k.slice(0, index);
       let propName = k.slice(index+1);
       if(!objName||!propName) return;
       objName += 'Props';
-      props[objName] = props[objName]||{};
+      props[objName] = {...props[objName]};
       props[objName][propName] = v;
     }
   })
@@ -274,14 +274,15 @@ export default function BaseComponent(aprops) {
   if(active) classSet['active'] = true;
   if(selected) classSet['selected'] = true;
   if(disabled) classSet['disabled'] = true;
-  if(onClick) classSet['cursor-pointer'] = true;
-  if(onClick||btn) classSet['btn'] = true;
+  if(onClick&&(btn!==false)) classSet['cursor-pointer'] = true;
+  if((onClick||btn)&&(btn!==false)) classSet['btn'] = true;
   
+  if(aprops.hasOwnProperty('onClick')) props.onClick = onClick;
   return {
     ...props,
     className: classes(classNamePre, classSet, className, classNameExt),
     style: {...stylePre, ...styleSet, ...style, ...styleExt},
-    selected, active, disabled, onClick,
+    selected, active, disabled,
     ref: refWrap,
   };
 }

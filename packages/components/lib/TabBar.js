@@ -25,7 +25,7 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
 
 var _react = _interopRequireDefault(require("react"));
 
-var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
+var _BaseComponent = _interopRequireDefault(require("./BaseComponent"));
 
 var _Panel = _interopRequireWildcard(require("./Panel"));
 
@@ -63,27 +63,26 @@ function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var _BaseComponent = (0, _BaseComponent2.default)(this.props),
-          _BaseComponent$select = _BaseComponent.selectedIndex,
-          selectedIndex = _BaseComponent$select === void 0 ? this.state.selectedIndex : _BaseComponent$select,
-          selectedIndexDefault = _BaseComponent.selectedIndexDefault,
-          onAction = _BaseComponent.onAction,
-          navProps = _BaseComponent.navProps,
-          containerProps = _BaseComponent.containerProps,
-          children = _BaseComponent.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["selectedIndex", "selectedIndexDefault", "onAction", "navProps", "containerProps", "children"]);
-
+      var aprops = (0, _BaseComponent.default)(this.props);
+      var _aprops$selectedIndex = aprops.selectedIndex,
+          selectedIndex = _aprops$selectedIndex === void 0 ? this.state.selectedIndex : _aprops$selectedIndex,
+          selectedIndexDefault = aprops.selectedIndexDefault,
+          onAction = aprops.onAction,
+          navProps = aprops.navProps,
+          containerProps = aprops.containerProps,
+          children = aprops.children,
+          props = (0, _objectWithoutProperties2.default)(aprops, ["selectedIndex", "selectedIndexDefault", "onAction", "navProps", "containerProps", "children"]);
       children = _react.default.Children.toArray(children).filter(function (v) {
         return v;
       });
       return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
-        _containerProps: this.props,
-        type: "primary",
+        panelContainerProps: aprops,
+        ctype: "primary",
         direction: "v",
         align: "stretch"
       }, props), _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
-        _containerProps: navProps,
-        type: "justify",
+        panelContainerProps: navProps,
+        ctype: "justify",
         selectedIndex: selectedIndex
       }, navProps), children.map(function (v, i) {
         var _v$props = v.props,
@@ -95,7 +94,7 @@ function (_React$Component) {
           key: v.key || i,
           componentTransform: _Icon.PanelIcon,
           selected: selectedIndex === i,
-          hasSelection: true,
+          "bp-panelTheme-sensitiveSelect": true,
           onClick: function onClick(e) {
             return _this2.setState({
               selectedIndex: i
@@ -106,9 +105,9 @@ function (_React$Component) {
           }
         }, props));
       })), _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
-        _containerProps: containerProps,
-        itemSelected: true,
-        type: "scroll",
+        panelContainerProps: containerProps,
+        panelItemSelected: true,
+        ctype: "scroll",
         selectedIndex: selectedIndex,
         onSelectedChange: function onSelectedChange(i, props) {
           return _this2.setState({

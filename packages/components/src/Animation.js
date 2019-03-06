@@ -34,7 +34,7 @@ let Animation = aprops=>{
       onExiting={chainedFuncs(type.onExiting&&type.onExiting.bind(null, props), onExiting&&onExiting.bind(null, props))}
       onExited={chainedFuncs(type.onExited&&type.onExited.bind(null, props), onExited&&onExited.bind(null, props), onFinished)}
       {...transitionProps} >
-      {state=><Panel {...type.getProps?type.getProps(state, props):props} />}
+      {state=><Panel btn={false} {...type.getProps?type.getProps(state, props):props} />}
     </Transition>
   );
 }
@@ -81,7 +81,7 @@ Animation.defaultProps.types = {
   },
   fade: {
     getProps: (state, aprops)=>{
-      let { in:isIn, timeout, ...props } = aprops;
+      let { in:isIn, timeout, dimension, ...props } = aprops;
       props.classNamePre = `opacity-${(state==='entered'||state==='entering')?'100':(isIn?'50':'0')}`;
       props.stylePre = { ...transiton(`${timeout}ms`, { property: 'opacity' }) };
       return props;

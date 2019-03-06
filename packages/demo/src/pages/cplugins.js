@@ -13,9 +13,9 @@ export default props=>{
         <List className="margin-bottom-2x" header="modal">
           <List.Item title="modal" className="text-weight-bold text-size-lg" />
           <List.Item title="打开" onClick={()=>app.modal.show('modal')} />
-          <List.Item title="打开 alert" onClick={()=>app.modal.show('modal', {role: 'alert'})} />
-          <List.Item title="打开 prompt" onClick={()=>app.modal.show('modal', {role: 'prompt'})} />
-          <List.Item title="打开 popup" onClick={()=>app.modal.show('modal', {role: 'popup'})} />
+          <List.Item title="打开 alert" onClick={()=>app.modal.show('modal', {type: 'alert', onAction: index=>{index>=0&&alert('ok')}})} />
+          <List.Item title="打开 prompt" onClick={()=>app.modal.show('modal', {type: 'prompt', onAction: index=>{index>0&&alert('ok')}})} />
+          <List.Item title="打开 popup" onClick={()=>app.modal.show('modal', {type: 'popup', })} />
           <List.Item title="打开 带 title 带 close" onClick={()=>app.modal.show('modal', {title: 'title', close: true})} />
         </List>
 

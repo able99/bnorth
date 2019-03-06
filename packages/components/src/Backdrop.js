@@ -24,7 +24,7 @@ let Backdrop = aprops=>{
     'position-absolute square-full offset-a-start overflow-a-hidden': true,
   }
 
-  return <Panel componentTransform={Animation} type="fade" b-style="mask" classNamePre={classNamePre} {...props} />;
+  return <Panel componentTransform={Animation} type="fade" b-style="mask" btn={false} classNamePre={classNamePre} {...props} />;
 }
 
 Backdrop.defaultProps = {};

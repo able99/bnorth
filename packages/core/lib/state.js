@@ -402,7 +402,9 @@ function () {
               case 0:
                 data = this.app.utils.objectDelete(this.data(), _did);
                 _context3.next = 3;
-                return this.update(data, {}, true);
+                return this.update(data, {
+                  append: false
+                });
 
               case 3:
                 return _context3.abrupt("return", _context3.sent);

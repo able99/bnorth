@@ -59,7 +59,7 @@ let Component = aprops=>{
           in: [true, false],
         }}/>
         <Groups.Show>
-          {props=><Panel>{listGener()}<Backdrop children="Backdrop" {...props}/></Panel>}
+          {props=><div className="position-relative">{listGener()}<Backdrop children="Backdrop" {...props}/></div>}
         </Groups.Show>
       </Groups.Group>
 
@@ -198,8 +198,11 @@ let Component = aprops=>{
       </Groups.Group>
 
       <Groups.Group title="Modal" desc="对话框">
+        <Groups.Props data={{
+          type: ['alert', 'prompt', 'popup', 'document'],
+        }}/>
         <Groups.Show>
-          {props=><div style={{height: 500}} className="position-relative"><Modal title="title" role="prompt" _precast={{a:1}} close {...props}>body</Modal></div>}
+          {props=><div style={{height: 500}} className="position-relative"><Modal title="title" close {...props}>body</Modal></div>}
         </Groups.Show>
       </Groups.Group>
 
@@ -226,14 +229,14 @@ let Component = aprops=>{
 
       <Groups.Group title="PanelContainer" desc="面板容器组件">
         <Groups.Props data={{
-          type: ['single', 'justify', 'primary', 'flex', 'scroll'],
+          ctype: ['single', 'justify', 'primary', 'flex', 'scroll'],
           selectedIndex: [0,1,2,3,4,5],
           countToShow: [1,2],
           separator: undefined,
         }}/>
         <Groups.Show>
           <PanelContainer {...stateData} onSelectedChange={selectedIndex=>page.stateData.update({selectedIndex})}>
-            {listGener(5)}
+            {listGener(5, {Component: Panel})}
           </PanelContainer>
         </Groups.Show>
       </Groups.Group>
@@ -279,12 +282,12 @@ let Component = aprops=>{
       <Groups.Group title="TabBar" desc="标签页">
         <Groups.Props data={{
           'bp-nav-separator': undefined, 
-          'bp-nav-bp-item-b-style': ['underline'],
+          'bp-nav-bp-panelItem-b-style': ['underline'],
           position: ['bottom'], 
-          'bp-nav-bp-item-position': ['top', 'left'],
+          'bp-nav-bp-panelItem-position': ['top', 'left'],
         }} />
         <Groups.Show>
-          <TabBar bs-height={150} bp-container-bp-item-className="scrollable-y">
+          <TabBar bs-height={150} bp-container-bp-panelItem-className="scrollable-y">
             <TabBar.Item title="title1" name="view_comfy">{listGener(20, {children: i=>('tab1-'+i)})}</TabBar.Item>
             <TabBar.Item title="title2" name="settings">{listGener(20, {children: i=>('tab2-'+i)})}</TabBar.Item>
             <TabBar.Item title="title3" name="extension">{listGener(20, {children: i=>('tab3-'+i)})}</TabBar.Item>
@@ -307,7 +310,7 @@ let Component = aprops=>{
 Component.controller = app=>({
   stateLog: {initialization: []},
   stateCommonProps: app.plugins.getPluginById().stateCommonProps._id,
-  stateComponentProps: app.plugins.getPluginById().stateComponentProps._id,
+  stateComponentProps: {},
 })
 
 

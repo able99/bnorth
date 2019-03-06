@@ -26,9 +26,9 @@ let PropSel = aprops=>{
       <label key={(v?v.toString():'')+i} className="margin-right-">
         <input 
           className="margin-right-xxs"
-          onChange={e=>state.update({[title]: v})} checked={(stateData[title]===v)||false}
+          onChange={e=>{if(v===undefined){state.delete(title)}else{state.update({[title]: v})}}} checked={(stateData[title]===v)||false}
           type='radio' key={v} />
-        <span>{v!==undefined?v:'none'}</span>
+        <span>{v!==undefined?String(v):'none'}</span>
       </label>
     ))
   }else if(!option) {
@@ -96,12 +96,12 @@ Groups.Sep = aprops=>{
 }
 
 Groups.Props = aprops=>{
-  let { data, isCommon, page, stateComponentProps } = aprops;
+  let { data, isCommon, page, stateCommonProps, stateComponentProps } = aprops;
 
   return (
     <div className="margin-bottom-">
       <div className="border-set-bottom- padding-a-"><strong>{isCommon?'通用':'组件'}属性</strong></div>
-      {Object.entries(data||{}).map(([k,v])=><PropSel key={k} title={k} option={v} state={page.stateComponentProps} stateData={stateComponentProps} />)}
+      {Object.entries(data||{}).map(([k,v])=><PropSel key={k} title={k} option={v} state={isCommon?page.stateCommonProps:page.stateComponentProps} stateData={isCommon?stateCommonProps:stateComponentProps} />)}
     </div>
   ) 
 }
@@ -119,9 +119,10 @@ Groups.Show = aprops=>{
     <div>
       <hr /> <hr /> <hr />
       {children.map((v,i)=>{
-        let props = {...stateCommonProps, ...stateComponentProps}
+        let key = i;
+        let props = {...stateCommonProps, ...stateComponentProps, key}
         props.key = props.key||i;
-        return cloneElement(typeof(v)==='function'?v(props):v, props)
+        return cloneElement(typeof(v)==='function'?v(props):v, typeof(v)==='function'?{key}:props);
       })}
       <hr /> <hr /> <hr />
     </div>

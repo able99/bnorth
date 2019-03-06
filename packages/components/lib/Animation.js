@@ -65,7 +65,9 @@ var _Animation = function Animation(aprops) {
     onExiting: (0, _BaseComponent2.chainedFuncs)(type.onExiting && type.onExiting.bind(null, props), onExiting && onExiting.bind(null, props)),
     onExited: (0, _BaseComponent2.chainedFuncs)(type.onExited && type.onExited.bind(null, props), onExited && onExited.bind(null, props), onFinished)
   }, transitionProps), function (state) {
-    return _react.default.createElement(_Panel.default, type.getProps ? type.getProps(state, props) : props);
+    return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+      btn: false
+    }, type.getProps ? type.getProps(state, props) : props));
   });
 };
 
@@ -118,7 +120,8 @@ _Animation.defaultProps.types = {
     getProps: function getProps(state, aprops) {
       var isIn = aprops.in,
           timeout = aprops.timeout,
-          props = (0, _objectWithoutProperties2.default)(aprops, ["in", "timeout"]);
+          dimension = aprops.dimension,
+          props = (0, _objectWithoutProperties2.default)(aprops, ["in", "timeout", "dimension"]);
       props.classNamePre = "opacity-".concat(state === 'entered' || state === 'entering' ? '100' : isIn ? '50' : '0');
       props.stylePre = (0, _objectSpread2.default)({}, (0, _animation.transiton)("".concat(timeout, "ms"), {
         property: 'opacity'

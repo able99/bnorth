@@ -159,7 +159,7 @@ export let PanelLoader = aprops=>{
   let { isProgress, progress, loaderProps, title, titleProps, children, ...props } = BaseComponent(aprops);
 
   return (
-    <Panel.Container _containerProps={aprops} type="flex"  position="left" justify="center" align="center" {...props}>
+    <Panel.Container panelContainerProps={aprops} ctype="flex"  position="left" justify="center" align="center" {...props}>
       <Loader isProgress={isProgress} progress={progress} {...loaderProps} />
       {title||children?<Panel bc-text-truncate-1 {...titleProps} >{title}{children}</Panel>:null}
     </Panel.Container>

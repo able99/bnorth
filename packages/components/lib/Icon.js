@@ -243,8 +243,8 @@ var PanelIcon = function PanelIcon(aprops) {
       props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["selected", "name", "src", "char", "shape", "iconSelected", "rotate", "iconProps", "title", "titleProps", "children"]);
 
   return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
-    _containerProps: aprops,
-    type: "flex",
+    panelContainerProps: aprops,
+    ctype: "flex",
     position: "left",
     justify: "center",
     align: "center",

@@ -37,24 +37,23 @@ var _Icon = _interopRequireDefault(require("./Icon"));
 var List = function List(aprops) {
   var _BaseComponent = (0, _BaseComponent3.default)(aprops),
       separatorInset = _BaseComponent.separatorInset,
-      hasTheme = _BaseComponent.hasTheme,
       header = _BaseComponent.header,
       footer = _BaseComponent.footer,
       headerProps = _BaseComponent.headerProps,
       footerProps = _BaseComponent.footerProps,
       children = _BaseComponent.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["separatorInset", "hasTheme", "header", "footer", "headerProps", "footerProps", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["separatorInset", "header", "footer", "headerProps", "footerProps", "children"]);
 
   return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
-    _containerProps: aprops
+    panelContainerProps: aprops
   }, props), header ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "bc-border-set-bottom-": true,
     "bc-padding-a-": true,
-    itemPlain: true
+    panelItemPlain: true
   }, headerProps), header) : null, children, footer ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "bc-border-set-top-": true,
     "bc-padding-a-": true,
-    itemPlain: true
+    panelItemPlain: true
   }, footerProps), footer) : null);
 };
 
@@ -89,12 +88,6 @@ List.defaultProps = {};
  * @type {object}
  */
 
-/*
- * 设置是否 List 组件各个部分有主题设置
- * @type {boolean}
- */
-
-List.defaultProps.hasTheme = true;
 Object.defineProperty(List, "List", {
   get: function get() {
     return List;
@@ -120,9 +113,9 @@ var _Item = function Item(aprops) {
   var _classNamePre;
 
   var _BaseComponent2 = (0, _BaseComponent3.default)(aprops, _Item),
-      itemIndex = _BaseComponent2.itemIndex,
-      itemCount = _BaseComponent2.itemCount,
-      separatorInset = _BaseComponent2._containerProps.separatorInset,
+      panelItemIndex = _BaseComponent2.panelItemIndex,
+      panelItemCount = _BaseComponent2.panelItemCount,
+      separatorInset = _BaseComponent2.panelContainerProps.separatorInset,
       onClick = _BaseComponent2.onClick,
       media = _BaseComponent2.media,
       mediaProps = _BaseComponent2.mediaProps,
@@ -140,13 +133,13 @@ var _Item = function Item(aprops) {
       _BaseComponent2$autoA = _BaseComponent2.autoArrow,
       autoArrow = _BaseComponent2$autoA === void 0 ? true : _BaseComponent2$autoA,
       children = _BaseComponent2.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["itemIndex", "itemCount", "_containerProps", "onClick", "media", "mediaProps", "mainProps", "title", "titleProps", "subTitle", "subTitleProps", "desc", "descProps", "after", "afterProps", "arrow", "arrowProps", "autoArrow", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["panelItemIndex", "panelItemCount", "panelContainerProps", "onClick", "media", "mediaProps", "mainProps", "title", "titleProps", "subTitle", "subTitleProps", "desc", "descProps", "after", "afterProps", "arrow", "arrowProps", "autoArrow", "children"]);
 
   var classNamePre = (_classNamePre = {
     'padding-a-': true
-  }, (0, _defineProperty2.default)(_classNamePre, "margin-left-".concat(separatorInset && separatorInset !== true ? '-' + separatorInset : ''), separatorInset), (0, _defineProperty2.default)(_classNamePre, 'padding-left-0', separatorInset), (0, _defineProperty2.default)(_classNamePre, 'border-set-bottom-', itemIndex < itemCount - 1), _classNamePre);
+  }, (0, _defineProperty2.default)(_classNamePre, "margin-left-".concat(separatorInset && separatorInset !== true ? '-' + separatorInset : ''), separatorInset), (0, _defineProperty2.default)(_classNamePre, 'padding-left-0', separatorInset), (0, _defineProperty2.default)(_classNamePre, 'border-set-bottom-', panelItemIndex < panelItemCount - 1), _classNamePre);
   return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
-    type: "primary",
+    ctype: "primary",
     align: "center",
     "b-style": "white",
     classNamePre: classNamePre,
@@ -155,7 +148,7 @@ var _Item = function Item(aprops) {
     "bc-line-height-0": true,
     "bc-margin-right-": true
   }, mediaProps), media === true ? undefined : media) : null, _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
-    itemSelected: true
+    panelItemSelected: true
   }, mainProps), title ? _react.default.createElement(_Panel.default, titleProps, title === true ? undefined : title) : null, subTitle ? _react.default.createElement(_Panel.default, subTitleProps, subTitle === true ? undefined : subTitle) : null, desc ? _react.default.createElement(_Panel.default, descProps, desc === true ? undefined : desc) : null, children), after ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "bc-line-height-0": true
   }, afterProps), after === true ? undefined : after) : null, arrow || autoArrow && onClick ? _react.default.createElement(_Panel.default, (0, _extends2.default)({

@@ -353,7 +353,6 @@ function BaseComponent(aprops) {
       Object.assign(styleSet, Array.isArray(v) ? _name2.apply(void 0, (0, _toConsumableArray2.default)(v)) : _name2(v));
     } else if (k.startsWith('bp-')) {
       delete props[k];
-      if (!v) return;
       k = k.slice(3);
       var index = k.indexOf('-');
       if (index < 0) return;
@@ -361,22 +360,22 @@ function BaseComponent(aprops) {
       var propName = k.slice(index + 1);
       if (!objName || !propName) return;
       objName += 'Props';
-      props[objName] = props[objName] || {};
+      props[objName] = (0, _objectSpread2.default)({}, props[objName]);
       props[objName][propName] = v;
     }
   });
   if (active) classSet['active'] = true;
   if (selected) classSet['selected'] = true;
   if (disabled) classSet['disabled'] = true;
-  if (onClick) classSet['cursor-pointer'] = true;
-  if (onClick || btn) classSet['btn'] = true;
+  if (onClick && btn !== false) classSet['cursor-pointer'] = true;
+  if ((onClick || btn) && btn !== false) classSet['btn'] = true;
+  if (aprops.hasOwnProperty('onClick')) props.onClick = onClick;
   return (0, _objectSpread2.default)({}, props, {
     className: (0, _classes.default)(classNamePre, classSet, className, classNameExt),
     style: (0, _objectSpread2.default)({}, stylePre, styleSet, style, styleExt),
     selected: selected,
     active: active,
     disabled: disabled,
-    onClick: onClick,
     ref: refWrap
   });
 }

@@ -159,7 +159,7 @@ export let PanelIcon = aprops=>{
   } = BaseComponent(aprops);
 
   return (
-    <PanelContainer _containerProps={aprops} type="flex"  position="left" justify="center" align="center" selected={selected} {...props}>
+    <PanelContainer panelContainerProps={aprops} ctype="flex"  position="left" justify="center" align="center" selected={selected} {...props}>
       <Icon 
         name={name&&(selected&&iconSelected?iconSelected:name)}
         src={src&&(selected&&iconSelected?iconSelected:src)}

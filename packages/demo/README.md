@@ -24,5 +24,5 @@ bnorth 解决方案 demo
 
 ### demo 反馈给 bnorth 需要解决的问题
 
-1. panelcontainer 和 plain 的属性改为 _ 开头; panel 大量属性存在 warning ; index.js?0f42:2178 Warning: Panel: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop.
-1. demo 属性设置为 none 时，应该删除属性，而不是设置为 undefined
+1. modal state
+1. btn 自动

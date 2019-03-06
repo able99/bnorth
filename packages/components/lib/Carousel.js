@@ -167,7 +167,7 @@ function (_React$Component) {
       var classNamePreControllerNext = (_classNamePreControll2 = {}, (0, _defineProperty2.default)(_classNamePreControll2, classNameStrController, true), (0, _defineProperty2.default)(_classNamePreControll2, "offset-right-start", true), _classNamePreControll2);
       var classNamePrePager = 'position-absolute padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
       return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
-        type: "scroll",
+        ctype: "scroll",
         selectedIndex: selectedIndex,
         onSelectedChange: function onSelectedChange(selectedIndex) {
           return _this3.setState({
@@ -192,7 +192,7 @@ function (_React$Component) {
         onClick: function onClick(e) {
           return _this3.prev();
         },
-        itemPlain: true
+        panelItemPlain: true
       }, controllerProps, controllerPrevProps)) : null, controller ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
         componentTransform: _Icon.default,
         classNamePre: classNamePreControllerNext,
@@ -203,12 +203,12 @@ function (_React$Component) {
         onClick: function onClick(e) {
           return _this3.next();
         },
-        itemPlain: true
+        panelItemPlain: true
       }, controllerProps, controllerPrevProps)) : null, pager ? _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
         component: "ol",
-        type: "flex",
+        ctype: "flex",
         selectedIndex: selectedIndex,
-        itemPlain: true,
+        panelItemPlain: true,
         classNamePre: classNamePrePager,
         "b-theme": "mask",
         "b-style": "solid"
@@ -224,7 +224,7 @@ function (_React$Component) {
           "bc-margin-left-xxs": Boolean(v),
           "b-theme": "white",
           "b-style": selectedIndex === v ? 'solid' : 'hollow',
-          bgThemeOnHollow: false,
+          "bp-panelTheme-bgOnHollow": false,
           onClick: function onClick() {
             return _this3.setState({
               selectedIndex: v

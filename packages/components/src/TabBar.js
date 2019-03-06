@@ -21,27 +21,28 @@ class TabBar extends React.Component {
   }
 
   render() {
+    let aprops = BaseComponent(this.props);
     let {
       selectedIndex=this.state.selectedIndex, selectedIndexDefault, onAction, 
       navProps, containerProps, 
       children, ...props
-    } = BaseComponent(this.props);
+    } = aprops;
     children = React.Children.toArray(children).filter(v=>v);
 
     return (
-      <PanelContainer _containerProps={this.props} type="primary" direction="v" align="stretch" {...props}>
-        <PanelContainer _containerProps={navProps} type="justify" selectedIndex={selectedIndex} {...navProps}>
+      <PanelContainer panelContainerProps={aprops} ctype="primary" direction="v" align="stretch" {...props}>
+        <PanelContainer panelContainerProps={navProps} ctype="justify" selectedIndex={selectedIndex} {...navProps}>
           {children.map((v,i)=>{
             let {event, onClick, children, ...props} = v.props;
             return <Panel 
-              key={v.key||i} componentTransform={PanelIcon} selected={selectedIndex===i} hasSelection
+              key={v.key||i} componentTransform={PanelIcon} selected={selectedIndex===i} bp-panelTheme-sensitiveSelect
               onClick={e=>this.setState({selectedIndex: i}, ()=>{ if(onAction) onAction(i, v.props, event); if(onClick) onClick(e) })}
               {...props} />
           })}
         </PanelContainer>
         <PanelContainer 
-          _containerProps={containerProps}
-          itemSelected type="scroll" selectedIndex={selectedIndex} 
+          panelContainerProps={containerProps}
+          panelItemSelected ctype="scroll" selectedIndex={selectedIndex} 
           onSelectedChange={(i,props)=>this.setState({selectedIndex: i}, ()=>{ if(onAction) onAction(i, props, props&&props.event)})}
           {...containerProps}>
           {children}

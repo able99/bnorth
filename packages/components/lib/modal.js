@@ -32,7 +32,7 @@ var _this = void 0;
 var _Modal = function Modal(aprops) {
   var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Modal),
       isIn = _BaseComponent.in,
-      role = _BaseComponent.role,
+      type = _BaseComponent.type,
       onClose = _BaseComponent.onClose,
       onFinished = _BaseComponent.onFinished,
       containerProps = _BaseComponent.containerProps,
@@ -43,31 +43,33 @@ var _Modal = function Modal(aprops) {
       footerProps = _BaseComponent.footerProps,
       buttons = _BaseComponent.buttons,
       children = _BaseComponent.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["in", "role", "onClose", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["in", "type", "onClose", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "children"]);
 
-  buttons = buttons[role] || [];
+  buttons = buttons[type] || [];
   children = typeof children === 'function' ? children(_this) : children;
   var classNamePre = {
     'position-relative backface-hidden overflow-a-hidden': true,
-    'square-full': role === 'popup',
-    'border-radius-': role !== 'popup' && role !== 'document'
+    'square-full': type === 'popup',
+    'border-radius-': type !== 'popup' && type !== 'document'
   };
   var stylePre = {
-    width: role !== 'popup' ? '80%' : undefined
+    width: type !== 'popup' ? '80%' : undefined
   };
   var classNamePreContainer = {
-    'flex-display-block': role !== 'document',
-    'flex-justify-center': role !== 'document',
-    'flex-align-center': role !== 'document'
+    'flex-display-block': type !== 'document',
+    'flex-justify-center': type !== 'document',
+    'flex-align-center': type !== 'document'
   };
   children = _react.default.createElement(_Panel.default, (0, _extends2.default)({
     onClick: function onClick(e) {
-      return e.stopPropagation();
+      e.stopPropagation();
+      e.preventDefault();
     },
+    btn: false,
     "b-style": "white",
-    stylePre: role !== 'document' && stylePre,
-    classNamePre: role !== 'document' && classNamePre
-  }, props), role === 'document' ? children : null, role !== 'document' && (title || close) ? _react.default.createElement(_Icon.PanelIcon, (0, _extends2.default)({
+    stylePre: type !== 'document' && stylePre,
+    classNamePre: type !== 'document' && classNamePre
+  }, props), type === 'document' ? children : null, type !== 'document' && (title || close) ? _react.default.createElement(_Icon.PanelIcon, (0, _extends2.default)({
     "bp-title-bc-flex-sub-flex-extend": true,
     "bp-title-bc-text-align-center": !close,
     name: close === true ? "close:x" : close,
@@ -77,11 +79,11 @@ var _Modal = function Modal(aprops) {
     "bc-width-full": true,
     "bc-padding-a-": true,
     position: "right"
-  }, headerProps), title) : null, role !== 'document' && children ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
+  }, headerProps), title) : null, type !== 'document' && children ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "bc-padding-a-": true,
     "bc-border-set-bottom-": Boolean(buttons.length)
-  }, bodyProps), children) : null, role !== 'document' && buttons.length ? _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
-    type: "justify"
+  }, bodyProps), children) : null, type !== 'document' && buttons.length ? _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
+    ctype: "justify"
   }, footerProps), buttons.map(function (v, i) {
     return _react.default.createElement(_Panel.default, (0, _extends2.default)({
       key: i,
@@ -89,14 +91,16 @@ var _Modal = function Modal(aprops) {
       "b-style": "plain",
       "bc-border-none-left-": Boolean(i),
       "bc-border-set-left-": Boolean(i),
-      onClick: function onClick() {
-        return onClose && onClose(i);
+      onClick: function onClick(e) {
+        e.stopPropagation();
+        onClose && onClose(i);
       }
     }, v));
   })) : null);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     componentTransform: _Backdrop.default,
     in: isIn,
+    btn: false,
     onClick: onClose,
     onFinished: onFinished,
     classNamePre: classNamePreContainer

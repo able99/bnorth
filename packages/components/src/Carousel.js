@@ -91,23 +91,23 @@ class Carousel extends React.Component {
     let classNamePrePager = 'position-absolute padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
 
     return (
-      <PanelContainer type="scroll" selectedIndex={selectedIndex} onSelectedChange={selectedIndex=>this.setState({selectedIndex}, ()=>this.go())} onMouseOver={e=>pauseOnHover&&this.pause()} onMouseOut={e=>this.isPaused&&this.play()} {...props}>
+      <PanelContainer ctype="scroll" selectedIndex={selectedIndex} onSelectedChange={selectedIndex=>this.setState({selectedIndex}, ()=>this.go())} onMouseOver={e=>pauseOnHover&&this.pause()} onMouseOut={e=>this.isPaused&&this.play()} {...props}>
         {children}
         {controller?<Panel 
           componentTransform={Icon} classNamePre={classNamePreControllerPrev} b-size="xl" b-style="solid" b-theme="mask" name="left:<"
           onClick={e=>this.prev()} 
-          itemPlain {...controllerProps} {...controllerPrevProps}  />:null}
+          panelItemPlain {...controllerProps} {...controllerPrevProps}  />:null}
         {controller?<Panel 
           componentTransform={Icon} classNamePre={classNamePreControllerNext} b-size="xl" b-style="solid" b-theme="mask" name="right:>"
           onClick={e=>this.next()} 
-          itemPlain {...controllerProps} {...controllerPrevProps}  />:null}
+          panelItemPlain {...controllerProps} {...controllerPrevProps}  />:null}
         {pager?<PanelContainer 
-          component="ol" type="flex" selectedIndex={selectedIndex}
-          itemPlain classNamePre={classNamePrePager} b-theme="mask" b-style="solid" {...pagerProps}>
+          component="ol" ctype="flex" selectedIndex={selectedIndex}
+          panelItemPlain classNamePre={classNamePrePager} b-theme="mask" b-style="solid" {...pagerProps}>
           {Array.from({length:children.length},(v,k)=>k).map(v=>
             <Panel 
               key={v} component="li" 
-              classNamePre="width-0em5 height-0em5 border-radius-rounded" bc-margin-left-xxs={Boolean(v)} b-theme='white' b-style={selectedIndex===v?'solid':'hollow'} bgThemeOnHollow={false}
+              classNamePre="width-0em5 height-0em5 border-radius-rounded" bc-margin-left-xxs={Boolean(v)} b-theme='white' b-style={selectedIndex===v?'solid':'hollow'} bp-panelTheme-bgOnHollow={false}
               onClick={()=>this.setState({selectedIndex: v}, ()=>this.go())} />
           )}
         </PanelContainer>:null}

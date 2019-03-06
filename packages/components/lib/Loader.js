@@ -246,8 +246,8 @@ var PanelLoader = function PanelLoader(aprops) {
       props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["isProgress", "progress", "loaderProps", "title", "titleProps", "children"]);
 
   return _react.default.createElement(_Panel.default.Container, (0, _extends2.default)({
-    _containerProps: aprops,
-    type: "flex",
+    panelContainerProps: aprops,
+    ctype: "flex",
     position: "left",
     justify: "center",
     align: "center"

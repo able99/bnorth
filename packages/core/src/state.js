@@ -215,7 +215,7 @@ class State {
    */
   async delete(_did) {
     let data = this.app.utils.objectDelete(this.data(), _did);
-    return await this.update(data, {}, true);
+    return await this.update(data, {append: false});
   }
 }
 

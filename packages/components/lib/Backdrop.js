@@ -40,6 +40,7 @@ var _Backdrop = function Backdrop(aprops) {
     componentTransform: _Animation.default,
     type: "fade",
     "b-style": "mask",
+    btn: false,
     classNamePre: classNamePre
   }, props));
 };

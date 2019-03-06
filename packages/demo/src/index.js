@@ -8,10 +8,7 @@ let app = new App({
     onAppStartConfig: ()=>{
       app.router.setRoutes(routes);
     },
-
     stateCommonProps: {},
-    stateComponentProps: {},
-    stateComponentSwitchs: {initialization: []},
   },
 })
 

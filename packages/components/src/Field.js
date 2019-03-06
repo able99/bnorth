@@ -19,11 +19,11 @@ let Field = aprops=>{
   let ComponentField = types[aprops.type]||types.text;
   if(!ComponentField) return null;
 
-  if(before||after) { props['b-style'] = 'plain'; props['itemSelected'] = true }
+  if(before||after) { props['b-style'] = 'plain'; props['panelItemSelected'] = true }
   let component = <ComponentField {...props} />
   if(!before&&!after) return component;
 
-  return <PanelContainer component={label&&'label'} type="primary" {...containerProps}>{before?<Panel {...beforeProps}>{before}</Panel>:null}{component}{after?<Panel {...afterProps}>{after}</Panel>:null}</PanelContainer>
+  return <PanelContainer component={label&&'label'} ctype="primary" {...containerProps}>{before?<Panel {...beforeProps}>{before}</Panel>:null}{component}{after?<Panel {...afterProps}>{after}</Panel>:null}</PanelContainer>
 }
 
 Field.defaultProps = {}
