@@ -170,12 +170,12 @@ function (_React$Component) {
           pattern = _BaseComponent.pattern,
           patterns = _BaseComponent.patterns,
           patternName = _BaseComponent.patternName,
-          onPressEnter = _BaseComponent.onPressEnter,
+          onEnterPress = _BaseComponent.onEnterPress,
           _onKeyPress = _BaseComponent.onKeyPress,
           _BaseComponent$compon = _BaseComponent.component,
           component = _BaseComponent$compon === void 0 ? "input" : _BaseComponent$compon,
           children = _BaseComponent.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "value", "typesToElement", "onChange", "pattern", "patterns", "patternName", "onPressEnter", "onKeyPress", "component", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "value", "typesToElement", "onChange", "pattern", "patterns", "patternName", "onEnterPress", "onKeyPress", "component", "children"]);
 
       if (typesToElement.includes(type)) {
         component = type;
@@ -195,12 +195,12 @@ function (_React$Component) {
         onChange: this.props.hasOwnProperty('value') && onChange && pattern && function (e) {
           if (!RegExp(pattern).test(e.target.value)) e.target.value = value;
           onChange(e);
-        } || undefined,
+        } || onChange,
         onKeyPress: function onKeyPress(e) {
-          if (onPressEnter && e.charCode === 13) {
+          if (onEnterPress && e.charCode === 13) {
             e.stopPropagation();
             e.preventDefault();
-            onPressEnter(e.target.value);
+            onEnterPress(e.target.value);
           } else {
             _onKeyPress && _onKeyPress(e);
           }
@@ -215,7 +215,7 @@ function (_React$Component) {
 _Normal.defaultProps = {};
 /**
  * 当控件在焦点情况下输入回车时触发
- * @attribute module:Field~Normal.onPressEnter
+ * @attribute module:Field~Normal.onEnterPress
  * @type {function}
  */
 

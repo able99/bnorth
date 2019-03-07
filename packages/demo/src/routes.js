@@ -1,57 +1,28 @@
-// import React from 'react';
-
-
-// let PageInfo = props=>{
-//   let { app, route } = props;
-
-//   return (
-//     <div className="scrollable-y padding-a-">
-//       <h3><button onClick={()=>app.router.back()}>back</button>page info</h3>
-//       <hr />
-//       {Object.entries(route).map(([k,v])=>{
-//         if(k==='subPageInfos'||k==='popLayerInfos') return null;
-//         if(k==='subPages') return <div>subPages: {Object.keys(v)}</div>;
-//         if(k==='popLayers') return <div>popLayers count: {v.length}</div>;
-//         return <div>{k}: {JSON.stringify(v)}</div>;
-//       })}
-//       <hr />
-//       <div className="margin-top-">
-//         <h4>navigator</h4>
-//         <button className="padding-a-xxs margin-bottom-" onClick={()=>app.router.push(['pageinfo', 'pp1'])}>push pageinfo pp1</button>
-//         <button className="padding-a-xxs margin-bottom-" onClick={()=>app.router.push('pageinfo', {query:{a:'qq1'}})}>push pageinfo query:|a:qq1</button>
-//         <button className="padding-a-xxs margin-bottom-" onClick={()=>app.router.push('pageinfo', {state:{a:'ss1'}})}>push pageinfo state:|a:ss1</button>
-//       </div>
-//     </div>
-//   )
-// }
-
 export default {
   '/': require('./pages/home').default,
   '/test': require('./test').default,
+
   'components:component?': {component: require('./pages/components').default, title: '组件列表'},
+
   'cplugins': {component: require('./pages/cplugins').default, title: '组件插件列表'},
-  // 'components:tab?': {
-  //   title: false,
-  //   component: require('./pages/components').default,
-  //   subPages: ['c_components', 'c_list', 'c_props', 'c_plugins' ],
-  // },
-  // 'c_components': {component: require('./pages/c-components').default, title: 'components show'},
-  // 'c_list': {component: require('./pages/c-list').default, title: 'list show'},
-  // 'search:keyword:pageid': require('./pages/search').default,
-  // 'c_props': require('./pages/c-props').default,
-  // 'c_plugins': require('./pages/c-plugins').default,
 
-  // 'router': require('./pages/router').default,
-  // 'require_param:param1': PageInfo,
-  // 'option_param:param1?': PageInfo,
-  // 'pageinfo:subparam1?': PageInfo,
-  // 'dynamic': {
-  //   loader: ()=>{
-  //     return new Promise(resolve=>setTimeout(()=>{resolve({component: ()=><div>page c</div> })},1000));
-  //   }
-  // },
+  'router': {component: require('./pages/router').default, title: '路由管理展示'},
+  'pageinfo:param1?:param2?': require('./pages/router').PageInfo,
+  'dynamic': {
+    loader: ()=>new Promise(resolve=>setTimeout(()=>{resolve({component: require('./pages/router').PageInfo })},3000))
+  },
 
-  // 'data': require('./pages/data').default,
+  'data': {component: require('./pages/data').default, title: '数据管理展示'},
 
-  // 'plugins': require('./pages/plugins').default,
+  'plugins': {component: require('./pages/plugins').default, title: '插件展示'},
+
+  'tabs:tab?': {
+    component: require('./pages/tabs').default, title: 'tabbar demo',
+    subPages: {tab1: 'tab1', tab2: 'tabx', tab3: 'tabx', tab4: 'tabx'},
+  },
+  'tab1': {component: require('./pages/tabs').Tab1, title: 'tab1'},
+  'tabx': {component: require('./pages/tabs').Tabx, title: 'tabx'},
+
+  'lists': {component: require('./pages/lists').default, title: 'list demo'},
+  'search:keyword?:pageid?': {component: require('./pages/lists').Search, title: '搜索'},
 }

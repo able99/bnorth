@@ -80,7 +80,7 @@ export default Loader;
 let Line = aprops=>{
   let {
     isProgress, progress, timeout, color, colorReverse,
-    className, children, ...props
+    children, ...props
   } = BaseComponent(aprops, Line);
 
   let classNamePre = 'width-full height-1em';
@@ -195,14 +195,15 @@ Object.defineProperty(Loader,"PanelLoader",{ get:function(){ return PanelLoader 
 
 
 export let OverlayLoader = aprops=>{
-  let { progress, height, ...props } = BaseComponent(aprops, OverlayLoader);
+  let { progress, top, height, ...props } = BaseComponent(aprops, OverlayLoader);
 
-  let classNamePre = 'position-absolute offset-left-start offset-top-start offset-right-start width-full';
+  let classNamePre = 'position-absolute offset-h-start width-full';
 
-  return <Panel component={Loader} type="line" isProgress progress={progress} classNamePre={classNamePre} bs-height={height} {...props} />
+  return <Panel componentTransform={Loader} type="line" isProgress progress={progress} classNamePre={classNamePre} bs-top={top} bs-height={height} {...props} />
 }
 
 OverlayLoader.defaultProps = {}
+OverlayLoader.defaultProps.top = 0;
 OverlayLoader.defaultProps.height = 3;
 
 Object.defineProperty(Loader,"OverlayLoader",{ get:function(){ return OverlayLoader }, set:function(val){ OverlayLoader = val }})

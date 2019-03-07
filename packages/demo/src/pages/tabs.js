@@ -1,39 +1,35 @@
 import React from 'react';
-import View from '@bnorth/components/lib/View'
-import Panel from '@bnorth/components/lib/Panel'
-import NavBar from '@bnorth/components/lib/NavBar'
-import TabBar from '@bnorth/components/lib/TabBar'
+import Panel from '@bnorth/components/lib/Panel';
+import TabBar from '@bnorth/components/lib/TabBar';
 
 
 let items = [
-  {title: 'cs', key: 'c_components', icon: 'view_comfy'}, 
-  {title: 'list', key: 'c_list', icon: 'format_list_bulleted'},
-  {title: 'props', key: 'c_props', icon: 'settings'},
-  {title: 'plugins', key: 'c_plugins', icon: 'extension'},
+  {title: 'cs', key: 'tab1', icon: 'view_comfy'}, 
+  {title: 'list', key: 'tab2', icon: 'format_list_bulleted'},
+  {title: 'props', key: 'tab3', icon: 'settings'},
+  {title: 'plugins', key: 'tab4', icon: 'extension'},
 ];
+
+export let Tab1 = aprops=>{
+  return 1;
+}
+
+export let Tabx = aprops=>{
+  return 234;
+}
+
 export default props=>{
-  let { app, route, children } = props;
-  
+  let { children } = props;
+
   return (
-    <View>
-      <NavBar>
-        <NavBar.Item icon="left" iconProps={{defaultName: '<'}} onClick={()=>app.router.back()} />
-        <NavBar.Title className="text-align-center-">Components</NavBar.Title>
-      </NavBar>
-      <Panel main>
-        {children[route.params.tab||'c_components']}
-      </Panel>
-      <TabBar panelItemProps={{'b-theme':'primary', 'b-style':'solid'}}>
+    <Panel page full>
+      <TabBar bc-flex-sub-flex-extend position="bottom" bp-nav-bp-panelItem-position="top" bp-nav-bc-padding-v- bp-nav-bc-border-set-top->
         {items.map(v=>(
-          <TabBar.Item 
-            onClick={()=>app.router.replace(['/components', v.key])}
-            selected={route.params.tab?route.params.tab===v.key:v.key==='c_components'}
-            key={v.key}
-            icon={v.icon}>
-            {v.title}
-          </TabBar.Item >
+          <TabBar.Item key={v.key} title={v.title} name={v.icon}>
+            {children[v.key]}
+          </TabBar.Item>
         ))}
       </TabBar>
-    </View>
+    </Panel>
   )
 }

@@ -126,9 +126,8 @@ var _Line = function Line(aprops) {
       timeout = _BaseComponent2.timeout,
       color = _BaseComponent2.color,
       colorReverse = _BaseComponent2.colorReverse,
-      className = _BaseComponent2.className,
       children = _BaseComponent2.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isProgress", "progress", "timeout", "color", "colorReverse", "className", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isProgress", "progress", "timeout", "color", "colorReverse", "children"]);
 
   var classNamePre = 'width-full height-1em';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
@@ -297,22 +296,25 @@ Object.defineProperty(_Loader, "PanelLoader", {
 var _OverlayLoader = function OverlayLoader(aprops) {
   var _BaseComponent5 = (0, _BaseComponent6.default)(aprops, _OverlayLoader),
       progress = _BaseComponent5.progress,
+      top = _BaseComponent5.top,
       height = _BaseComponent5.height,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["progress", "height"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["progress", "top", "height"]);
 
-  var classNamePre = 'position-absolute offset-left-start offset-top-start offset-right-start width-full';
+  var classNamePre = 'position-absolute offset-h-start width-full';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    component: _Loader,
+    componentTransform: _Loader,
     type: "line",
     isProgress: true,
     progress: progress,
     classNamePre: classNamePre,
+    "bs-top": top,
     "bs-height": height
   }, props));
 };
 
 exports.OverlayLoader = _OverlayLoader;
 _OverlayLoader.defaultProps = {};
+_OverlayLoader.defaultProps.top = 0;
 _OverlayLoader.defaultProps.height = 3;
 Object.defineProperty(_Loader, "OverlayLoader", {
   get: function get() {

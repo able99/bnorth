@@ -95,7 +95,7 @@ let Normal = class extends React.Component {
   render() { 
     let {
       type, value, typesToElement, onChange, pattern, patterns, patternName,
-      onPressEnter, onKeyPress, 
+      onEnterPress, onKeyPress, 
       component="input", children, ...props
     } = BaseComponent(this.props, Normal);
     if(typesToElement.includes(type)) { component = type; type = null }else{ children = undefined }
@@ -108,8 +108,8 @@ let Normal = class extends React.Component {
 
     return <Panel 
       component={component} type={type} 
-      onChange={(this.props.hasOwnProperty('value')&&onChange&&pattern&&(e=>{if(!RegExp(pattern).test(e.target.value)) e.target.value = value; onChange(e)}))||undefined}
-      onKeyPress={e=>{ if(onPressEnter&&e.charCode===13){ e.stopPropagation(); e.preventDefault(); onPressEnter(e.target.value) }else{ onKeyPress&&onKeyPress(e) } }} 
+      onChange={(this.props.hasOwnProperty('value')&&onChange&&pattern&&(e=>{if(!RegExp(pattern).test(e.target.value)) e.target.value = value; onChange(e)}))||onChange}
+      onKeyPress={e=>{ if(onEnterPress&&e.charCode===13){ e.stopPropagation(); e.preventDefault(); onEnterPress(e.target.value) }else{ onKeyPress&&onKeyPress(e) } }} 
       classNamePre={classNamePre} {...props}>
       {children}
     </Panel>
@@ -119,7 +119,7 @@ let Normal = class extends React.Component {
 Normal.defaultProps = {};
 /**
  * 当控件在焦点情况下输入回车时触发
- * @attribute module:Field~Normal.onPressEnter
+ * @attribute module:Field~Normal.onEnterPress
  * @type {function}
  */
       

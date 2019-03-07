@@ -20,11 +20,11 @@ export default props=>{
             desc="弹出与悬浮 ui 插件展示，如对话框等"
             onClick={()=>app.router.push('cplugins')} />
           <List.Item 
-            title="路由管理" 
+            title="路由管理展示" 
             desc="路由管理演示"
             onClick={()=>app.router.push('router')} />
           <List.Item 
-            title="数据管理" 
+            title="数据管理展示" 
             desc="数据管理演示"
             onClick={()=>app.router.push('data')} />
           <List.Item 
@@ -34,11 +34,11 @@ export default props=>{
           <List.Item 
             title="tabbar demo" 
             desc="基于 tabbar 的页面展示"
-            onClick={()=>app.router.push('tabbar')} />
+            onClick={()=>app.router.push('tabs')} />
           <List.Item 
             title="list demo" 
             desc="基于 list 的页面展示"
-            onClick={()=>app.router.push('list')} />
+            onClick={()=>app.router.push('lists')} />
         </List>
       </div>
     </div>

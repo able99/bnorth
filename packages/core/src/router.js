@@ -748,7 +748,7 @@ class Router {
    * 获取 url，但不跳转或者替换，参数参见 getPathInfo
    */
   getUrl(...args) {
-    return window.location.origin+window.location.pathname+window.location.search+this.getUrlPath(...args);
+    return window.location.origin+window.location.pathname+window.location.search+this.getPathName(...args);
   }
 
   /**

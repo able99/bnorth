@@ -116,7 +116,7 @@ class Render {
    * @param {boolean} - 开启或者关闭
    * @param {object} - 参数，与实现者具体定义 
    */
-  loading(show, options) {}
+  loader(show, options) {}
 
   /**
    * 限制 render 宽度

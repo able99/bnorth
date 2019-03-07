@@ -167,8 +167,8 @@ function () {
      */
 
   }, {
-    key: "loading",
-    value: function loading(show, options) {}
+    key: "loader",
+    value: function loader(show, options) {}
     /**
      * 限制 render 宽度
      * @param {string|number} 限制的宽度，为空或者0，取消限制 

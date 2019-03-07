@@ -5,11 +5,11 @@ export default function(app) {
   app.plugins.add(require('@bnorth/components/lib/Loader').loader);
   // app.plugins.add(require('@bnorth/components/lib/picker').default);
 
-  // app.plugins.add(require('@bnorth/plugin-network').default);
-  // app.plugins.add(require('@bnorth/plugin-request').default, {request: app.network.fetch.bind(app.network)});
+  app.plugins.add(require('@bnorth/plugin-network').default);
+  app.plugins.add(require('@bnorth/plugin-request').default, {request: app.network.fetch.bind(app.network)});
 
-  // app.plugins.add(require('@bnorth/plugin-validate').default);
-  // app.plugins.add(require('@bnorth/plugin-base64').default);
+  app.plugins.add(require('@bnorth/plugin-validate').default);
+  app.plugins.add(require('@bnorth/plugin-base64').default);
   // app.plugins.add(require('@bnorth/plugin-md5').default);
   // app.plugins.add(require('@bnorth/plugin-format').default);
 

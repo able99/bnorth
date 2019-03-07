@@ -1264,7 +1264,7 @@ function () {
   }, {
     key: "getUrl",
     value: function getUrl() {
-      return window.location.origin + window.location.pathname + window.location.search + this.getUrlPath.apply(this, arguments);
+      return window.location.origin + window.location.pathname + window.location.search + this.getPathName.apply(this, arguments);
     }
     /**
      * 跳转路径，参数参见 getPathInfo

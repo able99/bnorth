@@ -35,9 +35,9 @@
  * @type {object}
  * @property {function} fetchOnStart - 是否在数据单元装载时自动触发获取操作
  * @property {function} fetchOnActive - 是否在数据单元拥有者活动时自动触发获取操作
- * @property {function} loading - 是否在请求中强制显示进度条
+ * @property {function} loader - 是否在请求中强制显示进度条
  * @property {function} mask - 是否在请求中强制显示蒙层
- * @property {function} noLoadingMask - 是否强制关闭进度条和蒙层。默认情况下，请求类请求是默认显示进度条，提交型请求默认实现蒙层
+ * @property {function} noLoaderMask - 是否强制关闭进度条和蒙层。默认情况下，请求类请求是默认显示进度条，提交型请求默认实现蒙层
  * @property {module:index~PluginOptionsOnSuccess} onSuccess - 成功的回调函数
  * @property {module:index~PluginOptionsOnError} onError - 失败的回调函数
  * @property {function?} checkFetch - 检测是否可以发送求的函数，如果给定了函数，但是返回值不为真，则阻止请求
@@ -68,10 +68,10 @@ let getClass = (app, aoptions={})=>class Request extends app.State {
     app.event.on(this._id, 'onStateActive', (page, onStart)=>{this.options.fetchOnActive&&(!onStart)&&this.fetch()}, this._id);
   }
 
-  _requestFetching(fetching, {loading, mask, noLoadingMask, isSubmit}) {
-    loading && this.app.render.loading(fetching);
+  _requestFetching(fetching, {loader, mask, noLoaderMask, isSubmit}) {
+    loader && this.app.render.loader(fetching);
     mask && this.app.render.mask(fetching);
-    (!loading&&!mask) && !noLoadingMask && (!isSubmit?this.app.render.loading(fetching):this.app.render.mask(fetching));
+    (!loader&&!mask) && !noLoaderMask && (!isSubmit?this.app.render.loader(fetching):this.app.render.mask(fetching));
 
     if(isSubmit||!fetching) return;
     this.stateUpdate({fetching, error: null});
