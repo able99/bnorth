@@ -6,7 +6,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
 const { existsSync } = require('fs');
-const { join, basename } = require('path');
+const { join, basename, resolve } = require('path');
 let { getEnv, resolveApp } = require('./env.config');
 let { getArgv } = require('./argv.config');
 let { getBnorthConfig } = require('./bnorth.config');
@@ -212,6 +212,7 @@ function initWebpackConfig() {
   let {
     bail=true, 
     devtool='#cheap-module-eval-source-map',
+    mockjs,
     outputPath,
     outputFilename,
     outputPublicPath,
@@ -231,16 +232,15 @@ function initWebpackConfig() {
     bnorhtCoreNodeModules,
   } = getEnv();
 
-  let entry = resolveApp('src/index.js');
-  entry = {
-    [basename(entry).replace(/\.(js|tsx?)$/, '')]: isDev ? [require.resolve('react-dev-utils/webpackHotDevClient'), entry] : [entry],
-  };
-
+  let entrys = [];
+  if(isDev) entrys.push(require.resolve('react-dev-utils/webpackHotDevClient'));
+  if(mockjs) { entrys.push(require.resolve('mockjs/dist/mock')); entrys.push(resolve(mockjs)); }
+  entrys.push(resolveApp('src/index.js'));
 
   return { 
     bail,
     devtool,
-    entry,
+    entry: {[basename('src/index.js').replace(/\.(js|tsx?)$/, '')]: entrys},
     mode: env,
     output: { 
       path: appOut,

@@ -61,11 +61,13 @@ function genFuncDisplay(_ref) {
     }
   }),
   /**
-   * 设置滚动
+   * 设置滚动，各个方向可以分别设置，需要加上开关
    * @classname scrollable
    * @param {module:config~GenConfig#directionAxis} direction - 坐标轴方向
+   * @param {module:config~gen#StyleSwitcher} switcher - 样式开关
    */
   (0, _utils.genClassObjects)('.scrollable', {
+    selectorExt: '-',
     styleKeySet: (0, _utils.getStyleValueSet)(directionAxis),
     styleObjectMap: function styleObjectMap(styleKeySetKey, styleKeySetValue, styleValueSetKey, styleValueSetValue) {
       return {

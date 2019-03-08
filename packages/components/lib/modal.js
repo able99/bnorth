@@ -87,10 +87,10 @@ var _Modal = function Modal(aprops) {
   }, footerProps), buttons.map(function (v, i) {
     return _react.default.createElement(_Panel.default, (0, _extends2.default)({
       key: i,
-      component: _Button.default,
-      "b-style": "plain",
-      "bc-border-none-left-": Boolean(i),
+      componentTransform: _Button.default,
+      className: "bg-none- border-none-top- border-none-bottom- border-none-right-",
       "bc-border-set-left-": Boolean(i),
+      "bc-border-none-left-": !Boolean(i),
       onClick: function onClick(e) {
         e.stopPropagation();
         onClose && onClose(i);

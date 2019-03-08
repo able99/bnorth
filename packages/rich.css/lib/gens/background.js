@@ -31,8 +31,8 @@ function genFuncBackground(_ref) {
       opacityColors = _ref.opacityColors;
   return Object.assign(
   /**
-   * 设置背景颜色
-   * @classname bg-color
+   * 设置背景颜色，与 bg-color 互斥，需要开关
+   * @classname bg-color-
    * @param {module:config~GenConfig#utilColors|module:config~GenConfig#mainColors|module:config~GenConfig#opacityColors} color - 颜色
    */
   (0, _utils.genClassObjects)('.bg-color', {
@@ -41,9 +41,9 @@ function genFuncBackground(_ref) {
   }),
   /**
    * 设置无背景
-   * @classname bg-none
+   * @classname bg-none-
    */
-  (0, _utils.genClassObjects)('.bg-none', {
+  (0, _utils.genClassObjects)('.bg-none-', {
     styleObjectMap: {
       'background': 'none'
     }

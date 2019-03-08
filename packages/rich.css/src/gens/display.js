@@ -43,11 +43,13 @@ function genFuncDisplay({directionAxis, display, visibility, opacity, pointerEve
       styleValueMap: val=>(val/100).toFixed(2),
     }), 
     /**
-     * 设置滚动
+     * 设置滚动，各个方向可以分别设置，需要加上开关
      * @classname scrollable
      * @param {module:config~GenConfig#directionAxis} direction - 坐标轴方向
+     * @param {module:config~gen#StyleSwitcher} switcher - 样式开关
      */
     genClassObjects('.scrollable', {
+      selectorExt: '-',
       styleKeySet: getStyleValueSet(directionAxis),
       styleObjectMap: (styleKeySetKey, styleKeySetValue, styleValueSetKey, styleValueSetValue)=>({
         'max-width': styleKeySetKey!=='y'?'100%':undefined,

@@ -90,11 +90,13 @@ function genFuncBorder(_ref) {
     styleValueSet: (0, _utils.getStyleValueSet)(borderWidth)
   }),
   /**
-   * 设置无边框
+   * 设置无边框，因各个方向可以同时设置，需要设置开关
    * @classname border-none
    * @param {module:config~GenConfig#directionEdge} edge - 位置
+   * @param {module:config~gen#StyleSwitcher} switcher - 样式开关
    */
   (0, _utils.genClassObjects)('.border-none', {
+    selectorExt: '-',
     styleKey: 'border',
     styleKeySet: directionEdge,
     styleValueMap: function styleValueMap() {

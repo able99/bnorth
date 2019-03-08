@@ -15,8 +15,8 @@ import { genClassObjects } from '../utils';
 function genFuncBackground({utilColors, mainColors, opacityColors}) {
   return Object.assign(
     /**
-     * 设置背景颜色
-     * @classname bg-color
+     * 设置背景颜色，与 bg-color 互斥，需要开关
+     * @classname bg-color-
      * @param {module:config~GenConfig#utilColors|module:config~GenConfig#mainColors|module:config~GenConfig#opacityColors} color - 颜色
      */
     genClassObjects('.bg-color', {
@@ -25,9 +25,9 @@ function genFuncBackground({utilColors, mainColors, opacityColors}) {
     }), 
     /**
      * 设置无背景
-     * @classname bg-none
+     * @classname bg-none-
      */
-    genClassObjects('.bg-none', {
+    genClassObjects('.bg-none-', {
       styleObjectMap: {
         'background': 'none',
       },

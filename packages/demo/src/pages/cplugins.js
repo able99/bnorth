@@ -9,7 +9,7 @@ export default props=>{
   return (
     <div className="bg-color-white width-full height-full flex-display-block flex-direction-v">
       <NavBar title="组件插件列表" onBack={()=>app.router.back()} />
-      <div className="scrollable-y flex-sub-flex-extend">
+      <div className="scrollable-y- flex-sub-flex-extend">
         <List className="margin-bottom-2x">
           <List.Item title="modal" className="text-weight-bold text-size-lg" />
           <List.Item title="打开" onClick={()=>app.modal.show('modal')} />

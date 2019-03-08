@@ -14,11 +14,8 @@ bnorth 解决方案 demo
 1. component picker refine
 1. pluign valdate refine
 1. app config module
-1. do not dom unactive page
 1. 服务器渲染与 seo: 参数分隔符可配置，使分隔符支持中划线; browser 路由; button 支持 a 连接模式
-1. border-none-a- should split to border-none-x-
 1. component plugin refine; modal state refine
-1. border-none 与 border-set 和其他的互斥判断
 1. weshare 工程上，/:fivorate 本来是 首页的切换 tabbar 的参数，结果被 /|favorite 当成自己的参数了
 
 

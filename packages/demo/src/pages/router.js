@@ -7,7 +7,7 @@ export let PageInfo = props=>{
   let { app, route } = props;
 
   return (
-    <div className="scrollable-y padding-a-">
+    <div className="scrollable-y- padding-a-">
       <h3><button onClick={()=>app.router.back()}>back</button>page info</h3>
       <hr />
       {Object.entries(route).map(([k,v])=>{
@@ -34,7 +34,7 @@ export default props=>{
   return (
     <div className="bg-color-white width-full height-full flex-display-block flex-direction-v">
       <NavBar title="路由管理展示" onBack={()=>app.router.back()} />
-      <div className="scrollable-y flex-sub-flex-extend">
+      <div className="scrollable-y- flex-sub-flex-extend">
         <List className="margin-bottom-2x">
           <List.Item title="导航" className="text-weight-bold text-size-lg" />
           <List.Item title="push" onClick={()=>app.router.push('pageinfo')} />

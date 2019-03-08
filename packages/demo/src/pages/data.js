@@ -9,7 +9,7 @@ let Component = props=>{
   return (
     <div className="bg-color-white width-full height-full flex-display-block flex-direction-v">
       <NavBar title="数据管理展示" onBack={()=>app.router.back()} />
-      <div className="scrollable-y flex-sub-flex-extend">
+      <div className="scrollable-y- flex-sub-flex-extend">
         <List className="margin-bottom-2x">
           <List.Item title="state object" desc={JSON.stringify(stateDataObj)} className="text-weight-bold text-size-lg" />
           <List.Item title="add tick" onClick={()=>page.stateDataObj.set('tick', (stateDataObj.tick||0)+1)} />

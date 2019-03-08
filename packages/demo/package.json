@@ -49,6 +49,6 @@
   "bnorth": {
     "outputPublicPath": "./",
     "outputPath": "../../docs/demo/",
-    "mockerFile": "./mocker/index.js"
+    "mockjs": "./mockjs/index.js"
   }
 }

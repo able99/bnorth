@@ -65,7 +65,7 @@ let Component = aprops=>{
 
       <Groups.Group title="BackTop" desc="返回顶部按钮">
         <Groups.Show>
-          {props=><Panel data-dock><Panel bc-width-full bs-height="150px" bc-scrollable-y>{listGener(40)}<BackTop param="100%" dock {...props} /></Panel></Panel>}
+          {props=><Panel data-dock><Panel bc-width-full bs-height="150px" bc-scrollable-y->{listGener(40)}<BackTop param="100%" dock {...props} /></Panel></Panel>}
         </Groups.Show>
       </Groups.Group>
 
@@ -94,7 +94,7 @@ let Component = aprops=>{
 
       <Groups.Group title="Dropload" desc="上拉刷新">
         <Groups.Show>
-          {props=><Panel bc-position-relative bc-scrollable-y bs-height="150px">
+          {props=><Panel bc-position-relative bc-scrollable-y- bs-height="150px">
             {listGener(stateData.count||10)}
             <Dropload onLoad={()=>{page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({count: (stateData.count||10)+10, isLoading: false}), 3000)}} {...props} isLoading={stateData.isLoading}>loadding</Dropload>
           </Panel>}
@@ -109,7 +109,7 @@ let Component = aprops=>{
           dock: [true, false],
         }}/>
         <Groups.Show>
-          {props=><Panel data-dock><Panel bc-scrollable-y bs-height="150px">{listGener(20)}<Fab {...props}>fab</Fab></Panel></Panel>}
+          {props=><Panel data-dock><Panel bc-scrollable-y- bs-height="150px">{listGener(20)}<Fab {...props}>fab</Fab></Panel></Panel>}
         </Groups.Show>
       </Groups.Group>
 
@@ -246,13 +246,13 @@ let Component = aprops=>{
           placement: ['bottom-auto-full','right-auto-center'],
         }}/>
         <Groups.Show>
-          {props=><div className="scrollable-y" style={{height: 50}}>{listGener()}<Popover inline overlay={listGener()}  {...props}>popover</Popover></div>}
+          {props=><div className="scrollable-y-" style={{height: 50}}>{listGener()}<Popover inline overlay={listGener()}  {...props}>popover</Popover></div>}
         </Groups.Show>
       </Groups.Group>
 
       <Groups.Group title="PullRefresh" desc="下拉刷新">
         <Groups.Show>
-          {props=><div style={{height: 150}} className="scrollable-y">
+          {props=><div style={{height: 150}} className="scrollable-y-">
             <PullRefresh onLoad={()=>{page.stateData.update({isLoading: true}); setTimeout(()=>page.stateData.update({isLoading: false}), 3000)}} isLoading={stateData.isLoading} {...props}>{listGener(20, {onClick: ()=>alert(1)})}</PullRefresh>
           </div>}
         </Groups.Show>
@@ -260,7 +260,7 @@ let Component = aprops=>{
 
       <Groups.Group title="ScrollSpy" desc="滚动监控">
         <Groups.Show>
-          {props=><Panel bc-position-relative bc-width-full bs-height="100px" bc-scrollable-y>
+          {props=><Panel bc-position-relative bc-width-full bs-height="100px" bc-scrollable-y->
             {listGener(10)}
             <ScrollSpy onRelativeChange={(p)=>page.stateLog.update([p], {append: true})} {...props} />
             {listGener(10)}
@@ -287,7 +287,7 @@ let Component = aprops=>{
           'bp-nav-bp-panelItem-position': ['top', 'left'],
         }} />
         <Groups.Show>
-          <TabBar bs-height={150} bp-container-bp-panelItem-className="scrollable-y">
+          <TabBar bs-height={150} bp-container-bp-panelItem-className="scrollable-y-">
             <TabBar.Item title="title1" name="view_comfy">{listGener(20, {children: i=>('tab1-'+i)})}</TabBar.Item>
             <TabBar.Item title="title2" name="settings">{listGener(20, {children: i=>('tab2-'+i)})}</TabBar.Item>
             <TabBar.Item title="title3" name="extension">{listGener(20, {children: i=>('tab3-'+i)})}</TabBar.Item>

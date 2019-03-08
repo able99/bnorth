@@ -37,7 +37,7 @@ let Modal = aprops=>{
       {type!=='document'&&children?(<Panel bc-padding-a- bc-border-set-bottom-={Boolean(buttons.length)} {...bodyProps}>{children}</Panel>):null}
       {type!=='document'&&buttons.length?(
         <PanelContainer ctype="justify" {...footerProps}>
-          {buttons.map((v,i)=><Panel key={i} component={Button} b-style="plain" bc-border-none-left-={Boolean(i)} bc-border-set-left-={Boolean(i)} onClick={e=>{e.stopPropagation();onClose&&onClose(i)}} {...v} />)}
+          {buttons.map((v,i)=><Panel key={i} componentTransform={Button} className="bg-none- border-none-top- border-none-bottom- border-none-right-" bc-border-set-left-={Boolean(i)} bc-border-none-left-={!Boolean(i)} onClick={e=>{e.stopPropagation();onClose&&onClose(i)}} {...v} />)}
         </PanelContainer>
       ):null}
     </Panel>

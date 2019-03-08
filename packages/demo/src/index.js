@@ -15,3 +15,13 @@ let app = new App({
 initStyle(app);
 initPlugins(app);
 app.start();
+
+
+// console.log(require('@bnorth/rich.css/lib/classes').default(
+//   'border-none-a-',
+//   'border-set-a-alert',
+//   'border-set-a-alert',
+//   'border-set-a-alert',
+//   'border-set-a-alert',
+//   'border-none-left-'
+// ));

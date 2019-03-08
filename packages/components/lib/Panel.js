@@ -96,7 +96,7 @@ var _Panel = function Panel(aprops) {
   var classSet = (_classSet = {
     'position-relative': true,
     'offset-a-start square-full overflow-a-hidden': full
-  }, (0, _defineProperty2.default)(_classSet, page ? 'flex-display-inline' : 'display-inlineblock', inline), (0, _defineProperty2.default)(_classSet, (!inline ? 'flex-display-block' : '') + ' flex-direction-v bg-color-view', page), (0, _defineProperty2.default)(_classSet, 'scrollable-a flex-sub-flex-extend', main), _classSet);
+  }, (0, _defineProperty2.default)(_classSet, page ? 'flex-display-inline' : 'display-inlineblock', inline), (0, _defineProperty2.default)(_classSet, (!inline ? 'flex-display-block' : '') + ' flex-direction-v bg-color-view', page), (0, _defineProperty2.default)(_classSet, 'scrollable-a- flex-sub-flex-extend', main), _classSet);
   var styleSet = {};
   var textTheme;
   if (sensitiveSelect) textTheme = sensitiveBg ? selected ? textOnBgSelected : textOnBgUnselected : selected ? bTheme || '' : textUnselected;
@@ -113,11 +113,11 @@ var _Panel = function Panel(aprops) {
     var _theme = bTheme ? bTheme === true ? '' : bTheme : bTheme === false ? false : '';
 
     classSet['border-set-a-' + _theme] = _theme !== false;
-    classSet[bgOnHollow === false ? 'bg-none' : 'bg-color-' + (bgOnHollow === true ? '' : bgOnHollow)] = true;
+    classSet[bgOnHollow === false ? 'bg-none-' : 'bg-color-' + (bgOnHollow === true ? '' : bgOnHollow)] = true;
   } else if (bStyle === 'underline') {
     var _theme2 = bTheme ? bTheme === true ? '' : bTheme : bTheme === false ? false : '';
 
-    classSet['border-none-top border-none-left border-none-right bg-none'] = true;
+    classSet['border-none-top- border-none-left- border-none-right- bg-none-'] = true;
     classSet['border-width-bottom-2'] = true;
     classSet['border-set-bottom-' + _theme2] = _theme2 !== false;
     if (!selected) styleSet['borderColor'] = 'transparent';
@@ -126,7 +126,7 @@ var _Panel = function Panel(aprops) {
   } else if (bStyle === 'mask') {
     classSet['bg-color-mask'] = true;
   } else if (bStyle === 'plain') {
-    classSet['border-none-top border-none-bottom border-none-left border-none-right bg-none'] = true;
+    classSet['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
@@ -485,8 +485,8 @@ var _PanelItem = function PanelItem(aprops) {
   if (panelContainerType === 'justify') classSet.push('flex-sub-flex-extend');
   if (panelContainerType === 'primary') classSet.push(panelItemSelected ? 'flex-sub-flex-extend' : 'flex-sub-flex-none');
   if (panelContainerType === 'scroll') classSet.push('flex-sub-flex-extend height-full');
-  if (panelContainerProps.noOverlap && panelItemIndex < panelItemCount - 1) classSet.push('border-none-right');
-  if (panelContainerProps.separator) classSet.push('border-none-a bg-none');
+  if (panelContainerProps.noOverlap && panelItemIndex < panelItemCount - 1) classSet.push('border-none-right-');
+  if (panelContainerProps.separator) classSet.push('border-none-a- bg-none-');
   return (0, _react.cloneElement)(children, (0, _objectSpread6.default)({
     className: (0, _classes.default)(classSet, className),
     panelContainerProps: panelContainerProps,

@@ -82,7 +82,7 @@ function (_React$Component) {
           _ref$offset = _ref.offset,
           offset = _ref$offset === void 0 ? 0 : _ref$offset;
 
-      var classNamePre = 'scrollable-y';
+      var classNamePre = 'scrollable-y-';
       var classNamePreLoader = 'overflow-a-hidden transition-property-height';
       var stylePreLoader = {
         height: 0

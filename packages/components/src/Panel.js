@@ -34,7 +34,7 @@ let Panel = aprops=>{
     'offset-a-start square-full overflow-a-hidden': full,
     [page?'flex-display-inline':'display-inlineblock']: inline,
     [(!inline?'flex-display-block':'') + ' flex-direction-v bg-color-view']: page,
-    'scrollable-a flex-sub-flex-extend': main,
+    'scrollable-a- flex-sub-flex-extend': main,
   }
   let styleSet = {};
 
@@ -52,10 +52,10 @@ let Panel = aprops=>{
   }else if(bStyle==='hollow') {
     let theme = bTheme?(bTheme===true?'':bTheme):(bTheme===false?false:'');
     classSet['border-set-a-'+theme] = theme!==false;
-    classSet[bgOnHollow===false?'bg-none':('bg-color-'+(bgOnHollow===true?'':bgOnHollow))] = true;
+    classSet[bgOnHollow===false?'bg-none-':('bg-color-'+(bgOnHollow===true?'':bgOnHollow))] = true;
   }else if(bStyle==='underline') {
     let theme = bTheme?(bTheme===true?'':bTheme):(bTheme===false?false:'');
-    classSet['border-none-top border-none-left border-none-right bg-none'] = true;
+    classSet['border-none-top- border-none-left- border-none-right- bg-none-'] = true;
     classSet['border-width-bottom-2'] = true;
     classSet['border-set-bottom-'+theme] = theme!==false;
     if(!selected) styleSet['borderColor'] = 'transparent';
@@ -64,7 +64,7 @@ let Panel = aprops=>{
   }else if(bStyle==='mask') {
     classSet['bg-color-mask'] = true;
   }else if(bStyle==='plain') {
-    classSet['border-none-top border-none-bottom border-none-left border-none-right bg-none'] = true;
+    classSet['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
   }
 
   return <Component className={classes(classSet, className)} style={{...styleSet, ...style}} {...props} />
@@ -329,8 +329,8 @@ export let PanelItem = aprops=>{
   if(panelContainerType==='justify') classSet.push('flex-sub-flex-extend');
   if(panelContainerType==='primary') classSet.push(panelItemSelected?'flex-sub-flex-extend':'flex-sub-flex-none');
   if(panelContainerType==='scroll') classSet.push('flex-sub-flex-extend height-full');
-  if(panelContainerProps.noOverlap&&panelItemIndex<panelItemCount-1) classSet.push('border-none-right');
-  if(panelContainerProps.separator) classSet.push('border-none-a bg-none');
+  if(panelContainerProps.noOverlap&&panelItemIndex<panelItemCount-1) classSet.push('border-none-right-');
+  if(panelContainerProps.separator) classSet.push('border-none-a- bg-none-');
 
   return cloneElement(children, {className: classes(classSet, className), panelContainerProps, panelItemIndex, panelItemCount, panelItemSelected, panelItemPlain, ...props});
 }

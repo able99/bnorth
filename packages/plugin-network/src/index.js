@@ -146,7 +146,7 @@ class Network {
  * @type {index~PluginOptions}
  */
 Network.Options = {
-  baseUrl: './',
+  baseUrl: '/',
   apiUrl: '',
   url: '',
   // timeout: 1000*60,

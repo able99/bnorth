@@ -103,7 +103,7 @@ let Normal = class extends React.Component {
 
     let classNamePre = {
       'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle': true,
-      'bg-none border-none-a': !this.props['b-style'],
+      'bg-none- border-none-a-': !this.props['b-style'],
     }
 
     return <Panel 

@@ -66,7 +66,7 @@
   opacity: 1.00;
 }
 
-.scrollable-a {
+.scrollable-a- {
   max-width: 100%;
   max-height: 100%;
   overflow-x: auto;
@@ -74,7 +74,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.scrollable-x {
+.scrollable-x- {
   max-width: 100%;
   max-height: undefined;
   overflow-x: auto;
@@ -82,7 +82,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.scrollable-y {
+.scrollable-y- {
   max-width: undefined;
   max-height: 100%;
   overflow-x: hidden;

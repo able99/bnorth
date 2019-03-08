@@ -465,6 +465,9 @@ function (_React$Component) {
   }, {
     key: "shouldComponentUpdate",
     value: function shouldComponentUpdate(nextProps, nextState) {
+      if (nextProps.route.isActive !== this.props.route.isActive && nextProps.route.isActive) return true;
+      if (!this.props.route.isActive) return false;
+
       if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query', 'popLayers', 'subPages'])) {
         this.app.event.emit(this._id, 'onPageUpdate', this._id, 'route');
         return true;

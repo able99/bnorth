@@ -1018,33 +1018,33 @@
   border-bottom-width: 10px;
 }
 
-.border-none-a {
+.border-none-a- {
   border: none;
 }
 
-.border-none-h {
+.border-none-h- {
   border-left: none;
   border-right: none;
 }
 
-.border-none-v {
+.border-none-v- {
   border-top: none;
   border-bottom: none;
 }
 
-.border-none-left {
+.border-none-left- {
   border-left: none;
 }
 
-.border-none-right {
+.border-none-right- {
   border-right: none;
 }
 
-.border-none-top {
+.border-none-top- {
   border-top: none;
 }
 
-.border-none-bottom {
+.border-none-bottom- {
   border-bottom: none;
 }
 

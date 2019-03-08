@@ -63,7 +63,7 @@ let Groups = aprops=>{
   let Component = component?children.find(v=>v.props.title===component):component;
 
   return (
-    <div className="bg-color-white width-full height-full scrollable-y">
+    <div className="bg-color-white width-full height-full scrollable-y-">
       <NavBar title={component||'组件列表'} onBack={()=>app.router.back()} />
       {Component&&cloneElement(Component, props)}
       {!Component&&(
@@ -135,7 +135,7 @@ Groups.Log = aprops=>{
   return (
     <div>
       <div className="border-set-bottom- padding-a-"><strong>日志</strong></div>
-      <div className="border-set-bottom- padding-a- scrollable-y" style={{height: 100}}>{[...logs].reverse().map((v,i,a)=><div key={i}>{a.length-i-1}: {v}</div>)}</div>
+      <div className="border-set-bottom- padding-a- scrollable-y-" style={{height: 100}}>{[...logs].reverse().map((v,i,a)=><div key={i}>{a.length-i-1}: {v}</div>)}</div>
     </div>
   )
 }

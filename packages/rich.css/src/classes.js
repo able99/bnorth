@@ -23,38 +23,44 @@
  * }
  * ```
  */
-function classes(...args) {
+export default function classes(...args) {
   let ret = [];
-  let merge = function(arr) {
-    return arr.filter((v,i,a)=>{
-      let index = v.lastIndexOf('-');
-      let key = v.substr(0, index>0?index:v.length); 
-      return !a.slice(i+1).find(vv=>{
-        return vv.startsWith(key) || (key==='bg-none'&&vv.startsWith('bg-color')) || (key==='bg-color'&&vv.startsWith('bg-none'));
-      });
-    })
-  };  
-
-  for(let arg of args) {
-    let type = typeof arg;
-    if(type==='boolean') {
-      merge = arg;
-    }else if(type==='function') {
-      merge = arg;
-    }else if(type==='string') {
-      merge?(ret = ret.concat(arg.trim().split(/\s+/))):(ret.push(arg));
-    }else if(type==='number') {
-      ret.push(arg);
-    }else if(Array.isArray(arg) && arg.length) {
-      ret.push(classes(...arg));
+  
+  let addItem = item=>{
+    let type = Array.isArray(item)?'array':(typeof item);
+    if(type==='string'||type==='number') {
+      String(item).split(/\s/).forEach(v=>ret.push(v));
+    }else if(type==='array'&&item.length) {
+      ret.push(item.forEach(v=>addItem(v)));
     }else if(type==='object'){
-      /* eslint-disable no-loop-func */
-      Object.entries(arg).filter(([k,v])=>v).forEach(([k,v])=>ret.push(k));
+      Object.entries(item).filter(([k,v])=>v).forEach(([k,v])=>String(k).split(/\s/).forEach(vv=>ret.push(vv))); /* eslint-disable no-loop-func */
     }
   }
+  
+  let merge = function(items) {
+    items.reverse().forEach((v,i,a)=>{
+      if(!v) return;
+      let index = v.lastIndexOf('-');
+      let key = v.substr(0, index>0?index:v.length); 
+      for(let ii=i+1; ii<a.length; ii++) {
+        if(!a[ii]) continue;
+        if(a[ii].startsWith(key)) {a[ii] = null; continue};
+        for(let vvv of mutex) if(vvv.includes(key)&&(a[ii].startsWith(vvv[0])||a[ii].startsWith(vvv[1]))) {a[ii] = null; continue};
+      }
+    })
+    return items.filter(v=>v).reverse();
+  };  
 
-  if(merge) ret = merge(ret);
-  return ret.join(' ');
+  for(let arg of args) addItem(arg);
+  return merge(ret).join(' ');
 }
 
-export default classes;
+
+export let mutex = [
+  ['bg-none', 'bg-color'],
+  ['border-set-a', 'border-none-a'],
+  ['border-set-left', 'border-none-left'],
+  ['border-set-right', 'border-none-right'],
+  ['border-set-top', 'border-none-top'],
+  ['border-set-bottom', 'border-none-bottom'],
+];

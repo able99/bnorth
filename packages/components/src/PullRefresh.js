@@ -28,7 +28,7 @@ class PullRefresh extends React.Component {
     } = BaseComponent(this.props, PullRefresh);
     let { offset=0 } = this.state||{};
 
-    let classNamePre = 'scrollable-y';
+    let classNamePre = 'scrollable-y-';
     let classNamePreLoader = 'overflow-a-hidden transition-property-height';
     let stylePreLoader = { height: 0 };
     if(offset>0) stylePreLoader.height = offset;

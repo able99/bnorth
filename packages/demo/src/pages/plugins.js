@@ -9,7 +9,7 @@ export default props=>{
   return (
     <div className="bg-color-white width-full height-full flex-display-block flex-direction-v">
       <NavBar title="功能插件" onBack={()=>app.router.back()} />
-      <div className="scrollable-y flex-sub-flex-extend">
+      <div className="scrollable-y- flex-sub-flex-extend">
         <List className="margin-bottom-2x">
           <List.Item title="base64" className="text-weight-bold text-size-lg" />
           <List.Item title="编码 - abc" desc={app.utils.base64encode('abc')} />
