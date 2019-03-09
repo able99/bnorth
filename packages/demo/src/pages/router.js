@@ -7,21 +7,24 @@ export let PageInfo = props=>{
   let { app, route } = props;
 
   return (
-    <div className="scrollable-y- padding-a-">
-      <h3><button onClick={()=>app.router.back()}>back</button>page info</h3>
-      <hr />
-      {Object.entries(route).map(([k,v])=>{
-        if(k==='subPageInfos'||k==='popLayerInfos') return null;
-        if(k==='subPages') return <div>subPages: {Object.keys(v)}</div>;
-        if(k==='popLayers') return <div>popLayers count: {v.length}</div>;
-        return <div>{k}: {JSON.stringify(v)}</div>;
-      })}
-      <hr />
-      <div className="margin-top-">
-        <h4>navigator</h4>
-        <button className="padding-a-xxs margin-bottom-" onClick={()=>app.router.push(['pageinfo', 'pp1'])}>push pageinfo pp1</button>
-        <button className="padding-a-xxs margin-bottom-" onClick={()=>app.router.push('pageinfo', {query:{a:'qq1'}})}>push pageinfo query:|a:qq1</button>
-        <button className="padding-a-xxs margin-bottom-" onClick={()=>app.router.push('pageinfo', {state:{a:'ss1'}})}>push pageinfo state:|a:ss1</button>
+    <div className="bg-color-white width-full height-full flex-display-block flex-direction-v">
+      <NavBar title="路由展示" onBack={()=>app.router.back()} />
+      <div className="scrollable-y- flex-sub-flex-extend">
+        <List className="margin-bottom-2x">
+          <List.Item title="路由信息" className="text-weight-bold text-size-lg" />
+          {Object.entries(route).map(([k,v])=>{
+            if(k==='subPageInfos'||k==='popLayerInfos') return null;
+            if(k==='subPages') v = Object.keys(v);
+            if(k==='popLayers') v = 'popLayers count:' + v.length;
+            return <List.Item title={k} desc={JSON.stringify(v)} />
+          })}
+        </List>
+        <List className="margin-bottom-2x">
+          <List.Item title="导航" className="text-weight-bold text-size-lg" />
+          <List.Item title="push param1=pp1" onClick={()=>app.router.push(['pageinfo', 'pp1'])} />
+          <List.Item title="push query:{n:'qq1'}" onClick={()=>app.router.push('pageinfo', {query:{n:'qq1'}})} />
+          <List.Item title="push state:{n:'ss1'}" onClick={()=>app.router.push('pageinfo', {state:{n:'ss1'}})} />
+        </List>
       </div>
     </div>
   )

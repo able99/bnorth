@@ -41,8 +41,6 @@ var _BaseComponent5 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Touchable = _interopRequireDefault(require("./Touchable"));
 
-var _util = require("util");
-
 /**
  * @module
  */
@@ -486,7 +484,6 @@ var _PanelItem = function PanelItem(aprops) {
   if (panelContainerType === 'primary') classSet.push(panelItemSelected ? 'flex-sub-flex-extend' : 'flex-sub-flex-none');
   if (panelContainerType === 'scroll') classSet.push('flex-sub-flex-extend height-full');
   if (panelContainerProps.noOverlap && panelItemIndex < panelItemCount - 1) classSet.push('border-none-right-');
-  if (panelContainerProps.separator) classSet.push('border-none-a- bg-none-');
   return (0, _react.cloneElement)(children, (0, _objectSpread6.default)({
     className: (0, _classes.default)(classSet, className),
     panelContainerProps: panelContainerProps,

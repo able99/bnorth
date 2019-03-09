@@ -83,6 +83,7 @@ export let modal = {
       show: (Content, { onAction, options={}, state, ...props}={})=>{
         if(!Content) return;
 
+        if(!options.hasOwnProperty('_idPage')) options._idPage = app.router.getPage()._id;
         let _id = app.router.genPopLayerId(options);
         state = state&&app.State.createState(app, state===true?undefined:state, 'state', _id);
 

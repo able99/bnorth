@@ -19,7 +19,7 @@ export let Search = aprops=>{
   return (
     <Panel page main>
       <Field 
-        containerProps={{className: 'border-set-bottom-', 'b-style': 'white'}} 
+        containerProps={{className: 'border-set-bottom- padding-a-xxs', 'b-style': 'white'}} 
         value={stateData.keyword} onChange={e=>page.stateData.set('keyword', e.target.value)} placeholder="输入查询字符串" autoFocus="autofocus"
         before={<Button onClick={()=>page.actionGoBack()} b-style="plain"><Icon name="left" /></Button>}
         onEnterPress={()=>page.actionSubmit()} after={<Button onClick={()=>page.actionSubmit()} b-style="plain">搜索</Button>} />
@@ -49,7 +49,7 @@ let Component = aprops=>{
   return (
     <Panel page full>
       <Field 
-        containerProps={{className: 'border-set-bottom-', 'b-style': 'white'}} b-theme="light"
+        containerProps={{className: 'border-set-bottom- padding-a-xxs', 'b-style': 'white'}} b-theme="light"
         type="static" value={stateData.keyword||'输入查询字符串'} onClick={e=>app.router.push(['search', stateData.keyword, page._id])}
         before={<Button onClick={()=>page.actionGoBack()} b-style="plain"><Icon name="left" /></Button>} />
 

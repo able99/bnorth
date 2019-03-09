@@ -34,29 +34,29 @@ let Component = aprops=>{
 
   return (
     <Groups app={app} component={component} {...groupProps}>
-      <Groups.Group title="Animation" desc="动画">
+      <Groups.Group title="Animation" desc="进入与退出动画组件">
         <Groups.Props data={{
-          type: ['fade', 'collapse'],
-          'in': [true, false],
-          dimension: ['width', 'height'],
+          'type|动画类型，淡入淡出或是折叠': ['fade', 'collapse'],
+          'in|进入或是退出': [true, false],
+          'dimension|对于折叠动画，设定折叠方向': ['width', 'height'],
         }}/>
         <Groups.Show>
           <Animation>{listGener()}</Animation>
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="AspectRatio" desc="横纵比">
+      <Groups.Group title="AspectRatio" desc="横纵比自适应组件">
         <Groups.Props data={{
-          ratio: {type: 'range', min: 0, max: 10, fact: 0.1},
+          'ratio|横纵比例': {type: 'range', min: 0, max: 10, fact: 0.1},
         }}/>
         <Groups.Show>
           <AspectRatio>ratio={stateComponentProps.ratio}</AspectRatio>
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Backdrop" desc="背景">
+      <Groups.Group title="Backdrop" desc="幕布组件">
         <Groups.Props data={{
-          in: [true, false],
+          'in|进入或者退出': [true, false],
         }}/>
         <Groups.Show>
           {props=><div className="position-relative">{listGener()}<Backdrop children="Backdrop" {...props}/></div>}
@@ -75,12 +75,12 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Carousel" desc="轮播">
+      <Groups.Group title="Carousel" desc="轮播组件">
         <Groups.Props data={{
-          controller: undefined,
-          pager: undefined,
-          autoPlay: undefined,
-          pauseOnHover: undefined,
+          'controller|是否显示控制按钮': true,
+          'pager|是否显示分页按钮': true,
+          'autoPlay|是否自动播放': true,
+          'pauseOnHover|是否支持悬停': false,
         }}/>
         <Groups.Show>
           <Carousel>{Array.from(Array(5), (v,i)=>i).map(v=>(<Carousel.Item key={v}
@@ -103,10 +103,10 @@ let Component = aprops=>{
 
       <Groups.Group title="Fab" desc="浮动按钮">
         <Groups.Props data={{
-          h: ['start','center','end'],
-          v: ['start','center','end'],
-          margin: [true, false],
-          dock: [true, false],
+          'h|悬浮位置': ['start','center','end'],
+          'v|悬浮位置': ['start','center','end'],
+          'margin|悬浮边距': [true, false],
+          'dock|相对于具有 data-dock 属性元素还是父元素': [true, false],
         }}/>
         <Groups.Show>
           {props=><Panel data-dock><Panel bc-scrollable-y- bs-height="150px">{listGener(20)}<Fab {...props}>fab</Fab></Panel></Panel>}
@@ -115,57 +115,57 @@ let Component = aprops=>{
 
       <Groups.Group title="Field" desc="输入域">
         <Groups.Show>
-          <Groups.Sep title="text" />
+          <Groups.Sep title="普通文本框" />
           <Field type="text" />
-          <Groups.Sep title="text controlled" />
+          <Groups.Sep title="受控普通文本框" />
           <Field type="text" onChange={e=>page.stateData.update({text: e.target.value})} value={stateData.text}/>
-          <Groups.Sep title="patternName=number" />
+          <Groups.Sep title="模式输入框 patternName=number" />
           <Field type="text" onChange={e=>page.stateData.update({text1: e.target.value})} value={stateData.text1} patternName="number" />
-          <Groups.Sep title="static 空值" />
+          <Groups.Sep title="静态文本框 空值" />
           <Field type="static" />
-          <Groups.Sep title="static" />
+          <Groups.Sep title="静态文本框 有值" />
           <Field type="static" value="value" />
-          <Groups.Sep title="textarea" />
+          <Groups.Sep title="多行文本框" />
           <Field type="textarea" />
           <Groups.Sep title="checkbox" />
           <Field type="checkbox" />
           <Groups.Sep title="radio" />
           <Field type="radio" bp-input-name="r1" />
           <Field type="radio" bp-input-name="r1" />
-          <Groups.Sep title="switch" />
+          <Groups.Sep title="开关按钮" />
           <Field type="switch" />
-          <Groups.Sep title="file" />
+          <Groups.Sep title="文本选择框" />
           <Field type="file">open</Field>
-          <Groups.Sep title="container" />
-          {props=><Field containerProps={props} before="b" after="a" />}
+          <Groups.Sep title="带前后元素" />
+          {props=><Field containerProps={props} before="前" after="后" />}
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Icon" desc="图标">
+      <Groups.Group title="Icon" desc="图标组件">
         <Groups.Props data={{
-          rotate: [90,180],
+          'rotate|旋转角度': [90,180],
         }}/>
         <Groups.Show>
-          <Groups.Sep title="svg" />
+          <Groups.Sep title="svg 图标，使用名称索引" />
           <Icon {...stateCommonProps} name="star" />
-          <Groups.Sep title="img" />
+          <Groups.Sep title="图片图标，使用图片地址" />
           <Icon {...stateCommonProps} src={img} />
-          <Groups.Sep title="char" />
+          <Groups.Sep title="字符图标" />
           <Icon {...stateCommonProps} char='B' />
-          <Groups.Sep title="shape" />
+          <Groups.Sep title="形状图标 - 三角形" />
           <Icon {...stateCommonProps} shape='triangle' />
-          <Groups.Sep title="PanelIcon" />
+          <Groups.Sep title="图标文本面板" />
           <PanelIcon name="star" title="title" />
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Landscape" desc="横屏">
+      <Groups.Group title="Landscape" desc="自动横屏，宽度小于高度时自动旋转">
         <Groups.Show><Panel b-style="solid" b-theme="primary" bs-height={500} data-dock><Landscape>{listGener()}</Landscape></Panel></Groups.Show>
       </Groups.Group>
       
       <Groups.Group title="List" desc="列表">
         <Groups.Props data={{
-          separatorInset: undefined,
+          'separatorInset|缩进': false,
         }}/>
         <Groups.Show>
           <List header="header" footer="footer">
@@ -177,11 +177,11 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Loader" desc="加载中">
+      <Groups.Group title="Loader" desc="加载指示器">
         <Groups.Props data={{
-          type: ['circle','line'],
-          isProgress: undefined,
-          progress: {type: 'range', min: 1, max: 100},
+          'type|圆形或是线形': ['circle','line'],
+          'isProgress|指示进度还是指示加载中': false,
+          'progress|进度': {type: 'range', min: 1, max: 100},
         }}/>
         <Groups.Show>
           <Groups.Sep title="Loader" />
@@ -199,7 +199,7 @@ let Component = aprops=>{
 
       <Groups.Group title="Modal" desc="对话框">
         <Groups.Props data={{
-          type: ['alert', 'prompt', 'popup', 'document'],
+          'type|类型，如警告，询问，弹出和自定义': ['alert', 'prompt', 'popup', 'document'],
         }}/>
         <Groups.Show>
           {props=><div style={{height: 500}} className="position-relative"><Modal title="title" close {...props}>body</Modal></div>}
@@ -227,12 +227,12 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="PanelContainer" desc="面板容器组件">
+      <Groups.Group title="PanelContainer" desc="容器组件，可包含和组织子元素">
         <Groups.Props data={{
-          ctype: ['single', 'justify', 'primary', 'flex', 'scroll'],
-          selectedIndex: [0,1,2,3,4,5],
-          countToShow: [1,2],
-          separator: undefined,
+          'ctype|组织类型，如单件，平分，突出，flex 和 滑动': ['single', 'justify', 'primary', 'flex', 'scroll'],
+          'selectedIndex|选中子元素序号': [0,1,2,3,4,5],
+          'countToShow|滑动时指定显示个数': [1,2],
+          'separator|是否显示分隔条': false,
         }}/>
         <Groups.Show>
           <PanelContainer {...stateData} onSelectedChange={selectedIndex=>page.stateData.update({selectedIndex})}>
@@ -241,9 +241,9 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Popover" desc="弹出框">
+      <Groups.Group title="Popover" desc="气泡弹出框">
         <Groups.Props data={{
-          placement: ['bottom-auto-full','right-auto-center'],
+          'placement|弹出位置': ['bottom-auto-full','right-auto-center'],
         }}/>
         <Groups.Show>
           {props=><div className="scrollable-y-" style={{height: 50}}>{listGener()}<Popover inline overlay={listGener()}  {...props}>popover</Popover></div>}
@@ -258,21 +258,23 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="ScrollSpy" desc="滚动监控">
+      <Groups.Group title="ScrollSpy" desc="滚动监控，监控组件在列表中的位置和滚动事件">
         <Groups.Show>
           {props=><Panel bc-position-relative bc-width-full bs-height="100px" bc-scrollable-y->
             {listGener(10)}
+            <div>*****</div>
             <ScrollSpy onRelativeChange={(p)=>page.stateLog.update([p], {append: true})} {...props} />
+            <div>*****</div>
             {listGener(10)}
           </Panel>}
         </Groups.Show>
         <Groups.Log logs={stateLog} />
       </Groups.Group>
 
-      <Groups.Group title="Space" desc="空白">
+      <Groups.Group title="Space" desc="生成空白组件">
         <Groups.Props data={{
-          stacked: undefined,
-          count: {type: 'range', min: 1, max: 5},
+          'stacked|是否为垂直':  false,
+          'count|空白个数': {type: 'range', min: 1, max: 5},
         }}/>
         <Groups.Show>
           <Space count={1} />
@@ -281,10 +283,10 @@ let Component = aprops=>{
 
       <Groups.Group title="TabBar" desc="标签页">
         <Groups.Props data={{
-          'bp-nav-separator': undefined, 
-          'bp-nav-bp-panelItem-b-style': ['underline'],
-          position: ['bottom'], 
-          'bp-nav-bp-panelItem-position': ['top', 'left'],
+          'bp-nav-separator|是否显示分隔符': true, 
+          'bp-nav-bp-panelItem-b-style|导航按钮样式风格': ['underline'],
+          'position|导航与容器的位置': ['bottom'], 
+          'bp-nav-bp-panelItem-position|导航按钮中图标位置': ['top', 'left'],
         }} />
         <Groups.Show>
           <TabBar bs-height={150} bp-container-bp-panelItem-className="scrollable-y-">
@@ -295,7 +297,7 @@ let Component = aprops=>{
         </Groups.Show>
       </Groups.Group>
 
-      <Groups.Group title="Touchable" desc="触控">
+      <Groups.Group title="Touchable" desc="触控监控组件">
         <Groups.Show>
           <Touchable recognizers={{'pan':{enable: true}}} onPan={()=>page.stateLog.update(['onPan'], {append: true})} bs-height={50} b-style="solid" b-theme="primary" />
         </Groups.Show>

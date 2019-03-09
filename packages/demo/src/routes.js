@@ -18,9 +18,8 @@ export default {
 
   'tabs:tab?': {
     component: require('./pages/tabs').default, title: 'tabbar demo',
-    subPages: {tab1: 'tab1', tab2: 'tabx', tab3: 'tabx', tab4: 'tabx'},
+    subPages: ['tabx', 'tabx', 'tabx', 'tabx'],
   },
-  'tab1': {component: require('./pages/tabs').Tab1, title: 'tab1'},
   'tabx': {component: require('./pages/tabs').Tabx, title: 'tabx'},
 
   'lists': {component: require('./pages/lists').default, title: 'list demo'},

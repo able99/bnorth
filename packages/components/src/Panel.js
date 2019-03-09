@@ -6,7 +6,6 @@ import classes from '@bnorth/rich.css/lib/classes';
 import { transform } from '@bnorth/rich.css/lib/styles/animation'; 
 import BaseComponent, { domIsMouse, domFindNode } from './BaseComponent';
 import Touchable from './Touchable';
-import { debug } from 'util';
 
 
 /**
@@ -330,7 +329,6 @@ export let PanelItem = aprops=>{
   if(panelContainerType==='primary') classSet.push(panelItemSelected?'flex-sub-flex-extend':'flex-sub-flex-none');
   if(panelContainerType==='scroll') classSet.push('flex-sub-flex-extend height-full');
   if(panelContainerProps.noOverlap&&panelItemIndex<panelItemCount-1) classSet.push('border-none-right-');
-  if(panelContainerProps.separator) classSet.push('border-none-a- bg-none-');
 
   return cloneElement(children, {className: classes(classSet, className), panelContainerProps, panelItemIndex, panelItemCount, panelItemSelected, panelItemPlain, ...props});
 }

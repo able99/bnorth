@@ -396,10 +396,11 @@ class Router {
         if(this.passParams) params[v] = pageInfo.params[v];
       })
 
-      for (let [k,v] of Array.isArray(routeDefine.subPages)?routeDefine.subPages.map(v=>[v,v]):Object.entries(routeDefine.subPages||{})) {
+      for (let [k,v] of Array.isArray(routeDefine.subPages)?routeDefine.subPages.map((v,i)=>[v+String(i),v]):Object.entries(routeDefine.subPages||{})) {
         let subPageInfo = {...pageInfo};
         subPageInfo._idParent = subPageInfo._id;
-        subPageInfo._id = subPageInfo._id + SubPageSpe+v;
+        subPageInfo._idSubPage = k;
+        subPageInfo._id = subPageInfo._id + SubPageSpe + subPageInfo._idSubPage;
         subPageInfo.pageName = v;
         subPageInfo.isSubPage = true;
         subPageInfo.subPageInfos = {};
@@ -409,7 +410,7 @@ class Router {
         
         subPageInfo.routeName = routeNameSubPage;
         subPageInfo.routeDefine = routeDefineSubPage;
-        pageInfo.subPageInfos[k] = subPageInfo;
+        pageInfo.subPageInfos[subPageInfo._idSubPage] = subPageInfo;
       }
       
       _idPrev = _id;

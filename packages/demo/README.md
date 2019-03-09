@@ -17,9 +17,10 @@ bnorth 解决方案 demo
 1. 服务器渲染与 seo: 参数分隔符可配置，使分隔符支持中划线; browser 路由; button 支持 a 连接模式
 1. component plugin refine; modal state refine
 1. weshare 工程上，/:fivorate 本来是 首页的切换 tabbar 的参数，结果被 /|favorite 当成自己的参数了
+1. modal state, 
+1. btn 自动
+1. 滑块组件
+1. list refine, 
 
 
 ### demo 反馈给 bnorth 需要解决的问题
-
-1. modal state
-1. btn 自动

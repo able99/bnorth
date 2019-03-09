@@ -4,53 +4,50 @@ import List from './list';
 
 
 let commonProps = {
-  // 'toSub': undefined,
-  'b-style': ['solid', 'hollow', 'plain', 'underline'],
-  'b-theme': ['primary', 'alert', 'success'],
-  'b-size': ['xs', 'sm', 'lg', 'xl', '2x', '3x'],
-  'selected': undefined,
-  'active': undefined,
-  'disabled': undefined,
-  'bc-margin-a': ['0', 'xs', 'sm', 'lg', 'xl'],
-  'bc-padding-a': ['0', 'xs', 'sm', 'lg', 'xl'],
-  'bc-border-radius': ['2', '5', '10', 'rounded'],
-  'bc-border-set-a-': undefined,
+  'b-style|样式风格': ['solid', 'hollow', 'plain', 'underline'],
+  'b-theme|主题颜色': ['primary', 'alert', 'success'],
+  'b-size|主题大小': ['xs', 'sm', 'lg', 'xl', '2x', '3x'],
+  'selected|选中状态': false,
+  'active|活动状态': false,
+  'disabled|禁用状态': false,
+  'bc-margin-a|四周边距': ['0', 'xs', 'sm', 'lg', 'xl'],
+  'bc-padding-a|四周内距': ['0', 'xs', 'sm', 'lg', 'xl'],
+  'bc-border-radius|边框圆角': ['2', '5', '10', 'rounded'],
+  'bc-border-set-a|边框': [true, 'primary', 'alert'],
 }
 
 let PropSel = aprops=>{
   let { title, option, state, stateData } = aprops;
   let componnet = null;
+  let titles = String(title).split('|'); title = titles[0]; let desc = titles[1];
 
   if(Array.isArray(option)) {
     componnet = [undefined,...option].map((v,i)=>(
       <label key={(v?v.toString():'')+i} className="margin-right-">
         <input 
-          className="margin-right-xxs"
-          onChange={e=>{if(v===undefined){state.delete(title)}else{state.update({[title]: v})}}} checked={(stateData[title]===v)||false}
-          type='radio' key={v} />
+          className="margin-right-xxs" type='radio' key={v}
+          onChange={e=>{if(v===undefined){state.delete(title)}else{state.update({[title]: v})}}} checked={(stateData[title]===v)||false} />
         <span>{v!==undefined?String(v):'none'}</span>
       </label>
     ))
-  }else if(!option) {
+  }else if(typeof option==='boolean') {
     componnet = (
       <label>
         <input 
-          className="margin-right-"
-          onChange={e=>state.update({[title]: e.target.checked})} checked={Boolean(stateData[title])}
-          type='checkbox' />
+          className="margin-right-" type='checkbox'
+          onChange={e=>state.update({[title]: e.target.checked})} checked={Boolean(stateData[title])} />
       </label>
     )
   }else if(typeof option==='object'&&option.type==='range') {
     let { min, max, fact=1 } = option;
     componnet = (
       <input 
-        className="width-full" 
-        onChange={e=>state.update({[title]: e.target.value*fact})} value={(stateData[title]||0)*fact}
-        min={min} max={max} type='range' />
+        className="width-full" min={min} max={max} type='range' 
+        onChange={e=>state.update({[title]: e.target.value*fact})} value={(stateData[title]||0)*fact} />
     )
   }
 
-  return <div className="padding-a-"><div><strong>{title}</strong></div>{componnet}</div>;
+  return <div className="padding-a-"><div><strong>{title}</strong></div><div><small>{desc}</small></div>{componnet}</div>;
 }
 
 

@@ -158,6 +158,7 @@ var modal = {
             props = (0, _objectWithoutProperties2.default)(_ref, ["onAction", "options", "state"]);
 
         if (!Content) return;
+        if (!options.hasOwnProperty('_idPage')) options._idPage = app.router.getPage()._id;
 
         var _id = app.router.genPopLayerId(options);
 

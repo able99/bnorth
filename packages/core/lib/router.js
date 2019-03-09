@@ -635,8 +635,8 @@ function () {
                   var _iteratorError2 = undefined;
 
                   try {
-                    for (var _iterator2 = (Array.isArray(routeDefine.subPages) ? routeDefine.subPages.map(function (v) {
-                      return [v, v];
+                    for (var _iterator2 = (Array.isArray(routeDefine.subPages) ? routeDefine.subPages.map(function (v, i) {
+                      return [v + String(i), v];
                     }) : Object.entries(routeDefine.subPages || {}))[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                       var _step2$value = (0, _slicedToArray2.default)(_step2.value, 2),
                           k = _step2$value[0],
@@ -644,7 +644,8 @@ function () {
 
                       var subPageInfo = (0, _objectSpread2.default)({}, pageInfo);
                       subPageInfo._idParent = subPageInfo._id;
-                      subPageInfo._id = subPageInfo._id + SubPageSpe + v;
+                      subPageInfo._idSubPage = k;
+                      subPageInfo._id = subPageInfo._id + SubPageSpe + subPageInfo._idSubPage;
                       subPageInfo.pageName = v;
                       subPageInfo.isSubPage = true;
                       subPageInfo.subPageInfos = {};
@@ -660,7 +661,7 @@ function () {
                       };
                       subPageInfo.routeName = routeNameSubPage;
                       subPageInfo.routeDefine = routeDefineSubPage;
-                      pageInfo.subPageInfos[k] = subPageInfo;
+                      pageInfo.subPageInfos[subPageInfo._idSubPage] = subPageInfo;
                     }
                   } catch (err) {
                     _didIteratorError2 = true;
