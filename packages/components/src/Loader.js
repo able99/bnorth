@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import '@bnorth/rich.css/css/kf.spin.css';
+import '@bnorth/rich.css/css/kf.flyout.right.css';
 import { animation, transform, transiton, transformOrigin } from '@bnorth/rich.css/lib/styles/animation';
 import BaseComponent from './BaseComponent';
 import Panel from './Panel';
@@ -83,17 +84,12 @@ let Line = aprops=>{
     children, ...props
   } = BaseComponent(aprops, Line);
 
-  let classNamePre = 'width-full height-1em';
+  let classNamePre = 'width-full height-1em position-relative';
+  let stylePre = { background: colorReverse }
 
   return (
-    <Panel component="svg" preserveAspectRatio="none" viewBox="0 0 100 5" classNamePre={classNamePre} {...props}>
-      <line x1="0" y1="2" x2="100" y2="2" strokeWidth="5" stroke={colorReverse} fill="none" />
-      <line 
-        x1="0" y1="2" x2="100" y2="2" strokeWidth="5" stroke={color} fill="none" 
-        style={isProgress?transiton(timeout):null}
-        strokeDasharray={isProgress?`${progress},100`:'10,100'}>
-        {!isProgress?<animate attributeName="stroke-dashoffset" values="0;-90;0" dur={timeout} repeatCount="indefinite" />:null}
-      </line>
+    <Panel classNamePre={classNamePre} stylePre={stylePre} {...props}>
+      <Panel style={{width: (isProgress?progress:'10')+'%', height: '100%', left: '0', background: color, ...transiton(timeout), ...(!isProgress?animation('fly-out-right'):null)}}  />
       {children}
     </Panel>
   );

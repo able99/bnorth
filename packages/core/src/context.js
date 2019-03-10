@@ -71,6 +71,7 @@ class Context {
       </ContextComponent>
     )
     this.app.Page = this.consumerHoc(this.app.Page);
+    this.app.PopLayer = this.consumerHoc(this.app.PopLayer);
   }
 
   /**

@@ -1,7 +1,5 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
@@ -20,6 +18,8 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 require("core-js/modules/es6.string.ends-with");
 
 var _toArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toArray"));
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 require("core-js/modules/es7.symbol.async-iterator");
 
@@ -40,8 +40,6 @@ require("core-js/modules/es6.regexp.search");
 require("core-js/modules/es6.string.starts-with");
 
 require("core-js/modules/es6.object.keys");
-
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
@@ -67,7 +65,7 @@ var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/ge
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 
 var _createHashHistory = _interopRequireDefault(require("history/createHashHistory"));
 
@@ -295,16 +293,12 @@ function (_React$Component) {
     }
   }, {
     key: "_renderPopLayer",
-    value: function _renderPopLayer(_ref4) {
-      var Component = _ref4.content,
-          props = _ref4.props,
-          _ref4$options = _ref4.options,
-          _id = _ref4$options._id,
-          isContentComponent = _ref4$options.isContentComponent;
-      var aprops = (0, _objectSpread2.default)({}, isContentComponent ? {} : Component.props, props, {
-        key: _id
-      });
-      return isContentComponent ? _react.default.createElement(Component, aprops) : (0, _typeof2.default)(Component) === 'object' && Component.type ? (0, _react.cloneElement)(Component, aprops) : Component;
+    value: function _renderPopLayer(props) {
+      var app = this.props.app;
+      return _react.default.createElement(app.PopLayer, (0, _extends2.default)({
+        key: props.options._id,
+        app: app
+      }, props));
     }
   }, {
     key: "render",
@@ -828,16 +822,16 @@ function () {
   }, {
     key: "_getPopLayerNoPageId",
     value: function _getPopLayerNoPageId() {
-      return this._popLayerInfos.filter(function (_ref5) {
-        var options = _ref5.options;
+      return this._popLayerInfos.filter(function (_ref4) {
+        var options = _ref4.options;
         return !options._idPage;
       });
     }
   }, {
     key: "_getPopLayerByPageId",
     value: function _getPopLayerByPageId(_id) {
-      return this._popLayerInfos.filter(function (_ref6) {
-        var options = _ref6.options;
+      return this._popLayerInfos.filter(function (_ref5) {
+        var options = _ref5.options;
         return options._idPage === _id;
       });
     }
@@ -871,16 +865,16 @@ function () {
       } else if (typeof _id === 'number') {
         return this._pages[Object.keys(this._pages)[_id]];
       } else if (_id === undefined) {
-        return Object.entries(this._pages).filter(function (_ref7) {
-          var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
-              k = _ref8[0],
-              v = _ref8[1];
+        return Object.entries(this._pages).filter(function (_ref6) {
+          var _ref7 = (0, _slicedToArray2.default)(_ref6, 2),
+              k = _ref7[0],
+              v = _ref7[1];
 
           return v.props && v.props.route && !v.props.route.embed;
-        }).slice(-1).map(function (_ref9) {
-          var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
-              k = _ref10[0],
-              v = _ref10[1];
+        }).slice(-1).map(function (_ref8) {
+          var _ref9 = (0, _slicedToArray2.default)(_ref8, 2),
+              k = _ref9[0],
+              v = _ref9[1];
 
           return v;
         })[0];
@@ -926,6 +920,9 @@ function () {
       var popLayer = this.getPopLayerInfo(options._id);
 
       if (!popLayer) {
+        options.states = options.states || {};
+        if (options.data) options.states.stateData = this.app.State.createState(this.app, options.data === true ? undefined : options.data, 'stateData', options._id);
+
         this._popLayerInfos.push({
           content: content,
           props: props,
@@ -956,6 +953,7 @@ function () {
       });
 
       if (index < 0) return;
+      this._popLayerInfos[index].options.data && this._popLayerInfos[index].options.states.stateData.destructor();
       this._popLayerInfos[index].options.onRemove && this._popLayerInfos[index].options.onRemove();
 
       this._popLayerInfos.splice(index, 1);
@@ -984,6 +982,31 @@ function () {
     key: "getPopLayerInfos",
     value: function getPopLayerInfos() {
       return this._popLayerInfos;
+    }
+    /**
+     * 获取弹出层的状态数据
+     * @param {string} - 弹出层 id
+     * @returns {object}
+     */
+
+  }, {
+    key: "getPopLayerStates",
+    value: function getPopLayerStates(_id) {
+      var _ref10 = this.getPopLayerInfo(_id) || {},
+          _ref10$options = _ref10.options;
+
+      _ref10$options = _ref10$options === void 0 ? {} : _ref10$options;
+      var states = _ref10$options.states;
+      if (!states) return {};
+      var stateProps = {};
+      Object.entries(states).forEach(function (_ref11) {
+        var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
+            k = _ref12[0],
+            v = _ref12[1];
+
+        return stateProps[k] = v.data();
+      });
+      return stateProps;
     } // router interface
     // --------------------------------------
 
@@ -1018,10 +1041,10 @@ function () {
       var _this8 = this;
 
       this._routes = routes;
-      Object.entries(this._routes || {}).forEach(function (_ref11) {
-        var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
-            k = _ref12[0],
-            v = _ref12[1];
+      Object.entries(this._routes || {}).forEach(function (_ref13) {
+        var _ref14 = (0, _slicedToArray2.default)(_ref13, 2),
+            k = _ref14[0],
+            v = _ref14[1];
 
         return v.for && _this8.addNavigatorFunction(k, v.for);
       });
@@ -1063,10 +1086,10 @@ function () {
   }, {
     key: "getRouteByPageName",
     value: function getRouteByPageName(pageName) {
-      var route = Object.entries(this._routes).find(function (_ref13) {
-        var _ref14 = (0, _slicedToArray2.default)(_ref13, 2),
-            k = _ref14[0],
-            v = _ref14[1];
+      var route = Object.entries(this._routes).find(function (_ref15) {
+        var _ref16 = (0, _slicedToArray2.default)(_ref15, 2),
+            k = _ref16[0],
+            v = _ref16[1];
 
         return k.split(':')[0] === pageName;
       });
@@ -1237,10 +1260,10 @@ function () {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
         state: this.passState ? (0, _objectSpread2.default)({}, this._history.location.state, state) : state,
-        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this._history.location.query, query) : query).map(function (_ref15) {
-          var _ref16 = (0, _slicedToArray2.default)(_ref15, 2),
-              k = _ref16[0],
-              v = _ref16[1];
+        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this._history.location.query, query) : query).map(function (_ref17) {
+          var _ref18 = (0, _slicedToArray2.default)(_ref17, 2),
+              k = _ref18[0],
+              v = _ref18[1];
 
           return k + '=' + v;
         }).reduce(function (v1, v2) {

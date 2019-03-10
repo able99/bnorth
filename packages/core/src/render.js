@@ -95,14 +95,14 @@ class Render {
    * @param {number|string|component|element} - 提示的内容 
    * @param {object} - 参数，与实现者具体定义 
    */
-  error(message, {title}={}) { alert(this.app.utils.message2String(message)); }
+  error(message, {title}={}) { this.modal(this.app.utils.message2String(message)); }
 
   /**
    * 显示提示信息，未实现功能，由插件负责功能完善
    * @param {number|string|component|element} - 提示的内容 
    * @param {object} - 参数，与实现者具体定义 
    */
-  notice(content, options) { alert(this.app.utils.message2String(content)); }
+  notice(content, options) { this.modal(this.app.utils.message2String(content)); }
 
   /**
    * 显示阻塞式遮罩，未实现功能，由插件负责功能完善
@@ -117,6 +117,27 @@ class Render {
    * @param {object} - 参数，与实现者具体定义 
    */
   loader(show, options) {}
+
+  /**
+   * 显示模态对话框
+   * @param {boolean} - 开启或者关闭
+   * @param {object} - 参数，与实现者具体定义 
+   * @returns {string} id
+   */
+  modalShow(content, options) { alert(content) }
+
+  /**
+   * 显示模态对话框
+   * @param {string} - id
+   */
+  modalClose(_id) {}
+
+  /**
+   * 关闭模态对话框
+   * @param {string} - 开启或者关闭
+   * @param {object} - 参数，与实现者具体定义 
+   */
+  modalShow(content, options) { alert(content) }
 
   /**
    * 限制 render 宽度

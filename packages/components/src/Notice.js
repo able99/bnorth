@@ -44,8 +44,7 @@ export let notice = {
         message = app.utils.message2String(message);
         if(!message) return;
 
-        let _id = app.notice._id || app.router.genPopLayerId(options);
-        options._id = _id;
+        options._id = app.notice._id || app.router.genPopLayerId(options);
         props.in = true;
         props.onClose = ()=>app.notice.close();
         props.children = message;

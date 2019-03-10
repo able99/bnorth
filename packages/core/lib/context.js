@@ -130,6 +130,7 @@ function () {
         app: this.app
       }, this.app.render.component);
       this.app.Page = this.consumerHoc(this.app.Page);
+      this.app.PopLayer = this.consumerHoc(this.app.PopLayer);
     }
     /**
      * 清除指定 id 的数据块

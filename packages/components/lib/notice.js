@@ -85,10 +85,7 @@ var notice = {
 
         message = app.utils.message2String(message);
         if (!message) return;
-
-        var _id = app.notice._id || app.router.genPopLayerId(options);
-
-        options._id = _id;
+        options._id = app.notice._id || app.router.genPopLayerId(options);
         props.in = true;
 
         props.onClose = function () {

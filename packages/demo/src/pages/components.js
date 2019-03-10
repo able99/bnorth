@@ -47,10 +47,10 @@ let Component = aprops=>{
 
       <Groups.Group title="AspectRatio" desc="横纵比自适应组件">
         <Groups.Props data={{
-          'ratio|横纵比例': {type: 'range', min: 0, max: 10, fact: 0.1},
+          'ratio|横纵比例': {type: 'range'},
         }}/>
         <Groups.Show>
-          <AspectRatio>ratio={stateComponentProps.ratio}</AspectRatio>
+          {props=><AspectRatio {...props} ratio={props.ratio/10}>ratio={props.ratio/10}</AspectRatio>}
         </Groups.Show>
       </Groups.Group>
 
@@ -274,7 +274,7 @@ let Component = aprops=>{
       <Groups.Group title="Space" desc="生成空白组件">
         <Groups.Props data={{
           'stacked|是否为垂直':  false,
-          'count|空白个数': {type: 'range', min: 1, max: 5},
+          'count|空白个数': {type: 'range'},
         }}/>
         <Groups.Show>
           <Space count={1} />

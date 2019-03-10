@@ -17,6 +17,22 @@ export default props=>{
           <List.Item title="打开 prompt" onClick={()=>app.modal.show('modal', {type: 'prompt', onAction: index=>{index>0&&alert('ok')}})} />
           <List.Item title="打开 popup" onClick={()=>app.modal.show('modal', {type: 'popup', })} />
           <List.Item title="打开 带 title 带 close" onClick={()=>app.modal.show('modal', {title: 'title', close: true})} />
+          <List.Item title="带状态" onClick={()=>app.modal.show(props=>(
+            <div>
+              弹出层 - 状态 - {JSON.stringify(props.stateData)}
+              <div onClick={()=>props.states.stateData.update({tick:props.stateData.tick+1})}>点击更新 tick</div>
+              <div onClick={()=>props.app.modal.close(props._id)}>点击关闭</div>
+            </div>
+          ), {
+            title: 'title', close: true, 
+            onAction: (index, _id)=>{
+              alert(JSON.stringify(app.router.getPopLayerStates(_id)));
+            },
+            options:{
+              optionProps: ({stateData={}})=>({title: stateData.tick}), 
+              data: {initialization: {tick: 1}}
+            }
+          })} />
         </List>
 
         <List className="margin-bottom-2x">

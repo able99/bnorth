@@ -17,6 +17,8 @@ var _react = _interopRequireDefault(require("react"));
 
 require("@bnorth/rich.css/css/kf.spin.css");
 
+require("@bnorth/rich.css/css/kf.flyout.right.css");
+
 var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _BaseComponent6 = _interopRequireDefault(require("./BaseComponent"));
@@ -129,36 +131,21 @@ var _Line = function Line(aprops) {
       children = _BaseComponent2.children,
       props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isProgress", "progress", "timeout", "color", "colorReverse", "children"]);
 
-  var classNamePre = 'width-full height-1em';
+  var classNamePre = 'width-full height-1em position-relative';
+  var stylePre = {
+    background: colorReverse
+  };
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    component: "svg",
-    preserveAspectRatio: "none",
-    viewBox: "0 0 100 5",
-    classNamePre: classNamePre
-  }, props), _react.default.createElement("line", {
-    x1: "0",
-    y1: "2",
-    x2: "100",
-    y2: "2",
-    strokeWidth: "5",
-    stroke: colorReverse,
-    fill: "none"
-  }), _react.default.createElement("line", {
-    x1: "0",
-    y1: "2",
-    x2: "100",
-    y2: "2",
-    strokeWidth: "5",
-    stroke: color,
-    fill: "none",
-    style: isProgress ? (0, _animation.transiton)(timeout) : null,
-    strokeDasharray: isProgress ? "".concat(progress, ",100") : '10,100'
-  }, !isProgress ? _react.default.createElement("animate", {
-    attributeName: "stroke-dashoffset",
-    values: "0;-90;0",
-    dur: timeout,
-    repeatCount: "indefinite"
-  }) : null), children);
+    classNamePre: classNamePre,
+    stylePre: stylePre
+  }, props), _react.default.createElement(_Panel.default, {
+    style: (0, _objectSpread2.default)({
+      width: (isProgress ? progress : '10') + '%',
+      height: '100%',
+      left: '0',
+      background: color
+    }, (0, _animation.transiton)(timeout), !isProgress ? (0, _animation.animation)('fly-out-right') : null)
+  }), children);
 };
 
 _Line.defaultProps = {};

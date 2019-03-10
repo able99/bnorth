@@ -39,7 +39,7 @@ let PropSel = aprops=>{
       </label>
     )
   }else if(typeof option==='object'&&option.type==='range') {
-    let { min, max, fact=1 } = option;
+    let { min=1, max=10, fact=1 } = option;
     componnet = (
       <input 
         className="width-full" min={min} max={max} type='range' 

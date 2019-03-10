@@ -1,0 +1,15 @@
+@keyframes fly-out-right {
+  to {
+    left: 100%;
+  }
+}
+
+@-webkit-keyframes fly-out-right {
+  to {
+    left: 100%;
+  }
+}
+
+.animation-name-fly-out-right {
+  animation-name: fly-out-right;
+}

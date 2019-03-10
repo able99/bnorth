@@ -69,54 +69,38 @@ export let modal = {
 
   onPluginMount(app) {
     app.modal = {
-      _createContent: (_id, Content, state)=>(typeof Content==='function'?app.context.consumerHoc(()=>{
-        return (
-          <Content 
-            modalId={_id}
-            modalClose={()=>app.modal.close(_id)}
-            modalStateData={state&&state.data()} 
-            modalStateDataExt={state&&state.extData()} 
-            modalState={state} />
-        )
-      }):Content),
-
-      show: (Content, { onAction, options={}, state, ...props}={})=>{
-        if(!Content) return;
-
-        if(!options.hasOwnProperty('_idPage')) options._idPage = app.router.getPage()._id;
-        let _id = app.router.genPopLayerId(options);
-        state = state&&app.State.createState(app, state===true?undefined:state, 'state', _id);
-
-        options._id = _id;
-        options.isModal = true; 
-        options.onAdd = _id=>app.keyboard.on(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id));
-        options.onRemove = _id=>app.keyboard.off(_id, 'keydown', e=>e.keyCode===27&&app.modal.close(_id));
-        props.in = true;
-        props.onClose = index=>(!onAction || onAction( index, state, ()=>app.modal.close(_id), _id)!==false) && app.modal.close(_id);
-        props.children = app.modal._createContent(_id, Content, state);
-
-        return app.router.addPopLayer(<Modal /> , props, options);
-      },
-
-      update: (_id, Content, { options={}, state, ...props}={})=>{
-        if(!_id) return;
-        let {content, prevProps={}, options:prevOptions={}} = app.router.getPopLayerInfo(_id)||{};
-        if(!content) return;
-
-        props = {
-          ...prevProps,
-          ...props,
-          children: app.modal._createContent(_id, Content, state),
-        }
-        options = {
-          ...prevOptions,
-          ...options,
+      show: (Content, { onAction, options={}, ...props}={})=>{
+        let isNew = true;
+        if(options._id) {
+          let {content:prevContent, props:prevProps={}, options:prevOptions={}} = app.router.getPopLayerInfo(options._id)||{};
+          Content = Content||prevContent;
+          if(!Content) return;
+          if(prevContent) isNew = false;
+          props = { ...prevProps, ...props }
+          options = { ...prevOptions, ...options }
         }
 
-        return app.router.addPopLayer(content, props, options);
+        if(isNew) {
+          if(!options.hasOwnProperty('_idPage')) options._idPage = app.router.getPage()._id;
+          if(!options.hasOwnProperty('isModal')) options.isModal = true; 
+          options._id = app.router.genPopLayerId(options);
+          options.onAdd = _id=>app.keyboard.on(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
+          options.onRemove = _id=>app.keyboard.off(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
+          props.in = true;
+          props.onClose = index=>app.modal.close(options._id, index);
+        }
+        if(onAction) options.onAction = onAction;
+
+        return app.router.addPopLayer(typeof Content==='function'?props=><Modal {...props.props}><Content {...props}/></Modal>:<Modal>{Content}</Modal> , props, options);
       },
       
-      close: _id=>{
+      close: (_id, index)=>{
+        let {options:{onAction}={}} = app.router.getPopLayerInfo(_id)||{};
+        if(onAction&&onAction(index, _id)===false) return;
+        return app.modal.remove(_id);
+      },
+
+      remove: _id=>{
         if(!_id) return;
         let {content, props, options} = app.router.getPopLayerInfo(_id)||{};
         if(!content) return;
@@ -130,9 +114,16 @@ export let modal = {
         return app.router.addPopLayer(content, props, options);
       },
     };
+
+    app.modal._modalShow = app.render.modalShow;
+    app.modal._modalClose = app.render.modalClose;
+    app.render.modalShow = (content, options)=>app.modal.show(content, options);
+    app.render.modalClose = (_id)=>app.modal.close(_id);
   },
 
   onPluginUnmount(app) {
+    app.render.modalShow = app.modal._modalShow;
+    app.render.modalClose = app.modal._modalClose;
     delete app.modal;
   },
 }

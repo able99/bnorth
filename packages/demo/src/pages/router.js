@@ -66,6 +66,22 @@ export default props=>{
           <List.Item title="懒加载" onClick={()=>app.router.push(['dynamic', 'dp1'])} />
           <List.Item title="阻塞" onClick={()=>app.router.push(['dynamic', 'dp1'])} />
         </List>
+
+        <List className="margin-bottom-2x">
+          <List.Item title="弹出层操作" className="text-weight-bold text-size-lg" />
+          <List.Item title="添加弹出层 - 内容" onClick={()=>app.router.addPopLayer('弹出层 - 点击关闭')} />
+          <List.Item title="添加弹出层 - 组件" onClick={()=>app.router.addPopLayer(props=><div style={{zIndex: 9, position: 'absolute'}} onClick={()=>props.app.router.removePopLayer(props._id)}>弹出层 - 点击关闭</div>)} />
+          <List.Item title="添加弹出层 - 状态" onClick={()=>app.router.addPopLayer(props=>{
+            console.log(1111111, props); 
+            return (
+              <div style={{zIndex: 9, position: 'absolute', background: 'lightgray', padding: 8}}>
+                弹出层 - 状态 - {JSON.stringify(props.stateData)}
+                <div onClick={()=>props.states.stateData.update({tick:props.stateData.tick+1})}>点击更新 tick</div>
+                <div onClick={()=>props.app.router.removePopLayer(props._id)}>点击关闭</div>
+              </div>
+            )
+          }, undefined, {data: {initialization: {tick: 1}}})} />
+        </List>
       </div>
     </div>
   )

@@ -87,18 +87,17 @@ var mask = {
      * @returns {string} 弹出层 id
      */
 
-    app.mask.show = function (content) {
+    app.mask.show = function (Content) {
       var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
           _ref$options = _ref.options,
           options = _ref$options === void 0 ? {} : _ref$options,
           props = (0, _objectWithoutProperties2.default)(_ref, ["options"]);
 
-      var _id = app.mask._id || app.router.genPopLayerId(options);
-
-      options._id = _id;
-      options.isModal = true;
-      props.children = content;
-      return app.mask._id = app.router.addPopLayer(_react.default.createElement(_Mask, null), props, options);
+      options._id = app.mask._id || app.router.genPopLayerId(options);
+      if (!options.hasOwnProperty('isModal')) options.isModal = true;
+      return app.mask._id = app.router.addPopLayer(typeof Content === 'function' ? function (props) {
+        return _react.default.createElement(_Mask, props.props, _react.default.createElement(Content, props));
+      } : _react.default.createElement(_Mask, null, Content), props, options);
     };
     /**
      * 关闭蒙层

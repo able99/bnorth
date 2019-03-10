@@ -43,6 +43,8 @@ Search.controller = (app,page)=>({
 
 
 
+
+
 let Component = aprops=>{
   let { app, page, stateData, stateList, stateListExt } = aprops;
 
@@ -56,7 +58,7 @@ let Component = aprops=>{
       <Panel className="border-set-bottom- bg-color-white flex-display-block flex-align-center">
         <Popover 
           componentTransform={Button} b-style="plain" className="flex-sub-flex-extend" placement="bottom-auto-full"
-          overlay={<List>{types.map(v=><List.Item onClick={()=>page.stateList.fetch({type: v})} title={v} key={v} />)}</List>} >
+          overlay={<List>{['分类A','分类B','分类C'].map(v=><List.Item onClick={()=>page.stateList.fetch({type: v})} title={v} key={v} />)}</List>} >
           {stateData.type||'全部分类'}
         </Popover>
         <Button b-style="plain" className="flex-sub-flex-extend" onClick={()=>{
@@ -89,8 +91,6 @@ let Component = aprops=>{
   );
 };
 
-let listData = Array.from({length: 168}, (v,i)=>String(i).padStart(3,'0'));
-let types = ['分类A','分类B','分类C'];
 
 Component.controller = (app,page)=>({
   stateData: {initialization: { pageStart: 0, pageSize: 20, order: '', type: '', keyword: page.props.route.params.keyword||'' }},
@@ -105,19 +105,8 @@ Component.controller = (app,page)=>({
       },
     },
     initialization: [], fetchOnStart: true, trackState: true, 
+    url: '/test/lists',
     data: ()=>page.stateData.data(),
-    request: ({data, append}, request)=>{
-      data = data();
-      return new Promise((resolve, reject)=>{
-        let result = listData;
-        if(data.order==='desc') result = Array.from(listData).reverse();
-        result = result
-          .filter(v=>!data.keyword?true:v.includes(data.keyword))
-          .slice(data.pageStart, data.pageStart+data.pageSize)
-          .map(v=>({type: data.type, data: v, num: Number(v)}))
-        setTimeout(()=>resolve({ data: result}), append?1000:1000);
-      });
-    },
   },
 
   onPageSearchKeyword: keyword=>{

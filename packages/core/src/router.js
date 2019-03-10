@@ -1,7 +1,7 @@
 /**
  * @module
  */
-import React, { cloneElement } from 'react';
+import React from 'react';
 import createHistory from 'history/createHashHistory';
 import { join } from 'path';
 import PageLoading from './router.loading.js'
@@ -173,9 +173,9 @@ class RouterComponent extends React.Component {
     }
   }
 
-  _renderPopLayer({content:Component, props, options:{_id, isContentComponent}}) {
-    let aprops = { ...isContentComponent?{}:Component.props, ...props, key: _id };
-    return isContentComponent?<Component {...aprops} />:(typeof Component==='object'&&Component.type?cloneElement(Component, aprops):Component);
+  _renderPopLayer(props) {
+    let { app } = this.props;
+    return <app.PopLayer key={props.options._id} app={app} {...props} />;
   }
 
   render() {
@@ -517,6 +517,8 @@ class Router {
     let popLayer = this.getPopLayerInfo(options._id);
 
     if(!popLayer) {
+      options.states = options.states||{};
+      if(options.data) options.states.stateData = this.app.State.createState(this.app, options.data===true?undefined:options.data, 'stateData', options._id);
       this._popLayerInfos.push({ content, props, options });
       options.onAdd && options.onAdd(options._id);
     }else{
@@ -537,8 +539,10 @@ class Router {
     let index = this._popLayerInfos.findIndex(v=>v.options._id===_id);
     if(index<0) return;
 
+    this._popLayerInfos[index].options.data && this._popLayerInfos[index].options.states.stateData.destructor();
     this._popLayerInfos[index].options.onRemove && this._popLayerInfos[index].options.onRemove();
     this._popLayerInfos.splice(index, 1);
+
     this._updateRouterInfo(this._history.location);
   }
 
@@ -557,6 +561,19 @@ class Router {
    */
   getPopLayerInfos() {
     return this._popLayerInfos;
+  }
+
+  /**
+   * 获取弹出层的状态数据
+   * @param {string} - 弹出层 id
+   * @returns {object}
+   */
+  getPopLayerStates(_id) {
+    let { options:{states}={} } = this.getPopLayerInfo(_id)||{};
+    if(!states) return {};
+    let stateProps = {};
+    Object.entries(states).forEach(([k,v])=>stateProps[k]=v.data());
+    return stateProps;
   }
   
 

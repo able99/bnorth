@@ -3,7 +3,7 @@ import genCss from '@bnorth/rich.css';
 import Icon from '@bnorth/components/lib/Icon';
 import {OverlayLoader} from '@bnorth/components/lib/Loader';
 import icoSvg from '../res/default.ico.svg';
-import './index.css';
+// import './index.css';
 
 let iconMap = {
   'left': 'keyboard_arrow_left',
