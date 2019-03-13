@@ -48,12 +48,15 @@ var _Mask = function Mask(aprops) {
 };
 
 _Mask.defaultProps = {};
-/**
- * 设置 蒙层中间的 loader 组件的参数
- * @attribute module:mask.Mask.loaderProps
- * @type {object}
- */
+_Mask.defaultProps['b-precast'] = {
+  'b-theme': 'white'
+  /**
+   * 设置 蒙层中间的 loader 组件的参数
+   * @attribute module:mask.Mask.loaderProps
+   * @type {object}
+   */
 
+};
 Object.defineProperty(_Mask, "Mask", {
   get: function get() {
     return _Mask;

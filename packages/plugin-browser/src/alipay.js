@@ -103,72 +103,72 @@ class ALipay {
   }
 }
 
-class ALipay {
-  constructor(app, _id, options) {
-    /**
-     * App 的实例
-     * @type {module:app.App}
-     */
-    this.app = app;
-    /**
-     * 所属插件的实例的 id
-     * @type {string}
-     */
-    this._id = _id;
-    /**
-     * 所属插件的实例的 options
-     * @type {module:index~PluginOptions}
-     */
-    this.options = options;
+// class ALipay {
+//   constructor(app, _id, options) {
+//     /**
+//      * App 的实例
+//      * @type {module:app.App}
+//      */
+//     this.app = app;
+//     /**
+//      * 所属插件的实例的 id
+//      * @type {string}
+//      */
+//     this._id = _id;
+//     /**
+//      * 所属插件的实例的 options
+//      * @type {module:index~PluginOptions}
+//      */
+//     this.options = options;
 
-    this.isReady = false;
-    this.bridge = null;
-  };
+//     this.isReady = false;
+//     this.bridge = null;
+//   };
 
-  ready() {
-    return new Promise((resolve, reject)=>{
-      if (window.AlipayJSBridge) {
-        this.bridge = window.AlipayJSBridge
-        resolve(this.bridge);
-      } else {
-        document.addEventListener('AlipayJSBridgeReady', ()=>{
-          this.bridge = window.AlipayJSBridge
-          resolve(this.bridge);
-        }, false);
-      }
-    });
-  }
+//   ready() {
+//     return new Promise((resolve, reject)=>{
+//       if (window.AlipayJSBridge) {
+//         this.bridge = window.AlipayJSBridge
+//         resolve(this.bridge);
+//       } else {
+//         document.addEventListener('AlipayJSBridgeReady', ()=>{
+//           this.bridge = window.AlipayJSBridge
+//           resolve(this.bridge);
+//         }, false);
+//       }
+//     });
+//   }
 
-  invoke(name, options) {
-    return this.ready(bridge=>new Promise((resolve, reject)=>{
-      bridge.call(name, options, result=>{
-        resolve(result);
-      });
-    }));
-  }
+//   invoke(name, options) {
+//     return this.ready(bridge=>new Promise((resolve, reject)=>{
+//       bridge.call(name, options, result=>{
+//         resolve(result);
+//       });
+//     }));
+//   }
 
-  chooseImage(options) {
-    // count: options.count, 
-    // sizeType: options.sizeType, 
-    // sourceType: options.sourceType, 
-    return this.invoke('chooseImage', options);
-  }
+//   chooseImage(options) {
+//     // count: options.count, 
+//     // sizeType: options.sizeType, 
+//     // sourceType: options.sourceType, 
+//     return this.invoke('chooseImage', options);
+//   }
 
-  pay(options) {
-    return this.ready(bridge=>new Promise((resolve, reject)=>{
-      bridge.chooseWXPay({
-        timestamp: options.timestamp, 
-        nonceStr: options.nonceStr, 
-        package: options.package, 
-        signType: options.signType, 
-        paySign: options.paySign, 
-        success: result=>resolve(result),
-        fail: result=>reject(result),
-        cancel: result=>reject({cancel: true}),
-      });
-    }))
-  }
-}
+//   pay(options) {
+//     return this.ready(bridge=>new Promise((resolve, reject)=>{
+//       bridge.chooseWXPay({
+//         timestamp: options.timestamp, 
+//         nonceStr: options.nonceStr, 
+//         package: options.package, 
+//         signType: options.signType, 
+//         paySign: options.paySign, 
+//         success: result=>resolve(result),
+//         fail: result=>reject(result),
+//         cancel: result=>reject({cancel: true}),
+//       });
+//     }))
+//   }
+// }
 
 
 /**

@@ -58,12 +58,17 @@ function (_React$Component) {
     value: function componentDidMount() {
       var _this = this;
 
-      _BaseComponent2.domIsMouse && (0, _BaseComponent2.domFindNode)(this).addEventListener("click", function (event) {
-        if (_this.mark) {
-          event.stopPropagation();
+      if (_BaseComponent2.domIsMouse) {
+        (0, _BaseComponent2.domFindNode)(this).addEventListener("mousedown", function (event) {
           _this.mark = false;
-        }
-      }, true);
+        }, true);
+        (0, _BaseComponent2.domFindNode)(this).addEventListener("click", function (event) {
+          if (_this.mark) {
+            event.stopPropagation();
+            _this.mark = false;
+          }
+        }, true);
+      }
     }
   }, {
     key: "render",
@@ -117,7 +122,7 @@ function (_React$Component) {
               return offset >= triggerOffset && onLoad && onLoad();
             });
 
-            _this2.mark = true;
+            if (_BaseComponent2.domIsMouse) _this2.mark = true;
           }
         },
         onPanCancel: function onPanCancel() {
@@ -128,7 +133,7 @@ function (_React$Component) {
               return offset >= triggerOffset && onLoad && onLoad();
             });
 
-            _this2.mark = true;
+            if (_BaseComponent2.domIsMouse) _this2.mark = true;
           }
         },
         classNamePre: classNamePre

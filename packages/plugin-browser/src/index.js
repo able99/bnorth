@@ -129,10 +129,15 @@ class Browser {
   }
 
   set icon(url) {
-    let ico = document.createElement('link');
-    ico.setAttribute("rel", "shortcut icon")
-    ico.setAttribute("href", url)
-    document.getElementsByTagName("head")[0].appendChild(ico);
+    let el = document.querySelector('link[rel="shortcut icon"]');
+    if(el) {
+      el.setAttribute('href', url);
+    }else {
+      let ico = document.createElement('link');
+      ico.setAttribute("rel", "shortcut icon");
+      ico.setAttribute("href", url);
+      document.getElementsByTagName("head")[0].appendChild(ico);
+    }
   }
 
   /**

@@ -33,9 +33,9 @@ require("regenerator-runtime/runtime");
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-require("core-js/modules/es6.regexp.split");
-
 require("core-js/modules/es6.regexp.search");
+
+require("core-js/modules/es6.regexp.split");
 
 require("core-js/modules/es6.string.starts-with");
 
@@ -504,6 +504,11 @@ function () {
 
       this.app.log.debug('router location', location);
 
+      if (location.ignore) {
+        location.ignore = false;
+        return;
+      }
+
       this._clearError();
 
       Object.keys(this._states).filter(function (v) {
@@ -513,8 +518,9 @@ function () {
       });
       if (location.state) this._states[location.pathname] = location.state;
       location.query = {};
-      location.search = location.search.slice(1).trim();
-      location.search && location.search.split('&').forEach(function (v) {
+      location.search.slice(1).split('&').filter(function (v) {
+        return v;
+      }).forEach(function (v) {
         var vs = v.split('=');
         location.query[vs[0]] = decodeURIComponent(vs[1]);
       });
@@ -553,7 +559,7 @@ function () {
       _regenerator.default.mark(function _callee(location) {
         var _this6 = this;
 
-        var pathName, _idPrev, params, pageInfos, focusId, activeId, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, popLayerInfos, focusPopLayerInfo, activePageInfo, focusPopLayerInfoOfPage, _i, pageInfo, _block;
+        var pathName, _idPrev, params, pageInfos, focusId, activeId, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, popLayerInfos, focusPopLayerInfo, activePageInfo, focusPopLayerInfoOfPage, _i, pageInfo, _block;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -574,10 +580,11 @@ function () {
                 activeId = undefined;
                 /* route */
 
+                level = 0;
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context.prev = 10;
+                _context.prev = 11;
 
                 _loop = function _loop() {
                   var pagePathName = _step.value;
@@ -593,6 +600,7 @@ function () {
                   var pageInfo = {
                     _id: _id,
                     _idPrev: _idPrev,
+                    level: level,
                     pageName: pageName,
                     pathName: pathName,
                     pagePathName: pagePathName,
@@ -624,13 +632,14 @@ function () {
                     pageInfo.params[v] = pageInfo.pageParams[i] ? decodeURIComponent(pageInfo.pageParams[i]) : null;
                     if (_this6.passParams) params[v] = pageInfo.params[v];
                   });
+                  var subNo = 0;
                   var _iteratorNormalCompletion2 = true;
                   var _didIteratorError2 = false;
                   var _iteratorError2 = undefined;
 
                   try {
                     for (var _iterator2 = (Array.isArray(routeDefine.subPages) ? routeDefine.subPages.map(function (v, i) {
-                      return [v + String(i), v];
+                      return [v, v];
                     }) : Object.entries(routeDefine.subPages || {}))[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                       var _step2$value = (0, _slicedToArray2.default)(_step2.value, 2),
                           k = _step2$value[0],
@@ -639,6 +648,7 @@ function () {
                       var subPageInfo = (0, _objectSpread2.default)({}, pageInfo);
                       subPageInfo._idParent = subPageInfo._id;
                       subPageInfo._idSubPage = k;
+                      subPageInfo.subNo = subNo;
                       subPageInfo._id = subPageInfo._id + SubPageSpe + subPageInfo._idSubPage;
                       subPageInfo.pageName = v;
                       subPageInfo.isSubPage = true;
@@ -656,6 +666,7 @@ function () {
                       subPageInfo.routeName = routeNameSubPage;
                       subPageInfo.routeDefine = routeDefineSubPage;
                       pageInfo.subPageInfos[subPageInfo._idSubPage] = subPageInfo;
+                      subNo++;
                     }
                   } catch (err) {
                     _didIteratorError2 = true;
@@ -673,66 +684,67 @@ function () {
                   }
 
                   _idPrev = _id;
+                  level++;
                   pageInfos.push(pageInfo);
                 };
 
                 _iterator = location.pathnames[Symbol.iterator]();
 
-              case 13:
+              case 14:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 20;
+                  _context.next = 21;
                   break;
                 }
 
                 _ret = _loop();
 
                 if (!((0, _typeof2.default)(_ret) === "object")) {
-                  _context.next = 17;
+                  _context.next = 18;
                   break;
                 }
 
                 return _context.abrupt("return", _ret.v);
 
-              case 17:
+              case 18:
                 _iteratorNormalCompletion = true;
-                _context.next = 13;
+                _context.next = 14;
                 break;
 
-              case 20:
-                _context.next = 26;
+              case 21:
+                _context.next = 27;
                 break;
 
-              case 22:
-                _context.prev = 22;
-                _context.t0 = _context["catch"](10);
+              case 23:
+                _context.prev = 23;
+                _context.t0 = _context["catch"](11);
                 _didIteratorError = true;
                 _iteratorError = _context.t0;
 
-              case 26:
-                _context.prev = 26;
+              case 27:
                 _context.prev = 27;
+                _context.prev = 28;
 
                 if (!_iteratorNormalCompletion && _iterator.return != null) {
                   _iterator.return();
                 }
 
-              case 29:
-                _context.prev = 29;
+              case 30:
+                _context.prev = 30;
 
                 if (!_didIteratorError) {
-                  _context.next = 32;
+                  _context.next = 33;
                   break;
                 }
 
                 throw _iteratorError;
 
-              case 32:
-                return _context.finish(29);
-
               case 33:
-                return _context.finish(26);
+                return _context.finish(30);
 
               case 34:
+                return _context.finish(27);
+
+              case 35:
                 /* active & focus */
                 popLayerInfos = this._getPopLayerNoPageId();
                 focusPopLayerInfo = Array.from(popLayerInfos).reverse().find(function (v) {
@@ -758,32 +770,32 @@ function () {
 
                 _i = 0;
 
-              case 41:
+              case 42:
                 if (!(_i < pageInfos.length)) {
-                  _context.next = 51;
+                  _context.next = 52;
                   break;
                 }
 
                 pageInfo = pageInfos[_i];
-                _context.next = 45;
+                _context.next = 46;
                 return this.app.event.emit(this.app._id, 'onRouteMatch', pageInfo, location);
 
-              case 45:
+              case 46:
                 _block = _context.sent;
 
                 if (!_block) {
-                  _context.next = 48;
+                  _context.next = 49;
                   break;
                 }
 
                 return _context.abrupt("return", this.block(_block));
 
-              case 48:
+              case 49:
                 _i++;
-                _context.next = 41;
+                _context.next = 42;
                 break;
 
-              case 51:
+              case 52:
                 /* update */
                 this._focusId = focusId;
                 this._activeId = activeId;
@@ -791,12 +803,12 @@ function () {
 
                 this._updateRender();
 
-              case 55:
+              case 56:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[10, 22, 26, 34], [27,, 29, 33]]);
+        }, _callee, this, [[11, 23, 27, 35], [28,, 30, 34]]);
       }));
 
       return function _updateRouterInfo(_x) {
@@ -863,21 +875,11 @@ function () {
       if (typeof _id === 'string') {
         return this._pages[_id];
       } else if (typeof _id === 'number') {
-        return this._pages[Object.keys(this._pages)[_id]];
+        var pageinfo = this._pageInfos[_id];
+        return this._pages[pageinfo && pageinfo._id];
       } else if (_id === undefined) {
-        return Object.entries(this._pages).filter(function (_ref6) {
-          var _ref7 = (0, _slicedToArray2.default)(_ref6, 2),
-              k = _ref7[0],
-              v = _ref7[1];
-
-          return v.props && v.props.route && !v.props.route.embed;
-        }).slice(-1).map(function (_ref8) {
-          var _ref9 = (0, _slicedToArray2.default)(_ref8, 2),
-              k = _ref9[0],
-              v = _ref9[1];
-
-          return v;
-        })[0];
+        var _pageinfo = this._pageInfos[this._pageInfos.length - 1];
+        return this._pages[_pageinfo && _pageinfo._id];
       }
     }
     /**
@@ -992,17 +994,17 @@ function () {
   }, {
     key: "getPopLayerStates",
     value: function getPopLayerStates(_id) {
-      var _ref10 = this.getPopLayerInfo(_id) || {},
-          _ref10$options = _ref10.options;
+      var _ref6 = this.getPopLayerInfo(_id) || {},
+          _ref6$options = _ref6.options;
 
-      _ref10$options = _ref10$options === void 0 ? {} : _ref10$options;
-      var states = _ref10$options.states;
+      _ref6$options = _ref6$options === void 0 ? {} : _ref6$options;
+      var states = _ref6$options.states;
       if (!states) return {};
       var stateProps = {};
-      Object.entries(states).forEach(function (_ref11) {
-        var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
-            k = _ref12[0],
-            v = _ref12[1];
+      Object.entries(states).forEach(function (_ref7) {
+        var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
+            k = _ref8[0],
+            v = _ref8[1];
 
         return stateProps[k] = v.data();
       });
@@ -1041,10 +1043,10 @@ function () {
       var _this8 = this;
 
       this._routes = routes;
-      Object.entries(this._routes || {}).forEach(function (_ref13) {
-        var _ref14 = (0, _slicedToArray2.default)(_ref13, 2),
-            k = _ref14[0],
-            v = _ref14[1];
+      Object.entries(this._routes || {}).forEach(function (_ref9) {
+        var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
+            k = _ref10[0],
+            v = _ref10[1];
 
         return v.for && _this8.addNavigatorFunction(k, v.for);
       });
@@ -1086,10 +1088,10 @@ function () {
   }, {
     key: "getRouteByPageName",
     value: function getRouteByPageName(pageName) {
-      var route = Object.entries(this._routes).find(function (_ref15) {
-        var _ref16 = (0, _slicedToArray2.default)(_ref15, 2),
-            k = _ref16[0],
-            v = _ref16[1];
+      var route = Object.entries(this._routes).find(function (_ref11) {
+        var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
+            k = _ref12[0],
+            v = _ref12[1];
 
         return k.split(':')[0] === pageName;
       });
@@ -1221,6 +1223,7 @@ function () {
       var query = {};
       var state;
       var hash;
+      var ignore;
 
       var pathnames = this._pageInfos.map(function (v) {
         return v.pagePathName;
@@ -1251,6 +1254,7 @@ function () {
           if (arg.query) query = arg.query;
           if (arg.state) state = arg.state;
           if (arg.hash) hash = arg.hash;
+          if (arg.ignore) ignore = true;
         } else {
           addPath(String(arg));
         }
@@ -1260,16 +1264,17 @@ function () {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
         state: this.passState ? (0, _objectSpread2.default)({}, this._history.location.state, state) : state,
-        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this._history.location.query, query) : query).map(function (_ref17) {
-          var _ref18 = (0, _slicedToArray2.default)(_ref17, 2),
-              k = _ref18[0],
-              v = _ref18[1];
+        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this._history.location.query, query) : query).map(function (_ref13) {
+          var _ref14 = (0, _slicedToArray2.default)(_ref13, 2),
+              k = _ref14[0],
+              v = _ref14[1];
 
           return k + '=' + v;
         }).reduce(function (v1, v2) {
           return v1 + (v1 ? '&' : '') + v2;
         }, ''),
-        hash: hash
+        hash: hash,
+        ignore: ignore
       };
     }
     /**

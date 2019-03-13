@@ -383,9 +383,10 @@ Object.defineProperty(Panel,"ContainerItem",{ get:function(){ return PanelItem }
  */
 let InnerScroll = class extends React.Component {
   componentDidMount() {
-    domIsMouse && domFindNode(this).addEventListener("click", event=>{
-      if(this.mark) { event.stopPropagation(); this.mark = false }
-    },true)
+    if(domIsMouse) {
+      domFindNode(this).addEventListener("mousedown", event=>{ this.mark = false }, true);
+      domFindNode(this).addEventListener("click", event=>{ if(this.mark) { event.stopPropagation(); this.mark = false } }, true);
+    } 
   }
 
   handlePanStart(event, element) {
@@ -406,7 +407,8 @@ let InnerScroll = class extends React.Component {
         if(selectedIndex!==aindex) onSelectedChange(aindex, children[aindex].props);
       }
     });
-    this.mark = true 
+    
+    if(domIsMouse) this.mark = true;
   }
 
   render() {

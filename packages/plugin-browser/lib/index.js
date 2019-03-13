@@ -388,10 +388,16 @@ function () {
       return el && el.getAttribute('href');
     },
     set: function set(url) {
-      var ico = document.createElement('link');
-      ico.setAttribute("rel", "shortcut icon");
-      ico.setAttribute("href", url);
-      document.getElementsByTagName("head")[0].appendChild(ico);
+      var el = document.querySelector('link[rel="shortcut icon"]');
+
+      if (el) {
+        el.setAttribute('href', url);
+      } else {
+        var ico = document.createElement('link');
+        ico.setAttribute("rel", "shortcut icon");
+        ico.setAttribute("href", url);
+        document.getElementsByTagName("head")[0].appendChild(ico);
+      }
     }
     /**
      * 读取浏览器当前 url

@@ -49,9 +49,15 @@ function (_React$Component) {
   }
 
   (0, _createClass2.default)(ContextComponent, [{
+    key: "init",
+    value: function init(data, cb) {
+      return this.setState(data, cb);
+    }
+  }, {
     key: "update",
     value: function update(data, cb) {
-      return this.setState((0, _objectSpread2.default)({}, this.state, data), cb);
+      this.state = (0, _objectSpread2.default)({}, this.state, data);
+      return this.setState(this.state, cb);
     }
   }, {
     key: "data",
@@ -144,7 +150,7 @@ function () {
     value: function clear(_id, cb) {
       var state = this.provider.data();
       delete state[_id];
-      return this.provider.update(state, cb);
+      return this.provider.init(state, cb);
     }
     /**
      * 更新指定 id 的数据块，使用 `app.utils.objectUpdate` 更新策略

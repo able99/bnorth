@@ -563,12 +563,17 @@ function (_React$Component2) {
     value: function componentDidMount() {
       var _this = this;
 
-      _BaseComponent5.domIsMouse && (0, _BaseComponent5.domFindNode)(this).addEventListener("click", function (event) {
-        if (_this.mark) {
-          event.stopPropagation();
+      if (_BaseComponent5.domIsMouse) {
+        (0, _BaseComponent5.domFindNode)(this).addEventListener("mousedown", function (event) {
           _this.mark = false;
-        }
-      }, true);
+        }, true);
+        (0, _BaseComponent5.domFindNode)(this).addEventListener("click", function (event) {
+          if (_this.mark) {
+            event.stopPropagation();
+            _this.mark = false;
+          }
+        }, true);
+      }
     }
   }, {
     key: "handlePanStart",
@@ -603,7 +608,7 @@ function (_React$Component2) {
           if (selectedIndex !== aindex) onSelectedChange(aindex, children[aindex].props);
         }
       });
-      this.mark = true;
+      if (_BaseComponent5.domIsMouse) this.mark = true;
     }
   }, {
     key: "render",

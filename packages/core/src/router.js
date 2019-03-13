@@ -323,14 +323,14 @@ class Router {
 
   _handleLocationChange(location, action) {
     this.app.log.debug('router location', location);
+    if(location.ignore) {location.ignore = false; return}
     this._clearError();
 
     Object.keys(this._states).filter(v=>!location.pathname.startsWith(v)).forEach(v=>{delete this._states[v]});
     if(location.state) this._states[location.pathname] = location.state;
 
     location.query = {};
-    location.search = location.search.slice(1).trim();
-    location.search && location.search.split('&').forEach(v=>{
+    location.search.slice(1).split('&').filter(v=>v).forEach(v=>{
       let vs = v.split('=');
       location.query[vs[0]] = decodeURIComponent(vs[1]);
     })
@@ -371,12 +371,13 @@ class Router {
     let activeId = undefined;
 
     /* route */
+    let level = 0;
     for (let pagePathName of location.pathnames) {
       pathName = join(pathName, decodeURIComponent(pagePathName));
       let [pageName, ...pageParams] = pagePathName.split(ParamSpe);
       let _id = PageSign+pathName;
       let pageInfo = { 
-        _id, _idPrev, pageName, pathName, pagePathName, isSubPage: false,
+        _id, _idPrev, level, pageName, pathName, pagePathName, isSubPage: false,
         query: location.query, state: this._states[pathName], pageParams, hash: location.hash?location.hash.slice(1):'',
         subPageInfos: {}, popLayerInfos: this._getPopLayerByPageId(_id),
       };
@@ -396,10 +397,12 @@ class Router {
         if(this.passParams) params[v] = pageInfo.params[v];
       })
 
-      for (let [k,v] of Array.isArray(routeDefine.subPages)?routeDefine.subPages.map((v,i)=>[v+String(i),v]):Object.entries(routeDefine.subPages||{})) {
+      let subNo = 0;
+      for (let [k,v] of Array.isArray(routeDefine.subPages)?routeDefine.subPages.map((v,i)=>[v,v]):Object.entries(routeDefine.subPages||{})) {
         let subPageInfo = {...pageInfo};
         subPageInfo._idParent = subPageInfo._id;
         subPageInfo._idSubPage = k;
+        subPageInfo.subNo = subNo;
         subPageInfo._id = subPageInfo._id + SubPageSpe + subPageInfo._idSubPage;
         subPageInfo.pageName = v;
         subPageInfo.isSubPage = true;
@@ -411,9 +414,11 @@ class Router {
         subPageInfo.routeName = routeNameSubPage;
         subPageInfo.routeDefine = routeDefineSubPage;
         pageInfo.subPageInfos[subPageInfo._idSubPage] = subPageInfo;
+        subNo++;
       }
       
       _idPrev = _id;
+      level++;
       pageInfos.push(pageInfo);
     }
 
@@ -481,9 +486,11 @@ class Router {
     if(typeof _id === 'string') {
       return this._pages[_id];
     } else if(typeof _id === 'number') {
-      return this._pages[Object.keys(this._pages)[_id]];
+      let pageinfo = this._pageInfos[_id];
+      return this._pages[pageinfo&&pageinfo._id];
     } else if(_id===undefined){
-      return Object.entries(this._pages).filter(([k,v])=>v.props&&v.props.route&&!v.props.route.embed).slice(-1).map(([k,v])=>v)[0];
+      let pageinfo = this._pageInfos[this._pageInfos.length-1];
+      return this._pages[pageinfo&&pageinfo._id];
     }
   }
 
@@ -723,6 +730,7 @@ class Router {
     let query = {};
     let state;
     let hash;
+    let ignore;
     let pathnames = this._pageInfos.map(v=>v.pagePathName);
 
     let addPath = path=>path.split('/').forEach(v=>{
@@ -742,6 +750,7 @@ class Router {
         if(arg.query) query = arg.query;
         if(arg.state) state = arg.state;
         if(arg.hash) hash = arg.hash;
+        if(arg.ignore) ignore = true;
       }else {
         addPath(String(arg));
       }
@@ -752,6 +761,7 @@ class Router {
       state:this.passState?{...this._history.location.state, ...state}:state,
       search: '?'+Object.entries(this.passQuery?{...this._history.location.query, ...query}:query).map(([k,v])=>k+'='+v).reduce((v1,v2)=>v1+(v1?'&':'')+v2,''),
       hash,
+      ignore,
     };
   }
 

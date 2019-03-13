@@ -13,31 +13,31 @@ export default props=>{
         <List>
           <List.Item 
             title="组件列表" 
-            desc="组件展示"
+            desc="展示页面布局的常用组件"
             onClick={()=>app.router.push('components')} />
           <List.Item 
             title="组件插件列表" 
-            desc="弹出与悬浮 ui 插件展示，如对话框等"
+            desc="展示以插件形势存在的 ui 组件，这些组件插件提供了对话框，蒙层等弹出和悬浮功能"
             onClick={()=>app.router.push('cplugins')} />
           <List.Item 
             title="路由管理展示" 
-            desc="路由管理演示"
+            desc="展示应用组织页面和页面之间关系的能力"
             onClick={()=>app.router.push('router')} />
           <List.Item 
             title="数据管理展示" 
-            desc="数据管理演示"
+            desc="展示应用对网络数据获取与管理以及本地状态数据的管理"
             onClick={()=>app.router.push('data')} />
           <List.Item 
             title="功能插件列表" 
-            desc="功能插件展示"
+            desc="功能性插件展示，扩展了应用处理的能力，比如加密，操作浏览器，本地存储等等"
             onClick={()=>app.router.push('plugins')} />
           <List.Item 
-            title="tabbar demo" 
-            desc="基于 tabbar 的页面展示"
+            title="分页 demo" 
+            desc="基于分页组件的分页布局展示"
             onClick={()=>app.router.push('tabs')} />
           <List.Item 
-            title="list demo" 
-            desc="基于 list 的页面展示"
+            title="列表 demo" 
+            desc="常见列表型页面的布局和逻辑展示"
             onClick={()=>app.router.push('lists')} />
         </List>
       </div>

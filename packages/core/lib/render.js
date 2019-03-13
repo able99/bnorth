@@ -138,7 +138,7 @@ function () {
       var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
           title = _ref3.title;
 
-      alert(this.app.utils.message2String(message));
+      this.modal(this.app.utils.message2String(message));
     }
     /**
      * 显示提示信息，未实现功能，由插件负责功能完善
@@ -149,7 +149,7 @@ function () {
   }, {
     key: "notice",
     value: function notice(content, options) {
-      alert(this.app.utils.message2String(content));
+      this.modal(this.app.utils.message2String(content));
     }
     /**
      * 显示阻塞式遮罩，未实现功能，由插件负责功能完善
@@ -169,6 +169,26 @@ function () {
   }, {
     key: "loader",
     value: function loader(show, options) {}
+    /**
+     * 显示模态对话框
+     * @param {boolean} - 开启或者关闭
+     * @param {object} - 参数，与实现者具体定义 
+     * @returns {string} id
+     */
+
+  }, {
+    key: "modalShow",
+    value: function modalShow(content, options) {
+      alert(content);
+    }
+    /**
+     * 关闭模态对话框
+     * @param {string} - id
+     */
+
+  }, {
+    key: "modalClose",
+    value: function modalClose(_id) {}
     /**
      * 限制 render 宽度
      * @param {string|number} 限制的宽度，为空或者0，取消限制 

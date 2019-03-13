@@ -67,11 +67,12 @@ function (_React$Component) {
       var _aprops$selectedIndex = aprops.selectedIndex,
           selectedIndex = _aprops$selectedIndex === void 0 ? this.state.selectedIndex : _aprops$selectedIndex,
           selectedIndexDefault = aprops.selectedIndexDefault,
+          onWillChange = aprops.onWillChange,
           onAction = aprops.onAction,
           navProps = aprops.navProps,
           containerProps = aprops.containerProps,
           children = aprops.children,
-          props = (0, _objectWithoutProperties2.default)(aprops, ["selectedIndex", "selectedIndexDefault", "onAction", "navProps", "containerProps", "children"]);
+          props = (0, _objectWithoutProperties2.default)(aprops, ["selectedIndex", "selectedIndexDefault", "onWillChange", "onAction", "navProps", "containerProps", "children"]);
       children = _react.default.Children.toArray(children).filter(function (v) {
         return v;
       });
@@ -96,7 +97,9 @@ function (_React$Component) {
           selected: selectedIndex === i,
           "bp-panelTheme-sensitiveSelect": true,
           onClick: function onClick(e) {
-            return _this2.setState({
+            if (onWillChange && onWillChange(i, v.props, event) === false) return;
+
+            _this2.setState({
               selectedIndex: i
             }, function () {
               if (onAction) onAction(i, v.props, event);
@@ -109,14 +112,22 @@ function (_React$Component) {
         panelItemSelected: true,
         ctype: "scroll",
         selectedIndex: selectedIndex,
-        onSelectedChange: function onSelectedChange(i, props) {
-          return _this2.setState({
+        onSelectedChange: function onSelectedChange(i) {
+          var props = children[i].props;
+          if (onWillChange && onWillChange(i, props, props && props.event) === false) return;
+
+          _this2.setState({
             selectedIndex: i
           }, function () {
             if (onAction) onAction(i, props, props && props.event);
           });
         }
-      }, containerProps), children));
+      }, containerProps), children.map(function (v) {
+        return _react.default.createElement(_Panel.default, {
+          key: v.key,
+          children: v.props.children
+        });
+      })));
     }
   }]);
   return TabBar;

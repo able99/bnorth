@@ -12,8 +12,13 @@ class ContextComponent extends React.Component {
     this.app.context.provider = this;
   }
 
+  init(data, cb) {
+    return this.setState(data, cb);
+  }
+
   update(data, cb) {
-    return this.setState({...this.state, ...data}, cb);
+    this.state = {...this.state, ...data}
+    return this.setState(this.state, cb);
   }
 
   data(name) {
@@ -83,7 +88,7 @@ class Context {
   clear(_id, cb) {
     let state = this.provider.data();
     delete state[_id];
-    return this.provider.update(state, cb);
+    return this.provider.init(state, cb);
   }
 
   /**

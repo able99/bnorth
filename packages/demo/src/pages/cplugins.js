@@ -11,13 +11,13 @@ export default props=>{
       <NavBar title="组件插件列表" onBack={()=>app.router.back()} />
       <div className="scrollable-y- flex-sub-flex-extend">
         <List className="margin-bottom-2x">
-          <List.Item title="modal" className="text-weight-bold text-size-lg" />
+          <List.Item title="modal" desc="模态对话框" className="text-weight-bold text-size-lg" />
           <List.Item title="打开" onClick={()=>app.modal.show('modal')} />
           <List.Item title="打开 alert" onClick={()=>app.modal.show('modal', {type: 'alert', onAction: index=>{index>=0&&alert('ok')}})} />
           <List.Item title="打开 prompt" onClick={()=>app.modal.show('modal', {type: 'prompt', onAction: index=>{index>0&&alert('ok')}})} />
           <List.Item title="打开 popup" onClick={()=>app.modal.show('modal', {type: 'popup', })} />
           <List.Item title="打开 带 title 带 close" onClick={()=>app.modal.show('modal', {title: 'title', close: true})} />
-          <List.Item title="带状态" onClick={()=>app.modal.show(props=>(
+          <List.Item title="打开 带状态数据" onClick={()=>app.modal.show(props=>(
             <div>
               弹出层 - 状态 - {JSON.stringify(props.stateData)}
               <div onClick={()=>props.states.stateData.update({tick:props.stateData.tick+1})}>点击更新 tick</div>
@@ -36,18 +36,18 @@ export default props=>{
         </List>
 
         <List className="margin-bottom-2x">
-          <List.Item title="notice" className="text-weight-bold text-size-lg" />
+          <List.Item title="notice" desc="消息通知" className="text-weight-bold text-size-lg" />
           <List.Item title="打开" onClick={()=>app.notice.show('notice')} />
           <List.Item title="关闭" onClick={()=>app.notice.close()} />
         </List>
 
         <List className="margin-bottom-2x">
-          <List.Item title="mask" className="text-weight-bold text-size-lg" />
+          <List.Item title="mask" desc="蒙层" className="text-weight-bold text-size-lg" />
           <List.Item title="打开" onClick={()=>{app.mask.show('3秒后关闭');window.setTimeout(()=>app.mask.close(), 3000)}} />
         </List>
 
         <List className="margin-bottom-2x">
-          <List.Item title="loader" className="text-weight-bold text-size-lg" />
+          <List.Item title="loader" desc="加载指示器" className="text-weight-bold text-size-lg" />
           <List.Item title="打开 可多次点击" onClick={()=>app.loader.show()} />
           <List.Item title="关闭 需多次关闭" onClick={()=>app.loader.close()} />
         </List>

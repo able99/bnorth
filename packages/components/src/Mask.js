@@ -28,6 +28,9 @@ let Mask = aprops=>{
 }
 
 Mask.defaultProps = {};
+Mask.defaultProps['b-precast'] = {
+  'b-theme': 'white',
+}
 /**
  * 设置 蒙层中间的 loader 组件的参数
  * @attribute module:mask.Mask.loaderProps

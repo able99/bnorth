@@ -155,7 +155,7 @@ let Component = aprops=>{
           <Groups.Sep title="形状图标 - 三角形" />
           <Icon {...stateCommonProps} shape='triangle' />
           <Groups.Sep title="图标文本面板" />
-          <PanelIcon name="star" title="title" />
+          <PanelIcon name="star" iconSelected="settings" title="title" />
         </Groups.Show>
       </Groups.Group>
 

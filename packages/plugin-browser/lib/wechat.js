@@ -56,21 +56,22 @@ function () {
      */
 
     this.options = options;
-    this.isReady = false;
-    this.initPromise = null;
+    this.isSdkReady = false;
+    this.initSdkPromise = null;
     this.bridge = null;
+    this.sdk = null;
     this.signature = null;
     this.signatureUrl = '';
   }
 
   (0, _createClass2.default)(Wechat, [{
-    key: "getBridge",
-    value: function getBridge() {
+    key: "getSdk",
+    value: function getSdk() {
       var _this = this;
 
-      if (this.bridge) return Promise.resolve(this.bridge);
-      return this.app.browser.loadjs('//res.wx.qq.com/open/js/jweixin-1.4.0.js').then(function () {
-        return _this.bridge = window.wx;
+      if (this.sdk) return Promise.resolve(this.sdk);
+      return this.app.browser.loadjs(this.options.sdkJsUrl || '//res.wx.qq.com/open/js/jweixin-1.4.0.js').then(function () {
+        return _this.sdk = window.wx;
       });
     }
   }, {
@@ -80,67 +81,91 @@ function () {
 
       if (this.signature && this.signatureUrl === this.app.browser.url) return Promise.resolve(this.signature);
       this.signatureUrl = this.app.browser.url;
-      return this.app.network.fetch({
-        url: this.options.url,
-        data: {
-          url: this.signatureUrl
-        }
-      }).then(function (v) {
-        if (!v) throw new Error('错误的签名');
-        return _this2.signature = v;
+      return (this.options.getSignature ? this.options.getSignature(this.signatureUrl) : Promise.resolve()).then(function (result) {
+        if (!result) throw new Error('无效签名');
+        return _this2.signature = result;
       });
     }
   }, {
-    key: "init",
-    value: function init() {
+    key: "initSdk",
+    value: function initSdk() {
       var _this3 = this;
 
-      if (this.isReady) return this.bridge;
-      if (this.initPromise) return this.initPromise;
-      return this.initPromise = new Promise(function (resolve, reject) {
-        Promise.all(_this3.getBridge(), _this3.getSignature()).then(function (_ref) {
+      if (this.isSdkReady) return this.sdk;
+      if (this.initSdkPromise) return this.initSdkPromise;
+      return this.initSdkPromise = new Promise(function (resolve, reject) {
+        Promise.all(_this3.getSdk(), _this3.getSignature()).then(function (_ref) {
           var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-              bridge = _ref2[0],
+              sdk = _ref2[0],
               signature = _ref2[1];
 
-          bridge.config({
+          sdk.config({
             appId: signature.appId,
             timestamp: signature.timestamp,
             nonceStr: signature.nonceStr,
             signature: signature.signature,
-            jsApiList: ['showMenuItems', 'hideMenuItems', 'onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'onMenuShareQZone', 'chooseWXPay', 'addCard', 'closeWindow'].concat((0, _toConsumableArray2.default)(_this3.options.jsApiListExt || []))
+            jsApiList: ['showMenuItems', 'hideMenuItems', 'chooseWXPay', 'addCard', 'closeWindow'].concat((0, _toConsumableArray2.default)(_this3.options.jsApiListExt || []))
           });
-          bridge.ready(function () {
-            return resolve(bridge);
+          sdk.ready(function () {
+            return resolve(sdk);
           });
-          bridge.error(function (res) {
+          sdk.error(function (res) {
             return reject(res.errMsg);
           });
         }).catch(function (error) {
           reject(error);
         });
-      }).then(function (bridge) {
-        _this3.isReady = true;
-        _this3.initPromise = null;
-        return bridge;
+      }).then(function (sdk) {
+        _this3.isSdkReady = true;
+        _this3.initSdkPromise = null;
+        return sdk;
       }).catch(function (error) {
-        _this3.isReady = false;
-        _this3.bridge = null;
+        _this3.isSdkReady = false;
+        _this3.sdk = null;
         throw error;
       });
     }
   }, {
-    key: "ready",
-    value: function ready() {
+    key: "readyBridge",
+    value: function readyBridge() {
+      var _this4 = this;
+
+      return new Promise(function (resolve, reject) {
+        if (window.WeixinJSBridge) {
+          _this4.bridge = window.WeixinJSBridge;
+          resolve(_this4.bridge);
+        } else {
+          document.addEventListener('WeixinJSBridgeReady', function () {
+            _this4.bridge = window.WeixinJSBridge;
+            resolve(_this4.bridge);
+          }, false);
+        }
+      });
+    }
+  }, {
+    key: "readySdk",
+    value: function readySdk() {
       return this.init();
     }
   }, {
-    key: "invoke",
-    value: function invoke(name) {
+    key: "invokeBridge",
+    value: function invokeBridge(name) {
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      return this.ready(function (bridge) {
+      return this.readyBridge(function (bridge) {
         return new Promise(function (resolve, reject) {
-          var func = bridge[name];
+          bridge.invoke(name, options, function (result) {
+            return resolve(result);
+          });
+        });
+      });
+    }
+  }, {
+    key: "invokeSdk",
+    value: function invokeSdk(name) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      return this.readySdk(function (sdk) {
+        return new Promise(function (resolve, reject) {
+          var func = sdk[name];
           if (!func) reject({
             noFunc: true
           });
@@ -162,37 +187,23 @@ function () {
     }
   }, {
     key: "chooseImage",
-    value: function chooseImage(options) {
+    value: function chooseImage(options, isBridge) {
       // count: options.count, 
       // sizeType: options.sizeType, 
       // sourceType: options.sourceType, 
-      return this.invoke('chooseImage', options);
+      var name = 'chooseImage';
+      return isBridge ? this.invokeBridge(name, options) : this.invokeSdk(name, options);
     }
   }, {
     key: "pay",
-    value: function pay(options) {
-      return this.ready(function (bridge) {
-        return new Promise(function (resolve, reject) {
-          bridge.chooseWXPay({
-            timestamp: options.timestamp,
-            nonceStr: options.nonceStr,
-            package: options.package,
-            signType: options.signType,
-            paySign: options.paySign,
-            success: function success(result) {
-              return resolve(result);
-            },
-            fail: function fail(result) {
-              return reject(result);
-            },
-            cancel: function cancel(result) {
-              return reject({
-                cancel: true
-              });
-            }
-          });
-        });
-      });
+    value: function pay(options, isBridge) {
+      // timestamp: options.timestamp, 
+      // nonceStr: options.nonceStr, 
+      // package: options.package, 
+      // signType: options.signType, 
+      // paySign: options.paySign, 
+      var name = 'name';
+      return isBridge ? this.invokeBridge(name, options) : this.invokeSdk(name, options);
     }
   }]);
   return Wechat;

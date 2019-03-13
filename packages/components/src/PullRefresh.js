@@ -16,9 +16,10 @@ import { PanelLoader } from './Loader';
  */
 class PullRefresh extends React.Component {
   componentDidMount() {
-    domIsMouse && domFindNode(this).addEventListener("click", event=>{
-      if(this.mark) { event.stopPropagation(); this.mark = false }
-    },true)
+    if(domIsMouse) {
+      domFindNode(this).addEventListener("mousedown", event=>{ this.mark = false }, true);
+      domFindNode(this).addEventListener("click", event=>{ if(this.mark) { event.stopPropagation(); this.mark = false } }, true);
+    } 
   }
 
   render() {
@@ -45,13 +46,13 @@ class PullRefresh extends React.Component {
         onPanEnd={()=>{
           if(offset){ 
             this.setState({offset: 0}, ()=>offset>=triggerOffset&&onLoad&&onLoad()); 
-            this.mark = true 
+            if(domIsMouse) this.mark = true;
           }
         }}
         onPanCancel={()=>{
           if(offset){ 
             this.setState({offset: 0}, ()=>offset>=triggerOffset&&onLoad&&onLoad()); 
-            this.mark = true 
+            if(domIsMouse) this.mark = true;
           }
         }}
         classNamePre={classNamePre} {...props}>

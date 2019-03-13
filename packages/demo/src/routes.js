@@ -18,7 +18,7 @@ export default {
 
   'tabs:tab?': {
     component: require('./pages/tabs').default, title: 'tabbar demo',
-    subPages: ['tabx', 'tabx', 'tabx', 'tabx'],
+    subPages: {'tabx0': 'tabx', 'tabx1': 'tabx', 'tabx2': 'tabx', 'tabx3': 'tabx'},
   },
   'tabx': {component: require('./pages/tabs').Tabx, title: 'tabx'},
 

@@ -127,17 +127,10 @@ class Render {
   modalShow(content, options) { alert(content) }
 
   /**
-   * 显示模态对话框
+   * 关闭模态对话框
    * @param {string} - id
    */
   modalClose(_id) {}
-
-  /**
-   * 关闭模态对话框
-   * @param {string} - 开启或者关闭
-   * @param {object} - 参数，与实现者具体定义 
-   */
-  modalShow(content, options) { alert(content) }
 
   /**
    * 限制 render 宽度
