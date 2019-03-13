@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/plugin-network",
-  "version": "3.1.6",
+  "version": "4.0.0",
   "description": "bnorth plugin for network",
   "keywords": [
     "bnorth",
@@ -34,7 +34,7 @@
     "axios": "^0.18.0"
   },
   "devDependencies": {
-    "@bnorth/build": "^3.1.6"
+    "@bnorth/build": "^4.0.0"
   },
   "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
 }
