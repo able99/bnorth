@@ -162,6 +162,7 @@ class RouterComponent extends React.Component {
         route: { 
           ...pageInfo,
           isActive: isSubPage?_idParent===activeId:_id===activeId, 
+          isReactive: app.router._pages[_id],
           popLayers: popLayerInfos.map(v=>this._renderPopLayer(v)), 
           subPages: Object.entries(subPageInfos).reduce((v1, [k,v])=>{v1[k]=this._renderPage(v, activeId, focusId); return v1},{}),
           subPageInfos: undefined, popLayerInfos: undefined,

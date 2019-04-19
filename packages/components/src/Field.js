@@ -14,7 +14,7 @@ import Icon from './Icon';
  * @exportdefault
  */
 let Field = aprops=>{
-  let { types, before, after, label, beforeProps, afterProps, containerProps, ...props } = aprops;
+  let { types, before, after, label, beforeProps, afterProps, containerProps, ...props } = BaseComponent(aprops, Field);
   if(props.hasOwnProperty('value')&&props.value===undefined) props.value = '';
   let ComponentField = types[aprops.type]||types.text;
   if(!ComponentField) return null;

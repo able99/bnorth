@@ -150,7 +150,8 @@ var _Item = function Item(aprops) {
   }, mediaProps), media === true ? undefined : media) : null, _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
     panelItemSelected: true
   }, mainProps), title ? _react.default.createElement(_Panel.default, titleProps, title === true ? undefined : title) : null, subTitle ? _react.default.createElement(_Panel.default, subTitleProps, subTitle === true ? undefined : subTitle) : null, desc ? _react.default.createElement(_Panel.default, descProps, desc === true ? undefined : desc) : null, children), after ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    "bc-line-height-0": true
+    "bc-line-height-0": true,
+    "bc-margin-left-": true
   }, afterProps), after === true ? undefined : after) : null, arrow || autoArrow && onClick ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: _Icon.default,
     name: "right:>"

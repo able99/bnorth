@@ -31,7 +31,7 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _BaseComponent8 = _interopRequireWildcard(require("./BaseComponent"));
+var _BaseComponent9 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Panel = _interopRequireWildcard(require("./Panel"));
 
@@ -47,15 +47,17 @@ var _Icon = _interopRequireDefault(require("./Icon"));
  * @augments BaseComponent
  * @exportdefault
  */
-var Field = function Field(aprops) {
-  var types = aprops.types,
-      before = aprops.before,
-      after = aprops.after,
-      label = aprops.label,
-      beforeProps = aprops.beforeProps,
-      afterProps = aprops.afterProps,
-      containerProps = aprops.containerProps,
-      props = (0, _objectWithoutProperties2.default)(aprops, ["types", "before", "after", "label", "beforeProps", "afterProps", "containerProps"]);
+var _Field = function Field(aprops) {
+  var _BaseComponent = (0, _BaseComponent9.default)(aprops, _Field),
+      types = _BaseComponent.types,
+      before = _BaseComponent.before,
+      after = _BaseComponent.after,
+      label = _BaseComponent.label,
+      beforeProps = _BaseComponent.beforeProps,
+      afterProps = _BaseComponent.afterProps,
+      containerProps = _BaseComponent.containerProps,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["types", "before", "after", "label", "beforeProps", "afterProps", "containerProps"]);
+
   if (props.hasOwnProperty('value') && props.value === undefined) props.value = '';
   var ComponentField = types[aprops.type] || types.text;
   if (!ComponentField) return null;
@@ -74,7 +76,7 @@ var Field = function Field(aprops) {
   }, containerProps), before ? _react.default.createElement(_Panel.default, beforeProps, before) : null, component, after ? _react.default.createElement(_Panel.default, afterProps, after) : null);
 };
 
-Field.defaultProps = {};
+_Field.defaultProps = {};
 /**
  * 设置控件组件的类型，支持 html input type 以及自定义的类型，参见 Field 的成员，默认使用 text 对应的类型
  * @attribute module:Field.Field.type
@@ -117,15 +119,15 @@ Field.defaultProps = {};
  * @type {object}
  */
 
-Object.defineProperty(Field, "Field", {
+Object.defineProperty(_Field, "Field", {
   get: function get() {
-    return Field;
+    return _Field;
   },
   set: function set(val) {
-    Field = val;
+    _Field = val;
   }
 });
-var _default = Field;
+var _default = _Field;
 /**
  * 表单控件的一般类型组件
  * @component
@@ -151,7 +153,7 @@ function (_React$Component) {
   (0, _createClass2.default)(Normal, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.input = (0, _BaseComponent8.domFindNode)(this);
+      this.input = (0, _BaseComponent9.domFindNode)(this);
       this.input.value = this.props.value || '';
     }
   }, {
@@ -162,20 +164,20 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _BaseComponent = (0, _BaseComponent8.default)(this.props, _Normal),
-          type = _BaseComponent.type,
-          value = _BaseComponent.value,
-          typesToElement = _BaseComponent.typesToElement,
-          onChange = _BaseComponent.onChange,
-          pattern = _BaseComponent.pattern,
-          patterns = _BaseComponent.patterns,
-          patternName = _BaseComponent.patternName,
-          onEnterPress = _BaseComponent.onEnterPress,
-          _onKeyPress = _BaseComponent.onKeyPress,
-          _BaseComponent$compon = _BaseComponent.component,
-          component = _BaseComponent$compon === void 0 ? "input" : _BaseComponent$compon,
-          children = _BaseComponent.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "value", "typesToElement", "onChange", "pattern", "patterns", "patternName", "onEnterPress", "onKeyPress", "component", "children"]);
+      var _BaseComponent2 = (0, _BaseComponent9.default)(this.props, _Normal),
+          type = _BaseComponent2.type,
+          value = _BaseComponent2.value,
+          typesToElement = _BaseComponent2.typesToElement,
+          onChange = _BaseComponent2.onChange,
+          pattern = _BaseComponent2.pattern,
+          patterns = _BaseComponent2.patterns,
+          patternName = _BaseComponent2.patternName,
+          onEnterPress = _BaseComponent2.onEnterPress,
+          _onKeyPress = _BaseComponent2.onKeyPress,
+          _BaseComponent2$compo = _BaseComponent2.component,
+          component = _BaseComponent2$compo === void 0 ? "input" : _BaseComponent2$compo,
+          children = _BaseComponent2.children,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["type", "value", "typesToElement", "onChange", "pattern", "patterns", "patternName", "onEnterPress", "onKeyPress", "component", "children"]);
 
       if (typesToElement.includes(type)) {
         component = type;
@@ -232,7 +234,7 @@ _Normal.defaultProps.patterns = {
 };
 /* eslint-disable no-useless-escape */
 
-Object.defineProperty(Field, "Normal", {
+Object.defineProperty(_Field, "Normal", {
   get: function get() {
     return _Normal;
   },
@@ -251,10 +253,10 @@ Object.defineProperty(Field, "Normal", {
  */
 
 var _Static = function Static(aprops) {
-  var _BaseComponent2 = (0, _BaseComponent8.default)(aprops, _Static),
-      type = _BaseComponent2.type,
-      value = _BaseComponent2.value,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["type", "value"]);
+  var _BaseComponent3 = (0, _BaseComponent9.default)(aprops, _Static),
+      type = _BaseComponent3.type,
+      value = _BaseComponent3.value,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["type", "value"]);
 
   var classNamePre = 'line-height-1 vertical-align-middle';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
@@ -266,7 +268,7 @@ var _Static = function Static(aprops) {
 };
 
 _Static.defaultProps = {};
-Object.defineProperty(Field, "Static", {
+Object.defineProperty(_Field, "Static", {
   get: function get() {
     return _Static;
   },
@@ -283,7 +285,7 @@ Object.defineProperty(Field, "Static", {
  */
 
 var _HiddenInput = function HiddenInput(aprops) {
-  var props = (0, _BaseComponent8.default)(aprops, _HiddenInput);
+  var props = (0, _BaseComponent9.default)(aprops, _HiddenInput);
   var classNamePre = 'visibility-hide display-none';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: "input",
@@ -292,7 +294,7 @@ var _HiddenInput = function HiddenInput(aprops) {
 };
 
 _HiddenInput.defaultProps = {};
-Object.defineProperty(Field, "HiddenInput", {
+Object.defineProperty(_Field, "HiddenInput", {
   get: function get() {
     return _HiddenInput;
   },
@@ -309,15 +311,15 @@ Object.defineProperty(Field, "HiddenInput", {
  */
 
 var _File = function File(aprops) {
-  var _BaseComponent3 = (0, _BaseComponent8.default)(aprops, _File),
-      type = _BaseComponent3.type,
-      value = _BaseComponent3.value,
-      inputProps = _BaseComponent3.inputProps,
-      disabled = _BaseComponent3.disabled,
-      onClick = _BaseComponent3.onClick,
-      onChange = _BaseComponent3.onChange,
-      children = _BaseComponent3.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["type", "value", "inputProps", "disabled", "onClick", "onChange", "children"]);
+  var _BaseComponent4 = (0, _BaseComponent9.default)(aprops, _File),
+      type = _BaseComponent4.type,
+      value = _BaseComponent4.value,
+      inputProps = _BaseComponent4.inputProps,
+      disabled = _BaseComponent4.disabled,
+      onClick = _BaseComponent4.onClick,
+      onChange = _BaseComponent4.onChange,
+      children = _BaseComponent4.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["type", "value", "inputProps", "disabled", "onClick", "onChange", "children"]);
 
   var classNamePre = 'line-height-1 vertical-align-middle';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
@@ -340,7 +342,7 @@ _File.defaultProps = {};
  * @type {object}
  */
 
-Object.defineProperty(Field, "File", {
+Object.defineProperty(_Field, "File", {
   get: function get() {
     return _File;
   },
@@ -359,21 +361,21 @@ Object.defineProperty(Field, "File", {
  */
 
 var _CheckState = function CheckState(aprops) {
-  var _BaseComponent4 = (0, _BaseComponent8.default)(aprops, _CheckState),
-      type = _BaseComponent4.type,
-      value = _BaseComponent4.value,
-      defaultValue = _BaseComponent4.defaultValue,
-      domValue = _BaseComponent4.domValue,
-      disabled = _BaseComponent4.disabled,
-      onClick = _BaseComponent4.onClick,
-      onChange = _BaseComponent4.onChange,
-      inputProps = _BaseComponent4.inputProps,
-      innerProps = _BaseComponent4.innerProps,
-      statusProps = _BaseComponent4.statusProps,
-      statusCheckedProps = _BaseComponent4.statusCheckedProps,
-      statusUncheckedProps = _BaseComponent4.statusUncheckedProps,
-      children = _BaseComponent4.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["type", "value", "defaultValue", "domValue", "disabled", "onClick", "onChange", "inputProps", "innerProps", "statusProps", "statusCheckedProps", "statusUncheckedProps", "children"]);
+  var _BaseComponent5 = (0, _BaseComponent9.default)(aprops, _CheckState),
+      type = _BaseComponent5.type,
+      value = _BaseComponent5.value,
+      defaultValue = _BaseComponent5.defaultValue,
+      domValue = _BaseComponent5.domValue,
+      disabled = _BaseComponent5.disabled,
+      onClick = _BaseComponent5.onClick,
+      onChange = _BaseComponent5.onChange,
+      inputProps = _BaseComponent5.inputProps,
+      innerProps = _BaseComponent5.innerProps,
+      statusProps = _BaseComponent5.statusProps,
+      statusCheckedProps = _BaseComponent5.statusCheckedProps,
+      statusUncheckedProps = _BaseComponent5.statusUncheckedProps,
+      children = _BaseComponent5.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["type", "value", "defaultValue", "domValue", "disabled", "onClick", "onChange", "inputProps", "innerProps", "statusProps", "statusCheckedProps", "statusUncheckedProps", "children"]);
 
   var classNamePre = 'check-status line-height-0 display-inlineblock vertical-align-middle';
   var classNamePreInner = 'check-status-inner position-relative line-height-0 display-inlineblock';
@@ -432,7 +434,7 @@ _CheckState.defaultProps = {};
  * @type {object}
  */
 
-Object.defineProperty(Field, "CheckState", {
+Object.defineProperty(_Field, "CheckState", {
   get: function get() {
     return _CheckState;
   },
@@ -449,9 +451,9 @@ Object.defineProperty(Field, "CheckState", {
  */
 
 var _Checkbox = function Checkbox(aprops) {
-  var _BaseComponent5 = (0, _BaseComponent8.default)(aprops, _Checkbox),
-      disabled = _BaseComponent5.disabled,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["disabled"]);
+  var _BaseComponent6 = (0, _BaseComponent9.default)(aprops, _Checkbox),
+      disabled = _BaseComponent6.disabled,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent6, ["disabled"]);
 
   return _react.default.createElement(_CheckState, (0, _extends2.default)({
     "b-style": "hollow",
@@ -463,7 +465,7 @@ var _Checkbox = function Checkbox(aprops) {
   }, props));
 };
 
-Object.defineProperty(Field, "Checkbox", {
+Object.defineProperty(_Field, "Checkbox", {
   get: function get() {
     return _Checkbox;
   },
@@ -480,9 +482,9 @@ Object.defineProperty(Field, "Checkbox", {
  */
 
 var _Radio = function Radio(aprops) {
-  var _BaseComponent6 = (0, _BaseComponent8.default)(aprops, _Radio),
-      disabled = _BaseComponent6.disabled,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent6, ["disabled"]);
+  var _BaseComponent7 = (0, _BaseComponent9.default)(aprops, _Radio),
+      disabled = _BaseComponent7.disabled,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent7, ["disabled"]);
 
   return _react.default.createElement(_CheckState, (0, _extends2.default)({
     "b-style": "hollow",
@@ -495,7 +497,7 @@ var _Radio = function Radio(aprops) {
   }, props));
 };
 
-Object.defineProperty(Field, "Radio", {
+Object.defineProperty(_Field, "Radio", {
   get: function get() {
     return _Radio;
   },
@@ -512,11 +514,11 @@ Object.defineProperty(Field, "Radio", {
  */
 
 var _Switch = function Switch(aprops) {
-  var _BaseComponent7 = (0, _BaseComponent8.default)(aprops, _Switch),
-      disabled = _BaseComponent7.disabled,
-      _BaseComponent7$bThe = _BaseComponent7['b-theme'],
-      bTheme = _BaseComponent7$bThe === void 0 ? 'component' : _BaseComponent7$bThe,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent7, ["disabled", 'b-theme']);
+  var _BaseComponent8 = (0, _BaseComponent9.default)(aprops, _Switch),
+      disabled = _BaseComponent8.disabled,
+      _BaseComponent8$bThe = _BaseComponent8['b-theme'],
+      bTheme = _BaseComponent8$bThe === void 0 ? 'component' : _BaseComponent8$bThe,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent8, ["disabled", 'b-theme']);
 
   var classNamePreItem = 'border-radius-rounded width-1em height-1em';
   return _react.default.createElement(_CheckState, (0, _extends2.default)({
@@ -554,7 +556,7 @@ var _Switch = function Switch(aprops) {
   }));
 };
 
-Object.defineProperty(Field, "Switch", {
+Object.defineProperty(_Field, "Switch", {
   get: function get() {
     return _Switch;
   },
@@ -562,7 +564,7 @@ Object.defineProperty(Field, "Switch", {
     _Switch = val;
   }
 });
-Field.defaultProps.types = {
+_Field.defaultProps.types = {
   text: _Normal,
   static: _Static,
   file: _File,

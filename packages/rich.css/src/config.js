@@ -113,7 +113,7 @@ let genConfig = {
   bodyBackground: 'none',
 
   stateOpacityDisabled: 0.5,
-  stateOpacityActive: 0.8,
+  stateOpacityActive: 0.3,
 
   hMapTextSize: {
     '1': 'xxl',

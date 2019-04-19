@@ -94,7 +94,7 @@ let Item = aprops=>{
         {desc?(<Panel {...descProps}>{desc===true?undefined:desc}</Panel>):null}
         {children}
       </PanelContainer>
-      {after?(<Panel bc-line-height-0 {...afterProps}>{after===true?undefined:after}</Panel>):null}
+      {after?(<Panel bc-line-height-0 bc-margin-left- {...afterProps}>{after===true?undefined:after}</Panel>):null}
       {arrow||(autoArrow&&onClick)?(<Panel component={Icon} name="right:>" {...arrowProps}>{arrow===true?undefined:arrow}</Panel>):null}
     </PanelContainer>
   );

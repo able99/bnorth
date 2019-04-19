@@ -18,7 +18,7 @@ import Panel from './Panel';
 let Button = aprops=>{
   let props = BaseComponent(aprops, Button);
 
-  let classNamePre = 'btn outline-none appearance-none font-smoothing-antialiased transition-set- vertical-align-middle position-relative line-height-1 text-align-center padding-a-';
+  let classNamePre = 'outline-none appearance-none font-smoothing-antialiased vertical-align-middle position-relative line-height-1 text-align-center padding-a-';
   
   return <Panel component="button" b-style="solid" classNamePre={classNamePre} {...props} />
 }

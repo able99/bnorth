@@ -292,8 +292,11 @@ class Page extends React.Component {
         width: '100%', height: '100%',
       }:{
         position: 'absolute', top: 0, left: 0, bottom: 0, right: 0,
-        visibility: route.isActive?'visible':'hidden',
-      }
+        // visibility: route.isActive?'visible':'hidden',
+      },
+      className: !route.isSubPage
+        ?('page-animated '+(route.isActive?(!route.isReactive&&route.level?'page-animated-in-right':''):'page-animated-out-left'))
+        :'',
     }
   }
   
@@ -304,11 +307,13 @@ class Page extends React.Component {
     app.log.debug('page did mount', _id);
 
     this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this._handleKeyEvent(e));
-    this._bindController();
-    app.event.emit(app._id, 'onPageAdd', _id, this);
-    app.event.emit(this._id, 'onPageStart', this, isActive);
-    isActive && app.event.emit(this._id, 'onPageActive', this, true);
-    isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+    window.setTimeout(()=>{
+      this._bindController();
+      app.event.emit(app._id, 'onPageAdd', _id, this);
+      app.event.emit(this._id, 'onPageStart', this, isActive);
+      isActive && app.event.emit(this._id, 'onPageActive', this, true);
+      isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+    },500);
   }
 
   componentWillUnmount() {

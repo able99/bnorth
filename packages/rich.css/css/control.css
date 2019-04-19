@@ -5,7 +5,7 @@
 }
 
 .btn:active, .btn[active], .btn.active {
-  opacity: 0.8;
+  opacity: 0.3;
 }
 
 .check-status input + .check-status-inner .check-status-checked {
@@ -48,5 +48,5 @@ select::-ms-expand {
 }
 
 .status-active {
-  opacity: 0.8;
+  opacity: 0.3;
 }

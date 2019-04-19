@@ -274,6 +274,9 @@ function BaseComponent(aprops) {
       selected = _aprops.selected,
       disabled = _aprops.disabled,
       onClick = _aprops.onClick,
+      onTouchStart = _aprops.onTouchStart,
+      onTouchEnd = _aprops.onTouchEnd,
+      onTouchCancel = _aprops.onTouchCancel,
       btn = _aprops.btn,
       classNamePre = _aprops.classNamePre,
       classNameExt = _aprops.classNameExt,
@@ -282,7 +285,7 @@ function BaseComponent(aprops) {
       className = _aprops.className,
       style = _aprops.style,
       refWrap = _aprops.refWrap,
-      props = (0, _objectWithoutProperties2.default)(_aprops, ["active", "selected", "disabled", "onClick", "btn", "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "refWrap"]);
+      props = (0, _objectWithoutProperties2.default)(_aprops, ["active", "selected", "disabled", "onClick", "onTouchStart", "onTouchEnd", "onTouchCancel", "btn", "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "refWrap"]);
   var classSet = {};
   var styleSet = {};
   Object.entries(props).forEach(function (_ref) {
@@ -368,15 +371,38 @@ function BaseComponent(aprops) {
   if (selected) classSet['selected'] = true;
   if (disabled) classSet['disabled'] = true;
   if (onClick && btn !== false) classSet['cursor-pointer'] = true;
-  if ((onClick || btn) && btn !== false) classSet['btn'] = true;
+  if (onClick && !btn && btn !== false || btn === true) classSet['btn'] = true;
+
+  if (onClick && btn !== false) {
+    props['onTouchStart'] = function (e) {
+      e.currentTarget.classList.add(!btn || btn === true ? 'active' : btn);
+      onTouchStart && onTouchStart(e);
+    };
+
+    props['onTouchEnd'] = function (e) {
+      e.currentTarget.classList.remove(!btn || btn === true ? 'active' : btn);
+      onTouchEnd && onTouchEnd(e);
+    };
+
+    props['onTouchCancel'] = function (e) {
+      e.currentTarget.classList.remove(!btn || btn === true ? 'active' : btn);
+      onTouchCancel && onTouchCancel(e);
+    };
+  } else {
+    if (aprops.hasOwnProperty('onTouchStart')) props.onTouchStart = onTouchStart;
+    if (aprops.hasOwnProperty('onTouchEnd')) props.onTouchEnd = onTouchEnd;
+    if (aprops.hasOwnProperty('onTouchCancel')) props.onTouchCancel = onTouchCancel;
+  }
+
   if (aprops.hasOwnProperty('onClick')) props.onClick = onClick;
+  if (aprops.hasOwnProperty('selected')) props.selected = selected;
+  if (aprops.hasOwnProperty('active')) props.active = active;
+  if (aprops.hasOwnProperty('disabled')) props.disabled = disabled;
+  if (aprops.hasOwnProperty('btn')) props.btn = btn;
+  if (aprops.hasOwnProperty('refWrap')) props.ref = refWrap;
   return (0, _objectSpread2.default)({}, props, {
     className: (0, _classes.default)(classNamePre, classSet, className, classNameExt),
-    style: (0, _objectSpread2.default)({}, stylePre, styleSet, style, styleExt),
-    selected: selected,
-    active: active,
-    disabled: disabled,
-    ref: refWrap
+    style: (0, _objectSpread2.default)({}, stylePre, styleSet, style, styleExt)
   });
 }
 /**

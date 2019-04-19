@@ -89,9 +89,16 @@ export let modal = {
           props.in = true;
           props.onClose = index=>app.modal.close(options._id, index);
         }
-        if(onAction) options.onAction = onAction;
 
-        return app.router.addPopLayer(typeof Content==='function'?props=><Modal {...props.props}><Content {...props}/></Modal>:<Modal>{Content}</Modal> , props, options);
+        if(onAction) options.onAction = onAction;
+        let content = typeof Content==='function'?props=><Modal {...props.props}><Content {...props}/></Modal>:<Modal>{Content}</Modal>;
+
+        if(isNew) {
+          window.setTimeout(()=>app.router.addPopLayer(content , props, options), 0);
+          return app.router.addPopLayer(<Modal />, {}, options);
+        }else{
+          return app.router.addPopLayer(content , props, options);
+        }
       },
       
       close: (_id, index)=>{

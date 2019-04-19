@@ -119,8 +119,8 @@ class Network {
     let app = this.app;
     options = app.utils.getOptions(this.options, options);
     let params = {
-      url: options.apiUrl + options.url,
-      baseURL: options.baseUrl,
+      url: options.getUrl(),
+      baseURL: options.getBaseUrl(),
       method: options.getRequestMethod(app),
       headers: { "Content-Type":options.getRequestContentType(app), ...options.getRequestHeaders(app) },
       params: options.getRequestParams(app),
@@ -152,6 +152,13 @@ Network.Options = {
   // timeout: 1000*60,
   // responseType: '',
 
+  getBaseUrl(app) {
+    return this.baseUrl||'';
+  },
+
+  getUrl(app) {
+    return (this.apiUrl||'')+((typeof this.url==='function'?this.url():this.url)||'');
+  },
   
   getRequestHeaders(app) {
     return this.headers||{};

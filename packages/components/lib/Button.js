@@ -30,7 +30,7 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  */
 var _Button = function Button(aprops) {
   var props = (0, _BaseComponent.default)(aprops, _Button);
-  var classNamePre = 'btn outline-none appearance-none font-smoothing-antialiased transition-set- vertical-align-middle position-relative line-height-1 text-align-center padding-a-';
+  var classNamePre = 'outline-none appearance-none font-smoothing-antialiased vertical-align-middle position-relative line-height-1 text-align-center padding-a-';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: "button",
     "b-style": "solid",

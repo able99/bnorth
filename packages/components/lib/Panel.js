@@ -127,6 +127,11 @@ var _Panel = function Panel(aprops) {
     classSet['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
   }
 
+  if (typeof Component === 'string') {
+    delete props.active;
+    delete props.btn;
+  }
+
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _classes.default)(classSet, className),
     style: (0, _objectSpread6.default)({}, styleSet, style)

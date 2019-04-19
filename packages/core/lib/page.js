@@ -398,9 +398,10 @@ function (_React$Component) {
           top: 0,
           left: 0,
           bottom: 0,
-          right: 0,
-          visibility: route.isActive ? 'visible' : 'hidden'
-        }
+          right: 0 // visibility: route.isActive?'visible':'hidden',
+
+        },
+        className: !route.isSubPage ? 'page-animated ' + (route.isActive ? !route.isReactive && route.level ? 'page-animated-in-right' : '' : 'page-animated-out-left') : ''
       };
     } // page life circle
     // ---------------------------
@@ -418,13 +419,14 @@ function (_React$Component) {
       this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
         return _this3._handleKeyEvent(e);
       });
+      window.setTimeout(function () {
+        _this3._bindController();
 
-      this._bindController();
-
-      app.event.emit(app._id, 'onPageAdd', _id, this);
-      app.event.emit(this._id, 'onPageStart', this, isActive);
-      isActive && app.event.emit(this._id, 'onPageActive', this, true);
-      isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+        app.event.emit(app._id, 'onPageAdd', _id, _this3);
+        app.event.emit(_this3._id, 'onPageStart', _this3, isActive);
+        isActive && app.event.emit(_this3._id, 'onPageActive', _this3, true);
+        isActive && app.event.emit(app._id, 'onActivePageChange', _this3._id);
+      }, 500);
     }
   }, {
     key: "componentWillUnmount",

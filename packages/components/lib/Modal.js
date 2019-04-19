@@ -185,9 +185,18 @@ var modal = {
         }
 
         if (onAction) options.onAction = onAction;
-        return app.router.addPopLayer(typeof Content === 'function' ? function (props) {
+        var content = typeof Content === 'function' ? function (props) {
           return _react.default.createElement(_Modal, props.props, _react.default.createElement(Content, props));
-        } : _react.default.createElement(_Modal, null, Content), props, options);
+        } : _react.default.createElement(_Modal, null, Content);
+
+        if (isNew) {
+          window.setTimeout(function () {
+            return app.router.addPopLayer(content, props, options);
+          }, 0);
+          return app.router.addPopLayer(_react.default.createElement(_Modal, null), {}, options);
+        } else {
+          return app.router.addPopLayer(content, props, options);
+        }
       },
       close: function close(_id, index) {
         var _ref3 = app.router.getPopLayerInfo(_id) || {},

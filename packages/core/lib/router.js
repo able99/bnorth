@@ -263,6 +263,7 @@ function (_React$Component) {
           _id: _id,
           route: (0, _objectSpread2.default)({}, pageInfo, {
             isActive: isSubPage ? _idParent === activeId : _id === activeId,
+            isReactive: app.router._pages[_id],
             popLayers: popLayerInfos.map(function (v) {
               return _this2._renderPopLayer(v);
             }),

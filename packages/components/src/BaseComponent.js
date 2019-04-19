@@ -198,7 +198,7 @@ export default function BaseComponent(aprops) {
   delete aprops['b-dynamic'];
 
   let {
-    active, selected, disabled, onClick, btn,
+    active, selected, disabled, onClick, onTouchStart, onTouchEnd, onTouchCancel, btn,
     classNamePre, classNameExt, stylePre, styleExt, className, style, refWrap, ...props
   } = aprops;
 
@@ -275,15 +275,28 @@ export default function BaseComponent(aprops) {
   if(selected) classSet['selected'] = true;
   if(disabled) classSet['disabled'] = true;
   if(onClick&&(btn!==false)) classSet['cursor-pointer'] = true;
-  if((onClick||btn)&&(btn!==false)) classSet['btn'] = true;
-  
+  if((onClick&&(!btn&&btn!==false))||btn===true) classSet['btn'] = true;
+  if(onClick&&(btn!==false)) {
+    props['onTouchStart'] = e=>{e.currentTarget.classList.add(!btn||btn===true?'active':btn);onTouchStart&&onTouchStart(e)}
+    props['onTouchEnd'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchEnd&&onTouchEnd(e)}; 
+    props['onTouchCancel'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchCancel&&onTouchCancel(e)}; 
+  } else {
+    if(aprops.hasOwnProperty('onTouchStart')) props.onTouchStart = onTouchStart;
+    if(aprops.hasOwnProperty('onTouchEnd')) props.onTouchEnd = onTouchEnd;
+    if(aprops.hasOwnProperty('onTouchCancel')) props.onTouchCancel = onTouchCancel;
+  }
+
   if(aprops.hasOwnProperty('onClick')) props.onClick = onClick;
+  if(aprops.hasOwnProperty('selected')) props.selected = selected;
+  if(aprops.hasOwnProperty('active')) props.active = active;
+  if(aprops.hasOwnProperty('disabled')) props.disabled = disabled;
+  if(aprops.hasOwnProperty('btn')) props.btn = btn;
+  if(aprops.hasOwnProperty('refWrap')) props.ref = refWrap;
+  
   return {
     ...props,
     className: classes(classNamePre, classSet, className, classNameExt),
     style: {...stylePre, ...styleSet, ...style, ...styleExt},
-    selected, active, disabled,
-    ref: refWrap,
   };
 }
 
