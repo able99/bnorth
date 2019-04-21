@@ -112,7 +112,6 @@ function getPlugins() {
 
   let {
     env,
-    isDev, 
     define,
     appSrc,
     appPublic,
@@ -193,17 +192,17 @@ function getPlugins() {
   
   // production
   // -----------------------------
-  !isDev && extractCss && ret.plugins.push(new ExtractTextPlugin({
+  env === 'production' && extractCss && ret.plugins.push(new ExtractTextPlugin({
     filename: `[name].[contenthash:8].css`,
     allChunks: true,
   }));
 
-  !isDev && analyze && ret.push(new Visualizer());
+  env === 'production' && analyze && ret.push(new Visualizer());
 
   // developer
   // -----------------------------
-  isDev && ret.push(new webpack.HotModuleReplacementPlugin());
-  isDev && ret.push(new CaseSensitivePathsPlugin());
+  env === 'development' && ret.push(new webpack.HotModuleReplacementPlugin());
+  env === 'development' && ret.push(new CaseSensitivePathsPlugin());
 
   return ret;
 }
@@ -224,8 +223,8 @@ function initWebpackConfig() {
   } = getBnorthConfig();
 
   let {
+    type,
     env,
-    isDev,
     appOut,
     appNodeModules,
     ownNodeModules,
@@ -233,7 +232,8 @@ function initWebpackConfig() {
   } = getEnv();
 
   let entrys = [];
-  if(isDev) entrys.push(require.resolve('react-dev-utils/webpackHotDevClient'));
+  
+  if(type==='server') entrys.push(require.resolve('react-dev-utils/webpackHotDevClient'));
   if(mockjs) { entrys.push(require.resolve('mockjs/dist/mock')); entrys.push(resolve(mockjs)); }
   entrys.push(resolveApp('src/index.js'));
 

@@ -13,10 +13,9 @@ function resolveApp(relativePath) {
   return resolve(cacheAppPath, relativePath);
 }
 
-function initEnv({cwd, env}={}) {
+function initEnv({cwd, type, env}={}) {
   cwd = cwd || process.cwd();
   env = env || 'development'; // production
-  isDev = env === 'development';
 
   const appPath = realpathSync(cwd);
   cacheAppPath = appPath;
@@ -26,9 +25,8 @@ function initEnv({cwd, env}={}) {
 
   cache = {
     cwd,
+    type,
     env, 
-    isDev,
-
     appPath,
     appPackagePath,
     appPackage,

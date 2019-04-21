@@ -8,7 +8,7 @@ const spawn = require('cross-spawn');
 const { initEnv } = require('../config/env.config');
 
 module.exports = function run(type, watch) {
-  initEnv();
+  initEnv({type, env: argv.debug?'development':'production'});
   spawn.sync('node', process.argv.slice(3), {stdio: 'inherit'});
 }
 

@@ -45,7 +45,7 @@ function babelTransform(env, argv, watch, scb, ecb) {
 }
 
 module.exports = function run(type, watch) {
-  let env = initEnv();
+  let env = initEnv({type, env: 'development'});
   let argv = initArgv(type);
 
   console.log(`#start build: ${env, env.appName}`);

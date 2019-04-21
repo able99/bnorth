@@ -31,7 +31,6 @@ let config = {
 
   config_development: {
     devtool: '#cheap-module-eval-source-map',
-    outputPublicPath: '/',
   },
 
   config_production: {

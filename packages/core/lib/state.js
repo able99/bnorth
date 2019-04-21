@@ -270,7 +270,7 @@ function () {
       return this.app.utils.pathGet(data, path);
     }
     /**
-     * 更新数据单元的数据
+     * 更新数据单元的数据, 异步更新，同时调用2次 update，会导致后面更新覆盖前一次，建议用同步方式调用
      * @async
      * @param {*} - 新数据  
      * @param {object} - 更新参数，其中的 append 用于指定追加方式，参见 app.utils.objectUpdate 中对参数的说明

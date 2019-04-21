@@ -217,7 +217,7 @@ export default function BaseComponent(aprops) {
      * ```
      */
     if(k.startsWith('bs-')){
-      delete props[k]; if(!v) return; let name = k.slice(3);
+      delete props[k]; if(v===false||v===undefined||v===null) return; let name = k.slice(3);
 
       styleSet[name] = v;
     /**
@@ -235,7 +235,7 @@ export default function BaseComponent(aprops) {
      * ```
      */
     }else if(k.startsWith('bc-')){
-      delete props[k]; if(!v) return; let name = k.slice(3); 
+      delete props[k]; if(v===false||v===undefined||v===null) return; let name = k.slice(3); 
 
       classSet[name+(v===true?'':('-'+v))] = true;
     /**
@@ -268,6 +268,8 @@ export default function BaseComponent(aprops) {
       objName += 'Props';
       props[objName] = {...props[objName]};
       props[objName][propName] = v;
+    }else if(k.endsWith('Props')&&typeof(v)==='object'){
+      props[k] = {...props[k], ...v};
     }
   })
   

@@ -187,6 +187,10 @@ cordova-plugin-android-permissions
 
 cordova-plugin-adam-imagepicker
 
+### Qrcode
+
+phonegap-plugin-barcodescanner
+
 ### Use Native Navigator
 
 cordova-plugin-yc-navigator

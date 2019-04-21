@@ -324,7 +324,6 @@ class Router {
 
   _handleLocationChange(location, action) {
     this.app.log.debug('router location', location);
-    if(location.ignore) {location.ignore = false; return}
     this._clearError();
 
     Object.keys(this._states).filter(v=>!location.pathname.startsWith(v)).forEach(v=>{delete this._states[v]});
@@ -358,6 +357,7 @@ class Router {
     if(!pathnames.length) pathnames.push(spe);
     location.pathnames = pathnames;
     
+    if(location.ignore) {location.ignore = false; return}
     this._updateRouterInfo(location);
   };
 

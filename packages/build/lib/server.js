@@ -20,7 +20,7 @@ const { initWebpackConfig } = require('../config/webpack.config');
 // run
 //-----------------------------------
 function doRun(type, serverConfig) {
-  const env = initEnv();
+  const env = initEnv({type, env: 'development'});
   const argv = initArgv(type);
   const bnorthConfig = initBnorthConfig();
   initBabelOption();

@@ -1,6 +1,7 @@
 import '@bnorth/rich.css/css/normalize.css';
 import genCss from '@bnorth/rich.css';
 import Icon from '@bnorth/components/lib/Icon';
+import List from '@bnorth/components/lib/List';
 import {OverlayLoader} from '@bnorth/components/lib/Loader';
 import icoSvg from '../res/default.ico.svg';
 // import './index.css';
@@ -20,4 +21,9 @@ export default function(app) {
   Icon.appendMap(iconMap);
 
   OverlayLoader.defaultProps.top = 45-3;
+
+  List.Item.defaultProps['b-precast']['bc-padding-a'] = 'lg';
+  List.Item.defaultProps['b-precast']['bp-media-b-size'] = 'xxs';
+  List.Item.defaultProps['b-precast']['bp-title-b-size'] = '';
+  List.Item.defaultProps['b-precast']['bp-arrow-b-size'] = 'xxxl';
 }

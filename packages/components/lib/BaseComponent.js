@@ -34,6 +34,10 @@ exports.chainedFuncs = chainedFuncs;
 exports.default = BaseComponent;
 exports.domIsMouse = exports.domIsTouch = void 0;
 
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
+require("core-js/modules/es6.string.ends-with");
+
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 require("core-js/modules/es6.object.assign");
@@ -305,7 +309,7 @@ function BaseComponent(aprops) {
      */
     if (k.startsWith('bs-')) {
       delete props[k];
-      if (!v) return;
+      if (v === false || v === undefined || v === null) return;
       var name = k.slice(3);
       styleSet[name] = v;
       /**
@@ -324,7 +328,7 @@ function BaseComponent(aprops) {
        */
     } else if (k.startsWith('bc-')) {
       delete props[k];
-      if (!v) return;
+      if (v === false || v === undefined || v === null) return;
 
       var _name = k.slice(3);
 
@@ -365,6 +369,8 @@ function BaseComponent(aprops) {
       objName += 'Props';
       props[objName] = (0, _objectSpread2.default)({}, props[objName]);
       props[objName][propName] = v;
+    } else if (k.endsWith('Props') && (0, _typeof2.default)(v) === 'object') {
+      props[k] = (0, _objectSpread2.default)({}, props[k], v);
     }
   });
   if (active) classSet['active'] = true;

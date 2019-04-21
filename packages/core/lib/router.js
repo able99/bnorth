@@ -505,11 +505,6 @@ function () {
 
       this.app.log.debug('router location', location);
 
-      if (location.ignore) {
-        location.ignore = false;
-        return;
-      }
-
       this._clearError();
 
       Object.keys(this._states).filter(function (v) {
@@ -549,6 +544,11 @@ function () {
 
       if (!pathnames.length) pathnames.push(spe);
       location.pathnames = pathnames;
+
+      if (location.ignore) {
+        location.ignore = false;
+        return;
+      }
 
       this._updateRouterInfo(location);
     }
