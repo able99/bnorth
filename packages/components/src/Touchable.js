@@ -105,12 +105,14 @@ class Touchable extends React.Component{
 
   render() {
     let props = BaseComponent(this.props, Touchable);
-    Object.keys(props).forEach(v=>{ if(privateProps[v]) delete props[v] });
+    Object.keys(props).forEach(v=>{ 
+      if(privateProps[v]) 
+      delete props[v] 
+    });
 
     return <Panel {...props} />
   }
 }
-
 
 Touchable.defaultProps = {};
 /**
@@ -284,6 +286,7 @@ Touchable.defaultProps = {};
  * @type {Panel.module:Touchable~RecognizerCallback}
  */
 
-
 Object.defineProperty(Touchable,"Touchable",{ get:function(){ return Touchable }, set:function(val){ Touchable = val }})
+Touchable.isBnorth = true;
+Touchable.defaultProps['b-precast'] = {}
 export default Touchable;

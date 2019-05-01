@@ -62,7 +62,7 @@ class Popover extends React.Component {
       <Panel {...triggerProps} {...props}>
         {children}
         {!show?null:domCreatePortal((
-          <Panel componentTransform={Backdrop} {...closeProps} {...backdropProps}>
+          <Panel component={Backdrop} {...closeProps} {...backdropProps}>
             <Overlay 
               calcPosition={calcPosition} placement={placement} offsetTarget={offsetTarget} offsetOverlay={offsetOverlay} 
               ref={e=>e&&(!offsetOverlay)&&this.setState({offsetOverlay:domOffset(e, this.dock)})} 
@@ -206,15 +206,10 @@ Popover.defaultProps.calcPosition = function(offsetTarget, offsetOverlay, placem
  * @type {boolean}
  */
 
-
-
 Object.defineProperty(Popover,"Popover",{ get:function(){ return Popover }, set:function(val){ Popover = val }})
+Popover.isBnorth = true;
+Popover.defaultProps['b-precast'] = {}
 export default Popover;
-
-
-
-
-
 
 
 /**
@@ -228,18 +223,19 @@ let Overlay = class extends React.Component {
   render() {
     let {
       calcPosition, offsetTarget, offsetOverlay, placement,
-      ...props
+      classNamePre, stylePre, ...props
     } = BaseComponent(this.props, Overlay);
-
     
     let [classNamePosition, stylePosition] = offsetOverlay?calcPosition(offsetTarget,offsetOverlay, ...((placement&&placement.split('-'))||[])) : [{'visibility-hidden':true},{}];
-    let classNamePre = {
+    classNamePre = {
       'position-absolute bg-color-white border-set-a-': true,
-      ...classNamePosition
+      ...classNamePosition,
+      ...classNamePre,
     }
-    let stylePre = {
+    stylePre = {
       boxSizing: 'content-box',
       ...stylePosition,
+      ...stylePre,
     };
 
     return <Panel onMouseMove={e=>e.stopPropagation()} classNamePre={classNamePre} stylePre={stylePre} {...props} />
@@ -265,3 +261,5 @@ Overlay.defaultProps = {};
  */
 
 Object.defineProperty(Popover,"Overlay",{ get:function(){ return Overlay }, set:function(val){ Overlay = val }})
+Overlay.isBnorth = true;
+Overlay.defaultProps['b-precast'] = {}

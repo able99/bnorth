@@ -66,5 +66,7 @@ Object.defineProperty(_Space, "Space", {
     _Space = val;
   }
 });
+_Space.isBnorth = true;
+_Space.defaultProps['b-precast'] = {};
 var _default = _Space;
 exports.default = _default;

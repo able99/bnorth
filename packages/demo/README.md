@@ -34,7 +34,11 @@ bnorth 解决方案 demo
 1. BaseComponent 与 panel 合并
 1. btn 改名，去掉手动加 active 状态，但是保证 active 状态, 增加 touch 属性 ，onClick 转 onTouchStart
 1. 增加 nextTick 和 nextWork
+1. request 通过 tick 提供进度及时性
 1. 应该去掉 panle 的 relative ，relative 可能引起硬件加速
 1. cordova 建立工程时，如果没有 dist 建立默认 www； 增加 clean 命令 删除 cordova 文件夹；有 cordova 文件夹但是没有 config.xml 时应该怎么处理
-1. 对话框弹出性能，先弹出背景  页面先切换再棉花，提高响应速度  notice 优化，不要改 width, 启动不了硬件加速
+1. cordova tbs x5 内核
+1. cordova webview 的下拉与下拉事件
+1. 对话框弹出性能，先弹出背景  页面先切换再描画，提高响应速度；  notice 优化，不要改 width, 启动不了硬件加速
 1. page 转场
+1. loader 使用 requestAnimationFrame 去掉对 css 依赖

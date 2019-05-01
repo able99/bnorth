@@ -23,7 +23,7 @@ let Loader = aprops=>{
   return (
     <Panel 
       timeout={isProgress?timeoutTransition:timeoutAnimation} isProgress={isProgress} progress={progress} color={color} colorReverse={colorReverse}
-      componentTransform={component} {...props} />
+      component={component} {...props} />
   );
 }
 
@@ -66,6 +66,8 @@ Loader.defaultProps.colorReverse = 'lightgray';
 
 
 Object.defineProperty(Loader,"Loader",{ get:function(){ return Loader }, set:function(val){ Loader = val }})
+Loader.isBnorth = true;
+Loader.defaultProps['b-precast'] = {}
 export default Loader;
 
 
@@ -81,11 +83,11 @@ export default Loader;
 let Line = aprops=>{
   let {
     isProgress, progress, timeout, color, colorReverse,
-    children, ...props
+    classNamePre, stylePre, children, ...props
   } = BaseComponent(aprops, Line);
 
-  let classNamePre = 'width-full height-1em position-relative';
-  let stylePre = { background: colorReverse }
+  classNamePre = {'width-full height-1em position-relative': true, ...classNamePre}
+  stylePre = { background: colorReverse, ...stylePre }
 
   return (
     <Panel classNamePre={classNamePre} stylePre={stylePre} {...props}>
@@ -98,7 +100,8 @@ let Line = aprops=>{
 Line.defaultProps = {};
 
 Object.defineProperty(Loader,"Line",{ get:function(){ return Line }, set:function(val){ Line = val }})
-
+Line.isBnorth = true;
+Line.defaultProps['b-precast'] = {}
 
 
 /**
@@ -111,10 +114,10 @@ Object.defineProperty(Loader,"Line",{ get:function(){ return Line }, set:functio
 let Circle = aprops=>{
   let {
     isProgress, progress, timeout, color, colorReverse,
-    children, ...props
+    classNamePre, children, ...props
   } = BaseComponent(aprops, Circle);
 
-  let classNamePre = 'width-1em height-1em';
+  classNamePre = { 'width-1em height-1em': true, ...classNamePre }
 
   return (
     <Panel component="svg" viewBox="0 0 100 100" classNamePre={classNamePre} {...props}>
@@ -128,20 +131,17 @@ let Circle = aprops=>{
   );
 }
 
-Object.defineProperty(Loader,"Circle",{ get:function(){ return Circle }, set:function(val){ Circle = val }})
-
 Circle.defaultProps = {};
 
-
+Object.defineProperty(Loader,"Circle",{ get:function(){ return Circle }, set:function(val){ Circle = val }})
+Circle.isBnorth = true;
+Circle.defaultProps['b-precast'] = {}
 
 
 Loader.defaultProps.types = {
   line: Line,
   circle: Circle,
 }
-
-
-
 
 
 /**
@@ -152,7 +152,10 @@ Loader.defaultProps.types = {
  * @augments Panel.module:Container~Container
  */
 export let PanelLoader = aprops=>{
-  let { isProgress, progress, loaderProps, title, titleProps, children, ...props } = BaseComponent(aprops);
+  let { 
+    isProgress, progress, loaderProps, title, titleProps, 
+    children, ...props 
+  } = BaseComponent(aprops);
 
   return (
     <Panel.Container panelContainerProps={aprops} ctype="flex"  position="left" justify="center" align="center" {...props}>
@@ -185,17 +188,25 @@ PanelLoader.defaultProps = {};
  */
 
 Object.defineProperty(Loader,"PanelLoader",{ get:function(){ return PanelLoader }, set:function(val){ PanelLoader = val }})
-
+PanelLoader.isBnorth = true;
+PanelLoader.defaultProps['b-precast'] = {}
 
 
 
 
 export let OverlayLoader = aprops=>{
-  let { progress, top, height, ...props } = BaseComponent(aprops, OverlayLoader);
+  let { 
+    progress, top, height, 
+    classNamePre, ...props 
+  } = BaseComponent(aprops, OverlayLoader);
 
-  let classNamePre = 'position-absolute offset-h-start width-full';
+  classNamePre = { 'position-absolute offset-h-start width-full': true, ...classNamePre }
 
-  return <Panel componentTransform={Loader} type="line" isProgress progress={progress} classNamePre={classNamePre} bs-top={top} bs-height={height} {...props} />
+  return (
+    <Panel 
+      type="line" isProgress progress={progress} bs-top={top} bs-height={height} 
+      component={Loader} classNamePre={classNamePre} {...props} />
+  )
 }
 
 OverlayLoader.defaultProps = {}
@@ -203,10 +214,8 @@ OverlayLoader.defaultProps.top = 0;
 OverlayLoader.defaultProps.height = 3;
 
 Object.defineProperty(Loader,"OverlayLoader",{ get:function(){ return OverlayLoader }, set:function(val){ OverlayLoader = val }})
-
-
-
-
+OverlayLoader.isBnorth = true;
+OverlayLoader.defaultProps['b-precast'] = {}
 
 
 export let loader = {

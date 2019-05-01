@@ -16,9 +16,12 @@ import Panel from './Panel';
  * @exportdefault
  */
 let Button = aprops=>{
-  let props = BaseComponent(aprops, Button);
+  let { classNamePre, ...props } = BaseComponent(aprops, Button);
 
-  let classNamePre = 'outline-none appearance-none font-smoothing-antialiased vertical-align-middle position-relative line-height-1 text-align-center padding-a-';
+  classNamePre =  {
+    'outline-none appearance-none font-smoothing-antialiased vertical-align-middle position-relative line-height-1 text-align-center padding-a-': true,
+    ...classNamePre,
+  }
   
   return <Panel component="button" b-style="solid" classNamePre={classNamePre} {...props} />
 }
@@ -26,4 +29,6 @@ let Button = aprops=>{
 Button.defaultProps = {}
 
 Object.defineProperty(Button,"Button",{ get:function(){ return Button }, set:function(val){ Button = val }})
+Button.isBnorth = true;
+Button.defaultProps['b-precast'] = {};
 export default Button;

@@ -9,9 +9,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.modal = exports.default = void 0;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
@@ -42,19 +42,21 @@ var _Modal = function Modal(aprops) {
       bodyProps = _BaseComponent.bodyProps,
       footerProps = _BaseComponent.footerProps,
       buttons = _BaseComponent.buttons,
+      classNamePre = _BaseComponent.classNamePre,
+      stylePre = _BaseComponent.stylePre,
       children = _BaseComponent.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["in", "type", "onClose", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["in", "type", "onClose", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "classNamePre", "stylePre", "children"]);
 
   buttons = buttons[type] || [];
   children = typeof children === 'function' ? children(_this) : children;
-  var classNamePre = {
+  classNamePre = (0, _objectSpread2.default)({
     'position-relative backface-hidden overflow-a-hidden': true,
     'square-full': type === 'popup',
     'border-radius-': type !== 'popup' && type !== 'document'
-  };
-  var stylePre = {
+  }, classNamePre);
+  stylePre = (0, _objectSpread2.default)({
     width: type !== 'popup' ? '80%' : undefined
-  };
+  }, stylePre);
   var classNamePreContainer = {
     'flex-display-block': type !== 'document',
     'flex-justify-center': type !== 'document',
@@ -87,7 +89,7 @@ var _Modal = function Modal(aprops) {
   }, footerProps), buttons.map(function (v, i) {
     return _react.default.createElement(_Panel.default, (0, _extends2.default)({
       key: i,
-      componentTransform: _Button.default,
+      component: _Button.default,
       className: "bg-none- border-none-top- border-none-bottom- border-none-right-",
       "bc-border-set-left-": Boolean(i),
       "bc-border-none-left-": !Boolean(i),
@@ -98,7 +100,7 @@ var _Modal = function Modal(aprops) {
     }, v));
   })) : null);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    componentTransform: _Backdrop.default,
+    component: _Backdrop.default,
     in: isIn,
     btn: false,
     onClick: onClose,
@@ -108,9 +110,6 @@ var _Modal = function Modal(aprops) {
 };
 
 _Modal.defaultProps = {};
-_Modal.defaultProps['b-precast'] = {
-  'bp-header-bp-title-bc-text-weight': 'bold'
-};
 _Modal.defaultProps.buttons = {
   alert: [{
     children: '确定'
@@ -129,6 +128,10 @@ Object.defineProperty(_Modal, "Modal", {
     _Modal = val;
   }
 });
+_Modal.isBnorth = true;
+_Modal.defaultProps['b-precast'] = {
+  'bp-header-bp-title-bc-text-weight': 'bold'
+};
 var _default = _Modal;
 exports.default = _default;
 var modal = {

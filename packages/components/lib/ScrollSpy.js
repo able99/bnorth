@@ -240,5 +240,7 @@ Object.defineProperty(ScrollSpy, "ScrollSpy", {
     ScrollSpy = val;
   }
 });
+ScrollSpy.isBnorth = true;
+ScrollSpy.defaultProps['b-precast'] = {};
 var _default = ScrollSpy;
 exports.default = _default;

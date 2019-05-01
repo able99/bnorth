@@ -81,18 +81,24 @@ function (_React$Component) {
 
       var _BaseComponent = (0, _BaseComponent2.default)(this.props, Landscape),
           dock = _BaseComponent.dock,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["dock"]);
+          classNamePre = _BaseComponent.classNamePre,
+          stylePre = _BaseComponent.stylePre,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["dock", "classNamePre", "stylePre"]);
 
       var width = this.dock.clientWidth;
       var height = this.dock.clientHeight;
-      var stylePre = this.dock && height > width ? (0, _objectSpread2.default)({
+      classNamePre = (0, _objectSpread2.default)({
+        'position-relative': true
+      }, classNamePre);
+      stylePre = this.dock && height > width ? (0, _objectSpread2.default)({
         width: height,
         height: width,
         top: (height - width) / 2,
         left: (width - height) / 2
-      }, (0, _animation.transform)('rotate', '90deg')) : {};
+      }, (0, _animation.transform)('rotate', '90deg'), stylePre) : {};
       return _react.default.createElement(_Panel.default, (0, _extends2.default)({
         full: true,
+        classNamePre: classNamePre,
         stylePre: stylePre
       }, props));
     }
@@ -115,5 +121,7 @@ Object.defineProperty(Landscape, "Landscape", {
     Landscape = val;
   }
 });
+Landscape.isBnorth = true;
+Landscape.defaultProps['b-precast'] = {};
 var _default = Landscape;
 exports.default = _default;

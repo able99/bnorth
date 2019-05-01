@@ -35,10 +35,13 @@ class TabBar extends React.Component {
           {children.map((v,i)=>{
             let {event, onClick, children, ...props} = v.props;
             return <Panel 
-              key={v.key||i} componentTransform={PanelIcon} selected={selectedIndex===i} bp-panelTheme-sensitiveSelect
+              key={v.key||i} component={PanelIcon} selected={selectedIndex===i} bp-panelTheme-sensitiveSelect
               onClick={e=>{
                 if(onWillChange&&onWillChange(i, v.props, event)===false) return;
-                this.setState({selectedIndex: i}, ()=>{ if(onAction) onAction(i, v.props, event); if(onClick) onClick(e) })
+                this.setState({selectedIndex: i}, ()=>{ 
+                  if(onAction) onAction(i, v.props, event); 
+                  if(onClick) onClick(e) 
+                })
               }}
               {...props} />
           })}
@@ -49,7 +52,9 @@ class TabBar extends React.Component {
           onSelectedChange={i=>{
             let props = children[i].props;
             if(onWillChange&&onWillChange(i, props, props&&props.event)===false) return;
-            this.setState({selectedIndex: i}, ()=>{ if(onAction) onAction(i, props, props&&props.event)})
+            this.setState({selectedIndex: i}, ()=>{ 
+              if(onAction) onAction(i, props, props&&props.event)
+            })
           }}
           {...containerProps}>
           {children.map(v=><Panel key={v.key} children={v.props.children} />)}
@@ -94,8 +99,25 @@ TabBar.defaultProps = {}
  */
 
 Object.defineProperty(TabBar,"TabBar",{ get:function(){ return TabBar }, set:function(val){ TabBar = val }})
+TabBar.isBnorth = true;
+TabBar.defaultProps['b-precast'] = {}
 export default TabBar;
 
 
+/**
+ * 标签页组件条目
+ * @component 
+ * @augments BaseComponent
+ * @augments Panel.module:Container~PanelContainer 
+ * @exportdefault
+ */
+let Item = aprops=>{
+  let props = BaseComponent(aprops, Item);
+  return <Panel {...props} />
+}
 
-Object.defineProperty(TabBar,"Item",{ get:function(){ return Panel }, set:function(val){ Panel = val }})
+Item.defaultProps = {};
+
+Object.defineProperty(TabBar,"Item",{ get:function(){ return Item }, set:function(val){ Item = val }})
+Item.isBnorth = true;
+Item.defaultProps['b-precast'] = {}

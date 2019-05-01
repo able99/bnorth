@@ -38,8 +38,6 @@ var _Icon = _interopRequireDefault(require("./Icon"));
 /**
  * @module
  */
-// Carousel
-// ------------------------------
 
 /**
  * 轮播组件
@@ -183,7 +181,7 @@ function (_React$Component) {
           return _this3.isPaused && _this3.play();
         }
       }, props), children, controller ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
-        componentTransform: _Icon.default,
+        component: _Icon.default,
         classNamePre: classNamePreControllerPrev,
         "b-size": "xl",
         "b-style": "solid",
@@ -194,7 +192,7 @@ function (_React$Component) {
         },
         panelItemPlain: true
       }, controllerProps, controllerPrevProps)) : null, controller ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
-        componentTransform: _Icon.default,
+        component: _Icon.default,
         classNamePre: classNamePreControllerNext,
         "b-size": "xl",
         "b-style": "solid",
@@ -302,6 +300,32 @@ Object.defineProperty(Carousel, "Carousel", {
     Carousel = val;
   }
 });
+Carousel.isBnorth = true;
+Carousel.defaultProps['b-precast'] = {};
 var _default = Carousel;
+/**
+ *  轮播组件条目
+ * @component 
+ * @augments BaseComponent
+ * @augments Panel.module:Container~PanelContainer 
+ * @exportdefault
+ */
+
 exports.default = _default;
-Carousel.Item = _Panel.default;
+
+var _Item = function Item(aprops) {
+  var props = (0, _BaseComponent2.default)(aprops, _Item);
+  return _react.default.createElement(_Panel.default, props);
+};
+
+_Item.defaultProps = {};
+Object.defineProperty(Carousel, "Item", {
+  get: function get() {
+    return _Item;
+  },
+  set: function set(val) {
+    _Item = val;
+  }
+});
+_Item.isBnorth = true;
+_Item.defaultProps['b-precast'] = {};

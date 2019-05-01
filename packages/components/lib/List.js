@@ -11,6 +11,8 @@ exports.default = void 0;
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
+var _objectSpread3 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
@@ -96,6 +98,8 @@ Object.defineProperty(List, "List", {
     List = val;
   }
 });
+List.isBnorth = true;
+List.defaultProps['b-precast'] = {};
 var _default = List; // List Item
 // ----------------
 
@@ -110,7 +114,7 @@ var _default = List; // List Item
 exports.default = _default;
 
 var _Item = function Item(aprops) {
-  var _classNamePre;
+  var _objectSpread2;
 
   var _BaseComponent2 = (0, _BaseComponent3.default)(aprops, _Item),
       panelItemIndex = _BaseComponent2.panelItemIndex,
@@ -132,12 +136,13 @@ var _Item = function Item(aprops) {
       arrowProps = _BaseComponent2.arrowProps,
       _BaseComponent2$autoA = _BaseComponent2.autoArrow,
       autoArrow = _BaseComponent2$autoA === void 0 ? true : _BaseComponent2$autoA,
+      classNamePre = _BaseComponent2.classNamePre,
       children = _BaseComponent2.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["panelItemIndex", "panelItemCount", "panelContainerProps", "onClick", "media", "mediaProps", "mainProps", "title", "titleProps", "subTitle", "subTitleProps", "desc", "descProps", "after", "afterProps", "arrow", "arrowProps", "autoArrow", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["panelItemIndex", "panelItemCount", "panelContainerProps", "onClick", "media", "mediaProps", "mainProps", "title", "titleProps", "subTitle", "subTitleProps", "desc", "descProps", "after", "afterProps", "arrow", "arrowProps", "autoArrow", "classNamePre", "children"]);
 
-  var classNamePre = (_classNamePre = {
+  classNamePre = (0, _objectSpread3.default)((_objectSpread2 = {
     'padding-a-': true
-  }, (0, _defineProperty2.default)(_classNamePre, "margin-left-".concat(separatorInset && separatorInset !== true ? '-' + separatorInset : ''), separatorInset), (0, _defineProperty2.default)(_classNamePre, 'padding-left-0', separatorInset), (0, _defineProperty2.default)(_classNamePre, 'border-set-bottom-', panelItemIndex < panelItemCount - 1), _classNamePre);
+  }, (0, _defineProperty2.default)(_objectSpread2, "margin-left-".concat(separatorInset && separatorInset !== true ? '-' + separatorInset : ''), separatorInset), (0, _defineProperty2.default)(_objectSpread2, 'padding-left-0', separatorInset), (0, _defineProperty2.default)(_objectSpread2, 'border-set-bottom-', panelItemIndex < panelItemCount - 1), _objectSpread2), classNamePre);
   return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
     ctype: "primary",
     align: "center",
@@ -159,102 +164,94 @@ var _Item = function Item(aprops) {
 };
 
 _Item.defaultProps = {};
-_Item.defaultProps['b-precast'] = {
-  'bp-subTitle-bc-text-size': 'sm',
-  'bp-desc-bc-text-size': 'sm',
-  'bp-desc-bc-text-color': 'light',
-  'bp-after-bc-text-size': 'sm',
-  'bp-after-bc-text-color': 'light',
-  'bp-arrow-bc-text-color': 'light'
-  /**
-   * 参见 List
-   * @attribute module:List~Item.separatorInset
-   */
+/**
+ * 参见 List
+ * @attribute module:List~Item.separatorInset
+ */
 
-  /**
-   * 设置条目的媒体部分
-   * @attribute module:List~Item.media
-   * @type {element|cmponent}
-   */
+/**
+ * 设置条目的媒体部分
+ * @attribute module:List~Item.media
+ * @type {element|cmponent}
+ */
 
-  /**
-   * 设置条目的媒体部分的属性
-   * @attribute module:List~Item.mediaProps
-   * @type {object}
-   */
+/**
+ * 设置条目的媒体部分的属性
+ * @attribute module:List~Item.mediaProps
+ * @type {object}
+ */
 
-  /**
-   * 设置条目的主体部分
-   * @attribute module:List~Item.main
-   * @type {element|cmponent}
-   */
+/**
+ * 设置条目的主体部分
+ * @attribute module:List~Item.main
+ * @type {element|cmponent}
+ */
 
-  /**
-   * 设置条目的主体部分的属性
-   * @attribute module:List~Item.mainProps
-   * @type {object}
-   */
+/**
+ * 设置条目的主体部分的属性
+ * @attribute module:List~Item.mainProps
+ * @type {object}
+ */
 
-  /**
-   * 设置条目的标题部分
-   * @attribute module:List~Item.title
-   * @type {element|cmponent}
-   */
+/**
+ * 设置条目的标题部分
+ * @attribute module:List~Item.title
+ * @type {element|cmponent}
+ */
 
-  /**
-   * 设置条目的标题部分的属性
-   * @attribute module:List~Item.titleProps
-   * @type {object}
-   */
+/**
+ * 设置条目的标题部分的属性
+ * @attribute module:List~Item.titleProps
+ * @type {object}
+ */
 
-  /**
-   * 设置条目的副标题部分
-   * @attribute module:List~Item.subTitle
-   * @type {element|cmponent}
-   */
+/**
+ * 设置条目的副标题部分
+ * @attribute module:List~Item.subTitle
+ * @type {element|cmponent}
+ */
 
-  /**
-   * 设置条目的副标题部分的属性
-   * @attribute module:List~Item.subTitleProps
-   * @type {object}
-   */
+/**
+ * 设置条目的副标题部分的属性
+ * @attribute module:List~Item.subTitleProps
+ * @type {object}
+ */
 
-  /**
-   * 设置条目的描述部分
-   * @attribute module:List~Item.desc
-   * @type {element|cmponent}
-   */
+/**
+ * 设置条目的描述部分
+ * @attribute module:List~Item.desc
+ * @type {element|cmponent}
+ */
 
-  /**
-   * 设置条目的描述部分的属性
-   * @attribute module:List~Item.descProps
-   * @type {object}
-   */
+/**
+ * 设置条目的描述部分的属性
+ * @attribute module:List~Item.descProps
+ * @type {object}
+ */
 
-  /**
-   * 设置条目的尾部部分
-   * @attribute module:List~Item.desc
-   * @type {element|cmponent}
-   */
+/**
+ * 设置条目的尾部部分
+ * @attribute module:List~Item.desc
+ * @type {element|cmponent}
+ */
 
-  /**
-   * 设置条目的尾部部分的属性
-   * @attribute module:List~Item.descProps
-   * @type {object}
-   */
+/**
+ * 设置条目的尾部部分的属性
+ * @attribute module:List~Item.descProps
+ * @type {object}
+ */
 
-  /**
-   * 设置条目的箭头部分
-   * @attribute module:List~Item.arrow
-   * @type {element|cmponent}
-   */
+/**
+ * 设置条目的箭头部分
+ * @attribute module:List~Item.arrow
+ * @type {element|cmponent}
+ */
 
-  /**
-   * 设置箭头部分是否自动显示，如果设置为真，则在有 onClick 时，自动显示箭头部分
-   * @type {boolean}
-   */
+/**
+ * 设置箭头部分是否自动显示，如果设置为真，则在有 onClick 时，自动显示箭头部分
+ * @type {boolean}
+ */
 
-};
 _Item.defaultProps.autoArrow = true;
 Object.defineProperty(List, "Item", {
   get: function get() {
@@ -264,3 +261,12 @@ Object.defineProperty(List, "Item", {
     _Item = val;
   }
 });
+_Item.isBnorth = true;
+_Item.defaultProps['b-precast'] = {
+  'bp-subTitle-bc-text-size': 'sm',
+  'bp-desc-bc-text-size': 'sm',
+  'bp-desc-bc-text-color': 'light',
+  'bp-after-bc-text-size': 'sm',
+  'bp-after-bc-text-color': 'light',
+  'bp-arrow-bc-text-color': 'light'
+};

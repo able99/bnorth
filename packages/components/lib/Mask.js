@@ -9,6 +9,8 @@ exports.mask = exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
@@ -35,12 +37,15 @@ var _Loader = require("./Loader");
 var _Mask = function Mask(aprops) {
   var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Mask),
       loaderProps = _BaseComponent.loaderProps,
+      classNamePre = _BaseComponent.classNamePre,
       children = _BaseComponent.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["loaderProps", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["loaderProps", "classNamePre", "children"]);
 
-  var classNamePre = 'flex-display-block flex-direction-v flex-justify-center flex-align-center';
+  classNamePre = (0, _objectSpread2.default)({
+    'flex-display-block flex-direction-v flex-justify-center flex-align-center': true
+  }, classNamePre);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    componentTransform: _Backdrop.default,
+    component: _Backdrop.default,
     classNamePre: classNamePre
   }, props), _react.default.createElement(_Loader.PanelLoader, (0, _extends2.default)({
     position: "top"
@@ -48,15 +53,12 @@ var _Mask = function Mask(aprops) {
 };
 
 _Mask.defaultProps = {};
-_Mask.defaultProps['b-precast'] = {
-  'b-theme': 'white'
-  /**
-   * 设置 蒙层中间的 loader 组件的参数
-   * @attribute module:mask.Mask.loaderProps
-   * @type {object}
-   */
+/**
+ * 设置 蒙层中间的 loader 组件的参数
+ * @attribute module:mask.Mask.loaderProps
+ * @type {object}
+ */
 
-};
 Object.defineProperty(_Mask, "Mask", {
   get: function get() {
     return _Mask;
@@ -65,6 +67,10 @@ Object.defineProperty(_Mask, "Mask", {
     _Mask = val;
   }
 });
+_Mask.isBnorth = true;
+_Mask.defaultProps['b-precast'] = {
+  'b-theme': 'white'
+};
 var _default = _Mask;
 /**
  * 提供了对蒙层的显示和控制的能力，同时修改了 app.render.mask 的默认行为

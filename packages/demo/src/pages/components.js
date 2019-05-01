@@ -65,7 +65,7 @@ let Component = aprops=>{
 
       <Groups.Group title="BackTop" desc="返回顶部按钮">
         <Groups.Show>
-          {props=><Panel data-dock><Panel bc-width-full bs-height="150px" bc-scrollable-y->{listGener(40)}<BackTop param="100%" dock {...props} /></Panel></Panel>}
+          {props=><Panel data-dock bc-position-relative><Panel bc-width-full bs-height="150px" bc-scrollable-y->{listGener(40)}<BackTop param="100%" dock {...props} /></Panel></Panel>}
         </Groups.Show>
       </Groups.Group>
 
@@ -109,7 +109,7 @@ let Component = aprops=>{
           'dock|相对于具有 data-dock 属性元素还是父元素': [true, false],
         }}/>
         <Groups.Show>
-          {props=><Panel data-dock><Panel bc-scrollable-y- bs-height="150px">{listGener(20)}<Fab {...props}>fab</Fab></Panel></Panel>}
+          {props=><Panel data-dock bc-position-relative><Panel bc-position-relative bc-scrollable-y- bs-height="150px">{listGener(20)}<Fab {...props}>fab</Fab></Panel></Panel>}
         </Groups.Show>
       </Groups.Group>
 

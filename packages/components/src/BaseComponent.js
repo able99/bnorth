@@ -6,14 +6,7 @@ import ReactDOM from 'react-dom';
 import css from 'dom-helpers/style';
 import offset from 'dom-helpers/query/offset';
 import position from 'dom-helpers/query/position';
-import classes from '@bnorth/rich.css/lib/classes'; 
 
-
-const MARGINS = {
-  height: ['marginTop', 'marginBottom'],
-  width: ['marginLeft', 'marginRight'],
-};
- 
 
 // util
 // -------------------
@@ -132,6 +125,11 @@ export function domOffset(node, dock) {
   return dock?position(node, dock):offset(node);
 }
 
+const MARGINS = {
+  height: ['marginTop', 'marginBottom'],
+  width: ['marginLeft', 'marginRight'],
+};
+
 export function domGetDimensionValue(elem, dimension="height") {
   elem = ReactDOM.findDOMNode(elem);
   let value = elem[`offset${domCapitalize(dimension)}`];
@@ -188,77 +186,17 @@ export * from 'dom-helpers/events/'
  * @exportdefault
  * @name BaseComponent
  */
-export default function BaseComponent(aprops) {
-  aprops = {
-    ...(typeof aprops['b-precast']==='function'?aprops['b-precast'](aprops):aprops['b-precast']), 
-    ...(typeof aprops['b-dynamic']==='function'?aprops['b-dynamic'](aprops):aprops['b-dynamic']),
-    ...aprops
+export default function BaseComponent(props) {
+  props = {
+    ...(typeof props['b-precast']==='function'?props['b-precast'](props):props['b-precast']), 
+    ...(typeof props['b-dynamic']==='function'?props['b-dynamic'](props):props['b-dynamic']),
+    ...props
   }
-  delete aprops['b-precast'];
-  delete aprops['b-dynamic'];
-
-  let {
-    active, selected, disabled, onClick, onTouchStart, onTouchEnd, onTouchCancel, btn,
-    classNamePre, classNameExt, stylePre, styleExt, className, style, refWrap, ...props
-  } = aprops;
-
-  let classSet = {};
-  let styleSet = {};
+  delete props['b-precast'];
+  delete props['b-dynamic'];
 
   Object.entries(props).forEach(([k,v])=>{
-    /**
-     * 设置组件的样式对象，将属性名去掉 bs- 前缀，和属性值，追加到组件的样式对象中
-     * 
-     * @attribute BaseComponent.bs-xxx
-     * @type {number|string} 
-     * @example
-     * ```jsx
-     * <Panel bs-width="50%" style={{height: '50%'}} /> // style: { widht: 50%, height: 50% }
-     * ```
-     */
-    if(k.startsWith('bs-')){
-      delete props[k]; if(v===false||v===undefined||v===null) return; let name = k.slice(3);
-
-      styleSet[name] = v;
-    /**
-     * 设置样式类
-     * 
-     * - 当属性值为 true 时，将当前属性名，去掉 bc- 前缀，追加到组件的样式类属性中
-     * - 当属性值为数字或字符串时，将去掉 bc- 前缀的属性名和属性值用 - 连接后，追加到组件的样式类属性中
-     * - 当属性值不为真时，没有任何作用
-     * 
-     * @attribute BaseComponent.bc-xxx
-     * @type {boolean|string|number} 
-     * @example
-     * ```jsx
-     * <Panel bc-text-size="lg" bc-text-weight-={true} className="text-color-primary" /> // className: 'text-color-primary text-size-lg text-weight-'
-     * ```
-     */
-    }else if(k.startsWith('bc-')){
-      delete props[k]; if(v===false||v===undefined||v===null) return; let name = k.slice(3); 
-
-      classSet[name+(v===true?'':('-'+v))] = true;
-    /**
-     * 执行样式函数，并将结果设置到组件的样式对象。将属性名去掉 bs- 前缀作为函数名称，从样式函数集合中获取函数，将属性值(为数组时，作为展开参数)作为参数，执行并将结果追加到组件的样式对象中
-     * 
-     * @attribute BaseComponent.bf-xxx
-     * @type {number|string|array} 
-       * @example
-       * ```jsx
-       * import { backgroundImage } from '@bnorth/rich.css/lib/styles/background';
-       * import { addFunctions } from '@bnorth/components/lib/utils/props';
-       * addFunctions({ backgroundImage });
-       * 
-       * export default props=>{
-       *   return <Panel bf-background={'bg.jpg'} /> // style: {backgroundImage: url(bg.jpg)}
-       * }
-       * ```
-     */
-    }else if(k.startsWith('bf-')){
-      delete props[k]; if(!v) return; let name = k.slice(3); name = BaseComponent.styleFunctions[name]; if(!name) return;
-      
-      Object.assign(styleSet, Array.isArray(v)?name(...v):name(v));
-    }else if(k.startsWith('bp-')){
+    if(k.startsWith('bp-')){
       delete props[k]; 
       k = k.slice(3);
       let index = k.indexOf('-'); if(index<0) return;
@@ -268,38 +206,10 @@ export default function BaseComponent(aprops) {
       objName += 'Props';
       props[objName] = {...props[objName]};
       props[objName][propName] = v;
-    }else if(k.endsWith('Props')&&typeof(v)==='object'){
-      props[k] = {...props[k], ...v};
     }
   })
   
-  if(active) classSet['active'] = true;
-  if(selected) classSet['selected'] = true;
-  if(disabled) classSet['disabled'] = true;
-  if(onClick&&(btn!==false)) classSet['cursor-pointer'] = true;
-  if((onClick&&(!btn&&btn!==false))||btn===true) classSet['btn'] = true;
-  if(onClick&&(btn!==false)) {
-    props['onTouchStart'] = e=>{e.currentTarget.classList.add(!btn||btn===true?'active':btn);onTouchStart&&onTouchStart(e)}
-    props['onTouchEnd'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchEnd&&onTouchEnd(e)}; 
-    props['onTouchCancel'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchCancel&&onTouchCancel(e)}; 
-  } else {
-    if(aprops.hasOwnProperty('onTouchStart')) props.onTouchStart = onTouchStart;
-    if(aprops.hasOwnProperty('onTouchEnd')) props.onTouchEnd = onTouchEnd;
-    if(aprops.hasOwnProperty('onTouchCancel')) props.onTouchCancel = onTouchCancel;
-  }
-
-  if(aprops.hasOwnProperty('onClick')) props.onClick = onClick;
-  if(aprops.hasOwnProperty('selected')) props.selected = selected;
-  if(aprops.hasOwnProperty('active')) props.active = active;
-  if(aprops.hasOwnProperty('disabled')) props.disabled = disabled;
-  if(aprops.hasOwnProperty('btn')) props.btn = btn;
-  if(aprops.hasOwnProperty('refWrap')) props.ref = refWrap;
-  
-  return {
-    ...props,
-    className: classes(classNamePre, classSet, className, classNameExt),
-    style: {...stylePre, ...styleSet, ...style, ...styleExt},
-  };
+  return props;
 }
 
 /**

@@ -25,13 +25,13 @@ class Fab extends React.Component{
   }
 
   render() {
-    let { h, v, margin, dock, ...props } = BaseComponent(this.props, Fab);
+    let { h, v, margin, dock, classNamePre, ...props } = BaseComponent(this.props, Fab);
 
     if((dock===true||typeof dock==='string')&&!this.dock) {
       return <span ref={e=>{ if(!e) return;this.dock = domFindDock(e, dock);this.forceUpdate() }} style={{fontSize:0}} />
     }
 
-    let classNamePre = {
+    classNamePre = {
       'position-absolute': true,
       [`margin-top-${margin!==true?margin:''}`]: margin&&v==='start',
       [`margin-left-${margin!==true?margin:''}`]: margin&&h==='start',
@@ -46,9 +46,10 @@ class Fab extends React.Component{
       'offset-right-start': h==='end',
       'offset-top-start': v==='start',
       'offset-bottom-start': v==='end',
+      ...classNamePre,
     }
 
-    let component = <Panel componentTransform={Button} classNamePre={classNamePre}  {...props} />;
+    let component = <Panel component={Button} classNamePre={classNamePre}  {...props} />;
     return this.dock?domCreatePortal(component, this.dock):component;
   }
 }
@@ -80,5 +81,7 @@ Fab.defaultProps.margin = true;
 
 
 Object.defineProperty(Fab,"Fab",{ get:function(){ return Fab }, set:function(val){ Fab = val }})
+Fab.isBnorth = true;
+Fab.defaultProps['b-precast'] = {};
 export default Fab;
 

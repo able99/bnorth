@@ -28,19 +28,28 @@ class Landscape extends React.Component
 
   render() {
     if(!this.dock) return <span style={{ fontSize: 0 }} />;
-    let { dock, ...props } = BaseComponent(this.props, Landscape);
+    let { 
+      dock,
+      classNamePre ,stylePre, ...props 
+    } = BaseComponent(this.props, Landscape);
+
     let width = this.dock.clientWidth;
     let height = this.dock.clientHeight;
 
-    let stylePre = (this.dock&&height>width)?{ 
+    classNamePre = {
+      'position-relative': true,
+      ...classNamePre,
+    }
+    stylePre = (this.dock&&height>width)?{ 
       width: height,
       height: width,
       top: (height - width) / 2,
       left: (width - height) / 2,
       ...transform('rotate', '90deg'),
+      ...stylePre,
     }:{};
     
-    return <Panel full stylePre={stylePre} {...props} />;
+    return <Panel full classNamePre={classNamePre} stylePre={stylePre} {...props} />;
   }
 }
 
@@ -53,4 +62,6 @@ Landscape.defaultProps.dock = true;
 
 
 Object.defineProperty(Landscape,"Landscape",{ get:function(){ return Landscape }, set:function(val){ Landscape = val }})
+Landscape.isBnorth = true;
+Landscape.defaultProps['b-precast'] = {};
 export default Landscape;

@@ -144,7 +144,7 @@ function (_React$Component) {
         } : null
       };
       return _react.default.createElement(_Panel.default, (0, _extends2.default)({}, triggerProps, props), children, !show ? null : (0, _BaseComponent3.domCreatePortal)(_react.default.createElement(_Panel.default, (0, _extends2.default)({
-        componentTransform: _Backdrop.default
+        component: _Backdrop.default
       }, closeProps, backdropProps), _react.default.createElement(_Overlay, (0, _extends2.default)({
         calcPosition: calcPosition,
         placement: placement,
@@ -315,6 +315,8 @@ Object.defineProperty(Popover, "Popover", {
     Popover = val;
   }
 });
+Popover.isBnorth = true;
+Popover.defaultProps['b-precast'] = {};
 var _default = Popover;
 /**
  * 弹出层组件
@@ -344,7 +346,9 @@ function (_React$Component2) {
           offsetTarget = _BaseComponent2.offsetTarget,
           offsetOverlay = _BaseComponent2.offsetOverlay,
           placement = _BaseComponent2.placement,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["calcPosition", "offsetTarget", "offsetOverlay", "placement"]);
+          classNamePre = _BaseComponent2.classNamePre,
+          stylePre = _BaseComponent2.stylePre,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["calcPosition", "offsetTarget", "offsetOverlay", "placement", "classNamePre", "stylePre"]);
 
       var _ref2 = offsetOverlay ? calcPosition.apply(void 0, [offsetTarget, offsetOverlay].concat((0, _toConsumableArray2.default)(placement && placement.split('-') || []))) : [{
         'visibility-hidden': true
@@ -353,12 +357,12 @@ function (_React$Component2) {
           classNamePosition = _ref3[0],
           stylePosition = _ref3[1];
 
-      var classNamePre = (0, _objectSpread2.default)({
+      classNamePre = (0, _objectSpread2.default)({
         'position-absolute bg-color-white border-set-a-': true
-      }, classNamePosition);
-      var stylePre = (0, _objectSpread2.default)({
+      }, classNamePosition, classNamePre);
+      stylePre = (0, _objectSpread2.default)({
         boxSizing: 'content-box'
-      }, stylePosition);
+      }, stylePosition, stylePre);
       return _react.default.createElement(_Panel.default, (0, _extends2.default)({
         onMouseMove: function onMouseMove(e) {
           return e.stopPropagation();
@@ -400,3 +404,5 @@ Object.defineProperty(Popover, "Overlay", {
     _Overlay = val;
   }
 });
+_Overlay.isBnorth = true;
+_Overlay.defaultProps['b-precast'] = {};

@@ -9,9 +9,13 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+
 var _react = _interopRequireDefault(require("react"));
 
-var _BaseComponent = _interopRequireDefault(require("./BaseComponent"));
+var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -29,8 +33,13 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @exportdefault
  */
 var _Button = function Button(aprops) {
-  var props = (0, _BaseComponent.default)(aprops, _Button);
-  var classNamePre = 'outline-none appearance-none font-smoothing-antialiased vertical-align-middle position-relative line-height-1 text-align-center padding-a-';
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Button),
+      classNamePre = _BaseComponent.classNamePre,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["classNamePre"]);
+
+  classNamePre = (0, _objectSpread2.default)({
+    'outline-none appearance-none font-smoothing-antialiased vertical-align-middle position-relative line-height-1 text-align-center padding-a-': true
+  }, classNamePre);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: "button",
     "b-style": "solid",
@@ -47,5 +56,7 @@ Object.defineProperty(_Button, "Button", {
     _Button = val;
   }
 });
+_Button.isBnorth = true;
+_Button.defaultProps['b-precast'] = {};
 var _default = _Button;
 exports.default = _default;

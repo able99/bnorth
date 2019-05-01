@@ -18,18 +18,23 @@ class PullRefresh extends React.Component {
   componentDidMount() {
     if(domIsMouse) {
       domFindNode(this).addEventListener("mousedown", event=>{ this.mark = false }, true);
-      domFindNode(this).addEventListener("click", event=>{ if(this.mark) { event.stopPropagation(); this.mark = false } }, true);
+      domFindNode(this).addEventListener("click", event=>{ 
+        if(this.mark) { 
+          event.stopPropagation(); 
+          this.mark = false 
+        } 
+      }, true);
     } 
   }
 
   render() {
     let {
       isLoading, onLoad, triggerOffset, loaderProps, 
-      children, ...props
+      classNamePre, children, ...props
     } = BaseComponent(this.props, PullRefresh);
     let { offset=0 } = this.state||{};
 
-    let classNamePre = 'scrollable-y-';
+    classNamePre = { 'scrollable-y-': true, ...classNamePre}
     let classNamePreLoader = 'overflow-a-hidden transition-property-height';
     let stylePreLoader = { height: 0 };
     if(offset>0) stylePreLoader.height = offset;
@@ -37,7 +42,7 @@ class PullRefresh extends React.Component {
 
     return (
       <Panel 
-        componentTransform={Touchable} recognizers={{pan: {enable: true}}} direction="vertical" options={{touchAction:'pan-y'}} 
+        recognizers={{pan: {enable: true}}} direction="vertical" options={{touchAction:'pan-y'}} 
         onPan={(event, element)=>{
           if(element.scrollTop>0) return;
           this.setState({offset: Math.max(event.deltaY, 0)});
@@ -55,10 +60,10 @@ class PullRefresh extends React.Component {
             if(domIsMouse) this.mark = true;
           }
         }}
-        classNamePre={classNamePre} {...props}>
+        component={Touchable} classNamePre={classNamePre} {...props}>
         <Panel 
-          componentTransform={PanelLoader} position="top" isProgress={!isLoading} progress={offset*100/triggerOffset} 
-          classNamePre={classNamePreLoader} stylePre={stylePreLoader} {...loaderProps} />
+          position="top" isProgress={!isLoading} progress={offset*100/triggerOffset} 
+          component={PanelLoader} classNamePre={classNamePreLoader} stylePre={stylePreLoader} {...loaderProps} />
         {children}
       </Panel>
     )
@@ -89,5 +94,7 @@ PullRefresh.defaultProps.triggerOffset = 60;
 
 
 Object.defineProperty(PullRefresh,"PullRefresh",{ get:function(){ return PullRefresh }, set:function(val){ PullRefresh = val }})
+PullRefresh.isBnorth = true;
+PullRefresh.defaultProps['b-precast'] = {}
 export default PullRefresh;
 

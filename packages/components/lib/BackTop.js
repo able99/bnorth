@@ -108,12 +108,12 @@ function (_React$Component) {
           checkFunc(checkParam, _this.dock) ? _this.show() : _this.hide();
         }
       }, scrollSpyProps)), this.isShow() ? _react.default.createElement(_Panel.default, (0, _extends2.default)({
-        componentTransform: _Fab.default,
+        component: _Fab.default,
         onClick: (0, _BaseComponent2.chainedFuncs)(function () {
           return _this.scrollToTop();
         }, onClick)
       }, props), _react.default.createElement(_Panel.default, (0, _extends2.default)({
-        componentTransform: _Icon.PanelIcon,
+        component: _Icon.PanelIcon,
         name: "backTop:^"
       }, contentProps), children)) : null);
     }
@@ -161,5 +161,7 @@ Object.defineProperty(BackTop, "BackTop", {
     BackTop = val;
   }
 });
+BackTop.isBnorth = true;
+BackTop.defaultProps['b-precast'] = {};
 var _default = BackTop;
 exports.default = _default;

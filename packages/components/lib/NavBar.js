@@ -9,11 +9,13 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
 
-var _BaseComponent3 = _interopRequireDefault(require("./BaseComponent"));
+var _BaseComponent4 = _interopRequireDefault(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -23,8 +25,6 @@ var _Icon = require("./Icon");
  * 标题栏组件
  * @module 
  */
-// NarBar
-// --------------------------
 
 /**
  * 标题栏组件
@@ -33,14 +33,18 @@ var _Icon = require("./Icon");
  * @exportdefault
  */
 var _NavBar = function NavBar(aprops) {
-  var _BaseComponent = (0, _BaseComponent3.default)(aprops, _NavBar),
+  var _BaseComponent = (0, _BaseComponent4.default)(aprops, _NavBar),
       overlay = _BaseComponent.overlay,
       hidden = _BaseComponent.hidden,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["overlay", "hidden"]);
+      classNamePre = _BaseComponent.classNamePre,
+      _BaseComponent$styleP = _BaseComponent.stylePre,
+      stylePre = _BaseComponent$styleP === void 0 ? {} : _BaseComponent$styleP,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["overlay", "hidden", "classNamePre", "stylePre"]);
 
   if (hidden) return null;
-  var classNamePre = 'flex-display-block flex-justify-around flex-align-center width-full padding-v-sm';
-  var stylePre = {};
+  classNamePre = (0, _objectSpread2.default)({
+    'flex-display-block flex-justify-around flex-align-center width-full padding-v-sm': true
+  }, classNamePre);
   if (overlay) stylePre.paddingTop = overlay === true ? 20 : overlay;
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: "nav",
@@ -70,6 +74,8 @@ Object.defineProperty(_NavBar, "NavBar", {
     _NavBar = val;
   }
 });
+_NavBar.isBnorth = true;
+_NavBar.defaultProps['b-precast'] = {};
 var _default = _NavBar;
 /**
  * 标题栏组件的标题子组件
@@ -81,11 +87,14 @@ var _default = _NavBar;
 exports.default = _default;
 
 var _Title = function Title(aprops) {
-  var _BaseComponent2 = (0, _BaseComponent3.default)(aprops, _Title),
+  var _BaseComponent2 = (0, _BaseComponent4.default)(aprops, _Title),
       isFullOrCenter = _BaseComponent2.isFullOrCenter,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isFullOrCenter"]);
+      classNamePre = _BaseComponent2.classNamePre,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isFullOrCenter", "classNamePre"]);
 
-  var classNamePre = 'text-align-center flex-sub-flex-extend';
+  classNamePre = (0, _objectSpread2.default)({
+    'text-align-center flex-sub-flex-extend': true
+  }, classNamePre);
   return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_Panel.default, (0, _extends2.default)({
     inline: true,
     classNamePre: classNamePre,
@@ -98,16 +107,12 @@ var _Title = function Title(aprops) {
 };
 
 _Title.defaultProps = {};
-_Title.defaultProps['b-precast'] = {
-  'bc-text-weight': 'bold',
-  'bc-text-size': 'xl'
-  /**
-   * 设置标题组件铺满小组件之外空间，或者按需设置宽度并居中
-   * @attribute module:NavBar~Title.isFullOrCenter
-   * @type {boolean}
-   */
+/**
+ * 设置标题组件铺满小组件之外空间，或者按需设置宽度并居中
+ * @attribute module:NavBar~Title.isFullOrCenter
+ * @type {boolean}
+ */
 
-};
 Object.defineProperty(_NavBar, "Title", {
   get: function get() {
     return _Title;
@@ -116,6 +121,11 @@ Object.defineProperty(_NavBar, "Title", {
     _Title = val;
   }
 });
+_Title.isBnorth = true;
+_Title.defaultProps['b-precast'] = {
+  'bc-text-weight': 'bold',
+  'bc-text-size': 'xl'
+};
 /**
  * 标题栏组件的上的小组件
  * @component
@@ -124,10 +134,15 @@ Object.defineProperty(_NavBar, "Title", {
  */
 
 var _Item = function Item(aprops) {
-  var props = (0, _BaseComponent3.default)(aprops, _Item);
-  var classNamePre = 'padding-h-sm flex-sub-flex-none';
+  var _BaseComponent3 = (0, _BaseComponent4.default)(aprops, _Item),
+      classNamePre = _BaseComponent3.classNamePre,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["classNamePre"]);
+
+  classNamePre = (0, _objectSpread2.default)({
+    'padding-h-sm flex-sub-flex-none': true
+  }, classNamePre);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    componentTransform: _Icon.PanelIcon,
+    component: _Icon.PanelIcon,
     classNamePre: classNamePre
   }, props));
 };
@@ -141,3 +156,5 @@ Object.defineProperty(_NavBar, "Item", {
     _Item = val;
   }
 });
+_Item.isBnorth = true;
+_Item.defaultProps['b-precast'] = {};

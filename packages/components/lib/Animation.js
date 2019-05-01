@@ -9,7 +9,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
+var _objectSpread3 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
@@ -121,11 +123,13 @@ _Animation.defaultProps.types = {
       var isIn = aprops.in,
           timeout = aprops.timeout,
           dimension = aprops.dimension,
-          props = (0, _objectWithoutProperties2.default)(aprops, ["in", "timeout", "dimension"]);
-      props.classNamePre = "opacity-".concat(state === 'entered' || state === 'entering' ? '100' : isIn ? '50' : '0');
-      props.stylePre = (0, _objectSpread2.default)({}, (0, _animation.transiton)("".concat(timeout, "ms"), {
+          classNamePre = aprops.classNamePre,
+          stylePre = aprops.stylePre,
+          props = (0, _objectWithoutProperties2.default)(aprops, ["in", "timeout", "dimension", "classNamePre", "stylePre"]);
+      props.classNamePre = (0, _objectSpread3.default)((0, _defineProperty2.default)({}, "opacity-".concat(state === 'entered' || state === 'entering' ? '100' : isIn ? '50' : '0'), true), classNamePre);
+      props.stylePre = (0, _objectSpread3.default)({}, (0, _animation.transiton)("".concat(timeout, "ms"), {
         property: 'opacity'
-      }));
+      }), stylePre);
       return props;
     }
   },
@@ -134,15 +138,16 @@ _Animation.defaultProps.types = {
       var isIn = aprops.in,
           timeout = aprops.timeout,
           dimension = aprops.dimension,
-          props = (0, _objectWithoutProperties2.default)(aprops, ["in", "timeout", "dimension"]);
-      props.classNamePre = {
-        'overflow-a-hidden': true,
-        'text-white-space-nowrap': true,
+          classNamePre = aprops.classNamePre,
+          stylePre = aprops.stylePre,
+          props = (0, _objectWithoutProperties2.default)(aprops, ["in", "timeout", "dimension", "classNamePre", "stylePre"]);
+      props.classNamePre = (0, _objectSpread3.default)({
+        'overflow-a-hidden text-white-space-nowrap': true,
         'display-none': !isIn & state === 'exited'
-      };
-      props.stylePre = (0, _objectSpread2.default)({}, (0, _animation.transiton)("".concat(timeout, "ms"), {
+      }, classNamePre);
+      props.stylePre = (0, _objectSpread3.default)({}, (0, _animation.transiton)("".concat(timeout, "ms"), {
         property: dimension
-      }));
+      }), stylePre);
       return props;
     },
     onEnter: function onEnter(props, elem) {
@@ -176,5 +181,7 @@ Object.defineProperty(_Animation, "Animation", {
     _Animation = val;
   }
 });
+_Animation.isBnorth = true;
+_Animation.defaultProps['b-precast'] = {};
 var _default = _Animation;
 exports.default = _default;

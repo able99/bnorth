@@ -11,6 +11,8 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -80,14 +82,17 @@ function (_React$Component) {
           onLoad = _BaseComponent.onLoad,
           triggerOffset = _BaseComponent.triggerOffset,
           loaderProps = _BaseComponent.loaderProps,
+          classNamePre = _BaseComponent.classNamePre,
           children = _BaseComponent.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["isLoading", "onLoad", "triggerOffset", "loaderProps", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["isLoading", "onLoad", "triggerOffset", "loaderProps", "classNamePre", "children"]);
 
       var _ref = this.state || {},
           _ref$offset = _ref.offset,
           offset = _ref$offset === void 0 ? 0 : _ref$offset;
 
-      var classNamePre = 'scrollable-y-';
+      classNamePre = (0, _objectSpread2.default)({
+        'scrollable-y-': true
+      }, classNamePre);
       var classNamePreLoader = 'overflow-a-hidden transition-property-height';
       var stylePreLoader = {
         height: 0
@@ -95,7 +100,6 @@ function (_React$Component) {
       if (offset > 0) stylePreLoader.height = offset;
       if (isLoading) stylePreLoader.height = triggerOffset;
       return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-        componentTransform: _Touchable.default,
         recognizers: {
           pan: {
             enable: true
@@ -136,12 +140,13 @@ function (_React$Component) {
             if (_BaseComponent2.domIsMouse) _this2.mark = true;
           }
         },
+        component: _Touchable.default,
         classNamePre: classNamePre
       }, props), _react.default.createElement(_Panel.default, (0, _extends2.default)({
-        componentTransform: _Loader.PanelLoader,
         position: "top",
         isProgress: !isLoading,
         progress: offset * 100 / triggerOffset,
+        component: _Loader.PanelLoader,
         classNamePre: classNamePreLoader,
         stylePre: stylePreLoader
       }, loaderProps)), children);
@@ -183,5 +188,7 @@ Object.defineProperty(PullRefresh, "PullRefresh", {
     PullRefresh = val;
   }
 });
+PullRefresh.isBnorth = true;
+PullRefresh.defaultProps['b-precast'] = {};
 var _default = PullRefresh;
 exports.default = _default;

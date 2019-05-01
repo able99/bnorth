@@ -65,12 +65,9 @@ Field.defaultProps = {}
 
 
 Object.defineProperty(Field,"Field",{ get:function(){ return Field }, set:function(val){ Field = val }})
+Field.isBnorth = true;
+Field.defaultProps['b-precast'] = {}
 export default Field;
-
-
-
-
-
 
 
 /**
@@ -96,23 +93,26 @@ let Normal = class extends React.Component {
     let {
       type, value, typesToElement, onChange, pattern, patterns, patternName,
       onEnterPress, onKeyPress, 
-      component="input", children, ...props
+      component="input", classNamePre, children, ...props
     } = BaseComponent(this.props, Normal);
     if(typesToElement.includes(type)) { component = type; type = null }else{ children = undefined }
     if(patternName) pattern = patterns[patternName];
 
-    let classNamePre = {
+    classNamePre = {
       'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle': true,
       'bg-none- border-none-a-': !this.props['b-style'],
+      ...classNamePre,
     }
 
-    return <Panel 
-      component={component} type={type} 
-      onChange={(this.props.hasOwnProperty('value')&&onChange&&pattern&&(e=>{if(!RegExp(pattern).test(e.target.value)) e.target.value = value; onChange(e)}))||onChange}
-      onKeyPress={e=>{ if(onEnterPress&&e.charCode===13){ e.stopPropagation(); e.preventDefault(); onEnterPress(e.target.value) }else{ onKeyPress&&onKeyPress(e) } }} 
-      classNamePre={classNamePre} {...props}>
-      {children}
-    </Panel>
+    return (
+      <Panel 
+        type={type} 
+        onChange={(this.props.hasOwnProperty('value')&&onChange&&pattern&&(e=>{if(!RegExp(pattern).test(e.target.value)) e.target.value = value; onChange(e)}))||onChange}
+        onKeyPress={e=>{ if(onEnterPress&&e.charCode===13){ e.stopPropagation(); e.preventDefault(); onEnterPress(e.target.value) }else{ onKeyPress&&onKeyPress(e) } }} 
+        component={component} classNamePre={classNamePre} {...props}>
+        {children}
+      </Panel>
+    );
   }
 }
 
@@ -131,11 +131,8 @@ Normal.defaultProps.typesToElement = ['progress', 'select', 'textarea'];
 Normal.defaultProps.patterns = {number: "^\\d*$", float: '^\\d*(.\\d*)?$', float2: '/^\\d*(.\\d{0,2})?$/'}; /* eslint-disable no-useless-escape */
 
 Object.defineProperty(Field,"Normal",{ get:function(){ return Normal }, set:function(val){ Normal = val }})
-
-
-
-
-
+Normal.isBnorth = true;
+Normal.defaultProps['b-precast'] = {}
 
 
 /**
@@ -148,9 +145,15 @@ Object.defineProperty(Field,"Normal",{ get:function(){ return Normal }, set:func
  * @private
  */
 let Static = aprops=>{
-  let { type, value, ...props } = BaseComponent(aprops, Static);
+  let { 
+    type, value, 
+    classNamePre, ...props 
+  } = BaseComponent(aprops, Static);
 
-  let classNamePre = 'line-height-1 vertical-align-middle';
+  classNamePre = {
+    'line-height-1 vertical-align-middle': true,
+    ...classNamePre,
+  }
 
   return (
     <Panel component="span" classNamePre={classNamePre} {...props}>
@@ -162,11 +165,8 @@ let Static = aprops=>{
 Static.defaultProps = {};
 
 Object.defineProperty(Field,"Static",{ get:function(){ return Static }, set:function(val){ Static = val }})
-
-
-
-
-
+Static.isBnorth = true;
+Static.defaultProps['b-precast'] = {}
 
 
 /**
@@ -177,9 +177,12 @@ Object.defineProperty(Field,"Static",{ get:function(){ return Static }, set:func
  * @private
  */
 let HiddenInput = aprops=>{
-  let props = BaseComponent(aprops, HiddenInput);
+  let { classNamePre, ...props } = BaseComponent(aprops, HiddenInput);
 
-  let classNamePre = 'visibility-hide display-none';
+  classNamePre = {
+    'visibility-hide display-none': true,
+    ...classNamePre,
+  }
 
   return <Panel component="input" classNamePre={classNamePre} {...props} />;
 }
@@ -187,7 +190,8 @@ let HiddenInput = aprops=>{
 HiddenInput.defaultProps = {};
 
 Object.defineProperty(Field,"HiddenInput",{ get:function(){ return HiddenInput }, set:function(val){ HiddenInput = val }})
-
+HiddenInput.isBnorth = true;
+HiddenInput.defaultProps['b-precast'] = {}
 
 
 
@@ -203,13 +207,16 @@ Object.defineProperty(Field,"HiddenInput",{ get:function(){ return HiddenInput }
 let File = aprops=>{
   let {
     type, value, inputProps, disabled, onClick, onChange, 
-    children, ...props
+    classNamePre, children, ...props
   } = BaseComponent(aprops, File);
 
-  let classNamePre = 'line-height-1 vertical-align-middle';
+  classNamePre = {
+    'line-height-1 vertical-align-middle': true,
+    ...classNamePre,
+  }
 
   return (
-    <Panel component="label" classNamePre={classNamePre} disabled={disabled} {...props}>
+    <Panel disabled={disabled} component="label" classNamePre={classNamePre} {...props}>
       <HiddenInput type={type} value={value} disabled={disabled} onClick={onClick} onChange={onChange} {...inputProps} />
       {children}
     </Panel>
@@ -224,7 +231,8 @@ File.defaultProps = {};
  */
 
 Object.defineProperty(Field,"File",{ get:function(){ return File }, set:function(val){ File = val }})
-
+Field.isBnorth = true;
+Field.defaultProps['b-precast'] = {}
 
 
 
@@ -244,11 +252,16 @@ let CheckState = aprops=>{
   let {
     type, value, defaultValue, domValue, disabled, onClick, onChange, 
     inputProps, innerProps, statusProps, statusCheckedProps, statusUncheckedProps, 
-    children, ...props
+    classNamePre, children, ...props
   } = BaseComponent(aprops, CheckState);
 
-  let classNamePre = 'check-status line-height-0 display-inlineblock vertical-align-middle';
-  let classNamePreInner = 'check-status-inner position-relative line-height-0 display-inlineblock';
+  classNamePre = {
+    'check-status line-height-0 display-inlineblock vertical-align-middle': true,
+    ...classNamePre,
+  }
+  let classNamePreInner = {
+    'check-status-inner position-relative line-height-0 display-inlineblock': true,
+  }
 
   return (
     <Panel component="label" classNamePre={classNamePre} {...props}>
@@ -290,11 +303,9 @@ CheckState.defaultProps = {};
  */
 
 Object.defineProperty(Field,"CheckState",{ get:function(){ return CheckState }, set:function(val){ CheckState = val }})
+CheckState.isBnorth = true;
+CheckState.defaultProps['b-precast'] = {}
 
-
-
-
- 
 
 /**
  * 表单控件的对应的 checkbox 组件，基于2态组件实现
@@ -312,8 +323,11 @@ let Checkbox = aprops=>{
     disabled={disabled} {...props} />
 };
 
-Object.defineProperty(Field,"Checkbox",{ get:function(){ return Checkbox }, set:function(val){ Checkbox = val }})
+Checkbox.defaultProps = {}
 
+Object.defineProperty(Field,"Checkbox",{ get:function(){ return Checkbox }, set:function(val){ Checkbox = val }})
+Checkbox.isBnorth = true;
+Checkbox.defaultProps['b-precast'] = {}
 
 /**
  * 表单控件的对应的 radio 组件，基于2态组件实现
@@ -331,11 +345,11 @@ let Radio = aprops=>{
     disabled={disabled} {...props} />
 };
 
+Radio.defaultProps = {}
+
 Object.defineProperty(Field,"Radio",{ get:function(){ return Radio }, set:function(val){ Radio = val }})
-
-
-
-
+Radio.isBnorth = true;
+Radio.defaultProps['b-precast'] = {}
 
 
 /**
@@ -348,7 +362,9 @@ Object.defineProperty(Field,"Radio",{ get:function(){ return Radio }, set:functi
 let Switch = aprops=>{
   let { disabled, 'b-theme':bTheme='component', ...props } = BaseComponent(aprops, Switch);
 
-  let classNamePreItem = 'border-radius-rounded width-1em height-1em';
+  let classNamePreItem = {
+    'border-radius-rounded width-1em height-1em': true,
+  }
 
   return <CheckState 
     b-style="hollow" bg-color-component={disabled} bc-border-radius-rounded
@@ -367,11 +383,11 @@ let Switch = aprops=>{
     disabled={disabled} {...props} type="checkbox" />
 };
 
+Switch.defaultProps = {}
+
 Object.defineProperty(Field,"Switch",{ get:function(){ return Switch }, set:function(val){ Switch = val }})
-
-
-
-
+Switch.isBnorth = true;
+Switch.defaultProps['b-precast'] = {}
 
 
 Field.defaultProps.types = {

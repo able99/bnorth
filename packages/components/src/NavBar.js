@@ -8,9 +8,6 @@ import Panel from './Panel';
 import { PanelIcon } from './Icon';
 
 
-// NarBar
-// --------------------------
-
 /**
  * 标题栏组件
  * @component
@@ -18,11 +15,16 @@ import { PanelIcon } from './Icon';
  * @exportdefault
  */
 let NavBar = aprops=>{
-  let { overlay, hidden, ...props } = BaseComponent(aprops, NavBar);
+  let { 
+    overlay, hidden, 
+    classNamePre, stylePre={}, ...props 
+  } = BaseComponent(aprops, NavBar);
   if(hidden) return null;
 
-  let classNamePre = 'flex-display-block flex-justify-around flex-align-center width-full padding-v-sm';
-  let stylePre = {};
+  classNamePre = {
+    'flex-display-block flex-justify-around flex-align-center width-full padding-v-sm': true,
+    ...classNamePre,
+  }
   if(overlay) stylePre.paddingTop = overlay===true?20:overlay;
 
   return <Panel component="nav" classNamePre={classNamePre} stylePre={stylePre} {...props} />;
@@ -42,6 +44,8 @@ NavBar.defaultProps = {}
 
 
 Object.defineProperty(NavBar,"NavBar",{ get:function(){ return NavBar }, set:function(val){ NavBar = val }})
+NavBar.isBnorth = true;
+NavBar.defaultProps['b-precast'] = {};
 export default NavBar;
 
 
@@ -53,9 +57,15 @@ export default NavBar;
  * @mount NavBar.Title
  */
 let Title = aprops=>{
-  let { isFullOrCenter, ...props } = BaseComponent(aprops, Title);
+  let { 
+    isFullOrCenter, 
+    classNamePre, ...props 
+  } = BaseComponent(aprops, Title);
 
-  let classNamePre = 'text-align-center flex-sub-flex-extend';
+  classNamePre = {
+    'text-align-center flex-sub-flex-extend': true,
+    ...classNamePre,
+  }
 
   return (
     <React.Fragment>
@@ -66,10 +76,6 @@ let Title = aprops=>{
 }
 
 Title.defaultProps = {};
-Title.defaultProps['b-precast'] = {
-  'bc-text-weight': 'bold',
-  'bc-text-size': 'xl',
-}
 /**
  * 设置标题组件铺满小组件之外空间，或者按需设置宽度并居中
  * @attribute module:NavBar~Title.isFullOrCenter
@@ -77,7 +83,11 @@ Title.defaultProps['b-precast'] = {
  */
 
 Object.defineProperty(NavBar,"Title",{ get:function(){ return Title }, set:function(val){ Title = val }})
-
+Title.isBnorth = true;
+Title.defaultProps['b-precast'] = {
+  'bc-text-weight': 'bold',
+  'bc-text-size': 'xl',
+};
 
 
 
@@ -89,13 +99,18 @@ Object.defineProperty(NavBar,"Title",{ get:function(){ return Title }, set:funct
  * @mount NavBar.Item
  */
 let Item = aprops=>{
-  let props = BaseComponent(aprops, Item);
+  let { classNamePre, ...props } = BaseComponent(aprops, Item);
 
-  let classNamePre = 'padding-h-sm flex-sub-flex-none';
+  classNamePre = {
+    'padding-h-sm flex-sub-flex-none': true,
+    ...classNamePre,
+  }
 
-  return <Panel componentTransform={PanelIcon} classNamePre={classNamePre} {...props} />;
+  return <Panel component={PanelIcon} classNamePre={classNamePre} {...props} />;
 }
 
 Item.defaultProps = {};
 
 Object.defineProperty(NavBar,"Item",{ get:function(){ return Item }, set:function(val){ Item = val }})
+Item.isBnorth = true;
+Item.defaultProps['b-precast'] = {};

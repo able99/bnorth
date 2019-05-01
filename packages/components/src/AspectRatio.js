@@ -15,15 +15,16 @@ import Panel from './Panel';
 let AspectRatio = aprops=>{
   let {
     ratio, innerProps,
-    children, ...props
+    classNamePre, stylePre, children, ...props
   } = BaseComponent(aprops, AspectRatio);
   
-  let stylePre = ratio&&{paddingBottom: String(ratio*100)+'%'};
-  let classNamePre = 'position-absolute offset-a-start square-full overflow-a-hidden';
+  stylePre = ratio?{paddingBottom: String(ratio*100)+'%', ...stylePre}:stylePre;
+  classNamePre = {'position-relative': true, ...classNamePre};
+  let innerClassNamePre = {'position-absolute offset-a-start square-full overflow-a-hidden': true};
 
   return (
-    <Panel stylePre={stylePre} {...props} >
-      <Panel classNamePre={classNamePre} {...innerProps}>{children}</Panel>
+    <Panel classNamePre={classNamePre} stylePre={stylePre} {...props} >
+      <Panel classNamePre={innerClassNamePre} {...innerProps}>{children}</Panel>
     </Panel>
   );
 }
@@ -42,4 +43,6 @@ AspectRatio.defaultProps = {};
 
 
 Object.defineProperty(AspectRatio,"AspectRatio",{ get:function(){ return AspectRatio }, set:function(val){ AspectRatio = val }})
+AspectRatio.isBnorth = true;
+AspectRatio.defaultProps['b-precast'] = {};
 export default AspectRatio;

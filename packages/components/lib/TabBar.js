@@ -93,7 +93,7 @@ function (_React$Component) {
             props = (0, _objectWithoutProperties2.default)(_v$props, ["event", "onClick", "children"]);
         return _react.default.createElement(_Panel.default, (0, _extends2.default)({
           key: v.key || i,
-          componentTransform: _Icon.PanelIcon,
+          component: _Icon.PanelIcon,
           selected: selectedIndex === i,
           "bp-panelTheme-sensitiveSelect": true,
           onClick: function onClick(e) {
@@ -180,15 +180,32 @@ Object.defineProperty(TabBar, "TabBar", {
     TabBar = val;
   }
 });
+TabBar.isBnorth = true;
+TabBar.defaultProps['b-precast'] = {};
 var _default = TabBar;
+/**
+ * 标签页组件条目
+ * @component 
+ * @augments BaseComponent
+ * @augments Panel.module:Container~PanelContainer 
+ * @exportdefault
+ */
+
 exports.default = _default;
+
+var _Item = function Item(aprops) {
+  var props = (0, _BaseComponent.default)(aprops, _Item);
+  return _react.default.createElement(_Panel.default, props);
+};
+
+_Item.defaultProps = {};
 Object.defineProperty(TabBar, "Item", {
   get: function get() {
-    return _Panel.default;
+    return _Item;
   },
   set: function set(val) {
-    _Panel.default = (val, function () {
-      throw new Error('"' + "Panel" + '" is read-only.');
-    }());
+    _Item = val;
   }
 });
+_Item.isBnorth = true;
+_Item.defaultProps['b-precast'] = {};

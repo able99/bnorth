@@ -155,4 +155,6 @@ ScrollSpy.defaultProps.target = true;
 
 
 Object.defineProperty(ScrollSpy,"ScrollSpy",{ get:function(){ return ScrollSpy }, set:function(val){ ScrollSpy = val }})
+ScrollSpy.isBnorth = true;
+ScrollSpy.defaultProps['b-precast'] = {}
 export default ScrollSpy;

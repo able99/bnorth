@@ -9,6 +9,8 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -62,10 +64,13 @@ function (_React$Component) {
           isLoading = _BaseComponent.isLoading,
           onLoad = _BaseComponent.onLoad,
           offset = _BaseComponent.offset,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["disabled", "isLoading", "onLoad", "offset"]);
+          classNamePre = _BaseComponent.classNamePre,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["disabled", "isLoading", "onLoad", "offset", "classNamePre"]);
 
       if (disabled) return null;
-      var classNamePre = 'padding-a-';
+      classNamePre = (0, _objectSpread2.default)({
+        'padding-a-': true
+      }, classNamePre);
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_ScrollSpy.default, {
         onPosChange: function onPosChange(event, target) {
           if (isLoading || !onLoad) return;
@@ -79,7 +84,7 @@ function (_React$Component) {
           }
         }
       }), _react.default.createElement(_Panel.default, (0, _extends2.default)({
-        componentTransform: _Loader.PanelLoader,
+        component: _Loader.PanelLoader,
         position: "top",
         isProgress: false,
         "bc-visibility-hide": !isLoading,
@@ -123,5 +128,7 @@ Object.defineProperty(Dropload, "Dropload", {
     Dropload = val;
   }
 });
+Dropload.isBnorth = true;
+Dropload.defaultProps['b-precast'] = {};
 var _default = Dropload;
 exports.default = _default;

@@ -27,6 +27,20 @@ var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends")
 
 var _objectSpread6 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+require("core-js/modules/es6.object.assign");
+
+require("core-js/modules/es6.string.starts-with");
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es7.object.entries");
+
+require("core-js/modules/web.dom.iterable");
+
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
@@ -52,15 +66,24 @@ var _Touchable = _interopRequireDefault(require("./Touchable"));
  * @augments module:BaseComponent.BaseComponent
  */
 var _Panel = function Panel(aprops) {
-  var _classSet;
+  var _classSetPre;
 
-  if (aprops.componentTransform) {
-    var ComponentTransform = aprops.componentTransform,
-        tporps = (0, _objectWithoutProperties2.default)(aprops, ["componentTransform"]);
-    return _react.default.createElement(ComponentTransform, tporps);
+  if (aprops.component && aprops.component.isBnorth) {
+    var _Component = aprops.component,
+        _props = (0, _objectWithoutProperties2.default)(aprops, ["component"]);
+
+    return _react.default.createElement(_Component, _props);
   }
 
   var _BaseComponent = (0, _BaseComponent5.default)(aprops, _Panel),
+      active = _BaseComponent.active,
+      selected = _BaseComponent.selected,
+      disabled = _BaseComponent.disabled,
+      onClick = _BaseComponent.onClick,
+      onTouchStart = _BaseComponent.onTouchStart,
+      onTouchEnd = _BaseComponent.onTouchEnd,
+      onTouchCancel = _BaseComponent.onTouchCancel,
+      btn = _BaseComponent.btn,
       main = _BaseComponent.main,
       page = _BaseComponent.page,
       full = _BaseComponent.full,
@@ -70,6 +93,15 @@ var _Panel = function Panel(aprops) {
       panelItemCount = _BaseComponent.panelItemCount,
       panelItemSelected = _BaseComponent.panelItemSelected,
       panelItemPlain = _BaseComponent.panelItemPlain,
+      bTheme = _BaseComponent['b-theme'],
+      bStyle = _BaseComponent['b-style'],
+      bSize = _BaseComponent['b-size'],
+      classNamePre = _BaseComponent.classNamePre,
+      classNameExt = _BaseComponent.classNameExt,
+      stylePre = _BaseComponent.stylePre,
+      styleExt = _BaseComponent.styleExt,
+      className = _BaseComponent.className,
+      style = _BaseComponent.style,
       _BaseComponent$panelT = _BaseComponent.panelThemeProps,
       sensitiveBg = _BaseComponent$panelT.sensitiveBg,
       sensitiveSelect = _BaseComponent$panelT.sensitiveSelect,
@@ -78,63 +110,113 @@ var _Panel = function Panel(aprops) {
       textOnBgSelected = _BaseComponent$panelT.textOnBgSelected,
       textOnBgUnselected = _BaseComponent$panelT.textOnBgUnselected,
       textUnselected = _BaseComponent$panelT.textUnselected,
-      selected = _BaseComponent.selected,
-      bTheme = _BaseComponent['b-theme'],
-      bStyle = _BaseComponent['b-style'],
-      bSize = _BaseComponent['b-size'],
+      refWrap = _BaseComponent.refWrap,
       _BaseComponent$compon = _BaseComponent.component,
-      Component = _BaseComponent$compon === void 0 ? "div" : _BaseComponent$compon,
-      className = _BaseComponent.className,
-      style = _BaseComponent.style,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["main", "page", "full", "inline", "panelContainerProps", "panelItemIndex", "panelItemCount", "panelItemSelected", "panelItemPlain", "panelThemeProps", "selected", 'b-theme', 'b-style', 'b-size', "component", "className", "style"]);
+      Component = _BaseComponent$compon === void 0 ? aprops.componentPanel || "div" : _BaseComponent$compon,
+      componentPanel = _BaseComponent.componentPanel,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["active", "selected", "disabled", "onClick", "onTouchStart", "onTouchEnd", "onTouchCancel", "btn", "main", "page", "full", "inline", "panelContainerProps", "panelItemIndex", "panelItemCount", "panelItemSelected", "panelItemPlain", 'b-theme', 'b-style', 'b-size', "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "panelThemeProps", "refWrap", "component", "componentPanel"]);
 
   if (sensitiveBg === undefined) sensitiveBg = bStyle === 'solid' && bTheme;
   if (sensitiveSelect === undefined) sensitiveSelect = bStyle === 'underline';
   if (page) props['data-dock'] = true;
-  var classSet = (_classSet = {
-    'position-relative': true,
+  var classSetPre = (_classSetPre = {
+    // 'position-relative': true,
     'offset-a-start square-full overflow-a-hidden': full
-  }, (0, _defineProperty2.default)(_classSet, page ? 'flex-display-inline' : 'display-inlineblock', inline), (0, _defineProperty2.default)(_classSet, (!inline ? 'flex-display-block' : '') + ' flex-direction-v bg-color-view', page), (0, _defineProperty2.default)(_classSet, 'scrollable-a- flex-sub-flex-extend', main), _classSet);
+  }, (0, _defineProperty2.default)(_classSetPre, page ? 'flex-display-inline' : 'display-inlineblock', inline), (0, _defineProperty2.default)(_classSetPre, (!inline ? 'flex-display-block' : '') + ' flex-direction-v bg-color-view', page), (0, _defineProperty2.default)(_classSetPre, 'scrollable-a- flex-sub-flex-extend', main), _classSetPre);
+  var styleSetPre = {};
+  var classSet = {};
   var styleSet = {};
   var textTheme;
   if (sensitiveSelect) textTheme = sensitiveBg ? selected ? textOnBgSelected : textOnBgUnselected : selected ? bTheme || '' : textUnselected;
   if (!sensitiveSelect) textTheme = sensitiveBg ? textOnBg : bTheme;
   textTheme = textTheme ? textTheme === true ? '' : textTheme : false;
-  classSet['text-color-' + textTheme] = textTheme !== false;
-  classSet['text-size-' + (bSize === 'true' ? '' : bSize)] = bSize;
+  classSetPre['text-color-' + textTheme] = textTheme !== false;
+  classSetPre['text-size-' + (bSize === 'true' ? '' : bSize)] = bSize;
 
   if (bStyle === 'solid') {
     var theme = bTheme ? bTheme === true ? '' : bTheme : bTheme === false ? false : 'component';
-    classSet['bg-color-' + theme] = theme !== false;
-    classSet['border-set-a-' + theme] = theme !== false;
+    classSetPre['bg-color-' + theme] = theme !== false;
+    classSetPre['border-set-a-' + theme] = theme !== false;
   } else if (bStyle === 'hollow') {
     var _theme = bTheme ? bTheme === true ? '' : bTheme : bTheme === false ? false : '';
 
-    classSet['border-set-a-' + _theme] = _theme !== false;
-    classSet[bgOnHollow === false ? 'bg-none-' : 'bg-color-' + (bgOnHollow === true ? '' : bgOnHollow)] = true;
+    classSetPre['border-set-a-' + _theme] = _theme !== false;
+    classSetPre[bgOnHollow === false ? 'bg-none-' : 'bg-color-' + (bgOnHollow === true ? '' : bgOnHollow)] = true;
   } else if (bStyle === 'underline') {
     var _theme2 = bTheme ? bTheme === true ? '' : bTheme : bTheme === false ? false : '';
 
-    classSet['border-none-top- border-none-left- border-none-right- bg-none-'] = true;
-    classSet['border-width-bottom-2'] = true;
-    classSet['border-set-bottom-' + _theme2] = _theme2 !== false;
-    if (!selected) styleSet['borderColor'] = 'transparent';
+    classSetPre['border-none-top- border-none-left- border-none-right- bg-none-'] = true;
+    classSetPre['border-width-bottom-2'] = true;
+    classSetPre['border-set-bottom-' + _theme2] = _theme2 !== false;
+    if (!selected) styleSetPre['borderColor'] = 'transparent';
   } else if (bStyle === 'white') {
-    classSet['bg-color-white'] = true;
+    classSetPre['bg-color-white'] = true;
   } else if (bStyle === 'mask') {
-    classSet['bg-color-mask'] = true;
+    classSetPre['bg-color-mask'] = true;
   } else if (bStyle === 'plain') {
-    classSet['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
+    classSetPre['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
   }
 
-  if (typeof Component === 'string') {
-    delete props.active;
-    delete props.btn;
+  Object.entries(props).forEach(function (_ref) {
+    var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+        k = _ref2[0],
+        v = _ref2[1];
+
+    if (k.startsWith('bs-')) {
+      delete props[k];
+      if (v === false || v === undefined || v === null) return;
+      var name = k.slice(3);
+      styleSet[name] = v;
+    } else if (k.startsWith('bc-')) {
+      delete props[k];
+      if (v === false || v === undefined || v === null) return;
+
+      var _name = k.slice(3);
+
+      classSet[_name + (v === true ? '' : '-' + v)] = true;
+    } else if (k.startsWith('bf-')) {
+      delete props[k];
+      if (!v) return;
+
+      var _name2 = k.slice(3);
+
+      _name2 = _BaseComponent5.default.styleFunctions[_name2];
+      if (!_name2) return;
+      Object.assign(styleSet, Array.isArray(v) ? _name2.apply(void 0, (0, _toConsumableArray2.default)(v)) : _name2(v));
+    }
+  });
+  if (onClick) props.onClick = onClick;
+  if (refWrap) props.ref = refWrap;
+  if (active) classSet['active'] = true;
+  if (selected) classSet['selected'] = true;
+  if (disabled) classSet['disabled'] = true;
+  if (onClick && btn !== false) classSet['cursor-pointer'] = true;
+  if (onClick && !btn && btn !== false || btn === true) classSet['btn'] = true;
+
+  if (onClick && btn !== false) {
+    props['onTouchStart'] = function (e) {
+      e.currentTarget.classList.add(!btn || btn === true ? 'active' : btn);
+      onTouchStart && onTouchStart(e);
+    };
+
+    props['onTouchEnd'] = function (e) {
+      e.currentTarget.classList.remove(!btn || btn === true ? 'active' : btn);
+      onTouchEnd && onTouchEnd(e);
+    };
+
+    props['onTouchCancel'] = function (e) {
+      e.currentTarget.classList.remove(!btn || btn === true ? 'active' : btn);
+      onTouchCancel && onTouchCancel(e);
+    };
+  } else {
+    if (aprops.hasOwnProperty('onTouchStart')) props.onTouchStart = onTouchStart;
+    if (aprops.hasOwnProperty('onTouchEnd')) props.onTouchEnd = onTouchEnd;
+    if (aprops.hasOwnProperty('onTouchCancel')) props.onTouchCancel = onTouchCancel;
   }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _classes.default)(classSet, className),
-    style: (0, _objectSpread6.default)({}, styleSet, style)
+    className: (0, _classes.default)(classSetPre, classNamePre, classSet, className, classNameExt),
+    style: (0, _objectSpread6.default)({}, styleSetPre, stylePre, styleSet, style, styleExt)
   }, props));
 };
 
@@ -202,6 +284,49 @@ _Panel.defaultProps.panelThemeProps = {
    * @type {string}
    */
 
+  /**
+   * 设置组件的样式对象，将属性名去掉 bs- 前缀，和属性值，追加到组件的样式对象中
+   * 
+   * @attribute module:Panel.Panel.bs-xxx
+   * @type {number|string} 
+   * @example
+   * ```jsx
+   * <Panel bs-width="50%" style={{height: '50%'}} /> // style: { widht: 50%, height: 50% }
+   * ```
+   */
+
+  /**
+   * 设置样式类
+   * 
+   * - 当属性值为 true 时，将当前属性名，去掉 bc- 前缀，追加到组件的样式类属性中
+   * - 当属性值为数字或字符串时，将去掉 bc- 前缀的属性名和属性值用 - 连接后，追加到组件的样式类属性中
+   * - 当属性值不为真时，没有任何作用
+   * 
+   * @attribute module:Panel.Panel.bc-xxx
+   * @type {boolean|string|number} 
+   * @example
+   * ```jsx
+   * <Panel bc-text-size="lg" bc-text-weight-={true} className="text-color-primary" /> // className: 'text-color-primary text-size-lg text-weight-'
+   * ```
+   */
+
+  /**
+   * 执行样式函数，并将结果设置到组件的样式对象。将属性名去掉 bs- 前缀作为函数名称，从样式函数集合中获取函数，将属性值(为数组时，作为展开参数)作为参数，执行并将结果追加到组件的样式对象中
+   * 
+   * @attribute module:Panel.Panel.bf-xxx
+   * @type {number|string|array} 
+   * @example
+   * ```jsx
+   * import { backgroundImage } from '@bnorth/rich.css/lib/styles/background';
+   * import { addFunctions } from '@bnorth/components/lib/utils/props';
+   * addFunctions({ backgroundImage });
+   * 
+   * export default props=>{
+   *   return <Panel bf-background={'bg.jpg'} /> // style: {backgroundImage: url(bg.jpg)}
+   * }
+   * ```
+   */
+
 };
 Object.defineProperty(_Panel, "Panel", {
   get: function get() {
@@ -264,9 +389,9 @@ function (_React$Component) {
           getPanelItemProps = _BaseComponent2.getPanelItemProps,
           getPanelItemClassName = _BaseComponent2.getPanelItemClassName,
           getPanelItemStyle = _BaseComponent2.getPanelItemStyle,
-          className = _BaseComponent2.className,
+          classNamePre = _BaseComponent2.classNamePre,
           children = _BaseComponent2.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["ctype", "selectedIndex", "countToShow", "onSelectedChange", "panelContainerProps", "inline", "position", "direction", "justify", "align", "wrap", "separator", "separatorProps", "noOverlap", "genPanelItemProps", "panelItemProps", "getPanelItemProps", "getPanelItemClassName", "getPanelItemStyle", "className", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["ctype", "selectedIndex", "countToShow", "onSelectedChange", "panelContainerProps", "inline", "position", "direction", "justify", "align", "wrap", "separator", "separatorProps", "noOverlap", "genPanelItemProps", "panelItemProps", "getPanelItemProps", "getPanelItemClassName", "getPanelItemStyle", "classNamePre", "children"]);
 
       children = _react.default.Children.toArray(children).filter(function (v) {
         return v;
@@ -294,7 +419,7 @@ function (_React$Component) {
       children = children.map(function (v) {
         return (0, _typeof2.default)(v) !== 'object' || v.props.panelItemPlain ? v : _react.default.createElement(_PanelItem, genPanelItemProps(ctype, selectedIndex, panelContainerProps, ++panelItemIndex, panelItemCount, v.props, panelItemProps, getPanelItemClassName, getPanelItemStyle, getPanelItemProps), v);
       });
-      var classSet = {
+      var classSetPre = {
         'position-relative overflow-a-hidden': true
       };
 
@@ -306,13 +431,13 @@ function (_React$Component) {
       } else if (ctype === 'justify') {
         var _objectSpread2;
 
-        classSet = (0, _objectSpread6.default)({}, classSet, (_objectSpread2 = {}, (0, _defineProperty2.default)(_objectSpread2, 'flex-display-' + (inline ? 'inline' : 'block'), true), (0, _defineProperty2.default)(_objectSpread2, 'flex-justify-around flex-align-stretch', true), _objectSpread2));
+        classSetPre = (0, _objectSpread6.default)({}, classSetPre, (_objectSpread2 = {}, (0, _defineProperty2.default)(_objectSpread2, 'flex-display-' + (inline ? 'inline' : 'block'), true), (0, _defineProperty2.default)(_objectSpread2, 'flex-justify-around flex-align-stretch', true), _objectSpread2));
       } else if (ctype === 'primary') {
         var _objectSpread3;
 
-        classSet = (0, _objectSpread6.default)({}, classSet, (_objectSpread3 = {}, (0, _defineProperty2.default)(_objectSpread3, 'flex-display-' + (inline ? 'inline' : 'block'), true), (0, _defineProperty2.default)(_objectSpread3, 'flex-align-center', true), _objectSpread3));
+        classSetPre = (0, _objectSpread6.default)({}, classSetPre, (_objectSpread3 = {}, (0, _defineProperty2.default)(_objectSpread3, 'flex-display-' + (inline ? 'inline' : 'block'), true), (0, _defineProperty2.default)(_objectSpread3, 'flex-align-center', true), _objectSpread3));
       } else if (ctype === 'flex') {
-        classSet = (0, _objectSpread6.default)({}, classSet, (0, _defineProperty2.default)({}, 'flex-display-' + (inline ? 'inline' : 'block'), true));
+        classSetPre = (0, _objectSpread6.default)({}, classSetPre, (0, _defineProperty2.default)({}, 'flex-display-' + (inline ? 'inline' : 'block'), true));
       } else if (ctype === 'scroll') {
         children = _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_InnerScroll, {
           countToShow: countToShow,
@@ -326,9 +451,9 @@ function (_React$Component) {
       }
 
       if (position) direction = positionToDirection[position];
-      classSet = (0, _objectSpread6.default)({}, classSet, (_objectSpread5 = {}, (0, _defineProperty2.default)(_objectSpread5, 'flex-direction-' + direction, direction), (0, _defineProperty2.default)(_objectSpread5, 'flex-justify-' + justify, justify), (0, _defineProperty2.default)(_objectSpread5, 'flex-align-' + align, align), (0, _defineProperty2.default)(_objectSpread5, 'flex-wrap-' + wrap, wrap), _objectSpread5));
+      classSetPre = (0, _objectSpread6.default)({}, classSetPre, (_objectSpread5 = {}, (0, _defineProperty2.default)(_objectSpread5, 'flex-direction-' + direction, direction), (0, _defineProperty2.default)(_objectSpread5, 'flex-justify-' + justify, justify), (0, _defineProperty2.default)(_objectSpread5, 'flex-align-' + align, align), (0, _defineProperty2.default)(_objectSpread5, 'flex-wrap-' + wrap, wrap), _objectSpread5));
       return _react.default.createElement(_Panel, (0, _extends2.default)({
-        className: (0, _classes.default)(classSet, className)
+        classNamePre: (0, _classes.default)(classSetPre, classNamePre)
       }, props), children);
     }
   }]);
@@ -336,6 +461,7 @@ function (_React$Component) {
 }(_react.default.Component);
 
 exports.PanelContainer = _PanelContainer;
+_PanelContainer.isBnorth = true;
 _PanelContainer.defaultProps = {};
 /**
  * 设置子组件的排列类型，包括：
@@ -430,15 +556,15 @@ _PanelContainer.defaultProps.countToShow = 1;
  */
 
 _PanelContainer.defaultProps.genPanelItemProps = function (type, selectedIndex, panelContainerProps, panelItemIndex, panelItemCount) {
-  var _ref = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {},
-      className = _ref.className,
-      style = _ref.style,
-      props = (0, _objectWithoutProperties2.default)(_ref, ["className", "style"]);
+  var _ref3 = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {},
+      className = _ref3.className,
+      style = _ref3.style,
+      props = (0, _objectWithoutProperties2.default)(_ref3, ["className", "style"]);
 
-  var _ref2 = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {},
-      panelItemClassName = _ref2.className,
-      panelItemStyle = _ref2.style,
-      panelItemProps = (0, _objectWithoutProperties2.default)(_ref2, ["className", "style"]);
+  var _ref4 = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {},
+      panelItemClassName = _ref4.className,
+      panelItemStyle = _ref4.style,
+      panelItemProps = (0, _objectWithoutProperties2.default)(_ref4, ["className", "style"]);
 
   var getPanelItemClassName = arguments.length > 7 ? arguments[7] : undefined;
   var getPanelItemStyle = arguments.length > 8 ? arguments[8] : undefined;
@@ -500,6 +626,7 @@ var _PanelItem = function PanelItem(aprops) {
 };
 
 exports.PanelItem = _PanelItem;
+_PanelItem.isBnorth = true;
 _PanelItem.defaultProps = {};
 /**
  * 容器组件的组织类型
@@ -625,8 +752,8 @@ function (_React$Component2) {
           children = _BaseComponent4.children,
           props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["countToShow", "selectedIndex", "onSelectedChange", "children"]);
 
-      var _ref3 = this.state || {},
-          offset = _ref3.offset;
+      var _ref5 = this.state || {},
+          offset = _ref5.offset;
 
       children = _react.default.Children.toArray(children);
       var classNamePre = 'flex-display-block flex-align-stretch height-full transition-set-';
@@ -634,7 +761,7 @@ function (_React$Component2) {
         width: "".concat(100 / countToShow * children.length, "%")
       }, (0, _animation.transform)('translateX', isNaN(offset) ? -100 / children.length * (selectedIndex % children.length) + '%' : -(this.size / countToShow) * (selectedIndex % children.length) + (offset || 0) + 'px'));
       return _react.default.createElement(_Panel, (0, _extends2.default)({
-        componentTransform: _Touchable.default,
+        component: _Touchable.default,
         direction: "horizontal",
         recognizers: {
           'pan': {
@@ -653,6 +780,7 @@ function (_React$Component2) {
   return InnerScroll;
 }(_react.default.Component);
 
+_InnerScroll.isBnorth = true;
 _InnerScroll.defaultProps = {};
 Object.defineProperty(_Panel, "InnerScroll", {
   get: function get() {

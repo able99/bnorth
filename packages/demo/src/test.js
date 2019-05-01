@@ -2,7 +2,6 @@ import React from 'react';
 import Panel from '@bnorth/components/lib/Panel'
 import List from '@bnorth/components/lib/List'
 import Icon from '@bnorth/components/lib/Icon'
-import { cpus } from 'os';
 
 
 let Component = aprops=>{

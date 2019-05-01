@@ -55,7 +55,7 @@ var _Loader = function Loader(aprops) {
     progress: progress,
     color: color,
     colorReverse: colorReverse,
-    componentTransform: component
+    component: component
   }, props));
 };
 
@@ -110,6 +110,8 @@ Object.defineProperty(_Loader, "Loader", {
     _Loader = val;
   }
 });
+_Loader.isBnorth = true;
+_Loader.defaultProps['b-precast'] = {};
 var _default = _Loader;
 /**
  * 进度显示组件的线性样式
@@ -128,13 +130,17 @@ var _Line = function Line(aprops) {
       timeout = _BaseComponent2.timeout,
       color = _BaseComponent2.color,
       colorReverse = _BaseComponent2.colorReverse,
+      classNamePre = _BaseComponent2.classNamePre,
+      stylePre = _BaseComponent2.stylePre,
       children = _BaseComponent2.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isProgress", "progress", "timeout", "color", "colorReverse", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isProgress", "progress", "timeout", "color", "colorReverse", "classNamePre", "stylePre", "children"]);
 
-  var classNamePre = 'width-full height-1em position-relative';
-  var stylePre = {
+  classNamePre = (0, _objectSpread2.default)({
+    'width-full height-1em position-relative': true
+  }, classNamePre);
+  stylePre = (0, _objectSpread2.default)({
     background: colorReverse
-  };
+  }, stylePre);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     classNamePre: classNamePre,
     stylePre: stylePre
@@ -157,6 +163,8 @@ Object.defineProperty(_Loader, "Line", {
     _Line = val;
   }
 });
+_Line.isBnorth = true;
+_Line.defaultProps['b-precast'] = {};
 /**
  * 进度显示组件的圆环样式
  * @component 
@@ -172,10 +180,13 @@ var _Circle = function Circle(aprops) {
       timeout = _BaseComponent3.timeout,
       color = _BaseComponent3.color,
       colorReverse = _BaseComponent3.colorReverse,
+      classNamePre = _BaseComponent3.classNamePre,
       children = _BaseComponent3.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["isProgress", "progress", "timeout", "color", "colorReverse", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["isProgress", "progress", "timeout", "color", "colorReverse", "classNamePre", "children"]);
 
-  var classNamePre = 'width-1em height-1em';
+  classNamePre = (0, _objectSpread2.default)({
+    'width-1em height-1em': true
+  }, classNamePre);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: "svg",
     viewBox: "0 0 100 100",
@@ -199,6 +210,7 @@ var _Circle = function Circle(aprops) {
   }), children);
 };
 
+_Circle.defaultProps = {};
 Object.defineProperty(_Loader, "Circle", {
   get: function get() {
     return _Circle;
@@ -207,7 +219,8 @@ Object.defineProperty(_Loader, "Circle", {
     _Circle = val;
   }
 });
-_Circle.defaultProps = {};
+_Circle.isBnorth = true;
+_Circle.defaultProps['b-precast'] = {};
 _Loader.defaultProps.types = {
   line: _Line,
   circle: _Circle
@@ -279,23 +292,28 @@ Object.defineProperty(_Loader, "PanelLoader", {
     exports.PanelLoader = PanelLoader = val;
   }
 });
+PanelLoader.isBnorth = true;
+PanelLoader.defaultProps['b-precast'] = {};
 
 var _OverlayLoader = function OverlayLoader(aprops) {
   var _BaseComponent5 = (0, _BaseComponent6.default)(aprops, _OverlayLoader),
       progress = _BaseComponent5.progress,
       top = _BaseComponent5.top,
       height = _BaseComponent5.height,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["progress", "top", "height"]);
+      classNamePre = _BaseComponent5.classNamePre,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["progress", "top", "height", "classNamePre"]);
 
-  var classNamePre = 'position-absolute offset-h-start width-full';
+  classNamePre = (0, _objectSpread2.default)({
+    'position-absolute offset-h-start width-full': true
+  }, classNamePre);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    componentTransform: _Loader,
     type: "line",
     isProgress: true,
     progress: progress,
-    classNamePre: classNamePre,
     "bs-top": top,
-    "bs-height": height
+    "bs-height": height,
+    component: _Loader,
+    classNamePre: classNamePre
   }, props));
 };
 
@@ -311,6 +329,8 @@ Object.defineProperty(_Loader, "OverlayLoader", {
     exports.OverlayLoader = _OverlayLoader = val;
   }
 });
+_OverlayLoader.isBnorth = true;
+_OverlayLoader.defaultProps['b-precast'] = {};
 var loader = {
   _id: 'loader',
   onPluginMount: function onPluginMount(app) {

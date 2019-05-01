@@ -16,21 +16,24 @@ import { PanelLoader } from './Loader';
  * @export
  */
 let Mask = aprops=>{
-  let { loaderProps, children, ...props } = BaseComponent(aprops, Mask);
+  let { 
+    loaderProps, 
+    classNamePre, children, ...props 
+  } = BaseComponent(aprops, Mask);
 
-  let classNamePre = 'flex-display-block flex-direction-v flex-justify-center flex-align-center';
+ classNamePre = { 
+   'flex-display-block flex-direction-v flex-justify-center flex-align-center': true,
+   ...classNamePre,
+ }
 
   return (
-    <Panel componentTransform={Backdrop} classNamePre={classNamePre} {...props}>
+    <Panel component={Backdrop} classNamePre={classNamePre} {...props}>
       <PanelLoader position='top' {...loaderProps}>{children}</PanelLoader>
     </Panel>
   )
 }
 
 Mask.defaultProps = {};
-Mask.defaultProps['b-precast'] = {
-  'b-theme': 'white',
-}
 /**
  * 设置 蒙层中间的 loader 组件的参数
  * @attribute module:mask.Mask.loaderProps
@@ -38,6 +41,10 @@ Mask.defaultProps['b-precast'] = {
  */
 
 Object.defineProperty(Mask,"Mask",{ get:function(){ return Mask }, set:function(val){ Mask = val }})
+Mask.isBnorth = true;
+Mask.defaultProps['b-precast'] = {
+  'b-theme': 'white',
+};
 export default Mask;
 
 

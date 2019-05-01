@@ -7,9 +7,6 @@ import Panel, { PanelContainer } from './Panel';
 import Icon from './Icon';
 
 
-// Carousel
-// ------------------------------
-
 /**
  * 轮播组件
  * @component 
@@ -94,11 +91,11 @@ class Carousel extends React.Component {
       <PanelContainer ctype="scroll" selectedIndex={selectedIndex} onSelectedChange={selectedIndex=>this.setState({selectedIndex}, ()=>this.go())} onMouseOver={e=>pauseOnHover&&this.pause()} onMouseOut={e=>this.isPaused&&this.play()} {...props}>
         {children}
         {controller?<Panel 
-          componentTransform={Icon} classNamePre={classNamePreControllerPrev} b-size="xl" b-style="solid" b-theme="mask" name="left:<"
+          component={Icon} classNamePre={classNamePreControllerPrev} b-size="xl" b-style="solid" b-theme="mask" name="left:<"
           onClick={e=>this.prev()} 
           panelItemPlain {...controllerProps} {...controllerPrevProps}  />:null}
         {controller?<Panel 
-          componentTransform={Icon} classNamePre={classNamePreControllerNext} b-size="xl" b-style="solid" b-theme="mask" name="right:>"
+          component={Icon} classNamePre={classNamePreControllerNext} b-size="xl" b-style="solid" b-theme="mask" name="right:>"
           onClick={e=>this.next()} 
           panelItemPlain {...controllerProps} {...controllerPrevProps}  />:null}
         {pager?<PanelContainer 
@@ -165,8 +162,25 @@ Carousel.defaultProps.pager = true;
 
 
 Object.defineProperty(Carousel,"Carousel",{ get:function(){ return Carousel }, set:function(val){ Carousel = val }})
+Carousel.isBnorth = true;
+Carousel.defaultProps['b-precast'] = {};
 export default Carousel;
 
 
+/**
+ *  轮播组件条目
+ * @component 
+ * @augments BaseComponent
+ * @augments Panel.module:Container~PanelContainer 
+ * @exportdefault
+ */
+let Item = aprops=>{
+  let props = BaseComponent(aprops, Item);
+  return <Panel {...props} />
+}
 
-Carousel.Item = Panel;
+Item.defaultProps = {};
+
+Object.defineProperty(Carousel,"Item",{ get:function(){ return Item }, set:function(val){ Item = val }})
+Item.isBnorth = true;
+Item.defaultProps['b-precast'] = {}

@@ -20,11 +20,11 @@ let Icon = aprops=>{
   let {
     names, nameMaps, shapes,
     name, src, char, shape, rotate,
-    component, ...props
+    component, classNamePre, stylePre, ...props
   } = BaseComponent(aprops, Icon);
   
-  let classNamePre = ['display-inline', 'width-1em', 'height-1em'];
-  let stylePre = rotate?transform('rotate', String(rotate)+'deg'):{};
+  classNamePre = {'display-inline width-1em height-1em': true, ...classNamePre }
+  stylePre = rotate?{...transform('rotate', String(rotate)+'deg'), ...stylePre}:(stylePre||{});
 
   if(name) {
     let [nameSvg, defaultNameSvg] = name.split(':');
@@ -57,7 +57,7 @@ let Icon = aprops=>{
     props.children = typeof shape==='function'?shape():<path d={shape} />;
   }else if(char) {
     if(!component) component = 'span';
-    classNamePre.push('display-inlineblock text-align-center line-height-1em');
+    classNamePre['display-inlineblock text-align-center line-height-1em'] = true;
     props.children = char[0];
   }else {
     classNamePre = [];
@@ -139,6 +139,8 @@ Icon.appendMap = function(val, name) {
 }
 
 Object.defineProperty(Icon,"Icon",{ get:function(){ return Icon }, set:function(val){ Icon = val }})
+Icon.isBnorth = true;
+Icon.defaultProps['b-precast'] = {};
 export default Icon;
 
 
@@ -200,3 +202,5 @@ PanelIcon.defaultProps = {};
  */
 
 Object.defineProperty(Icon,"PanelIcon",{ get:function(){ return PanelIcon }, set:function(val){ PanelIcon = val }})
+PanelIcon.isBnorth = true;
+PanelIcon.defaultProps['b-precast'] = {}

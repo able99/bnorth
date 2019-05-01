@@ -15,63 +15,106 @@ import Touchable from './Touchable';
  * @augments module:BaseComponent.BaseComponent
  */
 let Panel = aprops=>{
-  if(aprops.componentTransform) { let {componentTransform:ComponentTransform, ...tporps} = aprops; return <ComponentTransform {...tporps} /> }
+  if(aprops.component&&aprops.component.isBnorth) { 
+    let {component:Component, ...props} = aprops; 
+    return <Component {...props} /> 
+  }
 
   let {
+    active, selected, disabled, 
+    onClick, onTouchStart, onTouchEnd, onTouchCancel, btn,
     main, page, full, inline, 
     panelContainerProps, panelItemIndex, panelItemCount, panelItemSelected, panelItemPlain, 
+    'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, 
+    classNamePre, classNameExt, stylePre, styleExt, className, style, 
     panelThemeProps:{sensitiveBg, sensitiveSelect, textOnBg, bgOnHollow, textOnBgSelected, textOnBgUnselected, textUnselected},
-    selected, 'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, component:Component="div", className, style, ...props
+    refWrap, component:Component=aprops.componentPanel||"div", componentPanel,...props
   } = BaseComponent(aprops, Panel);
   if(sensitiveBg===undefined) sensitiveBg = bStyle==='solid'&&bTheme;
   if(sensitiveSelect===undefined) sensitiveSelect = bStyle==='underline';
-
   if(page) props['data-dock'] = true;
 
-  let classSet = {
-    'position-relative': true,
+  let classSetPre = {
+    // 'position-relative': true,
     'offset-a-start square-full overflow-a-hidden': full,
     [page?'flex-display-inline':'display-inlineblock']: inline,
     [(!inline?'flex-display-block':'') + ' flex-direction-v bg-color-view']: page,
     'scrollable-a- flex-sub-flex-extend': main,
   }
+  let styleSetPre = {};
+  let classSet = {};
   let styleSet = {};
 
   let textTheme;
   if(sensitiveSelect) textTheme = sensitiveBg?(selected?textOnBgSelected:textOnBgUnselected):(selected?(bTheme||''):textUnselected);
   if(!sensitiveSelect) textTheme = sensitiveBg?textOnBg:bTheme;
   textTheme = textTheme?(textTheme===true?'':textTheme):false; 
-  classSet['text-color-'+textTheme] = textTheme!==false;
-  classSet['text-size-'+(bSize==='true'?'':bSize)] = bSize;
-
+  classSetPre['text-color-'+textTheme] = textTheme!==false;
+  classSetPre['text-size-'+(bSize==='true'?'':bSize)] = bSize;
   if(bStyle==='solid') {
     let theme = bTheme?(bTheme===true?'':bTheme):(bTheme===false?false:'component');
-    classSet['bg-color-'+theme] = theme!==false;
-    classSet['border-set-a-'+theme] = theme!==false;
+    classSetPre['bg-color-'+theme] = theme!==false;
+    classSetPre['border-set-a-'+theme] = theme!==false;
   }else if(bStyle==='hollow') {
     let theme = bTheme?(bTheme===true?'':bTheme):(bTheme===false?false:'');
-    classSet['border-set-a-'+theme] = theme!==false;
-    classSet[bgOnHollow===false?'bg-none-':('bg-color-'+(bgOnHollow===true?'':bgOnHollow))] = true;
+    classSetPre['border-set-a-'+theme] = theme!==false;
+    classSetPre[bgOnHollow===false?'bg-none-':('bg-color-'+(bgOnHollow===true?'':bgOnHollow))] = true;
   }else if(bStyle==='underline') {
     let theme = bTheme?(bTheme===true?'':bTheme):(bTheme===false?false:'');
-    classSet['border-none-top- border-none-left- border-none-right- bg-none-'] = true;
-    classSet['border-width-bottom-2'] = true;
-    classSet['border-set-bottom-'+theme] = theme!==false;
-    if(!selected) styleSet['borderColor'] = 'transparent';
+    classSetPre['border-none-top- border-none-left- border-none-right- bg-none-'] = true;
+    classSetPre['border-width-bottom-2'] = true;
+    classSetPre['border-set-bottom-'+theme] = theme!==false;
+    if(!selected) styleSetPre['borderColor'] = 'transparent';
   }else if(bStyle==='white') {
-    classSet['bg-color-white'] = true;
+    classSetPre['bg-color-white'] = true;
   }else if(bStyle==='mask') {
-    classSet['bg-color-mask'] = true;
+    classSetPre['bg-color-mask'] = true;
   }else if(bStyle==='plain') {
-    classSet['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
+    classSetPre['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
   }
 
-  if(typeof(Component)==='string'){
-    delete props.active;
-    delete props.btn;
+  Object.entries(props).forEach(([k,v])=>{
+    if(k.startsWith('bs-')){
+      delete props[k]; 
+      if(v===false||v===undefined||v===null) return; 
+      let name = k.slice(3);
+      styleSet[name] = v;
+    }else if(k.startsWith('bc-')){
+      delete props[k]; 
+      if(v===false||v===undefined||v===null) return; 
+      let name = k.slice(3); 
+      classSet[name+(v===true?'':('-'+v))] = true;
+    }else if(k.startsWith('bf-')){
+      delete props[k]; 
+      if(!v) return; 
+      let name = k.slice(3); 
+      name = BaseComponent.styleFunctions[name]; 
+      if(!name) return;
+      Object.assign(styleSet, Array.isArray(v)?name(...v):name(v));
+    }
+  })
+
+  if(onClick) props.onClick = onClick;
+  if(refWrap) props.ref = refWrap;
+  if(active) classSet['active'] = true;
+  if(selected) classSet['selected'] = true;
+  if(disabled) classSet['disabled'] = true;
+  if(onClick&&(btn!==false)) classSet['cursor-pointer'] = true;
+  if((onClick&&(!btn&&btn!==false))||btn===true) classSet['btn'] = true;
+  if(onClick&&(btn!==false)) {
+    props['onTouchStart'] = e=>{e.currentTarget.classList.add(!btn||btn===true?'active':btn);onTouchStart&&onTouchStart(e)}
+    props['onTouchEnd'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchEnd&&onTouchEnd(e)}; 
+    props['onTouchCancel'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchCancel&&onTouchCancel(e)}; 
+  } else {
+    if(aprops.hasOwnProperty('onTouchStart')) props.onTouchStart = onTouchStart;
+    if(aprops.hasOwnProperty('onTouchEnd')) props.onTouchEnd = onTouchEnd;
+    if(aprops.hasOwnProperty('onTouchCancel')) props.onTouchCancel = onTouchCancel;
   }
 
-  return <Component className={classes(classSet, className)} style={{...styleSet, ...style}} {...props} />
+  return <Component 
+    className={classes(classSetPre, classNamePre, classSet, className, classNameExt)} 
+    style={{...styleSetPre, ...stylePre, ...styleSet, ...style, ...styleExt}} 
+    {...props} />
 }
 
 Panel.defaultProps = {};
@@ -124,6 +167,46 @@ Panel.defaultProps.panelThemeProps = {
  * @attribute module:Panel.Panel.b-size
  * @type {string}
  */
+/**
+ * 设置组件的样式对象，将属性名去掉 bs- 前缀，和属性值，追加到组件的样式对象中
+ * 
+ * @attribute module:Panel.Panel.bs-xxx
+ * @type {number|string} 
+ * @example
+ * ```jsx
+ * <Panel bs-width="50%" style={{height: '50%'}} /> // style: { widht: 50%, height: 50% }
+ * ```
+ */
+/**
+ * 设置样式类
+ * 
+ * - 当属性值为 true 时，将当前属性名，去掉 bc- 前缀，追加到组件的样式类属性中
+ * - 当属性值为数字或字符串时，将去掉 bc- 前缀的属性名和属性值用 - 连接后，追加到组件的样式类属性中
+ * - 当属性值不为真时，没有任何作用
+ * 
+ * @attribute module:Panel.Panel.bc-xxx
+ * @type {boolean|string|number} 
+ * @example
+ * ```jsx
+ * <Panel bc-text-size="lg" bc-text-weight-={true} className="text-color-primary" /> // className: 'text-color-primary text-size-lg text-weight-'
+ * ```
+ */
+/**
+ * 执行样式函数，并将结果设置到组件的样式对象。将属性名去掉 bs- 前缀作为函数名称，从样式函数集合中获取函数，将属性值(为数组时，作为展开参数)作为参数，执行并将结果追加到组件的样式对象中
+ * 
+ * @attribute module:Panel.Panel.bf-xxx
+ * @type {number|string|array} 
+ * @example
+ * ```jsx
+ * import { backgroundImage } from '@bnorth/rich.css/lib/styles/background';
+ * import { addFunctions } from '@bnorth/components/lib/utils/props';
+ * addFunctions({ backgroundImage });
+ * 
+ * export default props=>{
+ *   return <Panel bf-background={'bg.jpg'} /> // style: {backgroundImage: url(bg.jpg)}
+ * }
+ * ```
+ */
 
 Object.defineProperty(Panel,"Panel",{ get:function(){ return Panel }, set:function(val){ Panel = val }})
 export default Panel;
@@ -150,7 +233,7 @@ export let PanelContainer = class extends React.Component {
       ctype, selectedIndex, countToShow, onSelectedChange, panelContainerProps, 
       inline, position, direction, justify, align, wrap, separator, separatorProps, noOverlap,
       genPanelItemProps, panelItemProps, getPanelItemProps, getPanelItemClassName, getPanelItemStyle,
-      className, children, ...props
+      classNamePre, children, ...props
     } = BaseComponent(this.props, PanelContainer);
 
     children = React.Children.toArray(children).filter(v=>v);
@@ -169,23 +252,23 @@ export let PanelContainer = class extends React.Component {
       ++panelItemIndex, panelItemCount, v.props, panelItemProps, getPanelItemClassName, getPanelItemStyle, getPanelItemProps
     )}>{v}</PanelItem>))
 
-    let classSet = { 'position-relative overflow-a-hidden': true };
+    let classSetPre = { 'position-relative overflow-a-hidden': true };
 
     if(ctype==='single'){
       children = children.filter(v=>v.props.panelItemSelected);
       props.inline = inline;
     }else if(ctype==='justify'){
-      classSet = { ...classSet,
+      classSetPre = { ...classSetPre,
         ['flex-display-'+(inline?'inline':'block')]: true,
         'flex-justify-around flex-align-stretch': true, 
       }
     }else if(ctype==='primary'){
-      classSet = { ...classSet,
+      classSetPre = { ...classSetPre,
         ['flex-display-'+(inline?'inline':'block')]: true,
         'flex-align-center': true,
       }
     }else if(ctype==='flex'){
-      classSet = { ...classSet,
+      classSetPre = { ...classSetPre,
         ['flex-display-'+(inline?'inline':'block')]: true,
       }
     }else if(ctype==='scroll') {
@@ -198,17 +281,18 @@ export let PanelContainer = class extends React.Component {
     }
 
     if(position) direction = positionToDirection[position];
-    classSet = { ...classSet,
+    classSetPre = { ...classSetPre,
       ['flex-direction-'+direction]: direction,
       ['flex-justify-'+justify]: justify,
       ['flex-align-'+align]: align,
       ['flex-wrap-'+wrap]: wrap,
     }
     
-    return <Panel className={classes(classSet, className)} {...props}>{children}</Panel>;
+    return <Panel classNamePre={classes(classSetPre, classNamePre)} {...props}>{children}</Panel>;
   }
 }
 
+PanelContainer.isBnorth = true;
 PanelContainer.defaultProps = {}
 /**
  * 设置子组件的排列类型，包括：
@@ -338,6 +422,7 @@ export let PanelItem = aprops=>{
   return cloneElement(children, {className: classes(classSet, className), panelContainerProps, panelItemIndex, panelItemCount, panelItemSelected, panelItemPlain, ...props});
 }
 
+PanelItem.isBnorth = true;
 PanelItem.defaultProps = {}
 /**
  * 容器组件的组织类型
@@ -433,7 +518,7 @@ let InnerScroll = class extends React.Component {
 
     return (
       <Panel 
-        componentTransform={Touchable} direction="horizontal" recognizers={{'pan':{enable: true}}} 
+        component={Touchable} direction="horizontal" recognizers={{'pan':{enable: true}}} 
         onPanStart={this.handlePanStart.bind(this)} onPan={this.handlePan.bind(this)} onPanEnd={this.handlePanEnd.bind(this)} onPanCancel={this.handlePanEnd.bind(this)}
         classNamePre={classNamePre} stylePre={stylePre} {...props}>
         {children}
@@ -442,6 +527,7 @@ let InnerScroll = class extends React.Component {
   }
 }
 
+InnerScroll.isBnorth = true;
 InnerScroll.defaultProps = {};
 
 Object.defineProperty(Panel,"InnerScroll",{ get:function(){ return InnerScroll }, set:function(val){ InnerScroll = val }})

@@ -81,21 +81,17 @@ Animation.defaultProps.types = {
   },
   fade: {
     getProps: (state, aprops)=>{
-      let { in:isIn, timeout, dimension, ...props } = aprops;
-      props.classNamePre = `opacity-${(state==='entered'||state==='entering')?'100':(isIn?'50':'0')}`;
-      props.stylePre = { ...transiton(`${timeout}ms`, { property: 'opacity' }) };
+      let { in:isIn, timeout, dimension, classNamePre, stylePre, ...props } = aprops;
+      props.classNamePre = { [`opacity-${(state==='entered'||state==='entering')?'100':(isIn?'50':'0')}`]: true, ...classNamePre }
+      props.stylePre = { ...transiton(`${timeout}ms`, { property: 'opacity' }), ...stylePre };
       return props;
     },
   },
   collapse: {
     getProps: (state, aprops)=>{
-      let { in:isIn, timeout, dimension, ...props } = aprops;
-      props.classNamePre = {
-        'overflow-a-hidden': true,
-        'text-white-space-nowrap': true,
-        'display-none': !isIn&state==='exited',
-      }
-      props.stylePre = { ...transiton(`${timeout}ms`, { property: dimension }) };
+      let { in:isIn, timeout, dimension, classNamePre, stylePre, ...props } = aprops;
+      props.classNamePre = { 'overflow-a-hidden text-white-space-nowrap': true, 'display-none': !isIn&state==='exited', ...classNamePre }
+      props.stylePre = { ...transiton(`${timeout}ms`, { property: dimension }), ...stylePre };
       return props;
     },
     onEnter: (props, elem)=>{
@@ -124,4 +120,6 @@ Animation.defaultProps.types = {
 
 
 Object.defineProperty(Animation,"Animation",{ get:function(){ return Animation }, set:function(val){ Animation = val }})
+Animation.isBnorth = true;
+Animation.defaultProps['b-precast'] = {}
 export default Animation;

@@ -9,6 +9,8 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
@@ -32,17 +34,25 @@ var _AspectRatio = function AspectRatio(aprops) {
   var _BaseComponent = (0, _BaseComponent2.default)(aprops, _AspectRatio),
       ratio = _BaseComponent.ratio,
       innerProps = _BaseComponent.innerProps,
+      classNamePre = _BaseComponent.classNamePre,
+      stylePre = _BaseComponent.stylePre,
       children = _BaseComponent.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["ratio", "innerProps", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["ratio", "innerProps", "classNamePre", "stylePre", "children"]);
 
-  var stylePre = ratio && {
+  stylePre = ratio ? (0, _objectSpread2.default)({
     paddingBottom: String(ratio * 100) + '%'
+  }, stylePre) : stylePre;
+  classNamePre = (0, _objectSpread2.default)({
+    'position-relative': true
+  }, classNamePre);
+  var innerClassNamePre = {
+    'position-absolute offset-a-start square-full overflow-a-hidden': true
   };
-  var classNamePre = 'position-absolute offset-a-start square-full overflow-a-hidden';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    classNamePre: classNamePre,
     stylePre: stylePre
   }, props), _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    classNamePre: classNamePre
+    classNamePre: innerClassNamePre
   }, innerProps), children));
 };
 
@@ -67,5 +77,7 @@ Object.defineProperty(_AspectRatio, "AspectRatio", {
     _AspectRatio = val;
   }
 });
+_AspectRatio.isBnorth = true;
+_AspectRatio.defaultProps['b-precast'] = {};
 var _default = _AspectRatio;
 exports.default = _default;

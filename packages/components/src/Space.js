@@ -12,7 +12,7 @@ import Panel from './Panel';
  * @augments BaseComponent
  * @exportdefault
  */
-let Space = (aprops)=>{
+let Space = aprops=>{
   let { count, stacked, children, ...props } = BaseComponent(aprops, Space);
 
   return (
@@ -37,4 +37,6 @@ Space.defaultProps.count = 1;
 
 
 Object.defineProperty(Space,"Space",{ get:function(){ return Space }, set:function(val){ Space = val }})
+Space.isBnorth = true;
+Space.defaultProps['b-precast'] = {}
 export default Space;

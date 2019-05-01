@@ -401,5 +401,7 @@ Object.defineProperty(Touchable, "Touchable", {
     Touchable = val;
   }
 });
+Touchable.isBnorth = true;
+Touchable.defaultProps['b-precast'] = {};
 var _default = Touchable;
 exports.default = _default;

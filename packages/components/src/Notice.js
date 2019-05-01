@@ -12,25 +12,26 @@ let Notice = aprops=>{
 
   return (
     <Panel className={classNamePreContainer} {...containerProps}>
-      <Animation in={isIn} type="collapse" bc-width-full onFinished={onFinished} transitionProps={transitionProps} {...animationProps}>
-        <PanelIcon 
+      <Panel component={Animation} in={isIn} type="collapse" bc-width-full onFinished={onFinished} transitionProps={transitionProps} {...animationProps}>
+        <Panel 
           bp-title-bc-flex-sub-flex-extend
           name="close:x" bp-icon-onClick={onClose} b-icon-bc-padding-a="xs"
-          bc-width-full bc-padding-a- position="right" b-style="solid" b-theme="mask" {...props} />
-      </Animation>
+          bc-width-full bc-padding-a- position="right" b-style="solid" b-theme="mask" 
+          component={PanelIcon} {...props} />
+      </Panel>
     </Panel>
   );
 }
 
 Notice.defaultProps = {}
+
+Object.defineProperty(Notice,"Notice",{ get:function(){ return Notice }, set:function(val){ Notice = val }})
+Notice.isBnorth = true;
 Notice.defaultProps['b-precast'] = {
   'bp-title-bc-text-weight-': true,
   'bp-title-bc-text-size': 'lg',
-}
-
-Object.defineProperty(Notice,"Notice",{ get:function(){ return Notice }, set:function(val){ Notice = val }})
+};
 export default Notice;
-
 
 
 export let notice = {

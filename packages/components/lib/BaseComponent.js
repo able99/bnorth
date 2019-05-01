@@ -34,14 +34,6 @@ exports.chainedFuncs = chainedFuncs;
 exports.default = BaseComponent;
 exports.domIsMouse = exports.domIsTouch = void 0;
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
-
-require("core-js/modules/es6.string.ends-with");
-
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
-
-require("core-js/modules/es6.object.assign");
-
 require("core-js/modules/es6.string.starts-with");
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
@@ -52,8 +44,6 @@ require("core-js/modules/es7.object.entries");
 
 require("core-js/modules/web.dom.iterable");
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
-
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
@@ -63,8 +53,6 @@ var _style = _interopRequireDefault(require("dom-helpers/style"));
 var _offset = _interopRequireDefault(require("dom-helpers/query/offset"));
 
 var _position = _interopRequireDefault(require("dom-helpers/query/position"));
-
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
 
 var _events = require("dom-helpers/events/");
 
@@ -83,12 +71,8 @@ Object.keys(_events).forEach(function (key) {
  * 基础组件以及一些工具函数
  * @module
  */
-var MARGINS = {
-  height: ['marginTop', 'marginBottom'],
-  width: ['marginLeft', 'marginRight']
-}; // util
+// util
 // -------------------
-
 function domCapitalize(string) {
   return "".concat(string.charAt(0).toUpperCase()).concat(string.slice(1));
 }
@@ -212,6 +196,11 @@ function domOffset(node, dock) {
   return dock ? (0, _position.default)(node, dock) : (0, _offset.default)(node);
 }
 
+var MARGINS = {
+  height: ['marginTop', 'marginBottom'],
+  width: ['marginLeft', 'marginRight']
+};
+
 function domGetDimensionValue(elem) {
   var dimension = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "height";
   elem = _reactDom.default.findDOMNode(elem);
@@ -269,96 +258,16 @@ function chainedFuncs() {
  * @exportdefault
  * @name BaseComponent
  */
-function BaseComponent(aprops) {
-  aprops = (0, _objectSpread2.default)({}, typeof aprops['b-precast'] === 'function' ? aprops['b-precast'](aprops) : aprops['b-precast'], typeof aprops['b-dynamic'] === 'function' ? aprops['b-dynamic'](aprops) : aprops['b-dynamic'], aprops);
-  delete aprops['b-precast'];
-  delete aprops['b-dynamic'];
-  var _aprops = aprops,
-      active = _aprops.active,
-      selected = _aprops.selected,
-      disabled = _aprops.disabled,
-      onClick = _aprops.onClick,
-      onTouchStart = _aprops.onTouchStart,
-      onTouchEnd = _aprops.onTouchEnd,
-      onTouchCancel = _aprops.onTouchCancel,
-      btn = _aprops.btn,
-      classNamePre = _aprops.classNamePre,
-      classNameExt = _aprops.classNameExt,
-      stylePre = _aprops.stylePre,
-      styleExt = _aprops.styleExt,
-      className = _aprops.className,
-      style = _aprops.style,
-      refWrap = _aprops.refWrap,
-      props = (0, _objectWithoutProperties2.default)(_aprops, ["active", "selected", "disabled", "onClick", "onTouchStart", "onTouchEnd", "onTouchCancel", "btn", "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "refWrap"]);
-  var classSet = {};
-  var styleSet = {};
+function BaseComponent(props) {
+  props = (0, _objectSpread2.default)({}, typeof props['b-precast'] === 'function' ? props['b-precast'](props) : props['b-precast'], typeof props['b-dynamic'] === 'function' ? props['b-dynamic'](props) : props['b-dynamic'], props);
+  delete props['b-precast'];
+  delete props['b-dynamic'];
   Object.entries(props).forEach(function (_ref) {
     var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
         k = _ref2[0],
         v = _ref2[1];
 
-    /**
-     * 设置组件的样式对象，将属性名去掉 bs- 前缀，和属性值，追加到组件的样式对象中
-     * 
-     * @attribute BaseComponent.bs-xxx
-     * @type {number|string} 
-     * @example
-     * ```jsx
-     * <Panel bs-width="50%" style={{height: '50%'}} /> // style: { widht: 50%, height: 50% }
-     * ```
-     */
-    if (k.startsWith('bs-')) {
-      delete props[k];
-      if (v === false || v === undefined || v === null) return;
-      var name = k.slice(3);
-      styleSet[name] = v;
-      /**
-       * 设置样式类
-       * 
-       * - 当属性值为 true 时，将当前属性名，去掉 bc- 前缀，追加到组件的样式类属性中
-       * - 当属性值为数字或字符串时，将去掉 bc- 前缀的属性名和属性值用 - 连接后，追加到组件的样式类属性中
-       * - 当属性值不为真时，没有任何作用
-       * 
-       * @attribute BaseComponent.bc-xxx
-       * @type {boolean|string|number} 
-       * @example
-       * ```jsx
-       * <Panel bc-text-size="lg" bc-text-weight-={true} className="text-color-primary" /> // className: 'text-color-primary text-size-lg text-weight-'
-       * ```
-       */
-    } else if (k.startsWith('bc-')) {
-      delete props[k];
-      if (v === false || v === undefined || v === null) return;
-
-      var _name = k.slice(3);
-
-      classSet[_name + (v === true ? '' : '-' + v)] = true;
-      /**
-       * 执行样式函数，并将结果设置到组件的样式对象。将属性名去掉 bs- 前缀作为函数名称，从样式函数集合中获取函数，将属性值(为数组时，作为展开参数)作为参数，执行并将结果追加到组件的样式对象中
-       * 
-       * @attribute BaseComponent.bf-xxx
-       * @type {number|string|array} 
-         * @example
-         * ```jsx
-         * import { backgroundImage } from '@bnorth/rich.css/lib/styles/background';
-         * import { addFunctions } from '@bnorth/components/lib/utils/props';
-         * addFunctions({ backgroundImage });
-         * 
-         * export default props=>{
-         *   return <Panel bf-background={'bg.jpg'} /> // style: {backgroundImage: url(bg.jpg)}
-         * }
-         * ```
-       */
-    } else if (k.startsWith('bf-')) {
-      delete props[k];
-      if (!v) return;
-
-      var _name2 = k.slice(3);
-
-      _name2 = BaseComponent.styleFunctions[_name2];
-      if (!_name2) return;
-      Object.assign(styleSet, Array.isArray(v) ? _name2.apply(void 0, (0, _toConsumableArray2.default)(v)) : _name2(v));
-    } else if (k.startsWith('bp-')) {
+    if (k.startsWith('bp-')) {
       delete props[k];
       k = k.slice(3);
       var index = k.indexOf('-');
@@ -369,47 +278,9 @@ function BaseComponent(aprops) {
       objName += 'Props';
       props[objName] = (0, _objectSpread2.default)({}, props[objName]);
       props[objName][propName] = v;
-    } else if (k.endsWith('Props') && (0, _typeof2.default)(v) === 'object') {
-      props[k] = (0, _objectSpread2.default)({}, props[k], v);
     }
   });
-  if (active) classSet['active'] = true;
-  if (selected) classSet['selected'] = true;
-  if (disabled) classSet['disabled'] = true;
-  if (onClick && btn !== false) classSet['cursor-pointer'] = true;
-  if (onClick && !btn && btn !== false || btn === true) classSet['btn'] = true;
-
-  if (onClick && btn !== false) {
-    props['onTouchStart'] = function (e) {
-      e.currentTarget.classList.add(!btn || btn === true ? 'active' : btn);
-      onTouchStart && onTouchStart(e);
-    };
-
-    props['onTouchEnd'] = function (e) {
-      e.currentTarget.classList.remove(!btn || btn === true ? 'active' : btn);
-      onTouchEnd && onTouchEnd(e);
-    };
-
-    props['onTouchCancel'] = function (e) {
-      e.currentTarget.classList.remove(!btn || btn === true ? 'active' : btn);
-      onTouchCancel && onTouchCancel(e);
-    };
-  } else {
-    if (aprops.hasOwnProperty('onTouchStart')) props.onTouchStart = onTouchStart;
-    if (aprops.hasOwnProperty('onTouchEnd')) props.onTouchEnd = onTouchEnd;
-    if (aprops.hasOwnProperty('onTouchCancel')) props.onTouchCancel = onTouchCancel;
-  }
-
-  if (aprops.hasOwnProperty('onClick')) props.onClick = onClick;
-  if (aprops.hasOwnProperty('selected')) props.selected = selected;
-  if (aprops.hasOwnProperty('active')) props.active = active;
-  if (aprops.hasOwnProperty('disabled')) props.disabled = disabled;
-  if (aprops.hasOwnProperty('btn')) props.btn = btn;
-  if (aprops.hasOwnProperty('refWrap')) props.ref = refWrap;
-  return (0, _objectSpread2.default)({}, props, {
-    className: (0, _classes.default)(classNamePre, classSet, className, classNameExt),
-    style: (0, _objectSpread2.default)({}, stylePre, styleSet, style, styleExt)
-  });
+  return props;
 }
 /**
  * 样式函数映射集合

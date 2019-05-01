@@ -58,6 +58,8 @@ List.defaultProps = {};
 
 
 Object.defineProperty(List,"List",{ get:function(){ return List }, set:function(val){ List = val }})
+List.isBnorth = true;
+List.defaultProps['b-precast'] = {};
 export default List;
 
 
@@ -75,14 +77,15 @@ let Item = aprops=>{
   let {
     panelItemIndex, panelItemCount, panelContainerProps:{separatorInset}, onClick, 
     media, mediaProps, mainProps, title, titleProps, subTitle, subTitleProps, desc, descProps, after, afterProps, arrow, arrowProps, autoArrow=true, 
-    children, ...props
+    classNamePre, children, ...props
   } = BaseComponent(aprops, Item);
 
-  let classNamePre = {
+  classNamePre = {
     'padding-a-': true,
     [`margin-left-${separatorInset&&separatorInset!==true?('-'+separatorInset):''}`]: separatorInset,
     'padding-left-0': separatorInset,
     'border-set-bottom-': panelItemIndex<panelItemCount-1,
+    ...classNamePre,
   };
 
   return (
@@ -102,14 +105,6 @@ let Item = aprops=>{
 
 
 Item.defaultProps = {}
-Item.defaultProps['b-precast'] = {
-  'bp-subTitle-bc-text-size': 'sm',
-  'bp-desc-bc-text-size': 'sm',
-  'bp-desc-bc-text-color': 'light',
-  'bp-after-bc-text-size': 'sm',
-  'bp-after-bc-text-color': 'light',
-  'bp-arrow-bc-text-color': 'light',
-}
 /**
  * 参见 List
  * @attribute module:List~Item.separatorInset
@@ -186,3 +181,12 @@ Item.defaultProps['b-precast'] = {
 Item.defaultProps.autoArrow = true; 
 
 Object.defineProperty(List,"Item",{ get:function(){ return Item }, set:function(val){ Item = val }})
+Item.isBnorth = true;
+Item.defaultProps['b-precast'] = {
+  'bp-subTitle-bc-text-size': 'sm',
+  'bp-desc-bc-text-size': 'sm',
+  'bp-desc-bc-text-color': 'light',
+  'bp-after-bc-text-size': 'sm',
+  'bp-after-bc-text-color': 'light',
+  'bp-arrow-bc-text-color': 'light',
+};

@@ -18,16 +18,23 @@ import Animation from './Animation';
  * @augments module:Animation.Animation
  */
 let Backdrop = aprops=>{
-  let props = BaseComponent(aprops, Backdrop);
+  let { classNamePre, ...props } = BaseComponent(aprops, Backdrop);
 
-  let classNamePre = {
+  classNamePre = {
     'position-absolute square-full offset-a-start overflow-a-hidden': true,
+    ...classNamePre,
   }
 
-  return <Panel componentTransform={Animation} type="fade" b-style="mask" btn={false} classNamePre={classNamePre} {...props} />;
+  return (
+    <Panel 
+      type="fade" b-style="mask" btn={false} 
+      component={Animation} classNamePre={classNamePre} {...props} />
+  )
 }
 
 Backdrop.defaultProps = {};
 
 Object.defineProperty(Backdrop,"Backdrop",{ get:function(){ return Backdrop }, set:function(val){ Backdrop = val }})
+Backdrop.isBnorth = true;
+Backdrop.defaultProps['b-precast'] = {};
 export default Backdrop;

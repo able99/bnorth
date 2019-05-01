@@ -10,17 +10,18 @@ let Modal = aprops=>{
   let {
     in:isIn, type, onClose, onFinished,
     containerProps, headerProps, title, close, bodyProps, footerProps, buttons,
-    children, ...props
+    classNamePre, stylePre, children, ...props
   } = BaseComponent(aprops, Modal);
   buttons = buttons[type]||[];
   children = typeof(children)==='function'?children(this):children;
 
-  let classNamePre = {
+  classNamePre = {
     'position-relative backface-hidden overflow-a-hidden': true,
     'square-full': type==='popup',
     'border-radius-': type!=='popup'&&type!=='document',
+    ...classNamePre,
   };
-  let stylePre = { width: type!=='popup'?'80%':undefined };
+  stylePre = { width: type!=='popup'?'80%':undefined, ...stylePre };
   let classNamePreContainer = { 'flex-display-block': type!=='document', 'flex-justify-center': type!=='document', 'flex-align-center': type!=='document' }
 
   children = (
@@ -37,25 +38,26 @@ let Modal = aprops=>{
       {type!=='document'&&children?(<Panel bc-padding-a- bc-border-set-bottom-={Boolean(buttons.length)} {...bodyProps}>{children}</Panel>):null}
       {type!=='document'&&buttons.length?(
         <PanelContainer ctype="justify" {...footerProps}>
-          {buttons.map((v,i)=><Panel key={i} componentTransform={Button} className="bg-none- border-none-top- border-none-bottom- border-none-right-" bc-border-set-left-={Boolean(i)} bc-border-none-left-={!Boolean(i)} onClick={e=>{e.stopPropagation();onClose&&onClose(i)}} {...v} />)}
+          {buttons.map((v,i)=><Panel key={i} component={Button} className="bg-none- border-none-top- border-none-bottom- border-none-right-" bc-border-set-left-={Boolean(i)} bc-border-none-left-={!Boolean(i)} onClick={e=>{e.stopPropagation();onClose&&onClose(i)}} {...v} />)}
         </PanelContainer>
       ):null}
     </Panel>
   )
   
-  return <Panel componentTransform={Backdrop} in={isIn} btn={false} onClick={onClose} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
+  return <Panel component={Backdrop} in={isIn} btn={false} onClick={onClose} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
 }
 
 Modal.defaultProps = {}
-Modal.defaultProps['b-precast'] = {
-  'bp-header-bp-title-bc-text-weight': 'bold',
-}
 Modal.defaultProps.buttons = {
   alert: [{children: '确定'}], 
   prompt: [{children: '取消'},{children: '确定'}],
 }
 
 Object.defineProperty(Modal,"Modal",{ get:function(){ return Modal }, set:function(val){ Modal = val }})
+Modal.isBnorth = true;
+Modal.defaultProps['b-precast'] = {
+  'bp-header-bp-title-bc-text-weight': 'bold',
+};
 export default Modal;
 
 

@@ -17,10 +17,13 @@ import { PanelLoader } from './Loader';
  */
 class Dropload extends React.Component{
   render() {
-    let { disabled, isLoading, onLoad, offset, ...props } = BaseComponent(this.props, Dropload);
+    let { 
+      disabled, isLoading, onLoad, offset, 
+      classNamePre, ...props 
+    } = BaseComponent(this.props, Dropload);
     if(disabled) return null;
   
-    let classNamePre = 'padding-a-';
+    classNamePre = { 'padding-a-': true, ...classNamePre }
     
     return (
       <React.Fragment>
@@ -29,7 +32,7 @@ class Dropload extends React.Component{
           let distance = Math.abs(target.scrollTop+target.clientHeight-target.scrollHeight);
           if(distance<offset){ !this.trigger&&onLoad(); this.trigger = true }else { this.trigger = false }
         }} />
-        <Panel componentTransform={PanelLoader} position='top' isProgress={false} bc-visibility-hide={!isLoading} classNamePre={classNamePre} {...props} />
+        <Panel component={PanelLoader} position='top' isProgress={false} bc-visibility-hide={!isLoading} classNamePre={classNamePre} {...props} />
       </React.Fragment>
     );
   }
@@ -60,6 +63,8 @@ Dropload.defaultProps.offset = 35;
 
 
 Object.defineProperty(Dropload,"Dropload",{ get:function(){ return Dropload }, set:function(val){ Dropload = val }})
+Dropload.isBnorth = true;
+Dropload.defaultProps['b-precast'] = {}
 export default Dropload;
 
 

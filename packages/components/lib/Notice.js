@@ -36,13 +36,14 @@ var _Notice = function Notice(aprops) {
   var classNamePreContainer = 'position-absolute offset-top-start offset-left-top width-full';
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     className: classNamePreContainer
-  }, containerProps), _react.default.createElement(_Animation.default, (0, _extends2.default)({
+  }, containerProps), _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    component: _Animation.default,
     in: isIn,
     type: "collapse",
     "bc-width-full": true,
     onFinished: onFinished,
     transitionProps: transitionProps
-  }, animationProps), _react.default.createElement(_Icon.PanelIcon, (0, _extends2.default)({
+  }, animationProps), _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "bp-title-bc-flex-sub-flex-extend": true,
     name: "close:x",
     "bp-icon-onClick": onClose,
@@ -51,15 +52,12 @@ var _Notice = function Notice(aprops) {
     "bc-padding-a-": true,
     position: "right",
     "b-style": "solid",
-    "b-theme": "mask"
+    "b-theme": "mask",
+    component: _Icon.PanelIcon
   }, props))));
 };
 
 _Notice.defaultProps = {};
-_Notice.defaultProps['b-precast'] = {
-  'bp-title-bc-text-weight-': true,
-  'bp-title-bc-text-size': 'lg'
-};
 Object.defineProperty(_Notice, "Notice", {
   get: function get() {
     return _Notice;
@@ -68,6 +66,11 @@ Object.defineProperty(_Notice, "Notice", {
     _Notice = val;
   }
 });
+_Notice.isBnorth = true;
+_Notice.defaultProps['b-precast'] = {
+  'bp-title-bc-text-weight-': true,
+  'bp-title-bc-text-size': 'lg'
+};
 var _default = _Notice;
 exports.default = _default;
 var notice = {

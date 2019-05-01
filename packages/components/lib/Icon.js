@@ -9,8 +9,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.PanelIcon = exports.default = void 0;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 require("core-js/modules/es6.array.from");
@@ -26,6 +24,8 @@ require("core-js/modules/es6.string.includes");
 require("core-js/modules/es6.regexp.split");
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 require("core-js/modules/es6.function.name");
 
@@ -63,10 +63,14 @@ var _Icon = function Icon(aprops) {
       shape = _BaseComponent.shape,
       rotate = _BaseComponent.rotate,
       component = _BaseComponent.component,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["names", "nameMaps", "shapes", "name", "src", "char", "shape", "rotate", "component"]);
+      classNamePre = _BaseComponent.classNamePre,
+      stylePre = _BaseComponent.stylePre,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["names", "nameMaps", "shapes", "name", "src", "char", "shape", "rotate", "component", "classNamePre", "stylePre"]);
 
-  var classNamePre = ['display-inline', 'width-1em', 'height-1em'];
-  var stylePre = rotate ? (0, _animation.transform)('rotate', String(rotate) + 'deg') : {};
+  classNamePre = (0, _objectSpread2.default)({
+    'display-inline width-1em height-1em': true
+  }, classNamePre);
+  stylePre = rotate ? (0, _objectSpread2.default)({}, (0, _animation.transform)('rotate', String(rotate) + 'deg'), stylePre) : stylePre || {};
 
   if (name) {
     var _name$split = name.split(':'),
@@ -113,7 +117,7 @@ var _Icon = function Icon(aprops) {
     });
   } else if (char) {
     if (!component) component = 'span';
-    classNamePre.push('display-inlineblock text-align-center line-height-1em');
+    classNamePre['display-inlineblock text-align-center line-height-1em'] = true;
     props.children = char[0];
   } else {
     classNamePre = [];
@@ -217,6 +221,8 @@ Object.defineProperty(_Icon, "Icon", {
     _Icon = val;
   }
 });
+_Icon.isBnorth = true;
+_Icon.defaultProps['b-precast'] = {};
 var _default = _Icon;
 /**
  * 图标小面板组件，扩展小面板组件，提供图标组件与面板内容混排的能力
@@ -300,3 +306,5 @@ Object.defineProperty(_Icon, "PanelIcon", {
     exports.PanelIcon = PanelIcon = val;
   }
 });
+PanelIcon.isBnorth = true;
+PanelIcon.defaultProps['b-precast'] = {};

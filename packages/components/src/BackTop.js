@@ -39,8 +39,8 @@ class BackTop extends React.Component {
           }} 
           {...scrollSpyProps} />
         {this.isShow()?(
-          <Panel componentTransform={Fab} onClick={chainedFuncs(()=>this.scrollToTop(), onClick)} {...props} >
-            <Panel componentTransform={PanelIcon} name="backTop:^" {...contentProps}>{children}</Panel>
+          <Panel component={Fab} onClick={chainedFuncs(()=>this.scrollToTop(), onClick)} {...props} >
+            <Panel component={PanelIcon} name="backTop:^" {...contentProps}>{children}</Panel>
           </Panel>
         ):null}
       </React.Fragment>
@@ -79,4 +79,6 @@ BackTop.defaultProps.checkParam="100%";
 
 
 Object.defineProperty(BackTop,"BackTop",{ get:function(){ return BackTop }, set:function(val){ BackTop = val }})
+BackTop.isBnorth = true;
+BackTop.defaultProps['b-precast'] = {};
 export default BackTop;

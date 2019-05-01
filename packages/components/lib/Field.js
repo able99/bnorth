@@ -11,6 +11,8 @@ exports.default = void 0;
 
 require("core-js/modules/es6.regexp.constructor");
 
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 require("core-js/modules/es7.array.includes");
 
 require("core-js/modules/es6.string.includes");
@@ -31,7 +33,7 @@ var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/h
 
 var _react = _interopRequireDefault(require("react"));
 
-var _BaseComponent9 = _interopRequireWildcard(require("./BaseComponent"));
+var _BaseComponent10 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Panel = _interopRequireWildcard(require("./Panel"));
 
@@ -48,7 +50,7 @@ var _Icon = _interopRequireDefault(require("./Icon"));
  * @exportdefault
  */
 var _Field = function Field(aprops) {
-  var _BaseComponent = (0, _BaseComponent9.default)(aprops, _Field),
+  var _BaseComponent = (0, _BaseComponent10.default)(aprops, _Field),
       types = _BaseComponent.types,
       before = _BaseComponent.before,
       after = _BaseComponent.after,
@@ -127,6 +129,8 @@ Object.defineProperty(_Field, "Field", {
     _Field = val;
   }
 });
+_Field.isBnorth = true;
+_Field.defaultProps['b-precast'] = {};
 var _default = _Field;
 /**
  * 表单控件的一般类型组件
@@ -153,7 +157,7 @@ function (_React$Component) {
   (0, _createClass2.default)(Normal, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.input = (0, _BaseComponent9.domFindNode)(this);
+      this.input = (0, _BaseComponent10.domFindNode)(this);
       this.input.value = this.props.value || '';
     }
   }, {
@@ -164,7 +168,7 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _BaseComponent2 = (0, _BaseComponent9.default)(this.props, _Normal),
+      var _BaseComponent2 = (0, _BaseComponent10.default)(this.props, _Normal),
           type = _BaseComponent2.type,
           value = _BaseComponent2.value,
           typesToElement = _BaseComponent2.typesToElement,
@@ -176,8 +180,9 @@ function (_React$Component) {
           _onKeyPress = _BaseComponent2.onKeyPress,
           _BaseComponent2$compo = _BaseComponent2.component,
           component = _BaseComponent2$compo === void 0 ? "input" : _BaseComponent2$compo,
+          classNamePre = _BaseComponent2.classNamePre,
           children = _BaseComponent2.children,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["type", "value", "typesToElement", "onChange", "pattern", "patterns", "patternName", "onEnterPress", "onKeyPress", "component", "children"]);
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["type", "value", "typesToElement", "onChange", "pattern", "patterns", "patternName", "onEnterPress", "onKeyPress", "component", "classNamePre", "children"]);
 
       if (typesToElement.includes(type)) {
         component = type;
@@ -187,12 +192,11 @@ function (_React$Component) {
       }
 
       if (patternName) pattern = patterns[patternName];
-      var classNamePre = {
+      classNamePre = (0, _objectSpread2.default)({
         'field transition outline-none appearance-none line-height-1 font-smoothing-antialiased vertical-align-middle': true,
         'bg-none- border-none-a-': !this.props['b-style']
-      };
+      }, classNamePre);
       return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-        component: component,
         type: type,
         onChange: this.props.hasOwnProperty('value') && onChange && pattern && function (e) {
           if (!RegExp(pattern).test(e.target.value)) e.target.value = value;
@@ -207,6 +211,7 @@ function (_React$Component) {
             _onKeyPress && _onKeyPress(e);
           }
         },
+        component: component,
         classNamePre: classNamePre
       }, props), children);
     }
@@ -242,6 +247,8 @@ Object.defineProperty(_Field, "Normal", {
     _Normal = val;
   }
 });
+_Normal.isBnorth = true;
+_Normal.defaultProps['b-precast'] = {};
 /**
  * 表单控件的显示静态文本的组件，用于与其他表单组件达到一致样式
  * @component
@@ -253,12 +260,15 @@ Object.defineProperty(_Field, "Normal", {
  */
 
 var _Static = function Static(aprops) {
-  var _BaseComponent3 = (0, _BaseComponent9.default)(aprops, _Static),
+  var _BaseComponent3 = (0, _BaseComponent10.default)(aprops, _Static),
       type = _BaseComponent3.type,
       value = _BaseComponent3.value,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["type", "value"]);
+      classNamePre = _BaseComponent3.classNamePre,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["type", "value", "classNamePre"]);
 
-  var classNamePre = 'line-height-1 vertical-align-middle';
+  classNamePre = (0, _objectSpread2.default)({
+    'line-height-1 vertical-align-middle': true
+  }, classNamePre);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: "span",
     classNamePre: classNamePre
@@ -276,6 +286,8 @@ Object.defineProperty(_Field, "Static", {
     _Static = val;
   }
 });
+_Static.isBnorth = true;
+_Static.defaultProps['b-precast'] = {};
 /**
  * 表单控件的隐藏组件，使用 label 组件套住该组件，用于改变默认组件的样式
  * @component
@@ -285,8 +297,13 @@ Object.defineProperty(_Field, "Static", {
  */
 
 var _HiddenInput = function HiddenInput(aprops) {
-  var props = (0, _BaseComponent9.default)(aprops, _HiddenInput);
-  var classNamePre = 'visibility-hide display-none';
+  var _BaseComponent4 = (0, _BaseComponent10.default)(aprops, _HiddenInput),
+      classNamePre = _BaseComponent4.classNamePre,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["classNamePre"]);
+
+  classNamePre = (0, _objectSpread2.default)({
+    'visibility-hide display-none': true
+  }, classNamePre);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: "input",
     classNamePre: classNamePre
@@ -302,6 +319,8 @@ Object.defineProperty(_Field, "HiddenInput", {
     _HiddenInput = val;
   }
 });
+_HiddenInput.isBnorth = true;
+_HiddenInput.defaultProps['b-precast'] = {};
 /**
  * 表单控件组件的文件选择控件实现的组件
  * @component
@@ -311,21 +330,24 @@ Object.defineProperty(_Field, "HiddenInput", {
  */
 
 var _File = function File(aprops) {
-  var _BaseComponent4 = (0, _BaseComponent9.default)(aprops, _File),
-      type = _BaseComponent4.type,
-      value = _BaseComponent4.value,
-      inputProps = _BaseComponent4.inputProps,
-      disabled = _BaseComponent4.disabled,
-      onClick = _BaseComponent4.onClick,
-      onChange = _BaseComponent4.onChange,
-      children = _BaseComponent4.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["type", "value", "inputProps", "disabled", "onClick", "onChange", "children"]);
+  var _BaseComponent5 = (0, _BaseComponent10.default)(aprops, _File),
+      type = _BaseComponent5.type,
+      value = _BaseComponent5.value,
+      inputProps = _BaseComponent5.inputProps,
+      disabled = _BaseComponent5.disabled,
+      onClick = _BaseComponent5.onClick,
+      onChange = _BaseComponent5.onChange,
+      classNamePre = _BaseComponent5.classNamePre,
+      children = _BaseComponent5.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["type", "value", "inputProps", "disabled", "onClick", "onChange", "classNamePre", "children"]);
 
-  var classNamePre = 'line-height-1 vertical-align-middle';
+  classNamePre = (0, _objectSpread2.default)({
+    'line-height-1 vertical-align-middle': true
+  }, classNamePre);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    disabled: disabled,
     component: "label",
-    classNamePre: classNamePre,
-    disabled: disabled
+    classNamePre: classNamePre
   }, props), _react.default.createElement(_HiddenInput, (0, _extends2.default)({
     type: type,
     value: value,
@@ -350,6 +372,8 @@ Object.defineProperty(_Field, "File", {
     _File = val;
   }
 });
+_Field.isBnorth = true;
+_Field.defaultProps['b-precast'] = {};
 /**
  * 表单控件的2态组件，用于实现 checkbox 等具有 checked 属性类型的组件，实现了2种状态切换的功能
  * 
@@ -361,24 +385,29 @@ Object.defineProperty(_Field, "File", {
  */
 
 var _CheckState = function CheckState(aprops) {
-  var _BaseComponent5 = (0, _BaseComponent9.default)(aprops, _CheckState),
-      type = _BaseComponent5.type,
-      value = _BaseComponent5.value,
-      defaultValue = _BaseComponent5.defaultValue,
-      domValue = _BaseComponent5.domValue,
-      disabled = _BaseComponent5.disabled,
-      onClick = _BaseComponent5.onClick,
-      onChange = _BaseComponent5.onChange,
-      inputProps = _BaseComponent5.inputProps,
-      innerProps = _BaseComponent5.innerProps,
-      statusProps = _BaseComponent5.statusProps,
-      statusCheckedProps = _BaseComponent5.statusCheckedProps,
-      statusUncheckedProps = _BaseComponent5.statusUncheckedProps,
-      children = _BaseComponent5.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["type", "value", "defaultValue", "domValue", "disabled", "onClick", "onChange", "inputProps", "innerProps", "statusProps", "statusCheckedProps", "statusUncheckedProps", "children"]);
+  var _BaseComponent6 = (0, _BaseComponent10.default)(aprops, _CheckState),
+      type = _BaseComponent6.type,
+      value = _BaseComponent6.value,
+      defaultValue = _BaseComponent6.defaultValue,
+      domValue = _BaseComponent6.domValue,
+      disabled = _BaseComponent6.disabled,
+      onClick = _BaseComponent6.onClick,
+      onChange = _BaseComponent6.onChange,
+      inputProps = _BaseComponent6.inputProps,
+      innerProps = _BaseComponent6.innerProps,
+      statusProps = _BaseComponent6.statusProps,
+      statusCheckedProps = _BaseComponent6.statusCheckedProps,
+      statusUncheckedProps = _BaseComponent6.statusUncheckedProps,
+      classNamePre = _BaseComponent6.classNamePre,
+      children = _BaseComponent6.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent6, ["type", "value", "defaultValue", "domValue", "disabled", "onClick", "onChange", "inputProps", "innerProps", "statusProps", "statusCheckedProps", "statusUncheckedProps", "classNamePre", "children"]);
 
-  var classNamePre = 'check-status line-height-0 display-inlineblock vertical-align-middle';
-  var classNamePreInner = 'check-status-inner position-relative line-height-0 display-inlineblock';
+  classNamePre = (0, _objectSpread2.default)({
+    'check-status line-height-0 display-inlineblock vertical-align-middle': true
+  }, classNamePre);
+  var classNamePreInner = {
+    'check-status-inner position-relative line-height-0 display-inlineblock': true
+  };
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: "label",
     classNamePre: classNamePre
@@ -442,6 +471,8 @@ Object.defineProperty(_Field, "CheckState", {
     _CheckState = val;
   }
 });
+_CheckState.isBnorth = true;
+_CheckState.defaultProps['b-precast'] = {};
 /**
  * 表单控件的对应的 checkbox 组件，基于2态组件实现
  * @component
@@ -451,9 +482,9 @@ Object.defineProperty(_Field, "CheckState", {
  */
 
 var _Checkbox = function Checkbox(aprops) {
-  var _BaseComponent6 = (0, _BaseComponent9.default)(aprops, _Checkbox),
-      disabled = _BaseComponent6.disabled,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent6, ["disabled"]);
+  var _BaseComponent7 = (0, _BaseComponent10.default)(aprops, _Checkbox),
+      disabled = _BaseComponent7.disabled,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent7, ["disabled"]);
 
   return _react.default.createElement(_CheckState, (0, _extends2.default)({
     "b-style": "hollow",
@@ -465,6 +496,7 @@ var _Checkbox = function Checkbox(aprops) {
   }, props));
 };
 
+_Checkbox.defaultProps = {};
 Object.defineProperty(_Field, "Checkbox", {
   get: function get() {
     return _Checkbox;
@@ -473,6 +505,8 @@ Object.defineProperty(_Field, "Checkbox", {
     _Checkbox = val;
   }
 });
+_Checkbox.isBnorth = true;
+_Checkbox.defaultProps['b-precast'] = {};
 /**
  * 表单控件的对应的 radio 组件，基于2态组件实现
  * @component
@@ -482,9 +516,9 @@ Object.defineProperty(_Field, "Checkbox", {
  */
 
 var _Radio = function Radio(aprops) {
-  var _BaseComponent7 = (0, _BaseComponent9.default)(aprops, _Radio),
-      disabled = _BaseComponent7.disabled,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent7, ["disabled"]);
+  var _BaseComponent8 = (0, _BaseComponent10.default)(aprops, _Radio),
+      disabled = _BaseComponent8.disabled,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent8, ["disabled"]);
 
   return _react.default.createElement(_CheckState, (0, _extends2.default)({
     "b-style": "hollow",
@@ -497,6 +531,7 @@ var _Radio = function Radio(aprops) {
   }, props));
 };
 
+_Radio.defaultProps = {};
 Object.defineProperty(_Field, "Radio", {
   get: function get() {
     return _Radio;
@@ -505,6 +540,8 @@ Object.defineProperty(_Field, "Radio", {
     _Radio = val;
   }
 });
+_Radio.isBnorth = true;
+_Radio.defaultProps['b-precast'] = {};
 /**
  * 表单控件的开关组件，基于2态组件实现
  * @component
@@ -514,13 +551,15 @@ Object.defineProperty(_Field, "Radio", {
  */
 
 var _Switch = function Switch(aprops) {
-  var _BaseComponent8 = (0, _BaseComponent9.default)(aprops, _Switch),
-      disabled = _BaseComponent8.disabled,
-      _BaseComponent8$bThe = _BaseComponent8['b-theme'],
-      bTheme = _BaseComponent8$bThe === void 0 ? 'component' : _BaseComponent8$bThe,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent8, ["disabled", 'b-theme']);
+  var _BaseComponent9 = (0, _BaseComponent10.default)(aprops, _Switch),
+      disabled = _BaseComponent9.disabled,
+      _BaseComponent9$bThe = _BaseComponent9['b-theme'],
+      bTheme = _BaseComponent9$bThe === void 0 ? 'component' : _BaseComponent9$bThe,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent9, ["disabled", 'b-theme']);
 
-  var classNamePreItem = 'border-radius-rounded width-1em height-1em';
+  var classNamePreItem = {
+    'border-radius-rounded width-1em height-1em': true
+  };
   return _react.default.createElement(_CheckState, (0, _extends2.default)({
     "b-style": "hollow",
     "bg-color-component": disabled,
@@ -556,6 +595,7 @@ var _Switch = function Switch(aprops) {
   }));
 };
 
+_Switch.defaultProps = {};
 Object.defineProperty(_Field, "Switch", {
   get: function get() {
     return _Switch;
@@ -564,6 +604,8 @@ Object.defineProperty(_Field, "Switch", {
     _Switch = val;
   }
 });
+_Switch.isBnorth = true;
+_Switch.defaultProps['b-precast'] = {};
 _Field.defaultProps.types = {
   text: _Normal,
   static: _Static,

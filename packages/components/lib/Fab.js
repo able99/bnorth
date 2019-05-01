@@ -13,6 +13,8 @@ var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends")
 
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
+var _objectSpread3 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -71,14 +73,15 @@ function (_React$Component) {
     key: "render",
     value: function render() {
       var _this = this,
-          _classNamePre;
+          _objectSpread2;
 
       var _BaseComponent = (0, _BaseComponent2.default)(this.props, Fab),
           h = _BaseComponent.h,
           v = _BaseComponent.v,
           margin = _BaseComponent.margin,
           dock = _BaseComponent.dock,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["h", "v", "margin", "dock"]);
+          classNamePre = _BaseComponent.classNamePre,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["h", "v", "margin", "dock", "classNamePre"]);
 
       if ((dock === true || typeof dock === 'string') && !this.dock) {
         return _react.default.createElement("span", {
@@ -94,12 +97,12 @@ function (_React$Component) {
         });
       }
 
-      var classNamePre = (_classNamePre = {
+      classNamePre = (0, _objectSpread3.default)((_objectSpread2 = {
         'position-absolute': true
-      }, (0, _defineProperty2.default)(_classNamePre, "margin-top-".concat(margin !== true ? margin : ''), margin && v === 'start'), (0, _defineProperty2.default)(_classNamePre, "margin-left-".concat(margin !== true ? margin : ''), margin && h === 'start'), (0, _defineProperty2.default)(_classNamePre, "margin-bottom-".concat(margin !== true ? margin : ''), margin && v === 'end'), (0, _defineProperty2.default)(_classNamePre, "margin-right-".concat(margin !== true ? margin : ''), margin && h === 'end'), (0, _defineProperty2.default)(_classNamePre, 'translate-center-x', h === 'center' && v !== 'center'), (0, _defineProperty2.default)(_classNamePre, 'translate-center-y', h !== 'center' && v === 'center'), (0, _defineProperty2.default)(_classNamePre, 'translate-center-a', h === 'center' && v === 'center'), (0, _defineProperty2.default)(_classNamePre, 'offset-left-center', h === 'center'), (0, _defineProperty2.default)(_classNamePre, 'offset-top-center', v === 'center'), (0, _defineProperty2.default)(_classNamePre, 'offset-left-start', h === 'start'), (0, _defineProperty2.default)(_classNamePre, 'offset-right-start', h === 'end'), (0, _defineProperty2.default)(_classNamePre, 'offset-top-start', v === 'start'), (0, _defineProperty2.default)(_classNamePre, 'offset-bottom-start', v === 'end'), _classNamePre);
+      }, (0, _defineProperty2.default)(_objectSpread2, "margin-top-".concat(margin !== true ? margin : ''), margin && v === 'start'), (0, _defineProperty2.default)(_objectSpread2, "margin-left-".concat(margin !== true ? margin : ''), margin && h === 'start'), (0, _defineProperty2.default)(_objectSpread2, "margin-bottom-".concat(margin !== true ? margin : ''), margin && v === 'end'), (0, _defineProperty2.default)(_objectSpread2, "margin-right-".concat(margin !== true ? margin : ''), margin && h === 'end'), (0, _defineProperty2.default)(_objectSpread2, 'translate-center-x', h === 'center' && v !== 'center'), (0, _defineProperty2.default)(_objectSpread2, 'translate-center-y', h !== 'center' && v === 'center'), (0, _defineProperty2.default)(_objectSpread2, 'translate-center-a', h === 'center' && v === 'center'), (0, _defineProperty2.default)(_objectSpread2, 'offset-left-center', h === 'center'), (0, _defineProperty2.default)(_objectSpread2, 'offset-top-center', v === 'center'), (0, _defineProperty2.default)(_objectSpread2, 'offset-left-start', h === 'start'), (0, _defineProperty2.default)(_objectSpread2, 'offset-right-start', h === 'end'), (0, _defineProperty2.default)(_objectSpread2, 'offset-top-start', v === 'start'), (0, _defineProperty2.default)(_objectSpread2, 'offset-bottom-start', v === 'end'), _objectSpread2), classNamePre);
 
       var component = _react.default.createElement(_Panel.default, (0, _extends2.default)({
-        componentTransform: _Button.default,
+        component: _Button.default,
         classNamePre: classNamePre
       }, props));
 
@@ -145,5 +148,7 @@ Object.defineProperty(Fab, "Fab", {
     Fab = val;
   }
 });
+Fab.isBnorth = true;
+Fab.defaultProps['b-precast'] = {};
 var _default = Fab;
 exports.default = _default;
