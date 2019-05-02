@@ -23,7 +23,14 @@ function initArgv(type) {
         .help('h')
         .argv;
       break;
-    
+
+    default:
+      cache = require('yargs')
+        .usage('Usage: roadhog build [options]')
+        .option('debug', { type: 'boolean', describe: 'Build without compress', default: false, })
+        .help('h')
+        .argv;
+     break;
   }
 
   return cache;

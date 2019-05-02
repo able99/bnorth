@@ -148,7 +148,7 @@ class RouterComponent extends React.Component {
     this.eventOffRouterUpdate();
   }
 
-  _renderPage(pageInfo, activeId, focusId){
+  _renderPage(pageInfo, activeId, focusId, deactiveId){
     let { app } = this.props;
     let {_id, _idParent, isSubPage, popLayerInfos, subPageInfos, routeDefine} = pageInfo||{};
 
@@ -163,6 +163,7 @@ class RouterComponent extends React.Component {
           ...pageInfo,
           isActive: isSubPage?_idParent===activeId:_id===activeId, 
           isReactive: app.router._pages[_id],
+          isDeactive: isSubPage?undefined:_id===deactiveId, 
           popLayers: popLayerInfos.map(v=>this._renderPopLayer(v)), 
           subPages: Object.entries(subPageInfos).reduce((v1, [k,v])=>{v1[k]=this._renderPage(v, activeId, focusId); return v1},{}),
           subPageInfos: undefined, popLayerInfos: undefined,
@@ -181,12 +182,12 @@ class RouterComponent extends React.Component {
 
   render() {
     let { app } = this.props;
-    let {_pageInfos, _error, _activeId, _focusId} = app.router;
+    let {_pageInfos, _error, _activeId, _focusId, _deactiveId} = app.router;
 
     if(_error) return <app.router.PageError app={app} data={_error} />;
     return (
       <React.Fragment>
-        {_pageInfos.map(v=>this._renderPage(v, _activeId, _focusId))}
+        {_pageInfos.map(v=>this._renderPage(v, _activeId, _focusId, _deactiveId))}
         {app.router._getPopLayerNoPageId().map(v=>this._renderPopLayer({...v}, _activeId, _focusId))}
       </React.Fragment>
     );
@@ -274,6 +275,10 @@ class Router {
      * 当前有键盘焦点的 id
      */
     this._focusId = undefined;
+    /*!
+     * 即将关闭的页面 id
+     */
+    this._deactiveId = undefined;
     /*!
      * 需要显示在页面上的错误信息
      */
@@ -370,6 +375,7 @@ class Router {
     let pageInfos = [];
     let focusId = undefined;
     let activeId = undefined;
+    let deactiveId = undefined;
 
     /* route */
     let level = 0;
@@ -441,9 +447,15 @@ class Router {
     }
 
     /* update */
+    if(this._activeId&&!pageInfos.find(v=>v._id===this._activeId)) {
+      deactiveId = this._activeId;
+      pageInfos.push(this._pageInfos.find(v=>v._id===this._activeId));
+    }
+
+    this._pageInfos = pageInfos;
     this._focusId = focusId;
     this._activeId = activeId;
-    this._pageInfos = pageInfos;
+    this._deactiveId = deactiveId;
     this._updateRender();
   }
 

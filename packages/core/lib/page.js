@@ -15,6 +15,8 @@ require("core-js/modules/es7.symbol.async-iterator");
 
 require("core-js/modules/es6.symbol");
 
+require("core-js/modules/es6.array.find-index");
+
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 require("core-js/modules/es6.regexp.split");
@@ -398,10 +400,10 @@ function (_React$Component) {
           top: 0,
           left: 0,
           bottom: 0,
-          right: 0 // visibility: route.isActive?'visible':'hidden',
+          right: 0,
+          background: 'white' // visibility: route.isActive?'visible':'hidden',
 
-        },
-        className: !route.isSubPage ? 'page-animated ' + (route.isActive ? !route.isReactive && route.level ? 'page-animated-in-right' : '' : 'page-animated-out-left') : ''
+        }
       };
     } // page life circle
     // ---------------------------
@@ -414,19 +416,53 @@ function (_React$Component) {
       var _this$props4 = this.props,
           app = _this$props4.app,
           _id = _this$props4._id,
-          isActive = _this$props4.route.isActive;
+          _this$props4$route = _this$props4.route,
+          isActive = _this$props4$route.isActive,
+          isSubPage = _this$props4$route.isSubPage,
+          isReactive = _this$props4$route.isReactive,
+          level = _this$props4$route.level;
       app.log.debug('page did mount', _id);
-      this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
-        return _this3._handleKeyEvent(e);
-      });
-      window.setTimeout(function () {
-        _this3._bindController();
 
-        app.event.emit(app._id, 'onPageAdd', _id, _this3);
-        app.event.emit(_this3._id, 'onPageStart', _this3, isActive);
-        isActive && app.event.emit(_this3._id, 'onPageActive', _this3, true);
-        isActive && app.event.emit(app._id, 'onActivePageChange', _this3._id);
-      }, 500);
+      if (!isSubPage && isActive && !isReactive && level) {
+        var element = _reactDom.default.findDOMNode(this);
+
+        var time = new Date().getTime();
+
+        var _run = function _run() {
+          var diff = new Date().getTime() - time;
+          var percent = diff * 100 / 150;
+          if (percent > 100) percent = 100;
+          element.style.webkitTransform = "translateX(" + (100 - percent) + "%)";
+
+          if (percent < 100) {
+            requestAnimationFrame(_run);
+          } else {
+            setTimeout(function () {
+              _this3._bindController();
+
+              _this3._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
+                return _this3._handleKeyEvent(e);
+              });
+              app.event.emit(app._id, 'onPageAdd', _id, _this3);
+              app.event.emit(_this3._id, 'onPageStart', _this3, isActive);
+              isActive && app.event.emit(_this3._id, 'onPageActive', _this3, true);
+              isActive && app.event.emit(app._id, 'onActivePageChange', _this3._id);
+            }, 50);
+          }
+        };
+
+        _run();
+      } else {
+        this._bindController();
+
+        this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
+          return _this3._handleKeyEvent(e);
+        });
+        app.event.emit(app._id, 'onPageAdd', _id, this);
+        app.event.emit(this._id, 'onPageStart', this, isActive);
+        isActive && app.event.emit(this._id, 'onPageActive', this, true);
+        isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+      }
     }
   }, {
     key: "componentWillUnmount",
@@ -447,11 +483,43 @@ function (_React$Component) {
     value: function componentDidUpdate(prevProps, prevState) {
       var _this$props6 = this.props,
           app = _this$props6.app,
-          isActive = _this$props6.route.isActive;
+          _this$props6$route = _this$props6.route,
+          _id = _this$props6$route._id,
+          isActive = _this$props6$route.isActive,
+          isDeactive = _this$props6$route.isDeactive;
 
       if (prevProps.route.isActive !== isActive) {
-        app.event.emit(this._id, isActive ? 'onPageActive' : 'onPageInactive', this, false);
-        isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+        app.event.emit(_id, isActive ? 'onPageActive' : 'onPageInactive', this, false);
+        isActive && app.event.emit(app._id, 'onActivePageChange', _id);
+      }
+
+      if (isDeactive) {
+        var element = _reactDom.default.findDOMNode(this);
+
+        var time = new Date().getTime();
+
+        var _run = function _run() {
+          var diff = new Date().getTime() - time;
+          var percent = diff * 100 / 150;
+          if (percent > 100) percent = 100;
+          element.style.webkitTransform = "translateX(" + percent + "%)";
+
+          if (percent < 100) {
+            requestAnimationFrame(_run);
+          } else {
+            var index = app.router._pageInfos.findIndex(function (v) {
+              return v._id === _id;
+            });
+
+            if (index >= 0) {
+              app.router._pageInfos.splice(index, 1);
+
+              app.router._updateRender();
+            }
+          }
+        };
+
+        _run();
       }
     }
   }, {

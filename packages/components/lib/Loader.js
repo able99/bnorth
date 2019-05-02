@@ -1,11 +1,25 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.loader = exports.OverlayLoader = exports.PanelLoader = exports.default = void 0;
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
@@ -21,7 +35,9 @@ require("@bnorth/rich.css/css/kf.flyout.right.css");
 
 var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
-var _BaseComponent6 = _interopRequireDefault(require("./BaseComponent"));
+var _animationFrame3 = _interopRequireWildcard(require("@bnorth/rich.css/lib/styles/animationFrame"));
+
+var _BaseComponent6 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -173,42 +189,82 @@ _Line.defaultProps['b-precast'] = {};
  * @augments module:Loader.Loader
  */
 
-var _Circle = function Circle(aprops) {
-  var _BaseComponent3 = (0, _BaseComponent6.default)(aprops, _Circle),
-      isProgress = _BaseComponent3.isProgress,
-      progress = _BaseComponent3.progress,
-      timeout = _BaseComponent3.timeout,
-      color = _BaseComponent3.color,
-      colorReverse = _BaseComponent3.colorReverse,
-      classNamePre = _BaseComponent3.classNamePre,
-      children = _BaseComponent3.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["isProgress", "progress", "timeout", "color", "colorReverse", "classNamePre", "children"]);
+var _Circle =
+/*#__PURE__*/
+function (_React$Component) {
+  (0, _inherits2.default)(Circle, _React$Component);
 
-  classNamePre = (0, _objectSpread2.default)({
-    'width-1em height-1em': true
-  }, classNamePre);
-  return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    component: "svg",
-    viewBox: "0 0 100 100",
-    classNamePre: classNamePre
-  }, props), _react.default.createElement("circle", {
-    cx: "50",
-    cy: "50",
-    r: "40",
-    strokeWidth: "20",
-    stroke: colorReverse,
-    fill: "none"
-  }), _react.default.createElement("circle", {
-    cx: "50",
-    cy: "50",
-    r: "40",
-    strokeWidth: "20",
-    stroke: color,
-    fill: "none",
-    style: isProgress ? (0, _objectSpread2.default)({}, (0, _animation.transiton)(timeout), (0, _animation.transform)('rotate', '-90deg'), (0, _animation.transformOrigin)()) : (0, _objectSpread2.default)({}, (0, _animation.animation)('spin'), (0, _animation.transformOrigin)()),
-    strokeDasharray: isProgress ? "".concat(2.51 * (progress || 0), ",251") : "150,251"
-  }), children);
-};
+  function Circle() {
+    (0, _classCallCheck2.default)(this, Circle);
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Circle).apply(this, arguments));
+  }
+
+  (0, _createClass2.default)(Circle, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var element = (0, _BaseComponent6.domFindNode)(this);
+      element = element.querySelectorAll('circle')[1];
+
+      var _animationFrame = (0, _animationFrame3.default)(element, _animationFrame3.afSpin, {
+        first: !this.props.isProgress
+      }),
+          _animationFrame2 = (0, _slicedToArray2.default)(_animationFrame, 2),
+          stop = _animationFrame2[0],
+          start = _animationFrame2[1];
+
+      this.stop = stop;
+      this.start = start;
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevProps.isProgress !== this.props.isProgress && this.props.isProgress) {
+        this.stop();
+      } else if (prevProps.isProgress !== this.props.isProgress && !this.props.isProgress) {
+        this.start();
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _BaseComponent3 = (0, _BaseComponent6.default)(this.props, _Circle),
+          isProgress = _BaseComponent3.isProgress,
+          progress = _BaseComponent3.progress,
+          timeout = _BaseComponent3.timeout,
+          color = _BaseComponent3.color,
+          colorReverse = _BaseComponent3.colorReverse,
+          classNamePre = _BaseComponent3.classNamePre,
+          children = _BaseComponent3.children,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["isProgress", "progress", "timeout", "color", "colorReverse", "classNamePre", "children"]);
+
+      classNamePre = (0, _objectSpread2.default)({
+        'width-1em height-1em': true
+      }, classNamePre);
+      return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+        component: "svg",
+        viewBox: "0 0 100 100",
+        classNamePre: classNamePre
+      }, props), _react.default.createElement("circle", {
+        cx: "50",
+        cy: "50",
+        r: "40",
+        strokeWidth: "20",
+        stroke: colorReverse,
+        fill: "none"
+      }), _react.default.createElement("circle", {
+        cx: "50",
+        cy: "50",
+        r: "40",
+        strokeWidth: "20",
+        stroke: color,
+        fill: "none",
+        style: isProgress ? (0, _objectSpread2.default)({}, (0, _animation.transiton)(timeout), (0, _animation.transform)('rotate', '-90deg'), (0, _animation.transformOrigin)()) : (0, _objectSpread2.default)({}, (0, _animation.transformOrigin)()),
+        strokeDasharray: isProgress ? "".concat(2.51 * (progress || 0), ",251") : "150,251"
+      }), children);
+    }
+  }]);
+  return Circle;
+}(_react.default.Component);
 
 _Circle.defaultProps = {};
 Object.defineProperty(_Loader, "Circle", {

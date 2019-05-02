@@ -291,29 +291,48 @@ class Page extends React.Component {
       style: route.isSubPage?{
         width: '100%', height: '100%',
       }:{
-        position: 'absolute', top: 0, left: 0, bottom: 0, right: 0,
+        position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, background: 'white',
         // visibility: route.isActive?'visible':'hidden',
       },
-      className: !route.isSubPage
-        ?('page-animated '+(route.isActive?(!route.isReactive&&route.level?'page-animated-in-right':''):'page-animated-out-left'))
-        :'',
     }
   }
   
   // page life circle
   // ---------------------------
   componentDidMount() {
-    let { app, _id, route:{isActive} } = this.props;
+    let { app, _id, route:{isActive, isSubPage,isReactive,level} } = this.props;
     app.log.debug('page did mount', _id);
 
-    this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this._handleKeyEvent(e));
-    window.setTimeout(()=>{
+    if(!isSubPage&&isActive&&!isReactive&&level) {
+      let element = ReactDOM.findDOMNode(this);
+      let time = (new Date()).getTime();
+      let _run = ()=>{
+        let diff = (new Date()).getTime() - time;
+        let percent = diff*100/150;
+        if(percent>100) percent = 100;
+        element.style.webkitTransform = "translateX("+(100-percent)+"%)";
+        if(percent < 100) {
+          requestAnimationFrame(_run);
+        }else{
+          setTimeout(()=>{
+            this._bindController();
+            this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this._handleKeyEvent(e));
+            app.event.emit(app._id, 'onPageAdd', _id, this);
+            app.event.emit(this._id, 'onPageStart', this, isActive);
+            isActive && app.event.emit(this._id, 'onPageActive', this, true);
+            isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+          }, 50)
+        }
+      }
+      _run();
+    }else{
       this._bindController();
+      this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this._handleKeyEvent(e));
       app.event.emit(app._id, 'onPageAdd', _id, this);
       app.event.emit(this._id, 'onPageStart', this, isActive);
       isActive && app.event.emit(this._id, 'onPageActive', this, true);
       isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
-    },500);
+    }
   }
 
   componentWillUnmount() {
@@ -328,11 +347,32 @@ class Page extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    let { app, route:{isActive} } = this.props;
+    let { app, route:{_id, isActive, isDeactive} } = this.props;
 
     if(prevProps.route.isActive !== isActive) {
-      app.event.emit(this._id, isActive?'onPageActive':'onPageInactive', this, false);
-      isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+      app.event.emit(_id, isActive?'onPageActive':'onPageInactive', this, false);
+      isActive && app.event.emit(app._id, 'onActivePageChange', _id);
+    }
+
+    if(isDeactive) {
+      let element = ReactDOM.findDOMNode(this);
+      let time = (new Date()).getTime();
+      let _run = ()=>{
+        let diff = (new Date()).getTime() - time;
+        let percent = diff*100/150;
+        if(percent>100) percent = 100;
+        element.style.webkitTransform = "translateX("+percent+"%)";
+        if(percent < 100) {
+          requestAnimationFrame(_run);
+        }else{
+          let index = app.router._pageInfos.findIndex(v=>v._id===_id);
+          if(index>=0){
+            app.router._pageInfos.splice(index,1);
+            app.router._updateRender();
+          }
+        }
+      }
+      _run();
     }
   }
 

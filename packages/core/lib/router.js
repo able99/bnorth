@@ -233,7 +233,7 @@ function (_React$Component) {
     }
   }, {
     key: "_renderPage",
-    value: function _renderPage(pageInfo, activeId, focusId) {
+    value: function _renderPage(pageInfo, activeId, focusId, deactiveId) {
       var _this2 = this;
 
       var app = this.props.app;
@@ -264,6 +264,7 @@ function (_React$Component) {
           route: (0, _objectSpread2.default)({}, pageInfo, {
             isActive: isSubPage ? _idParent === activeId : _id === activeId,
             isReactive: app.router._pages[_id],
+            isDeactive: isSubPage ? undefined : _id === deactiveId,
             popLayers: popLayerInfos.map(function (v) {
               return _this2._renderPopLayer(v);
             }),
@@ -311,13 +312,14 @@ function (_React$Component) {
           _pageInfos = _app$router._pageInfos,
           _error = _app$router._error,
           _activeId = _app$router._activeId,
-          _focusId = _app$router._focusId;
+          _focusId = _app$router._focusId,
+          _deactiveId = _app$router._deactiveId;
       if (_error) return _react.default.createElement(app.router.PageError, {
         app: app,
         data: _error
       });
       return _react.default.createElement(_react.default.Fragment, null, _pageInfos.map(function (v) {
-        return _this3._renderPage(v, _activeId, _focusId);
+        return _this3._renderPage(v, _activeId, _focusId, _deactiveId);
       }), app.router._getPopLayerNoPageId().map(function (v) {
         return _this3._renderPopLayer((0, _objectSpread2.default)({}, v), _activeId, _focusId);
       }));
@@ -426,6 +428,11 @@ function () {
      */
 
     this._focusId = undefined;
+    /*!
+     * 即将关闭的页面 id
+     */
+
+    this._deactiveId = undefined;
     /*!
      * 需要显示在页面上的错误信息
      */
@@ -560,7 +567,7 @@ function () {
       _regenerator.default.mark(function _callee(location) {
         var _this6 = this;
 
-        var pathName, _idPrev, params, pageInfos, focusId, activeId, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, popLayerInfos, focusPopLayerInfo, activePageInfo, focusPopLayerInfoOfPage, _i, pageInfo, _block;
+        var pathName, _idPrev, params, pageInfos, focusId, activeId, deactiveId, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, popLayerInfos, focusPopLayerInfo, activePageInfo, focusPopLayerInfoOfPage, _i, pageInfo, _block;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -579,13 +586,14 @@ function () {
                 pageInfos = [];
                 focusId = undefined;
                 activeId = undefined;
+                deactiveId = undefined;
                 /* route */
 
                 level = 0;
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context.prev = 11;
+                _context.prev = 12;
 
                 _loop = function _loop() {
                   var pagePathName = _step.value;
@@ -691,61 +699,61 @@ function () {
 
                 _iterator = location.pathnames[Symbol.iterator]();
 
-              case 14:
+              case 15:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 21;
+                  _context.next = 22;
                   break;
                 }
 
                 _ret = _loop();
 
                 if (!((0, _typeof2.default)(_ret) === "object")) {
-                  _context.next = 18;
+                  _context.next = 19;
                   break;
                 }
 
                 return _context.abrupt("return", _ret.v);
 
-              case 18:
+              case 19:
                 _iteratorNormalCompletion = true;
-                _context.next = 14;
+                _context.next = 15;
                 break;
 
-              case 21:
-                _context.next = 27;
+              case 22:
+                _context.next = 28;
                 break;
 
-              case 23:
-                _context.prev = 23;
-                _context.t0 = _context["catch"](11);
+              case 24:
+                _context.prev = 24;
+                _context.t0 = _context["catch"](12);
                 _didIteratorError = true;
                 _iteratorError = _context.t0;
 
-              case 27:
-                _context.prev = 27;
+              case 28:
                 _context.prev = 28;
+                _context.prev = 29;
 
                 if (!_iteratorNormalCompletion && _iterator.return != null) {
                   _iterator.return();
                 }
 
-              case 30:
-                _context.prev = 30;
+              case 31:
+                _context.prev = 31;
 
                 if (!_didIteratorError) {
-                  _context.next = 33;
+                  _context.next = 34;
                   break;
                 }
 
                 throw _iteratorError;
 
-              case 33:
-                return _context.finish(30);
-
               case 34:
-                return _context.finish(27);
+                return _context.finish(31);
 
               case 35:
+                return _context.finish(28);
+
+              case 36:
                 /* active & focus */
                 popLayerInfos = this._getPopLayerNoPageId();
                 focusPopLayerInfo = Array.from(popLayerInfos).reverse().find(function (v) {
@@ -771,45 +779,55 @@ function () {
 
                 _i = 0;
 
-              case 42:
+              case 43:
                 if (!(_i < pageInfos.length)) {
-                  _context.next = 52;
+                  _context.next = 53;
                   break;
                 }
 
                 pageInfo = pageInfos[_i];
-                _context.next = 46;
+                _context.next = 47;
                 return this.app.event.emit(this.app._id, 'onRouteMatch', pageInfo, location);
 
-              case 46:
+              case 47:
                 _block = _context.sent;
 
                 if (!_block) {
-                  _context.next = 49;
+                  _context.next = 50;
                   break;
                 }
 
                 return _context.abrupt("return", this.block(_block));
 
-              case 49:
+              case 50:
                 _i++;
-                _context.next = 42;
+                _context.next = 43;
                 break;
 
-              case 52:
+              case 53:
                 /* update */
+                if (this._activeId && !pageInfos.find(function (v) {
+                  return v._id === _this6._activeId;
+                })) {
+                  deactiveId = this._activeId;
+                  pageInfos.push(this._pageInfos.find(function (v) {
+                    return v._id === _this6._activeId;
+                  }));
+                }
+
+                this._pageInfos = pageInfos;
                 this._focusId = focusId;
                 this._activeId = activeId;
-                this._pageInfos = pageInfos;
+                this._deactiveId = deactiveId;
 
                 this._updateRender();
 
-              case 56:
+              case 59:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[11, 23, 27, 35], [28,, 30, 34]]);
+        }, _callee, this, [[12, 24, 28, 36], [29,, 31, 35]]);
       }));
 
       return function _updateRouterInfo(_x) {

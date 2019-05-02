@@ -5,7 +5,8 @@ import React from 'react';
 import '@bnorth/rich.css/css/kf.spin.css';
 import '@bnorth/rich.css/css/kf.flyout.right.css';
 import { animation, transform, transiton, transformOrigin } from '@bnorth/rich.css/lib/styles/animation';
-import BaseComponent from './BaseComponent';
+import animationFrame, { afSpin } from '@bnorth/rich.css/lib/styles/animationFrame';
+import BaseComponent, { domFindNode } from './BaseComponent';
 import Panel from './Panel';
 
  
@@ -111,24 +112,42 @@ Line.defaultProps['b-precast'] = {}
  * @augments BaseComponent
  * @augments module:Loader.Loader
  */
-let Circle = aprops=>{
-  let {
-    isProgress, progress, timeout, color, colorReverse,
-    classNamePre, children, ...props
-  } = BaseComponent(aprops, Circle);
+let Circle = class extends React.Component{
+  componentDidMount() {
+    let element = domFindNode(this);
+    element = element.querySelectorAll('circle')[1]
+    let [stop, start] = animationFrame(element, afSpin, {first: !this.props.isProgress});
+    this.stop = stop;
+    this.start = start;
+  }
 
-  classNamePre = { 'width-1em height-1em': true, ...classNamePre }
+  componentDidUpdate(prevProps, prevState) {
+    if(prevProps.isProgress !== this.props.isProgress && this.props.isProgress) { 
+      this.stop();
+    }else if(prevProps.isProgress !== this.props.isProgress && !this.props.isProgress) { 
+      this.start();
+    }
+  }
 
-  return (
-    <Panel component="svg" viewBox="0 0 100 100" classNamePre={classNamePre} {...props}>
-      <circle cx="50" cy="50" r="40" strokeWidth="20" stroke={colorReverse} fill="none" />
-      <circle cx="50" cy="50" r="40" strokeWidth="20" stroke={color} fill="none" 
-        style={isProgress?{...transiton(timeout),...transform('rotate', '-90deg'),...transformOrigin()}:{...animation('spin'),...transformOrigin()}}
-        strokeDasharray={isProgress?`${2.51*(progress||0)},251`:"150,251"}>
-      </circle>
-      {children}
-    </Panel>
-  );
+  render() {
+    let {
+      isProgress, progress, timeout, color, colorReverse,
+      classNamePre, children, ...props
+    } = BaseComponent(this.props, Circle);
+
+    classNamePre = { 'width-1em height-1em': true, ...classNamePre }
+
+    return (
+      <Panel component="svg" viewBox="0 0 100 100" classNamePre={classNamePre} {...props}>
+        <circle cx="50" cy="50" r="40" strokeWidth="20" stroke={colorReverse} fill="none" />
+        <circle cx="50" cy="50" r="40" strokeWidth="20" stroke={color} fill="none" 
+          style={isProgress?{...transiton(timeout),...transform('rotate', '-90deg'),...transformOrigin()}:{...transformOrigin()}}
+          strokeDasharray={isProgress?`${2.51*(progress||0)},251`:"150,251"}>
+        </circle>
+        {children}
+      </Panel>
+    );
+  }
 }
 
 Circle.defaultProps = {};
