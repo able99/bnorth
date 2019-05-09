@@ -31,8 +31,8 @@ var _this = void 0;
 
 var _Modal = function Modal(aprops) {
   var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Modal),
-      isIn = _BaseComponent.in,
       type = _BaseComponent.type,
+      rewind = _BaseComponent.rewind,
       onClose = _BaseComponent.onClose,
       onFinished = _BaseComponent.onFinished,
       containerProps = _BaseComponent.containerProps,
@@ -45,7 +45,7 @@ var _Modal = function Modal(aprops) {
       classNamePre = _BaseComponent.classNamePre,
       stylePre = _BaseComponent.stylePre,
       children = _BaseComponent.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["in", "type", "onClose", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "classNamePre", "stylePre", "children"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "rewind", "onClose", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "classNamePre", "stylePre", "children"]);
 
   buttons = buttons[type] || [];
   children = typeof children === 'function' ? children(_this) : children;
@@ -101,7 +101,7 @@ var _Modal = function Modal(aprops) {
   })) : null);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: _Backdrop.default,
-    in: isIn,
+    rewind: rewind,
     btn: false,
     onClick: onClose,
     onFinished: onFinished,
@@ -180,7 +180,7 @@ var modal = {
             });
           };
 
-          props.in = true;
+          props.rewind = false;
 
           props.onClose = function (index) {
             return app.modal.close(options._id, index);
@@ -219,7 +219,7 @@ var modal = {
             options = _ref4.options;
 
         if (!content) return;
-        props.in = false;
+        props.rewind = true;
 
         props.onFinished = function () {
           app.router.removePopLayer(_id);

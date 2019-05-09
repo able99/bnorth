@@ -2,9 +2,10 @@
  * @module
  */
 import React from 'react';
+import { afZoom } from '@bnorth/rich.css/lib/styles/animationFrame';
 import BaseComponent from './BaseComponent';
 import Panel from './Panel';
-import Animation from './Animation';
+import AnimationFrame from './AnimationFrame';
 
 
 /**
@@ -18,7 +19,10 @@ import Animation from './Animation';
  * @augments module:Animation.Animation
  */
 let Backdrop = aprops=>{
-  let { classNamePre, ...props } = BaseComponent(aprops, Backdrop);
+  let { 
+    play, rewind, frameFunc, params={}, onFinished, duration,
+    classNamePre, ...props 
+  } = BaseComponent(aprops, Backdrop);
 
   classNamePre = {
     'position-absolute square-full offset-a-start overflow-a-hidden': true,
@@ -26,13 +30,14 @@ let Backdrop = aprops=>{
   }
 
   return (
-    <Panel 
-      type="fade" b-style="mask" btn={false} 
-      component={Animation} classNamePre={classNamePre} {...props} />
+    <AnimationFrame play={play} rewind={rewind} frameFunc={frameFunc} params={params} onFinished={onFinished}>
+      <Panel b-style="mask" btn={false} classNamePre={classNamePre} {...props} />
+    </AnimationFrame> 
   )
 }
 
 Backdrop.defaultProps = {};
+Backdrop.defaultProps.frameFunc = afZoom;
 
 Object.defineProperty(Backdrop,"Backdrop",{ get:function(){ return Backdrop }, set:function(val){ Backdrop = val }})
 Backdrop.isBnorth = true;

@@ -1,11 +1,12 @@
 .btn:disabled, .btn[disabled], .btn.disabled {
-  opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
+  background-color: #cbcbcb;
+  border-color: #cbcbcb;
 }
 
 .btn:active, .btn[active], .btn.active {
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .check-status input + .check-status-inner .check-status-checked {
@@ -44,9 +45,10 @@ select::-ms-expand {
 }
 
 .status-disabled {
-  opacity: 0.5;
+  background-color: #cbcbcb;
+  border-color: #cbcbcb;
 }
 
 .status-active {
-  opacity: 0.3;
+  opacity: 0.5;
 }

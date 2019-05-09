@@ -9,8 +9,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.loader = exports.OverlayLoader = exports.PanelLoader = exports.default = void 0;
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -35,9 +33,11 @@ require("@bnorth/rich.css/css/kf.flyout.right.css");
 
 var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
-var _animationFrame3 = _interopRequireWildcard(require("@bnorth/rich.css/lib/styles/animationFrame"));
+var _animationFrame = _interopRequireWildcard(require("@bnorth/rich.css/lib/styles/animationFrame"));
 
 var _BaseComponent6 = _interopRequireWildcard(require("./BaseComponent"));
+
+var _AnimationFrame = _interopRequireDefault(require("./AnimationFrame"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
@@ -200,32 +200,21 @@ function (_React$Component) {
   }
 
   (0, _createClass2.default)(Circle, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var element = (0, _BaseComponent6.domFindNode)(this);
-      element = element.querySelectorAll('circle')[1];
-
-      var _animationFrame = (0, _animationFrame3.default)(element, _animationFrame3.afSpin, {
-        first: !this.props.isProgress
-      }),
-          _animationFrame2 = (0, _slicedToArray2.default)(_animationFrame, 2),
-          stop = _animationFrame2[0],
-          start = _animationFrame2[1];
-
-      this.stop = stop;
-      this.start = start;
-    }
-  }, {
-    key: "componentDidUpdate",
-    value: function componentDidUpdate(prevProps, prevState) {
-      if (prevProps.isProgress !== this.props.isProgress && this.props.isProgress) {
-        this.stop();
-      } else if (prevProps.isProgress !== this.props.isProgress && !this.props.isProgress) {
-        this.start();
-      }
-    }
-  }, {
     key: "render",
+    // componentDidMount() {
+    //   let element = domFindNode(this);
+    //   element = element.querySelectorAll('circle')[1]
+    //   let [stop, start] = animationFrame(element, afSpin, {first: !this.props.isProgress});
+    //   this.stop = stop;
+    //   this.start = start;
+    // }
+    // componentDidUpdate(prevProps, prevState) {
+    //   if(prevProps.isProgress !== this.props.isProgress && this.props.isProgress) { 
+    //     this.stop();
+    //   }else if(prevProps.isProgress !== this.props.isProgress && !this.props.isProgress) { 
+    //     this.start();
+    //   }
+    // }
     value: function render() {
       var _BaseComponent3 = (0, _BaseComponent6.default)(this.props, _Circle),
           isProgress = _BaseComponent3.isProgress,
@@ -251,7 +240,10 @@ function (_React$Component) {
         strokeWidth: "20",
         stroke: colorReverse,
         fill: "none"
-      }), _react.default.createElement("circle", {
+      }), _react.default.createElement(_AnimationFrame.default, {
+        play: true,
+        frameFunc: _animationFrame.afSpin
+      }, _react.default.createElement("circle", {
         cx: "50",
         cy: "50",
         r: "40",
@@ -260,7 +252,7 @@ function (_React$Component) {
         fill: "none",
         style: isProgress ? (0, _objectSpread2.default)({}, (0, _animation.transiton)(timeout), (0, _animation.transform)('rotate', '-90deg'), (0, _animation.transformOrigin)()) : (0, _objectSpread2.default)({}, (0, _animation.transformOrigin)()),
         strokeDasharray: isProgress ? "".concat(2.51 * (progress || 0), ",251") : "150,251"
-      }), children);
+      })), children);
     }
   }]);
   return Circle;

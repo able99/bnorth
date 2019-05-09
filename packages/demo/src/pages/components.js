@@ -217,7 +217,7 @@ let Component = aprops=>{
 
       <Groups.Group title="Notice" desc="通知栏">
         <Groups.Show>
-          {props=><div style={{height: 300}} className="position-relative"><Notice {...props}>notice</Notice></div>}
+          {props=><div style={{height: 300}} className="position-relative overflow-hidden"><Notice {...props}>notice</Notice></div>}
         </Groups.Show>
       </Groups.Group>
 

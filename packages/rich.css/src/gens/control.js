@@ -13,7 +13,7 @@ import { triangleImage } from '../styles/shape'
  * @param {module:config~GenConfig} config - 生成配置对象
  * @returns {module:gen~ClassObjects} 样式表的描述对象
  */
-function genFuncControl({textColors, mainColors, stateOpacityDisabled, stateOpacityActive}) {
+function genFuncControl({textColors, mainColors, stateDisabled, stateActive}) {
   return Object.assign(
     /**
      * 支持点击状态
@@ -21,15 +21,13 @@ function genFuncControl({textColors, mainColors, stateOpacityDisabled, stateOpac
      */
     genClassObjects('.btn:disabled, .btn[disabled], .btn.disabled', {
       styleObjectMap: {
-        'opacity': stateOpacityDisabled,
         'cursor': 'not-allowed',
         'pointer-events': 'none',
+        ...typeof(stateDisabled)==='string'?{'background-color':stateDisabled, 'border-color':stateDisabled}:{opacity:stateDisabled},
       },
     }), 
     genClassObjects('.btn:active, .btn[active], .btn.active', {
-      styleObjectMap: {
-        'opacity': stateOpacityActive,
-      },
+      styleObjectMap: typeof(stateActive)==='string'?{'background-color':stateActive, 'border-color':stateActive}:{opacity:stateActive},
     }), 
 
     /**
@@ -95,14 +93,10 @@ function genFuncControl({textColors, mainColors, stateOpacityDisabled, stateOpac
     }), 
 
     genClassObjects('.status-disabled', {
-      styleObjectMap: {
-        'opacity': stateOpacityDisabled,
-      },
+      styleObjectMap: typeof(stateDisabled)==='string'?{'background-color':stateDisabled, 'border-color':stateDisabled}:{opacity:stateDisabled},
     }), 
     genClassObjects('.status-active', {
-      styleObjectMap: {
-        'opacity': stateOpacityActive,
-      },
+      styleObjectMap: typeof(stateActive)==='string'?{'background-color':stateActive, 'border-color':stateActive}:{opacity:stateActive},
     }), 
   );
 }

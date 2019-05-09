@@ -90,7 +90,7 @@ export let mask = {
       let {content, props={}, options={}} = app.router.getPopLayerInfo(app.mask._id)||{};
       if(!content) { app.mask._id = undefined; return }
 
-      props.in = false;
+      props.rewind = true;
       props.onFinished = ()=>{ 
         app.router.removePopLayer(app.mask._id); 
         app.mask._id = undefined; 

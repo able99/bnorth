@@ -1,29 +1,35 @@
 import React from 'react';
+import { afPeekTop } from '@bnorth/rich.css/lib/styles/animationFrame';
 import BaseComponent from './BaseComponent';
 import Panel from './Panel';
-import Animation from './Animation';
+import AnimationFrame from './AnimationFrame';
 import { PanelIcon } from './Icon';
 
 
 let Notice = aprops=>{
-  let { containerProps, in:isIn, onClose, onFinished, transitionProps, animationProps, ...props } = BaseComponent(aprops, Notice);
+  let { 
+    onClose, onFinished, frameFunc, params={}, duration, rewind,
+    classNamePre, ...props 
+  } = BaseComponent(aprops, Notice);
 
-  let classNamePreContainer = 'position-absolute offset-top-start offset-left-top width-full';
+  classNamePre = {
+    'position-absolute offset-top-start offset-left-top width-full padding-a-': true,
+    ...classNamePre,
+  }
 
   return (
-    <Panel className={classNamePreContainer} {...containerProps}>
-      <Panel component={Animation} in={isIn} type="collapse" bc-width-full onFinished={onFinished} transitionProps={transitionProps} {...animationProps}>
-        <Panel 
-          bp-title-bc-flex-sub-flex-extend
-          name="close:x" bp-icon-onClick={onClose} b-icon-bc-padding-a="xs"
-          bc-width-full bc-padding-a- position="right" b-style="solid" b-theme="mask" 
-          component={PanelIcon} {...props} />
-      </Panel>
-    </Panel>
+    <AnimationFrame play rewind={rewind} frameFunc={frameFunc} params={params} onFinished={()=>rewind&&onFinished&&onFinished()}>
+      <Panel 
+        bp-title-bc-flex-sub-flex-extend
+        name="close:x" bp-icon-onClick={onClose} b-icon-bc-padding-a="xs"
+        position="right" b-style="solid" b-theme="mask" 
+        component={PanelIcon} classNamePre={classNamePre} {...props} />
+    </AnimationFrame>
   );
 }
 
 Notice.defaultProps = {}
+Notice.defaultProps.frameFunc = afPeekTop;
 
 Object.defineProperty(Notice,"Notice",{ get:function(){ return Notice }, set:function(val){ Notice = val }})
 Notice.isBnorth = true;
@@ -46,7 +52,7 @@ export let notice = {
         if(!message) return;
 
         options._id = app.notice._id || app.router.genPopLayerId(options);
-        props.in = true;
+        props.rewind = false;
         props.onClose = ()=>app.notice.close();
         props.children = message;
 
@@ -62,7 +68,7 @@ export let notice = {
         let {content, props={}, options={}} = app.router.getPopLayerInfo(app.notice._id)||{};
         if(!content) { app.notice._id = undefined; return; }
 
-        props.in = false;
+        props.rewind = true;
         props.onFinished = ()=>{ 
           app.router.removePopLayer(app.notice._id); 
           app.notice._id = undefined; 

@@ -1,9 +1,13 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 require("core-js/modules/es6.object.assign");
 
@@ -26,22 +30,29 @@ var _shape = require("../styles/shape");
 function genFuncControl(_ref) {
   var textColors = _ref.textColors,
       mainColors = _ref.mainColors,
-      stateOpacityDisabled = _ref.stateOpacityDisabled,
-      stateOpacityActive = _ref.stateOpacityActive;
+      stateDisabled = _ref.stateDisabled,
+      stateActive = _ref.stateActive;
   return Object.assign(
   /**
    * 支持点击状态
    * @classname btn
    */
   (0, _utils.genClassObjects)('.btn:disabled, .btn[disabled], .btn.disabled', {
-    styleObjectMap: {
-      'opacity': stateOpacityDisabled,
+    styleObjectMap: (0, _objectSpread2.default)({
       'cursor': 'not-allowed',
       'pointer-events': 'none'
-    }
+    }, typeof stateDisabled === 'string' ? {
+      'background-color': stateDisabled,
+      'border-color': stateDisabled
+    } : {
+      opacity: stateDisabled
+    })
   }), (0, _utils.genClassObjects)('.btn:active, .btn[active], .btn.active', {
-    styleObjectMap: {
-      'opacity': stateOpacityActive
+    styleObjectMap: typeof stateActive === 'string' ? {
+      'background-color': stateActive,
+      'border-color': stateActive
+    } : {
+      opacity: stateActive
     }
   }),
   /**
@@ -99,12 +110,18 @@ function genFuncControl(_ref) {
       'display': 'none'
     }
   }), (0, _utils.genClassObjects)('.status-disabled', {
-    styleObjectMap: {
-      'opacity': stateOpacityDisabled
+    styleObjectMap: typeof stateDisabled === 'string' ? {
+      'background-color': stateDisabled,
+      'border-color': stateDisabled
+    } : {
+      opacity: stateDisabled
     }
   }), (0, _utils.genClassObjects)('.status-active', {
-    styleObjectMap: {
-      'opacity': stateOpacityActive
+    styleObjectMap: typeof stateActive === 'string' ? {
+      'background-color': stateActive,
+      'border-color': stateActive
+    } : {
+      opacity: stateActive
     }
   }));
 }

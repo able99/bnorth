@@ -44,8 +44,8 @@
  * @typedef GenConfig
  * @type {object}
  * @property {string} bodyBackground - 设置 body 的背景
- * @property {string|number} stateOpacityDisabled - disabled 状态的透明值
- * @property {string|number} stateOpacityActive - active 状态的透明值
+ * @property {string|number} stateDisabled - disabled 状态的透明值
+ * @property {string|number} stateActive - active 状态的透明值
  * @property {GenConfigSet}  hMapTextSize - 标题元素到字体集合的映射
  * @property {GenConfigSet} lineHeight - 行高集合
  * 
@@ -112,8 +112,8 @@ let genConfig = {
   // ---------------------
   bodyBackground: 'none',
 
-  stateOpacityDisabled: 0.5,
-  stateOpacityActive: 0.3,
+  stateDisabled: '#cbcbcb',
+  stateActive: 0.5,
 
   hMapTextSize: {
     '1': 'xxl',

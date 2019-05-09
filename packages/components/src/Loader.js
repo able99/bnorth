@@ -7,6 +7,7 @@ import '@bnorth/rich.css/css/kf.flyout.right.css';
 import { animation, transform, transiton, transformOrigin } from '@bnorth/rich.css/lib/styles/animation';
 import animationFrame, { afSpin } from '@bnorth/rich.css/lib/styles/animationFrame';
 import BaseComponent, { domFindNode } from './BaseComponent';
+import AnimationFrame from './AnimationFrame';
 import Panel from './Panel';
 
  
@@ -113,21 +114,21 @@ Line.defaultProps['b-precast'] = {}
  * @augments module:Loader.Loader
  */
 let Circle = class extends React.Component{
-  componentDidMount() {
-    let element = domFindNode(this);
-    element = element.querySelectorAll('circle')[1]
-    let [stop, start] = animationFrame(element, afSpin, {first: !this.props.isProgress});
-    this.stop = stop;
-    this.start = start;
-  }
+  // componentDidMount() {
+  //   let element = domFindNode(this);
+  //   element = element.querySelectorAll('circle')[1]
+  //   let [stop, start] = animationFrame(element, afSpin, {first: !this.props.isProgress});
+  //   this.stop = stop;
+  //   this.start = start;
+  // }
 
-  componentDidUpdate(prevProps, prevState) {
-    if(prevProps.isProgress !== this.props.isProgress && this.props.isProgress) { 
-      this.stop();
-    }else if(prevProps.isProgress !== this.props.isProgress && !this.props.isProgress) { 
-      this.start();
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if(prevProps.isProgress !== this.props.isProgress && this.props.isProgress) { 
+  //     this.stop();
+  //   }else if(prevProps.isProgress !== this.props.isProgress && !this.props.isProgress) { 
+  //     this.start();
+  //   }
+  // }
 
   render() {
     let {
@@ -140,10 +141,12 @@ let Circle = class extends React.Component{
     return (
       <Panel component="svg" viewBox="0 0 100 100" classNamePre={classNamePre} {...props}>
         <circle cx="50" cy="50" r="40" strokeWidth="20" stroke={colorReverse} fill="none" />
-        <circle cx="50" cy="50" r="40" strokeWidth="20" stroke={color} fill="none" 
-          style={isProgress?{...transiton(timeout),...transform('rotate', '-90deg'),...transformOrigin()}:{...transformOrigin()}}
-          strokeDasharray={isProgress?`${2.51*(progress||0)},251`:"150,251"}>
-        </circle>
+        <AnimationFrame play frameFunc={afSpin}>
+          <circle cx="50" cy="50" r="40" strokeWidth="20" stroke={color} fill="none" 
+            style={isProgress?{...transiton(timeout),...transform('rotate', '-90deg'),...transformOrigin()}:{...transformOrigin()}}
+            strokeDasharray={isProgress?`${2.51*(progress||0)},251`:"150,251"}>
+          </circle>
+        </AnimationFrame>
         {children}
       </Panel>
     );

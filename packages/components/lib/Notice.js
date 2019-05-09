@@ -7,57 +7,62 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.notice = exports.default = void 0;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
 
+var _animationFrame = require("@bnorth/rich.css/lib/styles/animationFrame");
+
 var _BaseComponent2 = _interopRequireDefault(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
-var _Animation = _interopRequireDefault(require("./Animation"));
+var _AnimationFrame = _interopRequireDefault(require("./AnimationFrame"));
 
 var _Icon = require("./Icon");
 
 var _Notice = function Notice(aprops) {
   var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Notice),
-      containerProps = _BaseComponent.containerProps,
-      isIn = _BaseComponent.in,
       onClose = _BaseComponent.onClose,
-      onFinished = _BaseComponent.onFinished,
-      transitionProps = _BaseComponent.transitionProps,
-      animationProps = _BaseComponent.animationProps,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["containerProps", "in", "onClose", "onFinished", "transitionProps", "animationProps"]);
+      _onFinished = _BaseComponent.onFinished,
+      frameFunc = _BaseComponent.frameFunc,
+      _BaseComponent$params = _BaseComponent.params,
+      params = _BaseComponent$params === void 0 ? {} : _BaseComponent$params,
+      duration = _BaseComponent.duration,
+      rewind = _BaseComponent.rewind,
+      classNamePre = _BaseComponent.classNamePre,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["onClose", "onFinished", "frameFunc", "params", "duration", "rewind", "classNamePre"]);
 
-  var classNamePreContainer = 'position-absolute offset-top-start offset-left-top width-full';
-  return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    className: classNamePreContainer
-  }, containerProps), _react.default.createElement(_Panel.default, (0, _extends2.default)({
-    component: _Animation.default,
-    in: isIn,
-    type: "collapse",
-    "bc-width-full": true,
-    onFinished: onFinished,
-    transitionProps: transitionProps
-  }, animationProps), _react.default.createElement(_Panel.default, (0, _extends2.default)({
+  classNamePre = (0, _objectSpread2.default)({
+    'position-absolute offset-top-start offset-left-top width-full padding-a-': true
+  }, classNamePre);
+  return _react.default.createElement(_AnimationFrame.default, {
+    play: true,
+    rewind: rewind,
+    frameFunc: frameFunc,
+    params: params,
+    onFinished: function onFinished() {
+      return rewind && _onFinished && _onFinished();
+    }
+  }, _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "bp-title-bc-flex-sub-flex-extend": true,
     name: "close:x",
     "bp-icon-onClick": onClose,
     "b-icon-bc-padding-a": "xs",
-    "bc-width-full": true,
-    "bc-padding-a-": true,
     position: "right",
     "b-style": "solid",
     "b-theme": "mask",
-    component: _Icon.PanelIcon
-  }, props))));
+    component: _Icon.PanelIcon,
+    classNamePre: classNamePre
+  }, props)));
 };
 
 _Notice.defaultProps = {};
+_Notice.defaultProps.frameFunc = _animationFrame.afPeekTop;
 Object.defineProperty(_Notice, "Notice", {
   get: function get() {
     return _Notice;
@@ -89,7 +94,7 @@ var notice = {
         message = app.utils.message2String(message);
         if (!message) return;
         options._id = app.notice._id || app.router.genPopLayerId(options);
-        props.in = true;
+        props.rewind = false;
 
         props.onClose = function () {
           return app.notice.close();
@@ -122,7 +127,7 @@ var notice = {
           return;
         }
 
-        props.in = false;
+        props.rewind = true;
 
         props.onFinished = function () {
           app.router.removePopLayer(app.notice._id);

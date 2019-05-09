@@ -127,7 +127,7 @@ var mask = {
         return;
       }
 
-      props.in = false;
+      props.rewind = true;
 
       props.onFinished = function () {
         app.router.removePopLayer(app.mask._id);

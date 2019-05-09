@@ -8,7 +8,7 @@ import Button from './Button';
 
 let Modal = aprops=>{
   let {
-    in:isIn, type, onClose, onFinished,
+    type, rewind, onClose, onFinished,
     containerProps, headerProps, title, close, bodyProps, footerProps, buttons,
     classNamePre, stylePre, children, ...props
   } = BaseComponent(aprops, Modal);
@@ -44,7 +44,7 @@ let Modal = aprops=>{
     </Panel>
   )
   
-  return <Panel component={Backdrop} in={isIn} btn={false} onClick={onClose} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
+  return <Panel component={Backdrop} rewind={rewind} btn={false} onClick={onClose} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
 }
 
 Modal.defaultProps = {}
@@ -88,7 +88,7 @@ export let modal = {
           options._id = app.router.genPopLayerId(options);
           options.onAdd = _id=>app.keyboard.on(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
           options.onRemove = _id=>app.keyboard.off(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
-          props.in = true;
+          props.rewind = false;
           props.onClose = index=>app.modal.close(options._id, index);
         }
 
@@ -114,7 +114,7 @@ export let modal = {
         let {content, props, options} = app.router.getPopLayerInfo(_id)||{};
         if(!content) return;
 
-        props.in = false;
+        props.rewind = true;
         props.onFinished = ()=>{
           app.router.removePopLayer(_id);
           app.context.clear(_id);
