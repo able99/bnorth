@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/plugin-format",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "bnorth plugin for format",
   "keywords": [
     "bnorth",
@@ -30,7 +30,7 @@
     "url": "https://github.com/able99/bnorth/issues"
   },
   "devDependencies": {
-    "@bnorth/build": "^4.0.0"
+    "@bnorth/build": "^4.0.1"
   },
   "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
 }

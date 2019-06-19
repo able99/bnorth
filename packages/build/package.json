@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/build",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "bnorth unique build tool",
   "keywords": [
     "react",

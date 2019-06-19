@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/rich.css",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "all in one css way, or dynamic css way",
   "keywords": [
     "css",
@@ -38,12 +38,12 @@
     "url": "https://github.com/able99/bnorth/issues"
   },
   "dependencies": {
-    "dom-helpers": "^3.3.1",
     "animate.css": "^3.7.0",
+    "dom-helpers": "^3.3.1",
     "normalize.css": "^8.0.0"
   },
   "devDependencies": {
-    "@bnorth/build": "^4.0.0"
+    "@bnorth/build": "^4.0.1"
   },
   "gitHead": "9e9e04594b3be333b4a2fb202e4727e46082bdbc"
 }
