@@ -2,7 +2,7 @@
  * @module
  */
 import React from 'react';
-import { afZoom } from '@bnorth/rich.css/lib/styles/animationFrame';
+import { afFade } from '@bnorth/rich.css/lib/styles/animationFrame';
 import BaseComponent from './BaseComponent';
 import Panel from './Panel';
 import AnimationFrame from './AnimationFrame';
@@ -37,7 +37,7 @@ let Backdrop = aprops=>{
 }
 
 Backdrop.defaultProps = {};
-Backdrop.defaultProps.frameFunc = afZoom;
+Backdrop.defaultProps.frameFunc = afFade;
 
 Object.defineProperty(Backdrop,"Backdrop",{ get:function(){ return Backdrop }, set:function(val){ Backdrop = val }})
 Backdrop.isBnorth = true;

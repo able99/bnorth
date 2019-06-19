@@ -7,8 +7,6 @@
 # mid
 /www
 /cordova
-
-# production
 /build
 /dist
 

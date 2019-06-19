@@ -116,3 +116,7 @@ hr {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.scrollbar-no-::-webkit-scrollbar {
+  display: none;
+}

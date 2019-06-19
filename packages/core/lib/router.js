@@ -806,7 +806,7 @@ function () {
 
               case 53:
                 /* update */
-                if (this._activeId && !pageInfos.find(function (v) {
+                if (this._history.action === 'POP' && this._activeId && !pageInfos.find(function (v) {
                   return v._id === _this6._activeId;
                 })) {
                   deactiveId = this._activeId;

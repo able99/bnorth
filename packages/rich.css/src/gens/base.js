@@ -127,6 +127,15 @@ function genFuncBase({ textColors, utilColors, textSize, hMapTextSize, textFontF
         '-moz-osx-font-smoothing': 'grayscale',
       },
     }), 
+    /**
+     * 设置文字反锯齿
+     * @classname font-smoothing-antialiased
+     */
+    genClassObjects('.scrollbar-no-::-webkit-scrollbar', {
+      styleObjectMap: {
+        'display': 'none',
+      },
+    }), 
   );
 }
 

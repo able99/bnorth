@@ -1,7 +1,6 @@
 {
   "packages": [
-    "packages/*",
-    "/Users/hubn/Desktop/project/grid/locheck"
+    "packages/*"
   ],
   "version": "4.0.0"
 }

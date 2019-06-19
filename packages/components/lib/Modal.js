@@ -101,6 +101,7 @@ var _Modal = function Modal(aprops) {
   })) : null);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: _Backdrop.default,
+    duration: 100,
     rewind: rewind,
     btn: false,
     onClick: onClose,

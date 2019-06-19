@@ -304,6 +304,17 @@ class Page extends React.Component {
     app.log.debug('page did mount', _id);
 
     if(!isSubPage&&isActive&&!isReactive&&level) {
+      if(app.router._history.action!=="PUSH") {
+        setTimeout(()=>{
+          this._bindController();
+          this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this._handleKeyEvent(e));
+          app.event.emit(app._id, 'onPageAdd', _id, this);
+          app.event.emit(this._id, 'onPageStart', this, isActive);
+          isActive && app.event.emit(this._id, 'onPageActive', this, true);
+          isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+        }, 150)
+        return;
+      }
       let element = ReactDOM.findDOMNode(this);
       let time = (new Date()).getTime();
       let _run = ()=>{

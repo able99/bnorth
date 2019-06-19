@@ -61,10 +61,29 @@ export function afPeekTop(el, start, time, { duration, rewind }) {
 
 export function afZoom(el, start, time, { duration, rewind }) {
   let diff = (new Date()).getTime() - time;
-  let scale = diff/duration;
+  let scale = diff/duration+0.3;
   if(scale>1) scale = 1;
   let obj = transform('scale', !rewind?scale:(1-scale));
   Object.entries(obj).forEach(([k,v])=>{ el.style[k] = v });
 
   return scale<1;
+}
+
+export function afFade(el, start, time, { duration, rewind }) {
+  let diff = (new Date()).getTime() - time;
+  let scale = diff/duration;
+  if(scale>1) scale = 1;
+  el.style.opacity = !rewind?scale:(1-scale);
+
+  return scale<1;
+}
+
+export function afBottom(el, start, time, { duration, rewind }) {
+  let diff = (new Date()).getTime() - time;
+  let percent = diff*100/duration;
+  if(percent>100) percent = 100;
+  let obj = transform('translateY', (!rewind?(100-percent):(percent))+'%');
+  Object.entries(obj).forEach(([k,v])=>{ el.style[k] = v });
+
+  return percent<100;
 }

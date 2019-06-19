@@ -40,6 +40,7 @@ function checkCordovaProject() {
 }
 
 function makeCordovaProject(appPackage) {
+  fs.removeSync(descPath);
   fs.mkdirSync(descPath);
   fs.mkdirSync(descWWWPath);
   fs.copySync(templateConfigXml, srcXmlPath);
@@ -50,7 +51,7 @@ function makeCordovaProject(appPackage) {
 
 function syncWidgetToCordova() {
   fs.removeSync(descWWWPath);
-  fs.copySync(srcWWWPath, descWWWPath);
+  fs.existsSync(srcWWWPath)?fs.copySync(srcWWWPath, descWWWPath):fs.mkdirSync(descWWWPath);
 }
 
 function syncConfigToCordova() {

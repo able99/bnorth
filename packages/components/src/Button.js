@@ -19,7 +19,7 @@ let Button = aprops=>{
   let { classNamePre, ...props } = BaseComponent(aprops, Button);
 
   classNamePre =  {
-    'outline-none appearance-none font-smoothing-antialiased vertical-align-middle position-relative line-height-1 text-align-center padding-a-': true,
+    'outline-none appearance-none font-smoothing-antialiased vertical-align-middle line-height-1 text-align-center padding-a-': true,
     ...classNamePre,
   }
   

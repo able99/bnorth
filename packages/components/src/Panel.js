@@ -252,7 +252,7 @@ export let PanelContainer = class extends React.Component {
       ++panelItemIndex, panelItemCount, v.props, panelItemProps, getPanelItemClassName, getPanelItemStyle, getPanelItemProps
     )}>{v}</PanelItem>))
 
-    let classSetPre = { 'position-relative overflow-a-hidden': true };
+    let classSetPre = { 'overflow-a-hidden': true };
 
     if(ctype==='single'){
       children = children.filter(v=>v.props.panelItemSelected);
@@ -413,7 +413,7 @@ export let PanelItem = aprops=>{
   if(panelItemPlain) return children;
 
   let classSet = [];
-  if(panelContainerType==='single') classSet.push('position-relative offset-a-start square-full overflow-a-hidden');
+  if(panelContainerType==='single') classSet.push('offset-a-start square-full overflow-a-hidden');
   if(panelContainerType==='justify') classSet.push('flex-sub-flex-extend');
   if(panelContainerType==='primary') classSet.push(panelItemSelected?'flex-sub-flex-extend':'flex-sub-flex-none');
   if(panelContainerType==='scroll') classSet.push('flex-sub-flex-extend height-full');

@@ -31,12 +31,14 @@ bnorth 解决方案 demo
 1. tabbar 页面布局的 刷新问题
 1. 去掉 root 100%, 使用 document 滚动
 1. cordova webview 的上拉与下拉事件
+1. cordova tbs x5 内核
+1. btn 改名，去掉手动加 active 状态，但是保证 active 状态, 增加 touch 属性 ，onClick 转 onTouchStart
+1. 增加 nextTick 和 nextWork, request 通过 tick 提高进度显示及时性
+1. debug 自动增加 <allow-navigation href="*" />
+1. inactive page 隐藏问题, animationFrame 整理，页面切换整理
+
 
 ### demo 反馈给 bnorth 需要解决的问题
-1. btn 改名，去掉手动加 active 状态，但是保证 active 状态, 增加 touch 属性 ，onClick 转 onTouchStart
-1. 增加 nextTick 和 nextWork
-1. request 通过 tick 提高进度及时性
 1. cordova 建立工程时，如果没有 dist 建立默认 www； 增加 clean 命令 删除 cordova 文件夹；有 cordova 文件夹但是没有 config.xml 时应该怎么处理
-1. cordova tbs x5 内核
-1. animation 支持 requestAnimationFrame，notice 从 width 改成 top,  全部组件去掉 css 动画
+1. list after bp-after-b-theme 没有起作用
 

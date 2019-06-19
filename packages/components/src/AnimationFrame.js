@@ -14,10 +14,15 @@ import { domFindNode } from './BaseComponent';
  * @augments module:Panel.Panel
  */
 let AnimationFrame = class extends React.Component{
+  handleFinished() {
+    let { rewind, params, onFinished } = this.props;
+    onFinished&&onFinished(params, rewind);
+  }
+
   componentDidMount() {
-    let { play, rewind, duration, frameFunc, params, onFinished } = this.props;
+    let { play, rewind, duration, frameFunc, params } = this.props;
     let element = domFindNode(this);
-    let ret = animationFrame(element, frameFunc, {autoStart: play, ...params, rewind, duration}, ()=>onFinished&&onFinished());
+    let ret = animationFrame(element, frameFunc, {autoStart: play, ...params, rewind, duration}, ()=>this.handleFinished());
     if(ret) {
       let [stop, start] = ret;
       this.stop = stop;

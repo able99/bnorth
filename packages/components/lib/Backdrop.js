@@ -66,7 +66,7 @@ var _Backdrop = function Backdrop(aprops) {
 };
 
 _Backdrop.defaultProps = {};
-_Backdrop.defaultProps.frameFunc = _animationFrame.afZoom;
+_Backdrop.defaultProps.frameFunc = _animationFrame.afFade;
 Object.defineProperty(_Backdrop, "Backdrop", {
   get: function get() {
     return _Backdrop;

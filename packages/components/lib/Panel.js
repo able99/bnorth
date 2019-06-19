@@ -420,7 +420,7 @@ function (_React$Component) {
         return (0, _typeof2.default)(v) !== 'object' || v.props.panelItemPlain ? v : _react.default.createElement(_PanelItem, genPanelItemProps(ctype, selectedIndex, panelContainerProps, ++panelItemIndex, panelItemCount, v.props, panelItemProps, getPanelItemClassName, getPanelItemStyle, getPanelItemProps), v);
       });
       var classSetPre = {
-        'position-relative overflow-a-hidden': true
+        'overflow-a-hidden': true
       };
 
       if (ctype === 'single') {
@@ -610,7 +610,7 @@ var _PanelItem = function PanelItem(aprops) {
 
   if (panelItemPlain) return children;
   var classSet = [];
-  if (panelContainerType === 'single') classSet.push('position-relative offset-a-start square-full overflow-a-hidden');
+  if (panelContainerType === 'single') classSet.push('offset-a-start square-full overflow-a-hidden');
   if (panelContainerType === 'justify') classSet.push('flex-sub-flex-extend');
   if (panelContainerType === 'primary') classSet.push(panelItemSelected ? 'flex-sub-flex-extend' : 'flex-sub-flex-none');
   if (panelContainerType === 'scroll') classSet.push('flex-sub-flex-extend height-full');

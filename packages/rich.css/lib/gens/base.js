@@ -145,6 +145,15 @@ function genFuncBase(_ref) {
       '-webkit-font-smoothing': 'antialiased',
       '-moz-osx-font-smoothing': 'grayscale'
     }
+  }),
+  /**
+   * 设置文字反锯齿
+   * @classname font-smoothing-antialiased
+   */
+  (0, _utils.genClassObjects)('.scrollbar-no-::-webkit-scrollbar', {
+    styleObjectMap: {
+      'display': 'none'
+    }
   }));
 }
 

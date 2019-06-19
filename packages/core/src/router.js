@@ -447,7 +447,7 @@ class Router {
     }
 
     /* update */
-    if(this._activeId&&!pageInfos.find(v=>v._id===this._activeId)) {
+    if(this._history.action==='POP'&&this._activeId&&!pageInfos.find(v=>v._id===this._activeId)) {
       deactiveId = this._activeId;
       pageInfos.push(this._pageInfos.find(v=>v._id===this._activeId));
     }

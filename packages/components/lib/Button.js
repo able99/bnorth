@@ -38,7 +38,7 @@ var _Button = function Button(aprops) {
       props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["classNamePre"]);
 
   classNamePre = (0, _objectSpread2.default)({
-    'outline-none appearance-none font-smoothing-antialiased vertical-align-middle position-relative line-height-1 text-align-center padding-a-': true
+    'outline-none appearance-none font-smoothing-antialiased vertical-align-middle line-height-1 text-align-center padding-a-': true
   }, classNamePre);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: "button",

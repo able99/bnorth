@@ -10,6 +10,8 @@ exports.afSpin = afSpin;
 exports.afFlyoutLeft = afFlyoutLeft;
 exports.afPeekTop = afPeekTop;
 exports.afZoom = afZoom;
+exports.afFade = afFade;
+exports.afBottom = afBottom;
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
@@ -112,7 +114,7 @@ function afZoom(el, start, time, _ref9) {
   var duration = _ref9.duration,
       rewind = _ref9.rewind;
   var diff = new Date().getTime() - time;
-  var scale = diff / duration;
+  var scale = diff / duration + 0.3;
   if (scale > 1) scale = 1;
   var obj = (0, _animation.transform)('scale', !rewind ? scale : 1 - scale);
   Object.entries(obj).forEach(function (_ref10) {
@@ -123,4 +125,31 @@ function afZoom(el, start, time, _ref9) {
     el.style[k] = v;
   });
   return scale < 1;
+}
+
+function afFade(el, start, time, _ref12) {
+  var duration = _ref12.duration,
+      rewind = _ref12.rewind;
+  var diff = new Date().getTime() - time;
+  var scale = diff / duration;
+  if (scale > 1) scale = 1;
+  el.style.opacity = !rewind ? scale : 1 - scale;
+  return scale < 1;
+}
+
+function afBottom(el, start, time, _ref13) {
+  var duration = _ref13.duration,
+      rewind = _ref13.rewind;
+  var diff = new Date().getTime() - time;
+  var percent = diff * 100 / duration;
+  if (percent > 100) percent = 100;
+  var obj = (0, _animation.transform)('translateY', (!rewind ? 100 - percent : percent) + '%');
+  Object.entries(obj).forEach(function (_ref14) {
+    var _ref15 = (0, _slicedToArray2.default)(_ref14, 2),
+        k = _ref15[0],
+        v = _ref15[1];
+
+    el.style[k] = v;
+  });
+  return percent < 100;
 }

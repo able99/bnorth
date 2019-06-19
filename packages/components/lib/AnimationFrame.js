@@ -49,15 +49,25 @@ function (_React$Component) {
   }
 
   (0, _createClass2.default)(AnimationFrame, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
+    key: "handleFinished",
+    value: function handleFinished() {
       var _this$props = this.props,
-          play = _this$props.play,
           rewind = _this$props.rewind,
-          duration = _this$props.duration,
-          frameFunc = _this$props.frameFunc,
           params = _this$props.params,
           onFinished = _this$props.onFinished;
+      onFinished && onFinished(params, rewind);
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this = this;
+
+      var _this$props2 = this.props,
+          play = _this$props2.play,
+          rewind = _this$props2.rewind,
+          duration = _this$props2.duration,
+          frameFunc = _this$props2.frameFunc,
+          params = _this$props2.params;
       var element = (0, _BaseComponent.domFindNode)(this);
       var ret = (0, _animationFrame.default)(element, frameFunc, (0, _objectSpread2.default)({
         autoStart: play
@@ -65,7 +75,7 @@ function (_React$Component) {
         rewind: rewind,
         duration: duration
       }), function () {
-        return onFinished && onFinished();
+        return _this.handleFinished();
       });
 
       if (ret) {
@@ -80,9 +90,9 @@ function (_React$Component) {
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
-      var _this$props2 = this.props,
-          play = _this$props2.play,
-          rewind = _this$props2.rewind;
+      var _this$props3 = this.props,
+          play = _this$props3.play,
+          rewind = _this$props3.rewind;
 
       if (prevProps.play !== play && play) {
         play && this.start && this.start();

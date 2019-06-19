@@ -44,7 +44,7 @@ let Modal = aprops=>{
     </Panel>
   )
   
-  return <Panel component={Backdrop} rewind={rewind} btn={false} onClick={onClose} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
+  return <Panel component={Backdrop} duration={100} rewind={rewind} btn={false} onClick={onClose} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
 }
 
 Modal.defaultProps = {}

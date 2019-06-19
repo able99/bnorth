@@ -1,5 +1,3 @@
-import Home from './pages/home';
-
 export default {
-  '/': Home,
+  '/': require('./pages/home').default,
 }

@@ -424,6 +424,21 @@ function (_React$Component) {
       app.log.debug('page did mount', _id);
 
       if (!isSubPage && isActive && !isReactive && level) {
+        if (app.router._history.action !== "PUSH") {
+          setTimeout(function () {
+            _this3._bindController();
+
+            _this3._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
+              return _this3._handleKeyEvent(e);
+            });
+            app.event.emit(app._id, 'onPageAdd', _id, _this3);
+            app.event.emit(_this3._id, 'onPageStart', _this3, isActive);
+            isActive && app.event.emit(_this3._id, 'onPageActive', _this3, true);
+            isActive && app.event.emit(app._id, 'onActivePageChange', _this3._id);
+          }, 150);
+          return;
+        }
+
         var element = _reactDom.default.findDOMNode(this);
 
         var time = new Date().getTime();
