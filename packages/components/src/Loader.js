@@ -141,7 +141,7 @@ let Circle = class extends React.Component{
     return (
       <Panel component="svg" viewBox="0 0 100 100" classNamePre={classNamePre} {...props}>
         <circle cx="50" cy="50" r="40" strokeWidth="20" stroke={colorReverse} fill="none" />
-        <AnimationFrame play frameFunc={afSpin}>
+        <AnimationFrame play={!isProgress} frameFunc={afSpin}>
           <circle cx="50" cy="50" r="40" strokeWidth="20" stroke={color} fill="none" 
             style={isProgress?{...transiton(timeout),...transform('rotate', '-90deg'),...transformOrigin()}:{...transformOrigin()}}
             strokeDasharray={isProgress?`${2.51*(progress||0)},251`:"150,251"}>

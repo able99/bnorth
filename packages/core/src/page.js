@@ -312,6 +312,10 @@ class Page extends React.Component {
           app.event.emit(this._id, 'onPageStart', this, isActive);
           isActive && app.event.emit(this._id, 'onPageActive', this, true);
           isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+          Array.from(document.querySelectorAll('main')).filter(v=>!v.getAttribute('data-page-sub')).forEach(v=>{
+            let id = v.getAttribute('data-page');
+            v.style.visibility=_id===id?"visible":"hidden";
+          })
         }, 150)
         return;
       }
@@ -332,6 +336,11 @@ class Page extends React.Component {
             app.event.emit(this._id, 'onPageStart', this, isActive);
             isActive && app.event.emit(this._id, 'onPageActive', this, true);
             isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+
+            Array.from(document.querySelectorAll('main')).filter(v=>!v.getAttribute('data-page-sub')).forEach(v=>{
+              let id = v.getAttribute('data-page');
+              v.style.visibility=_id===id?"visible":"hidden";
+            })
           }, 50)
         }
       }
@@ -383,6 +392,8 @@ class Page extends React.Component {
           }
         }
       }
+      let p = Array.from(document.querySelectorAll('main')).filter(v=>!v.getAttribute('data-page-sub')).slice(-2)[0];
+      if(p)p.style.visibility="visible";
       _run();
     }
   }

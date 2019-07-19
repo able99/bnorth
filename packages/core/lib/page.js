@@ -17,6 +17,8 @@ require("core-js/modules/es6.symbol");
 
 require("core-js/modules/es6.array.find-index");
 
+require("core-js/modules/es6.array.from");
+
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 require("core-js/modules/es6.regexp.split");
@@ -435,6 +437,12 @@ function (_React$Component) {
             app.event.emit(_this3._id, 'onPageStart', _this3, isActive);
             isActive && app.event.emit(_this3._id, 'onPageActive', _this3, true);
             isActive && app.event.emit(app._id, 'onActivePageChange', _this3._id);
+            Array.from(document.querySelectorAll('main')).filter(function (v) {
+              return !v.getAttribute('data-page-sub');
+            }).forEach(function (v) {
+              var id = v.getAttribute('data-page');
+              v.style.visibility = _id === id ? "visible" : "hidden";
+            });
           }, 150);
           return;
         }
@@ -462,6 +470,12 @@ function (_React$Component) {
               app.event.emit(_this3._id, 'onPageStart', _this3, isActive);
               isActive && app.event.emit(_this3._id, 'onPageActive', _this3, true);
               isActive && app.event.emit(app._id, 'onActivePageChange', _this3._id);
+              Array.from(document.querySelectorAll('main')).filter(function (v) {
+                return !v.getAttribute('data-page-sub');
+              }).forEach(function (v) {
+                var id = v.getAttribute('data-page');
+                v.style.visibility = _id === id ? "visible" : "hidden";
+              });
             }, 50);
           }
         };
@@ -533,6 +547,11 @@ function (_React$Component) {
             }
           }
         };
+
+        var p = Array.from(document.querySelectorAll('main')).filter(function (v) {
+          return !v.getAttribute('data-page-sub');
+        }).slice(-2)[0];
+        if (p) p.style.visibility = "visible";
 
         _run();
       }

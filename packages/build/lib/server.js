@@ -68,7 +68,7 @@ function doRun(type, serverConfig) {
     headers: { 'access-control-allow-origin': '*' },
     clientLogLevel: 'none',
     watchOptions: { ignored: /node_modules/ },
-    open: true,
+    open: false,
     before(app) {
       bnorthConfig.mockerFile && apiMocker(app, resolve(bnorthConfig.mockerFile), bnorthConfig.mockerConfig);
     },

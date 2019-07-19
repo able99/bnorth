@@ -232,6 +232,11 @@ function (_React$Component) {
       this.eventOffRouterUpdate();
     }
   }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      console.log(1111, this.props.app.router._pageInfos);
+    }
+  }, {
     key: "_renderPage",
     value: function _renderPage(pageInfo, activeId, focusId, deactiveId) {
       var _this2 = this;

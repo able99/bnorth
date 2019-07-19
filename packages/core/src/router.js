@@ -148,6 +148,10 @@ class RouterComponent extends React.Component {
     this.eventOffRouterUpdate();
   }
 
+  componentDidUpdate() {
+    console.log(1111,this.props.app.router._pageInfos);
+  }
+
   _renderPage(pageInfo, activeId, focusId, deactiveId){
     let { app } = this.props;
     let {_id, _idParent, isSubPage, popLayerInfos, subPageInfos, routeDefine} = pageInfo||{};
