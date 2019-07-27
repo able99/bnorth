@@ -43,7 +43,7 @@ function makeCordovaProject(appPackage) {
   fs.removeSync(descPath);
   fs.mkdirSync(descPath);
   fs.mkdirSync(descWWWPath);
-  fs.copySync(templateConfigXml, srcXmlPath);
+  !fs.existsSync(srcXmlPath) && fs.copySync(templateConfigXml, srcXmlPath);
   syncConfigToCordova();
   runCordova(['plugin', 'add', 'cordova-plugin-whitelist']);
   syncConfigToWeb();

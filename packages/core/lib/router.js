@@ -25,8 +25,6 @@ require("core-js/modules/es7.symbol.async-iterator");
 
 require("core-js/modules/es6.symbol");
 
-require("core-js/modules/es6.array.from");
-
 require("core-js/modules/es6.array.find");
 
 require("regenerator-runtime/runtime");
@@ -45,8 +43,6 @@ var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends")
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
-require("core-js/modules/web.dom.iterable");
-
 require("core-js/modules/es6.array.iterator");
 
 require("core-js/modules/es7.object.entries");
@@ -54,6 +50,10 @@ require("core-js/modules/es7.object.entries");
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 require("core-js/modules/es6.object.assign");
+
+require("core-js/modules/es6.array.from");
+
+require("core-js/modules/web.dom.iterable");
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -218,13 +218,84 @@ function (_React$Component) {
   }
 
   (0, _createClass2.default)(RouterComponent, [{
+    key: "_pageInit",
+    value: function _pageInit() {
+      var app = this.props.app;
+      var router = app.router;
+      Array.from(document.querySelectorAll('main')).filter(function (v) {
+        return !v.getAttribute('data-page-sub');
+      }).forEach(function (v) {
+        var id = v.getAttribute('data-page');
+
+        if (id === router._activeId) {
+          v.style.webkitTransform = "translateX(" + 0 + "%)";
+          v.style.display = 'block';
+        } else {
+          v.style.display = 'none';
+        }
+      });
+    }
+  }, {
+    key: "_pageTrans",
+    value: function _pageTrans() {
+      var app = this.props.app;
+      var router = app.router;
+      if (!router._transStatus) return;
+      var activeEl = document.querySelector('main[data-page="' + router._activeId + '"]');
+      var deactiveEl = document.querySelector('main[data-page="' + router._deactiveId + '"]');
+      Array.from(document.querySelectorAll('main')).filter(function (v) {
+        return !v.getAttribute('data-page-sub');
+      }).forEach(function (v) {
+        var id = v.getAttribute('data-page');
+
+        if (id === router._activeId) {
+          v.style.webkitTransform = "translateX(" + (router._transStatus === 'push' ? 100 : -100) + "%)";
+          v.style.display = 'block';
+        } else if (id === router._deactiveId) {
+          v.style.webkitTransform = "translateX(" + 0 + "%)";
+          v.style.display = 'block';
+        } else {
+          v.style.display = 'none';
+        }
+      });
+      var time = new Date().getTime();
+      var finish = false;
+
+      var _run = function _run() {
+        if (finish) {
+          deactiveEl.style.display = 'none';
+
+          router._updateRouterInfo(router._history.location);
+
+          return;
+        }
+
+        var diff = new Date().getTime() - time;
+        var percent = diff * 100 / 200;
+
+        if (percent >= 100) {
+          percent = 100;
+          finish = true;
+        }
+
+        activeEl.style.webkitTransform = "translate3d(" + (router._transStatus === 'push' ? 100 - percent : percent - 100) + "%, 0, 0)";
+        deactiveEl.style.webkitTransform = "translate3d(" + (router._transStatus === 'push' ? -1 : 1) * percent + "%, 0, 0)";
+        requestAnimationFrame(_run);
+      };
+
+      _run();
+    }
+  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this = this;
 
-      this.eventOffRouterUpdate = this.props.app.event.on(this.props.app._id, 'onRouterUpdate', function () {
+      var app = this.props.app;
+      this.eventOffRouterUpdate = app.event.on(app._id, 'onRouterUpdate', function () {
         return _this.forceUpdate();
       });
+
+      this._pageInit();
     }
   }, {
     key: "componentWillUnmount",
@@ -234,19 +305,18 @@ function (_React$Component) {
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
-      console.log(1111, this.props.app.router._pageInfos);
+      this._pageTrans();
     }
   }, {
     key: "_renderPage",
-    value: function _renderPage(pageInfo, activeId, focusId, deactiveId) {
+    value: function _renderPage(pageInfo, activeId, focusId) {
       var _this2 = this;
 
       var app = this.props.app;
 
       var _ref = pageInfo || {},
           _id = _ref._id,
-          _idParent = _ref._idParent,
-          isSubPage = _ref.isSubPage,
+          isActive = _ref.isActive,
           popLayerInfos = _ref.popLayerInfos,
           subPageInfos = _ref.subPageInfos,
           routeDefine = _ref.routeDefine;
@@ -267,9 +337,9 @@ function (_React$Component) {
           app: app,
           _id: _id,
           route: (0, _objectSpread2.default)({}, pageInfo, {
-            isActive: isSubPage ? _idParent === activeId : _id === activeId,
-            isReactive: app.router._pages[_id],
-            isDeactive: isSubPage ? undefined : _id === deactiveId,
+            subPageInfos: undefined,
+            popLayerInfos: undefined,
+            isActive: isActive,
             popLayers: popLayerInfos.map(function (v) {
               return _this2._renderPopLayer(v);
             }),
@@ -280,9 +350,7 @@ function (_React$Component) {
 
               v1[k] = _this2._renderPage(v, activeId, focusId);
               return v1;
-            }, {}),
-            subPageInfos: undefined,
-            popLayerInfos: undefined
+            }, {})
           })
         };
         return _react.default.createElement(app.Page, (0, _extends2.default)({
@@ -317,14 +385,13 @@ function (_React$Component) {
           _pageInfos = _app$router._pageInfos,
           _error = _app$router._error,
           _activeId = _app$router._activeId,
-          _focusId = _app$router._focusId,
-          _deactiveId = _app$router._deactiveId;
+          _focusId = _app$router._focusId;
       if (_error) return _react.default.createElement(app.router.PageError, {
         app: app,
         data: _error
       });
       return _react.default.createElement(_react.default.Fragment, null, _pageInfos.map(function (v) {
-        return _this3._renderPage(v, _activeId, _focusId, _deactiveId);
+        return _this3._renderPage(v, _activeId, _focusId);
       }), app.router._getPopLayerNoPageId().map(function (v) {
         return _this3._renderPopLayer((0, _objectSpread2.default)({}, v), _activeId, _focusId);
       }));
@@ -398,6 +465,18 @@ function () {
      */
 
     this.passParams = false;
+    /**
+     * 设置页面进场动画是否显示白屏提高速度
+     * @type {boolean}
+     */
+
+    this.transInBlank = true;
+    /**
+     * 设置页面离场动画是否显示白屏提高速度
+     * @type {boolean}
+     */
+
+    this.transOutBlank = true;
     /*!
      * 路由描画组件，是所有页面和弹出层的父组件
      */
@@ -572,7 +651,7 @@ function () {
       _regenerator.default.mark(function _callee(location) {
         var _this6 = this;
 
-        var pathName, _idPrev, params, pageInfos, focusId, activeId, deactiveId, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, popLayerInfos, focusPopLayerInfo, activePageInfo, focusPopLayerInfoOfPage, _i, pageInfo, _block;
+        var pathName, _idPrev, params, pageInfos, focusId, activeId, deactiveId, transStatus, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, popLayerInfos, focusPopLayerInfo, activePageInfo, focusPopLayerInfoOfPage, _i, pageInfo, _block, deactivePageInfos;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -592,13 +671,14 @@ function () {
                 focusId = undefined;
                 activeId = undefined;
                 deactiveId = undefined;
+                transStatus = undefined;
                 /* route */
 
                 level = 0;
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context.prev = 12;
+                _context.prev = 13;
 
                 _loop = function _loop() {
                   var pagePathName = _step.value;
@@ -619,6 +699,7 @@ function () {
                     pathName: pathName,
                     pagePathName: pagePathName,
                     isSubPage: false,
+                    isActive: false,
                     query: location.query,
                     state: _this6._states[pathName],
                     pageParams: pageParams,
@@ -704,61 +785,61 @@ function () {
 
                 _iterator = location.pathnames[Symbol.iterator]();
 
-              case 15:
+              case 16:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 22;
+                  _context.next = 23;
                   break;
                 }
 
                 _ret = _loop();
 
                 if (!((0, _typeof2.default)(_ret) === "object")) {
-                  _context.next = 19;
+                  _context.next = 20;
                   break;
                 }
 
                 return _context.abrupt("return", _ret.v);
 
-              case 19:
+              case 20:
                 _iteratorNormalCompletion = true;
-                _context.next = 15;
+                _context.next = 16;
                 break;
 
-              case 22:
-                _context.next = 28;
+              case 23:
+                _context.next = 29;
                 break;
 
-              case 24:
-                _context.prev = 24;
-                _context.t0 = _context["catch"](12);
+              case 25:
+                _context.prev = 25;
+                _context.t0 = _context["catch"](13);
                 _didIteratorError = true;
                 _iteratorError = _context.t0;
 
-              case 28:
-                _context.prev = 28;
+              case 29:
                 _context.prev = 29;
+                _context.prev = 30;
 
                 if (!_iteratorNormalCompletion && _iterator.return != null) {
                   _iterator.return();
                 }
 
-              case 31:
-                _context.prev = 31;
+              case 32:
+                _context.prev = 32;
 
                 if (!_didIteratorError) {
-                  _context.next = 34;
+                  _context.next = 35;
                   break;
                 }
 
                 throw _iteratorError;
 
-              case 34:
-                return _context.finish(31);
-
               case 35:
-                return _context.finish(28);
+                return _context.finish(32);
 
               case 36:
+                return _context.finish(29);
+
+              case 37:
                 /* active & focus */
                 popLayerInfos = this._getPopLayerNoPageId();
                 focusPopLayerInfo = Array.from(popLayerInfos).reverse().find(function (v) {
@@ -784,55 +865,93 @@ function () {
 
                 _i = 0;
 
-              case 43:
+              case 44:
                 if (!(_i < pageInfos.length)) {
-                  _context.next = 53;
+                  _context.next = 54;
                   break;
                 }
 
                 pageInfo = pageInfos[_i];
-                _context.next = 47;
+                _context.next = 48;
                 return this.app.event.emit(this.app._id, 'onRouteMatch', pageInfo, location);
 
-              case 47:
+              case 48:
                 _block = _context.sent;
 
                 if (!_block) {
-                  _context.next = 50;
+                  _context.next = 51;
                   break;
                 }
 
                 return _context.abrupt("return", this.block(_block));
 
-              case 50:
+              case 51:
                 _i++;
-                _context.next = 43;
+                _context.next = 44;
                 break;
 
-              case 53:
+              case 54:
                 /* update */
-                if (this._history.action === 'POP' && this._activeId && !pageInfos.find(function (v) {
+                if (this._activeId !== activeId && this._history.action === 'POP' && this._activeId && !pageInfos.find(function (v) {
                   return v._id === _this6._activeId;
                 })) {
                   deactiveId = this._activeId;
+                  transStatus = this._pageInfos.find(function (v) {
+                    return v._id === activeId;
+                  }) ? 'pop' : 'pop-new';
                   pageInfos.push(this._pageInfos.find(function (v) {
                     return v._id === _this6._activeId;
                   }));
+                } else if (this._activeId !== activeId) {
+                  deactiveId = this._activeId;
+                  transStatus = 'push';
+                }
+
+                activePageInfo.isActive = transStatus || true;
+                activePageInfo.subPageInfos && Object.entries(activePageInfo.subPageInfos).forEach(function (_ref4) {
+                  var _ref5 = (0, _slicedToArray2.default)(_ref4, 2),
+                      k = _ref5[0],
+                      v = _ref5[1];
+
+                  return v.isActive = true;
+                });
+
+                if (deactiveId) {
+                  deactivePageInfos = pageInfos.find(function (v) {
+                    return v._id === deactiveId;
+                  });
+
+                  if (!deactivePageInfos) {
+                    deactivePageInfos = this._pageInfos.find(function (v) {
+                      return v._id === deactiveId;
+                    });
+                    pageInfos.push(deactivePageInfos);
+                  }
+
+                  deactivePageInfos.isActive = transStatus === 'push' ? 'background' : 'unmount';
+                  deactivePageInfos.subPageInfos && Object.entries(deactivePageInfos.subPageInfos).forEach(function (_ref6) {
+                    var _ref7 = (0, _slicedToArray2.default)(_ref6, 2),
+                        k = _ref7[0],
+                        v = _ref7[1];
+
+                    return v.isActive = deactivePageInfos.isActive;
+                  });
                 }
 
                 this._pageInfos = pageInfos;
                 this._focusId = focusId;
                 this._activeId = activeId;
                 this._deactiveId = deactiveId;
+                this._transStatus = transStatus;
 
                 this._updateRender();
 
-              case 59:
+              case 64:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[12, 24, 28, 36], [29,, 31, 35]]);
+        }, _callee, this, [[13, 25, 29, 37], [30,, 32, 36]]);
       }));
 
       return function _updateRouterInfo(_x) {
@@ -858,16 +977,16 @@ function () {
   }, {
     key: "_getPopLayerNoPageId",
     value: function _getPopLayerNoPageId() {
-      return this._popLayerInfos.filter(function (_ref4) {
-        var options = _ref4.options;
+      return this._popLayerInfos.filter(function (_ref8) {
+        var options = _ref8.options;
         return !options._idPage;
       });
     }
   }, {
     key: "_getPopLayerByPageId",
     value: function _getPopLayerByPageId(_id) {
-      return this._popLayerInfos.filter(function (_ref5) {
-        var options = _ref5.options;
+      return this._popLayerInfos.filter(function (_ref9) {
+        var options = _ref9.options;
         return options._idPage === _id;
       });
     }
@@ -1018,17 +1137,17 @@ function () {
   }, {
     key: "getPopLayerStates",
     value: function getPopLayerStates(_id) {
-      var _ref6 = this.getPopLayerInfo(_id) || {},
-          _ref6$options = _ref6.options;
+      var _ref10 = this.getPopLayerInfo(_id) || {},
+          _ref10$options = _ref10.options;
 
-      _ref6$options = _ref6$options === void 0 ? {} : _ref6$options;
-      var states = _ref6$options.states;
+      _ref10$options = _ref10$options === void 0 ? {} : _ref10$options;
+      var states = _ref10$options.states;
       if (!states) return {};
       var stateProps = {};
-      Object.entries(states).forEach(function (_ref7) {
-        var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
-            k = _ref8[0],
-            v = _ref8[1];
+      Object.entries(states).forEach(function (_ref11) {
+        var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
+            k = _ref12[0],
+            v = _ref12[1];
 
         return stateProps[k] = v.data();
       });
@@ -1067,10 +1186,10 @@ function () {
       var _this8 = this;
 
       this._routes = routes;
-      Object.entries(this._routes || {}).forEach(function (_ref9) {
-        var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
-            k = _ref10[0],
-            v = _ref10[1];
+      Object.entries(this._routes || {}).forEach(function (_ref13) {
+        var _ref14 = (0, _slicedToArray2.default)(_ref13, 2),
+            k = _ref14[0],
+            v = _ref14[1];
 
         return v.for && _this8.addNavigatorFunction(k, v.for);
       });
@@ -1112,10 +1231,10 @@ function () {
   }, {
     key: "getRouteByPageName",
     value: function getRouteByPageName(pageName) {
-      var route = Object.entries(this._routes).find(function (_ref11) {
-        var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
-            k = _ref12[0],
-            v = _ref12[1];
+      var route = Object.entries(this._routes).find(function (_ref15) {
+        var _ref16 = (0, _slicedToArray2.default)(_ref15, 2),
+            k = _ref16[0],
+            v = _ref16[1];
 
         return k.split(':')[0] === pageName;
       });
@@ -1288,10 +1407,10 @@ function () {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
         state: this.passState ? (0, _objectSpread2.default)({}, this._history.location.state, state) : state,
-        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this._history.location.query, query) : query).map(function (_ref13) {
-          var _ref14 = (0, _slicedToArray2.default)(_ref13, 2),
-              k = _ref14[0],
-              v = _ref14[1];
+        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this._history.location.query, query) : query).map(function (_ref17) {
+          var _ref18 = (0, _slicedToArray2.default)(_ref17, 2),
+              k = _ref18[0],
+              v = _ref18[1];
 
           return k + '=' + v;
         }).reduce(function (v1, v2) {

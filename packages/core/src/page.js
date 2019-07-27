@@ -292,66 +292,46 @@ class Page extends React.Component {
         width: '100%', height: '100%',
       }:{
         position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, background: 'white',
-        // visibility: route.isActive?'visible':'hidden',
+        'WebkitBackfaceVisibility': 'hidden', 'MozBackfaceVisibility': 'hidden',  'msBackfaceVisibility': 'hidden', 
+        'backfaceVisibility': 'hidden',  'WebkitPerspective': 1000, 'MozPerspective': 1000, 'msPerspective': 1000, 'perspective': 1000,
       },
     }
   }
   
+  _pageInit() {
+    let { app, _id, route:{isActive} } = this.props;
+
+    if(app.router.transInBlank) this._bindController();
+    this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this._handleKeyEvent(e));
+    app.event.emit(this._id, 'onPageStart', this, isActive);
+    isActive && app.event.emit(this._id, 'onPageActive', this, true);
+    isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+  }
+
   // page life circle
   // ---------------------------
   componentDidMount() {
-    let { app, _id, route:{isActive, isSubPage,isReactive,level} } = this.props;
+    let { app, _id, route:{isSubPage} } = this.props;
     app.log.debug('page did mount', _id);
+    app.event.emit(app._id, 'onPageAdd', _id, this);
+    if(!app.router.transInBlank) this._bindController();
+    if(!this._controllerBinded&&(isSubPage||!app.router._transStatus)) this._pageInit();
+  }
 
-    if(!isSubPage&&isActive&&!isReactive&&level) {
-      if(app.router._history.action!=="PUSH") {
-        setTimeout(()=>{
-          this._bindController();
-          this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this._handleKeyEvent(e));
-          app.event.emit(app._id, 'onPageAdd', _id, this);
-          app.event.emit(this._id, 'onPageStart', this, isActive);
-          isActive && app.event.emit(this._id, 'onPageActive', this, true);
-          isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
-          Array.from(document.querySelectorAll('main')).filter(v=>!v.getAttribute('data-page-sub')).forEach(v=>{
-            let id = v.getAttribute('data-page');
-            v.style.visibility=_id===id?"visible":"hidden";
-          })
-        }, 150)
-        return;
-      }
-      let element = ReactDOM.findDOMNode(this);
-      let time = (new Date()).getTime();
-      let _run = ()=>{
-        let diff = (new Date()).getTime() - time;
-        let percent = diff*100/150;
-        if(percent>100) percent = 100;
-        element.style.webkitTransform = "translateX("+(100-percent)+"%)";
-        if(percent < 100) {
-          requestAnimationFrame(_run);
-        }else{
-          setTimeout(()=>{
-            this._bindController();
-            this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this._handleKeyEvent(e));
-            app.event.emit(app._id, 'onPageAdd', _id, this);
-            app.event.emit(this._id, 'onPageStart', this, isActive);
-            isActive && app.event.emit(this._id, 'onPageActive', this, true);
-            isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+  componentDidUpdate(prevProps, prevState) {
+    let {app, route:{_id, isSubPage, isActive}} = this.props;
 
-            Array.from(document.querySelectorAll('main')).filter(v=>!v.getAttribute('data-page-sub')).forEach(v=>{
-              let id = v.getAttribute('data-page');
-              v.style.visibility=_id===id?"visible":"hidden";
-            })
-          }, 50)
-        }
-      }
-      _run();
-    }else{
-      this._bindController();
-      this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this._handleKeyEvent(e));
-      app.event.emit(app._id, 'onPageAdd', _id, this);
-      app.event.emit(this._id, 'onPageStart', this, isActive);
-      isActive && app.event.emit(this._id, 'onPageActive', this, true);
-      isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
+    if(!this._controllerBinded&&!isSubPage) {
+      if(isActive===true||isActive===false) this._pageInit();
+      return;
+    }
+
+    if(prevProps.route.isActive !== true && isActive === true) {
+      app.event.emit(_id, 'onPageActive', this, false);
+      app.event.emit(app._id, 'onActivePageChange', _id);
+    }
+    if(prevProps.route.isActive && isActive === false) {
+      app.event.emit(_id, 'onPageInactive', this, false);
     }
   }
 
@@ -366,38 +346,6 @@ class Page extends React.Component {
     app.event.off(_id);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    let { app, route:{_id, isActive, isDeactive} } = this.props;
-
-    if(prevProps.route.isActive !== isActive) {
-      app.event.emit(_id, isActive?'onPageActive':'onPageInactive', this, false);
-      isActive && app.event.emit(app._id, 'onActivePageChange', _id);
-    }
-
-    if(isDeactive) {
-      let element = ReactDOM.findDOMNode(this);
-      let time = (new Date()).getTime();
-      let _run = ()=>{
-        let diff = (new Date()).getTime() - time;
-        let percent = diff*100/150;
-        if(percent>100) percent = 100;
-        element.style.webkitTransform = "translateX("+percent+"%)";
-        if(percent < 100) {
-          requestAnimationFrame(_run);
-        }else{
-          let index = app.router._pageInfos.findIndex(v=>v._id===_id);
-          if(index>=0){
-            app.router._pageInfos.splice(index,1);
-            app.router._updateRender();
-          }
-        }
-      }
-      let p = Array.from(document.querySelectorAll('main')).filter(v=>!v.getAttribute('data-page-sub')).slice(-2)[0];
-      if(p)p.style.visibility="visible";
-      _run();
-    }
-  }
-
   componentDidCatch(error, info) {
     let { app } = this.props;
     app.log.debug('page did catch');
@@ -405,8 +353,8 @@ class Page extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if((nextProps.route.isActive !== this.props.route.isActive) && nextProps.route.isActive) return true;
-    if(!this.props.route.isActive) return false;
+    if((nextProps.route.isActive !== this.props.route.isActive) && (nextProps.route.isActive===true||nextProps.route.isActive===false)) return true;
+    if(this.props.route.isActive!==true&&this.props.route.isActive!==false) return false;
 
     if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query', 'popLayers', 'subPages'])) {
       this.app.event.emit(this._id, 'onPageUpdate', this._id, 'route');
@@ -420,14 +368,14 @@ class Page extends React.Component {
   }
 
   render() {
-    let { app, _id, route:{routeDefine,subPages,popLayers}, ...props } = this.props;
+    let { app, _id, route:{isActive,routeDefine,subPages,popLayers}, ...props } = this.props;
     app.log.debug('page render', _id);
     this._actionNum = 0;
 
     return (
       <main {...this._getPageFrameProps()}>
-        {this._controllerBinded?<routeDefine.component {...props} {...this._getPageComponentProps()}>{subPages}</routeDefine.component>:null}
-        {this._controllerBinded?popLayers:null}
+        {this._controllerBinded&&(!app.router.transOutBlank||isActive!=='unmount')?<routeDefine.component {...props} {...this._getPageComponentProps()}>{subPages}</routeDefine.component>:null}
+        {this._controllerBinded&&(!app.router.transOutBlank||isActive!=='unmount'?popLayers:null)}
       </main>
     )
   }

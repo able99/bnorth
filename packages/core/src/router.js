@@ -140,8 +140,63 @@ let PageSign = '#';
  * 提交到 render 模块的的 router 组件，是所有页面和弹出层的父组件
  */
 class RouterComponent extends React.Component {
+  _pageInit() {
+    let app = this.props.app;
+    let router = app.router;
+
+    Array.from(document.querySelectorAll('main')).filter(v=>!v.getAttribute('data-page-sub')).forEach(v=>{
+      let id = v.getAttribute('data-page');
+      if(id===router._activeId) {
+        v.style.webkitTransform = "translateX("+(0)+"%)";
+        v.style.display = 'block';
+      } else {
+        v.style.display = 'none';
+      }
+    })
+  }
+
+  _pageTrans() {
+    let app = this.props.app;
+    let router = app.router;
+    if(!router._transStatus) return
+
+    let activeEl = document.querySelector('main[data-page="'+router._activeId+'"]');
+    let deactiveEl = document.querySelector('main[data-page="'+router._deactiveId+'"]');
+
+    Array.from(document.querySelectorAll('main')).filter(v=>!v.getAttribute('data-page-sub')).forEach(v=>{
+      let id = v.getAttribute('data-page');
+      if(id===router._activeId) {
+        v.style.webkitTransform = "translateX("+(router._transStatus==='push'?100:-100)+"%)";
+        v.style.display = 'block';
+      }else if(id===router._deactiveId) {
+        v.style.webkitTransform = "translateX("+(0)+"%)";
+        v.style.display = 'block';
+      }else {
+        v.style.display = 'none';
+      }
+    })
+    
+    let time = (new Date()).getTime();
+    let finish = false;
+    let _run = ()=>{
+      if(finish) { deactiveEl.style.display = 'none'; router._updateRouterInfo(router._history.location); return }
+
+      let diff = (new Date()).getTime() - time;
+      let percent = diff*100/200;
+      if(percent>=100) { percent = 100; finish = true }
+
+      activeEl.style.webkitTransform = "translate3d("+(router._transStatus==='push'?(100-percent):(percent-100))+"%, 0, 0)";
+      deactiveEl.style.webkitTransform = "translate3d("+((router._transStatus==='push'?-1:1)*percent)+"%, 0, 0)";
+
+      requestAnimationFrame(_run);
+    }
+    _run();
+  }
+
   componentDidMount() {
-    this.eventOffRouterUpdate = this.props.app.event.on(this.props.app._id, 'onRouterUpdate', ()=>this.forceUpdate());
+    let app = this.props.app;
+    this.eventOffRouterUpdate = app.event.on(app._id, 'onRouterUpdate', ()=>this.forceUpdate());
+    this._pageInit();
   }
 
   componentWillUnmount() {
@@ -149,28 +204,24 @@ class RouterComponent extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log(1111,this.props.app.router._pageInfos);
+    this._pageTrans();
   }
 
-  _renderPage(pageInfo, activeId, focusId, deactiveId){
+  _renderPage(pageInfo, activeId, focusId){
     let { app } = this.props;
-    let {_id, _idParent, isSubPage, popLayerInfos, subPageInfos, routeDefine} = pageInfo||{};
+    let {_id, isActive, popLayerInfos, subPageInfos, routeDefine} = pageInfo||{};
 
     if(routeDefine.loader){
       routeDefine.loader(app).then(v=>{ Object.assign(routeDefine, v, {loader: null}); this.forceUpdate() })
       return <app.router.PageLoading key={_id} />;
     }else if(typeof routeDefine.component==='function'){
       let props = { 
-        app, 
-        _id, 
+        app, _id, 
         route: { 
-          ...pageInfo,
-          isActive: isSubPage?_idParent===activeId:_id===activeId, 
-          isReactive: app.router._pages[_id],
-          isDeactive: isSubPage?undefined:_id===deactiveId, 
+          ...pageInfo, subPageInfos: undefined, popLayerInfos: undefined,
+          isActive, 
           popLayers: popLayerInfos.map(v=>this._renderPopLayer(v)), 
           subPages: Object.entries(subPageInfos).reduce((v1, [k,v])=>{v1[k]=this._renderPage(v, activeId, focusId); return v1},{}),
-          subPageInfos: undefined, popLayerInfos: undefined,
         }, 
       };
       return <app.Page key={_id} {...props} />;
@@ -186,12 +237,12 @@ class RouterComponent extends React.Component {
 
   render() {
     let { app } = this.props;
-    let {_pageInfos, _error, _activeId, _focusId, _deactiveId} = app.router;
+    let {_pageInfos, _error, _activeId, _focusId} = app.router;
 
     if(_error) return <app.router.PageError app={app} data={_error} />;
     return (
       <React.Fragment>
-        {_pageInfos.map(v=>this._renderPage(v, _activeId, _focusId, _deactiveId))}
+        {_pageInfos.map(v=>this._renderPage(v, _activeId, _focusId))}
         {app.router._getPopLayerNoPageId().map(v=>this._renderPopLayer({...v}, _activeId, _focusId))}
       </React.Fragment>
     );
@@ -250,6 +301,16 @@ class Router {
      * @type {boolean}
      */
     this.passParams = false;
+    /**
+     * 设置页面进场动画是否显示白屏提高速度
+     * @type {boolean}
+     */
+    this.transInBlank = true;
+    /**
+     * 设置页面离场动画是否显示白屏提高速度
+     * @type {boolean}
+     */
+    this.transOutBlank = true;
 
     /*!
      * 路由描画组件，是所有页面和弹出层的父组件
@@ -380,6 +441,7 @@ class Router {
     let focusId = undefined;
     let activeId = undefined;
     let deactiveId = undefined;
+    let transStatus = undefined;
 
     /* route */
     let level = 0;
@@ -388,7 +450,7 @@ class Router {
       let [pageName, ...pageParams] = pagePathName.split(ParamSpe);
       let _id = PageSign+pathName;
       let pageInfo = { 
-        _id, _idPrev, level, pageName, pathName, pagePathName, isSubPage: false,
+        _id, _idPrev, level, pageName, pathName, pagePathName, isSubPage: false, isActive: false,
         query: location.query, state: this._states[pathName], pageParams, hash: location.hash?location.hash.slice(1):'',
         subPageInfos: {}, popLayerInfos: this._getPopLayerByPageId(_id),
       };
@@ -451,15 +513,31 @@ class Router {
     }
 
     /* update */
-    if(this._history.action==='POP'&&this._activeId&&!pageInfos.find(v=>v._id===this._activeId)) {
+    if(this._activeId!==activeId&&this._history.action==='POP'&&this._activeId&&!pageInfos.find(v=>v._id===this._activeId)) {
       deactiveId = this._activeId;
+      transStatus = this._pageInfos.find(v=>v._id===activeId)?'pop':'pop-new';
       pageInfos.push(this._pageInfos.find(v=>v._id===this._activeId));
+    }else if(this._activeId!==activeId) {
+      deactiveId = this._activeId;
+      transStatus = 'push';
     }
-
+    
+    activePageInfo.isActive = transStatus||true;
+    activePageInfo.subPageInfos&&Object.entries(activePageInfo.subPageInfos).forEach(([k,v])=>v.isActive=true);
+    if(deactiveId) {
+      let deactivePageInfos = pageInfos.find(v=>v._id===deactiveId);
+      if(!deactivePageInfos) {
+        deactivePageInfos = this._pageInfos.find(v=>v._id===deactiveId);
+        pageInfos.push(deactivePageInfos);
+      }
+      deactivePageInfos.isActive = transStatus === 'push'?'background':'unmount';
+      deactivePageInfos.subPageInfos&&Object.entries(deactivePageInfos.subPageInfos).forEach(([k,v])=>v.isActive=deactivePageInfos.isActive);
+    }
     this._pageInfos = pageInfos;
     this._focusId = focusId;
     this._activeId = activeId;
     this._deactiveId = deactiveId;
+    this._transStatus = transStatus;
     this._updateRender();
   }
 

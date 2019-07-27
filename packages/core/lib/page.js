@@ -15,10 +15,6 @@ require("core-js/modules/es7.symbol.async-iterator");
 
 require("core-js/modules/es6.symbol");
 
-require("core-js/modules/es6.array.find-index");
-
-require("core-js/modules/es6.array.from");
-
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 require("core-js/modules/es6.regexp.split");
@@ -403,109 +399,48 @@ function (_React$Component) {
           left: 0,
           bottom: 0,
           right: 0,
-          background: 'white' // visibility: route.isActive?'visible':'hidden',
-
+          background: 'white',
+          'WebkitBackfaceVisibility': 'hidden',
+          'MozBackfaceVisibility': 'hidden',
+          'msBackfaceVisibility': 'hidden',
+          'backfaceVisibility': 'hidden',
+          'WebkitPerspective': 1000,
+          'MozPerspective': 1000,
+          'msPerspective': 1000,
+          'perspective': 1000
         }
       };
+    }
+  }, {
+    key: "_pageInit",
+    value: function _pageInit() {
+      var _this3 = this;
+
+      var _this$props4 = this.props,
+          app = _this$props4.app,
+          _id = _this$props4._id,
+          isActive = _this$props4.route.isActive;
+      if (app.router.transInBlank) this._bindController();
+      this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
+        return _this3._handleKeyEvent(e);
+      });
+      app.event.emit(this._id, 'onPageStart', this, isActive);
+      isActive && app.event.emit(this._id, 'onPageActive', this, true);
+      isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
     } // page life circle
     // ---------------------------
 
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this3 = this;
-
-      var _this$props4 = this.props,
-          app = _this$props4.app,
-          _id = _this$props4._id,
-          _this$props4$route = _this$props4.route,
-          isActive = _this$props4$route.isActive,
-          isSubPage = _this$props4$route.isSubPage,
-          isReactive = _this$props4$route.isReactive,
-          level = _this$props4$route.level;
-      app.log.debug('page did mount', _id);
-
-      if (!isSubPage && isActive && !isReactive && level) {
-        if (app.router._history.action !== "PUSH") {
-          setTimeout(function () {
-            _this3._bindController();
-
-            _this3._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
-              return _this3._handleKeyEvent(e);
-            });
-            app.event.emit(app._id, 'onPageAdd', _id, _this3);
-            app.event.emit(_this3._id, 'onPageStart', _this3, isActive);
-            isActive && app.event.emit(_this3._id, 'onPageActive', _this3, true);
-            isActive && app.event.emit(app._id, 'onActivePageChange', _this3._id);
-            Array.from(document.querySelectorAll('main')).filter(function (v) {
-              return !v.getAttribute('data-page-sub');
-            }).forEach(function (v) {
-              var id = v.getAttribute('data-page');
-              v.style.visibility = _id === id ? "visible" : "hidden";
-            });
-          }, 150);
-          return;
-        }
-
-        var element = _reactDom.default.findDOMNode(this);
-
-        var time = new Date().getTime();
-
-        var _run = function _run() {
-          var diff = new Date().getTime() - time;
-          var percent = diff * 100 / 150;
-          if (percent > 100) percent = 100;
-          element.style.webkitTransform = "translateX(" + (100 - percent) + "%)";
-
-          if (percent < 100) {
-            requestAnimationFrame(_run);
-          } else {
-            setTimeout(function () {
-              _this3._bindController();
-
-              _this3._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
-                return _this3._handleKeyEvent(e);
-              });
-              app.event.emit(app._id, 'onPageAdd', _id, _this3);
-              app.event.emit(_this3._id, 'onPageStart', _this3, isActive);
-              isActive && app.event.emit(_this3._id, 'onPageActive', _this3, true);
-              isActive && app.event.emit(app._id, 'onActivePageChange', _this3._id);
-              Array.from(document.querySelectorAll('main')).filter(function (v) {
-                return !v.getAttribute('data-page-sub');
-              }).forEach(function (v) {
-                var id = v.getAttribute('data-page');
-                v.style.visibility = _id === id ? "visible" : "hidden";
-              });
-            }, 50);
-          }
-        };
-
-        _run();
-      } else {
-        this._bindController();
-
-        this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
-          return _this3._handleKeyEvent(e);
-        });
-        app.event.emit(app._id, 'onPageAdd', _id, this);
-        app.event.emit(this._id, 'onPageStart', this, isActive);
-        isActive && app.event.emit(this._id, 'onPageActive', this, true);
-        isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
-      }
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
       var _this$props5 = this.props,
           app = _this$props5.app,
           _id = _this$props5._id,
-          isActive = _this$props5.route.isActive;
-      app.log.debug('page will unmount', _id);
-      isActive && app.event.emit(this._id, 'onPageInactive', this, true);
-      app.event.emit(this._id, 'onPageStop', this);
-      app.event.emit(app._id, 'onPageRemove', _id, this);
-      this._offKeyEvent && this._offKeyEvent();
-      app.event.off(_id);
+          isSubPage = _this$props5.route.isSubPage;
+      app.log.debug('page did mount', _id);
+      app.event.emit(app._id, 'onPageAdd', _id, this);
+      if (!app.router.transInBlank) this._bindController();
+      if (!this._controllerBinded && (isSubPage || !app.router._transStatus)) this._pageInit();
     }
   }, {
     key: "componentDidUpdate",
@@ -514,47 +449,36 @@ function (_React$Component) {
           app = _this$props6.app,
           _this$props6$route = _this$props6.route,
           _id = _this$props6$route._id,
-          isActive = _this$props6$route.isActive,
-          isDeactive = _this$props6$route.isDeactive;
+          isSubPage = _this$props6$route.isSubPage,
+          isActive = _this$props6$route.isActive;
 
-      if (prevProps.route.isActive !== isActive) {
-        app.event.emit(_id, isActive ? 'onPageActive' : 'onPageInactive', this, false);
-        isActive && app.event.emit(app._id, 'onActivePageChange', _id);
+      if (!this._controllerBinded && !isSubPage) {
+        if (isActive === true || isActive === false) this._pageInit();
+        return;
       }
 
-      if (isDeactive) {
-        var element = _reactDom.default.findDOMNode(this);
-
-        var time = new Date().getTime();
-
-        var _run = function _run() {
-          var diff = new Date().getTime() - time;
-          var percent = diff * 100 / 150;
-          if (percent > 100) percent = 100;
-          element.style.webkitTransform = "translateX(" + percent + "%)";
-
-          if (percent < 100) {
-            requestAnimationFrame(_run);
-          } else {
-            var index = app.router._pageInfos.findIndex(function (v) {
-              return v._id === _id;
-            });
-
-            if (index >= 0) {
-              app.router._pageInfos.splice(index, 1);
-
-              app.router._updateRender();
-            }
-          }
-        };
-
-        var p = Array.from(document.querySelectorAll('main')).filter(function (v) {
-          return !v.getAttribute('data-page-sub');
-        }).slice(-2)[0];
-        if (p) p.style.visibility = "visible";
-
-        _run();
+      if (prevProps.route.isActive !== true && isActive === true) {
+        app.event.emit(_id, 'onPageActive', this, false);
+        app.event.emit(app._id, 'onActivePageChange', _id);
       }
+
+      if (prevProps.route.isActive && isActive === false) {
+        app.event.emit(_id, 'onPageInactive', this, false);
+      }
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      var _this$props7 = this.props,
+          app = _this$props7.app,
+          _id = _this$props7._id,
+          isActive = _this$props7.route.isActive;
+      app.log.debug('page will unmount', _id);
+      isActive && app.event.emit(this._id, 'onPageInactive', this, true);
+      app.event.emit(this._id, 'onPageStop', this);
+      app.event.emit(app._id, 'onPageRemove', _id, this);
+      this._offKeyEvent && this._offKeyEvent();
+      app.event.off(_id);
     }
   }, {
     key: "componentDidCatch",
@@ -569,8 +493,8 @@ function (_React$Component) {
   }, {
     key: "shouldComponentUpdate",
     value: function shouldComponentUpdate(nextProps, nextState) {
-      if (nextProps.route.isActive !== this.props.route.isActive && nextProps.route.isActive) return true;
-      if (!this.props.route.isActive) return false;
+      if (nextProps.route.isActive !== this.props.route.isActive && (nextProps.route.isActive === true || nextProps.route.isActive === false)) return true;
+      if (this.props.route.isActive !== true && this.props.route.isActive !== false) return false;
 
       if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query', 'popLayers', 'subPages'])) {
         this.app.event.emit(this._id, 'onPageUpdate', this._id, 'route');
@@ -610,17 +534,18 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props7 = this.props,
-          app = _this$props7.app,
-          _id = _this$props7._id,
-          _this$props7$route = _this$props7.route,
-          routeDefine = _this$props7$route.routeDefine,
-          subPages = _this$props7$route.subPages,
-          popLayers = _this$props7$route.popLayers,
-          props = (0, _objectWithoutProperties2.default)(_this$props7, ["app", "_id", "route"]);
+      var _this$props8 = this.props,
+          app = _this$props8.app,
+          _id = _this$props8._id,
+          _this$props8$route = _this$props8.route,
+          isActive = _this$props8$route.isActive,
+          routeDefine = _this$props8$route.routeDefine,
+          subPages = _this$props8$route.subPages,
+          popLayers = _this$props8$route.popLayers,
+          props = (0, _objectWithoutProperties2.default)(_this$props8, ["app", "_id", "route"]);
       app.log.debug('page render', _id);
       this._actionNum = 0;
-      return _react.default.createElement("main", this._getPageFrameProps(), this._controllerBinded ? _react.default.createElement(routeDefine.component, (0, _extends2.default)({}, props, this._getPageComponentProps()), subPages) : null, this._controllerBinded ? popLayers : null);
+      return _react.default.createElement("main", this._getPageFrameProps(), this._controllerBinded && (!app.router.transOutBlank || isActive !== 'unmount') ? _react.default.createElement(routeDefine.component, (0, _extends2.default)({}, props, this._getPageComponentProps()), subPages) : null, this._controllerBinded && (!app.router.transOutBlank || isActive !== 'unmount' ? popLayers : null));
     }
   }, {
     key: "_id",
