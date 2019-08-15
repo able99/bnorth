@@ -71,7 +71,7 @@ let Component = aprops=>{
 
       <Groups.Group title="Button" desc="按钮组件">
         <Groups.Show>
-          <Button>button</Button>
+          <Button btn>button</Button>
         </Groups.Show>
       </Groups.Group>
 

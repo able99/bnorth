@@ -240,6 +240,29 @@ OverlayLoader.isBnorth = true;
 OverlayLoader.defaultProps['b-precast'] = {}
 
 
+
+export let PullDownLoader = aprops=>{
+  let { 
+    progress, top, 
+    containerProps, ...props 
+  } = BaseComponent(aprops, OverlayLoader);
+
+  if(!progress||progress<0) return null;
+  return (
+    <Panel bc-padding-a- bc-bg-color-white bc-border-set-a- bc-position-absolute bc-text-align-center bc-pointer-events-none bs-top={top} bs-left={0} bs-right={0} bs-width="100%" {...containerProps}>
+      <Panel type="circle" isProgress={progress<100} progress={progress} component={Loader} {...props} />
+    </Panel>
+  )
+}
+
+PullDownLoader.defaultProps = {}
+PullDownLoader.defaultProps.top = 50;
+
+Object.defineProperty(Loader,"PullDownLoader",{ get:function(){ return PullDownLoader }, set:function(val){ PullDownLoader = val }})
+PullDownLoader.isBnorth = true;
+PullDownLoader.defaultProps['b-precast'] = {}
+
+
 export let loader = {
   _id: 'loader',
 
@@ -288,10 +311,31 @@ export let loader = {
           }
         });
       },
+      pulldown: progress=>{
+        app.loader._id = app.router.addPopLayer(
+          <PullDownLoader progress={progress} />, 
+        );
+      },
     };
 
     app.loader._loader = app.render.loader;
     app.render.loader = (show, options)=>show?app.loader.show(options):app.loader.close();
+
+    app.loader.pulldown = {
+      show: (progress=0, aprops, aoptions)=>{
+        let {content, props={}, options={}} = app.router.getPopLayerInfo(app.loader.pulldown._id)||{};
+        if(!content){
+          app.loader.pulldown._id = app.router.addPopLayer(<PullDownLoader progress={progress} />, aprops, aoptions);
+        }else{
+          app.loader.pulldown._id = app.router.addPopLayer(content, {...props, ...aprops, progress}, {...options, ...aoptions});
+        }
+        return app.loader.pulldown._id;
+      },
+      close: ()=>{
+        app.router.removePopLayer(app.loader.pulldown._id); 
+        app.loader.pulldown._id = undefined; 
+      },
+    };
   },
 
   onPluginUnmount(app) {

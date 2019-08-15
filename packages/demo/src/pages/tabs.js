@@ -17,7 +17,21 @@ export let Tabx = props=>{
   return (
     <Panel full page>
       <NavBar bc-border-set-bottom-><NavBar.Item name="left" onClick={()=>app.router.back()} /><NavBar.Title>{route._idSubPage}</NavBar.Title></NavBar>
-      <Panel main bc-bg-color-white>{listGener(50, {pre: route._idSubPage})}</Panel>
+      
+      <TabBar bc-flex-sub-flex-extend bp-container-bp-panelItem-className="scrollable-y-" 
+        bp-container-bp-panelItem-data-b-pulldown 
+
+        bp-container-bp-panelItem-onScroll={e=>{
+          console.log(111, e.currentTarget.pulldown);
+          if(e.currentTarget.pulldown)app.loader.pulldown.show(e.currentTarget.pulldown)}
+          }>
+        <TabBar.Item title="tab1">
+          {listGener(50, {pre: route._idSubPage, clickable: true})}
+        </TabBar.Item>
+        <TabBar.Item title="tab2">
+          {listGener(50, {pre: route._idSubPage, clickable: true})}
+        </TabBar.Item>
+      </TabBar>
       <Panel bc-border-set-top- bc-padding-a- bc-text-align-center>footer</Panel>
     </Panel>
   )

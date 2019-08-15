@@ -7,7 +7,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.loader = exports.OverlayLoader = exports.PanelLoader = exports.default = void 0;
+exports.loader = exports.PullDownLoader = exports.OverlayLoader = exports.PanelLoader = exports.default = void 0;
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -35,7 +35,7 @@ var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _animationFrame = _interopRequireWildcard(require("@bnorth/rich.css/lib/styles/animationFrame"));
 
-var _BaseComponent6 = _interopRequireWildcard(require("./BaseComponent"));
+var _BaseComponent7 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _AnimationFrame = _interopRequireDefault(require("./AnimationFrame"));
 
@@ -52,7 +52,7 @@ var _Panel = _interopRequireDefault(require("./Panel"));
  * @augments BaseComponent
  */
 var _Loader = function Loader(aprops) {
-  var _BaseComponent = (0, _BaseComponent6.default)(aprops, _Loader),
+  var _BaseComponent = (0, _BaseComponent7.default)(aprops, _Loader),
       type = _BaseComponent.type,
       types = _BaseComponent.types,
       timeoutTransition = _BaseComponent.timeoutTransition,
@@ -140,7 +140,7 @@ var _default = _Loader;
 exports.default = _default;
 
 var _Line = function Line(aprops) {
-  var _BaseComponent2 = (0, _BaseComponent6.default)(aprops, _Line),
+  var _BaseComponent2 = (0, _BaseComponent7.default)(aprops, _Line),
       isProgress = _BaseComponent2.isProgress,
       progress = _BaseComponent2.progress,
       timeout = _BaseComponent2.timeout,
@@ -216,7 +216,7 @@ function (_React$Component) {
     //   }
     // }
     value: function render() {
-      var _BaseComponent3 = (0, _BaseComponent6.default)(this.props, _Circle),
+      var _BaseComponent3 = (0, _BaseComponent7.default)(this.props, _Circle),
           isProgress = _BaseComponent3.isProgress,
           progress = _BaseComponent3.progress,
           timeout = _BaseComponent3.timeout,
@@ -241,7 +241,7 @@ function (_React$Component) {
         stroke: colorReverse,
         fill: "none"
       }), _react.default.createElement(_AnimationFrame.default, {
-        play: true,
+        play: !isProgress,
         frameFunc: _animationFrame.afSpin
       }, _react.default.createElement("circle", {
         cx: "50",
@@ -283,7 +283,7 @@ _Loader.defaultProps.types = {
 };
 
 var PanelLoader = function PanelLoader(aprops) {
-  var _BaseComponent4 = (0, _BaseComponent6.default)(aprops),
+  var _BaseComponent4 = (0, _BaseComponent7.default)(aprops),
       isProgress = _BaseComponent4.isProgress,
       progress = _BaseComponent4.progress,
       loaderProps = _BaseComponent4.loaderProps,
@@ -344,7 +344,7 @@ PanelLoader.isBnorth = true;
 PanelLoader.defaultProps['b-precast'] = {};
 
 var _OverlayLoader = function OverlayLoader(aprops) {
-  var _BaseComponent5 = (0, _BaseComponent6.default)(aprops, _OverlayLoader),
+  var _BaseComponent5 = (0, _BaseComponent7.default)(aprops, _OverlayLoader),
       progress = _BaseComponent5.progress,
       top = _BaseComponent5.top,
       height = _BaseComponent5.height,
@@ -379,6 +379,47 @@ Object.defineProperty(_Loader, "OverlayLoader", {
 });
 _OverlayLoader.isBnorth = true;
 _OverlayLoader.defaultProps['b-precast'] = {};
+
+var PullDownLoader = function PullDownLoader(aprops) {
+  var _BaseComponent6 = (0, _BaseComponent7.default)(aprops, _OverlayLoader),
+      progress = _BaseComponent6.progress,
+      top = _BaseComponent6.top,
+      containerProps = _BaseComponent6.containerProps,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent6, ["progress", "top", "containerProps"]);
+
+  if (!progress || progress < 0) return null;
+  return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    "bc-padding-a-": true,
+    "bc-bg-color-white": true,
+    "bc-border-set-a-": true,
+    "bc-position-absolute": true,
+    "bc-text-align-center": true,
+    "bc-pointer-events-none": true,
+    "bs-top": top,
+    "bs-left": 0,
+    "bs-right": 0,
+    "bs-width": "100%"
+  }, containerProps), _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    type: "circle",
+    isProgress: progress < 100,
+    progress: progress,
+    component: _Loader
+  }, props)));
+};
+
+exports.PullDownLoader = PullDownLoader;
+PullDownLoader.defaultProps = {};
+PullDownLoader.defaultProps.top = 50;
+Object.defineProperty(_Loader, "PullDownLoader", {
+  get: function get() {
+    return PullDownLoader;
+  },
+  set: function set(val) {
+    exports.PullDownLoader = PullDownLoader = val;
+  }
+});
+PullDownLoader.isBnorth = true;
+PullDownLoader.defaultProps['b-precast'] = {};
 var loader = {
   _id: 'loader',
   onPluginMount: function onPluginMount(app) {
@@ -445,12 +486,48 @@ var loader = {
             app.loader._id = undefined;
           }
         });
+      },
+      pulldown: function pulldown(progress) {
+        app.loader._id = app.router.addPopLayer(_react.default.createElement(PullDownLoader, {
+          progress: progress
+        }));
       }
     };
     app.loader._loader = app.render.loader;
 
     app.render.loader = function (show, options) {
       return show ? app.loader.show(options) : app.loader.close();
+    };
+
+    app.loader.pulldown = {
+      show: function show() {
+        var progress = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+        var aprops = arguments.length > 1 ? arguments[1] : undefined;
+        var aoptions = arguments.length > 2 ? arguments[2] : undefined;
+
+        var _ref4 = app.router.getPopLayerInfo(app.loader.pulldown._id) || {},
+            content = _ref4.content,
+            _ref4$props = _ref4.props,
+            props = _ref4$props === void 0 ? {} : _ref4$props,
+            _ref4$options = _ref4.options,
+            options = _ref4$options === void 0 ? {} : _ref4$options;
+
+        if (!content) {
+          app.loader.pulldown._id = app.router.addPopLayer(_react.default.createElement(PullDownLoader, {
+            progress: progress
+          }), aprops, aoptions);
+        } else {
+          app.loader.pulldown._id = app.router.addPopLayer(content, (0, _objectSpread2.default)({}, props, aprops, {
+            progress: progress
+          }), (0, _objectSpread2.default)({}, options, aoptions));
+        }
+
+        return app.loader.pulldown._id;
+      },
+      close: function close() {
+        app.router.removePopLayer(app.loader.pulldown._id);
+        app.loader.pulldown._id = undefined;
+      }
     };
   },
   onPluginUnmount: function onPluginUnmount(app) {

@@ -12,6 +12,7 @@ var _exportNames = {
   domTriggerBrowserReflow: true,
   domIsTouch: true,
   domIsMouse: true,
+  domPassiveSupported: true,
   domFindNode: true,
   domFindDock: true,
   domFindScrollDock: true,
@@ -23,6 +24,7 @@ var _exportNames = {
 };
 exports.domCapitalize = domCapitalize;
 exports.domTriggerBrowserReflow = domTriggerBrowserReflow;
+exports.domPassiveSupported = domPassiveSupported;
 exports.domFindNode = domFindNode;
 exports.domFindDock = domFindDock;
 exports.domFindScrollDock = domFindScrollDock;
@@ -90,14 +92,34 @@ function domTriggerBrowserReflow(node) {
  */
 
 
-var domIsTouch = 'ontouchstart' in document;
+var domIsTouch = !!('ontouchstart' in window || window.DocumentTouch && document instanceof window.DocumentTouch);
 /**
  * 是否支持鼠标
  * @type {boolean}
  */
 
 exports.domIsTouch = domIsTouch;
-var domIsMouse = 'onmousedown' in document; // dom find
+var domIsMouse = !domIsTouch;
+/**
+ * 是否支持 passive event listener
+ */
+
+exports.domIsMouse = domIsMouse;
+
+function domPassiveSupported() {
+  var result = false;
+
+  try {
+    var options = Object.defineProperty({}, "passive", {
+      get: function get() {
+        result = true;
+      }
+    });
+    window.addEventListener("test", null, options);
+  } catch (err) {}
+
+  return result;
+} // dom find
 // -------------------
 
 /**
@@ -106,7 +128,6 @@ var domIsMouse = 'onmousedown' in document; // dom find
  * @returns {element} 对应的元素
  */
 
-exports.domIsMouse = domIsMouse;
 
 function domFindNode(node) {
   return _reactDom.default.findDOMNode(node);

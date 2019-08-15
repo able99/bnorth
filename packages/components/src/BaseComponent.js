@@ -26,12 +26,23 @@ export function domTriggerBrowserReflow(node) {
  * 是否支持 touch
  * @type {boolean}
  */
-export const domIsTouch = 'ontouchstart' in document;
+export const domIsTouch = !!(('ontouchstart' in window) || window.DocumentTouch && document instanceof window.DocumentTouch);
 /**
  * 是否支持鼠标
  * @type {boolean}
  */
-export const domIsMouse = 'onmousedown' in document;
+export const domIsMouse = !domIsTouch;
+/**
+ * 是否支持 passive event listener
+ */
+export function domPassiveSupported() {
+  var result = false;
+  try {
+      var options = Object.defineProperty({}, "passive", { get: function() { result = true } });
+      window.addEventListener("test", null, options);
+  } catch(err) {}
+  return result;
+}
 
 
 // dom find

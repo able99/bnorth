@@ -4,8 +4,7 @@
 import React, { cloneElement } from 'react';
 import classes from '@bnorth/rich.css/lib/classes'; 
 import { transform } from '@bnorth/rich.css/lib/styles/animation'; 
-import BaseComponent, { domIsMouse, domFindNode } from './BaseComponent';
-import Touchable from './Touchable';
+import BaseComponent, { domIsMouse, domFindNode, domPassiveSupported } from './BaseComponent';
 
 
 /**
@@ -22,7 +21,7 @@ let Panel = aprops=>{
 
   let {
     active, selected, disabled, 
-    onClick, onTouchStart, onTouchEnd, onTouchCancel, btn,
+    onClick, btn,
     main, page, full, inline, 
     panelContainerProps, panelItemIndex, panelItemCount, panelItemSelected, panelItemPlain, 
     'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, 
@@ -101,15 +100,15 @@ let Panel = aprops=>{
   if(disabled) classSet['disabled'] = true;
   if(onClick&&(btn!==false)) classSet['cursor-pointer'] = true;
   if((onClick&&(!btn&&btn!==false))||btn===true) classSet['btn'] = true;
-  if(onClick&&(btn!==false)) {
-    props['onTouchStart'] = e=>{e.currentTarget.classList.add(!btn||btn===true?'active':btn);onTouchStart&&onTouchStart(e)}
-    props['onTouchEnd'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchEnd&&onTouchEnd(e)}; 
-    props['onTouchCancel'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchCancel&&onTouchCancel(e)}; 
-  } else {
-    if(aprops.hasOwnProperty('onTouchStart')) props.onTouchStart = onTouchStart;
-    if(aprops.hasOwnProperty('onTouchEnd')) props.onTouchEnd = onTouchEnd;
-    if(aprops.hasOwnProperty('onTouchCancel')) props.onTouchCancel = onTouchCancel;
-  }
+  // if(onClick&&(btn!==false)) {
+  //   props['onTouchStart'] = e=>{e.currentTarget.classList.add(!btn||btn===true?'active':btn);onTouchStart&&onTouchStart(e)}
+  //   props['onTouchEnd'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchEnd&&onTouchEnd(e)}; 
+  //   props['onTouchCancel'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchCancel&&onTouchCancel(e)}; 
+  // } else {
+  //   if(aprops.hasOwnProperty('onTouchStart')) props.onTouchStart = onTouchStart;
+  //   if(aprops.hasOwnProperty('onTouchEnd')) props.onTouchEnd = onTouchEnd;
+  //   if(aprops.hasOwnProperty('onTouchCancel')) props.onTouchCancel = onTouchCancel;
+  // }
 
   return <Component 
     className={classes(classSetPre, classNamePre, classSet, className, classNameExt)} 
@@ -472,58 +471,112 @@ Object.defineProperty(Panel,"ContainerItem",{ get:function(){ return PanelItem }
  * @augments module:Touchable.Touchable
  */
 let InnerScroll = class extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount() {
+    let { countToShow,selectedIndex, children } = this.props;
+    let node = domFindNode(this);
+    this.size = node.clientWidth*countToShow/children.length;
+    let val = -(this.size/countToShow)*(selectedIndex%children.length);
+    node.scrollableLeft = -val;
+    node.scrollableWidth = node.clientWidth;
+    
     if(domIsMouse) {
       domFindNode(this).addEventListener("mousedown", event=>{ this.mark = false }, true);
       domFindNode(this).addEventListener("click", event=>{ if(this.mark) { event.stopPropagation(); this.mark = false } }, true);
     } 
   }
 
-  handlePanStart(event, element) {
-    let { countToShow, children } = this.props;
-    this.size = element.clientWidth*countToShow/children.length;
-  }
-  handlePan(event, element) {
-    this.setState({offset: event.deltaX});
+  componentDidUpdate() {
+    let { selectedIndex, countToShow, children } = this.props;
+    let node = domFindNode(this);
+    this.size = node.clientWidth*countToShow/children.length;
+
+    let val = -(this.size/countToShow)*(selectedIndex%children.length);
+    node.scrollableLeft = -val;
+    node.scrollableWidth = node.clientWidth;
   }
 
-  handlePanEnd(event, element) {
+  handleStart(e) {
     let { selectedIndex, countToShow, onSelectedChange, children } = this.props;
-    this.setState({offset: undefined},()=>{
+    let node = domFindNode(this);
+    let x = domIsMouse?e.clientX:e.touches[0].clientX;
+    let y = domIsMouse?e.clientY:e.touches[0].clientY;
+    let offsetX, offsetY, moved, ignore;
+
+    if(!node.scrollable) {
+      node.scrollable = 'x';
+      node.scrollableWidth = node.clientWidth*children.length;
+      node.scrollableLeft = selectedIndex * node.clientWidth;
+    }
+
+    let handleMove = e=>{
+      offsetX = (domIsMouse?e.clientX:e.touches[0].clientX) - x;
+      offsetY = (domIsMouse?e.clientY:e.touches[0].clientY) - y;
+
+      if(ignore===undefined) {
+        if(Math.abs(offsetY)>Math.abs(offsetX)) { handleEnd(); return; }
+        ignore = false;
+      }
+      
+      moved = true;
+      let val = -(this.size/countToShow)*(selectedIndex%children.length)+(offsetX||0);
+      val = Math.min(0, val);
+      val = Math.max(-(children.length-1)*this.size, val);
+      let style = transform('translate3D', val+'px', 0, 0);
+      Object.entries(style).forEach(([k,v])=>node.style[k]=v)
+      node.scrollableLeft = -val;
+
+      if((selectedIndex===0&&offsetX>0)||(selectedIndex===(children.length-1)&&offsetX<0)){
+
+      }else{
+        e.stopPropagation();
+        // e.preventDefault();
+      }
+    }
+
+    let handleEnd = e=>{
+      node.removeEventListener(domIsMouse?'mousemove':'touchmove', handleMove);
+      node.removeEventListener(domIsMouse?'mouseup':'touchend', handleEnd);
+      (!domIsMouse)&&node.removeEventListener('touchcancel', handleEnd);
+
+      if(!moved) return;
+
+      let val = -(this.size/countToShow)*(selectedIndex%children.length);
+      let style = transform('translate3D', val+'px', 0, 0);
+      Object.entries(style).forEach(([k,v])=>node.style[k]=v)
+      node.scrollableLeft = -val;
+
       if(onSelectedChange) {
-        let aindex = selectedIndex - Math.round((event.deltaX*children.length)/(countToShow*element.clientWidth));
+        let aindex = selectedIndex - Math.round(((offsetX||0)*children.length)/(countToShow*node.clientWidth));
         aindex = Math.min(aindex, children.length-1);
         aindex = Math.max(aindex, 0);
         if(selectedIndex!==aindex) onSelectedChange(aindex, children[aindex].props);
       }
-    });
-    
-    if(domIsMouse) this.mark = true;
+
+      if(domIsMouse) this.mark = true;
+    }
+
+    let eventOption = domPassiveSupported()?{passive: true}:false;
+    node.addEventListener(domIsMouse?'mousemove':'touchmove', handleMove, eventOption);
+    node.addEventListener(domIsMouse?'mouseup':'touchend', handleEnd, eventOption);
+    (!domIsMouse)&&node.addEventListener('touchcancel', handleEnd, eventOption);
   }
 
   render() {
     let { countToShow, selectedIndex, onSelectedChange, children, ...props } = BaseComponent(this.props, InnerScroll);
-    let { offset } = this.state||{};
 
     children = React.Children.toArray(children);
 
-    let classNamePre = 'flex-display-block flex-align-stretch height-full transition-set-';
+    let classNamePre = 'flex-display-block flex-align-stretch height-full transition-set- overflow-x-hidden';
     let stylePre = {
       width: `${100/countToShow*children.length}%`,
-      ...transform('translateX', isNaN(offset)
-        ?-100/children.length*(selectedIndex%children.length)+'%'
-        :(-(this.size/countToShow)*(selectedIndex%children.length)+(offset||0))+'px'
-      ),
+      ...transform('translateX', (-(this.size/countToShow)*(selectedIndex%children.length))+'px'),
     }
 
-    return (
-      <Panel 
-        component={Touchable} direction="horizontal" recognizers={{'pan':{enable: true}}} 
-        onPanStart={this.handlePanStart.bind(this)} onPan={this.handlePan.bind(this)} onPanEnd={this.handlePanEnd.bind(this)} onPanCancel={this.handlePanEnd.bind(this)}
-        classNamePre={classNamePre} stylePre={stylePre} {...props}>
-        {children}
-      </Panel>
-    );
+    return <Panel {...{[domIsMouse?'onMouseDown':'onTouchStart']:e=>this.handleStart(e)}} classNamePre={classNamePre} stylePre={stylePre} {...props}>{children}</Panel> 
   }
 }
 

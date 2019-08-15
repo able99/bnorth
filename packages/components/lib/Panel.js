@@ -53,8 +53,6 @@ var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _BaseComponent5 = _interopRequireWildcard(require("./BaseComponent"));
 
-var _Touchable = _interopRequireDefault(require("./Touchable"));
-
 /**
  * @module
  */
@@ -80,9 +78,6 @@ var _Panel = function Panel(aprops) {
       selected = _BaseComponent.selected,
       disabled = _BaseComponent.disabled,
       onClick = _BaseComponent.onClick,
-      onTouchStart = _BaseComponent.onTouchStart,
-      onTouchEnd = _BaseComponent.onTouchEnd,
-      onTouchCancel = _BaseComponent.onTouchCancel,
       btn = _BaseComponent.btn,
       main = _BaseComponent.main,
       page = _BaseComponent.page,
@@ -114,7 +109,7 @@ var _Panel = function Panel(aprops) {
       _BaseComponent$compon = _BaseComponent.component,
       Component = _BaseComponent$compon === void 0 ? aprops.componentPanel || "div" : _BaseComponent$compon,
       componentPanel = _BaseComponent.componentPanel,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["active", "selected", "disabled", "onClick", "onTouchStart", "onTouchEnd", "onTouchCancel", "btn", "main", "page", "full", "inline", "panelContainerProps", "panelItemIndex", "panelItemCount", "panelItemSelected", "panelItemPlain", 'b-theme', 'b-style', 'b-size', "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "panelThemeProps", "refWrap", "component", "componentPanel"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["active", "selected", "disabled", "onClick", "btn", "main", "page", "full", "inline", "panelContainerProps", "panelItemIndex", "panelItemCount", "panelItemSelected", "panelItemPlain", 'b-theme', 'b-style', 'b-size', "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "panelThemeProps", "refWrap", "component", "componentPanel"]);
 
   if (sensitiveBg === undefined) sensitiveBg = bStyle === 'solid' && bTheme;
   if (sensitiveSelect === undefined) sensitiveSelect = bStyle === 'underline';
@@ -191,28 +186,15 @@ var _Panel = function Panel(aprops) {
   if (selected) classSet['selected'] = true;
   if (disabled) classSet['disabled'] = true;
   if (onClick && btn !== false) classSet['cursor-pointer'] = true;
-  if (onClick && !btn && btn !== false || btn === true) classSet['btn'] = true;
-
-  if (onClick && btn !== false) {
-    props['onTouchStart'] = function (e) {
-      e.currentTarget.classList.add(!btn || btn === true ? 'active' : btn);
-      onTouchStart && onTouchStart(e);
-    };
-
-    props['onTouchEnd'] = function (e) {
-      e.currentTarget.classList.remove(!btn || btn === true ? 'active' : btn);
-      onTouchEnd && onTouchEnd(e);
-    };
-
-    props['onTouchCancel'] = function (e) {
-      e.currentTarget.classList.remove(!btn || btn === true ? 'active' : btn);
-      onTouchCancel && onTouchCancel(e);
-    };
-  } else {
-    if (aprops.hasOwnProperty('onTouchStart')) props.onTouchStart = onTouchStart;
-    if (aprops.hasOwnProperty('onTouchEnd')) props.onTouchEnd = onTouchEnd;
-    if (aprops.hasOwnProperty('onTouchCancel')) props.onTouchCancel = onTouchCancel;
-  }
+  if (onClick && !btn && btn !== false || btn === true) classSet['btn'] = true; // if(onClick&&(btn!==false)) {
+  //   props['onTouchStart'] = e=>{e.currentTarget.classList.add(!btn||btn===true?'active':btn);onTouchStart&&onTouchStart(e)}
+  //   props['onTouchEnd'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchEnd&&onTouchEnd(e)}; 
+  //   props['onTouchCancel'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchCancel&&onTouchCancel(e)}; 
+  // } else {
+  //   if(aprops.hasOwnProperty('onTouchStart')) props.onTouchStart = onTouchStart;
+  //   if(aprops.hasOwnProperty('onTouchEnd')) props.onTouchEnd = onTouchEnd;
+  //   if(aprops.hasOwnProperty('onTouchCancel')) props.onTouchCancel = onTouchCancel;
+  // }
 
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _classes.default)(classSetPre, classNamePre, classSet, className, classNameExt),
@@ -685,15 +667,25 @@ var _InnerScroll =
 function (_React$Component2) {
   (0, _inherits2.default)(InnerScroll, _React$Component2);
 
-  function InnerScroll() {
+  function InnerScroll(props) {
     (0, _classCallCheck2.default)(this, InnerScroll);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(InnerScroll).apply(this, arguments));
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(InnerScroll).call(this, props));
   }
 
   (0, _createClass2.default)(InnerScroll, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this = this;
+
+      var _this$props = this.props,
+          countToShow = _this$props.countToShow,
+          selectedIndex = _this$props.selectedIndex,
+          children = _this$props.children;
+      var node = (0, _BaseComponent5.domFindNode)(this);
+      this.size = node.clientWidth * countToShow / children.length;
+      var val = -(this.size / countToShow) * (selectedIndex % children.length);
+      node.scrollableLeft = -val;
+      node.scrollableWidth = node.clientWidth;
 
       if (_BaseComponent5.domIsMouse) {
         (0, _BaseComponent5.domFindNode)(this).addEventListener("mousedown", function (event) {
@@ -708,43 +700,109 @@ function (_React$Component2) {
       }
     }
   }, {
-    key: "handlePanStart",
-    value: function handlePanStart(event, element) {
-      var _this$props = this.props,
-          countToShow = _this$props.countToShow,
-          children = _this$props.children;
-      this.size = element.clientWidth * countToShow / children.length;
-    }
-  }, {
-    key: "handlePan",
-    value: function handlePan(event, element) {
-      this.setState({
-        offset: event.deltaX
-      });
-    }
-  }, {
-    key: "handlePanEnd",
-    value: function handlePanEnd(event, element) {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
       var _this$props2 = this.props,
           selectedIndex = _this$props2.selectedIndex,
           countToShow = _this$props2.countToShow,
-          onSelectedChange = _this$props2.onSelectedChange,
           children = _this$props2.children;
-      this.setState({
-        offset: undefined
-      }, function () {
+      var node = (0, _BaseComponent5.domFindNode)(this);
+      this.size = node.clientWidth * countToShow / children.length;
+      var val = -(this.size / countToShow) * (selectedIndex % children.length);
+      node.scrollableLeft = -val;
+      node.scrollableWidth = node.clientWidth;
+    }
+  }, {
+    key: "handleStart",
+    value: function handleStart(e) {
+      var _this2 = this;
+
+      var _this$props3 = this.props,
+          selectedIndex = _this$props3.selectedIndex,
+          countToShow = _this$props3.countToShow,
+          onSelectedChange = _this$props3.onSelectedChange,
+          children = _this$props3.children;
+      var node = (0, _BaseComponent5.domFindNode)(this);
+      var x = _BaseComponent5.domIsMouse ? e.clientX : e.touches[0].clientX;
+      var y = _BaseComponent5.domIsMouse ? e.clientY : e.touches[0].clientY;
+      var offsetX, offsetY, moved, ignore;
+
+      if (!node.scrollable) {
+        node.scrollable = 'x';
+        node.scrollableWidth = node.clientWidth * children.length;
+        node.scrollableLeft = selectedIndex * node.clientWidth;
+      }
+
+      var handleMove = function handleMove(e) {
+        offsetX = (_BaseComponent5.domIsMouse ? e.clientX : e.touches[0].clientX) - x;
+        offsetY = (_BaseComponent5.domIsMouse ? e.clientY : e.touches[0].clientY) - y;
+
+        if (ignore === undefined) {
+          if (Math.abs(offsetY) > Math.abs(offsetX)) {
+            handleEnd();
+            return;
+          }
+
+          ignore = false;
+        }
+
+        moved = true;
+        var val = -(_this2.size / countToShow) * (selectedIndex % children.length) + (offsetX || 0);
+        val = Math.min(0, val);
+        val = Math.max(-(children.length - 1) * _this2.size, val);
+        var style = (0, _animation.transform)('translate3D', val + 'px', 0, 0);
+        Object.entries(style).forEach(function (_ref5) {
+          var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
+              k = _ref6[0],
+              v = _ref6[1];
+
+          return node.style[k] = v;
+        });
+        node.scrollableLeft = -val;
+
+        if (selectedIndex === 0 && offsetX > 0 || selectedIndex === children.length - 1 && offsetX < 0) {} else {
+          e.stopPropagation(); // e.preventDefault();
+        }
+      };
+
+      var handleEnd = function handleEnd(e) {
+        node.removeEventListener(_BaseComponent5.domIsMouse ? 'mousemove' : 'touchmove', handleMove);
+        node.removeEventListener(_BaseComponent5.domIsMouse ? 'mouseup' : 'touchend', handleEnd);
+        !_BaseComponent5.domIsMouse && node.removeEventListener('touchcancel', handleEnd);
+        if (!moved) return;
+        var val = -(_this2.size / countToShow) * (selectedIndex % children.length);
+        var style = (0, _animation.transform)('translate3D', val + 'px', 0, 0);
+        Object.entries(style).forEach(function (_ref7) {
+          var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
+              k = _ref8[0],
+              v = _ref8[1];
+
+          return node.style[k] = v;
+        });
+        node.scrollableLeft = -val;
+
         if (onSelectedChange) {
-          var aindex = selectedIndex - Math.round(event.deltaX * children.length / (countToShow * element.clientWidth));
+          var aindex = selectedIndex - Math.round((offsetX || 0) * children.length / (countToShow * node.clientWidth));
           aindex = Math.min(aindex, children.length - 1);
           aindex = Math.max(aindex, 0);
           if (selectedIndex !== aindex) onSelectedChange(aindex, children[aindex].props);
         }
-      });
-      if (_BaseComponent5.domIsMouse) this.mark = true;
+
+        if (_BaseComponent5.domIsMouse) _this2.mark = true;
+      };
+
+      var eventOption = (0, _BaseComponent5.domPassiveSupported)() ? {
+        passive: true
+      } : false;
+      node.addEventListener(_BaseComponent5.domIsMouse ? 'mousemove' : 'touchmove', handleMove, eventOption);
+      node.addEventListener(_BaseComponent5.domIsMouse ? 'mouseup' : 'touchend', handleEnd, eventOption);
+      !_BaseComponent5.domIsMouse && node.addEventListener('touchcancel', handleEnd, eventOption);
     }
   }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       var _BaseComponent4 = (0, _BaseComponent5.default)(this.props, _InnerScroll),
           countToShow = _BaseComponent4.countToShow,
           selectedIndex = _BaseComponent4.selectedIndex,
@@ -752,26 +810,14 @@ function (_React$Component2) {
           children = _BaseComponent4.children,
           props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["countToShow", "selectedIndex", "onSelectedChange", "children"]);
 
-      var _ref5 = this.state || {},
-          offset = _ref5.offset;
-
       children = _react.default.Children.toArray(children);
-      var classNamePre = 'flex-display-block flex-align-stretch height-full transition-set-';
+      var classNamePre = 'flex-display-block flex-align-stretch height-full transition-set- overflow-x-hidden';
       var stylePre = (0, _objectSpread6.default)({
         width: "".concat(100 / countToShow * children.length, "%")
-      }, (0, _animation.transform)('translateX', isNaN(offset) ? -100 / children.length * (selectedIndex % children.length) + '%' : -(this.size / countToShow) * (selectedIndex % children.length) + (offset || 0) + 'px'));
-      return _react.default.createElement(_Panel, (0, _extends2.default)({
-        component: _Touchable.default,
-        direction: "horizontal",
-        recognizers: {
-          'pan': {
-            enable: true
-          }
-        },
-        onPanStart: this.handlePanStart.bind(this),
-        onPan: this.handlePan.bind(this),
-        onPanEnd: this.handlePanEnd.bind(this),
-        onPanCancel: this.handlePanEnd.bind(this),
+      }, (0, _animation.transform)('translateX', -(this.size / countToShow) * (selectedIndex % children.length) + 'px'));
+      return _react.default.createElement(_Panel, (0, _extends2.default)({}, (0, _defineProperty2.default)({}, _BaseComponent5.domIsMouse ? 'onMouseDown' : 'onTouchStart', function (e) {
+        return _this3.handleStart(e);
+      }), {
         classNamePre: classNamePre,
         stylePre: stylePre
       }, props), children);

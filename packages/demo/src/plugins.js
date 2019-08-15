@@ -1,4 +1,5 @@
 export default function(app) {
+  app.plugins.add(require('@bnorth/components/lib/rootGesture').default);
   app.plugins.add(require('@bnorth/components/lib/Notice').notice);
   app.plugins.add(require('@bnorth/components/lib/Mask').mask);
   app.plugins.add(require('@bnorth/components/lib/Modal').modal);
