@@ -13,19 +13,25 @@ require("regenerator-runtime/runtime");
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es7.object.entries");
-
-require("core-js/modules/web.dom.iterable");
-
 require("core-js/modules/es6.object.assign");
 
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+
+require("core-js/modules/es7.symbol.async-iterator");
+
+require("core-js/modules/es6.symbol");
+
+require("core-js/modules/es6.string.starts-with");
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+require("core-js/modules/web.dom.iterable");
+
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es7.object.entries");
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -88,9 +94,108 @@ var State =
 /*#__PURE__*/
 function () {
   (0, _createClass2.default)(State, null, [{
-    key: "_genStateId",
+    key: "checkModuleOptions",
     // static
     // ---------------
+    value: function checkModuleOptions(options) {
+      return Array.isArray(options) ? options : Object.entries(options).filter(function (_ref) {
+        var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+            k = _ref2[0],
+            v = _ref2[1];
+
+        return k.startsWith('state') || k.startsWith('_state');
+      });
+    }
+  }, {
+    key: "attachStates",
+    value: function attachStates(app, module, _id, options, cb) {
+      var _this = this;
+
+      this.checkModuleOptions(options).forEach(function (_ref3) {
+        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+            k = _ref4[0],
+            v = _ref4[1];
+
+        module[k] = app.State.createState(app, v, k, _id);
+
+        if (!module[k]) {
+          app.render.panic(v, {
+            title: 'no state',
+            _id: _this._id
+          });
+          return;
+        }
+
+        cb && cb(k, v, module[k]);
+      });
+    }
+  }, {
+    key: "detachStates",
+    value: function detachStates(module, options) {
+      this.checkModuleOptions(options).forEach(function (_ref5) {
+        var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
+            k = _ref6[0],
+            v = _ref6[1];
+
+        if (k.startsWith('state') || k.startsWith('_state')) {
+          module[k] && module[k].destructor();
+        }
+      });
+    }
+  }, {
+    key: "checkStates",
+    value: function checkStates(module, context, nextContext, options) {
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.checkModuleOptions(options)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var _step$value = (0, _slicedToArray2.default)(_step.value, 2),
+              k = _step$value[0],
+              v = _step$value[1];
+
+          var key = module[k] && module[k]._id;
+          if (context[key] !== nextContext[key]) return true;
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: "getStates",
+    value: function getStates(module, options) {
+      var ret = {};
+      this.checkModuleOptions(options).forEach(function (_ref7) {
+        var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
+            k = _ref8[0],
+            v = _ref8[1];
+
+        v = module[k];
+        if (!v) return;
+        ret[k] = v.data();
+        var extData = v.extData();
+        extData && (ret["".concat(k, "Ext")] = extData);
+      });
+      return ret;
+    } // static
+    // ---------------
+
+  }, {
+    key: "_genStateId",
     value: function _genStateId(stateKey, ownerId) {
       if (!stateKey || !ownerId) return;
       return "*".concat(stateKey, "@").concat(ownerId);
@@ -133,20 +238,20 @@ function () {
         return app.State.getStateById(aoptions);
       }
 
-      var _ref = aoptions || {
+      var _ref9 = aoptions || {
         state: app.State
       },
-          state = _ref.state,
-          options = (0, _objectWithoutProperties2.default)(_ref, ["state"]);
+          state = _ref9.state,
+          options = (0, _objectWithoutProperties2.default)(_ref9, ["state"]);
 
       var _id = options._id || State._genStateId(stateKey, ownerId);
 
-      var _ref2 = (0, _typeof2.default)(state) === 'object' ? state : {
+      var _ref10 = (0, _typeof2.default)(state) === 'object' ? state : {
         constructor: state
       },
-          _ref2$constructor = _ref2.constructor,
-          constructor = _ref2$constructor === void 0 ? app.State : _ref2$constructor,
-          props = (0, _objectWithoutProperties2.default)(_ref2, ["constructor"]);
+          _ref10$constructor = _ref10.constructor,
+          constructor = _ref10$constructor === void 0 ? app.State : _ref10$constructor,
+          props = (0, _objectWithoutProperties2.default)(_ref10, ["constructor"]);
 
       if (State.states[_id]) {
         app.log.error('state _id dup:', _id);
@@ -165,7 +270,7 @@ function () {
   }]);
 
   function State(app, _id) {
-    var _this = this;
+    var _this2 = this;
 
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     (0, _classCallCheck2.default)(this, State);
@@ -189,15 +294,15 @@ function () {
 
     this.options = options;
     if (this.options.initialization === undefined) this.options.initialization = {};
-    Object.entries(this.options).forEach(function (_ref3) {
-      var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
-          k = _ref4[0],
-          v = _ref4[1];
+    Object.entries(this.options).forEach(function (_ref11) {
+      var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
+          k = _ref12[0],
+          v = _ref12[1];
 
-      return k.indexOf('onState') === 0 && _this.app.event.on(_this._id, k, v, _this._id);
+      return k.indexOf('onState') === 0 && _this2.app.event.on(_this2._id, k, v, _this2._id);
     });
     this.app.event.on(this._id, 'onStateStop', function () {
-      _this.destructor();
+      _this2.destructor();
     }, this._id);
   }
 

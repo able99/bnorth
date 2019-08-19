@@ -179,14 +179,14 @@ class RouterComponent extends React.Component {
     let time = (new Date()).getTime();
     let finish = false;
     let _run = ()=>{
-      if(finish) { deactiveEl.style.display = 'none'; router._updateRouterInfo(router._history.location); return }
+      if(finish) { deactiveEl&&(deactiveEl.style.display='none'); router._updateRouterInfo(router._history.location); return }
 
       let diff = (new Date()).getTime() - time;
       let percent = diff*100/200;
       if(percent>=100) { percent = 100; finish = true }
 
       activeEl.style.webkitTransform = "translate3d("+(router._transStatus==='push'?(100-percent):(percent-100))+"%, 0, 0)";
-      deactiveEl.style.webkitTransform = "translate3d("+((router._transStatus==='push'?-1:1)*percent)+"%, 0, 0)";
+      deactiveEl&&(deactiveEl.style.webkitTransform="translate3d("+((router._transStatus==='push'?-1:1)*percent)+"%, 0, 0)");
 
       requestAnimationFrame(_run);
     }
@@ -220,7 +220,7 @@ class RouterComponent extends React.Component {
         route: { 
           ...pageInfo, subPageInfos: undefined, popLayerInfos: undefined,
           isActive, 
-          popLayers: popLayerInfos.map(v=>this._renderPopLayer(v)), 
+          popLayers: popLayerInfos.map(v=>this._renderPopLayer(app, v.options._id)), 
           subPages: Object.entries(subPageInfos).reduce((v1, [k,v])=>{v1[k]=this._renderPage(v, activeId, focusId); return v1},{}),
         }, 
       };
@@ -230,9 +230,8 @@ class RouterComponent extends React.Component {
     }
   }
 
-  _renderPopLayer(props) {
-    let { app } = this.props;
-    return <app.PopLayer key={props.options._id} app={app} {...props} />;
+  _renderPopLayer(app, _id) {
+    return <app.PopLayer key={_id} app={app} id={_id} />;
   }
 
   render() {
@@ -243,7 +242,7 @@ class RouterComponent extends React.Component {
     return (
       <React.Fragment>
         {_pageInfos.map(v=>this._renderPage(v, _activeId, _focusId))}
-        {app.router._getPopLayerNoPageId().map(v=>this._renderPopLayer({...v}, _activeId, _focusId))}
+        {app.router._getPopLayerNoPageId().map(v=>this._renderPopLayer(app, v.options._id))}
       </React.Fragment>
     );
   }
@@ -444,8 +443,13 @@ class Router {
     let transStatus = undefined;
 
     /* route */
+    console.log(999);
+    let isPop = this._history.action==='POP';
+    let isFirst = this._pageInfos.length === 0;
+
     let level = 0;
     for (let pagePathName of location.pathnames) {
+
       pathName = join(pathName, decodeURIComponent(pagePathName));
       let [pageName, ...pageParams] = pagePathName.split(ParamSpe);
       let _id = PageSign+pathName;
@@ -469,6 +473,29 @@ class Router {
         pageInfo.params[v] = pageInfo.pageParams[i]?decodeURIComponent(pageInfo.pageParams[i]):null;
         if(this.passParams) params[v] = pageInfo.params[v];
       })
+
+
+      let isLast = pagePathName === location.pathnames[location.pathnames.length-1];
+      let prevOne = this._pageInfos.find(vv=>vv._id===pageInfo._id);
+      let isNew = !prevOne;
+      let isPrevActive = pageInfo._id===this._activeId&&!isLast;
+      let isReactive = pageInfo._id!==this._activeId&&isLast;
+      let status;
+      if(isFirst) {
+        status = isLast?'normal':'waitting';
+      }else if(isNew&&isLast){
+        status = isPop?'popin':'pushin'
+      }else if(isNew&&!isLast) {
+        status = 'waitting';
+      }else if(isPrevActive){
+        status = isPop?'popout':'pushout';
+      }else if(isReactive){
+        status = 'popin'
+      }else {
+        status = isLast?'normal':'background';
+      }
+      console.log(pageInfo._id, status);
+
 
       let subNo = 0;
       for (let [k,v] of Array.isArray(routeDefine.subPages)?routeDefine.subPages.map((v,i)=>[v,v]):Object.entries(routeDefine.subPages||{})) {
@@ -533,6 +560,9 @@ class Router {
       deactivePageInfos.isActive = transStatus === 'push'?'background':'unmount';
       deactivePageInfos.subPageInfos&&Object.entries(deactivePageInfos.subPageInfos).forEach(([k,v])=>v.isActive=deactivePageInfos.isActive);
     }
+
+    
+
     this._pageInfos = pageInfos;
     this._focusId = focusId;
     this._activeId = activeId;
@@ -554,18 +584,18 @@ class Router {
   }
 
   _getPopLayerNoPageId() {
-    return this._popLayerInfos.filter(({options})=>!options._idPage);
+    return this._popLayerInfos.filter(({options, remove})=>!remove&&!options._idPage);
   }
 
   _getPopLayerByPageId(_id) {
-    return this._popLayerInfos.filter(({options})=>options._idPage===_id);
+    return this._popLayerInfos.filter(({options, remove})=>!remove&&options._idPage===_id);
   }
 
   _removePopLayerByPageId(_id) {
     this._getPopLayerByPageId(_id).forEach(v=>this.removePopLayer(v.options._id))
   }
 
-  // pages poplayer interface
+  // pages interface
   // ---------------------------------------
   /**
    * 获取页面实例
@@ -597,6 +627,9 @@ class Router {
     return this._pages;
   }
 
+
+  // poplayer interface
+  // ---------------------------------------
   /**
    * 生成弹出层 id
    * @param {module:router~PopLayerOptions} - 配置参数
@@ -614,22 +647,20 @@ class Router {
    * @returns {string} 弹出层 id 
    */
   addPopLayer(content, props={}, options={}) {
-    if(!content) return;
     options._id = this.genPopLayerId(options);
     let popLayer = this.getPopLayerInfo(options._id);
 
     if(!popLayer) {
-      options.states = options.states||{};
-      if(options.data) options.states.stateData = this.app.State.createState(this.app, options.data===true?undefined:options.data, 'stateData', options._id);
+      if(!content) return;
       this._popLayerInfos.push({ content, props, options });
-      options.onAdd && options.onAdd(options._id);
+      this._updateRouterInfo(this._history.location);
     }else{
-      popLayer.content = content;
-      popLayer.props = props;
-      popLayer.options = options;
+      content&&(popLayer.content=content);
+      popLayer.props = {...popLayer.props, ...props};
+      popLayer.options = {...popLayer.options, ...options};
+      popLayer.instance&&popLayer.instance.setState({});
     }
     
-    this._updateRouterInfo(this._history.location);
     return options._id;
   }
 
@@ -638,13 +669,9 @@ class Router {
    * @param {!string} - 弹出层 id
    */
   removePopLayer(_id) {
-    let index = this._popLayerInfos.findIndex(v=>v.options._id===_id);
-    if(index<0) return;
-
-    this._popLayerInfos[index].options.data && this._popLayerInfos[index].options.states.stateData.destructor();
-    this._popLayerInfos[index].options.onRemove && this._popLayerInfos[index].options.onRemove();
-    this._popLayerInfos.splice(index, 1);
-
+    let info = this.getPopLayerInfo(_id);
+    if(!info) return;
+    info.remove = true;
     this._updateRouterInfo(this._history.location);
   }
 
@@ -663,19 +690,6 @@ class Router {
    */
   getPopLayerInfos() {
     return this._popLayerInfos;
-  }
-
-  /**
-   * 获取弹出层的状态数据
-   * @param {string} - 弹出层 id
-   * @returns {object}
-   */
-  getPopLayerStates(_id) {
-    let { options:{states}={} } = this.getPopLayerInfo(_id)||{};
-    if(!states) return {};
-    let stateProps = {};
-    Object.entries(states).forEach(([k,v])=>stateProps[k]=v.data());
-    return stateProps;
   }
   
 

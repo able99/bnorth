@@ -164,15 +164,14 @@ var _default = {
         x = y = undefined;
 
         if (scrollEl && scrollEl.pulldown) {
-          console.log(222);
           var evt = document.createEvent("Events");
           evt.initEvent('scroll', true, true);
-          scrollEl.pulldown = false;
+          scrollEl.pulldown = String(scrollEl.pulldown);
           scrollEl.dispatchEvent(evt);
-          scrollEl.pulldown = undefined;
         }
 
         if (scrollEl && scrollEl.pullup) scrollEl.pullup = undefined;
+        if (scrollEl && scrollEl.pulldown) scrollEl.pulldown = undefined;
         scrollEl = undefined;
         direction = undefined;
         if (edgeShadow) edgeShadow.remove();

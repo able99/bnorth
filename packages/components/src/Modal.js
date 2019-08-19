@@ -10,10 +10,10 @@ let Modal = aprops=>{
   let {
     type, rewind, onClose, onFinished,
     containerProps, headerProps, title, close, bodyProps, footerProps, buttons,
-    classNamePre, stylePre, children, ...props
+    classNamePre, stylePre, children, poplayer, ...props
   } = BaseComponent(aprops, Modal);
   buttons = buttons[type]||[];
-  children = typeof(children)==='function'?children(this):children;
+  children = typeof(children)==='function'?children(poplayer):children;
 
   classNamePre = {
     'position-relative backface-hidden overflow-a-hidden': true,
@@ -62,72 +62,40 @@ export default Modal;
 
 
 
-
-
-
 export let modal = {
   pluginName: 'modal',
   pluginDependence: [],
 
   onPluginMount(app) {
     app.modal = {
-      show: (Content, { onAction, options={}, ...props}={})=>{
-        let isNew = true;
-        if(options._id) {
-          let {content:prevContent, props:prevProps={}, options:prevOptions={}} = app.router.getPopLayerInfo(options._id)||{};
-          Content = Content||prevContent;
-          if(!Content) return;
-          if(prevContent) isNew = false;
-          props = { ...prevProps, ...props }
-          options = { ...prevOptions, ...options }
-        }
-
-        if(isNew) {
-          if(!options.hasOwnProperty('_idPage')) options._idPage = app.router.getPage()._id;
-          if(!options.hasOwnProperty('isModal')) options.isModal = true; 
-          options._id = app.router.genPopLayerId(options);
-          options.onAdd = _id=>app.keyboard.on(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
-          options.onRemove = _id=>app.keyboard.off(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
-          props.rewind = false;
-          props.onClose = index=>app.modal.close(options._id, index);
-        }
-
-        if(onAction) options.onAction = onAction;
-        let content = typeof Content==='function'?props=><Modal {...props.props}><Content {...props}/></Modal>:<Modal>{Content}</Modal>;
-
-        if(isNew) {
-          window.setTimeout(()=>app.router.addPopLayer(content , props, options), 0);
-          return app.router.addPopLayer(<Modal />, {}, options);
-        }else{
-          return app.router.addPopLayer(content , props, options);
-        }
+      show: (content, props, options={})=>{
+        return options._id = app.router.addPopLayer( Modal, 
+          {children: content, onClose: index=>app.modal.close(options._id, index), ...props}, 
+          {_idPage: app.router.getPage()._id, isModal: true, ...options}
+        );
+        //   options.onAdd = _id=>app.keyboard.on(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
+        //   options.onRemove = _id=>app.keyboard.off(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
       },
       
       close: (_id, index)=>{
-        let {options:{onAction}={}} = app.router.getPopLayerInfo(_id)||{};
+        let {props:{onAction}={}} = app.router.getPopLayerInfo(_id)||{};
         if(onAction&&onAction(index, _id)===false) return;
         return app.modal.remove(_id);
       },
 
       remove: _id=>{
-        if(!_id) return;
         let {content, props, options} = app.router.getPopLayerInfo(_id)||{};
         if(!content) return;
-
         props.rewind = true;
-        props.onFinished = ()=>{
-          app.router.removePopLayer(_id);
-          app.context.clear(_id);
-        }
-
+        props.onFinished = ()=>{ app.router.removePopLayer(_id) }
         return app.router.addPopLayer(content, props, options);
       },
     };
 
     app.modal._modalShow = app.render.modalShow;
     app.modal._modalClose = app.render.modalClose;
-    app.render.modalShow = (content, options)=>app.modal.show(content, options);
-    app.render.modalClose = (_id)=>app.modal.close(_id);
+    app.render.modalShow = (...args)=>app.modal.show(...args);
+    app.render.modalClose = (...args)=>app.modal.close(...args);
   },
 
   onPluginUnmount(app) {

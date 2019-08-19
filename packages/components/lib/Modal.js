@@ -1,8 +1,8 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -27,8 +27,6 @@ var _Icon = require("./Icon");
 
 var _Button = _interopRequireDefault(require("./Button"));
 
-var _this = void 0;
-
 var _Modal = function Modal(aprops) {
   var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Modal),
       type = _BaseComponent.type,
@@ -45,10 +43,11 @@ var _Modal = function Modal(aprops) {
       classNamePre = _BaseComponent.classNamePre,
       stylePre = _BaseComponent.stylePre,
       children = _BaseComponent.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "rewind", "onClose", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "classNamePre", "stylePre", "children"]);
+      poplayer = _BaseComponent.poplayer,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "rewind", "onClose", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "classNamePre", "stylePre", "children", "poplayer"]);
 
   buttons = buttons[type] || [];
-  children = typeof children === 'function' ? children(_this) : children;
+  children = typeof children === 'function' ? children(poplayer) : children;
   classNamePre = (0, _objectSpread2.default)({
     'position-relative backface-hidden overflow-a-hidden': true,
     'square-full': type === 'popup',
@@ -140,91 +139,39 @@ var modal = {
   pluginDependence: [],
   onPluginMount: function onPluginMount(app) {
     app.modal = {
-      show: function show(Content) {
-        var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-            onAction = _ref.onAction,
-            _ref$options = _ref.options,
-            options = _ref$options === void 0 ? {} : _ref$options,
-            props = (0, _objectWithoutProperties2.default)(_ref, ["onAction", "options"]);
-
-        var isNew = true;
-
-        if (options._id) {
-          var _ref2 = app.router.getPopLayerInfo(options._id) || {},
-              prevContent = _ref2.content,
-              _ref2$props = _ref2.props,
-              prevProps = _ref2$props === void 0 ? {} : _ref2$props,
-              _ref2$options = _ref2.options,
-              prevOptions = _ref2$options === void 0 ? {} : _ref2$options;
-
-          Content = Content || prevContent;
-          if (!Content) return;
-          if (prevContent) isNew = false;
-          props = (0, _objectSpread2.default)({}, prevProps, props);
-          options = (0, _objectSpread2.default)({}, prevOptions, options);
-        }
-
-        if (isNew) {
-          if (!options.hasOwnProperty('_idPage')) options._idPage = app.router.getPage()._id;
-          if (!options.hasOwnProperty('isModal')) options.isModal = true;
-          options._id = app.router.genPopLayerId(options);
-
-          options.onAdd = function (_id) {
-            return app.keyboard.on(options._id, 'keydown', function (e) {
-              return e.keyCode === 27 && app.modal.close(options._id);
-            });
-          };
-
-          options.onRemove = function (_id) {
-            return app.keyboard.off(options._id, 'keydown', function (e) {
-              return e.keyCode === 27 && app.modal.close(options._id);
-            });
-          };
-
-          props.rewind = false;
-
-          props.onClose = function (index) {
+      show: function show(content, props) {
+        var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+        return options._id = app.router.addPopLayer(_Modal, (0, _objectSpread2.default)({
+          children: content,
+          onClose: function onClose(index) {
             return app.modal.close(options._id, index);
-          };
-        }
-
-        if (onAction) options.onAction = onAction;
-        var content = typeof Content === 'function' ? function (props) {
-          return _react.default.createElement(_Modal, props.props, _react.default.createElement(Content, props));
-        } : _react.default.createElement(_Modal, null, Content);
-
-        if (isNew) {
-          window.setTimeout(function () {
-            return app.router.addPopLayer(content, props, options);
-          }, 0);
-          return app.router.addPopLayer(_react.default.createElement(_Modal, null), {}, options);
-        } else {
-          return app.router.addPopLayer(content, props, options);
-        }
+          }
+        }, props), (0, _objectSpread2.default)({
+          _idPage: app.router.getPage()._id,
+          isModal: true
+        }, options)); //   options.onAdd = _id=>app.keyboard.on(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
+        //   options.onRemove = _id=>app.keyboard.off(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
       },
       close: function close(_id, index) {
-        var _ref3 = app.router.getPopLayerInfo(_id) || {},
-            _ref3$options = _ref3.options;
+        var _ref = app.router.getPopLayerInfo(_id) || {},
+            _ref$props = _ref.props;
 
-        _ref3$options = _ref3$options === void 0 ? {} : _ref3$options;
-        var onAction = _ref3$options.onAction;
+        _ref$props = _ref$props === void 0 ? {} : _ref$props;
+        var onAction = _ref$props.onAction;
         if (onAction && onAction(index, _id) === false) return;
         return app.modal.remove(_id);
       },
       remove: function remove(_id) {
-        if (!_id) return;
-
-        var _ref4 = app.router.getPopLayerInfo(_id) || {},
-            content = _ref4.content,
-            props = _ref4.props,
-            options = _ref4.options;
+        var _ref2 = app.router.getPopLayerInfo(_id) || {},
+            content = _ref2.content,
+            props = _ref2.props,
+            options = _ref2.options;
 
         if (!content) return;
         props.rewind = true;
 
         props.onFinished = function () {
           app.router.removePopLayer(_id);
-          app.context.clear(_id);
         };
 
         return app.router.addPopLayer(content, props, options);
@@ -233,12 +180,16 @@ var modal = {
     app.modal._modalShow = app.render.modalShow;
     app.modal._modalClose = app.render.modalClose;
 
-    app.render.modalShow = function (content, options) {
-      return app.modal.show(content, options);
+    app.render.modalShow = function () {
+      var _app$modal;
+
+      return (_app$modal = app.modal).show.apply(_app$modal, arguments);
     };
 
-    app.render.modalClose = function (_id) {
-      return app.modal.close(_id);
+    app.render.modalClose = function () {
+      var _app$modal2;
+
+      return (_app$modal2 = app.modal).close.apply(_app$modal2, arguments);
     };
   },
   onPluginUnmount: function onPluginUnmount(app) {

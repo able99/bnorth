@@ -18,13 +18,10 @@ export let Tabx = props=>{
     <Panel full page>
       <NavBar bc-border-set-bottom-><NavBar.Item name="left" onClick={()=>app.router.back()} /><NavBar.Title>{route._idSubPage}</NavBar.Title></NavBar>
       
-      <TabBar bc-flex-sub-flex-extend bp-container-bp-panelItem-className="scrollable-y-" 
+      <TabBar 
+        bc-flex-sub-flex-extend bp-container-bp-panelItem-className="scrollable-y-" 
         bp-container-bp-panelItem-data-b-pulldown 
-
-        bp-container-bp-panelItem-onScroll={e=>{
-          console.log(111, e.currentTarget.pulldown);
-          if(e.currentTarget.pulldown)app.loader.pulldown.show(e.currentTarget.pulldown)}
-          }>
+        bp-container-bp-panelItem-onScroll={e=>{if(e.currentTarget.pulldown)app.pulldown.show(e.currentTarget.pulldown)}}>
         <TabBar.Item title="tab1">
           {listGener(50, {pre: route._idSubPage, clickable: true})}
         </TabBar.Item>

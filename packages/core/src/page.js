@@ -219,21 +219,18 @@ class Page extends React.Component {
     let { app, route:{routeDefine:{component, controller}={}} } = this.props;
     let acontroller = controller||component.controller||{};
     let controllerObj = typeof(acontroller)==='function'?acontroller(app, this):acontroller;
+    this.options = controllerObj;
 
     if(!controllerObj.stateData) controllerObj.stateData = undefined;
     if(!controllerObj.actionGoBack) controllerObj.actionGoBack = ()=>app.router.back();
 
-    Object.entries(controllerObj).forEach(([k,v])=>{
-      if(k.startsWith('state')||k.startsWith('_state')) {
-        this[k] = app.State.createState(app, v, k, this._id);
-        if(!this[k]) { app.render.panic(v, {title: 'no state', _id: this._id}); return } 
-        if(typeof v==='string') return;
-        app.event.on(this._id, 'onPageStart', (page,isActive)=>{app.event.emit(this[k]._id, 'onStateStart', this[k]._id, isActive)}, this[k]._id);
-        app.event.on(this._id, 'onPageActive', (page,onStart)=>{app.event.emit(this[k]._id, 'onStateActive', this[k]._id, onStart)}, this[k]._id);
-        app.event.on(this._id, 'onPageInactive', (page,onStop)=>{app.event.emit(this[k]._id, 'onStateInactive', this[k]._id, onStop)}, this[k]._id);
-        app.event.on(this._id, 'onPageStop', (page)=>{app.event.emit(this[k]._id, 'onStateStop', this[k]._id)}, this[k]._id);
-      }
-    });
+    app.State.attachStates(app, this, this._id, this.options, (k,v,state)=>{
+      if(typeof v==='string') return;
+      app.event.on(this._id, 'onPageStart', (page,isActive)=>{app.event.emit(this[k]._id, 'onStateStart', this[k]._id, isActive)}, this[k]._id);
+      app.event.on(this._id, 'onPageActive', (page,onStart)=>{app.event.emit(this[k]._id, 'onStateActive', this[k]._id, onStart)}, this[k]._id);
+      app.event.on(this._id, 'onPageInactive', (page,onStop)=>{app.event.emit(this[k]._id, 'onStateInactive', this[k]._id, onStop)}, this[k]._id);
+      app.event.on(this._id, 'onPageStop', (page)=>{app.event.emit(this[k]._id, 'onStateStop', this[k]._id)}, this[k]._id);
+    })
 
     Object.entries(controllerObj).forEach(([k,v])=>{
       if(k.startsWith('state')||k.startsWith('_state')) {
@@ -262,40 +259,6 @@ class Page extends React.Component {
 
     this._controllerBinded = true;
     this.forceUpdate();
-  }
-
-  _getStateKeys() {
-    return Object.entries(this).filter(([k,v])=>/_?state\w+/.test(k)).map(([k,v])=>v._id);
-  }
-
-  _getPageComponentProps() {
-    let { app, _id, route } = this.props;
-    let states = Object.entries(this)
-      .filter(([k,v])=>/_?state\w+/.test(k))
-      .reduce((v1, [k,v])=>{
-        v1[k] = v.data();
-        let extData = v.extData();
-        if(extData) v1[`${k}Ext`] = extData;
-        return v1;
-      },{})
-
-    return { app, _id, route, page: this, ...states }
-  }
-
-  _getPageFrameProps() {
-    let { _id, route } = this.props;
-
-    return {
-      'data-page': _id,
-      'data-page-sub': route.isSubPage?route.routeName:undefined,
-      style: route.isSubPage?{
-        width: '100%', height: '100%',
-      }:{
-        position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, background: 'white',
-        'WebkitBackfaceVisibility': 'hidden', 'MozBackfaceVisibility': 'hidden',  'msBackfaceVisibility': 'hidden', 
-        'backfaceVisibility': 'hidden',  'WebkitPerspective': 1000, 'MozPerspective': 1000, 'msPerspective': 1000, 'perspective': 1000,
-      },
-    }
   }
   
   _pageInit() {
@@ -360,7 +323,7 @@ class Page extends React.Component {
       this.app.event.emit(this._id, 'onPageUpdate', this._id, 'route');
       return true;
     }
-    for(let k of this._getStateKeys()) if(this.props.context[k]!==nextProps.context[k]) {
+    if(this.app.State.checkStates(this, this.props.context, nextProps.context, this.options)) {
       this.app.event.emit(this._id, 'onPageUpdate', this._id, 'state');
       return true;
     }
@@ -368,18 +331,42 @@ class Page extends React.Component {
   }
 
   render() {
-    let { app, _id, route:{isActive,routeDefine,subPages,popLayers}, ...props } = this.props;
+    let { app, _id, route, ...props } = this.props;
+    let {isActive,routeDefine,subPages,popLayers} = route;
     app.log.debug('page render', _id);
     this._actionNum = 0;
 
+    let aprops = {app, _id, route, page: this, ...this.options&&app.State.getStates(this, this.options)}
+    
     return (
-      <main {...this._getPageFrameProps()}>
-        {this._controllerBinded&&(!app.router.transOutBlank||isActive!=='unmount')?<routeDefine.component {...props} {...this._getPageComponentProps()}>{subPages}</routeDefine.component>:null}
+      <Page.Frame id={_id} route={route}>
+        {this._controllerBinded&&(!app.router.transOutBlank||isActive!=='unmount')?<routeDefine.component {...aprops} {...props}>{subPages}</routeDefine.component>:null}
         {this._controllerBinded&&(!app.router.transOutBlank||isActive!=='unmount'?popLayers:null)}
-      </main>
+      </Page.Frame>
     )
   }
 }
 
-
 export default Page;
+
+
+
+
+
+Page.Frame = aprops=>{
+  let { id:_id, route, children } = aprops;
+
+  let props = {
+    'data-page': _id,
+    'data-page-sub': route.isSubPage?route.routeName:undefined,
+    style: route.isSubPage?{
+      width: '100%', height: '100%',
+    }:{
+      position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, background: 'white',
+      'WebkitBackfaceVisibility': 'hidden', 'MozBackfaceVisibility': 'hidden',  'msBackfaceVisibility': 'hidden', 
+      'backfaceVisibility': 'hidden',  'WebkitPerspective': 1000, 'MozPerspective': 1000, 'msPerspective': 1000, 'perspective': 1000,
+    },
+  }
+
+  return <main {...props}>{children}</main>
+}

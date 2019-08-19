@@ -2,15 +2,17 @@
  * @module
  */
 import React from 'react';
+import '@bnorth/rich.css/css/animation.css';
 import '@bnorth/rich.css/css/kf.spin.css';
 import '@bnorth/rich.css/css/kf.flyout.right.css';
 import { animation, transform, transiton, transformOrigin } from '@bnorth/rich.css/lib/styles/animation';
-import animationFrame, { afSpin } from '@bnorth/rich.css/lib/styles/animationFrame';
-import BaseComponent, { domFindNode } from './BaseComponent';
+import { afSpin } from '@bnorth/rich.css/lib/styles/animationFrame';
+import BaseComponent from './BaseComponent';
 import AnimationFrame from './AnimationFrame';
 import Panel from './Panel';
+import Backdrop from './Backdrop';
 
- 
+
 /**
  * 进度显示组件
  * @component 
@@ -72,9 +74,6 @@ Loader.isBnorth = true;
 Loader.defaultProps['b-precast'] = {}
 export default Loader;
 
-
-
-
 /**
  * 进度显示组件的线性样式
  * @component 
@@ -105,7 +104,6 @@ Object.defineProperty(Loader,"Line",{ get:function(){ return Line }, set:functio
 Line.isBnorth = true;
 Line.defaultProps['b-precast'] = {}
 
-
 /**
  * 进度显示组件的圆环样式
  * @component 
@@ -114,22 +112,6 @@ Line.defaultProps['b-precast'] = {}
  * @augments module:Loader.Loader
  */
 let Circle = class extends React.Component{
-  // componentDidMount() {
-  //   let element = domFindNode(this);
-  //   element = element.querySelectorAll('circle')[1]
-  //   let [stop, start] = animationFrame(element, afSpin, {first: !this.props.isProgress});
-  //   this.stop = stop;
-  //   this.start = start;
-  // }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   if(prevProps.isProgress !== this.props.isProgress && this.props.isProgress) { 
-  //     this.stop();
-  //   }else if(prevProps.isProgress !== this.props.isProgress && !this.props.isProgress) { 
-  //     this.start();
-  //   }
-  // }
-
   render() {
     let {
       isProgress, progress, timeout, color, colorReverse,
@@ -159,11 +141,13 @@ Object.defineProperty(Loader,"Circle",{ get:function(){ return Circle }, set:fun
 Circle.isBnorth = true;
 Circle.defaultProps['b-precast'] = {}
 
-
 Loader.defaultProps.types = {
   line: Line,
   circle: Circle,
 }
+
+
+
 
 
 /**
@@ -216,130 +200,210 @@ PanelLoader.defaultProps['b-precast'] = {}
 
 
 
-export let OverlayLoader = aprops=>{
-  let { 
-    progress, top, height, 
-    classNamePre, ...props 
-  } = BaseComponent(aprops, OverlayLoader);
 
-  classNamePre = { 'position-absolute offset-h-start width-full': true, ...classNamePre }
-
+  
+export let LoaderPopLayer = aprops=>{
+  let { progress, timeout, 'b-theme':bTheme="primary", top, height, innerProps, poplayer, ...props } = BaseComponent(aprops, LoaderPopLayer);
+  
   return (
-    <Panel 
-      type="line" isProgress progress={progress} bs-top={top} bs-height={height} 
-      component={Loader} classNamePre={classNamePre} {...props} />
-  )
-}
-
-OverlayLoader.defaultProps = {}
-OverlayLoader.defaultProps.top = 0;
-OverlayLoader.defaultProps.height = 3;
-
-Object.defineProperty(Loader,"OverlayLoader",{ get:function(){ return OverlayLoader }, set:function(val){ OverlayLoader = val }})
-OverlayLoader.isBnorth = true;
-OverlayLoader.defaultProps['b-precast'] = {}
-
-
-
-export let PullDownLoader = aprops=>{
-  let { 
-    progress, top, 
-    containerProps, ...props 
-  } = BaseComponent(aprops, OverlayLoader);
-
-  if(!progress||progress<0) return null;
-  return (
-    <Panel bc-padding-a- bc-bg-color-white bc-border-set-a- bc-position-absolute bc-text-align-center bc-pointer-events-none bs-top={top} bs-left={0} bs-right={0} bs-width="100%" {...containerProps}>
-      <Panel type="circle" isProgress={progress<100} progress={progress} component={Loader} {...props} />
+    <Panel bc-position-absolute bc-offset-h-start bc-width-full bs-top={top} bs-height={height} {...props}>
+      <Panel b-style="solid" b-theme={bTheme} bc-height-full bs-width={(progress||0)+'%'} style={transiton(timeout, {property: 'width'})} />
     </Panel>
   )
 }
 
-PullDownLoader.defaultProps = {}
-PullDownLoader.defaultProps.top = 50;
+LoaderPopLayer.defaultProps = {}
+LoaderPopLayer.defaultProps.top = 0;
+LoaderPopLayer.defaultProps.height = 3;
+LoaderPopLayer.defaultProps.timeout = '1s';
 
-Object.defineProperty(Loader,"PullDownLoader",{ get:function(){ return PullDownLoader }, set:function(val){ PullDownLoader = val }})
-PullDownLoader.isBnorth = true;
-PullDownLoader.defaultProps['b-precast'] = {}
+Object.defineProperty(Loader,"LoaderPopLayer",{ get:function(){ return LoaderPopLayer }, set:function(val){ LoaderPopLayer = val }})
+LoaderPopLayer.isBnorth = true;
+LoaderPopLayer.defaultProps['b-precast'] = {}
 
 
-export let loader = {
+
+export let loader = (app, options={})=>({
   _id: 'loader',
 
   onPluginMount(app) {
     app.loader = {
       count: 0, 
-      timeoutPrgress: '20000',
-      timeoutSet: '200',
-      reset: (progress=0, cb, aprops, aoptions)=>{
-        let {content, props={}, options={}} = app.router.getPopLayerInfo(app.loader._id)||{};
-        if(!content){
-          app.loader._id = app.router.addPopLayer(
-            <OverlayLoader timeout={app.loader.timeoutSet} isProgress progress={progress} />, 
-            aprops, aoptions
-          );
-        }else{
-          app.loader._id = app.router.addPopLayer(
-            content, 
-            {...props, ...aprops, progress, timeout: app.loader.timeoutSet}, 
-            {...options, ...aoptions}
-          );
+      timeout: options.timeout||20000,
+      reset: (progress=0, props, options)=>{
+        if(app.loader.timer) {window.clearTimeout(app.loader.timer); app.loader.timer=null}
+        app.loader._id = app.router.addPopLayer(LoaderPopLayer, {...props, progress}, {...options, _id: app.loader._id});
+
+        if(progress>100&&!app.loader.count) {
+          app.router.removePopLayer(app.loader._id); 
+          app.loader._id = undefined; 
+        } else if(progress>100&&app.loader.count) {
+          if(app.loader.timer) {window.clearTimeout(app.loader.timer); app.loader.timer=null}
+        }else {
+          app.loader.timer = window.setTimeout(()=>app.loader.reset(progress+100000/app.loader.timeout), 1000);
         }
-
-        setTimeout(()=>{
-          let {content, props={}, options={}} = app.router.getPopLayerInfo(app.loader._id)||{};
-          if(content){
-            props.progress = 100;
-            props.timeout = app.loader.timeoutPrgress;
-            app.loader._id = app.router.addPopLayer(content, props, options);
-            cb&&cb();
-          }
-        }, app.loader.timeoutSet);
-
-        return app.loader._id;
       },
-      show: ({options, ...props}={})=>{
+      show: (props, options)=>{
         app.loader.count++;
-        return app.loader.reset(0, null, props, options);
+        return app.loader.reset(0, props, options);
       },
       close: force=>{
         app.loader.count = force?0:Math.max(--app.loader.count,0);
-        return app.loader.reset(app.loader.count?10:100, ()=>{
-          if(!app.loader.count) {
-            app.router.removePopLayer(app.loader._id); 
-            app.loader._id = undefined; 
-          }
-        });
-      },
-      pulldown: progress=>{
-        app.loader._id = app.router.addPopLayer(
-          <PullDownLoader progress={progress} />, 
-        );
+        return app.loader.reset(app.loader.count?10:100);
       },
     };
 
     app.loader._loader = app.render.loader;
-    app.render.loader = (show, options)=>show?app.loader.show(options):app.loader.close();
-
-    app.loader.pulldown = {
-      show: (progress=0, aprops, aoptions)=>{
-        let {content, props={}, options={}} = app.router.getPopLayerInfo(app.loader.pulldown._id)||{};
-        if(!content){
-          app.loader.pulldown._id = app.router.addPopLayer(<PullDownLoader progress={progress} />, aprops, aoptions);
-        }else{
-          app.loader.pulldown._id = app.router.addPopLayer(content, {...props, ...aprops, progress}, {...options, ...aoptions});
-        }
-        return app.loader.pulldown._id;
-      },
-      close: ()=>{
-        app.router.removePopLayer(app.loader.pulldown._id); 
-        app.loader.pulldown._id = undefined; 
-      },
-    };
+    app.render.loader = (show, ...args)=>show?app.loader.show(...args):app.loader.close();
   },
 
   onPluginUnmount(app) {
     app.render.loader = app.loader._loader;
     delete app.loader;
+  },
+})
+
+
+
+
+
+export let PullDownPopLayer = aprops=>{
+  let { progress, height=100, poplayer, children, ...props } = BaseComponent(aprops, PullDownPopLayer);
+  if(!progress||progress<0) return null;
+  children = typeof(children)==='function'?children(poplayer):children;
+
+  return (
+    <Panel 
+      bc-padding-a- bc-bg-color-white bc-border-set-a- bc-border-radius-rounded bc-line-height-0 bc-position-absolute bc-offset-left-center bc-pointer-events-none bs-left="50%" 
+      bs-top={Math.min(height, progress)} style={typeof(progress)!=='string'&&{...transform('rotate', progress*(360/height)%360+'deg')}} bc-transiton-set- 
+      bc-animation-name-spin={Boolean(typeof(progress)==='string'&&progress>=height)} bc-animation-iteration-count-infinite bc-animation-duration-1000
+      {...props}>
+      {children||<svg 
+        version="1.1" viewBox="0 0 1024 1024" preserveAspectRatio="none" stroke="currentcolor" fill="currentcolor"
+        bs-width="1em" bs-height="1em" className="display-inline width-1em height-1em">
+        <path d="M1024 384h-384l143.53-143.53c-72.53-72.526-168.96-112.47-271.53-112.47s-199 39.944-271.53 112.47c-72.526 72.53-112.47 168.96-112.47 271.53s39.944 199 112.47 271.53c72.53 72.526 168.96 112.47 271.53 112.47s199-39.944 271.528-112.472c6.056-6.054 11.86-12.292 17.456-18.668l96.32 84.282c-93.846 107.166-231.664 174.858-385.304 174.858-282.77 0-512-229.23-512-512s229.23-512 512-512c141.386 0 269.368 57.326 362.016 149.984l149.984-149.984v384z" />
+      </svg>}
+    </Panel>
+  )
+}
+
+PullDownPopLayer.defaultProps = {}
+
+Object.defineProperty(Loader,"PullDownPopLayer",{ get:function(){ return PullDownPopLayer }, set:function(val){ PullDownPopLayer = val }})
+PullDownPopLayer.isBnorth = true;
+PullDownPopLayer.defaultProps['b-precast'] = {}
+
+
+
+export let pulldown = {
+  _id: 'pulldown',
+
+  onPluginMount(app) {
+    app.pulldown = {
+      show: (progress=0, props, options)=>{
+        if(typeof(progress)==='string'&&progress<100) { 
+          return app.pulldown.close(); 
+        }else {
+          return app.pulldown._id = app.router.addPopLayer(PullDownPopLayer, {...props, progress}, {...options, _id: app.pulldown._id});
+        }
+      },
+      close: ()=>{
+        app.router.removePopLayer(app.pulldown._id); 
+        app.pulldown._id = undefined; 
+      },
+    };
+  },
+
+  onPluginUnmount(app) {
+    delete app.pulldown;
+  },
+}
+
+
+
+
+
+/**
+ * 蒙层组件
+ * @component
+ * @augments BaseComponent
+ * @export
+ */
+export let MaskPopLayer = aprops=>{
+  let { loaderProps, classNamePre, children, poplayer, ...props } = BaseComponent(aprops, MaskPopLayer);
+  children = typeof(children)==='function'?children(poplayer):children;
+
+  classNamePre = { 'flex-display-block flex-direction-v flex-justify-center flex-align-center': true, ...classNamePre }
+
+  return (
+    <Panel component={Backdrop} classNamePre={classNamePre} {...props}>
+      <Panel component={PanelLoader} position='top' {...loaderProps}>{children}</Panel>
+    </Panel>
+  )
+}
+
+MaskPopLayer.defaultProps = {};
+/**
+ * 设置 蒙层中间的 loader 组件的参数
+ * @attribute module:loader.MaskPopLayer.loaderProps
+ * @type {object}
+ */
+
+Object.defineProperty(MaskPopLayer,"MaskPopLayer",{ get:function(){ return MaskPopLayer }, set:function(val){ MaskPopLayer = val }})
+MaskPopLayer.isBnorth = true;
+MaskPopLayer.defaultProps['b-precast'] = {
+  'b-theme': 'white',
+};
+
+
+
+/**
+ * 提供了对蒙层的显示和控制的能力，同时修改了 app.render.mask 的默认行为
+ * @plugin mask
+ * @exportdefault
+ */
+export let mask = {
+  // plugin 
+  // --------------------------------
+  _id: 'mask',
+
+  onPluginMount(app) {
+    /**
+     * 挂载在 App 实例上的蒙层操作对象
+     * @memberof module:mask.mask
+     */
+    app.mask = {};
+    
+    /**
+     * 显示蒙层
+     * @memberof module:loader.mask
+     * @param {element|component|string|number?} content - 显示内容
+     * @param {object?} props - 弹出层属性
+     * @param {object?} options - 弹出层配置
+     * @returns {string} 弹出层 id
+     */
+    app.mask.show = (content, props, options)=>{
+      return app.mask._id = app.router.addPopLayer(MaskPopLayer, {children: content, ...props}, {isModal: true, ...options, _id: app.mask._id});
+    }
+
+    /**
+     * 关闭蒙层
+     * @memberof module:loader.mask
+     */
+    app.mask.close = ()=>{
+      let {content, props={}, options} = app.router.getPopLayerInfo(app.mask._id)||{};
+      if(!content) { app.mask._id = undefined; return }
+      props.rewind = true;
+      props.onFinished = ()=>{ app.router.removePopLayer(app.mask._id); app.mask._id = undefined }
+      return app.router.addPopLayer(content, props, options);
+    }
+
+    app.mask._oldMask = app.render.mask;
+    app.render.mask = (show, options)=>show?app.mask.show(options):app.mask.close();
+  },
+
+  onPluginUnmount(app) {
+    app.render.mask = app.mask._oldMask;
+    delete app.mask;
   },
 }

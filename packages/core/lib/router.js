@@ -11,8 +11,6 @@ require("core-js/modules/es6.function.name");
 
 require("core-js/modules/es6.regexp.replace");
 
-require("core-js/modules/es6.array.find-index");
-
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 require("core-js/modules/es6.string.ends-with");
@@ -263,7 +261,7 @@ function (_React$Component) {
 
       var _run = function _run() {
         if (finish) {
-          deactiveEl.style.display = 'none';
+          deactiveEl && (deactiveEl.style.display = 'none');
 
           router._updateRouterInfo(router._history.location);
 
@@ -279,7 +277,7 @@ function (_React$Component) {
         }
 
         activeEl.style.webkitTransform = "translate3d(" + (router._transStatus === 'push' ? 100 - percent : percent - 100) + "%, 0, 0)";
-        deactiveEl.style.webkitTransform = "translate3d(" + (router._transStatus === 'push' ? -1 : 1) * percent + "%, 0, 0)";
+        deactiveEl && (deactiveEl.style.webkitTransform = "translate3d(" + (router._transStatus === 'push' ? -1 : 1) * percent + "%, 0, 0)");
         requestAnimationFrame(_run);
       };
 
@@ -341,7 +339,7 @@ function (_React$Component) {
             popLayerInfos: undefined,
             isActive: isActive,
             popLayers: popLayerInfos.map(function (v) {
-              return _this2._renderPopLayer(v);
+              return _this2._renderPopLayer(app, v.options._id);
             }),
             subPages: Object.entries(subPageInfos).reduce(function (v1, _ref2) {
               var _ref3 = (0, _slicedToArray2.default)(_ref2, 2),
@@ -368,12 +366,12 @@ function (_React$Component) {
     }
   }, {
     key: "_renderPopLayer",
-    value: function _renderPopLayer(props) {
-      var app = this.props.app;
-      return _react.default.createElement(app.PopLayer, (0, _extends2.default)({
-        key: props.options._id,
-        app: app
-      }, props));
+    value: function _renderPopLayer(app, _id) {
+      return _react.default.createElement(app.PopLayer, {
+        key: _id,
+        app: app,
+        id: _id
+      });
     }
   }, {
     key: "render",
@@ -393,7 +391,7 @@ function (_React$Component) {
       return _react.default.createElement(_react.default.Fragment, null, _pageInfos.map(function (v) {
         return _this3._renderPage(v, _activeId, _focusId);
       }), app.router._getPopLayerNoPageId().map(function (v) {
-        return _this3._renderPopLayer((0, _objectSpread2.default)({}, v), _activeId, _focusId);
+        return _this3._renderPopLayer(app, v.options._id);
       }));
     }
   }]);
@@ -651,7 +649,7 @@ function () {
       _regenerator.default.mark(function _callee(location) {
         var _this6 = this;
 
-        var pathName, _idPrev, params, pageInfos, focusId, activeId, deactiveId, transStatus, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, popLayerInfos, focusPopLayerInfo, activePageInfo, focusPopLayerInfoOfPage, _i, pageInfo, _block, deactivePageInfos;
+        var pathName, _idPrev, params, pageInfos, focusId, activeId, deactiveId, transStatus, isPop, isFirst, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, popLayerInfos, focusPopLayerInfo, activePageInfo, focusPopLayerInfoOfPage, _i, pageInfo, _block, deactivePageInfos;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -674,11 +672,14 @@ function () {
                 transStatus = undefined;
                 /* route */
 
+                console.log(999);
+                isPop = this._history.action === 'POP';
+                isFirst = this._pageInfos.length === 0;
                 level = 0;
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context.prev = 13;
+                _context.prev = 16;
 
                 _loop = function _loop() {
                   var pagePathName = _step.value;
@@ -727,6 +728,32 @@ function () {
                     pageInfo.params[v] = pageInfo.pageParams[i] ? decodeURIComponent(pageInfo.pageParams[i]) : null;
                     if (_this6.passParams) params[v] = pageInfo.params[v];
                   });
+                  var isLast = pagePathName === location.pathnames[location.pathnames.length - 1];
+
+                  var prevOne = _this6._pageInfos.find(function (vv) {
+                    return vv._id === pageInfo._id;
+                  });
+
+                  var isNew = !prevOne;
+                  var isPrevActive = pageInfo._id === _this6._activeId && !isLast;
+                  var isReactive = pageInfo._id !== _this6._activeId && isLast;
+                  var status = void 0;
+
+                  if (isFirst) {
+                    status = isLast ? 'normal' : 'waitting';
+                  } else if (isNew && isLast) {
+                    status = isPop ? 'popin' : 'pushin';
+                  } else if (isNew && !isLast) {
+                    status = 'waitting';
+                  } else if (isPrevActive) {
+                    status = isPop ? 'popout' : 'pushout';
+                  } else if (isReactive) {
+                    status = 'popin';
+                  } else {
+                    status = isLast ? 'normal' : 'background';
+                  }
+
+                  console.log(pageInfo._id, status);
                   var subNo = 0;
                   var _iteratorNormalCompletion2 = true;
                   var _didIteratorError2 = false;
@@ -785,61 +812,61 @@ function () {
 
                 _iterator = location.pathnames[Symbol.iterator]();
 
-              case 16:
+              case 19:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 23;
+                  _context.next = 26;
                   break;
                 }
 
                 _ret = _loop();
 
                 if (!((0, _typeof2.default)(_ret) === "object")) {
-                  _context.next = 20;
+                  _context.next = 23;
                   break;
                 }
 
                 return _context.abrupt("return", _ret.v);
 
-              case 20:
-                _iteratorNormalCompletion = true;
-                _context.next = 16;
-                break;
-
               case 23:
-                _context.next = 29;
+                _iteratorNormalCompletion = true;
+                _context.next = 19;
                 break;
 
-              case 25:
-                _context.prev = 25;
-                _context.t0 = _context["catch"](13);
+              case 26:
+                _context.next = 32;
+                break;
+
+              case 28:
+                _context.prev = 28;
+                _context.t0 = _context["catch"](16);
                 _didIteratorError = true;
                 _iteratorError = _context.t0;
 
-              case 29:
-                _context.prev = 29;
-                _context.prev = 30;
+              case 32:
+                _context.prev = 32;
+                _context.prev = 33;
 
                 if (!_iteratorNormalCompletion && _iterator.return != null) {
                   _iterator.return();
                 }
 
-              case 32:
-                _context.prev = 32;
+              case 35:
+                _context.prev = 35;
 
                 if (!_didIteratorError) {
-                  _context.next = 35;
+                  _context.next = 38;
                   break;
                 }
 
                 throw _iteratorError;
 
-              case 35:
+              case 38:
+                return _context.finish(35);
+
+              case 39:
                 return _context.finish(32);
 
-              case 36:
-                return _context.finish(29);
-
-              case 37:
+              case 40:
                 /* active & focus */
                 popLayerInfos = this._getPopLayerNoPageId();
                 focusPopLayerInfo = Array.from(popLayerInfos).reverse().find(function (v) {
@@ -865,32 +892,32 @@ function () {
 
                 _i = 0;
 
-              case 44:
+              case 47:
                 if (!(_i < pageInfos.length)) {
-                  _context.next = 54;
+                  _context.next = 57;
                   break;
                 }
 
                 pageInfo = pageInfos[_i];
-                _context.next = 48;
+                _context.next = 51;
                 return this.app.event.emit(this.app._id, 'onRouteMatch', pageInfo, location);
 
-              case 48:
+              case 51:
                 _block = _context.sent;
 
                 if (!_block) {
-                  _context.next = 51;
+                  _context.next = 54;
                   break;
                 }
 
                 return _context.abrupt("return", this.block(_block));
 
-              case 51:
+              case 54:
                 _i++;
-                _context.next = 44;
+                _context.next = 47;
                 break;
 
-              case 54:
+              case 57:
                 /* update */
                 if (this._activeId !== activeId && this._history.action === 'POP' && this._activeId && !pageInfos.find(function (v) {
                   return v._id === _this6._activeId;
@@ -946,12 +973,12 @@ function () {
 
                 this._updateRender();
 
-              case 64:
+              case 67:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[13, 25, 29, 37], [30,, 32, 36]]);
+        }, _callee, this, [[16, 28, 32, 40], [33,, 35, 39]]);
       }));
 
       return function _updateRouterInfo(_x) {
@@ -978,16 +1005,18 @@ function () {
     key: "_getPopLayerNoPageId",
     value: function _getPopLayerNoPageId() {
       return this._popLayerInfos.filter(function (_ref8) {
-        var options = _ref8.options;
-        return !options._idPage;
+        var options = _ref8.options,
+            remove = _ref8.remove;
+        return !remove && !options._idPage;
       });
     }
   }, {
     key: "_getPopLayerByPageId",
     value: function _getPopLayerByPageId(_id) {
       return this._popLayerInfos.filter(function (_ref9) {
-        var options = _ref9.options;
-        return options._idPage === _id;
+        var options = _ref9.options,
+            remove = _ref9.remove;
+        return !remove && options._idPage === _id;
       });
     }
   }, {
@@ -998,7 +1027,7 @@ function () {
       this._getPopLayerByPageId(_id).forEach(function (v) {
         return _this7.removePopLayer(v.options._id);
       });
-    } // pages poplayer interface
+    } // pages interface
     // ---------------------------------------
 
     /**
@@ -1034,7 +1063,9 @@ function () {
     key: "getPages",
     value: function getPages() {
       return this._pages;
-    }
+    } // poplayer interface
+    // ---------------------------------------
+
     /**
      * 生成弹出层 id
      * @param {module:router~PopLayerOptions} - 配置参数
@@ -1060,13 +1091,11 @@ function () {
     value: function addPopLayer(content) {
       var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      if (!content) return;
       options._id = this.genPopLayerId(options);
       var popLayer = this.getPopLayerInfo(options._id);
 
       if (!popLayer) {
-        options.states = options.states || {};
-        if (options.data) options.states.stateData = this.app.State.createState(this.app, options.data === true ? undefined : options.data, 'stateData', options._id);
+        if (!content) return;
 
         this._popLayerInfos.push({
           content: content,
@@ -1074,14 +1103,13 @@ function () {
           options: options
         });
 
-        options.onAdd && options.onAdd(options._id);
+        this._updateRouterInfo(this._history.location);
       } else {
-        popLayer.content = content;
-        popLayer.props = props;
-        popLayer.options = options;
+        content && (popLayer.content = content);
+        popLayer.props = (0, _objectSpread2.default)({}, popLayer.props, props);
+        popLayer.options = (0, _objectSpread2.default)({}, popLayer.options, options);
+        popLayer.instance && popLayer.instance.setState({});
       }
-
-      this._updateRouterInfo(this._history.location);
 
       return options._id;
     }
@@ -1093,15 +1121,9 @@ function () {
   }, {
     key: "removePopLayer",
     value: function removePopLayer(_id) {
-      var index = this._popLayerInfos.findIndex(function (v) {
-        return v.options._id === _id;
-      });
-
-      if (index < 0) return;
-      this._popLayerInfos[index].options.data && this._popLayerInfos[index].options.states.stateData.destructor();
-      this._popLayerInfos[index].options.onRemove && this._popLayerInfos[index].options.onRemove();
-
-      this._popLayerInfos.splice(index, 1);
+      var info = this.getPopLayerInfo(_id);
+      if (!info) return;
+      info.remove = true;
 
       this._updateRouterInfo(this._history.location);
     }
@@ -1127,31 +1149,6 @@ function () {
     key: "getPopLayerInfos",
     value: function getPopLayerInfos() {
       return this._popLayerInfos;
-    }
-    /**
-     * 获取弹出层的状态数据
-     * @param {string} - 弹出层 id
-     * @returns {object}
-     */
-
-  }, {
-    key: "getPopLayerStates",
-    value: function getPopLayerStates(_id) {
-      var _ref10 = this.getPopLayerInfo(_id) || {},
-          _ref10$options = _ref10.options;
-
-      _ref10$options = _ref10$options === void 0 ? {} : _ref10$options;
-      var states = _ref10$options.states;
-      if (!states) return {};
-      var stateProps = {};
-      Object.entries(states).forEach(function (_ref11) {
-        var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
-            k = _ref12[0],
-            v = _ref12[1];
-
-        return stateProps[k] = v.data();
-      });
-      return stateProps;
     } // router interface
     // --------------------------------------
 
@@ -1186,10 +1183,10 @@ function () {
       var _this8 = this;
 
       this._routes = routes;
-      Object.entries(this._routes || {}).forEach(function (_ref13) {
-        var _ref14 = (0, _slicedToArray2.default)(_ref13, 2),
-            k = _ref14[0],
-            v = _ref14[1];
+      Object.entries(this._routes || {}).forEach(function (_ref10) {
+        var _ref11 = (0, _slicedToArray2.default)(_ref10, 2),
+            k = _ref11[0],
+            v = _ref11[1];
 
         return v.for && _this8.addNavigatorFunction(k, v.for);
       });
@@ -1231,10 +1228,10 @@ function () {
   }, {
     key: "getRouteByPageName",
     value: function getRouteByPageName(pageName) {
-      var route = Object.entries(this._routes).find(function (_ref15) {
-        var _ref16 = (0, _slicedToArray2.default)(_ref15, 2),
-            k = _ref16[0],
-            v = _ref16[1];
+      var route = Object.entries(this._routes).find(function (_ref12) {
+        var _ref13 = (0, _slicedToArray2.default)(_ref12, 2),
+            k = _ref13[0],
+            v = _ref13[1];
 
         return k.split(':')[0] === pageName;
       });
@@ -1407,10 +1404,10 @@ function () {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
         state: this.passState ? (0, _objectSpread2.default)({}, this._history.location.state, state) : state,
-        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this._history.location.query, query) : query).map(function (_ref17) {
-          var _ref18 = (0, _slicedToArray2.default)(_ref17, 2),
-              k = _ref18[0],
-              v = _ref18[1];
+        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this._history.location.query, query) : query).map(function (_ref14) {
+          var _ref15 = (0, _slicedToArray2.default)(_ref14, 2),
+              k = _ref15[0],
+              v = _ref15[1];
 
           return k + '=' + v;
         }).reduce(function (v1, v2) {

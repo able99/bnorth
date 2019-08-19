@@ -57,6 +57,46 @@
 class State {
   // static
   // ---------------
+  static checkModuleOptions(options) {
+    return Array.isArray(options)?options:Object.entries(options).filter(([k,v])=>k.startsWith('state')||k.startsWith('_state'))
+  }
+  static attachStates(app, module, _id, options, cb) {
+    this.checkModuleOptions(options).forEach(([k,v])=>{
+      module[k] = app.State.createState(app, v, k, _id);
+      if(!module[k]) { app.render.panic(v, {title: 'no state', _id: this._id}); return } 
+      cb&&cb(k,v,module[k]);
+    });
+  }
+
+  static detachStates(module, options) {
+    this.checkModuleOptions(options).forEach(([k,v])=>{
+      if(k.startsWith('state')||k.startsWith('_state')) {
+        module[k]&&module[k].destructor();
+      }
+    });
+  }
+
+  static checkStates(module, context, nextContext, options) {
+    for(let [k,v] of this.checkModuleOptions(options)){
+      let key = module[k]&&module[k]._id;
+      if(context[key]!==nextContext[key]) return true;
+    }
+    return false;
+  }
+
+  static getStates(module, options) {
+    let ret = {};
+    this.checkModuleOptions(options).forEach(([k,v])=>{
+      v = module[k]; 
+      if(!v) return;
+      ret[k] = v.data();
+      let extData = v.extData();
+      extData&&(ret[`${k}Ext`] = extData);
+    });
+    return ret;
+  }
+  // static
+  // ---------------
   static _genStateId(stateKey, ownerId) {
     if(!stateKey||!ownerId) return;
     return `*${stateKey}@${ownerId}`

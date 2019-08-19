@@ -6,16 +6,14 @@ import AnimationFrame from './AnimationFrame';
 import { PanelIcon } from './Icon';
 
 
-let Notice = aprops=>{
+let NoticePopLayer = aprops=>{
   let { 
     onClose, onFinished, frameFunc, params={}, duration, rewind,
-    classNamePre, ...props 
-  } = BaseComponent(aprops, Notice);
+    classNamePre, poplayer, ...props 
+  } = BaseComponent(aprops, NoticePopLayer);
+  props.children = typeof(props.children)==='function'?props.children(poplayer):props.children;
 
-  classNamePre = {
-    'position-absolute offset-top-start offset-left-top width-full padding-a-': true,
-    ...classNamePre,
-  }
+  classNamePre = { 'position-absolute offset-top-start offset-left-top width-full padding-a-': true, ...classNamePre }
 
   return (
     <AnimationFrame play rewind={rewind} frameFunc={frameFunc} params={params} onFinished={()=>rewind&&onFinished&&onFinished()}>
@@ -28,16 +26,16 @@ let Notice = aprops=>{
   );
 }
 
-Notice.defaultProps = {}
-Notice.defaultProps.frameFunc = afPeekTop;
+NoticePopLayer.defaultProps = {}
+NoticePopLayer.defaultProps.frameFunc = afPeekTop;
 
-Object.defineProperty(Notice,"Notice",{ get:function(){ return Notice }, set:function(val){ Notice = val }})
-Notice.isBnorth = true;
-Notice.defaultProps['b-precast'] = {
+Object.defineProperty(NoticePopLayer,"NoticePopLayer",{ get:function(){ return NoticePopLayer }, set:function(val){ NoticePopLayer = val }})
+NoticePopLayer.isBnorth = true;
+NoticePopLayer.defaultProps['b-precast'] = {
   'bp-title-bc-text-weight-': true,
   'bp-title-bc-text-size': 'lg',
 };
-export default Notice;
+export default NoticePopLayer;
 
 
 export let notice = {
@@ -45,48 +43,42 @@ export let notice = {
 
   onPluginMount(app) {
     app.notice = {
-      _timer: undefined,
-
       show: (message, { timeout=3000, options={}, ...props}={})=>{
         message = app.utils.message2String(message);
         if(!message) return;
 
-        options._id = app.notice._id || app.router.genPopLayerId(options);
-        props.rewind = false;
-        props.onClose = ()=>app.notice.close();
-        props.children = message;
+        app.notice._id = app.router.addPopLayer(NoticePopLayer, 
+          {children: message, onClose: ()=>app.notice.close(), ...props}, 
+          {...options, _id: app.notice._id}
+        );
 
         if(app.notice._timer) window.clearTimeout(app.notice._timer);
         app.notice._timer = window.setTimeout(()=>app.notice.close(),timeout);
 
-        return app.notice._id = app.router.addPopLayer(<Notice /> , props, options);
+        return app.notice._id;
       },
 
       close: ()=>{
         if(app.notice._timer) { window.clearTimeout(app.notice._timer); app.notice._timer = undefined; }
         if(!app.notice._id) return;
-        let {content, props={}, options={}} = app.router.getPopLayerInfo(app.notice._id)||{};
-        if(!content) { app.notice._id = undefined; return; }
-
-        props.rewind = true;
-        props.onFinished = ()=>{ 
-          app.router.removePopLayer(app.notice._id); 
-          app.notice._id = undefined; 
-        }
-
-        return app.router.addPopLayer(content, props, options);
+        return app.router.addPopLayer(undefined, {
+          rewind: true,
+          onFinished: ()=>{ app.router.removePopLayer(app.notice._id); app.notice._id = undefined }
+        },{
+          _id: app.notice._id,
+        });
       },
     };
 
     app.notice._oldNotice = app.render.notice;
-    app.notice._oldErrorNotice = app.render.errorNotice;
-    app.render.notice = (message, options)=>app.notice.show(message, options);
-    app.render.error = (message, options={})=>app.notice.show(message, {...options, 'b-theme': options['b-theme']||'alert'});
+    app.notice._oldError = app.render.error;
+    app.render.notice = (...args)=>app.notice.show(...args);
+    app.render.error = (message, props, options)=>app.notice.show(message, {...props, 'b-theme': 'alert'}, options);
   },
 
   onPluginUnmount(app) {
     app.render.notice = app.notice._oldNotice;
-    app.render.error = app.notice._oldErrorNotice;
+    app.render.error = app.notice._oldError;
     delete app.notice;
   },
 }

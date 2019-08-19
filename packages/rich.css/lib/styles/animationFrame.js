@@ -39,13 +39,15 @@ function animationFrame(el, work) {
   var stop = false;
 
   function run() {
-    var ret = work(el, start++, time, options);
+    var ret = !stop && work(el, start++, time, options);
 
-    if (!stop && ret) {
+    if (!stop) {
       window.requestAnimationFrame(run);
     } else if (cb) {
       cb();
     }
+
+    if (!ret) stop = true;
   }
 
   ;
@@ -95,10 +97,16 @@ function afFlyoutLeft(el, start, time, _ref3) {
 function afPeekTop(el, start, time, _ref6) {
   var duration = _ref6.duration,
       rewind = _ref6.rewind;
+  var ret = true;
   var total = (0, _dom.domGetDimensionValue)(el);
   var diff = new Date().getTime() - time;
   var top = diff * total / duration;
-  if (top > total) top = total;
+
+  if (top >= total) {
+    top = total;
+    ret = false;
+  }
+
   var obj = (0, _animation.transform)('translateY', '-' + (!rewind ? total - top : top) + 'px');
   Object.entries(obj).forEach(function (_ref7) {
     var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
@@ -107,7 +115,7 @@ function afPeekTop(el, start, time, _ref6) {
 
     el.style[k] = v;
   });
-  return top <= total;
+  return ret;
 }
 
 function afZoom(el, start, time, _ref9) {

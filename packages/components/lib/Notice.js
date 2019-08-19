@@ -25,8 +25,8 @@ var _AnimationFrame = _interopRequireDefault(require("./AnimationFrame"));
 
 var _Icon = require("./Icon");
 
-var _Notice = function Notice(aprops) {
-  var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Notice),
+var _NoticePopLayer = function NoticePopLayer(aprops) {
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, _NoticePopLayer),
       onClose = _BaseComponent.onClose,
       _onFinished = _BaseComponent.onFinished,
       frameFunc = _BaseComponent.frameFunc,
@@ -35,8 +35,10 @@ var _Notice = function Notice(aprops) {
       duration = _BaseComponent.duration,
       rewind = _BaseComponent.rewind,
       classNamePre = _BaseComponent.classNamePre,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["onClose", "onFinished", "frameFunc", "params", "duration", "rewind", "classNamePre"]);
+      poplayer = _BaseComponent.poplayer,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["onClose", "onFinished", "frameFunc", "params", "duration", "rewind", "classNamePre", "poplayer"]);
 
+  props.children = typeof props.children === 'function' ? props.children(poplayer) : props.children;
   classNamePre = (0, _objectSpread2.default)({
     'position-absolute offset-top-start offset-left-top width-full padding-a-': true
   }, classNamePre);
@@ -61,28 +63,27 @@ var _Notice = function Notice(aprops) {
   }, props)));
 };
 
-_Notice.defaultProps = {};
-_Notice.defaultProps.frameFunc = _animationFrame.afPeekTop;
-Object.defineProperty(_Notice, "Notice", {
+_NoticePopLayer.defaultProps = {};
+_NoticePopLayer.defaultProps.frameFunc = _animationFrame.afPeekTop;
+Object.defineProperty(_NoticePopLayer, "NoticePopLayer", {
   get: function get() {
-    return _Notice;
+    return _NoticePopLayer;
   },
   set: function set(val) {
-    _Notice = val;
+    _NoticePopLayer = val;
   }
 });
-_Notice.isBnorth = true;
-_Notice.defaultProps['b-precast'] = {
+_NoticePopLayer.isBnorth = true;
+_NoticePopLayer.defaultProps['b-precast'] = {
   'bp-title-bc-text-weight-': true,
   'bp-title-bc-text-size': 'lg'
 };
-var _default = _Notice;
+var _default = _NoticePopLayer;
 exports.default = _default;
 var notice = {
   _id: 'notice',
   onPluginMount: function onPluginMount(app) {
     app.notice = {
-      _timer: undefined,
       show: function show(message) {
         var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
             _ref$timeout = _ref.timeout,
@@ -93,19 +94,19 @@ var notice = {
 
         message = app.utils.message2String(message);
         if (!message) return;
-        options._id = app.notice._id || app.router.genPopLayerId(options);
-        props.rewind = false;
-
-        props.onClose = function () {
-          return app.notice.close();
-        };
-
-        props.children = message;
+        app.notice._id = app.router.addPopLayer(_NoticePopLayer, (0, _objectSpread2.default)({
+          children: message,
+          onClose: function onClose() {
+            return app.notice.close();
+          }
+        }, props), (0, _objectSpread2.default)({}, options, {
+          _id: app.notice._id
+        }));
         if (app.notice._timer) window.clearTimeout(app.notice._timer);
         app.notice._timer = window.setTimeout(function () {
           return app.notice.close();
         }, timeout);
-        return app.notice._id = app.router.addPopLayer(_react.default.createElement(_Notice, null), props, options);
+        return app.notice._id;
       },
       close: function close() {
         if (app.notice._timer) {
@@ -114,46 +115,35 @@ var notice = {
         }
 
         if (!app.notice._id) return;
-
-        var _ref2 = app.router.getPopLayerInfo(app.notice._id) || {},
-            content = _ref2.content,
-            _ref2$props = _ref2.props,
-            props = _ref2$props === void 0 ? {} : _ref2$props,
-            _ref2$options = _ref2.options,
-            options = _ref2$options === void 0 ? {} : _ref2$options;
-
-        if (!content) {
-          app.notice._id = undefined;
-          return;
-        }
-
-        props.rewind = true;
-
-        props.onFinished = function () {
-          app.router.removePopLayer(app.notice._id);
-          app.notice._id = undefined;
-        };
-
-        return app.router.addPopLayer(content, props, options);
+        return app.router.addPopLayer(undefined, {
+          rewind: true,
+          onFinished: function onFinished() {
+            app.router.removePopLayer(app.notice._id);
+            app.notice._id = undefined;
+          }
+        }, {
+          _id: app.notice._id
+        });
       }
     };
     app.notice._oldNotice = app.render.notice;
-    app.notice._oldErrorNotice = app.render.errorNotice;
+    app.notice._oldError = app.render.error;
 
-    app.render.notice = function (message, options) {
-      return app.notice.show(message, options);
+    app.render.notice = function () {
+      var _app$notice;
+
+      return (_app$notice = app.notice).show.apply(_app$notice, arguments);
     };
 
-    app.render.error = function (message) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      return app.notice.show(message, (0, _objectSpread2.default)({}, options, {
-        'b-theme': options['b-theme'] || 'alert'
-      }));
+    app.render.error = function (message, props, options) {
+      return app.notice.show(message, (0, _objectSpread2.default)({}, props, {
+        'b-theme': 'alert'
+      }), options);
     };
   },
   onPluginUnmount: function onPluginUnmount(app) {
     app.render.notice = app.notice._oldNotice;
-    app.render.error = app.notice._oldErrorNotice;
+    app.render.error = app.notice._oldError;
     delete app.notice;
   }
 };

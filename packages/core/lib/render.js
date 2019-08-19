@@ -7,6 +7,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+require("core-js/modules/web.dom.iterable");
+
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es7.object.entries");
+
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
@@ -64,6 +72,7 @@ function () {
      */
 
     this.stopForRenderError = false;
+    this._elementIdRandom = 0;
     this.app.event.on(this.app._id, 'onAppStartRender', function () {
       _this._renderRootComponent();
     });
@@ -134,10 +143,7 @@ function () {
 
   }, {
     key: "error",
-    value: function error(message) {
-      var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-          title = _ref3.title;
-
+    value: function error(message, props, options) {
       this.modal(this.app.utils.message2String(message));
     }
     /**
@@ -148,7 +154,7 @@ function () {
 
   }, {
     key: "notice",
-    value: function notice(content, options) {
+    value: function notice(content, props, options) {
       this.modal(this.app.utils.message2String(content));
     }
     /**
@@ -159,7 +165,7 @@ function () {
 
   }, {
     key: "mask",
-    value: function mask(show, options) {}
+    value: function mask(show, props, options) {}
     /**
      * 显示进度条，未实现功能，由插件负责功能完善
      * @param {boolean} - 开启或者关闭
@@ -168,7 +174,7 @@ function () {
 
   }, {
     key: "loader",
-    value: function loader(show, options) {}
+    value: function loader(show, props, options) {}
     /**
      * 显示模态对话框
      * @param {boolean} - 开启或者关闭
@@ -178,7 +184,7 @@ function () {
 
   }, {
     key: "modalShow",
-    value: function modalShow(content, options) {
+    value: function modalShow(content, props, options) {
       alert(content);
     }
     /**
@@ -200,6 +206,34 @@ function () {
       this.domRoot.style.maxWidth = width ? "".concat(width, "px") : 'initial';
       this.domRoot.style.marginLeft = width ? 'auto' : 'unset';
       this.domRoot.style.marginRight = width ? 'auto' : 'unset';
+    }
+  }, {
+    key: "addElement",
+    value: function addElement() {
+      var tag = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "div";
+      var attrs = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var id = this._elementIdRandom++;
+      var element = document.createElement(tag);
+      attrs['data-popelement'] = id;
+      Object.entries(attrs).map(function (_ref3) {
+        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+            k = _ref4[0],
+            v = _ref4[1];
+
+        return element.setAttribute(k, v);
+      });
+      return id;
+    }
+  }, {
+    key: "getElement",
+    value: function getElement(_id) {
+      return document.querySelector('[data-popelement="' + _id + '"]');
+    }
+  }, {
+    key: "removeElement",
+    value: function removeElement(_id) {
+      var element = this.getElement(_id);
+      element && element.remove();
     }
   }, {
     key: "domRoot",

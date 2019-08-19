@@ -40,6 +40,7 @@ class Render {
      * @type {boolean}
      */
     this.stopForRenderError = false;
+    this._elementIdRandom = 0;
 
     this.app.event.on(this.app._id, 'onAppStartRender', ()=>{this._renderRootComponent()});
   }
@@ -95,28 +96,28 @@ class Render {
    * @param {number|string|component|element} - 提示的内容 
    * @param {object} - 参数，与实现者具体定义 
    */
-  error(message, {title}={}) { this.modal(this.app.utils.message2String(message)); }
+  error(message, props, options) { this.modal(this.app.utils.message2String(message)); }
 
   /**
    * 显示提示信息，未实现功能，由插件负责功能完善
    * @param {number|string|component|element} - 提示的内容 
    * @param {object} - 参数，与实现者具体定义 
    */
-  notice(content, options) { this.modal(this.app.utils.message2String(content)); }
+  notice(content, props, options) { this.modal(this.app.utils.message2String(content)); }
 
   /**
    * 显示阻塞式遮罩，未实现功能，由插件负责功能完善
    * @param {boolean} - 开启或者关闭
    * @param {object} - 参数，与实现者具体定义 
    */
-  mask(show, options) {}
+  mask(show, props, options) {}
 
   /**
    * 显示进度条，未实现功能，由插件负责功能完善
    * @param {boolean} - 开启或者关闭
    * @param {object} - 参数，与实现者具体定义 
    */
-  loader(show, options) {}
+  loader(show, props, options) {}
 
   /**
    * 显示模态对话框
@@ -124,7 +125,7 @@ class Render {
    * @param {object} - 参数，与实现者具体定义 
    * @returns {string} id
    */
-  modalShow(content, options) { alert(content) }
+  modalShow(content, props, options) { alert(content) }
 
   /**
    * 关闭模态对话框
@@ -140,6 +141,23 @@ class Render {
     this.domRoot.style.maxWidth = width?`${width}px`:'initial';
     this.domRoot.style.marginLeft = width?'auto':'unset';
     this.domRoot.style.marginRight = width?'auto':'unset';
+  }
+
+  addElement(tag="div", attrs={}) {
+    let id = this._elementIdRandom++;
+    let element = document.createElement(tag);
+    attrs['data-popelement'] = id;
+    Object.entries(attrs).map(([k,v])=>element.setAttribute(k,v));
+    return id;
+  }
+
+  getElement(_id) {
+    return document.querySelector('[data-popelement="'+_id+'"]');
+  }
+
+  removeElement(_id) {
+    let element = this.getElement(_id);
+    element&&element.remove();
   }
 }
 

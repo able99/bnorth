@@ -12,12 +12,13 @@ export default function animationFrame(el, work, options={}, cb) {
   let stop = false;
 
   function run() {
-    let ret = work(el, start++, time, options);
-    if(!stop&&ret) {
+    let ret = !stop&&work(el, start++, time, options);
+    if(!stop) {
       window.requestAnimationFrame(run);
     }else if(cb){
       cb();
     }
+    if(!ret) stop = true;
   };
 
   if(options.autoStart) run();
@@ -49,14 +50,14 @@ export function afFlyoutLeft(el, start, time, {duration}) {
 }
 
 export function afPeekTop(el, start, time, { duration, rewind }) {
+  let ret = true;
   let total = domGetDimensionValue(el);
   let diff = (new Date()).getTime() - time;
   let top = diff*total/duration;
-  if(top>total) top = total;
+  if(top>=total) { top = total; ret = false }
   let obj = transform('translateY', '-'+(!rewind?(total-top):(top))+'px');
   Object.entries(obj).forEach(([k,v])=>{ el.style[k] = v });
-
-  return top<=total;
+  return ret;
 }
 
 export function afZoom(el, start, time, { duration, rewind }) {

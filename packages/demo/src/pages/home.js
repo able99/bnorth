@@ -5,7 +5,7 @@ import List from '../components/list'
 
 export default props=>{
   let { app } = props;
-
+  // console.log(11111, props.stateData);
   return (
     <div className="bg-color-white width-full height-full flex-display-block flex-direction-v">
       <NavBar title="bnorth demo" />

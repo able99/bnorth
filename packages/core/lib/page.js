@@ -9,13 +9,9 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
-
-require("core-js/modules/es7.symbol.async-iterator");
-
-require("core-js/modules/es6.symbol");
-
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
 require("core-js/modules/es6.regexp.split");
 
@@ -269,45 +265,30 @@ function (_React$Component) {
           controller = _this$props$route$rou.controller;
       var acontroller = controller || component.controller || {};
       var controllerObj = typeof acontroller === 'function' ? acontroller(app, this) : acontroller;
+      this.options = controllerObj;
       if (!controllerObj.stateData) controllerObj.stateData = undefined;
       if (!controllerObj.actionGoBack) controllerObj.actionGoBack = function () {
         return app.router.back();
       };
+      app.State.attachStates(app, this, this._id, this.options, function (k, v, state) {
+        if (typeof v === 'string') return;
+        app.event.on(_this2._id, 'onPageStart', function (page, isActive) {
+          app.event.emit(_this2[k]._id, 'onStateStart', _this2[k]._id, isActive);
+        }, _this2[k]._id);
+        app.event.on(_this2._id, 'onPageActive', function (page, onStart) {
+          app.event.emit(_this2[k]._id, 'onStateActive', _this2[k]._id, onStart);
+        }, _this2[k]._id);
+        app.event.on(_this2._id, 'onPageInactive', function (page, onStop) {
+          app.event.emit(_this2[k]._id, 'onStateInactive', _this2[k]._id, onStop);
+        }, _this2[k]._id);
+        app.event.on(_this2._id, 'onPageStop', function (page) {
+          app.event.emit(_this2[k]._id, 'onStateStop', _this2[k]._id);
+        }, _this2[k]._id);
+      });
       Object.entries(controllerObj).forEach(function (_ref) {
         var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
             k = _ref2[0],
             v = _ref2[1];
-
-        if (k.startsWith('state') || k.startsWith('_state')) {
-          _this2[k] = app.State.createState(app, v, k, _this2._id);
-
-          if (!_this2[k]) {
-            app.render.panic(v, {
-              title: 'no state',
-              _id: _this2._id
-            });
-            return;
-          }
-
-          if (typeof v === 'string') return;
-          app.event.on(_this2._id, 'onPageStart', function (page, isActive) {
-            app.event.emit(_this2[k]._id, 'onStateStart', _this2[k]._id, isActive);
-          }, _this2[k]._id);
-          app.event.on(_this2._id, 'onPageActive', function (page, onStart) {
-            app.event.emit(_this2[k]._id, 'onStateActive', _this2[k]._id, onStart);
-          }, _this2[k]._id);
-          app.event.on(_this2._id, 'onPageInactive', function (page, onStop) {
-            app.event.emit(_this2[k]._id, 'onStateInactive', _this2[k]._id, onStop);
-          }, _this2[k]._id);
-          app.event.on(_this2._id, 'onPageStop', function (page) {
-            app.event.emit(_this2[k]._id, 'onStateStop', _this2[k]._id);
-          }, _this2[k]._id);
-        }
-      });
-      Object.entries(controllerObj).forEach(function (_ref3) {
-        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
-            k = _ref4[0],
-            v = _ref4[1];
 
         if (k.startsWith('state') || k.startsWith('_state')) {// state
         } else if (k === 'onPageAdd' || k === 'onPageRemove') {
@@ -335,91 +316,14 @@ function (_React$Component) {
       this.forceUpdate();
     }
   }, {
-    key: "_getStateKeys",
-    value: function _getStateKeys() {
-      return Object.entries(this).filter(function (_ref5) {
-        var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
-            k = _ref6[0],
-            v = _ref6[1];
-
-        return /_?state\w+/.test(k);
-      }).map(function (_ref7) {
-        var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
-            k = _ref8[0],
-            v = _ref8[1];
-
-        return v._id;
-      });
-    }
-  }, {
-    key: "_getPageComponentProps",
-    value: function _getPageComponentProps() {
-      var _this$props2 = this.props,
-          app = _this$props2.app,
-          _id = _this$props2._id,
-          route = _this$props2.route;
-      var states = Object.entries(this).filter(function (_ref9) {
-        var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
-            k = _ref10[0],
-            v = _ref10[1];
-
-        return /_?state\w+/.test(k);
-      }).reduce(function (v1, _ref11) {
-        var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
-            k = _ref12[0],
-            v = _ref12[1];
-
-        v1[k] = v.data();
-        var extData = v.extData();
-        if (extData) v1["".concat(k, "Ext")] = extData;
-        return v1;
-      }, {});
-      return (0, _objectSpread2.default)({
-        app: app,
-        _id: _id,
-        route: route,
-        page: this
-      }, states);
-    }
-  }, {
-    key: "_getPageFrameProps",
-    value: function _getPageFrameProps() {
-      var _this$props3 = this.props,
-          _id = _this$props3._id,
-          route = _this$props3.route;
-      return {
-        'data-page': _id,
-        'data-page-sub': route.isSubPage ? route.routeName : undefined,
-        style: route.isSubPage ? {
-          width: '100%',
-          height: '100%'
-        } : {
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          background: 'white',
-          'WebkitBackfaceVisibility': 'hidden',
-          'MozBackfaceVisibility': 'hidden',
-          'msBackfaceVisibility': 'hidden',
-          'backfaceVisibility': 'hidden',
-          'WebkitPerspective': 1000,
-          'MozPerspective': 1000,
-          'msPerspective': 1000,
-          'perspective': 1000
-        }
-      };
-    }
-  }, {
     key: "_pageInit",
     value: function _pageInit() {
       var _this3 = this;
 
-      var _this$props4 = this.props,
-          app = _this$props4.app,
-          _id = _this$props4._id,
-          isActive = _this$props4.route.isActive;
+      var _this$props2 = this.props,
+          app = _this$props2.app,
+          _id = _this$props2._id,
+          isActive = _this$props2.route.isActive;
       if (app.router.transInBlank) this._bindController();
       this._offKeyEvent = app.keyboard.on(_id, 'keydown', function (e) {
         return _this3._handleKeyEvent(e);
@@ -433,10 +337,10 @@ function (_React$Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this$props5 = this.props,
-          app = _this$props5.app,
-          _id = _this$props5._id,
-          isSubPage = _this$props5.route.isSubPage;
+      var _this$props3 = this.props,
+          app = _this$props3.app,
+          _id = _this$props3._id,
+          isSubPage = _this$props3.route.isSubPage;
       app.log.debug('page did mount', _id);
       app.event.emit(app._id, 'onPageAdd', _id, this);
       if (!app.router.transInBlank) this._bindController();
@@ -445,12 +349,12 @@ function (_React$Component) {
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
-      var _this$props6 = this.props,
-          app = _this$props6.app,
-          _this$props6$route = _this$props6.route,
-          _id = _this$props6$route._id,
-          isSubPage = _this$props6$route.isSubPage,
-          isActive = _this$props6$route.isActive;
+      var _this$props4 = this.props,
+          app = _this$props4.app,
+          _this$props4$route = _this$props4.route,
+          _id = _this$props4$route._id,
+          isSubPage = _this$props4$route.isSubPage,
+          isActive = _this$props4$route.isActive;
 
       if (!this._controllerBinded && !isSubPage) {
         if (isActive === true || isActive === false) this._pageInit();
@@ -469,10 +373,10 @@ function (_React$Component) {
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      var _this$props7 = this.props,
-          app = _this$props7.app,
-          _id = _this$props7._id,
-          isActive = _this$props7.route.isActive;
+      var _this$props5 = this.props,
+          app = _this$props5.app,
+          _id = _this$props5._id,
+          isActive = _this$props5.route.isActive;
       app.log.debug('page will unmount', _id);
       isActive && app.event.emit(this._id, 'onPageInactive', this, true);
       app.event.emit(this._id, 'onPageStop', this);
@@ -501,32 +405,9 @@ function (_React$Component) {
         return true;
       }
 
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this._getStateKeys()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var k = _step.value;
-
-          if (this.props.context[k] !== nextProps.context[k]) {
-            this.app.event.emit(this._id, 'onPageUpdate', this._id, 'state');
-            return true;
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+      if (this.app.State.checkStates(this, this.props.context, nextProps.context, this.options)) {
+        this.app.event.emit(this._id, 'onPageUpdate', this._id, 'state');
+        return true;
       }
 
       return false;
@@ -534,18 +415,27 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props8 = this.props,
-          app = _this$props8.app,
-          _id = _this$props8._id,
-          _this$props8$route = _this$props8.route,
-          isActive = _this$props8$route.isActive,
-          routeDefine = _this$props8$route.routeDefine,
-          subPages = _this$props8$route.subPages,
-          popLayers = _this$props8$route.popLayers,
-          props = (0, _objectWithoutProperties2.default)(_this$props8, ["app", "_id", "route"]);
+      var _this$props6 = this.props,
+          app = _this$props6.app,
+          _id = _this$props6._id,
+          route = _this$props6.route,
+          props = (0, _objectWithoutProperties2.default)(_this$props6, ["app", "_id", "route"]);
+      var isActive = route.isActive,
+          routeDefine = route.routeDefine,
+          subPages = route.subPages,
+          popLayers = route.popLayers;
       app.log.debug('page render', _id);
       this._actionNum = 0;
-      return _react.default.createElement("main", this._getPageFrameProps(), this._controllerBinded && (!app.router.transOutBlank || isActive !== 'unmount') ? _react.default.createElement(routeDefine.component, (0, _extends2.default)({}, props, this._getPageComponentProps()), subPages) : null, this._controllerBinded && (!app.router.transOutBlank || isActive !== 'unmount' ? popLayers : null));
+      var aprops = (0, _objectSpread2.default)({
+        app: app,
+        _id: _id,
+        route: route,
+        page: this
+      }, this.options && app.State.getStates(this, this.options));
+      return _react.default.createElement(Page.Frame, {
+        id: _id,
+        route: route
+      }, this._controllerBinded && (!app.router.transOutBlank || isActive !== 'unmount') ? _react.default.createElement(routeDefine.component, (0, _extends2.default)({}, aprops, props), subPages) : null, this._controllerBinded && (!app.router.transOutBlank || isActive !== 'unmount' ? popLayers : null));
     }
   }, {
     key: "_id",
@@ -595,3 +485,33 @@ function (_React$Component) {
 
 var _default = Page;
 exports.default = _default;
+
+Page.Frame = function (aprops) {
+  var _id = aprops.id,
+      route = aprops.route,
+      children = aprops.children;
+  var props = {
+    'data-page': _id,
+    'data-page-sub': route.isSubPage ? route.routeName : undefined,
+    style: route.isSubPage ? {
+      width: '100%',
+      height: '100%'
+    } : {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+      background: 'white',
+      'WebkitBackfaceVisibility': 'hidden',
+      'MozBackfaceVisibility': 'hidden',
+      'msBackfaceVisibility': 'hidden',
+      'backfaceVisibility': 'hidden',
+      'WebkitPerspective': 1000,
+      'MozPerspective': 1000,
+      'msPerspective': 1000,
+      'perspective': 1000
+    }
+  };
+  return _react.default.createElement("main", props, children);
+};
