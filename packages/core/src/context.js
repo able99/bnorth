@@ -26,8 +26,12 @@ class ContextComponent extends React.Component {
     return name?data[name]:data;
   }
 
+  componentDidCatch(error, info) {
+    debugger;
+  }
+
   render() {
-    return <this.app.context.Provider value={{...this.state}}>{this.props.children}</this.app.context.Provider> ;
+    return <this.app.context.Provider value={{...this.state}}>{this.props.children}</this.app.context.Provider> 
   }
 }
 
@@ -52,31 +56,11 @@ class Context {
      * @type {string}
      */
     this._id = app._id+'.context';
-    this.app.event.on(this.app._id, 'onAppStartContext', ()=>{this._createStore()});
-  }
-
-  _createStore() {
+    this.Component = ContextComponent;
     let { Provider, Consumer } = createContext();
     this.Provider = Provider;
     this.Consumer = Consumer;
-
-    this.consumerHoc = (
-      Component=>{
-        return props => (
-          <this.Consumer>
-            {context=><Component context={context} {...props} />}
-          </this.Consumer>
-        )
-      }
-    )
-
-    this.app.render.component = (
-      <ContextComponent app={this.app}>
-        {this.app.render.component}
-      </ContextComponent>
-    )
-    this.app.Page = this.consumerHoc(this.app.Page);
-    this.app.PopLayer = this.consumerHoc(this.app.PopLayer);
+    this.consumerHoc = Component=>props=><this.Consumer>{context=><Component context={context} {...props} />}</this.Consumer>
   }
 
   /**

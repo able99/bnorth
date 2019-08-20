@@ -4,8 +4,7 @@
 import React from 'react';
 import createHistory from 'history/createHashHistory';
 import { join } from 'path';
-import PageLoading from './router.loading.js'
-import PageError from './router.error.js'
+import RouterComponent from './router.component'
 
 let spe = '/';
 let ParamSpe = ':';
@@ -136,118 +135,6 @@ let PageSign = '#';
  */
 
 
-/*!
- * 提交到 render 模块的的 router 组件，是所有页面和弹出层的父组件
- */
-class RouterComponent extends React.Component {
-  _pageInit() {
-    let app = this.props.app;
-    let router = app.router;
-
-    Array.from(document.querySelectorAll('main')).filter(v=>!v.getAttribute('data-page-sub')).forEach(v=>{
-      let id = v.getAttribute('data-page');
-      if(id===router._activeId) {
-        v.style.webkitTransform = "translateX("+(0)+"%)";
-        v.style.display = 'block';
-      } else {
-        v.style.display = 'none';
-      }
-    })
-  }
-
-  _pageTrans() {
-    let app = this.props.app;
-    let router = app.router;
-    if(!router._transStatus) return
-
-    let activeEl = document.querySelector('main[data-page="'+router._activeId+'"]');
-    let deactiveEl = document.querySelector('main[data-page="'+router._deactiveId+'"]');
-
-    Array.from(document.querySelectorAll('main')).filter(v=>!v.getAttribute('data-page-sub')).forEach(v=>{
-      let id = v.getAttribute('data-page');
-      if(id===router._activeId) {
-        v.style.webkitTransform = "translateX("+(router._transStatus==='push'?100:-100)+"%)";
-        v.style.display = 'block';
-      }else if(id===router._deactiveId) {
-        v.style.webkitTransform = "translateX("+(0)+"%)";
-        v.style.display = 'block';
-      }else {
-        v.style.display = 'none';
-      }
-    })
-    
-    let time = (new Date()).getTime();
-    let finish = false;
-    let _run = ()=>{
-      if(finish) { deactiveEl&&(deactiveEl.style.display='none'); router._updateRouterInfo(router._history.location); return }
-
-      let diff = (new Date()).getTime() - time;
-      let percent = diff*100/200;
-      if(percent>=100) { percent = 100; finish = true }
-
-      activeEl.style.webkitTransform = "translate3d("+(router._transStatus==='push'?(100-percent):(percent-100))+"%, 0, 0)";
-      deactiveEl&&(deactiveEl.style.webkitTransform="translate3d("+((router._transStatus==='push'?-1:1)*percent)+"%, 0, 0)");
-
-      requestAnimationFrame(_run);
-    }
-    _run();
-  }
-
-  componentDidMount() {
-    let app = this.props.app;
-    this.eventOffRouterUpdate = app.event.on(app._id, 'onRouterUpdate', ()=>this.forceUpdate());
-    this._pageInit();
-  }
-
-  componentWillUnmount() {
-    this.eventOffRouterUpdate();
-  }
-
-  componentDidUpdate() {
-    this._pageTrans();
-  }
-
-  _renderPage(pageInfo, activeId, focusId){
-    let { app } = this.props;
-    let {_id, isActive, popLayerInfos, subPageInfos, routeDefine} = pageInfo||{};
-
-    if(routeDefine.loader){
-      routeDefine.loader(app).then(v=>{ Object.assign(routeDefine, v, {loader: null}); this.forceUpdate() })
-      return <app.router.PageLoading key={_id} />;
-    }else if(typeof routeDefine.component==='function'){
-      let props = { 
-        app, _id, 
-        route: { 
-          ...pageInfo, subPageInfos: undefined, popLayerInfos: undefined,
-          isActive, 
-          popLayers: popLayerInfos.map(v=>this._renderPopLayer(app, v.options._id)), 
-          subPages: Object.entries(subPageInfos).reduce((v1, [k,v])=>{v1[k]=this._renderPage(v, activeId, focusId); return v1},{}),
-        }, 
-      };
-      return <app.Page key={_id} {...props} />;
-    }else{
-      return <app.router key={_id} app={app} data={{errorRoute: "wrong component"}} />
-    }
-  }
-
-  _renderPopLayer(app, _id) {
-    return <app.PopLayer key={_id} app={app} id={_id} />;
-  }
-
-  render() {
-    let { app } = this.props;
-    let {_pageInfos, _error, _activeId, _focusId} = app.router;
-
-    if(_error) return <app.router.PageError app={app} data={_error} />;
-    return (
-      <React.Fragment>
-        {_pageInfos.map(v=>this._renderPage(v, _activeId, _focusId))}
-        {app.router._getPopLayerNoPageId().map(v=>this._renderPopLayer(app, v.options._id))}
-      </React.Fragment>
-    );
-  }
-}
-
 /**
  * app 的页面管理器，负责路由映射，页面管理，弹出层管理，导航操作等功能
  * 
@@ -275,423 +162,30 @@ class Router {
      * @type {string}
      */
     this._id = app._id+'.router';
-    /**
-     * 懒加载页面的加载中组件
-     * @type {component}
-     */
-    this.PageLoading = PageLoading;
-    /**
-     * 路由错误或者页面错误时的错误显示组件
-     * @type {component}
-     */
-    this.PageError = PageError;
-    /**
-     * 设置导航时是否传递之前的查询字符串到新页面
-     * @type {boolean}
-     */
-    this.passQuery = false;
-    /**
-     * 设置导航时是否传递之前的状态数据到新页面
-     * @type {boolean}
-     */
-    this.passState = false;
-    /**
-     * 设置导航时是否传递之前的页面参数到新页面
-     * @type {boolean}
-     */
-    this.passParams = false;
-    /**
-     * 设置页面进场动画是否显示白屏提高速度
-     * @type {boolean}
-     */
-    this.transInBlank = true;
-    /**
-     * 设置页面离场动画是否显示白屏提高速度
-     * @type {boolean}
-     */
-    this.transOutBlank = true;
 
     /*!
      * 路由描画组件，是所有页面和弹出层的父组件
      */
-    this._RouterComponent = RouterComponent;
+    this.Component = RouterComponent;
+    this.component = null;
     /*!
      * 路由集合
      */
     this._routes = {}; 
     /*!
-     * 页面实例的集合
-     */
-    this._pages = {}; 
-    /*!
-     * 弹出层描述信息集合
-     */
-    this._popLayerInfos = []; 
-    /*!
-     * 页面描述信息集合
-     */
-    this._pageInfos = [];
-    /*!
-     * 当前顶层页面的 id
-     */
-    this._activeId = undefined;
-    /*!
-     * 当前有键盘焦点的 id
-     */
-    this._focusId = undefined;
-    /*!
-     * 即将关闭的页面 id
-     */
-    this._deactiveId = undefined;
-    /*!
-     * 需要显示在页面上的错误信息
-     */
-    this._error = undefined;
-    /*!
      * 暂存的被阻塞的路径信息
      */
     this._block = undefined;
-    /*!
-     * 弹出层 id 的随机发生数
-     */
-    this._popLayerIdRandom = 0;
-    /*!
-     * 历史栈里面记录的数量
-     */
-    this._historyCount = 0;
-    /*!
-     * 暂存各个页面的状态数据，用于返回时恢复
-     */
-    this._states = {};
     
-    this.app.event.on(this.app._id, 'onPageAdd', (_id, page)=>{page&&this._addPage(_id, page)}, this._id);
-    this.app.event.on(this.app._id, 'onPageRemove', (_id, page)=>{page&&this._removePage(_id)}, this._id);
-    this.app.event.on(this.app._id, 'onAppStartRouter', ()=>(this.app.render.component = <this._RouterComponent app={this.app} />), this._id);
-    this.app.event.on(this.app._id, 'onAppStartRender', ()=>{this._updateRender()}, this._id);
     this.app.event.on(this.app._id, 'onRouteErrorNoRoute', name=>this.error(`route name: ${name}`, 'no route error'), this._id);
     this.app.event.on(this.app._id, 'onRouteErrorNoParam', name=>this.error(`params name: ${name}`, 'miss require param error'), this._id);
-
-    this._history = createHistory();
-    this._history.listen((location, action)=>this._handleLocationChange(location, action));
-    this._handleLocationChange(this._history.location, this._history.action);
   }
 
   destructor() {
     this.app.event.off(this._id);
   }
 
-  // private work
-  // --------------------------------------
-  _updateRender() {
-    this.app.log.debug('router:update render');
-    this.app.event.emit(this.app._id, 'onRouterUpdate');
-  }
 
-  _clearError() {
-    this._error = null;
-  }
-
-  _handleLocationChange(location, action) {
-    this.app.log.debug('router location', location);
-    this._clearError();
-
-    Object.keys(this._states).filter(v=>!location.pathname.startsWith(v)).forEach(v=>{delete this._states[v]});
-    if(location.state) this._states[location.pathname] = location.state;
-
-    location.query = {};
-    location.search.slice(1).split('&').filter(v=>v).forEach(v=>{
-      let vs = v.split('=');
-      location.query[vs[0]] = decodeURIComponent(vs[1]);
-    })
-
-    if(action==='PUSH') this._historyCount++;
-    if(action==='POP') this._historyCount = Math.max(--this._historyCount, 0);
-
-    let pos = 0;
-    let pathnames = [];
-    while(pos<location.pathname.length-1) {
-      let index = location.pathname.indexOf(spe, pos+1);
-      index = index>=0?index:location.pathname.length;
-      let sub = location.pathname.slice(pos+1, index);
-      if((pos===0&&sub[0]===ParamSpe)||(this.getRouteByPageName(spe+sub.split(ParamSpe)[0]).length)) {
-        pathnames.push(spe+sub);
-      }else if(pos===0){
-        pathnames.push(spe);
-        pathnames.push(sub);
-      }else {
-        pathnames.push(sub);
-      }
-      pos = index;
-    }
-    if(!pathnames.length) pathnames.push(spe);
-    location.pathnames = pathnames;
-    
-    if(location.ignore) {location.ignore = false; return}
-    this._updateRouterInfo(location);
-  };
-
-  async _updateRouterInfo(location) {
-    if(!Object.keys(this.getRoutes()).length) return;
-
-    let pathName = '';
-    let _idPrev; 
-    let params = {};
-    let pageInfos = [];
-    let focusId = undefined;
-    let activeId = undefined;
-    let deactiveId = undefined;
-    let transStatus = undefined;
-
-    /* route */
-    console.log(999);
-    let isPop = this._history.action==='POP';
-    let isFirst = this._pageInfos.length === 0;
-
-    let level = 0;
-    for (let pagePathName of location.pathnames) {
-
-      pathName = join(pathName, decodeURIComponent(pagePathName));
-      let [pageName, ...pageParams] = pagePathName.split(ParamSpe);
-      let _id = PageSign+pathName;
-      let pageInfo = { 
-        _id, _idPrev, level, pageName, pathName, pagePathName, isSubPage: false, isActive: false,
-        query: location.query, state: this._states[pathName], pageParams, hash: location.hash?location.hash.slice(1):'',
-        subPageInfos: {}, popLayerInfos: this._getPopLayerByPageId(_id),
-      };
-      let [routeName, routeDefine] = this.getRouteByPageName(pageInfo.pageName);
-      if(!routeName||!routeDefine) return this.app.event.emit(this.app._id, 'onRouteErrorNoRoute', pageInfo.pageName, pageInfo, location);
-      pageInfo.routeName = routeName;
-      pageInfo.routeDefine = routeDefine;
-      pageInfo.routeParams = routeName.split(ParamSpe).slice(1);
-
-      pageInfo.params = this.passParams?{...params}:{};
-      pageInfo.routeParams.forEach((v,i)=>{
-        let optional = v.endsWith(ParamOptional);
-        if(optional) v = v.slice(0, -1);
-        if(!optional&&i>pageInfo.pageParams.length-1) return this.app.event.emit(this.app._id, 'onRouteErrorNoParam', v, pageInfo, location);
-        
-        pageInfo.params[v] = pageInfo.pageParams[i]?decodeURIComponent(pageInfo.pageParams[i]):null;
-        if(this.passParams) params[v] = pageInfo.params[v];
-      })
-
-
-      let isLast = pagePathName === location.pathnames[location.pathnames.length-1];
-      let prevOne = this._pageInfos.find(vv=>vv._id===pageInfo._id);
-      let isNew = !prevOne;
-      let isPrevActive = pageInfo._id===this._activeId&&!isLast;
-      let isReactive = pageInfo._id!==this._activeId&&isLast;
-      let status;
-      if(isFirst) {
-        status = isLast?'normal':'waitting';
-      }else if(isNew&&isLast){
-        status = isPop?'popin':'pushin'
-      }else if(isNew&&!isLast) {
-        status = 'waitting';
-      }else if(isPrevActive){
-        status = isPop?'popout':'pushout';
-      }else if(isReactive){
-        status = 'popin'
-      }else {
-        status = isLast?'normal':'background';
-      }
-      console.log(pageInfo._id, status);
-
-
-      let subNo = 0;
-      for (let [k,v] of Array.isArray(routeDefine.subPages)?routeDefine.subPages.map((v,i)=>[v,v]):Object.entries(routeDefine.subPages||{})) {
-        let subPageInfo = {...pageInfo};
-        subPageInfo._idParent = subPageInfo._id;
-        subPageInfo._idSubPage = k;
-        subPageInfo.subNo = subNo;
-        subPageInfo._id = subPageInfo._id + SubPageSpe + subPageInfo._idSubPage;
-        subPageInfo.pageName = v;
-        subPageInfo.isSubPage = true;
-        subPageInfo.subPageInfos = {};
-        subPageInfo.popLayerInfos = this._getPopLayerByPageId(subPageInfo._id);
-        let [routeNameSubPage, routeDefineSubPage] = this.getRouteByPageName(subPageInfo.pageName);
-        if(!routeNameSubPage||!routeDefineSubPage) return this.app.event.emit(this.app._id, 'onRouteErrorNoRoute', subPageInfo.pageName, subPageInfo, location);
-        
-        subPageInfo.routeName = routeNameSubPage;
-        subPageInfo.routeDefine = routeDefineSubPage;
-        pageInfo.subPageInfos[subPageInfo._idSubPage] = subPageInfo;
-        subNo++;
-      }
-      
-      _idPrev = _id;
-      level++;
-      pageInfos.push(pageInfo);
-    }
-
-    /* active & focus */
-    let popLayerInfos = this._getPopLayerNoPageId();
-    let focusPopLayerInfo = Array.from(popLayerInfos).reverse().find(v=>v.options.isModal);
-    let activePageInfo = pageInfos.slice(-1)[0];
-    if(focusPopLayerInfo) focusId = focusPopLayerInfo.options._id;
-    if(activePageInfo) activeId = activePageInfo._id;
-    if(activePageInfo && !focusId){
-      let focusPopLayerInfoOfPage = activePageInfo.popLayerInfos&&Array.from(activePageInfo.popLayerInfos).reverse().find(v=>v.options.isModal);
-      if(focusPopLayerInfoOfPage) { focusId = focusPopLayerInfoOfPage.options.id }else{ focusId = activePageInfo._id }
-    }
-
-    /* match */
-    for(let pageInfo of pageInfos) {
-      let _block = await this.app.event.emit(this.app._id, 'onRouteMatch', pageInfo, location);
-      if(_block) return this.block(_block);
-    }
-
-    /* update */
-    if(this._activeId!==activeId&&this._history.action==='POP'&&this._activeId&&!pageInfos.find(v=>v._id===this._activeId)) {
-      deactiveId = this._activeId;
-      transStatus = this._pageInfos.find(v=>v._id===activeId)?'pop':'pop-new';
-      pageInfos.push(this._pageInfos.find(v=>v._id===this._activeId));
-    }else if(this._activeId!==activeId) {
-      deactiveId = this._activeId;
-      transStatus = 'push';
-    }
-    
-    activePageInfo.isActive = transStatus||true;
-    activePageInfo.subPageInfos&&Object.entries(activePageInfo.subPageInfos).forEach(([k,v])=>v.isActive=true);
-    if(deactiveId) {
-      let deactivePageInfos = pageInfos.find(v=>v._id===deactiveId);
-      if(!deactivePageInfos) {
-        deactivePageInfos = this._pageInfos.find(v=>v._id===deactiveId);
-        pageInfos.push(deactivePageInfos);
-      }
-      deactivePageInfos.isActive = transStatus === 'push'?'background':'unmount';
-      deactivePageInfos.subPageInfos&&Object.entries(deactivePageInfos.subPageInfos).forEach(([k,v])=>v.isActive=deactivePageInfos.isActive);
-    }
-
-    
-
-    this._pageInfos = pageInfos;
-    this._focusId = focusId;
-    this._activeId = activeId;
-    this._deactiveId = deactiveId;
-    this._transStatus = transStatus;
-    this._updateRender();
-  }
-
-  _addPage(_id, page) {
-    this._pages[_id] = page;
-  }
-  
-  _removePage(_id) {
-    let page = this.getPage(_id);
-    if(page) {
-      this._removePopLayerByPageId(page._id);
-      delete this._pages[page._id];
-    }
-  }
-
-  _getPopLayerNoPageId() {
-    return this._popLayerInfos.filter(({options, remove})=>!remove&&!options._idPage);
-  }
-
-  _getPopLayerByPageId(_id) {
-    return this._popLayerInfos.filter(({options, remove})=>!remove&&options._idPage===_id);
-  }
-
-  _removePopLayerByPageId(_id) {
-    this._getPopLayerByPageId(_id).forEach(v=>this.removePopLayer(v.options._id))
-  }
-
-  // pages interface
-  // ---------------------------------------
-  /**
-   * 获取页面实例
-   * @param {(string|number)?} - 获取参数
-   * 
-   * 1. string：获取指定 id 的页面
-   * 1. number：获取指定序号的页面
-   * 1. 空：获取顶层页面
-   * 
-   * @returns {module:page.Page} 页面实例
-   */
-  getPage(_id) {
-    if(typeof _id === 'string') {
-      return this._pages[_id];
-    } else if(typeof _id === 'number') {
-      let pageinfo = this._pageInfos[_id];
-      return this._pages[pageinfo&&pageinfo._id];
-    } else if(_id===undefined){
-      let pageinfo = this._pageInfos[this._pageInfos.length-1];
-      return this._pages[pageinfo&&pageinfo._id];
-    }
-  }
-
-  /**
-   * 获取页面实例集合
-   * @returns {module:page.Page[]} 页面实例
-   */
-  getPages() {
-    return this._pages;
-  }
-
-
-  // poplayer interface
-  // ---------------------------------------
-  /**
-   * 生成弹出层 id
-   * @param {module:router~PopLayerOptions} - 配置参数
-   * @returns {string} 弹出层 id 
-   */
-  genPopLayerId(options={}) {
-    return options._id || `${++this._popLayerIdRandom}@${options._idPage?options._idPage:'#'}`;
-  }
-
-  /**
-   * 添加弹出层
-   * @param {number|string|component|element} - 内容 
-   * @param {object} props - 组件属性
-   * @param {module:router~PopLayerOptions} options - 弹出层配置
-   * @returns {string} 弹出层 id 
-   */
-  addPopLayer(content, props={}, options={}) {
-    options._id = this.genPopLayerId(options);
-    let popLayer = this.getPopLayerInfo(options._id);
-
-    if(!popLayer) {
-      if(!content) return;
-      this._popLayerInfos.push({ content, props, options });
-      this._updateRouterInfo(this._history.location);
-    }else{
-      content&&(popLayer.content=content);
-      popLayer.props = {...popLayer.props, ...props};
-      popLayer.options = {...popLayer.options, ...options};
-      popLayer.instance&&popLayer.instance.setState({});
-    }
-    
-    return options._id;
-  }
-
-  /**
-   * 移除弹出层
-   * @param {!string} - 弹出层 id
-   */
-  removePopLayer(_id) {
-    let info = this.getPopLayerInfo(_id);
-    if(!info) return;
-    info.remove = true;
-    this._updateRouterInfo(this._history.location);
-  }
-
-  /**
-   * 获取弹出层信息
-   * @param {string} - 弹出层 id
-   * @returns {module:router~PopLayerInfo}
-   */
-  getPopLayerInfo(_id) {
-    return this._popLayerInfos.find(v=>v.options._id===_id);
-  }
-
-  /**
-   * 获取全部弹出层信息集合
-   * @returns {module:router~PopLayerInfo[]}
-   */
-  getPopLayerInfos() {
-    return this._popLayerInfos;
-  }
-  
 
   // router interface
   // --------------------------------------
@@ -704,8 +198,6 @@ class Router {
     if(!name||!route) return;
     this._routes[name] = route;
     route.for&&this.addNavigatorFunction(name, route.for);
-    this._handleLocationChange(this._history.location, this._history.action);
-    this._updateRouterInfo(this._history.location);
   }
 
   /**
@@ -718,8 +210,6 @@ class Router {
   setRoutes(routes) {
     this._routes = routes;
     Object.entries(this._routes||{}).forEach(([k,v])=>v.for&&this.addNavigatorFunction(k, v.for));
-    this._handleLocationChange(this._history.location, this._history.action);
-    this._updateRouterInfo(this._history.location);
   }
 
   /**
@@ -778,23 +268,6 @@ class Router {
     return this.app.router._pageInfos[this.app.router._pageInfos.length-1].name==='/';
   }
 
-  /**
-   * 判断是否具有键盘焦点
-   * @param {*} - 页面或者弹出层 id
-   * @returns {boolean} 是否具有键盘焦点
-   */
-  isFocus(_id) {
-    return this._focusId === _id;
-  }
-
-  /**
-   * 判断是否是顶层
-   * @param {*} - 页面或者弹出层 id
-   * @returns {boolean} 是否顶层
-   */
-  isActive(_id) {
-    return this._activeId === _id;
-  }
 
   // router navigator interface
   // ----------------------------------------
@@ -840,7 +313,7 @@ class Router {
     let state;
     let hash;
     let ignore;
-    let pathnames = this._pageInfos.map(v=>v.pagePathName);
+    let pathnames = this.component.state._pageInfos.map(v=>v.pagePathName);
 
     let addPath = path=>path.split('/').forEach(v=>{
       if(v==='') {
@@ -878,7 +351,7 @@ class Router {
    * 获取路径名称，但不跳转或者替换，参数参见 getPathInfo
    */
   getPathName(...args) {
-    return this._history.createHref(this.getPathInfo(...args));
+    return this.component._history.createHref(this.getPathInfo(...args));
   }
 
   /**
@@ -893,7 +366,7 @@ class Router {
    */
   push(...args) {
     this.app.log.debug('router push', args);
-    this._history.push(this.getPathInfo(...args));
+    this.component._history.push(this.getPathInfo(...args));
     return true;
   }
 
@@ -902,7 +375,7 @@ class Router {
    */
   replace(...args) {
     this.app.log.debug('router replace', args);
-    this._history.replace(this.getPathInfo(...args));
+    this.component._history.replace(this.getPathInfo(...args));
     return true;
   }
 
@@ -912,7 +385,7 @@ class Router {
    */
   back(step=1) {
     this.app.log.debug('router back');
-    this._history.go(-step);
+    this.component._history.go(-step);
     return true;
   }
 
@@ -920,9 +393,7 @@ class Router {
    * 强制刷新全部页面
    */
   refresh() {
-    this._clearError();
-    this._updateRouterInfo(this._history.location);
-    return true;
+    return this.component.setState({error: null});
   }
 
   /**
@@ -948,10 +419,8 @@ class Router {
    * @param {string} - 错误目标 id 
    */
   error(message, title, _id) {
-    this._error = {message, title, _id};
-    this._updateRender();
+    return this.component.setState({error: {message, title, _id}});
   }
-
 }
 
 

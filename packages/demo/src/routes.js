@@ -8,8 +8,11 @@ export default {
 
   'router': {component: require('./pages/router').default, title: '路由管理展示'},
   'pageinfo:param1?:param2?': require('./pages/router').PageInfo,
-  'dynamic': {
+  'dynamic1': {
     loader: ()=>new Promise(resolve=>setTimeout(()=>{resolve({component: require('./pages/router').PageInfo })},3000))
+  },
+  'dynamic': {
+    component: ()=>new Promise(resolve=>setTimeout(()=>{resolve({component: require('./pages/router').PageInfo })},3000))
   },
 
   'data': {component: require('./pages/data').default, title: '数据管理展示'},

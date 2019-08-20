@@ -66,6 +66,11 @@ function (_React$Component) {
       return name ? data[name] : data;
     }
   }, {
+    key: "componentDidCatch",
+    value: function componentDidCatch(error, info) {
+      debugger;
+    }
+  }, {
     key: "render",
     value: function render() {
       return _react.default.createElement(this.app.context.Provider, {
@@ -105,47 +110,34 @@ function () {
      */
 
     this._id = app._id + '.context';
-    this.app.event.on(this.app._id, 'onAppStartContext', function () {
-      _this2._createStore();
-    });
+    this.Component = ContextComponent;
+
+    var _createContext = (0, _react.createContext)(),
+        Provider = _createContext.Provider,
+        Consumer = _createContext.Consumer;
+
+    this.Provider = Provider;
+    this.Consumer = Consumer;
+
+    this.consumerHoc = function (Component) {
+      return function (props) {
+        return _react.default.createElement(_this2.Consumer, null, function (context) {
+          return _react.default.createElement(Component, (0, _extends2.default)({
+            context: context
+          }, props));
+        });
+      };
+    };
   }
+  /**
+   * 清除指定 id 的数据块
+   * @param {string} - 数据块 id
+   * @param {function} - 完成时的回调函数 
+   * @returns {promise} react state 操作 promise
+   */
+
 
   (0, _createClass2.default)(Context, [{
-    key: "_createStore",
-    value: function _createStore() {
-      var _this3 = this;
-
-      var _createContext = (0, _react.createContext)(),
-          Provider = _createContext.Provider,
-          Consumer = _createContext.Consumer;
-
-      this.Provider = Provider;
-      this.Consumer = Consumer;
-
-      this.consumerHoc = function (Component) {
-        return function (props) {
-          return _react.default.createElement(_this3.Consumer, null, function (context) {
-            return _react.default.createElement(Component, (0, _extends2.default)({
-              context: context
-            }, props));
-          });
-        };
-      };
-
-      this.app.render.component = _react.default.createElement(ContextComponent, {
-        app: this.app
-      }, this.app.render.component);
-      this.app.Page = this.consumerHoc(this.app.Page);
-      this.app.PopLayer = this.consumerHoc(this.app.PopLayer);
-    }
-    /**
-     * 清除指定 id 的数据块
-     * @param {string} - 数据块 id
-     * @param {function} - 完成时的回调函数 
-     * @returns {promise} react state 操作 promise
-     */
-
-  }, {
     key: "clear",
     value: function clear(_id, cb) {
       var state = this.provider.data();

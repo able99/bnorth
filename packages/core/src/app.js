@@ -101,16 +101,19 @@ import Keyboard from './keyboard';
      * @type {module:state.State}
      */
     this.State = this.options.State||State;
+    this.State.app = this;
     /**
      * Page 单个页面的组件
      * @type {module:page.Page}
      */
     this.Page = this.options.Page||Page;
+    this.Page.app = this;
     /**
      * Page 弹出层组件
      * @type {module:poplayer.PopLayer}
      */
     this.PopLayer = this.options.PopLayer||PopLayer;
+    this.PopLayer.app = this;
     /**
      * Utils 模块类，实现一些常用的工具函数
      * @type {class}

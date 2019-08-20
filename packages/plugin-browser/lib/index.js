@@ -457,9 +457,9 @@ var browser = function browser(app) {
       if (options.autoTitle) {
         app.event.on(app._id, 'onActivePageChange', function (_idPage) {
           if (!app.browser._defaultTitle) app.browser._defaultTitle = app.browser.title;
-          var page = app.router.getPage(_idPage);
-          if (page && page.props.route.title === false) return;
-          app.browser.title = page && page.route.routeDefine.title || app.browser._defaultTitle;
+          var page = app.Page.getPage(_idPage);
+          if (page && page.props.info.title === false) return;
+          app.browser.title = page && page.info.routeDefine.title || app.browser._defaultTitle;
         }, app.browser._id);
       }
     },

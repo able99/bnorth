@@ -121,6 +121,36 @@ import ReactDOM from 'react-dom';
  * @exportdefault
  */
 class Page extends React.Component {
+  // page manager
+  // ---------------------
+
+  /**
+   * 页面集合
+   */
+  static pages = {};
+
+  /**
+   * 获取页面实例
+   * @param {(string|number)?} - 获取参数
+   * 
+   * 1. string：获取指定 id 的页面
+   * 1. number：获取指定序号的页面
+   * 1. 空：获取顶层页面
+   * 
+   * @returns {module:page.Page} 页面实例
+   */
+  static getPage(_id) {
+    if(typeof _id === 'string') {
+      return Page.pages[_id];
+    } else if(typeof _id === 'number') {
+      let pageinfo = Page.app.router.component.state._pageInfos[_id];
+      return Page.pages[pageinfo&&pageinfo._id];
+    } else if(_id===undefined){
+      let pageinfo = Page.app.router.component.state._pageInfos[Page.app.router.component.state._pageInfos.length-1];
+      return pageinfo&&Page.pages[pageinfo._id];
+    }
+  }
+
   // page interface
   // ---------------------
   /**
@@ -143,16 +173,24 @@ class Page extends React.Component {
    * 页面路由匹配信息
    * @type {module:page~PageRouteInfo}
    */
-  get route() { 
-    return this.props.route;
+  get info() { 
+    return this.props.info;
   }
 
   /**
    * 页面框架的 dom 元素
    * @type {element}
    */
-  get frame() { 
+  get dom() { 
     return ReactDOM.findDOMNode(this);
+  }
+
+  get status() {
+    return this.props.info.status
+  }
+
+  get active() {
+    return this.props.info.status === 'normal';
   }
 
   /**
@@ -162,7 +200,7 @@ class Page extends React.Component {
    */
   getSubPage(subName) { 
     let _id = this.props.subPages[subName]&&this.props.subPages[subName].props._id;
-    return _id && this.props.app.router.getPage(_id);
+    return _id && this.props.app.info.getPage(_id);
   }
 
   /**
@@ -170,7 +208,7 @@ class Page extends React.Component {
    * @returns {module:page.Page} 父页面实例
    */
   getParrentPage() {
-    return this.app.getPage(this.props.route._idParent);
+    return this.app.getPage(this.props.info._idParent);
   }
 
   /**
@@ -178,7 +216,7 @@ class Page extends React.Component {
    * @returns {module:page.Page} 父页面实例
    */
   getPrevPage() {
-    return this.app.getPage(this.props.route._idPrev);
+    return this.app.getPage(this.props.info._idPrev);
   }
 
   /**
@@ -205,24 +243,16 @@ class Page extends React.Component {
 
   // page private work
   // ---------------------------
-  /*!
-   * 处理页面键盘事件，在返回键时，返回上级历史
-   */
-  _handleKeyEvent(e) {
-    return e.keyCode===27&&this.actionGoBack();
-  }
+  constructor(props) {
+    super(props);
+    Page.pages[this._id] = this;
+    
+    let { app, info:{routeDefine:{component, controller}={}} } = this.props;
+    controller = controller||component.controller||{};
+    this.options = typeof(controller)==='function'?controller(app, this):controller;
 
-  /*!
-   * 处理页面 controller 的构建和初始化
-   */
-  _bindController() {
-    let { app, route:{routeDefine:{component, controller}={}} } = this.props;
-    let acontroller = controller||component.controller||{};
-    let controllerObj = typeof(acontroller)==='function'?acontroller(app, this):acontroller;
-    this.options = controllerObj;
-
-    if(!controllerObj.stateData) controllerObj.stateData = undefined;
-    if(!controllerObj.actionGoBack) controllerObj.actionGoBack = ()=>app.router.back();
+    if(!this.options.stateData) this.options.stateData = undefined;
+    if(!this.options.actionGoBack) this.options.actionGoBack = ()=>app.router.back();
 
     app.State.attachStates(app, this, this._id, this.options, (k,v,state)=>{
       if(typeof v==='string') return;
@@ -232,116 +262,106 @@ class Page extends React.Component {
       app.event.on(this._id, 'onPageStop', (page)=>{app.event.emit(this[k]._id, 'onStateStop', this[k]._id)}, this[k]._id);
     })
 
-    Object.entries(controllerObj).forEach(([k,v])=>{
-      if(k.startsWith('state')||k.startsWith('_state')) {
-        // state
-      }else if(k==='onPageAdd'||k==='onPageRemove') {
-        // app event
+    Object.entries(this.options).forEach(([k,v])=>{
+      if(k.startsWith('state')||k.startsWith('_state')) { // state
+      }else if(k==='onPageAdd'||k==='onPageRemove') { // app event
         app.event.on(app._id, k, v, this._id);
-      }else if(k.startsWith('onPage')) {
-        // page event
+      }else if(k.startsWith('onPage')) { // page event
         app.event.on(this._id, k, v, this._id);
-      }else if(k.startsWith('onState')) {
-        // page state event
+      }else if(k.startsWith('onState')) { // page state event
         let stateEvents = k.split('_');
         if(stateEvents[0]&&this[stateEvents[1]]) app.event.on(this[stateEvents[1]]._id, stateEvents[0], v, this._id);
-      }else if(k.startsWith('on')) {
-        // app event
+      }else if(k.startsWith('on')) { // app event
         app.event.on(app._id, k, v, this._id);
-      }else if(k.startsWith('action')){ 
-        // action
+      }else if(k.startsWith('action')){ // action
         this[k] = this.action(v, k.slice(6));
-      }else{
-        // user props
+      }else{ // user props
         this[k] = v;
       }
     })
-
-    this._controllerBinded = true;
-    this.forceUpdate();
   }
   
-  _pageInit() {
-    let { app, _id, route:{isActive} } = this.props;
-
-    if(app.router.transInBlank) this._bindController();
-    this._offKeyEvent = app.keyboard.on(_id, 'keydown', e=>this._handleKeyEvent(e));
-    app.event.emit(this._id, 'onPageStart', this, isActive);
-    isActive && app.event.emit(this._id, 'onPageActive', this, true);
-    isActive && app.event.emit(app._id, 'onActivePageChange', this._id);
-  }
-
   // page life circle
   // ---------------------------
-  componentDidMount() {
-    let { app, _id, route:{isSubPage} } = this.props;
-    app.log.debug('page did mount', _id);
-    app.event.emit(app._id, 'onPageAdd', _id, this);
-    if(!app.router.transInBlank) this._bindController();
-    if(!this._controllerBinded&&(isSubPage||!app.router._transStatus)) this._pageInit();
+  _pageStart() {
+    if(this._started) return;
+    let { app, _id } = this.props;
+    let active = this.active;
+    app.event.emit(_id, 'onPageStart', this, active);
+    active && app.event.emit(_id, 'onPageActive', this, true);
+    active && app.event.emit(app._id, 'onActivePageChange', _id);
+    this._started = true;
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    let {app, route:{_id, isSubPage, isActive}} = this.props;
-
-    if(!this._controllerBinded&&!isSubPage) {
-      if(isActive===true||isActive===false) this._pageInit();
-      return;
-    }
-
-    if(prevProps.route.isActive !== true && isActive === true) {
-      app.event.emit(_id, 'onPageActive', this, false);
-      app.event.emit(app._id, 'onActivePageChange', _id);
-    }
-    if(prevProps.route.isActive && isActive === false) {
-      app.event.emit(_id, 'onPageInactive', this, false);
-    }
+  _pageActive() {
+    let { app, _id } = this.props;
+    app.event.emit(_id, 'onPageActive', this, false);
+    app.event.emit(app._id, 'onActivePageChange', _id);
   }
 
-  componentWillUnmount() {
-    let { app, _id, route:{isActive} } = this.props;
-    app.log.debug('page will unmount', _id);
+  _pageInactive() {
+    let { app, _id } = this.props;
+    app.event.emit(_id, 'onPageInactive', this, false);
+  }
 
-    isActive&&app.event.emit(this._id, 'onPageInactive', this, true);
+  _pageStop() {
+    let { app, _id } = this.props;
+    let active = this.active;
+    active&&app.event.emit(_id, 'onPageInactive', this, true);
     app.event.emit(this._id,'onPageStop', this);
     app.event.emit(app._id, 'onPageRemove', _id, this);
-    this._offKeyEvent && this._offKeyEvent();
+    delete Page.pages[_id];
     app.event.off(_id);
   }
 
-  componentDidCatch(error, info) {
-    let { app } = this.props;
-    app.log.debug('page did catch');
-    app.render.panic(error, {title:'page error catch', _id: this._id});
+  componentDidMount() {
+    let { app, _id, info:{isSubPage, status} } = this.props;
+    app.log.debug('page did mount', _id);
+    app.event.emit(app._id, 'onPageAdd', _id, this);
+    if(isSubPage||status==='normal'||status==='background') this._pageStart();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if((nextProps.route.isActive !== this.props.route.isActive) && (nextProps.route.isActive===true||nextProps.route.isActive===false)) return true;
-    if(this.props.route.isActive!==true&&this.props.route.isActive!==false) return false;
+  componentDidUpdate(prevProps, prevState) {
+    let status = this.status;
+    if(!this._started&&(status==='normal'||status==='background')) this._pageStart();
+    if(prevProps.info.status !== 'normal' && status === 'normal') this._pageActive();
+    if(prevProps.info.staus === 'normal' && status !== 'normal') this._pageInactive()
+  }
 
-    if (!this.props.app.utils.shallowEqual(this.props.route, nextProps.route, ['params', 'query', 'popLayers', 'subPages'])) {
-      this.app.event.emit(this._id, 'onPageUpdate', this._id, 'route');
-      return true;
-    }
-    if(this.app.State.checkStates(this, this.props.context, nextProps.context, this.options)) {
-      this.app.event.emit(this._id, 'onPageUpdate', this._id, 'state');
-      return true;
-    }
+  componentWillUnmount() {
+    let { app, _id } = this.props;
+    app.log.debug('page will unmount', _id);
+    this._pageStop();
+  }
+
+  // componentDidCatch(error, info) {
+  //   let { app, _id } = this.props;
+  //   app.log.debug('page did catch');
+  //   app.render.panic(error, {title:'page error catch', _id});
+  // }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if(nextProps.info.status !== this.props.info.status) return true;
+    if(!this.props.app.utils.shallowEqual(this.props.subPages, nextProps.subPages)) return true;
+    if(!this.props.app.utils.shallowEqual(this.props.popLayers, nextProps.popLayers)) return true;
+    if(!this.props.app.utils.shallowEqual(this.props.info, nextProps.info, ['params', 'query', 'popLayers', 'subPages'])) return true;
+    if(this.app.State.checkStates(this, this.props.context, nextProps.context, this.options)) return true;
     return false;
   }
 
   render() {
-    let { app, _id, route, ...props } = this.props;
-    let {isActive,routeDefine,subPages,popLayers} = route;
+    let { app, _id, info, subPages, popLayers } = this.props;
     app.log.debug('page render', _id);
     this._actionNum = 0;
-
-    let aprops = {app, _id, route, page: this, ...this.options&&app.State.getStates(this, this.options)}
     
     return (
-      <Page.Frame id={_id} route={route}>
-        {this._controllerBinded&&(!app.router.transOutBlank||isActive!=='unmount')?<routeDefine.component {...aprops} {...props}>{subPages}</routeDefine.component>:null}
-        {this._controllerBinded&&(!app.router.transOutBlank||isActive!=='unmount'?popLayers:null)}
+      <Page.Frame app={app} _id={_id} info={info}>
+        <info.routeDefine.component 
+          app={app} page={this} _id={_id} route={info} info={info}
+          {...this.options&&app.State.getStates(this, this.options)}>
+          {subPages}
+        </info.routeDefine.component>
+        {popLayers}
       </Page.Frame>
     )
   }
@@ -354,19 +374,19 @@ export default Page;
 
 
 Page.Frame = aprops=>{
-  let { id:_id, route, children } = aprops;
+  let { _id, info, children } = aprops;
+  let show = info.status==='normal'||info.status==='pushout';
 
   let props = {
     'data-page': _id,
-    'data-page-sub': route.isSubPage?route.routeName:undefined,
-    style: route.isSubPage?{
+    'data-page-sub': info.isSubPage?info.routeName:undefined,
+    style: info.isSubPage?{
       width: '100%', height: '100%',
     }:{
+      display: show?'block':'none',
       position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, background: 'white',
-      'WebkitBackfaceVisibility': 'hidden', 'MozBackfaceVisibility': 'hidden',  'msBackfaceVisibility': 'hidden', 
-      'backfaceVisibility': 'hidden',  'WebkitPerspective': 1000, 'MozPerspective': 1000, 'msPerspective': 1000, 'perspective': 1000,
     },
   }
 
-  return <main {...props}>{children}</main>
+  return <main {...props}>{show?children:null}</main>
 }

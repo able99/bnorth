@@ -7,37 +7,19 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+require("core-js/modules/es6.regexp.search");
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+
 require("core-js/modules/es6.function.name");
 
 require("core-js/modules/es6.regexp.replace");
 
-var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
-
-require("core-js/modules/es6.string.ends-with");
-
-var _toArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toArray"));
-
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
-
-require("core-js/modules/es7.symbol.async-iterator");
-
-require("core-js/modules/es6.symbol");
-
-require("core-js/modules/es6.array.find");
-
-require("regenerator-runtime/runtime");
-
-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
-
-require("core-js/modules/es6.regexp.search");
-
 require("core-js/modules/es6.regexp.split");
 
-require("core-js/modules/es6.string.starts-with");
-
-require("core-js/modules/es6.object.keys");
-
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+require("core-js/modules/es6.array.find");
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
@@ -45,23 +27,11 @@ require("core-js/modules/es6.array.iterator");
 
 require("core-js/modules/es7.object.entries");
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
-require("core-js/modules/es6.object.assign");
-
-require("core-js/modules/es6.array.from");
-
 require("core-js/modules/web.dom.iterable");
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -69,9 +39,7 @@ var _createHashHistory = _interopRequireDefault(require("history/createHashHisto
 
 var _path = require("path");
 
-var _routerLoading = _interopRequireDefault(require("./router.loading.js"));
-
-var _routerError = _interopRequireDefault(require("./router.error.js"));
+var _router = _interopRequireDefault(require("./router.component"));
 
 /**
  * @module
@@ -201,202 +169,6 @@ var PageSign = '#';
  * @property {module:router~PathInfo} location - 路径信息
  */
 
-/*!
- * 提交到 render 模块的的 router 组件，是所有页面和弹出层的父组件
- */
-
-var RouterComponent =
-/*#__PURE__*/
-function (_React$Component) {
-  (0, _inherits2.default)(RouterComponent, _React$Component);
-
-  function RouterComponent() {
-    (0, _classCallCheck2.default)(this, RouterComponent);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(RouterComponent).apply(this, arguments));
-  }
-
-  (0, _createClass2.default)(RouterComponent, [{
-    key: "_pageInit",
-    value: function _pageInit() {
-      var app = this.props.app;
-      var router = app.router;
-      Array.from(document.querySelectorAll('main')).filter(function (v) {
-        return !v.getAttribute('data-page-sub');
-      }).forEach(function (v) {
-        var id = v.getAttribute('data-page');
-
-        if (id === router._activeId) {
-          v.style.webkitTransform = "translateX(" + 0 + "%)";
-          v.style.display = 'block';
-        } else {
-          v.style.display = 'none';
-        }
-      });
-    }
-  }, {
-    key: "_pageTrans",
-    value: function _pageTrans() {
-      var app = this.props.app;
-      var router = app.router;
-      if (!router._transStatus) return;
-      var activeEl = document.querySelector('main[data-page="' + router._activeId + '"]');
-      var deactiveEl = document.querySelector('main[data-page="' + router._deactiveId + '"]');
-      Array.from(document.querySelectorAll('main')).filter(function (v) {
-        return !v.getAttribute('data-page-sub');
-      }).forEach(function (v) {
-        var id = v.getAttribute('data-page');
-
-        if (id === router._activeId) {
-          v.style.webkitTransform = "translateX(" + (router._transStatus === 'push' ? 100 : -100) + "%)";
-          v.style.display = 'block';
-        } else if (id === router._deactiveId) {
-          v.style.webkitTransform = "translateX(" + 0 + "%)";
-          v.style.display = 'block';
-        } else {
-          v.style.display = 'none';
-        }
-      });
-      var time = new Date().getTime();
-      var finish = false;
-
-      var _run = function _run() {
-        if (finish) {
-          deactiveEl && (deactiveEl.style.display = 'none');
-
-          router._updateRouterInfo(router._history.location);
-
-          return;
-        }
-
-        var diff = new Date().getTime() - time;
-        var percent = diff * 100 / 200;
-
-        if (percent >= 100) {
-          percent = 100;
-          finish = true;
-        }
-
-        activeEl.style.webkitTransform = "translate3d(" + (router._transStatus === 'push' ? 100 - percent : percent - 100) + "%, 0, 0)";
-        deactiveEl && (deactiveEl.style.webkitTransform = "translate3d(" + (router._transStatus === 'push' ? -1 : 1) * percent + "%, 0, 0)");
-        requestAnimationFrame(_run);
-      };
-
-      _run();
-    }
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this = this;
-
-      var app = this.props.app;
-      this.eventOffRouterUpdate = app.event.on(app._id, 'onRouterUpdate', function () {
-        return _this.forceUpdate();
-      });
-
-      this._pageInit();
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      this.eventOffRouterUpdate();
-    }
-  }, {
-    key: "componentDidUpdate",
-    value: function componentDidUpdate() {
-      this._pageTrans();
-    }
-  }, {
-    key: "_renderPage",
-    value: function _renderPage(pageInfo, activeId, focusId) {
-      var _this2 = this;
-
-      var app = this.props.app;
-
-      var _ref = pageInfo || {},
-          _id = _ref._id,
-          isActive = _ref.isActive,
-          popLayerInfos = _ref.popLayerInfos,
-          subPageInfos = _ref.subPageInfos,
-          routeDefine = _ref.routeDefine;
-
-      if (routeDefine.loader) {
-        routeDefine.loader(app).then(function (v) {
-          Object.assign(routeDefine, v, {
-            loader: null
-          });
-
-          _this2.forceUpdate();
-        });
-        return _react.default.createElement(app.router.PageLoading, {
-          key: _id
-        });
-      } else if (typeof routeDefine.component === 'function') {
-        var props = {
-          app: app,
-          _id: _id,
-          route: (0, _objectSpread2.default)({}, pageInfo, {
-            subPageInfos: undefined,
-            popLayerInfos: undefined,
-            isActive: isActive,
-            popLayers: popLayerInfos.map(function (v) {
-              return _this2._renderPopLayer(app, v.options._id);
-            }),
-            subPages: Object.entries(subPageInfos).reduce(function (v1, _ref2) {
-              var _ref3 = (0, _slicedToArray2.default)(_ref2, 2),
-                  k = _ref3[0],
-                  v = _ref3[1];
-
-              v1[k] = _this2._renderPage(v, activeId, focusId);
-              return v1;
-            }, {})
-          })
-        };
-        return _react.default.createElement(app.Page, (0, _extends2.default)({
-          key: _id
-        }, props));
-      } else {
-        return _react.default.createElement(app.router, {
-          key: _id,
-          app: app,
-          data: {
-            errorRoute: "wrong component"
-          }
-        });
-      }
-    }
-  }, {
-    key: "_renderPopLayer",
-    value: function _renderPopLayer(app, _id) {
-      return _react.default.createElement(app.PopLayer, {
-        key: _id,
-        app: app,
-        id: _id
-      });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this3 = this;
-
-      var app = this.props.app;
-      var _app$router = app.router,
-          _pageInfos = _app$router._pageInfos,
-          _error = _app$router._error,
-          _activeId = _app$router._activeId,
-          _focusId = _app$router._focusId;
-      if (_error) return _react.default.createElement(app.router.PageError, {
-        app: app,
-        data: _error
-      });
-      return _react.default.createElement(_react.default.Fragment, null, _pageInfos.map(function (v) {
-        return _this3._renderPage(v, _activeId, _focusId);
-      }), app.router._getPopLayerNoPageId().map(function (v) {
-        return _this3._renderPopLayer(app, v.options._id);
-      }));
-    }
-  }]);
-  return RouterComponent;
-}(_react.default.Component);
 /**
  * app 的页面管理器，负责路由映射，页面管理，弹出层管理，导航操作等功能
  * 
@@ -409,7 +181,6 @@ function (_React$Component) {
  * @exportdefault
  */
 
-
 var Router =
 /*#__PURE__*/
 function () {
@@ -418,7 +189,7 @@ function () {
    * @param {module:app.App} app 
    */
   function Router(app) {
-    var _this4 = this;
+    var _this = this;
 
     (0, _classCallCheck2.default)(this, Router);
 
@@ -433,722 +204,34 @@ function () {
      */
 
     this._id = app._id + '.router';
-    /**
-     * 懒加载页面的加载中组件
-     * @type {component}
-     */
-
-    this.PageLoading = _routerLoading.default;
-    /**
-     * 路由错误或者页面错误时的错误显示组件
-     * @type {component}
-     */
-
-    this.PageError = _routerError.default;
-    /**
-     * 设置导航时是否传递之前的查询字符串到新页面
-     * @type {boolean}
-     */
-
-    this.passQuery = false;
-    /**
-     * 设置导航时是否传递之前的状态数据到新页面
-     * @type {boolean}
-     */
-
-    this.passState = false;
-    /**
-     * 设置导航时是否传递之前的页面参数到新页面
-     * @type {boolean}
-     */
-
-    this.passParams = false;
-    /**
-     * 设置页面进场动画是否显示白屏提高速度
-     * @type {boolean}
-     */
-
-    this.transInBlank = true;
-    /**
-     * 设置页面离场动画是否显示白屏提高速度
-     * @type {boolean}
-     */
-
-    this.transOutBlank = true;
     /*!
      * 路由描画组件，是所有页面和弹出层的父组件
      */
 
-    this._RouterComponent = RouterComponent;
+    this.Component = _router.default;
+    this.component = null;
     /*!
      * 路由集合
      */
 
     this._routes = {};
     /*!
-     * 页面实例的集合
-     */
-
-    this._pages = {};
-    /*!
-     * 弹出层描述信息集合
-     */
-
-    this._popLayerInfos = [];
-    /*!
-     * 页面描述信息集合
-     */
-
-    this._pageInfos = [];
-    /*!
-     * 当前顶层页面的 id
-     */
-
-    this._activeId = undefined;
-    /*!
-     * 当前有键盘焦点的 id
-     */
-
-    this._focusId = undefined;
-    /*!
-     * 即将关闭的页面 id
-     */
-
-    this._deactiveId = undefined;
-    /*!
-     * 需要显示在页面上的错误信息
-     */
-
-    this._error = undefined;
-    /*!
      * 暂存的被阻塞的路径信息
      */
 
     this._block = undefined;
-    /*!
-     * 弹出层 id 的随机发生数
-     */
-
-    this._popLayerIdRandom = 0;
-    /*!
-     * 历史栈里面记录的数量
-     */
-
-    this._historyCount = 0;
-    /*!
-     * 暂存各个页面的状态数据，用于返回时恢复
-     */
-
-    this._states = {};
-    this.app.event.on(this.app._id, 'onPageAdd', function (_id, page) {
-      page && _this4._addPage(_id, page);
-    }, this._id);
-    this.app.event.on(this.app._id, 'onPageRemove', function (_id, page) {
-      page && _this4._removePage(_id);
-    }, this._id);
-    this.app.event.on(this.app._id, 'onAppStartRouter', function () {
-      return _this4.app.render.component = _react.default.createElement(_this4._RouterComponent, {
-        app: _this4.app
-      });
-    }, this._id);
-    this.app.event.on(this.app._id, 'onAppStartRender', function () {
-      _this4._updateRender();
-    }, this._id);
     this.app.event.on(this.app._id, 'onRouteErrorNoRoute', function (name) {
-      return _this4.error("route name: ".concat(name), 'no route error');
+      return _this.error("route name: ".concat(name), 'no route error');
     }, this._id);
     this.app.event.on(this.app._id, 'onRouteErrorNoParam', function (name) {
-      return _this4.error("params name: ".concat(name), 'miss require param error');
+      return _this.error("params name: ".concat(name), 'miss require param error');
     }, this._id);
-    this._history = (0, _createHashHistory.default)();
-
-    this._history.listen(function (location, action) {
-      return _this4._handleLocationChange(location, action);
-    });
-
-    this._handleLocationChange(this._history.location, this._history.action);
   }
 
   (0, _createClass2.default)(Router, [{
     key: "destructor",
     value: function destructor() {
       this.app.event.off(this._id);
-    } // private work
-    // --------------------------------------
-
-  }, {
-    key: "_updateRender",
-    value: function _updateRender() {
-      this.app.log.debug('router:update render');
-      this.app.event.emit(this.app._id, 'onRouterUpdate');
-    }
-  }, {
-    key: "_clearError",
-    value: function _clearError() {
-      this._error = null;
-    }
-  }, {
-    key: "_handleLocationChange",
-    value: function _handleLocationChange(location, action) {
-      var _this5 = this;
-
-      this.app.log.debug('router location', location);
-
-      this._clearError();
-
-      Object.keys(this._states).filter(function (v) {
-        return !location.pathname.startsWith(v);
-      }).forEach(function (v) {
-        delete _this5._states[v];
-      });
-      if (location.state) this._states[location.pathname] = location.state;
-      location.query = {};
-      location.search.slice(1).split('&').filter(function (v) {
-        return v;
-      }).forEach(function (v) {
-        var vs = v.split('=');
-        location.query[vs[0]] = decodeURIComponent(vs[1]);
-      });
-      if (action === 'PUSH') this._historyCount++;
-      if (action === 'POP') this._historyCount = Math.max(--this._historyCount, 0);
-      var pos = 0;
-      var pathnames = [];
-
-      while (pos < location.pathname.length - 1) {
-        var index = location.pathname.indexOf(spe, pos + 1);
-        index = index >= 0 ? index : location.pathname.length;
-        var sub = location.pathname.slice(pos + 1, index);
-
-        if (pos === 0 && sub[0] === ParamSpe || this.getRouteByPageName(spe + sub.split(ParamSpe)[0]).length) {
-          pathnames.push(spe + sub);
-        } else if (pos === 0) {
-          pathnames.push(spe);
-          pathnames.push(sub);
-        } else {
-          pathnames.push(sub);
-        }
-
-        pos = index;
-      }
-
-      if (!pathnames.length) pathnames.push(spe);
-      location.pathnames = pathnames;
-
-      if (location.ignore) {
-        location.ignore = false;
-        return;
-      }
-
-      this._updateRouterInfo(location);
-    }
-  }, {
-    key: "_updateRouterInfo",
-    value: function () {
-      var _updateRouterInfo2 = (0, _asyncToGenerator2.default)(
-      /*#__PURE__*/
-      _regenerator.default.mark(function _callee(location) {
-        var _this6 = this;
-
-        var pathName, _idPrev, params, pageInfos, focusId, activeId, deactiveId, transStatus, isPop, isFirst, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, popLayerInfos, focusPopLayerInfo, activePageInfo, focusPopLayerInfoOfPage, _i, pageInfo, _block, deactivePageInfos;
-
-        return _regenerator.default.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                if (Object.keys(this.getRoutes()).length) {
-                  _context.next = 2;
-                  break;
-                }
-
-                return _context.abrupt("return");
-
-              case 2:
-                pathName = '';
-                params = {};
-                pageInfos = [];
-                focusId = undefined;
-                activeId = undefined;
-                deactiveId = undefined;
-                transStatus = undefined;
-                /* route */
-
-                console.log(999);
-                isPop = this._history.action === 'POP';
-                isFirst = this._pageInfos.length === 0;
-                level = 0;
-                _iteratorNormalCompletion = true;
-                _didIteratorError = false;
-                _iteratorError = undefined;
-                _context.prev = 16;
-
-                _loop = function _loop() {
-                  var pagePathName = _step.value;
-                  pathName = (0, _path.join)(pathName, decodeURIComponent(pagePathName));
-
-                  var _pagePathName$split = pagePathName.split(ParamSpe),
-                      _pagePathName$split2 = (0, _toArray2.default)(_pagePathName$split),
-                      pageName = _pagePathName$split2[0],
-                      pageParams = _pagePathName$split2.slice(1);
-
-                  var _id = PageSign + pathName;
-
-                  var pageInfo = {
-                    _id: _id,
-                    _idPrev: _idPrev,
-                    level: level,
-                    pageName: pageName,
-                    pathName: pathName,
-                    pagePathName: pagePathName,
-                    isSubPage: false,
-                    isActive: false,
-                    query: location.query,
-                    state: _this6._states[pathName],
-                    pageParams: pageParams,
-                    hash: location.hash ? location.hash.slice(1) : '',
-                    subPageInfos: {},
-                    popLayerInfos: _this6._getPopLayerByPageId(_id)
-                  };
-
-                  var _this6$getRouteByPage = _this6.getRouteByPageName(pageInfo.pageName),
-                      _this6$getRouteByPage2 = (0, _slicedToArray2.default)(_this6$getRouteByPage, 2),
-                      routeName = _this6$getRouteByPage2[0],
-                      routeDefine = _this6$getRouteByPage2[1];
-
-                  if (!routeName || !routeDefine) return {
-                    v: _this6.app.event.emit(_this6.app._id, 'onRouteErrorNoRoute', pageInfo.pageName, pageInfo, location)
-                  };
-                  pageInfo.routeName = routeName;
-                  pageInfo.routeDefine = routeDefine;
-                  pageInfo.routeParams = routeName.split(ParamSpe).slice(1);
-                  pageInfo.params = _this6.passParams ? (0, _objectSpread2.default)({}, params) : {};
-                  pageInfo.routeParams.forEach(function (v, i) {
-                    var optional = v.endsWith(ParamOptional);
-                    if (optional) v = v.slice(0, -1);
-                    if (!optional && i > pageInfo.pageParams.length - 1) return _this6.app.event.emit(_this6.app._id, 'onRouteErrorNoParam', v, pageInfo, location);
-                    pageInfo.params[v] = pageInfo.pageParams[i] ? decodeURIComponent(pageInfo.pageParams[i]) : null;
-                    if (_this6.passParams) params[v] = pageInfo.params[v];
-                  });
-                  var isLast = pagePathName === location.pathnames[location.pathnames.length - 1];
-
-                  var prevOne = _this6._pageInfos.find(function (vv) {
-                    return vv._id === pageInfo._id;
-                  });
-
-                  var isNew = !prevOne;
-                  var isPrevActive = pageInfo._id === _this6._activeId && !isLast;
-                  var isReactive = pageInfo._id !== _this6._activeId && isLast;
-                  var status = void 0;
-
-                  if (isFirst) {
-                    status = isLast ? 'normal' : 'waitting';
-                  } else if (isNew && isLast) {
-                    status = isPop ? 'popin' : 'pushin';
-                  } else if (isNew && !isLast) {
-                    status = 'waitting';
-                  } else if (isPrevActive) {
-                    status = isPop ? 'popout' : 'pushout';
-                  } else if (isReactive) {
-                    status = 'popin';
-                  } else {
-                    status = isLast ? 'normal' : 'background';
-                  }
-
-                  console.log(pageInfo._id, status);
-                  var subNo = 0;
-                  var _iteratorNormalCompletion2 = true;
-                  var _didIteratorError2 = false;
-                  var _iteratorError2 = undefined;
-
-                  try {
-                    for (var _iterator2 = (Array.isArray(routeDefine.subPages) ? routeDefine.subPages.map(function (v, i) {
-                      return [v, v];
-                    }) : Object.entries(routeDefine.subPages || {}))[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                      var _step2$value = (0, _slicedToArray2.default)(_step2.value, 2),
-                          k = _step2$value[0],
-                          v = _step2$value[1];
-
-                      var subPageInfo = (0, _objectSpread2.default)({}, pageInfo);
-                      subPageInfo._idParent = subPageInfo._id;
-                      subPageInfo._idSubPage = k;
-                      subPageInfo.subNo = subNo;
-                      subPageInfo._id = subPageInfo._id + SubPageSpe + subPageInfo._idSubPage;
-                      subPageInfo.pageName = v;
-                      subPageInfo.isSubPage = true;
-                      subPageInfo.subPageInfos = {};
-                      subPageInfo.popLayerInfos = _this6._getPopLayerByPageId(subPageInfo._id);
-
-                      var _this6$getRouteByPage3 = _this6.getRouteByPageName(subPageInfo.pageName),
-                          _this6$getRouteByPage4 = (0, _slicedToArray2.default)(_this6$getRouteByPage3, 2),
-                          routeNameSubPage = _this6$getRouteByPage4[0],
-                          routeDefineSubPage = _this6$getRouteByPage4[1];
-
-                      if (!routeNameSubPage || !routeDefineSubPage) return {
-                        v: _this6.app.event.emit(_this6.app._id, 'onRouteErrorNoRoute', subPageInfo.pageName, subPageInfo, location)
-                      };
-                      subPageInfo.routeName = routeNameSubPage;
-                      subPageInfo.routeDefine = routeDefineSubPage;
-                      pageInfo.subPageInfos[subPageInfo._idSubPage] = subPageInfo;
-                      subNo++;
-                    }
-                  } catch (err) {
-                    _didIteratorError2 = true;
-                    _iteratorError2 = err;
-                  } finally {
-                    try {
-                      if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-                        _iterator2.return();
-                      }
-                    } finally {
-                      if (_didIteratorError2) {
-                        throw _iteratorError2;
-                      }
-                    }
-                  }
-
-                  _idPrev = _id;
-                  level++;
-                  pageInfos.push(pageInfo);
-                };
-
-                _iterator = location.pathnames[Symbol.iterator]();
-
-              case 19:
-                if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 26;
-                  break;
-                }
-
-                _ret = _loop();
-
-                if (!((0, _typeof2.default)(_ret) === "object")) {
-                  _context.next = 23;
-                  break;
-                }
-
-                return _context.abrupt("return", _ret.v);
-
-              case 23:
-                _iteratorNormalCompletion = true;
-                _context.next = 19;
-                break;
-
-              case 26:
-                _context.next = 32;
-                break;
-
-              case 28:
-                _context.prev = 28;
-                _context.t0 = _context["catch"](16);
-                _didIteratorError = true;
-                _iteratorError = _context.t0;
-
-              case 32:
-                _context.prev = 32;
-                _context.prev = 33;
-
-                if (!_iteratorNormalCompletion && _iterator.return != null) {
-                  _iterator.return();
-                }
-
-              case 35:
-                _context.prev = 35;
-
-                if (!_didIteratorError) {
-                  _context.next = 38;
-                  break;
-                }
-
-                throw _iteratorError;
-
-              case 38:
-                return _context.finish(35);
-
-              case 39:
-                return _context.finish(32);
-
-              case 40:
-                /* active & focus */
-                popLayerInfos = this._getPopLayerNoPageId();
-                focusPopLayerInfo = Array.from(popLayerInfos).reverse().find(function (v) {
-                  return v.options.isModal;
-                });
-                activePageInfo = pageInfos.slice(-1)[0];
-                if (focusPopLayerInfo) focusId = focusPopLayerInfo.options._id;
-                if (activePageInfo) activeId = activePageInfo._id;
-
-                if (activePageInfo && !focusId) {
-                  focusPopLayerInfoOfPage = activePageInfo.popLayerInfos && Array.from(activePageInfo.popLayerInfos).reverse().find(function (v) {
-                    return v.options.isModal;
-                  });
-
-                  if (focusPopLayerInfoOfPage) {
-                    focusId = focusPopLayerInfoOfPage.options.id;
-                  } else {
-                    focusId = activePageInfo._id;
-                  }
-                }
-                /* match */
-
-
-                _i = 0;
-
-              case 47:
-                if (!(_i < pageInfos.length)) {
-                  _context.next = 57;
-                  break;
-                }
-
-                pageInfo = pageInfos[_i];
-                _context.next = 51;
-                return this.app.event.emit(this.app._id, 'onRouteMatch', pageInfo, location);
-
-              case 51:
-                _block = _context.sent;
-
-                if (!_block) {
-                  _context.next = 54;
-                  break;
-                }
-
-                return _context.abrupt("return", this.block(_block));
-
-              case 54:
-                _i++;
-                _context.next = 47;
-                break;
-
-              case 57:
-                /* update */
-                if (this._activeId !== activeId && this._history.action === 'POP' && this._activeId && !pageInfos.find(function (v) {
-                  return v._id === _this6._activeId;
-                })) {
-                  deactiveId = this._activeId;
-                  transStatus = this._pageInfos.find(function (v) {
-                    return v._id === activeId;
-                  }) ? 'pop' : 'pop-new';
-                  pageInfos.push(this._pageInfos.find(function (v) {
-                    return v._id === _this6._activeId;
-                  }));
-                } else if (this._activeId !== activeId) {
-                  deactiveId = this._activeId;
-                  transStatus = 'push';
-                }
-
-                activePageInfo.isActive = transStatus || true;
-                activePageInfo.subPageInfos && Object.entries(activePageInfo.subPageInfos).forEach(function (_ref4) {
-                  var _ref5 = (0, _slicedToArray2.default)(_ref4, 2),
-                      k = _ref5[0],
-                      v = _ref5[1];
-
-                  return v.isActive = true;
-                });
-
-                if (deactiveId) {
-                  deactivePageInfos = pageInfos.find(function (v) {
-                    return v._id === deactiveId;
-                  });
-
-                  if (!deactivePageInfos) {
-                    deactivePageInfos = this._pageInfos.find(function (v) {
-                      return v._id === deactiveId;
-                    });
-                    pageInfos.push(deactivePageInfos);
-                  }
-
-                  deactivePageInfos.isActive = transStatus === 'push' ? 'background' : 'unmount';
-                  deactivePageInfos.subPageInfos && Object.entries(deactivePageInfos.subPageInfos).forEach(function (_ref6) {
-                    var _ref7 = (0, _slicedToArray2.default)(_ref6, 2),
-                        k = _ref7[0],
-                        v = _ref7[1];
-
-                    return v.isActive = deactivePageInfos.isActive;
-                  });
-                }
-
-                this._pageInfos = pageInfos;
-                this._focusId = focusId;
-                this._activeId = activeId;
-                this._deactiveId = deactiveId;
-                this._transStatus = transStatus;
-
-                this._updateRender();
-
-              case 67:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this, [[16, 28, 32, 40], [33,, 35, 39]]);
-      }));
-
-      return function _updateRouterInfo(_x) {
-        return _updateRouterInfo2.apply(this, arguments);
-      };
-    }()
-  }, {
-    key: "_addPage",
-    value: function _addPage(_id, page) {
-      this._pages[_id] = page;
-    }
-  }, {
-    key: "_removePage",
-    value: function _removePage(_id) {
-      var page = this.getPage(_id);
-
-      if (page) {
-        this._removePopLayerByPageId(page._id);
-
-        delete this._pages[page._id];
-      }
-    }
-  }, {
-    key: "_getPopLayerNoPageId",
-    value: function _getPopLayerNoPageId() {
-      return this._popLayerInfos.filter(function (_ref8) {
-        var options = _ref8.options,
-            remove = _ref8.remove;
-        return !remove && !options._idPage;
-      });
-    }
-  }, {
-    key: "_getPopLayerByPageId",
-    value: function _getPopLayerByPageId(_id) {
-      return this._popLayerInfos.filter(function (_ref9) {
-        var options = _ref9.options,
-            remove = _ref9.remove;
-        return !remove && options._idPage === _id;
-      });
-    }
-  }, {
-    key: "_removePopLayerByPageId",
-    value: function _removePopLayerByPageId(_id) {
-      var _this7 = this;
-
-      this._getPopLayerByPageId(_id).forEach(function (v) {
-        return _this7.removePopLayer(v.options._id);
-      });
-    } // pages interface
-    // ---------------------------------------
-
-    /**
-     * 获取页面实例
-     * @param {(string|number)?} - 获取参数
-     * 
-     * 1. string：获取指定 id 的页面
-     * 1. number：获取指定序号的页面
-     * 1. 空：获取顶层页面
-     * 
-     * @returns {module:page.Page} 页面实例
-     */
-
-  }, {
-    key: "getPage",
-    value: function getPage(_id) {
-      if (typeof _id === 'string') {
-        return this._pages[_id];
-      } else if (typeof _id === 'number') {
-        var pageinfo = this._pageInfos[_id];
-        return this._pages[pageinfo && pageinfo._id];
-      } else if (_id === undefined) {
-        var _pageinfo = this._pageInfos[this._pageInfos.length - 1];
-        return this._pages[_pageinfo && _pageinfo._id];
-      }
-    }
-    /**
-     * 获取页面实例集合
-     * @returns {module:page.Page[]} 页面实例
-     */
-
-  }, {
-    key: "getPages",
-    value: function getPages() {
-      return this._pages;
-    } // poplayer interface
-    // ---------------------------------------
-
-    /**
-     * 生成弹出层 id
-     * @param {module:router~PopLayerOptions} - 配置参数
-     * @returns {string} 弹出层 id 
-     */
-
-  }, {
-    key: "genPopLayerId",
-    value: function genPopLayerId() {
-      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      return options._id || "".concat(++this._popLayerIdRandom, "@").concat(options._idPage ? options._idPage : '#');
-    }
-    /**
-     * 添加弹出层
-     * @param {number|string|component|element} - 内容 
-     * @param {object} props - 组件属性
-     * @param {module:router~PopLayerOptions} options - 弹出层配置
-     * @returns {string} 弹出层 id 
-     */
-
-  }, {
-    key: "addPopLayer",
-    value: function addPopLayer(content) {
-      var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      options._id = this.genPopLayerId(options);
-      var popLayer = this.getPopLayerInfo(options._id);
-
-      if (!popLayer) {
-        if (!content) return;
-
-        this._popLayerInfos.push({
-          content: content,
-          props: props,
-          options: options
-        });
-
-        this._updateRouterInfo(this._history.location);
-      } else {
-        content && (popLayer.content = content);
-        popLayer.props = (0, _objectSpread2.default)({}, popLayer.props, props);
-        popLayer.options = (0, _objectSpread2.default)({}, popLayer.options, options);
-        popLayer.instance && popLayer.instance.setState({});
-      }
-
-      return options._id;
-    }
-    /**
-     * 移除弹出层
-     * @param {!string} - 弹出层 id
-     */
-
-  }, {
-    key: "removePopLayer",
-    value: function removePopLayer(_id) {
-      var info = this.getPopLayerInfo(_id);
-      if (!info) return;
-      info.remove = true;
-
-      this._updateRouterInfo(this._history.location);
-    }
-    /**
-     * 获取弹出层信息
-     * @param {string} - 弹出层 id
-     * @returns {module:router~PopLayerInfo}
-     */
-
-  }, {
-    key: "getPopLayerInfo",
-    value: function getPopLayerInfo(_id) {
-      return this._popLayerInfos.find(function (v) {
-        return v.options._id === _id;
-      });
-    }
-    /**
-     * 获取全部弹出层信息集合
-     * @returns {module:router~PopLayerInfo[]}
-     */
-
-  }, {
-    key: "getPopLayerInfos",
-    value: function getPopLayerInfos() {
-      return this._popLayerInfos;
     } // router interface
     // --------------------------------------
 
@@ -1164,10 +247,6 @@ function () {
       if (!name || !route) return;
       this._routes[name] = route;
       route.for && this.addNavigatorFunction(name, route.for);
-
-      this._handleLocationChange(this._history.location, this._history.action);
-
-      this._updateRouterInfo(this._history.location);
     }
     /**
      * addRoute 的批量版本，
@@ -1180,20 +259,16 @@ function () {
   }, {
     key: "setRoutes",
     value: function setRoutes(routes) {
-      var _this8 = this;
+      var _this2 = this;
 
       this._routes = routes;
-      Object.entries(this._routes || {}).forEach(function (_ref10) {
-        var _ref11 = (0, _slicedToArray2.default)(_ref10, 2),
-            k = _ref11[0],
-            v = _ref11[1];
+      Object.entries(this._routes || {}).forEach(function (_ref) {
+        var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+            k = _ref2[0],
+            v = _ref2[1];
 
-        return v.for && _this8.addNavigatorFunction(k, v.for);
+        return v.for && _this2.addNavigatorFunction(k, v.for);
       });
-
-      this._handleLocationChange(this._history.location, this._history.action);
-
-      this._updateRouterInfo(this._history.location);
     }
     /**
      * 获取路由表
@@ -1228,10 +303,10 @@ function () {
   }, {
     key: "getRouteByPageName",
     value: function getRouteByPageName(pageName) {
-      var route = Object.entries(this._routes).find(function (_ref12) {
-        var _ref13 = (0, _slicedToArray2.default)(_ref12, 2),
-            k = _ref13[0],
-            v = _ref13[1];
+      var route = Object.entries(this._routes).find(function (_ref3) {
+        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+            k = _ref4[0],
+            v = _ref4[1];
 
         return k.split(':')[0] === pageName;
       });
@@ -1248,7 +323,7 @@ function () {
   }, {
     key: "addNavigatorFunction",
     value: function addNavigatorFunction(pageName, navigatorName) {
-      var _this9 = this;
+      var _this3 = this;
 
       pageName = pageName && pageName.split(ParamSpe[0])[0];
       navigatorName = navigatorName || this.app.utils.captilaze(pageName);
@@ -1258,7 +333,7 @@ function () {
           args[_key] = arguments[_key];
         }
 
-        return _this9.push([pageName].concat(args));
+        return _this3.push([pageName].concat(args));
       };
 
       this["replace".concat(navigatorName)] = function () {
@@ -1266,7 +341,7 @@ function () {
           args[_key2] = arguments[_key2];
         }
 
-        return _this9.replace([pageName].concat(args));
+        return _this3.replace([pageName].concat(args));
       };
     }
     /**
@@ -1288,28 +363,6 @@ function () {
     key: "isRootPath",
     value: function isRootPath() {
       return this.app.router._pageInfos[this.app.router._pageInfos.length - 1].name === '/';
-    }
-    /**
-     * 判断是否具有键盘焦点
-     * @param {*} - 页面或者弹出层 id
-     * @returns {boolean} 是否具有键盘焦点
-     */
-
-  }, {
-    key: "isFocus",
-    value: function isFocus(_id) {
-      return this._focusId === _id;
-    }
-    /**
-     * 判断是否是顶层
-     * @param {*} - 页面或者弹出层 id
-     * @returns {boolean} 是否顶层
-     */
-
-  }, {
-    key: "isActive",
-    value: function isActive(_id) {
-      return this._activeId === _id;
     } // router navigator interface
     // ----------------------------------------
 
@@ -1365,7 +418,7 @@ function () {
       var hash;
       var ignore;
 
-      var pathnames = this._pageInfos.map(function (v) {
+      var pathnames = this.component.state._pageInfos.map(function (v) {
         return v.pagePathName;
       });
 
@@ -1404,10 +457,10 @@ function () {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
         state: this.passState ? (0, _objectSpread2.default)({}, this._history.location.state, state) : state,
-        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this._history.location.query, query) : query).map(function (_ref14) {
-          var _ref15 = (0, _slicedToArray2.default)(_ref14, 2),
-              k = _ref15[0],
-              v = _ref15[1];
+        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this._history.location.query, query) : query).map(function (_ref5) {
+          var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
+              k = _ref6[0],
+              v = _ref6[1];
 
           return k + '=' + v;
         }).reduce(function (v1, v2) {
@@ -1424,7 +477,7 @@ function () {
   }, {
     key: "getPathName",
     value: function getPathName() {
-      return this._history.createHref(this.getPathInfo.apply(this, arguments));
+      return this.component._history.createHref(this.getPathInfo.apply(this, arguments));
     }
     /**
      * 获取 url，但不跳转或者替换，参数参见 getPathInfo
@@ -1448,7 +501,7 @@ function () {
 
       this.app.log.debug('router push', args);
 
-      this._history.push(this.getPathInfo.apply(this, args));
+      this.component._history.push(this.getPathInfo.apply(this, args));
 
       return true;
     }
@@ -1465,7 +518,7 @@ function () {
 
       this.app.log.debug('router replace', args);
 
-      this._history.replace(this.getPathInfo.apply(this, args));
+      this.component._history.replace(this.getPathInfo.apply(this, args));
 
       return true;
     }
@@ -1480,7 +533,7 @@ function () {
       var step = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       this.app.log.debug('router back');
 
-      this._history.go(-step);
+      this.component._history.go(-step);
 
       return true;
     }
@@ -1491,11 +544,9 @@ function () {
   }, {
     key: "refresh",
     value: function refresh() {
-      this._clearError();
-
-      this._updateRouterInfo(this._history.location);
-
-      return true;
+      return this.component.setState({
+        error: null
+      });
     }
     /**
      * 跳转到根页面
@@ -1535,13 +586,13 @@ function () {
   }, {
     key: "error",
     value: function error(message, title, _id) {
-      this._error = {
-        message: message,
-        title: title,
-        _id: _id
-      };
-
-      this._updateRender();
+      return this.component.setState({
+        error: {
+          message: message,
+          title: title,
+          _id: _id
+        }
+      });
     }
   }]);
   return Router;

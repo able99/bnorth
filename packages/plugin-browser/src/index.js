@@ -354,9 +354,9 @@ let browser = (app,options={})=>({
     if(options.autoTitle) {
       app.event.on(app._id, 'onActivePageChange', _idPage=>{
         if(!app.browser._defaultTitle) app.browser._defaultTitle = app.browser.title;
-        let page = app.router.getPage(_idPage);
-        if(page&&page.props.route.title===false) return;
-        app.browser.title = (page&&page.route.routeDefine.title)||app.browser._defaultTitle;
+        let page = app.Page.getPage(_idPage);
+        if(page&&page.props.info.title===false) return;
+        app.browser.title = (page&&page.info.routeDefine.title)||app.browser._defaultTitle;
       }, app.browser._id);
     }
   },

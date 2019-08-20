@@ -97,7 +97,11 @@ function () {
         this.domWaiting.innerText = '...';
       }
 
-      _reactDom.default.render(this.component, this.domRoot);
+      _reactDom.default.render(_react.default.createElement(this.app.context.Component, {
+        app: this.app
+      }, _react.default.createElement(this.app.router.Component, {
+        app: this.app
+      })), this.domRoot);
     } // interface
     // -------------------
 

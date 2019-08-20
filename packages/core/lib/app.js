@@ -148,18 +148,21 @@ function () {
      */
 
     this.State = this.options.State || _state.default;
+    this.State.app = this;
     /**
      * Page 单个页面的组件
      * @type {module:page.Page}
      */
 
     this.Page = this.options.Page || _page.default;
+    this.Page.app = this;
     /**
      * Page 弹出层组件
      * @type {module:poplayer.PopLayer}
      */
 
     this.PopLayer = this.options.PopLayer || _poplayer.default;
+    this.PopLayer.app = this;
     /**
      * Utils 模块类，实现一些常用的工具函数
      * @type {class}

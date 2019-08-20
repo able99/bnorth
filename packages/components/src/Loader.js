@@ -304,7 +304,7 @@ export let pulldown = {
         if(typeof(progress)==='string'&&progress<100) { 
           return app.pulldown.close(); 
         }else {
-          return app.pulldown._id = app.router.addPopLayer(PullDownPopLayer, {...props, progress}, {...options, _id: app.pulldown._id});
+          return app.pulldown._id = app.PopLayer.addPopLayer(PullDownPopLayer, {...props, progress}, {...options, _id: app.pulldown._id});
         }
       },
       close: ()=>{

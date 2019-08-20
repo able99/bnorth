@@ -3,9 +3,9 @@ import NavBar from '../components/navbar'
 import List from '../components/list'
 
 
-export default props=>{
+let Component = props=>{
   let { app } = props;
-  // console.log(11111, props.stateData);
+  console.log('test', 'render', props.stateData);
   return (
     <div className="bg-color-white width-full height-full flex-display-block flex-direction-v">
       <NavBar title="bnorth demo" />
@@ -44,3 +44,12 @@ export default props=>{
     </div>
   );
 };
+
+Component.controller = {
+  onPageStart: ()=>console.log('test', 'onPageStart'),
+  onPageStop: ()=>console.log('test', 'onPageSop'),
+  onPageActive: ()=>console.log('test', 'onPageActive'),
+  onPageInactive: ()=>console.log('test', 'onPageInactive'),
+}
+
+export default Component;

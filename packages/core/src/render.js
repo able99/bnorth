@@ -64,7 +64,12 @@ class Render {
       this.domWaiting.setAttribute('style', 'text-align: center: margin-top: 48px;');
       this.domWaiting.innerText = '...';
     }
-    ReactDOM.render(this.component, this.domRoot);
+    ReactDOM.render(
+      <this.app.context.Component app={this.app}>
+        <this.app.router.Component app={this.app} />
+      </this.app.context.Component>, 
+      this.domRoot
+    );
   }
 
 

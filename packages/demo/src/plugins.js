@@ -5,6 +5,7 @@ export default function(app) {
   app.plugins.add(require('@bnorth/components/lib/Loader').loader);
   app.plugins.add(require('@bnorth/components/lib/Loader').pulldown);
   app.plugins.add(require('@bnorth/components/lib/Loader').mask);
+  // app.plugins.add(require('@bnorth/components/lib/pageTransform').PageTransform);
   // app.plugins.add(require('@bnorth/components/lib/picker').default);
 
   app.plugins.add(require('@bnorth/plugin-network').default);
