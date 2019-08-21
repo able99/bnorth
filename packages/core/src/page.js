@@ -143,10 +143,11 @@ class Page extends React.Component {
     if(typeof _id === 'string') {
       return Page.pages[_id];
     } else if(typeof _id === 'number') {
-      let pageinfo = Page.app.router.component.state._pageInfos[_id];
+      let pageinfo = Page.app.router.getPageInfos()[_id];
       return Page.pages[pageinfo&&pageinfo._id];
     } else if(_id===undefined){
-      let pageinfo = Page.app.router.component.state._pageInfos[Page.app.router.component.state._pageInfos.length-1];
+      let infos = Page.app.router.getPageInfos();
+      let pageinfo = infos[infos.length-1];
       return pageinfo&&Page.pages[pageinfo._id];
     }
   }
@@ -161,22 +162,10 @@ class Page extends React.Component {
     return this.props._id;
   }
 
-  /**
-   * app 实例
-   * @type {module:app.App}
-   */
-  get app() { 
-    return this.props.app;
+  get status() { 
+    return this.props.status;
   }
-
-  /**
-   * 页面路由匹配信息
-   * @type {module:page~PageRouteInfo}
-   */
-  get info() { 
-    return this.props.info;
-  }
-
+  
   /**
    * 页面框架的 dom 元素
    * @type {element}
@@ -185,12 +174,8 @@ class Page extends React.Component {
     return ReactDOM.findDOMNode(this);
   }
 
-  get status() {
-    return this.props.info.status
-  }
-
   get active() {
-    return this.props.info.status === 'normal';
+    return this.props.status === 'normal';
   }
 
   /**
@@ -246,33 +231,33 @@ class Page extends React.Component {
   constructor(props) {
     super(props);
     Page.pages[this._id] = this;
-    
-    let { app, info:{routeDefine:{component, controller}={}} } = this.props;
+
+    let {routeDefine:{component, controller}={}} = this.props;
     controller = controller||component.controller||{};
-    this.options = typeof(controller)==='function'?controller(app, this):controller;
+    this.options = typeof(controller)==='function'?controller(Page.app, this):controller;
 
     if(!this.options.stateData) this.options.stateData = undefined;
-    if(!this.options.actionGoBack) this.options.actionGoBack = ()=>app.router.back();
+    if(!this.options.actionGoBack) this.options.actionGoBack = ()=>Page.app.router.back();
 
-    app.State.attachStates(app, this, this._id, this.options, (k,v,state)=>{
+    Page.app.State.attachStates(Page.app, this, this._id, this.options, (k,v,state)=>{
       if(typeof v==='string') return;
-      app.event.on(this._id, 'onPageStart', (page,isActive)=>{app.event.emit(this[k]._id, 'onStateStart', this[k]._id, isActive)}, this[k]._id);
-      app.event.on(this._id, 'onPageActive', (page,onStart)=>{app.event.emit(this[k]._id, 'onStateActive', this[k]._id, onStart)}, this[k]._id);
-      app.event.on(this._id, 'onPageInactive', (page,onStop)=>{app.event.emit(this[k]._id, 'onStateInactive', this[k]._id, onStop)}, this[k]._id);
-      app.event.on(this._id, 'onPageStop', (page)=>{app.event.emit(this[k]._id, 'onStateStop', this[k]._id)}, this[k]._id);
+      Page.app.event.on(this._id, 'onPageStart', (page,isActive)=>{Page.app.event.emit(this[k]._id, 'onStateStart', this[k]._id, isActive)}, this[k]._id);
+      Page.app.event.on(this._id, 'onPageActive', (page,onStart)=>{Page.app.event.emit(this[k]._id, 'onStateActive', this[k]._id, onStart)}, this[k]._id);
+      Page.app.event.on(this._id, 'onPageInactive', (page,onStop)=>{Page.app.event.emit(this[k]._id, 'onStateInactive', this[k]._id, onStop)}, this[k]._id);
+      Page.app.event.on(this._id, 'onPageStop', (page)=>{Page.app.event.emit(this[k]._id, 'onStateStop', this[k]._id)}, this[k]._id);
     })
 
     Object.entries(this.options).forEach(([k,v])=>{
       if(k.startsWith('state')||k.startsWith('_state')) { // state
       }else if(k==='onPageAdd'||k==='onPageRemove') { // app event
-        app.event.on(app._id, k, v, this._id);
+        Page.app.event.on(Page.app._id, k, v, this._id);
       }else if(k.startsWith('onPage')) { // page event
-        app.event.on(this._id, k, v, this._id);
+        Page.app.event.on(this._id, k, v, this._id);
       }else if(k.startsWith('onState')) { // page state event
         let stateEvents = k.split('_');
-        if(stateEvents[0]&&this[stateEvents[1]]) app.event.on(this[stateEvents[1]]._id, stateEvents[0], v, this._id);
+        if(stateEvents[0]&&this[stateEvents[1]]) Page.app.event.on(this[stateEvents[1]]._id, stateEvents[0], v, this._id);
       }else if(k.startsWith('on')) { // app event
-        app.event.on(app._id, k, v, this._id);
+        Page.app.event.on(Page.app._id, k, v, this._id);
       }else if(k.startsWith('action')){ // action
         this[k] = this.action(v, k.slice(6));
       }else{ // user props
@@ -285,108 +270,101 @@ class Page extends React.Component {
   // ---------------------------
   _pageStart() {
     if(this._started) return;
-    let { app, _id } = this.props;
+    let { _id } = this.props;
     let active = this.active;
-    app.event.emit(_id, 'onPageStart', this, active);
-    active && app.event.emit(_id, 'onPageActive', this, true);
-    active && app.event.emit(app._id, 'onActivePageChange', _id);
+
+    Page.app.event.emit(_id, 'onPageStart', this, active);
+    active && Page.app.event.emit(_id, 'onPageActive', this, true);
+    active && Page.app.event.emit(Page.app._id, 'onActivePageChange', _id);
     this._started = true;
   }
 
   _pageActive() {
-    let { app, _id } = this.props;
-    app.event.emit(_id, 'onPageActive', this, false);
-    app.event.emit(app._id, 'onActivePageChange', _id);
+    let { _id } = this.props;
+    Page.app.event.emit(_id, 'onPageActive', this, false);
+    Page.app.event.emit(Page.app._id, 'onActivePageChange', _id);
   }
 
   _pageInactive() {
-    let { app, _id } = this.props;
-    app.event.emit(_id, 'onPageInactive', this, false);
+    let { _id } = this.props;
+    Page.app.event.emit(_id, 'onPageInactive', this, false);
   }
 
   _pageStop() {
-    let { app, _id } = this.props;
+    let { _id } = this.props;
     let active = this.active;
-    active&&app.event.emit(_id, 'onPageInactive', this, true);
-    app.event.emit(this._id,'onPageStop', this);
-    app.event.emit(app._id, 'onPageRemove', _id, this);
+
+    active&&Page.app.event.emit(_id, 'onPageInactive', this, true);
+    Page.app.event.emit(this._id,'onPageStop', this);
+    Page.app.event.emit(Page.app._id, 'onPageRemove', _id, this);
     delete Page.pages[_id];
-    app.event.off(_id);
+    Page.app.event.off(_id);
   }
 
   componentDidMount() {
-    let { app, _id, info:{isSubPage, status} } = this.props;
-    app.log.debug('page did mount', _id);
-    app.event.emit(app._id, 'onPageAdd', _id, this);
+    let { _id, isSubPage, status } = this.props;
+    Page.app.log.debug('page did mount', _id);
+    Page.app.event.emit(Page.app._id, 'onPageAdd', _id, this);
     if(isSubPage||status==='normal'||status==='background') this._pageStart();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    let status = this.status;
+    let { status } = this.props;
     if(!this._started&&(status==='normal'||status==='background')) this._pageStart();
-    if(prevProps.info.status !== 'normal' && status === 'normal') this._pageActive();
-    if(prevProps.info.staus === 'normal' && status !== 'normal') this._pageInactive()
+    if(prevProps.status !== 'normal' && status === 'normal') this._pageActive();
+    if(prevProps.staus === 'normal' && status !== 'normal') this._pageInactive()
   }
 
   componentWillUnmount() {
-    let { app, _id } = this.props;
-    app.log.debug('page will unmount', _id);
+    let { _id } = this.props;
+    Page.app.log.debug('page will unmount', _id);
     this._pageStop();
   }
 
-  // componentDidCatch(error, info) {
-  //   let { app, _id } = this.props;
-  //   app.log.debug('page did catch');
-  //   app.render.panic(error, {title:'page error catch', _id});
-  // }
-
   shouldComponentUpdate(nextProps, nextState) {
-    if(nextProps.info.status !== this.props.info.status) return true;
-    if(!this.props.app.utils.shallowEqual(this.props.subPages, nextProps.subPages)) return true;
-    if(!this.props.app.utils.shallowEqual(this.props.popLayers, nextProps.popLayers)) return true;
-    if(!this.props.app.utils.shallowEqual(this.props.info, nextProps.info, ['params', 'query', 'popLayers', 'subPages'])) return true;
-    if(this.app.State.checkStates(this, this.props.context, nextProps.context, this.options)) return true;
+    if(this.props.status!==nextProps.status) return true;
+    if(!Page.app.utils.shallowEqual(this.props.routeDefine, nextProps.routeDefine)) return true;
+    if(!Page.app.utils.shallowEqual(this.props.params, nextProps.params)) return true;
+    if(!Page.app.utils.shallowEqual(this.props.query, nextProps.query)) return true;
+    if(Page.app.State.checkStates(this, this.props.context, nextProps.context, this.options)) return true;
     return false;
   }
 
+  _showStatus() {
+    return this.props.status==='normal'||this.props.status==='pushout';
+  }
+
+  _frameProps() {
+    let { _id, isSubPage, routeName } = this.props;
+
+    return {
+      'data-page': _id,
+      'data-page-sub': isSubPage?routeName:undefined,
+      style: isSubPage?{
+        width: '100%', height: '100%',
+      }:{
+        display: this._showStatus()?'block':'none',
+        position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, background: 'white',
+      },
+    }
+  }
+
+  _contentProps() {
+    let { _id } = this.props;
+    
+    return {
+      app: Page.app, page:this, _id, route:this.props, info:this.props,
+      ...this.options&&Page.app.State.getStates(this, this.options),
+    }
+  }
+
   render() {
-    let { app, _id, info, subPages, popLayers } = this.props;
-    app.log.debug('page render', _id);
+    let { _id, routeDefine:{component:Component}, children } = this.props;
+    Page.app.log.debug('page render', _id);
     this._actionNum = 0;
     
-    return (
-      <Page.Frame app={app} _id={_id} info={info}>
-        <info.routeDefine.component 
-          app={app} page={this} _id={_id} route={info} info={info}
-          {...this.options&&app.State.getStates(this, this.options)}>
-          {subPages}
-        </info.routeDefine.component>
-        {popLayers}
-      </Page.Frame>
-    )
+    return <main {...this._frameProps()}><Component {...this._contentProps()}>{children}</Component></main>;
   }
 }
 
 export default Page;
-
-
-
-
-
-Page.Frame = aprops=>{
-  let { _id, info, children } = aprops;
-  let show = info.status==='normal'||info.status==='pushout';
-
-  let props = {
-    'data-page': _id,
-    'data-page-sub': info.isSubPage?info.routeName:undefined,
-    style: info.isSubPage?{
-      width: '100%', height: '100%',
-    }:{
-      display: show?'block':'none',
-      position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, background: 'white',
-    },
-  }
-
-  return <main {...props}>{show?children:null}</main>
-}

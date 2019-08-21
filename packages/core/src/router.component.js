@@ -234,23 +234,16 @@ export default class RouterComponent extends React.Component {
   }
 
   render() {
-    let { app } = this.props;
     let {_pageInfos, _popLayerInfos} = this.state;
 
     return (
       <React.Fragment>
-        {_pageInfos.map(v=><this.Page 
-          key={v._id} _id={v._id} app={app} info={v} 
-          subPages={Object.entries(v.subPageInfos).reduce((vv1, [kk2,vv2])=>{vv1[kk2]=(<this.Page 
-            key={vv2._id} _id={vv2._id} app={app} info={vv2} />
-          );return vv1},{})} 
-          poplayers={_popLayerInfos.filter(v=>v.options._idPage===v._id).map(v=><this.PopLayer 
-            key={v.options._id} app={app} id={v.options._id} />
-          )} />
-        )}
-        {_popLayerInfos.filter(v=>!v.options._idPage).map(v=><this.PopLayer 
-          key={v.options._id} app={app} id={v.options._id} />
-        )}
+        {_pageInfos.map(v=>(
+          <this.Page key={v._id} {...v}>
+            {Object.entries(v.subPageInfos).reduce((vv1, [kk2,vv2])=>{vv1[kk2]=(<this.Page key={vv2._id} {...vv2} />);return vv1},{})} 
+          </this.Page>
+        ))}
+        {_popLayerInfos.map(v=><this.PopLayer key={v.options._id} {...v} />)}
       </React.Fragment>
     );
   }

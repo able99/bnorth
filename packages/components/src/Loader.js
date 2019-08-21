@@ -232,10 +232,10 @@ export let loader = (app, options={})=>({
       timeout: options.timeout||20000,
       reset: (progress=0, props, options)=>{
         if(app.loader.timer) {window.clearTimeout(app.loader.timer); app.loader.timer=null}
-        app.loader._id = app.router.addPopLayer(LoaderPopLayer, {...props, progress}, {...options, _id: app.loader._id});
+        app.loader._id = app.PopLayer.addPopLayer(LoaderPopLayer, {...props, progress}, {...options, _id: app.loader._id});
 
         if(progress>100&&!app.loader.count) {
-          app.router.removePopLayer(app.loader._id); 
+          app.PopLayer.removePopLayer(app.loader._id); 
           app.loader._id = undefined; 
         } else if(progress>100&&app.loader.count) {
           if(app.loader.timer) {window.clearTimeout(app.loader.timer); app.loader.timer=null}
@@ -300,7 +300,8 @@ export let pulldown = {
 
   onPluginMount(app) {
     app.pulldown = {
-      show: (progress=0, props, options)=>{
+      show: (progress, props, options)=>{
+        if(progress<15) return;
         if(typeof(progress)==='string'&&progress<100) { 
           return app.pulldown.close(); 
         }else {
@@ -308,7 +309,7 @@ export let pulldown = {
         }
       },
       close: ()=>{
-        app.router.removePopLayer(app.pulldown._id); 
+        app.PopLayer.removePopLayer(app.pulldown._id); 
         app.pulldown._id = undefined; 
       },
     };

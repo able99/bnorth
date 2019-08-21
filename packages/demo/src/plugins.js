@@ -4,7 +4,6 @@ export default function(app) {
   app.plugins.add(require('@bnorth/components/lib/Modal').modal);
   app.plugins.add(require('@bnorth/components/lib/Loader').loader);
   app.plugins.add(require('@bnorth/components/lib/Loader').pulldown);
-  app.plugins.add(require('@bnorth/components/lib/Loader').mask);
   // app.plugins.add(require('@bnorth/components/lib/pageTransform').PageTransform);
   // app.plugins.add(require('@bnorth/components/lib/picker').default);
 
@@ -17,7 +16,7 @@ export default function(app) {
   app.plugins.add(require('@bnorth/plugin-format').default);
 
   app.plugins.add(require('@bnorth/plugin-storage').default);
-  app.plugins.add(require('@bnorth/plugin-browser').default, {autoTitle: true});
+  // app.plugins.add(require('@bnorth/plugin-browser').default, {autoTitle: true});
   app.plugins.add(require('@bnorth/plugin-browser/lib/wechat').default, {});
   app.plugins.add(require('@bnorth/plugin-browser/lib/alipay').default, {});
   // app.plugins.add(require('@bnorth/plugin-user').default);

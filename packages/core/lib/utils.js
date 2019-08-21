@@ -245,7 +245,6 @@ function () {
   }, {
     key: "shallowEqual",
     value: function shallowEqual(objA, objB) {
-      var checkEqualProps = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
       if (objA === objB) return true;
       if ((0, _typeof2.default)(objA) !== 'object' || objA === null || (0, _typeof2.default)(objB) !== 'object' || objB === null) return false;
       var keysA = Object.keys(objA);
@@ -254,14 +253,37 @@ function () {
 
       for (var _i = 0; _i < keysA.length; _i++) {
         var key = keysA[_i];
-
-        if (!objB.hasOwnProperty(key) || (checkEqualProps.includes(key) ? !this.shallowEqual(objA[key], objB[key]) : objA[key] !== objB[key])) {
-          // console.log("shallowEqual: ",key);
-          return false;
-        }
+        if (objA[key] !== objB[key]) return false;
       }
 
       return true;
+    }
+  }, {
+    key: "diff",
+    value: function diff(objA, objB) {
+      var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+          recursion = _ref.recursion,
+          include = _ref.include,
+          exclude = _ref.exclude;
+
+      if (objA === objB) return;
+      if ((0, _typeof2.default)(objA) !== 'object' || objA === null || (0, _typeof2.default)(objB) !== 'object' || objB === null) return 'null';
+      var keysA = Object.keys(objA);
+      var keysB = Object.keys(objB);
+      if (keysA.length !== keysB.length) return 'length';
+
+      for (var _i2 = 0; _i2 < keysA.length; _i2++) {
+        var key = keysA[_i2];
+        if (include && !include.includes(key)) continue;
+        if (exclude && exclude.includes(key)) continue;
+        if (!objB.hasOwnProperty(key)) return key;
+
+        if (recursion && recursion.includes(key)) {
+          if (this.diff(objA[key], objB[key])) return key;
+        } else {
+          if (objA[key] !== objB[key]) return key;
+        }
+      }
     } // string
     // -------------------------
 

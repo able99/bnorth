@@ -169,20 +169,33 @@ class Utils {
    * @param {string[]} - 需要递归一次浅层比较的属性 
    * @returns {boolean} 是否相等
    */
-  shallowEqual(objA, objB, checkEqualProps=[]) {
+  shallowEqual(objA, objB) {
     if (objA===objB) return true;
     if (typeof objA!=='object' || objA===null || typeof objB!=='object' || objB===null) return false;
     let keysA = Object.keys(objA);
     let keysB = Object.keys(objB);
     if (keysA.length!==keysB.length) return false;
-    
-    for(let key of keysA) 
-      if( !objB.hasOwnProperty(key) || (checkEqualProps.includes(key)?!this.shallowEqual(objA[key], objB[key]):objA[key]!==objB[key])){
-      // console.log("shallowEqual: ",key);
-      return false;
-    }
-  
+    for(let key of keysA) if(objA[key]!==objB[key]) return false;
     return true;
+  }
+
+  diff(objA, objB, {recursion, include, exclude}={}) {
+    if (objA===objB) return;
+    if (typeof objA!=='object' || objA===null || typeof objB!=='object' || objB===null) return 'null';
+    let keysA = Object.keys(objA);
+    let keysB = Object.keys(objB);
+    if (keysA.length!==keysB.length) return 'length';
+
+    for(let key of keysA) {
+      if(include&&!include.includes(key)) continue;
+      if(exclude&&exclude.includes(key)) continue;
+      if(!objB.hasOwnProperty(key)) return key;
+      if(recursion&&recursion.includes(key)){
+        if(this.diff(objA[key], objB[key])) return key;
+      }else{
+        if(objA[key]!==objB[key]) return key;
+      }
+    }
   }
 
   // string

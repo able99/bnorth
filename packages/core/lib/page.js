@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 require("core-js/modules/es6.regexp.split");
 
@@ -245,25 +245,10 @@ function (_React$Component) {
     get: function get() {
       return this.props._id;
     }
-    /**
-     * app 实例
-     * @type {module:app.App}
-     */
-
   }, {
-    key: "app",
+    key: "status",
     get: function get() {
-      return this.props.app;
-    }
-    /**
-     * 页面路由匹配信息
-     * @type {module:page~PageRouteInfo}
-     */
-
-  }, {
-    key: "info",
-    get: function get() {
-      return this.props.info;
+      return this.props.status;
     }
     /**
      * 页面框架的 dom 元素
@@ -276,14 +261,9 @@ function (_React$Component) {
       return _reactDom.default.findDOMNode(this);
     }
   }, {
-    key: "status",
-    get: function get() {
-      return this.props.info.status;
-    }
-  }, {
     key: "active",
     get: function get() {
-      return this.props.info.status === 'normal';
+      return this.props.status === 'normal';
     }
   }], [{
     key: "getPage",
@@ -308,10 +288,12 @@ function (_React$Component) {
       if (typeof _id === 'string') {
         return Page.pages[_id];
       } else if (typeof _id === 'number') {
-        var pageinfo = Page.app.router.component.state._pageInfos[_id];
+        var pageinfo = Page.app.router.getPageInfos()[_id];
+
         return Page.pages[pageinfo && pageinfo._id];
       } else if (_id === undefined) {
-        var _pageinfo = Page.app.router.component.state._pageInfos[Page.app.router.component.state._pageInfos.length - 1];
+        var infos = Page.app.router.getPageInfos();
+        var _pageinfo = infos[infos.length - 1];
         return _pageinfo && Page.pages[_pageinfo._id];
       }
     }
@@ -323,31 +305,29 @@ function (_React$Component) {
     (0, _classCallCheck2.default)(this, Page);
     _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Page).call(this, props));
     Page.pages[_this._id] = (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this));
-    var _this$props = _this.props,
-        app = _this$props.app,
-        _this$props$info$rout = _this$props.info.routeDefine;
-    _this$props$info$rout = _this$props$info$rout === void 0 ? {} : _this$props$info$rout;
-    var component = _this$props$info$rout.component,
-        controller = _this$props$info$rout.controller;
+    var _this$props$routeDefi = _this.props.routeDefine;
+    _this$props$routeDefi = _this$props$routeDefi === void 0 ? {} : _this$props$routeDefi;
+    var component = _this$props$routeDefi.component,
+        controller = _this$props$routeDefi.controller;
     controller = controller || component.controller || {};
-    _this.options = typeof controller === 'function' ? controller(app, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))) : controller;
+    _this.options = typeof controller === 'function' ? controller(Page.app, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))) : controller;
     if (!_this.options.stateData) _this.options.stateData = undefined;
     if (!_this.options.actionGoBack) _this.options.actionGoBack = function () {
-      return app.router.back();
+      return Page.app.router.back();
     };
-    app.State.attachStates(app, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), _this._id, _this.options, function (k, v, state) {
+    Page.app.State.attachStates(Page.app, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), _this._id, _this.options, function (k, v, state) {
       if (typeof v === 'string') return;
-      app.event.on(_this._id, 'onPageStart', function (page, isActive) {
-        app.event.emit(_this[k]._id, 'onStateStart', _this[k]._id, isActive);
+      Page.app.event.on(_this._id, 'onPageStart', function (page, isActive) {
+        Page.app.event.emit(_this[k]._id, 'onStateStart', _this[k]._id, isActive);
       }, _this[k]._id);
-      app.event.on(_this._id, 'onPageActive', function (page, onStart) {
-        app.event.emit(_this[k]._id, 'onStateActive', _this[k]._id, onStart);
+      Page.app.event.on(_this._id, 'onPageActive', function (page, onStart) {
+        Page.app.event.emit(_this[k]._id, 'onStateActive', _this[k]._id, onStart);
       }, _this[k]._id);
-      app.event.on(_this._id, 'onPageInactive', function (page, onStop) {
-        app.event.emit(_this[k]._id, 'onStateInactive', _this[k]._id, onStop);
+      Page.app.event.on(_this._id, 'onPageInactive', function (page, onStop) {
+        Page.app.event.emit(_this[k]._id, 'onStateInactive', _this[k]._id, onStop);
       }, _this[k]._id);
-      app.event.on(_this._id, 'onPageStop', function (page) {
-        app.event.emit(_this[k]._id, 'onStateStop', _this[k]._id);
+      Page.app.event.on(_this._id, 'onPageStop', function (page) {
+        Page.app.event.emit(_this[k]._id, 'onStateStop', _this[k]._id);
       }, _this[k]._id);
     });
     Object.entries(_this.options).forEach(function (_ref) {
@@ -358,17 +338,17 @@ function (_React$Component) {
       if (k.startsWith('state') || k.startsWith('_state')) {// state
       } else if (k === 'onPageAdd' || k === 'onPageRemove') {
         // app event
-        app.event.on(app._id, k, v, _this._id);
+        Page.app.event.on(Page.app._id, k, v, _this._id);
       } else if (k.startsWith('onPage')) {
         // page event
-        app.event.on(_this._id, k, v, _this._id);
+        Page.app.event.on(_this._id, k, v, _this._id);
       } else if (k.startsWith('onState')) {
         // page state event
         var stateEvents = k.split('_');
-        if (stateEvents[0] && _this[stateEvents[1]]) app.event.on(_this[stateEvents[1]]._id, stateEvents[0], v, _this._id);
+        if (stateEvents[0] && _this[stateEvents[1]]) Page.app.event.on(_this[stateEvents[1]]._id, stateEvents[0], v, _this._id);
       } else if (k.startsWith('on')) {
         // app event
-        app.event.on(app._id, k, v, _this._id);
+        Page.app.event.on(Page.app._id, k, v, _this._id);
       } else if (k.startsWith('action')) {
         // action
         _this[k] = _this.action(v, k.slice(6));
@@ -386,113 +366,125 @@ function (_React$Component) {
     key: "_pageStart",
     value: function _pageStart() {
       if (this._started) return;
-      var _this$props2 = this.props,
-          app = _this$props2.app,
-          _id = _this$props2._id;
+      var _id = this.props._id;
       var active = this.active;
-      app.event.emit(_id, 'onPageStart', this, active);
-      active && app.event.emit(_id, 'onPageActive', this, true);
-      active && app.event.emit(app._id, 'onActivePageChange', _id);
+      Page.app.event.emit(_id, 'onPageStart', this, active);
+      active && Page.app.event.emit(_id, 'onPageActive', this, true);
+      active && Page.app.event.emit(Page.app._id, 'onActivePageChange', _id);
       this._started = true;
     }
   }, {
     key: "_pageActive",
     value: function _pageActive() {
-      var _this$props3 = this.props,
-          app = _this$props3.app,
-          _id = _this$props3._id;
-      app.event.emit(_id, 'onPageActive', this, false);
-      app.event.emit(app._id, 'onActivePageChange', _id);
+      var _id = this.props._id;
+      Page.app.event.emit(_id, 'onPageActive', this, false);
+      Page.app.event.emit(Page.app._id, 'onActivePageChange', _id);
     }
   }, {
     key: "_pageInactive",
     value: function _pageInactive() {
-      var _this$props4 = this.props,
-          app = _this$props4.app,
-          _id = _this$props4._id;
-      app.event.emit(_id, 'onPageInactive', this, false);
+      var _id = this.props._id;
+      Page.app.event.emit(_id, 'onPageInactive', this, false);
     }
   }, {
     key: "_pageStop",
     value: function _pageStop() {
-      var _this$props5 = this.props,
-          app = _this$props5.app,
-          _id = _this$props5._id;
+      var _id = this.props._id;
       var active = this.active;
-      active && app.event.emit(_id, 'onPageInactive', this, true);
-      app.event.emit(this._id, 'onPageStop', this);
-      app.event.emit(app._id, 'onPageRemove', _id, this);
+      active && Page.app.event.emit(_id, 'onPageInactive', this, true);
+      Page.app.event.emit(this._id, 'onPageStop', this);
+      Page.app.event.emit(Page.app._id, 'onPageRemove', _id, this);
       delete Page.pages[_id];
-      app.event.off(_id);
+      Page.app.event.off(_id);
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this$props6 = this.props,
-          app = _this$props6.app,
-          _id = _this$props6._id,
-          _this$props6$info = _this$props6.info,
-          isSubPage = _this$props6$info.isSubPage,
-          status = _this$props6$info.status;
-      app.log.debug('page did mount', _id);
-      app.event.emit(app._id, 'onPageAdd', _id, this);
+      var _this$props = this.props,
+          _id = _this$props._id,
+          isSubPage = _this$props.isSubPage,
+          status = _this$props.status;
+      Page.app.log.debug('page did mount', _id);
+      Page.app.event.emit(Page.app._id, 'onPageAdd', _id, this);
       if (isSubPage || status === 'normal' || status === 'background') this._pageStart();
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
-      var status = this.status;
+      var status = this.props.status;
       if (!this._started && (status === 'normal' || status === 'background')) this._pageStart();
-      if (prevProps.info.status !== 'normal' && status === 'normal') this._pageActive();
-      if (prevProps.info.staus === 'normal' && status !== 'normal') this._pageInactive();
+      if (prevProps.status !== 'normal' && status === 'normal') this._pageActive();
+      if (prevProps.staus === 'normal' && status !== 'normal') this._pageInactive();
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      var _this$props7 = this.props,
-          app = _this$props7.app,
-          _id = _this$props7._id;
-      app.log.debug('page will unmount', _id);
+      var _id = this.props._id;
+      Page.app.log.debug('page will unmount', _id);
 
       this._pageStop();
-    } // componentDidCatch(error, info) {
-    //   let { app, _id } = this.props;
-    //   app.log.debug('page did catch');
-    //   app.render.panic(error, {title:'page error catch', _id});
-    // }
-
+    }
   }, {
     key: "shouldComponentUpdate",
     value: function shouldComponentUpdate(nextProps, nextState) {
-      if (nextProps.info.status !== this.props.info.status) return true;
-      if (!this.props.app.utils.shallowEqual(this.props.subPages, nextProps.subPages)) return true;
-      if (!this.props.app.utils.shallowEqual(this.props.popLayers, nextProps.popLayers)) return true;
-      if (!this.props.app.utils.shallowEqual(this.props.info, nextProps.info, ['params', 'query', 'popLayers', 'subPages'])) return true;
-      if (this.app.State.checkStates(this, this.props.context, nextProps.context, this.options)) return true;
+      if (this.props.status !== nextProps.status) return true;
+      if (!Page.app.utils.shallowEqual(this.props.routeDefine, nextProps.routeDefine)) return true;
+      if (!Page.app.utils.shallowEqual(this.props.params, nextProps.params)) return true;
+      if (!Page.app.utils.shallowEqual(this.props.query, nextProps.query)) return true;
+      if (Page.app.State.checkStates(this, this.props.context, nextProps.context, this.options)) return true;
       return false;
+    }
+  }, {
+    key: "_showStatus",
+    value: function _showStatus() {
+      return this.props.status === 'normal' || this.props.status === 'pushout';
+    }
+  }, {
+    key: "_frameProps",
+    value: function _frameProps() {
+      var _this$props2 = this.props,
+          _id = _this$props2._id,
+          isSubPage = _this$props2.isSubPage,
+          routeName = _this$props2.routeName;
+      return {
+        'data-page': _id,
+        'data-page-sub': isSubPage ? routeName : undefined,
+        style: isSubPage ? {
+          width: '100%',
+          height: '100%'
+        } : {
+          display: this._showStatus() ? 'block' : 'none',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          background: 'white'
+        }
+      };
+    }
+  }, {
+    key: "_contentProps",
+    value: function _contentProps() {
+      var _id = this.props._id;
+      return (0, _objectSpread2.default)({
+        app: Page.app,
+        page: this,
+        _id: _id,
+        route: this.props,
+        info: this.props
+      }, this.options && Page.app.State.getStates(this, this.options));
     }
   }, {
     key: "render",
     value: function render() {
-      var _this$props8 = this.props,
-          app = _this$props8.app,
-          _id = _this$props8._id,
-          info = _this$props8.info,
-          subPages = _this$props8.subPages,
-          popLayers = _this$props8.popLayers;
-      app.log.debug('page render', _id);
+      var _this$props3 = this.props,
+          _id = _this$props3._id,
+          Component = _this$props3.routeDefine.component,
+          children = _this$props3.children;
+      Page.app.log.debug('page render', _id);
       this._actionNum = 0;
-      return _react.default.createElement(Page.Frame, {
-        app: app,
-        _id: _id,
-        info: info
-      }, _react.default.createElement(info.routeDefine.component, (0, _extends2.default)({
-        app: app,
-        page: this,
-        _id: _id,
-        route: info,
-        info: info
-      }, this.options && app.State.getStates(this, this.options)), subPages), popLayers);
+      return _react.default.createElement("main", this._frameProps(), _react.default.createElement(Component, this._contentProps(), children));
     }
   }]);
   return Page;
@@ -501,27 +493,3 @@ function (_React$Component) {
 (0, _defineProperty2.default)(Page, "pages", {});
 var _default = Page;
 exports.default = _default;
-
-Page.Frame = function (aprops) {
-  var _id = aprops._id,
-      info = aprops.info,
-      children = aprops.children;
-  var show = info.status === 'normal' || info.status === 'pushout';
-  var props = {
-    'data-page': _id,
-    'data-page-sub': info.isSubPage ? info.routeName : undefined,
-    style: info.isSubPage ? {
-      width: '100%',
-      height: '100%'
-    } : {
-      display: show ? 'block' : 'none',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-      background: 'white'
-    }
-  };
-  return _react.default.createElement("main", props, show ? children : null);
-};

@@ -36,7 +36,7 @@ export let Tabx = props=>{
 
 export default props=>{
   let { children } = props;
-
+console.log(555555);
   return (
     <Panel page full>
       <TabBar bc-flex-sub-flex-extend position="bottom" bp-nav-bp-panelItem-position="top" bp-nav-bc-padding-v- bp-nav-bc-border-set-top->

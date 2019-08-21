@@ -7,6 +7,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 require("core-js/modules/es7.object.entries");
@@ -515,47 +517,26 @@ function (_React$Component) {
     value: function render() {
       var _this5 = this;
 
-      var app = this.props.app;
       var _this$state = this.state,
           _pageInfos = _this$state._pageInfos,
           _popLayerInfos = _this$state._popLayerInfos;
       return _react.default.createElement(_react.default.Fragment, null, _pageInfos.map(function (v) {
-        return _react.default.createElement(_this5.Page, {
-          key: v._id,
-          _id: v._id,
-          app: app,
-          info: v,
-          subPages: Object.entries(v.subPageInfos).reduce(function (vv1, _ref) {
-            var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-                kk2 = _ref2[0],
-                vv2 = _ref2[1];
+        return _react.default.createElement(_this5.Page, (0, _extends2.default)({
+          key: v._id
+        }, v), Object.entries(v.subPageInfos).reduce(function (vv1, _ref) {
+          var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+              kk2 = _ref2[0],
+              vv2 = _ref2[1];
 
-            vv1[kk2] = _react.default.createElement(_this5.Page, {
-              key: vv2._id,
-              _id: vv2._id,
-              app: app,
-              info: vv2
-            });
-            return vv1;
-          }, {}),
-          poplayers: _popLayerInfos.filter(function (v) {
-            return v.options._idPage === v._id;
-          }).map(function (v) {
-            return _react.default.createElement(_this5.PopLayer, {
-              key: v.options._id,
-              app: app,
-              id: v.options._id
-            });
-          })
-        });
-      }), _popLayerInfos.filter(function (v) {
-        return !v.options._idPage;
-      }).map(function (v) {
-        return _react.default.createElement(_this5.PopLayer, {
-          key: v.options._id,
-          app: app,
-          id: v.options._id
-        });
+          vv1[kk2] = _react.default.createElement(_this5.Page, (0, _extends2.default)({
+            key: vv2._id
+          }, vv2));
+          return vv1;
+        }, {}));
+      }), _popLayerInfos.map(function (v) {
+        return _react.default.createElement(_this5.PopLayer, (0, _extends2.default)({
+          key: v.options._id
+        }, v));
       }));
     }
   }]);

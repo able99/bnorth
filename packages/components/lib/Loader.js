@@ -394,14 +394,14 @@ var loader = function loader(app) {
             app.loader.timer = null;
           }
 
-          app.loader._id = app.router.addPopLayer(_LoaderPopLayer, (0, _objectSpread2.default)({}, props, {
+          app.loader._id = app.PopLayer.addPopLayer(_LoaderPopLayer, (0, _objectSpread2.default)({}, props, {
             progress: progress
           }), (0, _objectSpread2.default)({}, options, {
             _id: app.loader._id
           }));
 
           if (progress > 100 && !app.loader.count) {
-            app.router.removePopLayer(app.loader._id);
+            app.PopLayer.removePopLayer(app.loader._id);
             app.loader._id = undefined;
           } else if (progress > 100 && app.loader.count) {
             if (app.loader.timer) {
@@ -501,10 +501,8 @@ var pulldown = {
   _id: 'pulldown',
   onPluginMount: function onPluginMount(app) {
     app.pulldown = {
-      show: function show() {
-        var progress = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-        var props = arguments.length > 1 ? arguments[1] : undefined;
-        var options = arguments.length > 2 ? arguments[2] : undefined;
+      show: function show(progress, props, options) {
+        if (progress < 15) return;
 
         if (typeof progress === 'string' && progress < 100) {
           return app.pulldown.close();
@@ -517,7 +515,7 @@ var pulldown = {
         }
       },
       close: function close() {
-        app.router.removePopLayer(app.pulldown._id);
+        app.PopLayer.removePopLayer(app.pulldown._id);
         app.pulldown._id = undefined;
       }
     };

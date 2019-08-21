@@ -5,19 +5,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 class PopLayer extends React.Component {
+  static app;
+
   // poplayer interface
   // ---------------------------------------
-  static app;
-  static _IdRandom = 0;
-  /**
-   * 生成弹出层 id
-   * @param {module:router~PopLayerOptions} - 配置参数
-   * @returns {string} 弹出层 id 
-   */
-  static genPopLayerId(options={}) {
-    return options._id || `${++this._popLayerIdRandom}@${options._idPage?options._idPage:'#'}`;
+  static poplayers = {}
+  static getPopLayer(_id) {
+    return PopLayer.poplayers[_id];
   }
 
+  // poplayer interface
+  // ---------------------------------------
+  static _IdRandom = 0;
   /**
    * 添加弹出层
    * @param {number|string|component|element} - 内容 
@@ -31,12 +30,12 @@ class PopLayer extends React.Component {
 
     if(!popLayer) {
       if(!content) return;
-      PopLayer.app.router.component.setState({_popLayerInfos: [...PopLayer.app.router.component.state._popLayerInfos, { content, props, options }]});
+      PopLayer.app.router.setPopLayerInfos([...PopLayer.app.router.getPopLayerInfos(), { content, props, options }]);
     }else{
       content&&(popLayer.content=content);
       popLayer.props = {...popLayer.props, ...props};
       popLayer.options = {...popLayer.options, ...options};
-      popLayer.instance&&popLayer.instance.setState({});
+      PopLayer.app.router.refresh();
     }
     
     return options._id;
@@ -47,10 +46,12 @@ class PopLayer extends React.Component {
    * @param {!string} - 弹出层 id
    */
   static removePopLayer(_id) {
-    let info = PopLayer.getPopLayerInfo(_id);
-    if(!info) return;
-    info.remove = true;
-    PopLayer.app.router.component.setState({});
+    let infos = PopLayer.app.router.getPopLayerInfos();
+    let index = infos.findIndex(v=>v.options._id===_id);
+    if(index>=0){
+      infos.splice(index, 1);
+      PopLayer.app.router.getPopLayerInfos(infos);
+    }
   }
 
   /**
@@ -59,59 +60,50 @@ class PopLayer extends React.Component {
    * @returns {module:router~PopLayerInfo}
    */
   static getPopLayerInfo(_id) {
-    return PopLayer.app.router.component.state._popLayerInfos.find(v=>v.options._id===_id);
+    return PopLayer.app.router.getPopLayerInfos().find(v=>v.options._id===_id);
   }
 
-
-
-
-
-
-
-
-
-
-  constructor(props) {
-    super(props);
-    let { app, id:_id } = this.props;
-    let info = PopLayer.getPopLayerInfo(_id);
-    if(info) info.instance = this;
-    app.State.attachStates(app, this, _id, info.options);
-  }
-  
+  // poplayer interface
+  // ---------------------------------------
   getDom() {
     return ReactDOM.findDOMNode(this);
   }
 
+  // poplayer interface
+  // ---------------------------------------
+  constructor(props) {
+    super(props);
+    let { options } = this.props;
+    PopLayer.poplayers[options._id] = this;
+    PopLayer.app.State.attachStates(PopLayer.app, this, options._id, options);
+  }
+
   componentWillUnmount() {
-    let { app, id:_id } = this.props;
-    let info = PopLayer.getPopLayerInfo(_id);
-    app.State.detachStates(this, info.options);
-    let infos = PopLayer.app.router.component.state._popLayerInfos;
-    let index = infos.findIndex(v=>v.options._id===_id);
-    index>=0&&infos.splice(index, 1);
+    let { options } = this.props;
+    PopLayer.app.State.detachStates(this, options);
+    delete PopLayer.poplayers[options._id];
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    let { app, id:_id } = this.props;
-    let info = PopLayer.getPopLayerInfo(_id);
-
-    if(!info) return false;
-    if (!this.props.app.utils.shallowEqual(this.prevProps, info.props)) return true;
-    if(app.State.checkStates(this, this.props.context, nextProps.context, info.options)) return true;
+    let { props, options } = this.props;
+    if (!PopLayer.app.utils.shallowEqual(nextProps.props, props)) return true;
+    if (!PopLayer.app.utils.shallowEqual(nextProps.options, options)) return true;
+    if(PopLayer.app.State.checkStates(this, nextProps.context, this.props.context, options)) return true;
     return false;
   }
 
   render() {
-    let { app, id:_id } = this.props;
-    let info = PopLayer.getPopLayerInfo(_id);
-    if(!info) return null;
-    let { content:Component, props, options } = info;
+    let { content:Component, props, options } = this.props;
     if(typeof Component!=='function') return Component;
+    let component = <Component data-poplayer={options._id} app={PopLayer.app} _id={options._id} poplayer={this} info={this.props} {...PopLayer.app.State.getStates(this, options)} {...props} />;
 
-    this.prevProps = {...props};
-    let poplayer={ app, _id, ...info, ...app.State.getStates(this, options) };
-    return <Component data-poplayer={_id} poplayer={poplayer} {...props} />;
+    if(options._idPage){
+      let page = PopLayer.app.Page.getPage(options._idPage);
+      let dom = page&&page.dom;
+      if(dom) return ReactDOM.createPortal(component, dom)
+    }
+
+    return component;
   }
 }
 

@@ -389,12 +389,7 @@ class Router {
     return true;
   }
 
-  /**
-   * 强制刷新全部页面
-   */
-  refresh() {
-    return this.component.setState({error: null});
-  }
+  
 
   /**
    * 跳转到根页面
@@ -420,6 +415,26 @@ class Router {
    */
   error(message, title, _id) {
     return this.component.setState({error: {message, title, _id}});
+  }
+
+  getPageInfos() {
+    return (this.component&&this.component.state._pageInfos)||[];
+  }
+
+  setPageInfos(_pageInfos) {
+    return this.component&&this.component.setState({_pageInfos});
+  }
+
+  getPopLayerInfos() {
+    return (this.component&&this.component.state._popLayerInfos)||[];
+  }
+
+  setPopLayerInfos(_popLayerInfos) {
+    return this.component&&this.component.setState({_popLayerInfos});
+  }
+
+  refresh() {
+    return this.component&&this.component.setState({error: null});
   }
 }
 
