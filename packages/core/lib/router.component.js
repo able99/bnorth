@@ -63,10 +63,6 @@ var _createHashHistory = _interopRequireDefault(require("history/createHashHisto
 
 var _path = require("path");
 
-var _routerLoading = _interopRequireDefault(require("./router.loading.js"));
-
-var _routerError = _interopRequireDefault(require("./router.error.js"));
-
 /**
  * @module
  */
@@ -474,7 +470,8 @@ function (_React$Component) {
                   });
                 });
                 this.setState({
-                  _pageInfos: pageInfos
+                  _pageInfos: pageInfos,
+                  _poplayers: poplayers
                 });
 
               case 54:
@@ -495,7 +492,6 @@ function (_React$Component) {
       var _this4 = this;
 
       var app = this.props.app;
-      var router = app.router;
       var page = app.Page.getPage();
       var status = page && page.status;
       if (status !== 'normal') requestAnimationFrame(function () {

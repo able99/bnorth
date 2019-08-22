@@ -29,7 +29,7 @@ class Event {
   }
 
   _getTargetEventName(targetId, eventName) {
-    return `!${eventName}@${targetId}`;
+    return `!${eventName}@${targetId||this.app._id}`;
   }
 
   _addListener(targetId, eventName, callback, ownerId, once) {
@@ -93,6 +93,7 @@ class Event {
    */
   emitSync(targetId, eventName, ...args) {
     let name = this._getTargetEventName(targetId, eventName);
+    this.app.options.logEvents&&this.app.log.log('event:',name,...args);
 
     [...this._listener[name]||[]].forEach(({callback, once})=>{
       callback(...args);
@@ -110,6 +111,7 @@ class Event {
    */
   async emit(targetId, eventName, ...args) {
     let name = this._getTargetEventName(targetId, eventName);
+    this.app.options.logEvents&&this.app.log.log('event:',name,...args);
 
     for (let {callback, once} of [...this._listener[name]||[]]) {
       let ret = await callback(...args);

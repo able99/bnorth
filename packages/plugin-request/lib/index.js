@@ -87,18 +87,14 @@ var getClass = function getClass(app) {
     function (_app$State) {
       (0, _inherits2.default)(Request, _app$State);
 
-      function Request(app, _id, options) {
+      function Request(_id, options) {
         var _this;
 
         (0, _classCallCheck2.default)(this, Request);
-        _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Request).call(this, app, _id, options));
-        _this.fetched = false;
-        app.event.on(_this._id, 'onStateStart', function (page) {
-          _this.options.fetchOnStart && _this.fetch();
-        }, _this._id);
-        app.event.on(_this._id, 'onStateActive', function (page, onStart) {
-          _this.options.fetchOnActive && !onStart && _this.fetch();
-        }, _this._id);
+        _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Request).call(this, _id, options));
+        _this.fetched = false; // app.event.on(this._id, 'onStateStart', (page)=>{this.options.fetchOnStart&&this.fetch()}, this._id);
+        // app.event.on(this._id, 'onStateActive', (page, onStart)=>{this.options.fetchOnActive&&(!onStart)&&this.fetch()}, this._id);
+
         return _this;
       }
 

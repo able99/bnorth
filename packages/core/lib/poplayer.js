@@ -9,6 +9,16 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+require("core-js/modules/es6.string.starts-with");
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
+require("core-js/modules/web.dom.iterable");
+
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es7.object.entries");
+
 require("core-js/modules/es6.array.find");
 
 require("core-js/modules/es6.array.find-index");
@@ -43,9 +53,14 @@ var PopLayer =
 function (_React$Component) {
   (0, _inherits2.default)(PopLayer, _React$Component);
   (0, _createClass2.default)(PopLayer, [{
-    key: "getDom",
+    key: "_id",
     // poplayer interface
     // ---------------------------------------
+    value: function _id() {
+      return this.props.options._id;
+    }
+  }, {
+    key: "getDom",
     value: function getDom() {
       return _reactDom.default.findDOMNode(this);
     } // poplayer interface
@@ -73,6 +88,7 @@ function (_React$Component) {
     value: function addPopLayer(content) {
       var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      // todo: poplayer option state,action
       options._id = options._id || "".concat(++PopLayer._IdRandom, "@").concat(options._idPage ? options._idPage : '#');
       var popLayer = PopLayer.getPopLayerInfo(options._id);
 
@@ -132,16 +148,28 @@ function (_React$Component) {
     _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(PopLayer).call(this, props));
     var options = _this.props.options;
     PopLayer.poplayers[options._id] = (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this));
-    PopLayer.app.State.attachStates(PopLayer.app, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), options._id, options);
+    _this._states = Object.entries(options).filter(function (_ref) {
+      var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+          k = _ref2[0],
+          v = _ref2[1];
+
+      return k.startsWith('state') || k.startsWith('_state');
+    });
+    PopLayer.app.State.attachStates((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), _this._states);
     return _this;
   }
 
   (0, _createClass2.default)(PopLayer, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      PopLayer.app.event.emit(PopLayer.app._id, 'onPopLayerStart', this._id);
+    }
+  }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      var options = this.props.options;
-      PopLayer.app.State.detachStates(this, options);
-      delete PopLayer.poplayers[options._id];
+      PopLayer.app.event.emit(PopLayer.app._id, 'onPopLayerStop', this._id);
+      PopLayer.app.State.detachStates(this, this._states);
+      delete PopLayer.poplayers[this._id];
     }
   }, {
     key: "shouldComponentUpdate",
@@ -151,7 +179,7 @@ function (_React$Component) {
           options = _this$props.options;
       if (!PopLayer.app.utils.shallowEqual(nextProps.props, props)) return true;
       if (!PopLayer.app.utils.shallowEqual(nextProps.options, options)) return true;
-      if (PopLayer.app.State.checkStates(this, nextProps.context, this.props.context, options)) return true;
+      if (PopLayer.app.State.checkStates(this, nextProps.context, this.props.context, this._states)) return true;
       return false;
     }
   }, {
@@ -161,15 +189,17 @@ function (_React$Component) {
           Component = _this$props2.content,
           props = _this$props2.props,
           options = _this$props2.options;
+      var _id = options._id;
+      PopLayer.app.event.emit(PopLayer.app._id, 'onPopLayerRender', _id, this.props);
       if (typeof Component !== 'function') return Component;
 
       var component = _react.default.createElement(Component, (0, _extends2.default)({
-        "data-poplayer": options._id,
+        "data-poplayer": _id,
         app: PopLayer.app,
-        _id: options._id,
+        _id: _id,
         poplayer: this,
         info: this.props
-      }, PopLayer.app.State.getStates(this, options), props));
+      }, PopLayer.app.State.getStates(this, this._states), props));
 
       if (options._idPage) {
         var page = PopLayer.app.Page.getPage(options._idPage);

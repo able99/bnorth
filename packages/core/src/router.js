@@ -1,16 +1,9 @@
 /**
  * @module
  */
-import React from 'react';
-import createHistory from 'history/createHashHistory';
-import { join } from 'path';
 import RouterComponent from './router.component'
 
-let spe = '/';
 let ParamSpe = ':';
-let SubPageSpe = '|';
-let ParamOptional = '?';
-let PageSign = '#';
 
 
 /**

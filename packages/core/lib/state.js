@@ -13,29 +13,27 @@ require("regenerator-runtime/runtime");
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
-require("core-js/modules/es6.object.assign");
-
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
-
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
-
-require("core-js/modules/es7.symbol.async-iterator");
-
-require("core-js/modules/es6.symbol");
-
 require("core-js/modules/es6.string.starts-with");
-
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-require("core-js/modules/web.dom.iterable");
 
 require("core-js/modules/es6.array.iterator");
 
 require("core-js/modules/es7.object.entries");
 
+require("core-js/modules/es7.symbol.async-iterator");
+
+require("core-js/modules/es6.symbol");
+
+require("core-js/modules/web.dom.iterable");
+
+require("core-js/modules/es6.object.assign");
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
 
 /**
  * @module
@@ -94,68 +92,101 @@ var State =
 /*#__PURE__*/
 function () {
   (0, _createClass2.default)(State, null, [{
-    key: "checkModuleOptions",
-    // static
+    key: "getState",
+    // states
     // ---------------
-    value: function checkModuleOptions(options) {
-      return Array.isArray(options) ? options : Object.entries(options).filter(function (_ref) {
-        var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-            k = _ref2[0],
-            v = _ref2[1];
 
-        return k.startsWith('state') || k.startsWith('_state');
-      });
+    /**
+     * 通过 state 的实例 id 获取 state 实例
+     * @param {string} - state 实例 id 
+     * @returns {module:state.State} state 实例
+     */
+    value: function getState(_id) {
+      return State.states[_id];
+    } // state helper
+    // ---------------
+
+    /**
+     * 创建数据单元
+     * @param {module:app.App} - App 的实例 
+     * @param {module:state.StateDefine} - 数据单元声明对象 
+     * @param {string} - state 在所有者上的属性名
+     * @param {string} - state 所有者 id 
+     */
+
+  }, {
+    key: "createState",
+    value: function createState(stateKey) {
+      var aoptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var ownerId = arguments.length > 2 ? arguments[2] : undefined;
+      if (typeof aoptions === 'string') return State.app.State.getState(aoptions);
+      if (!stateKey) return;
+
+      var _ref = Array.isArray(aoptions) ? aoptions : [aoptions, State.app.State],
+          _ref2 = (0, _slicedToArray2.default)(_ref, 3),
+          options = _ref2[0],
+          state = _ref2[1],
+          override = _ref2[2];
+
+      ownerId = ownerId || State.app._id;
+
+      var _id = options._id || "*".concat(stateKey, "@").concat(ownerId);
+
+      if (State.states[_id]) {
+        State.app.log.error('state _id dup:', _id);
+
+        State.states[_id].destructor();
+      }
+
+      return State.states[_id] = Object.assign(new state(_id, options, ownerId), override);
     }
   }, {
     key: "attachStates",
-    value: function attachStates(app, module, _id, options, cb) {
+    value: function attachStates(modulee, options, cb) {
       var _this = this;
 
-      this.checkModuleOptions(options).forEach(function (_ref3) {
+      options.forEach(function (_ref3) {
         var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
             k = _ref4[0],
             v = _ref4[1];
 
-        module[k] = app.State.createState(app, v, k, _id);
+        modulee[k] = State.app.State.createState(k, v, modulee._id);
 
-        if (!module[k]) {
-          app.render.panic(v, {
+        if (!modulee[k]) {
+          State.app.render.panic(v, {
             title: 'no state',
             _id: _this._id
           });
           return;
         }
 
-        cb && cb(k, v, module[k]);
+        cb && cb(k, v, modulee[k]);
       });
     }
   }, {
     key: "detachStates",
-    value: function detachStates(module, options) {
-      this.checkModuleOptions(options).forEach(function (_ref5) {
+    value: function detachStates(modulee, options) {
+      options.forEach(function (_ref5) {
         var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
             k = _ref6[0],
             v = _ref6[1];
 
-        if (k.startsWith('state') || k.startsWith('_state')) {
-          module[k] && module[k].destructor();
-        }
+        return modulee[k] && modulee[k].destructor();
       });
     }
   }, {
     key: "checkStates",
-    value: function checkStates(module, context, nextContext, options) {
+    value: function checkStates(modulee, context, nextContext, options) {
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = this.checkModuleOptions(options)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var _step$value = (0, _slicedToArray2.default)(_step.value, 2),
-              k = _step$value[0],
-              v = _step$value[1];
+        for (var _iterator = options[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var _step$value = (0, _slicedToArray2.default)(_step.value, 1),
+              k = _step$value[0];
 
-          var key = module[k] && module[k]._id;
+          var key = modulee[k] && modulee[k]._id;
           if (context[key] !== nextContext[key]) return true;
         }
       } catch (err) {
@@ -172,94 +203,23 @@ function () {
           }
         }
       }
-
-      return false;
     }
   }, {
     key: "getStates",
-    value: function getStates(module, options) {
+    value: function getStates(modulee, options) {
       var ret = {};
-      this.checkModuleOptions(options).forEach(function (_ref7) {
+      options.forEach(function (_ref7) {
         var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
             k = _ref8[0],
             v = _ref8[1];
 
-        v = module[k];
+        v = modulee[k];
         if (!v) return;
         ret[k] = v.data();
         var extData = v.extData();
         extData && (ret["".concat(k, "Ext")] = extData);
       });
       return ret;
-    } // static
-    // ---------------
-
-  }, {
-    key: "_genStateId",
-    value: function _genStateId(stateKey, ownerId) {
-      if (!stateKey || !ownerId) return;
-      return "*".concat(stateKey, "@").concat(ownerId);
-    }
-    /**
-     * 通过 state 的实例 id 获取 state 实例
-     * @param {string} - state 实例 id 
-     * @returns {module:state.State} state 实例
-     */
-
-  }, {
-    key: "getStateById",
-    value: function getStateById(_id) {
-      return State.states[_id];
-    }
-    /**
-     * 通过 state 实例在其所有者上的属性名和其所有者 id 获取 state 实例
-     * @param {string} - state 在所有者上的属性名
-     * @param {string} - state 所有者 id 
-     * @returns {module:state.State} 获取的 State 实例
-     */
-
-  }, {
-    key: "getStateByOwner",
-    value: function getStateByOwner(stateKey, ownerId) {
-      return State.getStateById(this._genStateId(stateKey, ownerId));
-    }
-    /**
-     * 创建数据单元
-     * @param {module:app.App} - App 的实例 
-     * @param {module:state.StateDefine} - 数据单元声明对象 
-     * @param {string} - state 在所有者上的属性名
-     * @param {string} - state 所有者 id 
-     */
-
-  }, {
-    key: "createState",
-    value: function createState(app, aoptions, stateKey, ownerId) {
-      if (typeof aoptions === 'string') {
-        return app.State.getStateById(aoptions);
-      }
-
-      var _ref9 = aoptions || {
-        state: app.State
-      },
-          state = _ref9.state,
-          options = (0, _objectWithoutProperties2.default)(_ref9, ["state"]);
-
-      var _id = options._id || State._genStateId(stateKey, ownerId);
-
-      var _ref10 = (0, _typeof2.default)(state) === 'object' ? state : {
-        constructor: state
-      },
-          _ref10$constructor = _ref10.constructor,
-          constructor = _ref10$constructor === void 0 ? app.State : _ref10$constructor,
-          props = (0, _objectWithoutProperties2.default)(_ref10, ["constructor"]);
-
-      if (State.states[_id]) {
-        app.log.error('state _id dup:', _id);
-
-        State.states[_id].destructor();
-      }
-
-      return State.states[_id] = Object.assign(new constructor(app, _id, options), props);
     } // constructor
     // ---------------
 
@@ -269,77 +229,74 @@ function () {
 
   }]);
 
-  function State(app, _id) {
+  function State(_id) {
     var _this2 = this;
 
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var ownerId = arguments.length > 2 ? arguments[2] : undefined;
     (0, _classCallCheck2.default)(this, State);
-    app.log.debug('state constructor', _id);
-    /**
-     * App 的实例
-     * @type {module:app.App}
-     */
 
-    this.app = app;
     /**
      * 数据单元的 id
      * @type {string}
      */
-
     this._id = _id;
     /**
      * 数据单元的声明对象
      * @type {module:state~StateDefine}
      */
 
-    this.options = options;
+    this.options = typeof options === 'function' ? options(State.app, this) : options;
+    this.options.ownerId = ownerId;
     if (this.options.initialization === undefined) this.options.initialization = {};
-    Object.entries(this.options).forEach(function (_ref11) {
-      var _ref12 = (0, _slicedToArray2.default)(_ref11, 2),
-          k = _ref12[0],
-          v = _ref12[1];
+    Object.entries(this.options).forEach(function (_ref9) {
+      var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
+          k = _ref10[0],
+          v = _ref10[1];
 
-      return k.indexOf('onState') === 0 && _this2.app.event.on(_this2._id, k, v, _this2._id);
+      if (k.startsWith('on')) {
+        State.app.event.on(null, k, v, _this2._id);
+      } else {
+        _this2[k] = v;
+      }
     });
-    this.app.event.on(this._id, 'onStateStop', function () {
-      _this2.destructor();
-    }, this._id);
+    State.app.event.emit(null, 'onStateStart', this._id);
+    this.options._onStart && this.options._onStart();
   }
 
   (0, _createClass2.default)(State, [{
     key: "destructor",
     value: function destructor() {
-      this.app.log.debug('state destructor', this._id);
-      this.app.event.off(this._id);
+      State.app.event.emit(null, 'onStateStop', this._id);
+      this.options._onStart && this.options._onStart();
+      State.app.event.off(this._id);
       if (this.options.cleanOnStop !== false) this.clear();
-      if (this._id !== true && this.options.removeOnStop !== false) delete State.states[this._id];
-    } // state private work
+    } // state work
 
   }, {
     key: "clear",
     value: function clear() {
-      this.app.log.debug('state clear');
-      return this.app.context.clear(this._id);
+      return State.app.context.clear(this._id);
     }
   }, {
     key: "stateData",
     value: function stateData() {
-      return this.app.utils.objectCopy(this.app.context.data(this._id, {}));
+      return State.app.utils.objectCopy(State.app.context.data(this._id, {}));
     }
   }, {
     key: "stateUpdate",
     value: function stateUpdate(data) {
-      this.app.context.update(this._id, data);
+      State.app.context.update(this._id, data);
     }
   }, {
     key: "stateSet",
     value: function stateSet(data) {
-      this.app.context.set(this._id, data);
+      State.app.context.set(this._id, data);
     }
   }, {
     key: "stateDelete",
     value: function stateDelete(did) {
-      this.app.context.delete(this._id, did);
+      State.app.context.delete(this._id, did);
     } // data operation interface
     // -------------------
 
@@ -351,7 +308,7 @@ function () {
   }, {
     key: "data",
     value: function data() {
-      return this.app.utils.objectCopy(this.stateData().data || this.options.initialization, this.options.deepCopy);
+      return State.app.utils.objectCopy(this.stateData().data || this.options.initialization, this.options.deepCopy);
     }
     /**
      * 读取数据单元中的扩展数据
@@ -372,7 +329,7 @@ function () {
     value: function get() {
       var path = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
       var data = this.data();
-      return this.app.utils.pathGet(data, path);
+      return State.app.utils.pathGet(data, path);
     }
     /**
      * 更新数据单元的数据, 异步更新，同时调用2次 update，会导致后面更新覆盖前一次，建议用同步方式调用
@@ -393,32 +350,33 @@ function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                this.app.log.debug('state update', data, options);
-                options = this.app.utils.getOptions(this.options, options);
+                options = State.app.utils.getOptions(this.options, options);
                 prevData = this.data();
-                nextData = this.app.utils.objectUpdate(prevData, data, options.append);
-                _context.next = 6;
-                return this.app.event.emit(this._id, 'onStateUpdating', nextData, prevData, data, options);
+                nextData = State.app.utils.objectUpdate(prevData, data, options.append);
+                _context.next = 5;
+                return State.app.event.emit(null, 'onStateUpdating', this._id, nextData, prevData, data, options);
 
-              case 6:
+              case 5:
                 _context.t0 = _context.sent;
 
                 if (_context.t0) {
-                  _context.next = 9;
+                  _context.next = 8;
                   break;
                 }
 
                 _context.t0 = nextData;
 
-              case 9:
+              case 8:
                 nextData = _context.t0;
-                this.app.context.update(this._id, {
+                nextData = this.options._onStateUpdating && this.options._onStateUpdating(nextData, prevData, data, options) || nextData;
+                State.app.context.update(this._id, {
                   data: nextData
                 });
-                this.app.event.emit(this._id, 'onStateUpdated', nextData, prevData, data, options);
+                State.app.event.emit(null, 'onStateUpdated', this._id, nextData, prevData, data, options);
+                this.options._onStateUpdated && this.options._onStateUpdated(nextData, prevData, data, options);
                 return _context.abrupt("return", nextData);
 
-              case 13:
+              case 14:
               case "end":
                 return _context.stop();
             }
@@ -459,7 +417,7 @@ function () {
                 input = _args2.length > 2 ? _args2[2] : undefined;
                 data = this.data();
 
-                if (this.app.utils.pathSet(data, path, val)) {
+                if (State.app.utils.pathSet(data, path, val)) {
                   _context2.next = 6;
                   break;
                 }
@@ -505,7 +463,7 @@ function () {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                data = this.app.utils.objectDelete(this.data(), _did);
+                data = State.app.utils.objectDelete(this.data(), _did);
                 _context3.next = 3;
                 return this.update(data, {
                   append: false
@@ -529,12 +487,8 @@ function () {
   }]);
   return State;
 }();
-/**
- * 存放全部数据单元的集合
- * @type {object}
- */
 
-
-State.states = {};
+(0, _defineProperty2.default)(State, "app", void 0);
+(0, _defineProperty2.default)(State, "states", {});
 var _default = State;
 exports.default = _default;

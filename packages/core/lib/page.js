@@ -9,17 +9,19 @@ exports.default = void 0;
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
-require("core-js/modules/es6.regexp.split");
+require("core-js/modules/es6.regexp.constructor");
+
+require("core-js/modules/es6.regexp.match");
 
 require("core-js/modules/es6.string.starts-with");
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
 
+require("core-js/modules/web.dom.iterable");
+
 require("core-js/modules/es6.array.iterator");
 
 require("core-js/modules/es7.object.entries");
-
-require("core-js/modules/web.dom.iterable");
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -161,17 +163,25 @@ var Page =
 function (_React$Component) {
   (0, _inherits2.default)(Page, _React$Component);
   (0, _createClass2.default)(Page, [{
-    key: "getSubPage",
-
+    key: "_isStatusActive",
+    value: function _isStatusActive(status) {
+      return status === 'normal';
+    }
+  }, {
+    key: "_isStatusStart",
+    value: function _isStatusStart(status) {
+      return status === 'normal' || status === 'background';
+    }
     /**
      * 通过子页面的名字获取当前页面的子页面实例
      * @param {string} - 子页面名称 
      * @returns {module:page.Page} 子页面实例
      */
-    value: function getSubPage(subName) {
-      var _id = this.props.subPages[subName] && this.props.subPages[subName].props._id;
 
-      return _id && this.props.app.info.getPage(_id);
+  }, {
+    key: "getSubPage",
+    value: function getSubPage(subName) {
+      Page.getPage(this.props.subPageInfos[subName] && this.props.subPageInfos[subName]._id);
     }
     /**
      * 子页面获取父页面的实例
@@ -181,7 +191,7 @@ function (_React$Component) {
   }, {
     key: "getParrentPage",
     value: function getParrentPage() {
-      return this.app.getPage(this.props.info._idParent);
+      Page.getPage(this.props._idParent);
     }
     /**
      * 页面获取前一页面的实例
@@ -191,8 +201,10 @@ function (_React$Component) {
   }, {
     key: "getPrevPage",
     value: function getPrevPage() {
-      return this.app.getPage(this.props.info._idPrev);
-    }
+      return this.app.getPage(this.props._idPrev);
+    } // page action
+    // ---------------------
+
     /**
      * 动态建立页面 action 函数，*注：* 动态创建一般是在 render 中，渲染时会多次建立，有消耗，建议在 controller 中定义为好
      * @param {!function} - action 函数
@@ -202,16 +214,12 @@ function (_React$Component) {
 
   }, {
     key: "action",
-    value: function action(func, name) {
+    value: function action(name, func) {
       var _this2 = this;
 
-      if (!name) name = "_".concat(++this._actionNum);
-
-      var ret = function ret() {
+      return this["action".concat(name)] = function () {
         try {
-          _this2.app.log.debug('page action', _this2._id, name);
-
-          _this2.app.event.emit(_this2._id, 'onPageAction', _this2._id, name);
+          Page.app.event.emit(Page.app._id, 'onPageAction', _this2._id, name);
 
           for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
@@ -219,18 +227,13 @@ function (_React$Component) {
 
           return func.apply(_this2, args);
         } catch (e) {
-          _this2.app.log.error('page action', name, e);
-
-          _this2.app.render.panic(e, {
+          Page.app.render.panic(e, {
             title: "action(".concat(name, ") error"),
             _id: _this2._id
           });
         }
-      };
-
-      if (name) this["action".concat(name)] = ret;
-      return ret;
-    } // page private work
+      }.bind(this);
+    } // page life
     // ---------------------------
 
   }, {
@@ -263,7 +266,7 @@ function (_React$Component) {
   }, {
     key: "active",
     get: function get() {
-      return this.props.status === 'normal';
+      return this._isStatusActive(this.status);
     }
   }], [{
     key: "getPage",
@@ -310,57 +313,39 @@ function (_React$Component) {
     var component = _this$props$routeDefi.component,
         controller = _this$props$routeDefi.controller;
     controller = controller || component.controller || {};
-    _this.options = typeof controller === 'function' ? controller(Page.app, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))) : controller;
-    if (!_this.options.stateData) _this.options.stateData = undefined;
-    if (!_this.options.actionGoBack) _this.options.actionGoBack = function () {
+    var options = typeof controller === 'function' ? controller(Page.app, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))) : controller;
+    if (!options.stateData) options.stateData = undefined;
+    if (!options.actionGoBack) options.actionGoBack = _this.action(function () {
       return Page.app.router.back();
-    };
-    Page.app.State.attachStates(Page.app, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), _this._id, _this.options, function (k, v, state) {
-      if (typeof v === 'string') return;
-      Page.app.event.on(_this._id, 'onPageStart', function (page, isActive) {
-        Page.app.event.emit(_this[k]._id, 'onStateStart', _this[k]._id, isActive);
-      }, _this[k]._id);
-      Page.app.event.on(_this._id, 'onPageActive', function (page, onStart) {
-        Page.app.event.emit(_this[k]._id, 'onStateActive', _this[k]._id, onStart);
-      }, _this[k]._id);
-      Page.app.event.on(_this._id, 'onPageInactive', function (page, onStop) {
-        Page.app.event.emit(_this[k]._id, 'onStateInactive', _this[k]._id, onStop);
-      }, _this[k]._id);
-      Page.app.event.on(_this._id, 'onPageStop', function (page) {
-        Page.app.event.emit(_this[k]._id, 'onStateStop', _this[k]._id);
-      }, _this[k]._id);
-    });
-    Object.entries(_this.options).forEach(function (_ref) {
+    }, 'GoBack');
+    _this._states = Object.entries(options).filter(function (_ref) {
       var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
           k = _ref2[0],
           v = _ref2[1];
 
-      if (k.startsWith('state') || k.startsWith('_state')) {// state
-      } else if (k === 'onPageAdd' || k === 'onPageRemove') {
-        // app event
-        Page.app.event.on(Page.app._id, k, v, _this._id);
-      } else if (k.startsWith('onPage')) {
-        // page event
-        Page.app.event.on(_this._id, k, v, _this._id);
-      } else if (k.startsWith('onState')) {
-        // page state event
-        var stateEvents = k.split('_');
-        if (stateEvents[0] && _this[stateEvents[1]]) Page.app.event.on(_this[stateEvents[1]]._id, stateEvents[0], v, _this._id);
+      return k.startsWith('state') || k.startsWith('_state');
+    });
+    Page.app.State.attachStates((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), _this._states);
+    Object.entries(options).forEach(function (_ref3) {
+      var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+          k = _ref4[0],
+          v = _ref4[1];
+
+      if (k.startsWith('onPage')) {
+        Page.app.event.on(_this._id, k, v, _this._id); // page event
+      } else if (k.match(/(on\w*)_(\w*)/)) {
+        _this[RegExp.$2] && Page.app.event.on(_this[RegExp.$2]._id, RegExp.$1, v, _this._id); // page module event
       } else if (k.startsWith('on')) {
-        // app event
-        Page.app.event.on(Page.app._id, k, v, _this._id);
+        Page.app.event.on(Page.app._id, k, v, _this._id); // app event
       } else if (k.startsWith('action')) {
-        // action
-        _this[k] = _this.action(v, k.slice(6));
+        _this[k] = _this.action(k.slice(6), v); // action
       } else {
-        // user props
-        _this[k] = v;
-      }
+        !k.startsWith('state') && !k.startsWith('_state') && (_this[k] = v);
+      } // user props
+
     });
     return _this;
-  } // page life circle
-  // ---------------------------
-
+  }
 
   (0, _createClass2.default)(Page, [{
     key: "_pageStart",
@@ -368,44 +353,40 @@ function (_React$Component) {
       if (this._started) return;
       var _id = this.props._id;
       var active = this.active;
-      Page.app.event.emit(_id, 'onPageStart', this, active);
-      active && Page.app.event.emit(_id, 'onPageActive', this, true);
-      active && Page.app.event.emit(Page.app._id, 'onActivePageChange', _id);
+      active && Page.app.event.emit(Page.app._id, 'onPageStart', _id, true);
+      this._onStart && this._onStart(active);
+      active && Page.app.event.emit(Page.app._id, 'onPageActive', _id, true);
+      active && this._onActive && this._onActive(true);
       this._started = true;
     }
   }, {
     key: "_pageActive",
     value: function _pageActive() {
-      var _id = this.props._id;
-      Page.app.event.emit(_id, 'onPageActive', this, false);
-      Page.app.event.emit(Page.app._id, 'onActivePageChange', _id);
+      Page.app.event.emit(Page.app._id, 'onPageActive', this._id, true);
+      this._onActive && this._onActive();
     }
   }, {
     key: "_pageInactive",
     value: function _pageInactive() {
-      var _id = this.props._id;
-      Page.app.event.emit(_id, 'onPageInactive', this, false);
+      this._onInactive && this._onInactive(false);
     }
   }, {
     key: "_pageStop",
     value: function _pageStop() {
       var _id = this.props._id;
       var active = this.active;
-      active && Page.app.event.emit(_id, 'onPageInactive', this, true);
-      Page.app.event.emit(this._id, 'onPageStop', this);
-      Page.app.event.emit(Page.app._id, 'onPageRemove', _id, this);
-      delete Page.pages[_id];
+      Page.app.event.emit(Page.app._id, 'onPageStop', _id, active);
+      active && this._onInactive && this._onInactive(true);
+      Page.app.State.detachStates(this, this._states);
       Page.app.event.off(_id);
+      delete Page.pages[_id];
     }
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this$props = this.props,
-          _id = _this$props._id,
           isSubPage = _this$props.isSubPage,
           status = _this$props.status;
-      Page.app.log.debug('page did mount', _id);
-      Page.app.event.emit(Page.app._id, 'onPageAdd', _id, this);
       if (isSubPage || status === 'normal' || status === 'background') this._pageStart();
     }
   }, {
@@ -419,9 +400,6 @@ function (_React$Component) {
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      var _id = this.props._id;
-      Page.app.log.debug('page will unmount', _id);
-
       this._pageStop();
     }
   }, {
@@ -431,9 +409,11 @@ function (_React$Component) {
       if (!Page.app.utils.shallowEqual(this.props.routeDefine, nextProps.routeDefine)) return true;
       if (!Page.app.utils.shallowEqual(this.props.params, nextProps.params)) return true;
       if (!Page.app.utils.shallowEqual(this.props.query, nextProps.query)) return true;
-      if (Page.app.State.checkStates(this, this.props.context, nextProps.context, this.options)) return true;
+      if (Page.app.State.checkStates(this, this.props.context, nextProps.context, this._states)) return true;
       return false;
-    }
+    } // page render
+    // ---------------------
+
   }, {
     key: "_showStatus",
     value: function _showStatus() {
@@ -473,7 +453,7 @@ function (_React$Component) {
         _id: _id,
         route: this.props,
         info: this.props
-      }, this.options && Page.app.State.getStates(this, this.options));
+      }, Page.app.State.getStates(this, this._states));
     }
   }, {
     key: "render",
@@ -482,14 +462,17 @@ function (_React$Component) {
           _id = _this$props3._id,
           Component = _this$props3.routeDefine.component,
           children = _this$props3.children;
-      Page.app.log.debug('page render', _id);
-      this._actionNum = 0;
-      return _react.default.createElement("main", this._frameProps(), _react.default.createElement(Component, this._contentProps(), children));
+
+      var frameProps = this._frameProps();
+
+      var contentProps = this._contentProps();
+
+      Page.app.event.emit(Page.app._id, 'onPageRender', _id, contentProps);
+      return _react.default.createElement("main", frameProps, _react.default.createElement(Component, contentProps, children));
     }
   }]);
   return Page;
 }(_react.default.Component);
 
+exports.default = Page;
 (0, _defineProperty2.default)(Page, "pages", {});
-var _default = Page;
-exports.default = _default;

@@ -68,7 +68,7 @@ function () {
   (0, _createClass2.default)(Event, [{
     key: "_getTargetEventName",
     value: function _getTargetEventName(targetId, eventName) {
-      return "!".concat(eventName, "@").concat(targetId);
+      return "!".concat(eventName, "@").concat(targetId || this.app._id);
     }
   }, {
     key: "_addListener",
@@ -157,7 +157,8 @@ function () {
   }, {
     key: "emitSync",
     value: function emitSync(targetId, eventName) {
-      var _this3 = this;
+      var _this$app$log,
+          _this3 = this;
 
       for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
         args[_key - 2] = arguments[_key];
@@ -165,6 +166,7 @@ function () {
 
       var name = this._getTargetEventName(targetId, eventName);
 
+      this.app.options.logEvents && (_this$app$log = this.app.log).log.apply(_this$app$log, ['event:', name].concat(args));
       (0, _toConsumableArray2.default)(this._listener[name] || []).forEach(function (_ref3) {
         var callback = _ref3.callback,
             once = _ref3.once;
@@ -187,6 +189,8 @@ function () {
       var _emit = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
       _regenerator.default.mark(function _callee(targetId, eventName) {
+        var _this$app$log2;
+
         var name,
             _len2,
             args,
@@ -209,36 +213,37 @@ function () {
                   args[_key2 - 2] = _args[_key2];
                 }
 
+                this.app.options.logEvents && (_this$app$log2 = this.app.log).log.apply(_this$app$log2, ['event:', name].concat(args));
                 _arr = (0, _toConsumableArray2.default)(this._listener[name] || []);
                 _i = 0;
 
-              case 4:
+              case 5:
                 if (!(_i < _arr.length)) {
-                  _context.next = 15;
+                  _context.next = 16;
                   break;
                 }
 
                 _arr$_i = _arr[_i], callback = _arr$_i.callback, once = _arr$_i.once;
-                _context.next = 8;
+                _context.next = 9;
                 return callback.apply(void 0, args);
 
-              case 8:
+              case 9:
                 ret = _context.sent;
                 if (once) this.off(callback);
 
                 if (!ret) {
-                  _context.next = 12;
+                  _context.next = 13;
                   break;
                 }
 
                 return _context.abrupt("return", ret);
 
-              case 12:
+              case 13:
                 _i++;
-                _context.next = 4;
+                _context.next = 5;
                 break;
 
-              case 15:
+              case 16:
               case "end":
                 return _context.stop();
             }

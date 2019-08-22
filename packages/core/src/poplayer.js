@@ -25,6 +25,7 @@ class PopLayer extends React.Component {
    * @returns {string} 弹出层 id 
    */
   static addPopLayer(content, props={}, options={}) {
+    // todo: poplayer option state,action
     options._id = options._id || `${++PopLayer._IdRandom}@${options._idPage?options._idPage:'#'}`;
     let popLayer = PopLayer.getPopLayerInfo(options._id);
 
@@ -65,9 +66,8 @@ class PopLayer extends React.Component {
 
   // poplayer interface
   // ---------------------------------------
-  getDom() {
-    return ReactDOM.findDOMNode(this);
-  }
+  _id() { return this.props.options._id }
+  getDom() { return ReactDOM.findDOMNode(this) }
 
   // poplayer interface
   // ---------------------------------------
@@ -75,27 +75,35 @@ class PopLayer extends React.Component {
     super(props);
     let { options } = this.props;
     PopLayer.poplayers[options._id] = this;
-    PopLayer.app.State.attachStates(PopLayer.app, this, options._id, options);
+    this._states = Object.entries(options).filter(([k,v])=>k.startsWith('state')||k.startsWith('_state'));
+    PopLayer.app.State.attachStates(this, this._states);
+  }
+
+  componentDidMount() {
+    PopLayer.app.event.emit(PopLayer.app._id, 'onPopLayerStart', this._id);
   }
 
   componentWillUnmount() {
-    let { options } = this.props;
-    PopLayer.app.State.detachStates(this, options);
-    delete PopLayer.poplayers[options._id];
+    PopLayer.app.event.emit(PopLayer.app._id, 'onPopLayerStop', this._id);
+    PopLayer.app.State.detachStates(this, this._states);
+    delete PopLayer.poplayers[this._id];
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     let { props, options } = this.props;
     if (!PopLayer.app.utils.shallowEqual(nextProps.props, props)) return true;
     if (!PopLayer.app.utils.shallowEqual(nextProps.options, options)) return true;
-    if(PopLayer.app.State.checkStates(this, nextProps.context, this.props.context, options)) return true;
+    if(PopLayer.app.State.checkStates(this, nextProps.context, this.props.context, this._states)) return true;
     return false;
   }
 
   render() {
     let { content:Component, props, options } = this.props;
+    let _id = options._id;
+
+    PopLayer.app.event.emit(PopLayer.app._id, 'onPopLayerRender', _id, this.props);
     if(typeof Component!=='function') return Component;
-    let component = <Component data-poplayer={options._id} app={PopLayer.app} _id={options._id} poplayer={this} info={this.props} {...PopLayer.app.State.getStates(this, options)} {...props} />;
+    let component = <Component data-poplayer={_id} app={PopLayer.app} _id={_id} poplayer={this} info={this.props} {...PopLayer.app.State.getStates(this, this._states)} {...props} />;
 
     if(options._idPage){
       let page = PopLayer.app.Page.getPage(options._idPage);

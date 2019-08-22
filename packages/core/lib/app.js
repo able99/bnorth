@@ -292,85 +292,83 @@ function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                this.log.info('app start');
-                _context.prev = 1;
+                _context.prev = 0;
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context.prev = 5;
+                _context.prev = 4;
                 _iterator = this._startEvents[Symbol.iterator]();
 
-              case 7:
+              case 6:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 15;
+                  _context.next = 14;
                   break;
                 }
 
                 v = _step.value;
-                _context.next = 11;
+                _context.next = 10;
                 return this.event.emit(this._id, v, this);
 
-              case 11:
+              case 10:
                 this.event.delete(v, this._id);
 
-              case 12:
+              case 11:
                 _iteratorNormalCompletion = true;
-                _context.next = 7;
+                _context.next = 6;
                 break;
 
-              case 15:
-                _context.next = 21;
+              case 14:
+                _context.next = 20;
                 break;
 
-              case 17:
-                _context.prev = 17;
-                _context.t0 = _context["catch"](5);
+              case 16:
+                _context.prev = 16;
+                _context.t0 = _context["catch"](4);
                 _didIteratorError = true;
                 _iteratorError = _context.t0;
 
-              case 21:
+              case 20:
+                _context.prev = 20;
                 _context.prev = 21;
-                _context.prev = 22;
 
                 if (!_iteratorNormalCompletion && _iterator.return != null) {
                   _iterator.return();
                 }
 
-              case 24:
-                _context.prev = 24;
+              case 23:
+                _context.prev = 23;
 
                 if (!_didIteratorError) {
-                  _context.next = 27;
+                  _context.next = 26;
                   break;
                 }
 
                 throw _iteratorError;
 
+              case 26:
+                return _context.finish(23);
+
               case 27:
-                return _context.finish(24);
+                return _context.finish(20);
 
               case 28:
-                return _context.finish(21);
-
-              case 29:
-                _context.next = 36;
+                _context.next = 34;
                 break;
 
-              case 31:
-                _context.prev = 31;
-                _context.t1 = _context["catch"](1);
-                this.log.error('app start', _context.t1);
+              case 30:
+                _context.prev = 30;
+                _context.t1 = _context["catch"](0);
                 this.render.critical(_context.t1, {
                   title: 'app start error'
                 });
                 return _context.abrupt("return", _context.t1);
 
-              case 36:
+              case 34:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[1, 31], [5, 17, 21, 29], [22,, 24, 28]]);
+        }, _callee, this, [[0, 30], [4, 16, 20, 28], [21,, 23, 27]]);
       }));
 
       return function start() {

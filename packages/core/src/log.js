@@ -37,6 +37,7 @@ class Log {
 
   _log(type, ...args) {
     if(!console||type<Log.levels[this.level]) return;
+    for(let arg in args) args[arg]===this.app&&(args[arg]='[app]');
     return console[type]?console[type](...args):console.log(...args);
   }
 

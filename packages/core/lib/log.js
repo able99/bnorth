@@ -72,6 +72,10 @@ function () {
         args[_key2 - 1] = arguments[_key2];
       }
 
+      for (var arg in args) {
+        args[arg] === this.app && (args[arg] = '[app]');
+      }
+
       return console[type] ? (_console = console)[type].apply(_console, args) : (_console2 = console).log.apply(_console2, args);
     }
     /**

@@ -55,71 +55,22 @@
  * @exportdefault
  */
 class State {
-  // static
+  static app;
+
+  // states
   // ---------------
-  static checkModuleOptions(options) {
-    return Array.isArray(options)?options:Object.entries(options).filter(([k,v])=>k.startsWith('state')||k.startsWith('_state'))
-  }
-  static attachStates(app, module, _id, options, cb) {
-    this.checkModuleOptions(options).forEach(([k,v])=>{
-      module[k] = app.State.createState(app, v, k, _id);
-      if(!module[k]) { app.render.panic(v, {title: 'no state', _id: this._id}); return } 
-      cb&&cb(k,v,module[k]);
-    });
-  }
-
-  static detachStates(module, options) {
-    this.checkModuleOptions(options).forEach(([k,v])=>{
-      if(k.startsWith('state')||k.startsWith('_state')) {
-        module[k]&&module[k].destructor();
-      }
-    });
-  }
-
-  static checkStates(module, context, nextContext, options) {
-    for(let [k,v] of this.checkModuleOptions(options)){
-      let key = module[k]&&module[k]._id;
-      if(context[key]!==nextContext[key]) return true;
-    }
-    return false;
-  }
-
-  static getStates(module, options) {
-    let ret = {};
-    this.checkModuleOptions(options).forEach(([k,v])=>{
-      v = module[k]; 
-      if(!v) return;
-      ret[k] = v.data();
-      let extData = v.extData();
-      extData&&(ret[`${k}Ext`] = extData);
-    });
-    return ret;
-  }
-  // static
-  // ---------------
-  static _genStateId(stateKey, ownerId) {
-    if(!stateKey||!ownerId) return;
-    return `*${stateKey}@${ownerId}`
-  }
-
+  static states = {};
   /**
    * 通过 state 的实例 id 获取 state 实例
    * @param {string} - state 实例 id 
    * @returns {module:state.State} state 实例
    */
-  static getStateById(_id) {
+  static getState(_id) {
     return State.states[_id];
   }
 
-  /**
-   * 通过 state 实例在其所有者上的属性名和其所有者 id 获取 state 实例
-   * @param {string} - state 在所有者上的属性名
-   * @param {string} - state 所有者 id 
-   * @returns {module:state.State} 获取的 State 实例
-   */
-  static getStateByOwner(stateKey, ownerId) {
-    return State.getStateById(this._genStateId(stateKey, ownerId));
-  }
+  // state helper
+  // ---------------
 
   /**
    * 创建数据单元
@@ -128,36 +79,53 @@ class State {
    * @param {string} - state 在所有者上的属性名
    * @param {string} - state 所有者 id 
    */
-  static createState(app, aoptions, stateKey, ownerId) {
-    if(typeof aoptions==='string') {
-      return app.State.getStateById(aoptions);
-    }
-    
-    let {state, ...options} = aoptions||{state: app.State};
-    let _id = options._id||State._genStateId(stateKey, ownerId);
-    let {constructor=app.State, ...props} = ((typeof state)==='object')?state:{constructor: state};
+  static createState(stateKey, aoptions={}, ownerId) {
+    if(typeof aoptions==='string') return State.app.State.getState(aoptions); 
+    if(!stateKey) return;
+    let [options, state, override] = Array.isArray(aoptions)?aoptions:[aoptions, State.app.State];
+    ownerId = ownerId||State.app._id;
+    let _id = options._id||`*${stateKey}@${ownerId}`;
 
-    if(State.states[_id]) { 
-      app.log.error('state _id dup:', _id); 
-      State.states[_id].destructor(); 
-    }
-
-    return State.states[_id] = Object.assign(new constructor(app, _id, options), props); 
+    if(State.states[_id]) { State.app.log.error('state _id dup:', _id); State.states[_id].destructor() }
+    return State.states[_id] = Object.assign(new state(_id, options, ownerId), override); 
   }
+
+  static attachStates(modulee, options, cb) {
+    options.forEach(([k,v])=>{
+      modulee[k] = State.app.State.createState(k, v, modulee._id);
+      if(!modulee[k]) { State.app.render.panic(v, {title: 'no state', _id: this._id}); return } 
+      cb&&cb(k,v,modulee[k]);
+    });
+  }
+
+  static detachStates(modulee, options) {
+    options.forEach(([k,v])=>modulee[k]&&modulee[k].destructor());
+  }
+
+  static checkStates(modulee, context, nextContext, options) {
+    for(let [k] of options){
+      let key = modulee[k]&&modulee[k]._id;
+      if(context[key]!==nextContext[key]) return true;
+    }
+  }
+
+  static getStates(modulee, options) {
+    let ret = {};
+    options.forEach(([k,v])=>{
+      v = modulee[k]; if(!v) return;
+      ret[k] = v.data();
+      let extData = v.extData(); extData&&(ret[`${k}Ext`] = extData);
+    });
+    return ret;
+  }
+  
 
   // constructor
   // ---------------
   /**
    * 不用于直接构造，而是通过定义拥有者定义数据单元声明对象，由拥有者通过数据单元构建函数构造
    */
-  constructor(app, _id, options={}) {
-    app.log.debug('state constructor', _id);
-
-    /**
-     * App 的实例
-     * @type {module:app.App}
-     */
-    this.app = app;
+  constructor(_id, options={}, ownerId) {
     /**
      * 数据单元的 id
      * @type {string}
@@ -167,26 +135,32 @@ class State {
      * 数据单元的声明对象
      * @type {module:state~StateDefine}
      */
-    this.options = options;
+    this.options = typeof(options)==='function'?options(State.app, this):options;
+
+    this.options.ownerId = ownerId;
     if(this.options.initialization===undefined) this.options.initialization = {};
-    
-    Object.entries(this.options).forEach(([k,v])=>k.indexOf('onState')===0&&this.app.event.on(this._id, k, v, this._id));
-    this.app.event.on(this._id, 'onStateStop', ()=>{this.destructor()}, this._id);
+    Object.entries(this.options).forEach(([k,v])=>{
+      if(k.startsWith('on')) { State.app.event.on(null, k, v, this._id)
+      }else{ this[k] = v }
+    });
+
+    State.app.event.emit(null, 'onStateStart', this._id);
+    this.options._onStart&&this.options._onStart();
   }
 
   destructor() {
-    this.app.log.debug('state destructor', this._id);
-    this.app.event.off(this._id);
+    State.app.event.emit(null, 'onStateStop', this._id);
+    this.options._onStart&&this.options._onStart();
+    State.app.event.off(this._id);
     if(this.options.cleanOnStop!==false) this.clear();
-    if(this._id!==true && this.options.removeOnStop!==false) delete State.states[this._id];
   }
 
-  // state private work
-  clear() { this.app.log.debug('state clear'); return this.app.context.clear(this._id) }
-  stateData() { return this.app.utils.objectCopy(this.app.context.data(this._id, {})) }
-  stateUpdate(data) { this.app.context.update(this._id, data) }
-  stateSet(data) { this.app.context.set(this._id, data) }
-  stateDelete(did) { this.app.context.delete(this._id, did) }
+  // state work
+  clear() { return State.app.context.clear(this._id) }
+  stateData() { return State.app.utils.objectCopy(State.app.context.data(this._id, {})) }
+  stateUpdate(data) { State.app.context.update(this._id, data) }
+  stateSet(data) { State.app.context.set(this._id, data) }
+  stateDelete(did) { State.app.context.delete(this._id, did) }
 
   // data operation interface
   // -------------------
@@ -195,7 +169,7 @@ class State {
    * @returns {*} 读取的数据
    */
   data() {
-    return this.app.utils.objectCopy(this.stateData().data||this.options.initialization, this.options.deepCopy)
+    return State.app.utils.objectCopy(this.stateData().data||this.options.initialization, this.options.deepCopy)
   }
 
   /**
@@ -211,7 +185,7 @@ class State {
    */
   get(path='') {
     let data = this.data()
-    return this.app.utils.pathGet(data, path);
+    return State.app.utils.pathGet(data, path);
   }
 
   /**
@@ -222,15 +196,15 @@ class State {
    * @returns {*} 更新后的数据
    */
   async update(data, options) {
-    this.app.log.debug('state update', data, options);
-
-    options = this.app.utils.getOptions(this.options, options);
+    options = State.app.utils.getOptions(this.options, options);
     let prevData = this.data();
-    let nextData = this.app.utils.objectUpdate(prevData, data, options.append);
+    let nextData = State.app.utils.objectUpdate(prevData, data, options.append);
 
-    nextData = await this.app.event.emit(this._id, 'onStateUpdating', nextData, prevData, data, options) || nextData; 
-    this.app.context.update(this._id, {data:nextData});
-    this.app.event.emit(this._id, 'onStateUpdated', nextData, prevData, data, options);
+    nextData = await State.app.event.emit(null, 'onStateUpdating', this._id, nextData, prevData, data, options)||nextData; 
+    nextData = (this.options._onStateUpdating&&this.options._onStateUpdating(nextData, prevData, data, options))||nextData;
+    State.app.context.update(this._id, {data:nextData});
+    State.app.event.emit(null, 'onStateUpdated', this._id, nextData, prevData, data, options);
+    this.options._onStateUpdated&&this.options._onStateUpdated(nextData, prevData, data, options);
     return nextData;
   }
   
@@ -244,7 +218,7 @@ class State {
    */
   async set(path='', val, input) {
     let data = this.data();
-    if(!this.app.utils.pathSet(data, path, val)) return false;
+    if(!State.app.utils.pathSet(data, path, val)) return false;
     return await this.update(data, {path, input});
   }
 
@@ -254,15 +228,10 @@ class State {
    * @returns {*} 更新后的数据
    */
   async delete(_did) {
-    let data = this.app.utils.objectDelete(this.data(), _did);
+    let data = State.app.utils.objectDelete(this.data(), _did);
     return await this.update(data, {append: false});
   }
 }
 
-/**
- * 存放全部数据单元的集合
- * @type {object}
- */
-State.states = {};
 
 export default State;

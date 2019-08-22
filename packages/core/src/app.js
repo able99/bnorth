@@ -214,14 +214,12 @@ import Keyboard from './keyboard';
    * @async
    */
   async start() {
-    this.log.info('app start');
     try{
       for (let v of this._startEvents) {
         await this.event.emit(this._id, v, this);
         this.event.delete(v, this._id);
       }
     }catch(e){
-      this.log.error('app start', e);
       this.render.critical(e, {title:'app start error'});
       return e;
     }

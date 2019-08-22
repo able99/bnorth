@@ -4,6 +4,7 @@ import initPlugins from './plugins';
 import routes from './routes';
 
 let app = new App({
+  logEvents: true,
   plugin:{
     onAppStartConfig: ()=>{
       app.router.setRoutes(routes);

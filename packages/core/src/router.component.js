@@ -4,8 +4,7 @@
 import React from 'react';
 import createHistory from 'history/createHashHistory';
 import { join } from 'path';
-import PageLoading from './router.loading.js'
-import PageError from './router.error.js'
+
 
 let spe = '/';
 let ParamSpe = ':';
@@ -214,12 +213,11 @@ export default class RouterComponent extends React.Component {
 
     let poplayers = this.state._popLayerInfos;
     poplayers = poplayers.filter(v=>!v.options._idPage||pageInfos.find(v=>v._id===v.options._idPage));
-    this.setState({_pageInfos: pageInfos});
+    this.setState({_pageInfos: pageInfos, _poplayers: poplayers});
   }
 
   _pageTransform() {
     let app = this.props.app;
-    let router = app.router;
     let page = app.Page.getPage();
     let status = page&&page.status;
     if(status !== 'normal') requestAnimationFrame(()=>this._updateRouterInfo(this._history.location));

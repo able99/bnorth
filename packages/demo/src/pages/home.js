@@ -46,10 +46,10 @@ let Component = props=>{
 };
 
 Component.controller = {
-  onPageStart: ()=>console.log('test', 'onPageStart'),
-  onPageStop: ()=>console.log('test', 'onPageSop'),
-  onPageActive: ()=>console.log('test', 'onPageActive'),
-  onPageInactive: ()=>console.log('test', 'onPageInactive'),
+  _onStart: ()=>console.log('test', 'onPageStart'),
+  _onStop: ()=>console.log('test', 'onPageSop'),
+  _onActive: ()=>console.log('test', 'onPageActive'),
+  _onInactive: ()=>console.log('test', 'onPageInactive'),
 }
 
 export default Component;

@@ -147,7 +147,7 @@ class Plugins {
       } else if(k.startsWith('on')) {
         app.event.on(app._id,k,v,_id);
       } else if(k.startsWith('state')) {
-        plugin[k] = app.State.createState(app, v, k, _id);
+        plugin[k] = app.State.createState(k, v, _id);
         if(!plugin[k]) { app.render.panic(v, {title: 'no state'}); return } 
         if(typeof v==='string') return;
 

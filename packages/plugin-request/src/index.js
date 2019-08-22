@@ -60,12 +60,12 @@
  * @extends module:state.State
  */
 let getClass = (app, aoptions={})=>class Request extends app.State {
-  constructor(app, _id, options) {
-    super(app, _id, options);
+  constructor(_id, options) {
+    super(_id, options);
     this.fetched = false;
     
-    app.event.on(this._id, 'onStateStart', (page)=>{this.options.fetchOnStart&&this.fetch()}, this._id);
-    app.event.on(this._id, 'onStateActive', (page, onStart)=>{this.options.fetchOnActive&&(!onStart)&&this.fetch()}, this._id);
+    // app.event.on(this._id, 'onStateStart', (page)=>{this.options.fetchOnStart&&this.fetch()}, this._id);
+    // app.event.on(this._id, 'onStateActive', (page, onStart)=>{this.options.fetchOnActive&&(!onStart)&&this.fetch()}, this._id);
   }
 
   _requestFetching(fetching, {loader, mask, noLoaderMask, isSubmit}) {

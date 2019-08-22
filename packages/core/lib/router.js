@@ -33,22 +33,12 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _react = _interopRequireDefault(require("react"));
-
-var _createHashHistory = _interopRequireDefault(require("history/createHashHistory"));
-
-var _path = require("path");
-
 var _router = _interopRequireDefault(require("./router.component"));
 
 /**
  * @module
  */
-var spe = '/';
 var ParamSpe = ':';
-var SubPageSpe = '|';
-var ParamOptional = '?';
-var PageSign = '#';
 /**
  * 路由声明对象
  * @typedef RouteDefine
