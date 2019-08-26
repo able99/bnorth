@@ -136,7 +136,7 @@ function (_React$Component) {
 
     _this.transOutBlank = true;
     _this.Page = _this.app.context.consumerHoc(_this.app.Page);
-    _this.PopLayer = _this.app.context.consumerHoc(_this.app.PopLayer);
+    _this.Poplayer = _this.app.context.consumerHoc(_this.app.Poplayer);
     _this._historyCount = 0;
     _this._history = (0, _createHashHistory.default)();
 
@@ -465,8 +465,8 @@ function (_React$Component) {
 
                 poplayers = this.state._popLayerInfos;
                 poplayers = poplayers.filter(function (v) {
-                  return !v.options._idPage || pageInfos.find(function (v) {
-                    return v._id === v.options._idPage;
+                  return !v.options._idPage || pageInfos.find(function (vv) {
+                    return vv._id === v.options._idPage;
                   });
                 });
                 this.setState({
@@ -530,7 +530,7 @@ function (_React$Component) {
           return vv1;
         }, {}));
       }), _popLayerInfos.map(function (v) {
-        return _react.default.createElement(_this5.PopLayer, (0, _extends2.default)({
+        return _react.default.createElement(_this5.Poplayer, (0, _extends2.default)({
           key: v.options._id
         }, v));
       }));

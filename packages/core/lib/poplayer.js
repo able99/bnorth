@@ -48,11 +48,11 @@ var _reactDom = _interopRequireDefault(require("react-dom"));
 /**
  * @module
  */
-var PopLayer =
+var Poplayer =
 /*#__PURE__*/
 function (_React$Component) {
-  (0, _inherits2.default)(PopLayer, _React$Component);
-  (0, _createClass2.default)(PopLayer, [{
+  (0, _inherits2.default)(Poplayer, _React$Component);
+  (0, _createClass2.default)(Poplayer, [{
     key: "_id",
     // poplayer interface
     // ---------------------------------------
@@ -67,34 +67,34 @@ function (_React$Component) {
     // ---------------------------------------
 
   }], [{
-    key: "getPopLayer",
+    key: "getPoplayer",
     // poplayer interface
     // ---------------------------------------
-    value: function getPopLayer(_id) {
-      return PopLayer.poplayers[_id];
+    value: function getPoplayer(_id) {
+      return Poplayer.poplayers[_id];
     } // poplayer interface
     // ---------------------------------------
 
   }, {
-    key: "addPopLayer",
+    key: "addPoplayer",
 
     /**
      * 添加弹出层
      * @param {number|string|component|element} - 内容 
      * @param {object} props - 组件属性
-     * @param {module:router~PopLayerOptions} options - 弹出层配置
+     * @param {module:router~PoplayerOptions} options - 弹出层配置
      * @returns {string} 弹出层 id 
      */
-    value: function addPopLayer(content) {
+    value: function addPoplayer(content) {
       var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
       // todo: poplayer option state,action
-      options._id = options._id || "".concat(++PopLayer._IdRandom, "@").concat(options._idPage ? options._idPage : '#');
-      var popLayer = PopLayer.getPopLayerInfo(options._id);
+      options._id = options._id || "".concat(++Poplayer._IdRandom, "@").concat(options._idPage ? options._idPage : '#');
+      var popLayer = Poplayer.getPoplayerInfo(options._id);
 
       if (!popLayer) {
         if (!content) return;
-        PopLayer.app.router.setPopLayerInfos((0, _toConsumableArray2.default)(PopLayer.app.router.getPopLayerInfos()).concat([{
+        Poplayer.app.router.setPoplayerInfos((0, _toConsumableArray2.default)(Poplayer.app.router.getPoplayerInfos()).concat([{
           content: content,
           props: props,
           options: options
@@ -103,7 +103,7 @@ function (_React$Component) {
         content && (popLayer.content = content);
         popLayer.props = (0, _objectSpread2.default)({}, popLayer.props, props);
         popLayer.options = (0, _objectSpread2.default)({}, popLayer.options, options);
-        PopLayer.app.router.refresh();
+        Poplayer.app.router.refresh();
       }
 
       return options._id;
@@ -114,40 +114,40 @@ function (_React$Component) {
      */
 
   }, {
-    key: "removePopLayer",
-    value: function removePopLayer(_id) {
-      var infos = PopLayer.app.router.getPopLayerInfos();
+    key: "removePoplayer",
+    value: function removePoplayer(_id) {
+      var infos = Poplayer.app.router.getPoplayerInfos();
       var index = infos.findIndex(function (v) {
         return v.options._id === _id;
       });
 
       if (index >= 0) {
         infos.splice(index, 1);
-        PopLayer.app.router.getPopLayerInfos(infos);
+        Poplayer.app.router.setPoplayerInfos(infos);
       }
     }
     /**
      * 获取弹出层信息
      * @param {string} - 弹出层 id
-     * @returns {module:router~PopLayerInfo}
+     * @returns {module:router~PoplayerInfo}
      */
 
   }, {
-    key: "getPopLayerInfo",
-    value: function getPopLayerInfo(_id) {
-      return PopLayer.app.router.getPopLayerInfos().find(function (v) {
+    key: "getPoplayerInfo",
+    value: function getPoplayerInfo(_id) {
+      return Poplayer.app.router.getPoplayerInfos().find(function (v) {
         return v.options._id === _id;
       });
     }
   }]);
 
-  function PopLayer(props) {
+  function Poplayer(props) {
     var _this;
 
-    (0, _classCallCheck2.default)(this, PopLayer);
-    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(PopLayer).call(this, props));
+    (0, _classCallCheck2.default)(this, Poplayer);
+    _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Poplayer).call(this, props));
     var options = _this.props.options;
-    PopLayer.poplayers[options._id] = (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this));
+    Poplayer.poplayers[options._id] = (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this));
     _this._states = Object.entries(options).filter(function (_ref) {
       var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
           k = _ref2[0],
@@ -155,21 +155,36 @@ function (_React$Component) {
 
       return k.startsWith('state') || k.startsWith('_state');
     });
-    PopLayer.app.State.attachStates((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), _this._states);
+    Poplayer.app.State.attachStates((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), _this._states);
+    Object.entries(options).forEach(function (_ref3) {
+      var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+          k = _ref4[0],
+          v = _ref4[1];
+
+      if (k.startsWith('on')) {
+        Poplayer.app.event.on(Poplayer.app._id, k, Poplayer.app.event.createHandler(k, v, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))), _this._id).bind((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
+      } else if (k.startsWith('_on')) {
+        _this[k] = Poplayer.app.event.createHandler(k, v, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))).bind((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
+      } else if (k.startsWith('action')) {
+        _this[k] = Poplayer.app.event.createAction(k, v, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))).bind((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
+      } else {
+        !k.startsWith('state') && !k.startsWith('_state') && (_this[k] = v);
+      }
+    });
     return _this;
   }
 
-  (0, _createClass2.default)(PopLayer, [{
+  (0, _createClass2.default)(Poplayer, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      PopLayer.app.event.emit(PopLayer.app._id, 'onPopLayerStart', this._id);
+      Poplayer.app.event.emit(Poplayer.app._id, 'onPoplayerStart', this._id);
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      PopLayer.app.event.emit(PopLayer.app._id, 'onPopLayerStop', this._id);
-      PopLayer.app.State.detachStates(this, this._states);
-      delete PopLayer.poplayers[this._id];
+      Poplayer.app.event.emit(Poplayer.app._id, 'onPoplayerStop', this._id);
+      Poplayer.app.State.detachStates(this, this._states);
+      delete Poplayer.poplayers[this._id];
     }
   }, {
     key: "shouldComponentUpdate",
@@ -177,9 +192,9 @@ function (_React$Component) {
       var _this$props = this.props,
           props = _this$props.props,
           options = _this$props.options;
-      if (!PopLayer.app.utils.shallowEqual(nextProps.props, props)) return true;
-      if (!PopLayer.app.utils.shallowEqual(nextProps.options, options)) return true;
-      if (PopLayer.app.State.checkStates(this, nextProps.context, this.props.context, this._states)) return true;
+      if (!Poplayer.app.utils.shallowEqual(nextProps.props, props)) return true;
+      if (!Poplayer.app.utils.shallowEqual(nextProps.options, options)) return true;
+      if (Poplayer.app.State.checkStates(this, nextProps.context, this.props.context, this._states)) return true;
       return false;
     }
   }, {
@@ -190,19 +205,19 @@ function (_React$Component) {
           props = _this$props2.props,
           options = _this$props2.options;
       var _id = options._id;
-      PopLayer.app.event.emit(PopLayer.app._id, 'onPopLayerRender', _id, this.props);
+      Poplayer.app.event.emit(Poplayer.app._id, 'onPoplayerRender', _id, this.props);
       if (typeof Component !== 'function') return Component;
 
       var component = _react.default.createElement(Component, (0, _extends2.default)({
         "data-poplayer": _id,
-        app: PopLayer.app,
+        app: Poplayer.app,
         _id: _id,
         poplayer: this,
         info: this.props
-      }, PopLayer.app.State.getStates(this, this._states), props));
+      }, Poplayer.app.State.getStates(this, this._states), props));
 
       if (options._idPage) {
-        var page = PopLayer.app.Page.getPage(options._idPage);
+        var page = Poplayer.app.Page.getPage(options._idPage);
         var dom = page && page.dom;
         if (dom) return _reactDom.default.createPortal(component, dom);
       }
@@ -210,11 +225,11 @@ function (_React$Component) {
       return component;
     }
   }]);
-  return PopLayer;
+  return Poplayer;
 }(_react.default.Component);
 
-(0, _defineProperty2.default)(PopLayer, "app", void 0);
-(0, _defineProperty2.default)(PopLayer, "poplayers", {});
-(0, _defineProperty2.default)(PopLayer, "_IdRandom", 0);
-var _default = PopLayer;
+(0, _defineProperty2.default)(Poplayer, "app", void 0);
+(0, _defineProperty2.default)(Poplayer, "poplayers", {});
+(0, _defineProperty2.default)(Poplayer, "_IdRandom", 0);
+var _default = Poplayer;
 exports.default = _default;

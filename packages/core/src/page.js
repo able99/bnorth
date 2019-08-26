@@ -187,22 +187,6 @@ export default class Page extends React.Component {
    */
   getPrevPage() { return this.app.getPage(this.props._idPrev) }
 
-  // page action
-  // ---------------------
-
-  /**
-   * 动态建立页面 action 函数，*注：* 动态创建一般是在 render 中，渲染时会多次建立，有消耗，建议在 controller 中定义为好
-   * @param {!function} - action 函数
-   * @param {string?} - action 名称，为空则生成随机名称
-   * @returns {function} 页面 action 函数
-   */
-  action(name, func) {
-    return this[`action${name}`] = ((...args)=>{
-      try{ Page.app.event.emit(Page.app._id, 'onPageAction', this._id, name); return func.apply(this, args);
-      }catch(e){ Page.app.render.panic(e, {title:`action(${name}) error`, _id: this._id}) }
-    }).bind(this);
-  }
-
   // page life
   // ---------------------------
   constructor(props) {
@@ -214,17 +198,16 @@ export default class Page extends React.Component {
     let options = typeof(controller)==='function'?controller(Page.app, this):controller;
 
     if(!options.stateData) options.stateData = undefined;
-    if(!options.actionGoBack) options.actionGoBack = this.action(()=>Page.app.router.back(), 'GoBack');
+    if(!options.actionGoBack) options.actionGoBack = Page.app.event.createHandler('actionGoBack', ()=>Page.app.router.back(), this);
 
     this._states = Object.entries(options).filter(([k,v])=>k.startsWith('state')||k.startsWith('_state'));
     Page.app.State.attachStates(this, this._states);
 
     Object.entries(options).forEach(([k,v])=>{
-      if(k.startsWith('onPage')) { Page.app.event.on(this._id, k, v, this._id); // page event
-      }else if(k.match(/(on\w*)_(\w*)/)) { this[RegExp.$2]&&Page.app.event.on(this[RegExp.$2]._id, RegExp.$1, v, this._id); // page module event
-      }else if(k.startsWith('on')) { Page.app.event.on(Page.app._id, k, v, this._id); // app event
-      }else if(k.startsWith('action')){ this[k] = this.action(k.slice(6), v); // action
-      }else{ !k.startsWith('state')&&!k.startsWith('_state')&&(this[k]=v) } // user props
+      if(k.startsWith('on')) { Page.app.event.on(Page.app._id, k, Page.app.event.createHandler(k, v, this), this._id).bind(this); 
+      }else if(k.startsWith('_on')) { this[k] = Page.app.event.createHandler(k, v, this).bind(this); 
+      }else if(k.startsWith('action')){ this[k] = Page.app.event.createAction(k, v, this).bind(this); 
+      }else{ !k.startsWith('state')&&!k.startsWith('_state')&&(this[k]=v) } 
     })
   }
   

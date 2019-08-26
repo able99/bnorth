@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.mask = exports.MaskPopLayer = exports.pulldown = exports.PullDownPopLayer = exports.loader = exports.LoaderPopLayer = exports.PanelLoader = exports.default = void 0;
+exports.mask = exports.MaskPoplayer = exports.pulldown = exports.PullDownPoplayer = exports.loader = exports.LoaderPoplayer = exports.PanelLoader = exports.default = void 0;
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -331,8 +331,8 @@ Object.defineProperty(_Loader, "PanelLoader", {
 PanelLoader.isBnorth = true;
 PanelLoader.defaultProps['b-precast'] = {};
 
-var _LoaderPopLayer = function LoaderPopLayer(aprops) {
-  var _BaseComponent5 = (0, _BaseComponent8.default)(aprops, _LoaderPopLayer),
+var _LoaderPoplayer = function LoaderPoplayer(aprops) {
+  var _BaseComponent5 = (0, _BaseComponent8.default)(aprops, _LoaderPoplayer),
       progress = _BaseComponent5.progress,
       timeout = _BaseComponent5.timeout,
       _BaseComponent5$bThe = _BaseComponent5['b-theme'],
@@ -360,27 +360,27 @@ var _LoaderPopLayer = function LoaderPopLayer(aprops) {
   }));
 };
 
-exports.LoaderPopLayer = _LoaderPopLayer;
-_LoaderPopLayer.defaultProps = {};
-_LoaderPopLayer.defaultProps.top = 0;
-_LoaderPopLayer.defaultProps.height = 3;
-_LoaderPopLayer.defaultProps.timeout = '1s';
-Object.defineProperty(_Loader, "LoaderPopLayer", {
+exports.LoaderPoplayer = _LoaderPoplayer;
+_LoaderPoplayer.defaultProps = {};
+_LoaderPoplayer.defaultProps.top = 0;
+_LoaderPoplayer.defaultProps.height = 3;
+_LoaderPoplayer.defaultProps.timeout = '1s';
+Object.defineProperty(_Loader, "LoaderPoplayer", {
   get: function get() {
-    return _LoaderPopLayer;
+    return _LoaderPoplayer;
   },
   set: function set(val) {
-    exports.LoaderPopLayer = _LoaderPopLayer = val;
+    exports.LoaderPoplayer = _LoaderPoplayer = val;
   }
 });
-_LoaderPopLayer.isBnorth = true;
-_LoaderPopLayer.defaultProps['b-precast'] = {};
+_LoaderPoplayer.isBnorth = true;
+_LoaderPoplayer.defaultProps['b-precast'] = {};
 
 var loader = function loader(app) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return {
     _id: 'loader',
-    onPluginMount: function onPluginMount(app) {
+    _onStart: function _onStart(app) {
       app.loader = {
         count: 0,
         timeout: options.timeout || 20000,
@@ -394,14 +394,14 @@ var loader = function loader(app) {
             app.loader.timer = null;
           }
 
-          app.loader._id = app.PopLayer.addPopLayer(_LoaderPopLayer, (0, _objectSpread2.default)({}, props, {
+          app.loader._id = app.Poplayer.addPoplayer(_LoaderPoplayer, (0, _objectSpread2.default)({}, props, {
             progress: progress
           }), (0, _objectSpread2.default)({}, options, {
             _id: app.loader._id
           }));
 
           if (progress > 100 && !app.loader.count) {
-            app.PopLayer.removePopLayer(app.loader._id);
+            app.Poplayer.removePoplayer(app.loader._id);
             app.loader._id = undefined;
           } else if (progress > 100 && app.loader.count) {
             if (app.loader.timer) {
@@ -435,7 +435,7 @@ var loader = function loader(app) {
         return show ? (_app$loader = app.loader).show.apply(_app$loader, args) : app.loader.close();
       };
     },
-    onPluginUnmount: function onPluginUnmount(app) {
+    _onStop: function _onStop(app) {
       app.render.loader = app.loader._loader;
       delete app.loader;
     }
@@ -444,8 +444,8 @@ var loader = function loader(app) {
 
 exports.loader = loader;
 
-var _PullDownPopLayer = function PullDownPopLayer(aprops) {
-  var _BaseComponent6 = (0, _BaseComponent8.default)(aprops, _PullDownPopLayer),
+var _PullDownPoplayer = function PullDownPoplayer(aprops) {
+  var _BaseComponent6 = (0, _BaseComponent8.default)(aprops, _PullDownPoplayer),
       progress = _BaseComponent6.progress,
       _BaseComponent6$heigh = _BaseComponent6.height,
       height = _BaseComponent6$heigh === void 0 ? 100 : _BaseComponent6$heigh,
@@ -485,21 +485,21 @@ var _PullDownPopLayer = function PullDownPopLayer(aprops) {
   })));
 };
 
-exports.PullDownPopLayer = _PullDownPopLayer;
-_PullDownPopLayer.defaultProps = {};
-Object.defineProperty(_Loader, "PullDownPopLayer", {
+exports.PullDownPoplayer = _PullDownPoplayer;
+_PullDownPoplayer.defaultProps = {};
+Object.defineProperty(_Loader, "PullDownPoplayer", {
   get: function get() {
-    return _PullDownPopLayer;
+    return _PullDownPoplayer;
   },
   set: function set(val) {
-    exports.PullDownPopLayer = _PullDownPopLayer = val;
+    exports.PullDownPoplayer = _PullDownPoplayer = val;
   }
 });
-_PullDownPopLayer.isBnorth = true;
-_PullDownPopLayer.defaultProps['b-precast'] = {};
+_PullDownPoplayer.isBnorth = true;
+_PullDownPoplayer.defaultProps['b-precast'] = {};
 var pulldown = {
   _id: 'pulldown',
-  onPluginMount: function onPluginMount(app) {
+  _onStart: function _onStart(app) {
     app.pulldown = {
       show: function show(progress, props, options) {
         if (progress < 15) return;
@@ -507,7 +507,7 @@ var pulldown = {
         if (typeof progress === 'string' && progress < 100) {
           return app.pulldown.close();
         } else {
-          return app.pulldown._id = app.PopLayer.addPopLayer(_PullDownPopLayer, (0, _objectSpread2.default)({}, props, {
+          return app.pulldown._id = app.Poplayer.addPoplayer(_PullDownPoplayer, (0, _objectSpread2.default)({}, props, {
             progress: progress
           }), (0, _objectSpread2.default)({}, options, {
             _id: app.pulldown._id
@@ -515,12 +515,12 @@ var pulldown = {
         }
       },
       close: function close() {
-        app.PopLayer.removePopLayer(app.pulldown._id);
+        app.Poplayer.removePoplayer(app.pulldown._id);
         app.pulldown._id = undefined;
       }
     };
   },
-  onPluginUnmount: function onPluginUnmount(app) {
+  _onStop: function _onStop(app) {
     delete app.pulldown;
   }
 };
@@ -533,8 +533,8 @@ var pulldown = {
 
 exports.pulldown = pulldown;
 
-var _MaskPopLayer = function MaskPopLayer(aprops) {
-  var _BaseComponent7 = (0, _BaseComponent8.default)(aprops, _MaskPopLayer),
+var _MaskPoplayer = function MaskPoplayer(aprops) {
+  var _BaseComponent7 = (0, _BaseComponent8.default)(aprops, _MaskPoplayer),
       loaderProps = _BaseComponent7.loaderProps,
       classNamePre = _BaseComponent7.classNamePre,
       children = _BaseComponent7.children,
@@ -554,24 +554,24 @@ var _MaskPopLayer = function MaskPopLayer(aprops) {
   }, loaderProps), children));
 };
 
-exports.MaskPopLayer = _MaskPopLayer;
-_MaskPopLayer.defaultProps = {};
+exports.MaskPoplayer = _MaskPoplayer;
+_MaskPoplayer.defaultProps = {};
 /**
  * 设置 蒙层中间的 loader 组件的参数
- * @attribute module:loader.MaskPopLayer.loaderProps
+ * @attribute module:loader.MaskPoplayer.loaderProps
  * @type {object}
  */
 
-Object.defineProperty(_MaskPopLayer, "MaskPopLayer", {
+Object.defineProperty(_MaskPoplayer, "MaskPoplayer", {
   get: function get() {
-    return _MaskPopLayer;
+    return _MaskPoplayer;
   },
   set: function set(val) {
-    exports.MaskPopLayer = _MaskPopLayer = val;
+    exports.MaskPoplayer = _MaskPoplayer = val;
   }
 });
-_MaskPopLayer.isBnorth = true;
-_MaskPopLayer.defaultProps['b-precast'] = {
+_MaskPoplayer.isBnorth = true;
+_MaskPoplayer.defaultProps['b-precast'] = {
   'b-theme': 'white'
 };
 /**
@@ -584,7 +584,7 @@ var mask = {
   // plugin 
   // --------------------------------
   _id: 'mask',
-  onPluginMount: function onPluginMount(app) {
+  _onStart: function _onStart(app) {
     /**
      * 挂载在 App 实例上的蒙层操作对象
      * @memberof module:mask.mask
@@ -600,7 +600,7 @@ var mask = {
      */
 
     app.mask.show = function (content, props, options) {
-      return app.mask._id = app.router.addPopLayer(_MaskPopLayer, (0, _objectSpread2.default)({
+      return app.mask._id = app.Poplayer.addPoplayer(_MaskPoplayer, (0, _objectSpread2.default)({
         children: content
       }, props), (0, _objectSpread2.default)({
         isModal: true
@@ -615,25 +615,15 @@ var mask = {
 
 
     app.mask.close = function () {
-      var _ref = app.router.getPopLayerInfo(app.mask._id) || {},
-          content = _ref.content,
-          _ref$props = _ref.props,
-          props = _ref$props === void 0 ? {} : _ref$props,
-          options = _ref.options;
-
-      if (!content) {
-        app.mask._id = undefined;
-        return;
-      }
-
-      props.rewind = true;
-
-      props.onFinished = function () {
-        app.router.removePopLayer(app.mask._id);
-        app.mask._id = undefined;
-      };
-
-      return app.router.addPopLayer(content, props, options);
+      return app.mask._id && app.Poplayer.addPoplayer(null, {
+        rewind: true,
+        onFinished: function onFinished() {
+          app.Poplayer.removePoplayer(app.mask._id);
+          app.mask._id = undefined;
+        }
+      }, {
+        _id: app.mask._id
+      });
     };
 
     app.mask._oldMask = app.render.mask;
@@ -642,7 +632,7 @@ var mask = {
       return show ? app.mask.show(options) : app.mask.close();
     };
   },
-  onPluginUnmount: function onPluginUnmount(app) {
+  _onStop: function _onStop(app) {
     app.render.mask = app.mask._oldMask;
     delete app.mask;
   }

@@ -310,7 +310,7 @@ let Component = aprops=>{
 
 Component.controller = app=>({
   stateLog: {initialization: []},
-  stateCommonProps: app.plugins.getPluginById().stateCommonProps._id,
+  stateCommonProps: app.plugins.getPlugin().stateCommonProps._id,
   stateComponentProps: {},
 })
 

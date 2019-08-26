@@ -9,21 +9,23 @@ exports.default = void 0;
 
 require("core-js/modules/es6.array.find-index");
 
-require("core-js/modules/es6.string.starts-with");
-
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es7.object.entries");
-
 var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 require("core-js/modules/es7.symbol.async-iterator");
 
 require("core-js/modules/es6.symbol");
 
+require("core-js/modules/es6.string.starts-with");
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+
 require("core-js/modules/web.dom.iterable");
+
+require("core-js/modules/es6.array.iterator");
+
+require("core-js/modules/es7.object.entries");
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 require("core-js/modules/es6.array.find");
 
@@ -116,24 +118,51 @@ function () {
      */
 
     this._id = app._id + '.plugins';
-    this._idNum = 0;
     this._plugins = [];
   }
+  /**
+   * 通过插件 id 获取插件
+   * @param {string} - 插件 id，默认为 App 插件
+   * @returns {module:plugins~PluginInstance} 插件实例
+   */
+
 
   (0, _createClass2.default)(Plugins, [{
-    key: "_checkPlugin",
-    value: function _checkPlugin(plugin) {
+    key: "getPlugin",
+    value: function getPlugin(_id) {
       var _this = this;
 
-      this.app.log.debug('plugin check');
-      if (!plugin) return;
+      return this._plugins.find(function (v) {
+        return v._id === _id || v._id === _this.app._id;
+      });
+    }
+  }, {
+    key: "getPlugins",
+    value: function getPlugins() {
+      return this._plugins;
+    }
+    /**
+     * 安装插件
+     * @param {module:plugins~PluginDefine|module:plugins~PluginDefineFunction} - 插件声明对象 
+     * @param  {...*} - 插件的参数 
+     */
 
-      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
+  }, {
+    key: "add",
+    value: function add(plugin, options) {
+      var _this2 = this;
+
+      if (!plugin) return;
+      if (plugin instanceof Function) plugin = plugin(this.app, plugin, options);
+
+      if (!plugin._id) {
+        this.app.render.critical('no id plugin');
+        return;
       }
 
-      if (plugin instanceof Function) plugin = plugin.apply(void 0, [this.app].concat(args));
-      plugin._id = '>' + (plugin._id ? plugin._id : 'anonymous' + ++this._idNum);
+      plugin = (0, _objectSpread2.default)({}, plugin, {
+        options: options
+      });
       if (!plugin._dependencies) plugin._dependencies = [];
 
       if (this._plugins.find(function (v) {
@@ -153,10 +182,10 @@ function () {
         var _loop = function _loop() {
           var dependence = _step.value;
 
-          if (!_this._plugins.find(function (v) {
+          if (!_this2._plugins.find(function (v) {
             return v._id.slice(1) === dependence;
           })) {
-            _this.app.render.critical("no dependence plugin: ".concat(plugin._id, " - ").concat(dependence), {
+            _this2.app.render.critical("no dependence plugin: ".concat(plugin._id, " - ").concat(dependence), {
               title: 'plugin nodeps'
             });
 
@@ -186,92 +215,36 @@ function () {
         }
       }
 
-      return plugin;
-    }
-    /**
-     * 通过插件 id 获取插件
-     * @param {string} - 插件 id，默认为 App 插件
-     * @returns {module:plugins~PluginInstance} 插件实例
-     */
-
-  }, {
-    key: "getPluginById",
-    value: function getPluginById(_id) {
-      var _this2 = this;
-
-      return this._plugins.find(function (v) {
-        return v._id === '>' + (_id || _this2.app._id);
-      });
-    }
-    /**
-     * 通过插件运行 id 获取插件
-     * @param {string} - 插件运行 id
-     * @returns {module:plugins~PluginInstance} 插件实例
-     */
-
-  }, {
-    key: "getPluginByInstanceId",
-    value: function getPluginByInstanceId(_id) {
-      return this._plugins.find(function (v) {
-        return v._id === _id;
-      });
-    }
-    /**
-     * 安装插件
-     * @param {module:plugins~PluginDefine|module:plugins~PluginDefineFunction} - 插件声明对象 
-     * @param  {...*} - 插件的参数 
-     */
-
-  }, {
-    key: "add",
-    value: function add(plugin) {
-      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-        args[_key2 - 1] = arguments[_key2];
-      }
-
-      plugin = this._checkPlugin.apply(this, [plugin].concat(args));
-      if (!plugin) return;
       var app = this.app;
       var _id = plugin._id;
-      app.log.debug('plugin add', plugin._id);
 
       this._plugins.push(plugin);
 
-      Object.entries(plugin).forEach(function (_ref) {
+      plugin._states = Object.entries(plugin).filter(function (_ref) {
         var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
             k = _ref2[0],
             v = _ref2[1];
 
-        if (k === 'onPluginAdd' || k === 'onPluginRemove') {
-          app.event.on(app._id, k, v, _id);
-        } else if (k.startsWith('onPlugin')) {
-          app.event.on(_id, k, v, _id);
-        } else if (k.startsWith('on')) {
-          app.event.on(app._id, k, v, _id);
-        } else if (k.startsWith('state')) {
-          plugin[k] = app.State.createState(k, v, _id);
+        return k.startsWith('state') || k.startsWith('_state');
+      });
+      app.State.attachStates(plugin, plugin._states);
+      Object.entries(plugin).forEach(function (_ref3) {
+        var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+            k = _ref4[0],
+            v = _ref4[1];
 
-          if (!plugin[k]) {
-            app.render.panic(v, {
-              title: 'no state'
-            });
-            return;
-          }
-
-          if (typeof v === 'string') return;
-          var _idState = plugin[k]._id;
-          app.event.on(_id, 'onPluginMount', function (app) {
-            app.event.emit(_idState, 'onStateStart', _idState, false);
-          }, _idState);
-          app.event.on(_id, 'onPluginUnmount', function (app) {
-            app.event.emit(_idState, 'onStateStop', _idState);
-          }, _idState);
+        if (k.startsWith('on')) {
+          app.event.on(null, k, app.event.createHandler(k, v, plugin).bind(plugin), _id);
+        } else if (k.startsWith('_on')) {
+          plugin[k] = app.event.createHandler(k, v, plugin).bind(plugin);
+        } else if (k.startsWith('action')) {
+          plugin[k] = app.event.createAction(k.slice(6), v, plugin).bind(plugin);
         } else {
-          plugin[k] = v;
+          !k.startsWith('state') && !k.startsWith('_state') && (_this2[k] = v);
         }
       });
-      app.event.emit(_id, 'onPluginMount', app, plugin);
-      app.event.emit(app._id, 'onPluginAdd', plugin);
+      app.event.emit(null, 'onPluginStart', plugin._id);
+      plugin._onStart && plugin._onStart(app);
     }
     /**
      * 移除插件
@@ -281,7 +254,7 @@ function () {
   }, {
     key: "remove",
     value: function remove(_id) {
-      this.app.log.debug('plugin remove', _id);
+      this.app.event.emit(null, 'onPluginStart', _id);
 
       var index = this._plugins.findIndex(function (v) {
         return v._id === _id;
@@ -289,12 +262,10 @@ function () {
 
       if (index < 0) return;
       var plugin = this._plugins[index];
-      this.app.event.emit(plugin._id._id, 'onPluginUnmount', this.app, plugin);
+      plugin._onStop && plugin._onStop(this.app);
       this.app.event.off(_id);
 
       this._plugins.splice(index, 1);
-
-      this.app.event.emit(this.app._id, 'onPluginRemove', _id);
     }
   }]);
   return Plugins;

@@ -9,6 +9,9 @@ let app = new App({
     onAppStartConfig: ()=>{
       app.router.setRoutes(routes);
     },
+    actionTest() {
+      console.log(44,this)
+    },
     stateCommonProps: {},
   },
 })

@@ -109,12 +109,12 @@ var ParamSpe = ':';
  * @property {object} params - 页面参数键值对
  * @property {boolean} isSubPage - 是否是子页面
  * @property {module:router~PageInfo[]} subPageInfos - 子页面描述信息集合
- * @property {module:router~PopLayerInfo[]} popLayerInfos - 所欲页面的弹出层集合
+ * @property {module:router~PoplayerInfo[]} popLayerInfos - 所欲页面的弹出层集合
  */
 
 /**
  * 弹出层配置参数
- * @typedef PopLayerOptions
+ * @typedef PoplayerOptions
  * @type {object}
  * @property {string?} _id - 指定 id，代替默认 id 生成规则
  * @property {string?} _idPage - 指定页面 id，设置弹出层所属页面
@@ -124,11 +124,11 @@ var ParamSpe = ':';
 
 /**
  * 弹出层的描述信息
- * @typedef PopLayerInfo
+ * @typedef PoplayerInfo
  * @type {object}
  * @property {component|string|number|element} content - 显示的内容或者组件
  * @property {object} props - 属性
- * @property {module:router~PopLayerOptions} options - 弹出层配置参数
+ * @property {module:router~PoplayerOptions} options - 弹出层配置参数
  */
 
 /**
@@ -586,13 +586,13 @@ function () {
       });
     }
   }, {
-    key: "getPopLayerInfos",
-    value: function getPopLayerInfos() {
+    key: "getPoplayerInfos",
+    value: function getPoplayerInfos() {
       return this.component && this.component.state._popLayerInfos || [];
     }
   }, {
-    key: "setPopLayerInfos",
-    value: function setPopLayerInfos(_popLayerInfos) {
+    key: "setPoplayerInfos",
+    value: function setPoplayerInfos(_popLayerInfos) {
       return this.component && this.component.setState({
         _popLayerInfos: _popLayerInfos
       });

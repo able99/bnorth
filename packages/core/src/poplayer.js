@@ -4,14 +4,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-class PopLayer extends React.Component {
+class Poplayer extends React.Component {
   static app;
 
   // poplayer interface
   // ---------------------------------------
   static poplayers = {}
-  static getPopLayer(_id) {
-    return PopLayer.poplayers[_id];
+  static getPoplayer(_id) {
+    return Poplayer.poplayers[_id];
   }
 
   // poplayer interface
@@ -21,22 +21,22 @@ class PopLayer extends React.Component {
    * 添加弹出层
    * @param {number|string|component|element} - 内容 
    * @param {object} props - 组件属性
-   * @param {module:router~PopLayerOptions} options - 弹出层配置
+   * @param {module:router~PoplayerOptions} options - 弹出层配置
    * @returns {string} 弹出层 id 
    */
-  static addPopLayer(content, props={}, options={}) {
+  static addPoplayer(content, props={}, options={}) {
     // todo: poplayer option state,action
-    options._id = options._id || `${++PopLayer._IdRandom}@${options._idPage?options._idPage:'#'}`;
-    let popLayer = PopLayer.getPopLayerInfo(options._id);
+    options._id = options._id || `${++Poplayer._IdRandom}@${options._idPage?options._idPage:'#'}`;
+    let popLayer = Poplayer.getPoplayerInfo(options._id);
 
     if(!popLayer) {
       if(!content) return;
-      PopLayer.app.router.setPopLayerInfos([...PopLayer.app.router.getPopLayerInfos(), { content, props, options }]);
+      Poplayer.app.router.setPoplayerInfos([...Poplayer.app.router.getPoplayerInfos(), { content, props, options }]);
     }else{
       content&&(popLayer.content=content);
       popLayer.props = {...popLayer.props, ...props};
       popLayer.options = {...popLayer.options, ...options};
-      PopLayer.app.router.refresh();
+      Poplayer.app.router.refresh();
     }
     
     return options._id;
@@ -46,22 +46,22 @@ class PopLayer extends React.Component {
    * 移除弹出层
    * @param {!string} - 弹出层 id
    */
-  static removePopLayer(_id) {
-    let infos = PopLayer.app.router.getPopLayerInfos();
+  static removePoplayer(_id) {
+    let infos = Poplayer.app.router.getPoplayerInfos();
     let index = infos.findIndex(v=>v.options._id===_id);
     if(index>=0){
       infos.splice(index, 1);
-      PopLayer.app.router.getPopLayerInfos(infos);
+      Poplayer.app.router.setPoplayerInfos(infos);
     }
   }
 
   /**
    * 获取弹出层信息
    * @param {string} - 弹出层 id
-   * @returns {module:router~PopLayerInfo}
+   * @returns {module:router~PoplayerInfo}
    */
-  static getPopLayerInfo(_id) {
-    return PopLayer.app.router.getPopLayerInfos().find(v=>v.options._id===_id);
+  static getPoplayerInfo(_id) {
+    return Poplayer.app.router.getPoplayerInfos().find(v=>v.options._id===_id);
   }
 
   // poplayer interface
@@ -74,26 +74,34 @@ class PopLayer extends React.Component {
   constructor(props) {
     super(props);
     let { options } = this.props;
-    PopLayer.poplayers[options._id] = this;
+    Poplayer.poplayers[options._id] = this;
+
     this._states = Object.entries(options).filter(([k,v])=>k.startsWith('state')||k.startsWith('_state'));
-    PopLayer.app.State.attachStates(this, this._states);
+    Poplayer.app.State.attachStates(this, this._states);
+    
+    Object.entries(options).forEach(([k,v])=>{
+      if(k.startsWith('on')) { Poplayer.app.event.on(Poplayer.app._id, k, Poplayer.app.event.createHandler(k, v, this), this._id).bind(this); 
+      }else if(k.startsWith('_on')) { this[k] = Poplayer.app.event.createHandler(k, v, this).bind(this); 
+      }else if(k.startsWith('action')){ this[k] = Poplayer.app.event.createAction(k, v, this).bind(this); 
+      }else{ !k.startsWith('state')&&!k.startsWith('_state')&&(this[k]=v) } 
+    })
   }
 
   componentDidMount() {
-    PopLayer.app.event.emit(PopLayer.app._id, 'onPopLayerStart', this._id);
+    Poplayer.app.event.emit(Poplayer.app._id, 'onPoplayerStart', this._id);
   }
 
   componentWillUnmount() {
-    PopLayer.app.event.emit(PopLayer.app._id, 'onPopLayerStop', this._id);
-    PopLayer.app.State.detachStates(this, this._states);
-    delete PopLayer.poplayers[this._id];
+    Poplayer.app.event.emit(Poplayer.app._id, 'onPoplayerStop', this._id);
+    Poplayer.app.State.detachStates(this, this._states);
+    delete Poplayer.poplayers[this._id];
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     let { props, options } = this.props;
-    if (!PopLayer.app.utils.shallowEqual(nextProps.props, props)) return true;
-    if (!PopLayer.app.utils.shallowEqual(nextProps.options, options)) return true;
-    if(PopLayer.app.State.checkStates(this, nextProps.context, this.props.context, this._states)) return true;
+    if (!Poplayer.app.utils.shallowEqual(nextProps.props, props)) return true;
+    if (!Poplayer.app.utils.shallowEqual(nextProps.options, options)) return true;
+    if(Poplayer.app.State.checkStates(this, nextProps.context, this.props.context, this._states)) return true;
     return false;
   }
 
@@ -101,12 +109,12 @@ class PopLayer extends React.Component {
     let { content:Component, props, options } = this.props;
     let _id = options._id;
 
-    PopLayer.app.event.emit(PopLayer.app._id, 'onPopLayerRender', _id, this.props);
+    Poplayer.app.event.emit(Poplayer.app._id, 'onPoplayerRender', _id, this.props);
     if(typeof Component!=='function') return Component;
-    let component = <Component data-poplayer={_id} app={PopLayer.app} _id={_id} poplayer={this} info={this.props} {...PopLayer.app.State.getStates(this, this._states)} {...props} />;
+    let component = <Component data-poplayer={_id} app={Poplayer.app} _id={_id} poplayer={this} info={this.props} {...Poplayer.app.State.getStates(this, this._states)} {...props} />;
 
     if(options._idPage){
-      let page = PopLayer.app.Page.getPage(options._idPage);
+      let page = Poplayer.app.Page.getPage(options._idPage);
       let dom = page&&page.dom;
       if(dom) return ReactDOM.createPortal(component, dom)
     }
@@ -116,4 +124,4 @@ class PopLayer extends React.Component {
 }
 
 
-export default PopLayer;
+export default Poplayer;

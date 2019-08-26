@@ -10,10 +10,10 @@ let Modal = aprops=>{
   let {
     type, rewind, onClose, onFinished,
     containerProps, headerProps, title, close, bodyProps, footerProps, buttons,
-    classNamePre, stylePre, children, poplayer, ...props
+    classNamePre, stylePre, children, app, poplayer, info, ...props
   } = BaseComponent(aprops, Modal);
   buttons = buttons[type]||[];
-  children = typeof(children)==='function'?children(poplayer):children;
+  children = typeof(children)==='function'?children({...props, app, poplayer, info}):children;
 
   classNamePre = {
     'position-relative backface-hidden overflow-a-hidden': true,
@@ -63,32 +63,32 @@ export default Modal;
 
 
 export let modal = {
-  pluginName: 'modal',
-  pluginDependence: [],
+  _id: 'modal',
 
-  onPluginMount(app) {
+  _onStart(app) {
     app.modal = {
       show: (content, props, options={})=>{
-        return options._id = app.router.addPopLayer( Modal, 
+        return options._id = app.Poplayer.addPoplayer( Modal, 
           {children: content, onClose: index=>app.modal.close(options._id, index), ...props}, 
-          {_idPage: app.router.getPage()._id, isModal: true, ...options}
+          {_idPage: app.Page.getPage()._id, isModal: true, ...options}
         );
-        //   options.onAdd = _id=>app.keyboard.on(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
-        //   options.onRemove = _id=>app.keyboard.off(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
+        // todo keyboard
       },
       
       close: (_id, index)=>{
-        let {props:{onAction}={}} = app.router.getPopLayerInfo(_id)||{};
+        // todo action
+        let {props:{onAction}={}} = app.Poplayer.getPoplayerInfo(_id)||{};
         if(onAction&&onAction(index, _id)===false) return;
         return app.modal.remove(_id);
       },
 
       remove: _id=>{
-        let {content, props, options} = app.router.getPopLayerInfo(_id)||{};
-        if(!content) return;
-        props.rewind = true;
-        props.onFinished = ()=>{ app.router.removePopLayer(_id) }
-        return app.router.addPopLayer(content, props, options);
+        return _id&&app.Poplayer.addPoplayer(null, {
+          rewind: true,
+          onFinished: ()=>app.Poplayer.removePoplayer(_id),
+        }, {
+          _id
+        });
       },
     };
 
@@ -98,7 +98,7 @@ export let modal = {
     app.render.modalClose = (...args)=>app.modal.close(...args);
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     app.render.modalShow = app.modal._modalShow;
     app.render.modalClose = app.modal._modalClose;
     delete app.modal;

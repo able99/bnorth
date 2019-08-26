@@ -81,31 +81,7 @@ class Plugins {
      * @type {string}
      */
     this._id = app._id+'.plugins';
-    this._idNum = 0;
     this._plugins = [];
-  }
-
-  _checkPlugin(plugin, ...args) {
-    this.app.log.debug('plugin check');
-    if(!plugin) return;
-    if(plugin instanceof Function) plugin = plugin(this.app, ...args);
-    
-    plugin._id = '>' + (plugin._id?plugin._id:('anonymous'+(++this._idNum)));
-    if(!plugin._dependencies) plugin._dependencies = [];
-
-    if(this._plugins.find(v=>v._id===plugin._id)) {
-      this.app.render.critical(plugin._id, {title:'plugin dup'});
-      return;
-    }
-
-    for(let dependence of (Array.isArray(plugin._dependencies)?plugin._dependencies:[plugin._dependencies])) {
-      if(!this._plugins.find(v=>v._id.slice(1)===dependence)) {
-        this.app.render.critical(`no dependence plugin: ${plugin._id} - ${dependence}`, {title:'plugin nodeps'});
-        return;
-      }
-    }
-
-    return plugin;
   }
 
   /**
@@ -113,17 +89,12 @@ class Plugins {
    * @param {string} - 插件 id，默认为 App 插件
    * @returns {module:plugins~PluginInstance} 插件实例
    */
-  getPluginById(_id) {
-    return this._plugins.find(v=>v._id===('>'+(_id||this.app._id)))
+  getPlugin(_id) {
+    return this._plugins.find(v=>v._id===_id||v._id===this.app._id);
   }
 
-  /**
-   * 通过插件运行 id 获取插件
-   * @param {string} - 插件运行 id
-   * @returns {module:plugins~PluginInstance} 插件实例
-   */
-  getPluginByInstanceId(_id) {
-    return this._plugins.find(v=>v._id===_id);
+  getPlugins() {
+    return this._plugins;
   }
 
   /**
@@ -131,36 +102,37 @@ class Plugins {
    * @param {module:plugins~PluginDefine|module:plugins~PluginDefineFunction} - 插件声明对象 
    * @param  {...*} - 插件的参数 
    */
-  add(plugin, ...args) {
-    plugin = this._checkPlugin(plugin, ...args);
+  add(plugin, options) {
     if(!plugin) return;
+    if(plugin instanceof Function) plugin = plugin(this.app, plugin, options);
+    if(!plugin._id) { this.app.render.critical('no id plugin'); return }
+    plugin = {...plugin, options};
+    if(!plugin._dependencies) plugin._dependencies = [];
+
+    if(this._plugins.find(v=>v._id===plugin._id)) { this.app.render.critical(plugin._id, {title:'plugin dup'}); return }
+    for(let dependence of (Array.isArray(plugin._dependencies)?plugin._dependencies:[plugin._dependencies])) {
+      if(!this._plugins.find(v=>v._id.slice(1)===dependence)) {
+        this.app.render.critical(`no dependence plugin: ${plugin._id} - ${dependence}`, {title:'plugin nodeps'});
+        return;
+      }
+    }
+
     let app = this.app;
     let _id = plugin._id;
-    app.log.debug('plugin add', plugin._id);
     this._plugins.push(plugin);
-  
-    Object.entries(plugin).forEach(([k,v])=>{
-      if(k==='onPluginAdd'||k==='onPluginRemove') {
-        app.event.on(app._id,k,v,_id);
-      } else if(k.startsWith('onPlugin')) {
-        app.event.on(_id,k,v,_id);
-      } else if(k.startsWith('on')) {
-        app.event.on(app._id,k,v,_id);
-      } else if(k.startsWith('state')) {
-        plugin[k] = app.State.createState(k, v, _id);
-        if(!plugin[k]) { app.render.panic(v, {title: 'no state'}); return } 
-        if(typeof v==='string') return;
 
-        let _idState = plugin[k]._id;
-        app.event.on(_id, 'onPluginMount', (app)=>{app.event.emit(_idState, 'onStateStart', _idState, false)}, _idState);
-        app.event.on(_id, 'onPluginUnmount', (app)=>{app.event.emit(_idState, 'onStateStop', _idState)}, _idState);
-      } else {
-        plugin[k] = v;
-      }
+    plugin._states = Object.entries(plugin).filter(([k,v])=>k.startsWith('state')||k.startsWith('_state'));
+    app.State.attachStates(plugin, plugin._states);
+
+    Object.entries(plugin).forEach(([k,v])=>{
+      if(k.startsWith('on')) { app.event.on(null, k, app.event.createHandler(k, v, plugin).bind(plugin), _id); 
+      }else if(k.startsWith('_on')) { plugin[k] = app.event.createHandler(k, v, plugin).bind(plugin);
+      }else if(k.startsWith('action')){ plugin[k] = app.event.createAction(k.slice(6), v, plugin).bind(plugin); 
+      }else{ !k.startsWith('state')&&!k.startsWith('_state')&&(this[k]=v) } 
     })
 
-    app.event.emit(_id, 'onPluginMount', app, plugin);
-    app.event.emit(app._id, 'onPluginAdd', plugin);
+    app.event.emit(null, 'onPluginStart', plugin._id);
+    plugin._onStart&&plugin._onStart(app);
   }
 
   /**
@@ -168,15 +140,13 @@ class Plugins {
    * @param {string} - 插件实例 id
    */
   remove(_id) {
-    this.app.log.debug('plugin remove', _id);
+    this.app.event.emit(null, 'onPluginStart', _id);
     let index = this._plugins.findIndex(v=>v._id===_id);
     if(index<0) return;
     let plugin = this._plugins[index];
-
-    this.app.event.emit(plugin._id._id, 'onPluginUnmount', this.app, plugin);
+    plugin._onStop&&plugin._onStop(this.app);
     this.app.event.off(_id);
     this._plugins.splice(index,1);
-    this.app.event.emit(this.app._id, 'onPluginRemove', _id);
   }
 }
 

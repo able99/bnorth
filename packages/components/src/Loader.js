@@ -202,8 +202,8 @@ PanelLoader.defaultProps['b-precast'] = {}
 
 
   
-export let LoaderPopLayer = aprops=>{
-  let { progress, timeout, 'b-theme':bTheme="primary", top, height, innerProps, poplayer, ...props } = BaseComponent(aprops, LoaderPopLayer);
+export let LoaderPoplayer = aprops=>{
+  let { progress, timeout, 'b-theme':bTheme="primary", top, height, innerProps, poplayer, ...props } = BaseComponent(aprops, LoaderPoplayer);
   
   return (
     <Panel bc-position-absolute bc-offset-h-start bc-width-full bs-top={top} bs-height={height} {...props}>
@@ -212,30 +212,30 @@ export let LoaderPopLayer = aprops=>{
   )
 }
 
-LoaderPopLayer.defaultProps = {}
-LoaderPopLayer.defaultProps.top = 0;
-LoaderPopLayer.defaultProps.height = 3;
-LoaderPopLayer.defaultProps.timeout = '1s';
+LoaderPoplayer.defaultProps = {}
+LoaderPoplayer.defaultProps.top = 0;
+LoaderPoplayer.defaultProps.height = 3;
+LoaderPoplayer.defaultProps.timeout = '1s';
 
-Object.defineProperty(Loader,"LoaderPopLayer",{ get:function(){ return LoaderPopLayer }, set:function(val){ LoaderPopLayer = val }})
-LoaderPopLayer.isBnorth = true;
-LoaderPopLayer.defaultProps['b-precast'] = {}
+Object.defineProperty(Loader,"LoaderPoplayer",{ get:function(){ return LoaderPoplayer }, set:function(val){ LoaderPoplayer = val }})
+LoaderPoplayer.isBnorth = true;
+LoaderPoplayer.defaultProps['b-precast'] = {}
 
 
 
 export let loader = (app, options={})=>({
   _id: 'loader',
 
-  onPluginMount(app) {
+  _onStart(app) {
     app.loader = {
       count: 0, 
       timeout: options.timeout||20000,
       reset: (progress=0, props, options)=>{
         if(app.loader.timer) {window.clearTimeout(app.loader.timer); app.loader.timer=null}
-        app.loader._id = app.PopLayer.addPopLayer(LoaderPopLayer, {...props, progress}, {...options, _id: app.loader._id});
+        app.loader._id = app.Poplayer.addPoplayer(LoaderPoplayer, {...props, progress}, {...options, _id: app.loader._id});
 
         if(progress>100&&!app.loader.count) {
-          app.PopLayer.removePopLayer(app.loader._id); 
+          app.Poplayer.removePoplayer(app.loader._id); 
           app.loader._id = undefined; 
         } else if(progress>100&&app.loader.count) {
           if(app.loader.timer) {window.clearTimeout(app.loader.timer); app.loader.timer=null}
@@ -257,7 +257,7 @@ export let loader = (app, options={})=>({
     app.render.loader = (show, ...args)=>show?app.loader.show(...args):app.loader.close();
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     app.render.loader = app.loader._loader;
     delete app.loader;
   },
@@ -267,8 +267,8 @@ export let loader = (app, options={})=>({
 
 
 
-export let PullDownPopLayer = aprops=>{
-  let { progress, height=100, poplayer, children, ...props } = BaseComponent(aprops, PullDownPopLayer);
+export let PullDownPoplayer = aprops=>{
+  let { progress, height=100, poplayer, children, ...props } = BaseComponent(aprops, PullDownPoplayer);
   if(!progress||progress<0) return null;
   children = typeof(children)==='function'?children(poplayer):children;
 
@@ -287,35 +287,35 @@ export let PullDownPopLayer = aprops=>{
   )
 }
 
-PullDownPopLayer.defaultProps = {}
+PullDownPoplayer.defaultProps = {}
 
-Object.defineProperty(Loader,"PullDownPopLayer",{ get:function(){ return PullDownPopLayer }, set:function(val){ PullDownPopLayer = val }})
-PullDownPopLayer.isBnorth = true;
-PullDownPopLayer.defaultProps['b-precast'] = {}
+Object.defineProperty(Loader,"PullDownPoplayer",{ get:function(){ return PullDownPoplayer }, set:function(val){ PullDownPoplayer = val }})
+PullDownPoplayer.isBnorth = true;
+PullDownPoplayer.defaultProps['b-precast'] = {}
 
 
 
 export let pulldown = {
   _id: 'pulldown',
 
-  onPluginMount(app) {
+  _onStart(app) {
     app.pulldown = {
       show: (progress, props, options)=>{
         if(progress<15) return;
         if(typeof(progress)==='string'&&progress<100) { 
           return app.pulldown.close(); 
         }else {
-          return app.pulldown._id = app.PopLayer.addPopLayer(PullDownPopLayer, {...props, progress}, {...options, _id: app.pulldown._id});
+          return app.pulldown._id = app.Poplayer.addPoplayer(PullDownPoplayer, {...props, progress}, {...options, _id: app.pulldown._id});
         }
       },
       close: ()=>{
-        app.PopLayer.removePopLayer(app.pulldown._id); 
+        app.Poplayer.removePoplayer(app.pulldown._id); 
         app.pulldown._id = undefined; 
       },
     };
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     delete app.pulldown;
   },
 }
@@ -330,8 +330,8 @@ export let pulldown = {
  * @augments BaseComponent
  * @export
  */
-export let MaskPopLayer = aprops=>{
-  let { loaderProps, classNamePre, children, poplayer, ...props } = BaseComponent(aprops, MaskPopLayer);
+export let MaskPoplayer = aprops=>{
+  let { loaderProps, classNamePre, children, poplayer, ...props } = BaseComponent(aprops, MaskPoplayer);
   children = typeof(children)==='function'?children(poplayer):children;
 
   classNamePre = { 'flex-display-block flex-direction-v flex-justify-center flex-align-center': true, ...classNamePre }
@@ -343,16 +343,16 @@ export let MaskPopLayer = aprops=>{
   )
 }
 
-MaskPopLayer.defaultProps = {};
+MaskPoplayer.defaultProps = {};
 /**
  * 设置 蒙层中间的 loader 组件的参数
- * @attribute module:loader.MaskPopLayer.loaderProps
+ * @attribute module:loader.MaskPoplayer.loaderProps
  * @type {object}
  */
 
-Object.defineProperty(MaskPopLayer,"MaskPopLayer",{ get:function(){ return MaskPopLayer }, set:function(val){ MaskPopLayer = val }})
-MaskPopLayer.isBnorth = true;
-MaskPopLayer.defaultProps['b-precast'] = {
+Object.defineProperty(MaskPoplayer,"MaskPoplayer",{ get:function(){ return MaskPoplayer }, set:function(val){ MaskPoplayer = val }})
+MaskPoplayer.isBnorth = true;
+MaskPoplayer.defaultProps['b-precast'] = {
   'b-theme': 'white',
 };
 
@@ -368,7 +368,7 @@ export let mask = {
   // --------------------------------
   _id: 'mask',
 
-  onPluginMount(app) {
+  _onStart(app) {
     /**
      * 挂载在 App 实例上的蒙层操作对象
      * @memberof module:mask.mask
@@ -384,7 +384,7 @@ export let mask = {
      * @returns {string} 弹出层 id
      */
     app.mask.show = (content, props, options)=>{
-      return app.mask._id = app.router.addPopLayer(MaskPopLayer, {children: content, ...props}, {isModal: true, ...options, _id: app.mask._id});
+      return app.mask._id = app.Poplayer.addPoplayer(MaskPoplayer, {children: content, ...props}, {isModal: true, ...options, _id: app.mask._id});
     }
 
     /**
@@ -392,18 +392,19 @@ export let mask = {
      * @memberof module:loader.mask
      */
     app.mask.close = ()=>{
-      let {content, props={}, options} = app.router.getPopLayerInfo(app.mask._id)||{};
-      if(!content) { app.mask._id = undefined; return }
-      props.rewind = true;
-      props.onFinished = ()=>{ app.router.removePopLayer(app.mask._id); app.mask._id = undefined }
-      return app.router.addPopLayer(content, props, options);
+      return app.mask._id&&app.Poplayer.addPoplayer(null, {
+        rewind: true,
+        onFinished: ()=>{ app.Poplayer.removePoplayer(app.mask._id); app.mask._id = undefined },
+      }, {
+        _id: app.mask._id
+      });
     }
 
     app.mask._oldMask = app.render.mask;
     app.render.mask = (show, options)=>show?app.mask.show(options):app.mask.close();
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     app.render.mask = app.mask._oldMask;
     delete app.mask;
   },

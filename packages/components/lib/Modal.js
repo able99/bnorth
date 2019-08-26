@@ -43,11 +43,17 @@ var _Modal = function Modal(aprops) {
       classNamePre = _BaseComponent.classNamePre,
       stylePre = _BaseComponent.stylePre,
       children = _BaseComponent.children,
+      app = _BaseComponent.app,
       poplayer = _BaseComponent.poplayer,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "rewind", "onClose", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "classNamePre", "stylePre", "children", "poplayer"]);
+      info = _BaseComponent.info,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "rewind", "onClose", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "classNamePre", "stylePre", "children", "app", "poplayer", "info"]);
 
   buttons = buttons[type] || [];
-  children = typeof children === 'function' ? children(poplayer) : children;
+  children = typeof children === 'function' ? children((0, _objectSpread2.default)({}, props, {
+    app: app,
+    poplayer: poplayer,
+    info: info
+  })) : children;
   classNamePre = (0, _objectSpread2.default)({
     'position-relative backface-hidden overflow-a-hidden': true,
     'square-full': type === 'popup',
@@ -135,25 +141,24 @@ _Modal.defaultProps['b-precast'] = {
 var _default = _Modal;
 exports.default = _default;
 var modal = {
-  pluginName: 'modal',
-  pluginDependence: [],
-  onPluginMount: function onPluginMount(app) {
+  _id: 'modal',
+  _onStart: function _onStart(app) {
     app.modal = {
       show: function show(content, props) {
         var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-        return options._id = app.router.addPopLayer(_Modal, (0, _objectSpread2.default)({
+        return options._id = app.Poplayer.addPoplayer(_Modal, (0, _objectSpread2.default)({
           children: content,
           onClose: function onClose(index) {
             return app.modal.close(options._id, index);
           }
         }, props), (0, _objectSpread2.default)({
-          _idPage: app.router.getPage()._id,
+          _idPage: app.Page.getPage()._id,
           isModal: true
-        }, options)); //   options.onAdd = _id=>app.keyboard.on(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
-        //   options.onRemove = _id=>app.keyboard.off(options._id, 'keydown', e=>e.keyCode===27&&app.modal.close(options._id));
+        }, options)); // todo keyboard
       },
       close: function close(_id, index) {
-        var _ref = app.router.getPopLayerInfo(_id) || {},
+        // todo action
+        var _ref = app.Poplayer.getPoplayerInfo(_id) || {},
             _ref$props = _ref.props;
 
         _ref$props = _ref$props === void 0 ? {} : _ref$props;
@@ -162,19 +167,14 @@ var modal = {
         return app.modal.remove(_id);
       },
       remove: function remove(_id) {
-        var _ref2 = app.router.getPopLayerInfo(_id) || {},
-            content = _ref2.content,
-            props = _ref2.props,
-            options = _ref2.options;
-
-        if (!content) return;
-        props.rewind = true;
-
-        props.onFinished = function () {
-          app.router.removePopLayer(_id);
-        };
-
-        return app.router.addPopLayer(content, props, options);
+        return _id && app.Poplayer.addPoplayer(null, {
+          rewind: true,
+          onFinished: function onFinished() {
+            return app.Poplayer.removePoplayer(_id);
+          }
+        }, {
+          _id: _id
+        });
       }
     };
     app.modal._modalShow = app.render.modalShow;
@@ -192,7 +192,7 @@ var modal = {
       return (_app$modal2 = app.modal).close.apply(_app$modal2, arguments);
     };
   },
-  onPluginUnmount: function onPluginUnmount(app) {
+  _onStop: function _onStop(app) {
     app.render.modalShow = app.modal._modalShow;
     app.render.modalClose = app.modal._modalClose;
     delete app.modal;

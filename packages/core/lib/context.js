@@ -66,11 +66,6 @@ function (_React$Component) {
       return name ? data[name] : data;
     }
   }, {
-    key: "componentDidCatch",
-    value: function componentDidCatch(error, info) {
-      debugger;
-    }
-  }, {
     key: "render",
     value: function render() {
       return _react.default.createElement(this.app.context.Provider, {
@@ -155,7 +150,6 @@ function () {
   }, {
     key: "update",
     value: function update(_id, data, cb) {
-      this.app.log.debug('context: update', _id);
       var state = this.provider.data();
       state[_id] = this.app.utils.objectUpdate(state[_id], data);
       return this.provider.update(state, cb);
@@ -171,7 +165,6 @@ function () {
   }, {
     key: "set",
     value: function set(_id, data, cb) {
-      this.app.log.debug('context: set', _id);
       var state = this.provider.data();
       state[_id] = data;
       return this.provider.update(state, cb);
@@ -186,7 +179,6 @@ function () {
   }, {
     key: "delete",
     value: function _delete(_id, _did, cb) {
-      this.app.log.debug('context: delete', _id);
       var state = this.provider.data();
       state[_id] = this.app.utils.objectDelete(state[_id], _did);
       return this.provider.update(state, cb);

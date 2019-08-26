@@ -8,7 +8,7 @@ import Event from './event';
 import Plugins from './plugins';
 import State from './state';
 import Page from './page';
-import PopLayer from './poplayer';
+import Poplayer from './poplayer';
 import Router from './router';
 import Context from './context';
 import Render from './render';
@@ -28,7 +28,7 @@ import Keyboard from './keyboard';
  * @property {class?} Render - 替换默认的app Render 模块
  * @property {class?} State - 替换默认的app 数据单元类
  * @property {class?} Page - 替换默认的app 页面组件
- * @property {class?} PopLayer - 替换默认的app 弹出层组件
+ * @property {class?} Poplayer - 替换默认的app 弹出层组件
  * @property {string?} rootId - react 渲染到的跟元素的 css 选择字符串
  * @property {module:plugins~PluginDefine?} plugin - app 插件，是 app 的第一个插件
  */
@@ -110,10 +110,10 @@ import Keyboard from './keyboard';
     this.Page.app = this;
     /**
      * Page 弹出层组件
-     * @type {module:poplayer.PopLayer}
+     * @type {module:poplayer.Poplayer}
      */
-    this.PopLayer = this.options.PopLayer||PopLayer;
-    this.PopLayer.app = this;
+    this.Poplayer = this.options.Poplayer||Poplayer;
+    this.Poplayer.app = this;
     /**
      * Utils 模块类，实现一些常用的工具函数
      * @type {class}

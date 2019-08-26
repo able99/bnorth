@@ -60,7 +60,7 @@ export default class RouterComponent extends React.Component {
     this.transOutBlank = true;
 
     this.Page = this.app.context.consumerHoc(this.app.Page);
-    this.PopLayer = this.app.context.consumerHoc(this.app.PopLayer);
+    this.Poplayer = this.app.context.consumerHoc(this.app.Poplayer);
 
     this._historyCount = 0;
     this._history = createHistory();
@@ -212,7 +212,7 @@ export default class RouterComponent extends React.Component {
     }
 
     let poplayers = this.state._popLayerInfos;
-    poplayers = poplayers.filter(v=>!v.options._idPage||pageInfos.find(v=>v._id===v.options._idPage));
+    poplayers = poplayers.filter(v=>!v.options._idPage||pageInfos.find(vv=>vv._id===v.options._idPage));
     this.setState({_pageInfos: pageInfos, _poplayers: poplayers});
   }
 
@@ -241,7 +241,7 @@ export default class RouterComponent extends React.Component {
             {Object.entries(v.subPageInfos).reduce((vv1, [kk2,vv2])=>{vv1[kk2]=(<this.Page key={vv2._id} {...vv2} />);return vv1},{})} 
           </this.Page>
         ))}
-        {_popLayerInfos.map(v=><this.PopLayer key={v.options._id} {...v} />)}
+        {_popLayerInfos.map(v=><this.Poplayer key={v.options._id} {...v} />)}
       </React.Fragment>
     );
   }

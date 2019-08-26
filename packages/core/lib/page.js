@@ -9,10 +9,6 @@ exports.default = void 0;
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
-require("core-js/modules/es6.regexp.constructor");
-
-require("core-js/modules/es6.regexp.match");
-
 require("core-js/modules/es6.string.starts-with");
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
@@ -202,37 +198,6 @@ function (_React$Component) {
     key: "getPrevPage",
     value: function getPrevPage() {
       return this.app.getPage(this.props._idPrev);
-    } // page action
-    // ---------------------
-
-    /**
-     * 动态建立页面 action 函数，*注：* 动态创建一般是在 render 中，渲染时会多次建立，有消耗，建议在 controller 中定义为好
-     * @param {!function} - action 函数
-     * @param {string?} - action 名称，为空则生成随机名称
-     * @returns {function} 页面 action 函数
-     */
-
-  }, {
-    key: "action",
-    value: function action(name, func) {
-      var _this2 = this;
-
-      return this["action".concat(name)] = function () {
-        try {
-          Page.app.event.emit(Page.app._id, 'onPageAction', _this2._id, name);
-
-          for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-            args[_key] = arguments[_key];
-          }
-
-          return func.apply(_this2, args);
-        } catch (e) {
-          Page.app.render.panic(e, {
-            title: "action(".concat(name, ") error"),
-            _id: _this2._id
-          });
-        }
-      }.bind(this);
     } // page life
     // ---------------------------
 
@@ -315,9 +280,9 @@ function (_React$Component) {
     controller = controller || component.controller || {};
     var options = typeof controller === 'function' ? controller(Page.app, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))) : controller;
     if (!options.stateData) options.stateData = undefined;
-    if (!options.actionGoBack) options.actionGoBack = _this.action(function () {
+    if (!options.actionGoBack) options.actionGoBack = Page.app.event.createHandler('actionGoBack', function () {
       return Page.app.router.back();
-    }, 'GoBack');
+    }, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
     _this._states = Object.entries(options).filter(function (_ref) {
       var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
           k = _ref2[0],
@@ -331,18 +296,15 @@ function (_React$Component) {
           k = _ref4[0],
           v = _ref4[1];
 
-      if (k.startsWith('onPage')) {
-        Page.app.event.on(_this._id, k, v, _this._id); // page event
-      } else if (k.match(/(on\w*)_(\w*)/)) {
-        _this[RegExp.$2] && Page.app.event.on(_this[RegExp.$2]._id, RegExp.$1, v, _this._id); // page module event
-      } else if (k.startsWith('on')) {
-        Page.app.event.on(Page.app._id, k, v, _this._id); // app event
+      if (k.startsWith('on')) {
+        Page.app.event.on(Page.app._id, k, Page.app.event.createHandler(k, v, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))), _this._id).bind((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
+      } else if (k.startsWith('_on')) {
+        _this[k] = Page.app.event.createHandler(k, v, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))).bind((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
       } else if (k.startsWith('action')) {
-        _this[k] = _this.action(k.slice(6), v); // action
+        _this[k] = Page.app.event.createAction(k, v, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))).bind((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
       } else {
         !k.startsWith('state') && !k.startsWith('_state') && (_this[k] = v);
-      } // user props
-
+      }
     });
     return _this;
   }

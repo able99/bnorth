@@ -255,6 +255,48 @@ function () {
         return _emit.apply(this, arguments);
       };
     }()
+  }, {
+    key: "createAction",
+    value: function createAction(name, func, modulee) {
+      var _this4 = this;
+
+      return function () {
+        try {
+          _this4.emit(null, 'onEventAction', name, modulee._id);
+
+          for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+            args[_key3] = arguments[_key3];
+          }
+
+          return func.apply(modulee, args);
+        } catch (e) {
+          _this4.app.render.panic(e, {
+            title: "action(".concat(name, "@").concat(modulee._id, ") error")
+          });
+        }
+      };
+    }
+  }, {
+    key: "createHandler",
+    value: function createHandler(name, func, modulee) {
+      var _this5 = this;
+
+      return function () {
+        try {
+          _this5.emit(null, 'onEventHandle', name, modulee._id);
+
+          for (var _len4 = arguments.length, args = new Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+            args[_key4] = arguments[_key4];
+          }
+
+          return func.apply(modulee, args);
+        } catch (e) {
+          _this5.app.render.panic(e, {
+            title: "handler(".concat(name, "@").concat(modulee._id, ") error")
+          });
+        }
+      };
+    }
   }]);
   return Event;
 }();

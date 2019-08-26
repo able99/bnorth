@@ -25,8 +25,8 @@ var _AnimationFrame = _interopRequireDefault(require("./AnimationFrame"));
 
 var _Icon = require("./Icon");
 
-var _NoticePopLayer = function NoticePopLayer(aprops) {
-  var _BaseComponent = (0, _BaseComponent2.default)(aprops, _NoticePopLayer),
+var _NoticePoplayer = function NoticePoplayer(aprops) {
+  var _BaseComponent = (0, _BaseComponent2.default)(aprops, _NoticePoplayer),
       onClose = _BaseComponent.onClose,
       _onFinished = _BaseComponent.onFinished,
       frameFunc = _BaseComponent.frameFunc,
@@ -63,26 +63,26 @@ var _NoticePopLayer = function NoticePopLayer(aprops) {
   }, props)));
 };
 
-_NoticePopLayer.defaultProps = {};
-_NoticePopLayer.defaultProps.frameFunc = _animationFrame.afPeekTop;
-Object.defineProperty(_NoticePopLayer, "NoticePopLayer", {
+_NoticePoplayer.defaultProps = {};
+_NoticePoplayer.defaultProps.frameFunc = _animationFrame.afPeekTop;
+Object.defineProperty(_NoticePoplayer, "NoticePoplayer", {
   get: function get() {
-    return _NoticePopLayer;
+    return _NoticePoplayer;
   },
   set: function set(val) {
-    _NoticePopLayer = val;
+    _NoticePoplayer = val;
   }
 });
-_NoticePopLayer.isBnorth = true;
-_NoticePopLayer.defaultProps['b-precast'] = {
+_NoticePoplayer.isBnorth = true;
+_NoticePoplayer.defaultProps['b-precast'] = {
   'bp-title-bc-text-weight-': true,
   'bp-title-bc-text-size': 'lg'
 };
-var _default = _NoticePopLayer;
+var _default = _NoticePoplayer;
 exports.default = _default;
 var notice = {
   _id: 'notice',
-  onPluginMount: function onPluginMount(app) {
+  _onStart: function _onStart(app) {
     app.notice = {
       show: function show(message) {
         var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
@@ -94,7 +94,7 @@ var notice = {
 
         message = app.utils.message2String(message);
         if (!message) return;
-        app.notice._id = app.router.addPopLayer(_NoticePopLayer, (0, _objectSpread2.default)({
+        app.notice._id = app.Poplayer.addPoplayer(_NoticePoplayer, (0, _objectSpread2.default)({
           children: message,
           onClose: function onClose() {
             return app.notice.close();
@@ -115,10 +115,10 @@ var notice = {
         }
 
         if (!app.notice._id) return;
-        return app.router.addPopLayer(undefined, {
+        return app.Poplayer.addPoplayer(undefined, {
           rewind: true,
           onFinished: function onFinished() {
-            app.router.removePopLayer(app.notice._id);
+            app.Poplayer.removePoplayer(app.notice._id);
             app.notice._id = undefined;
           }
         }, {
@@ -141,7 +141,7 @@ var notice = {
       }), options);
     };
   },
-  onPluginUnmount: function onPluginUnmount(app) {
+  _onStop: function _onStop(app) {
     app.render.notice = app.notice._oldNotice;
     app.render.error = app.notice._oldError;
     delete app.notice;

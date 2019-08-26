@@ -119,6 +119,24 @@ class Event {
       if(ret) return ret;
     }
   }
+
+  createAction(name, func, modulee) {
+    return (...args)=>{
+      try{ 
+        this.emit(null, 'onEventAction', name, modulee._id); 
+        return func.apply(modulee, args);
+      }catch(e){ this.app.render.panic(e, {title:`action(${name}@${modulee._id}) error`}) }
+    }
+  }
+
+  createHandler(name, func, modulee) {
+    return (...args)=>{
+      try{ 
+        this.emit(null, 'onEventHandle', name, modulee._id); 
+        return func.apply(modulee, args);
+      }catch(e){ this.app.render.panic(e, {title:`handler(${name}@${modulee._id}) error`}) }
+    }
+  }
 }
 
 
