@@ -230,7 +230,7 @@ var alipay = function alipay(app) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return {
     _id: 'alipay',
-    onPluginMount: function onPluginMount(app, plugin) {
+    _onStart: function _onStart(app, plugin) {
       /**
        * 为 App 实例增加支付宝操作类
        * @memberof module:alipay.alipay
@@ -247,7 +247,7 @@ var alipay = function alipay(app) {
 
       app.alipay = new ALipay(app, plugin._id, options);
     },
-    onPluginUnmount: function onPluginUnmount(app) {
+    _onStop: function _onStop(app) {
       app.event.off(app.alipay._id);
       delete app.ALipay;
       delete app.alipay;

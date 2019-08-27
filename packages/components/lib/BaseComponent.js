@@ -112,7 +112,7 @@ function domPassiveSupported() {
   try {
     var options = Object.defineProperty({}, "passive", {
       get: function get() {
-        result = true;
+        return result = true;
       }
     });
     window.addEventListener("test", null, options);

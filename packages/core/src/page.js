@@ -270,7 +270,7 @@ export default class Page extends React.Component {
   // ---------------------
 
   _showStatus() {
-    return this.props.status==='normal'||this.props.status==='pushout';
+    return this.props.status==='normal'||this.props.status==='pushout'||this.props.status==='pushin'||this.props.status==='popout'||this.props.status==='popin';
   }
 
   _frameProps() {

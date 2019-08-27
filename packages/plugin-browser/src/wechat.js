@@ -148,7 +148,7 @@ class Wechat {
 let wechat = (app,options={})=>({
   _id: 'wechat',
 
-  onPluginMount(app, plugin) {
+  _onStart(app, plugin) {
     /**
      * 为 App 实例增加微信操作类
      * @memberof module:wecaht.wechat
@@ -166,7 +166,7 @@ let wechat = (app,options={})=>({
     app.wechat = new Wechat(app, plugin._id, options);
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     app.event.off(app.wechat._id);
     delete app.Wechat;
     delete app.wechat;

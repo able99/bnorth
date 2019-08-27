@@ -59,7 +59,7 @@
  * @class Request
  * @extends module:state.State
  */
-let getClass = (app, aoptions={})=>class Request extends app.State {
+let getClass = (app, plugin)=>class Request extends app.State {
   constructor(_id, options) {
     super(_id, options);
     this.fetched = false;
@@ -98,7 +98,7 @@ let getClass = (app, aoptions={})=>class Request extends app.State {
   _requestWork(options={}) {
     if(options.checkFetch&&!options.checkFetch(options)) { return }
     if(options.once&&this.fetched) { this.app.log.info('plugin once'); return }
-    let fetch = options.request||aoptions.request;
+    let fetch = options.request||plugin.options.request;
     if(!fetch) throw new Error('plugin request error: no request');
     this._requestFetching(true, options);
 
@@ -161,13 +161,13 @@ let getClass = (app, aoptions={})=>class Request extends app.State {
  * @plugin 
  * @exportdefault
  */
-let request = (app, options)=>{
-  let Request = getClass(app, options);
+let request = (app, plugin, options)=>{
+  let Request = getClass(app, plugin);
 
   return {
     _id: 'request',
 
-    onPluginMount(app, plugin) {
+    _onStart(app, plugin) {
       /**
        * 为 App 实例增加关联网络请求的数据单元
        * @memberof module:index.request
@@ -184,7 +184,7 @@ let request = (app, options)=>{
       app.request = plugin;
     },
 
-    onPluginUnmount(app) {
+    _onStop(app) {
       delete app.Request;
       delete app.request;
     },

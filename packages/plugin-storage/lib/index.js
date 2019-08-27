@@ -160,7 +160,7 @@ function () {
 
 var storage = {
   _id: 'storage',
-  onPluginMount: function onPluginMount(app, plugin, options) {
+  _onStart: function _onStart(app, plugin, options) {
     /**
      * 为 App 实例增加存储管理类
      * @memberof module:index.storage
@@ -185,7 +185,7 @@ var storage = {
 
     app.storageSession = new app.Storage(app, plugin._id, options, true);
   },
-  onPluginUnmount: function onPluginUnmount(app) {
+  _onStop: function _onStop(app) {
     delete app.Storage;
     delete app.storage;
     delete app.storageSession;

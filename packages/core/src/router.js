@@ -2,6 +2,8 @@
  * @module
  */
 import RouterComponent from './router.component'
+import RouterError from './router.error';
+import RouterLoader from './router.loader';
 
 let ParamSpe = ':';
 
@@ -159,8 +161,13 @@ class Router {
     /*!
      * 路由描画组件，是所有页面和弹出层的父组件
      */
+    RouterComponent.app = app;
     this.Component = RouterComponent;
     this.component = null;
+    RouterError.app = app;
+    this.ComponentError = RouterError;
+    RouterLoader.app = app;
+    this.ComponentLoader = RouterLoader;
     /*!
      * 路由集合
      */
@@ -250,7 +257,7 @@ class Router {
    * @returns {number} 级数
    */
   getHistoryCount() {
-    return this._historyCount;
+    return this.component.historyCount;
   }
 
   /**
@@ -258,7 +265,7 @@ class Router {
    * @returns {boolean} 是否跟页面
    */
   isRootPath() {
-    return this.app.router._pageInfos[this.app.router._pageInfos.length-1].name==='/';
+    return this.getPageInfos().slice(-1)[0].name === '/';
   }
 
 
@@ -271,11 +278,11 @@ class Router {
   block(_block) {
     this.app.log.debug('router block', _block);
     if(typeof _block==='function'){
-      this._block = this._history.location;
+      this._block = this.history.location;
       _block = _block(this.app);
       this._block = _block||this._block;
     }else{
-      this._block = _block||this._history.location;
+      this._block = _block||this.history.location;
     }
     return true;
   }
@@ -286,7 +293,7 @@ class Router {
    */
   restore(location) {
     this.app.log.debug('router restore', location);
-    location||this._block?this._history.replace(location||this._block):this.replaceRoot();
+    location||this._block?this.history.replace(location||this._block):this.replaceRoot();
     this._block = null;
     return true;
   }
@@ -306,7 +313,7 @@ class Router {
     let state;
     let hash;
     let ignore;
-    let pathnames = this.component.state._pageInfos.map(v=>v.pagePathName);
+    let pathnames = this.component.state.pageInfos.map(v=>v.pagePathName);
 
     let addPath = path=>path.split('/').forEach(v=>{
       if(v==='') {
@@ -333,8 +340,8 @@ class Router {
 
     return {
       pathname: pathnames.map((v,i,a)=>i===0&&v==='/'&&a.length>1?'':v).join('/'),
-      state:this.passState?{...this._history.location.state, ...state}:state,
-      search: '?'+Object.entries(this.passQuery?{...this._history.location.query, ...query}:query).map(([k,v])=>k+'='+v).reduce((v1,v2)=>v1+(v1?'&':'')+v2,''),
+      state:this.passState?{...this.history.location.state, ...state}:state,
+      search: '?'+Object.entries(this.passQuery?{...this.history.location.query, ...query}:query).map(([k,v])=>k+'='+v).reduce((v1,v2)=>v1+(v1?'&':'')+v2,''),
       hash,
       ignore,
     };
@@ -344,7 +351,7 @@ class Router {
    * 获取路径名称，但不跳转或者替换，参数参见 getPathInfo
    */
   getPathName(...args) {
-    return this.component._history.createHref(this.getPathInfo(...args));
+    return this.component.history.createHref(this.getPathInfo(...args));
   }
 
   /**
@@ -359,7 +366,7 @@ class Router {
    */
   push(...args) {
     this.app.log.debug('router push', args);
-    this.component._history.push(this.getPathInfo(...args));
+    this.component.history.push(this.getPathInfo(...args));
     return true;
   }
 
@@ -368,7 +375,7 @@ class Router {
    */
   replace(...args) {
     this.app.log.debug('router replace', args);
-    this.component._history.replace(this.getPathInfo(...args));
+    this.component.history.replace(this.getPathInfo(...args));
     return true;
   }
 
@@ -378,7 +385,7 @@ class Router {
    */
   back(step=1) {
     this.app.log.debug('router back');
-    this.component._history.go(-step);
+    this.component.history.go(-step);
     return true;
   }
 
@@ -411,19 +418,19 @@ class Router {
   }
 
   getPageInfos() {
-    return (this.component&&this.component.state._pageInfos)||[];
+    return (this.component&&this.component.state.pageInfos)||[];
   }
 
-  setPageInfos(_pageInfos) {
-    return this.component&&this.component.setState({_pageInfos});
+  setPageInfos(pageInfos) {
+    return this.component&&this.component.setState({pageInfos});
   }
 
   getPoplayerInfos() {
-    return (this.component&&this.component.state._popLayerInfos)||[];
+    return (this.component&&this.component.state.poplayerInfos)||[];
   }
 
-  setPoplayerInfos(_popLayerInfos) {
-    return this.component&&this.component.setState({_popLayerInfos});
+  setPoplayerInfos(poplayerInfos) {
+    return this.component&&this.component.setState({poplayerInfos});
   }
 
   refresh() {

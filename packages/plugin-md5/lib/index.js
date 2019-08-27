@@ -20,7 +20,7 @@ var _jsMd = _interopRequireDefault(require("js-md5"));
  */
 var md5 = {
   _id: 'md5',
-  onPluginMount: function onPluginMount(app) {
+  _onStart: function _onStart(app) {
     /**
      * md5 编码
      * @memberof module:index.md5
@@ -32,7 +32,7 @@ var md5 = {
       return (0, _jsMd.default)(str);
     };
   },
-  onPluginUnmount: function onPluginUnmount(app) {
+  _onStop: function _onStop(app) {
     delete app.utils.md5;
   }
 };

@@ -64,9 +64,9 @@ Component.controller = app=>({
   stateEvent: { initialization: {tick: 10} },
   onStateUpdated_stateEvent: (data, prevData)=>{app.notice.show(`状态改变事件:${JSON.stringify(prevData)}->${JSON.stringify(data)}`)},
 
-  stateNetworkObj: {state: app.Request, url: '/test/obj', fetchOnStart: true},
-  stateNetworkArr: {state: app.Request, url: '/test/arr', fetchOnStart: true},
-  stateNetworkArrDeep: {state: app.Request, url: '/test/arr/deep', fetchOnStart: true},
+  stateNetworkObj: [{url: '/test/obj', fetchOnStart: true}, app.Request],
+  stateNetworkArr: [{url: '/test/arr', fetchOnStart: true}, app.Request],
+  stateNetworkArrDeep: [{url: '/test/arr/deep', fetchOnStart: true}, app.Request],
 
   stateValidate: {state: app.Validate, initialization: {a: 1}, rules: {a: 'required'} },
 });

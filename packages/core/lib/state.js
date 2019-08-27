@@ -171,7 +171,7 @@ function () {
             k = _ref6[0],
             v = _ref6[1];
 
-        return modulee[k] && modulee[k].destructor();
+        return modulee[k] && modulee[k].destructor(typeof v !== 'string');
       });
     }
   }, {
@@ -235,11 +235,12 @@ function () {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     var ownerId = arguments.length > 2 ? arguments[2] : undefined;
     (0, _classCallCheck2.default)(this, State);
-
+    this.app = State.app;
     /**
      * 数据单元的 id
      * @type {string}
      */
+
     this._id = _id;
     /**
      * 数据单元的声明对象
@@ -266,11 +267,12 @@ function () {
 
   (0, _createClass2.default)(State, [{
     key: "destructor",
-    value: function destructor() {
+    value: function destructor(remove) {
       State.app.event.emit(null, 'onStateStop', this._id);
       this.options._onStart && this.options._onStart();
       State.app.event.off(this._id);
       if (this.options.cleanOnStop !== false) this.clear();
+      if (remove) delete State.states[this._id];
     } // state work
 
   }, {

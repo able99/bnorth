@@ -26,7 +26,7 @@ export function domTriggerBrowserReflow(node) {
  * 是否支持 touch
  * @type {boolean}
  */
-export const domIsTouch = !!(('ontouchstart' in window) || window.DocumentTouch && document instanceof window.DocumentTouch);
+export const domIsTouch = !!(('ontouchstart' in window) || (window.DocumentTouch && document instanceof window.DocumentTouch));
 /**
  * 是否支持鼠标
  * @type {boolean}
@@ -38,7 +38,7 @@ export const domIsMouse = !domIsTouch;
 export function domPassiveSupported() {
   var result = false;
   try {
-      var options = Object.defineProperty({}, "passive", { get: function() { result = true } });
+      var options = Object.defineProperty({}, "passive", { get: function() { return result = true } });
       window.addEventListener("test", null, options);
   } catch(err) {}
   return result;

@@ -84,12 +84,12 @@ export default app=>{
   return {
     _id: 'validate',
 
-    onPluginMount(app) {
+    _onStart(app) {
       app.validate = validate;
       app.Validate = Validate;
     },
 
-    onPluginUnmount(app) {
+    _onStop(app) {
       delete app.validate;
       delete app.Validate;
     },

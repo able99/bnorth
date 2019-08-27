@@ -104,9 +104,9 @@ class Plugins {
    */
   add(plugin, options) {
     if(!plugin) return;
-    if(plugin instanceof Function) plugin = plugin(this.app, plugin, options);
+    let instance = {};
+    if(plugin instanceof Function) plugin = plugin(this.app, instance, options);
     if(!plugin._id) { this.app.render.critical('no id plugin'); return }
-    plugin = {...plugin, options};
     if(!plugin._dependencies) plugin._dependencies = [];
 
     if(this._plugins.find(v=>v._id===plugin._id)) { this.app.render.critical(plugin._id, {title:'plugin dup'}); return }
@@ -119,20 +119,21 @@ class Plugins {
 
     let app = this.app;
     let _id = plugin._id;
-    this._plugins.push(plugin);
+    instance.options = options;
+    this._plugins.push(instance);
 
-    plugin._states = Object.entries(plugin).filter(([k,v])=>k.startsWith('state')||k.startsWith('_state'));
-    app.State.attachStates(plugin, plugin._states);
+    instance._states = Object.entries(plugin).filter(([k,v])=>k.startsWith('state')||k.startsWith('_state'));
+    app.State.attachStates(instance, instance._states);
 
     Object.entries(plugin).forEach(([k,v])=>{
-      if(k.startsWith('on')) { app.event.on(null, k, app.event.createHandler(k, v, plugin).bind(plugin), _id); 
-      }else if(k.startsWith('_on')) { plugin[k] = app.event.createHandler(k, v, plugin).bind(plugin);
-      }else if(k.startsWith('action')){ plugin[k] = app.event.createAction(k.slice(6), v, plugin).bind(plugin); 
+      if(k.startsWith('on')) { app.event.on(null, k, app.event.createHandler(k, v, instance).bind(instance), _id); 
+      }else if(k.startsWith('_on')) { instance[k] = app.event.createHandler(k, v, instance).bind(instance);
+      }else if(k.startsWith('action')){ instance[k] = app.event.createAction(k.slice(6), v, instance).bind(instance); 
       }else{ !k.startsWith('state')&&!k.startsWith('_state')&&(this[k]=v) } 
     })
 
-    app.event.emit(null, 'onPluginStart', plugin._id);
-    plugin._onStart&&plugin._onStart(app);
+    app.event.emit(null, 'onPluginStart', instance._id);
+    instance._onStart&&instance._onStart(app, instance, options);
   }
 
   /**
@@ -144,7 +145,7 @@ class Plugins {
     let index = this._plugins.findIndex(v=>v._id===_id);
     if(index<0) return;
     let plugin = this._plugins[index];
-    plugin._onStop&&plugin._onStop(this.app);
+    plugin._onStop&&plugin._onStop(this.app, plugin, plugin.options);
     this.app.event.off(_id);
     this._plugins.splice(index,1);
   }

@@ -12,7 +12,7 @@ import hibase64 from 'hi-base64';
 let base64 = {
   _id: 'base64',
 
-  onPluginMount(app) {
+  _onStart(app) {
     /**
      * base64 编码
      * @memberof module:index.base64
@@ -31,7 +31,7 @@ let base64 = {
     app.utils.base64decode = (str, asciiOnly)=>hibase64.decode(str, asciiOnly);
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     delete app.utils.base64encode;
     delete app.utils.base64decode;
   },

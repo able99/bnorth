@@ -7,9 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.PageTransform = void 0;
 
-require("core-js/modules/es6.array.from");
-
-require("core-js/modules/web.dom.iterable");
+require("core-js/modules/es6.array.find");
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -21,15 +19,15 @@ var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/ge
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
-var _react = _interopRequireDefault(require("react"));
-
 var PageTransform = {
   _id: 'page_transform',
-  onPluginMount: function onPluginMount(app) {
-    app.router._RouterComponent =
+  _onStart: function _onStart(app) {
+    app.router._oldComponent = app.router.Component;
+
+    app.router.Component =
     /*#__PURE__*/
-    function (_app$router$_RouterCo) {
-      (0, _inherits2.default)(_class, _app$router$_RouterCo);
+    function (_app$router$Component) {
+      (0, _inherits2.default)(_class, _app$router$Component);
 
       function _class() {
         (0, _classCallCheck2.default)(this, _class);
@@ -37,63 +35,52 @@ var PageTransform = {
       }
 
       (0, _createClass2.default)(_class, [{
-        key: "_pageTrans",
-        value: function _pageTrans() {
+        key: "_pageTransform",
+        value: function _pageTransform() {
+          var _this = this;
+
           var app = this.props.app;
-          var router = app.router;
-          if (!router._transStatus) return;
-          var activeEl = document.querySelector('main[data-page="' + router._activeId + '"]');
-          var deactiveEl = document.querySelector('main[data-page="' + router._deactiveId + '"]');
-          Array.from(document.querySelectorAll('main')).filter(function (v) {
-            return !v.getAttribute('data-page-sub');
-          }).forEach(function (v) {
-            var id = v.getAttribute('data-page');
+          var page = app.Page.getPage();
+          var status = page && page.status;
 
-            if (id === router._activeId) {
-              v.style.webkitTransform = "translateX(" + (router._transStatus === 'push' ? 100 : -100) + "%)";
-              v.style.display = 'block';
-            } else if (id === router._deactiveId) {
-              v.style.webkitTransform = "translateX(" + 0 + "%)";
-              v.style.display = 'block';
-            } else {
-              v.style.display = 'none';
-            }
-          });
-          var time = new Date().getTime();
-          var finish = false;
+          if (status !== 'normal') {
+            var deactivePageInfo = this.state.pageInfos.find(function (v) {
+              return v.isInactive;
+            });
+            var deactivePage = deactivePageInfo && app.Page.getPage(deactivePageInfo._id);
+            var time = new Date().getTime();
+            var finish = false;
 
-          var _run = function _run() {
-            if (finish) {
-              deactiveEl && (deactiveEl.style.display = 'none');
+            var _run = function _run() {
+              if (finish) {
+                _this._updateRouterInfo();
 
-              router._updateRouterInfo(router._history.location);
+                return;
+              }
 
-              return;
-            }
+              var diff = new Date().getTime() - time;
+              var percent = diff * 100 / 300;
 
-            var diff = new Date().getTime() - time;
-            var percent = diff * 100 / 200;
+              if (percent >= 100) {
+                percent = 100;
+                finish = true;
+              }
 
-            if (percent >= 100) {
-              percent = 100;
-              finish = true;
-            }
+              page.dom.style.webkitTransform = "translate3d(" + (status === 'pushin' ? 100 - percent : percent - 100) + "%, 0, 0)";
+              deactivePage && (deactivePage.dom.style.webkitTransform = "translate3d(" + (status === 'pushout' ? 1 : -1) * percent + "%, 0, 0)");
+              requestAnimationFrame(_run);
+            };
 
-            activeEl.style.webkitTransform = "translate3d(" + (router._transStatus === 'push' ? 100 - percent : percent - 100) + "%, 0, 0)";
-            deactiveEl && (deactiveEl.style.webkitTransform = "translate3d(" + (router._transStatus === 'push' ? -1 : 1) * percent + "%, 0, 0)");
-            requestAnimationFrame(_run);
-          };
-
-          _run();
+            _run();
+          }
         }
       }]);
       return _class;
-    }(app.router._RouterComponent);
+    }(app.router.Component);
   },
-  onPluginUnmount: function onPluginUnmount(app) {
-    app.render.notice = app.notice._oldNotice;
-    app.render.error = app.notice._oldError;
-    delete app.notice;
+  _onStop: function _onStop(app) {
+    app.router.Component = app.router._oldComponent;
+    delete app.router._oldComponent;
   }
 };
 exports.PageTransform = PageTransform;

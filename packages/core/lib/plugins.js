@@ -25,8 +25,6 @@ require("core-js/modules/es6.array.iterator");
 
 require("core-js/modules/es7.object.entries");
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 require("core-js/modules/es6.array.find");
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
@@ -153,16 +151,14 @@ function () {
       var _this2 = this;
 
       if (!plugin) return;
-      if (plugin instanceof Function) plugin = plugin(this.app, plugin, options);
+      var instance = {};
+      if (plugin instanceof Function) plugin = plugin(this.app, instance, options);
 
       if (!plugin._id) {
         this.app.render.critical('no id plugin');
         return;
       }
 
-      plugin = (0, _objectSpread2.default)({}, plugin, {
-        options: options
-      });
       if (!plugin._dependencies) plugin._dependencies = [];
 
       if (this._plugins.find(function (v) {
@@ -217,34 +213,35 @@ function () {
 
       var app = this.app;
       var _id = plugin._id;
+      instance.options = options;
 
-      this._plugins.push(plugin);
+      this._plugins.push(instance);
 
-      plugin._states = Object.entries(plugin).filter(function (_ref) {
+      instance._states = Object.entries(plugin).filter(function (_ref) {
         var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
             k = _ref2[0],
             v = _ref2[1];
 
         return k.startsWith('state') || k.startsWith('_state');
       });
-      app.State.attachStates(plugin, plugin._states);
+      app.State.attachStates(instance, instance._states);
       Object.entries(plugin).forEach(function (_ref3) {
         var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
             k = _ref4[0],
             v = _ref4[1];
 
         if (k.startsWith('on')) {
-          app.event.on(null, k, app.event.createHandler(k, v, plugin).bind(plugin), _id);
+          app.event.on(null, k, app.event.createHandler(k, v, instance).bind(instance), _id);
         } else if (k.startsWith('_on')) {
-          plugin[k] = app.event.createHandler(k, v, plugin).bind(plugin);
+          instance[k] = app.event.createHandler(k, v, instance).bind(instance);
         } else if (k.startsWith('action')) {
-          plugin[k] = app.event.createAction(k.slice(6), v, plugin).bind(plugin);
+          instance[k] = app.event.createAction(k.slice(6), v, instance).bind(instance);
         } else {
           !k.startsWith('state') && !k.startsWith('_state') && (_this2[k] = v);
         }
       });
-      app.event.emit(null, 'onPluginStart', plugin._id);
-      plugin._onStart && plugin._onStart(app);
+      app.event.emit(null, 'onPluginStart', instance._id);
+      instance._onStart && instance._onStart(app, instance, options);
     }
     /**
      * 移除插件
@@ -262,7 +259,7 @@ function () {
 
       if (index < 0) return;
       var plugin = this._plugins[index];
-      plugin._onStop && plugin._onStop(this.app);
+      plugin._onStop && plugin._onStop(this.app, plugin, plugin.options);
       this.app.event.off(_id);
 
       this._plugins.splice(index, 1);

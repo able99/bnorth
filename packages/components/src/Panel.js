@@ -471,10 +471,6 @@ Object.defineProperty(Panel,"ContainerItem",{ get:function(){ return PanelItem }
  * @augments module:Touchable.Touchable
  */
 let InnerScroll = class extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     let { countToShow,selectedIndex, children } = this.props;
     let node = domFindNode(this);

@@ -80,8 +80,7 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits
  * @class Request
  * @extends module:state.State
  */
-var getClass = function getClass(app) {
-  var aoptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+var getClass = function getClass(app, plugin) {
   return (
     /*#__PURE__*/
     function (_app$State) {
@@ -157,7 +156,7 @@ var getClass = function getClass(app) {
             return;
           }
 
-          var fetch = options.request || aoptions.request;
+          var fetch = options.request || plugin.options.request;
           if (!fetch) throw new Error('plugin request error: no request');
 
           this._requestFetching(true, options);
@@ -240,11 +239,11 @@ var getClass = function getClass(app) {
  */
 
 
-var request = function request(app, options) {
-  var Request = getClass(app, options);
+var request = function request(app, plugin, options) {
+  var Request = getClass(app, plugin);
   return {
     _id: 'request',
-    onPluginMount: function onPluginMount(app, plugin) {
+    _onStart: function _onStart(app, plugin) {
       /**
        * 为 App 实例增加关联网络请求的数据单元
        * @memberof module:index.request
@@ -261,7 +260,7 @@ var request = function request(app, options) {
 
       app.request = plugin;
     },
-    onPluginUnmount: function onPluginUnmount(app) {
+    _onStop: function _onStop(app) {
       delete app.Request;
       delete app.request;
     },

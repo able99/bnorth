@@ -27,15 +27,15 @@ class Poplayer extends React.Component {
   static addPoplayer(content, props={}, options={}) {
     // todo: poplayer option state,action
     options._id = options._id || `${++Poplayer._IdRandom}@${options._idPage?options._idPage:'#'}`;
-    let popLayer = Poplayer.getPoplayerInfo(options._id);
+    let poplayer = Poplayer.getPoplayerInfo(options._id);
 
-    if(!popLayer) {
+    if(!poplayer) {
       if(!content) return;
       Poplayer.app.router.setPoplayerInfos([...Poplayer.app.router.getPoplayerInfos(), { content, props, options }]);
     }else{
-      content&&(popLayer.content=content);
-      popLayer.props = {...popLayer.props, ...props};
-      popLayer.options = {...popLayer.options, ...options};
+      content&&(poplayer.content=content);
+      poplayer.props = {...poplayer.props, ...props};
+      poplayer.options = {...poplayer.options, ...options};
       Poplayer.app.router.refresh();
     }
     

@@ -179,7 +179,7 @@ class ALipay {
 let alipay = (app,options={})=>({
   _id: 'alipay',
 
-  onPluginMount(app, plugin) {
+  _onStart(app, plugin) {
     /**
      * 为 App 实例增加支付宝操作类
      * @memberof module:alipay.alipay
@@ -197,7 +197,7 @@ let alipay = (app,options={})=>({
     app.alipay = new ALipay(app, plugin._id, options);
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     app.event.off(app.alipay._id);
     delete app.ALipay;
     delete app.alipay;

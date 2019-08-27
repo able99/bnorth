@@ -66,12 +66,6 @@ var _path = require("path");
 /**
  * @module
  */
-var spe = '/';
-var ParamSpe = ':';
-var SubPageSpe = '|';
-var ParamOptional = '?';
-var PageSign = '#';
-
 var RouterComponent =
 /*#__PURE__*/
 function (_React$Component) {
@@ -87,24 +81,24 @@ function (_React$Component) {
      * @type {module:app.App}
      */
 
-    _this.app = _this.props.app;
+    _this.app = RouterComponent.app;
     /**
      * 模块的 id
      * @type {string}
      */
 
     _this._id = _this.app._id + '.router.component';
-    _this.props.app.router.component = (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this));
     _this.state = {
-      _pageInfos: [],
-      _popLayerInfos: []
-      /*!
-       * 弹出层 id 的随机发生数
-       */
-
+      pageInfos: [],
+      poplayerInfos: []
     };
-    _this._popLayerIdRandom = 0;
-    _this._states = {};
+    _this.app.router.component = (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this));
+    _this.spePage = '/';
+    _this.prePage = '#';
+    _this.preSubPage = '|';
+    _this.speParams = ':';
+    _this.optionalParams = '?';
+    _this._locationStates = {};
     /**
      * 设置导航时是否传递之前的查询字符串到新页面
      * @type {boolean}
@@ -123,45 +117,34 @@ function (_React$Component) {
      */
 
     _this.passParams = false;
-    /**
-     * 设置页面进场动画是否显示白屏提高速度
-     * @type {boolean}
-     */
-
-    _this.transInBlank = true;
-    /**
-     * 设置页面离场动画是否显示白屏提高速度
-     * @type {boolean}
-     */
-
-    _this.transOutBlank = true;
     _this.Page = _this.app.context.consumerHoc(_this.app.Page);
     _this.Poplayer = _this.app.context.consumerHoc(_this.app.Poplayer);
-    _this._historyCount = 0;
-    _this._history = (0, _createHashHistory.default)();
+    _this.historyCount = 0;
+    _this.history = (0, _createHashHistory.default)();
 
-    _this._history.listen(function (location, action) {
-      return _this._handleLocationChange(location, action);
+    _this.history.listen(function (location, action) {
+      return _this._handleLocationChange();
     });
 
-    _this._handleLocationChange(_this._history.location, _this._history.action);
+    _this._handleLocationChange();
 
     return _this;
   }
 
   (0, _createClass2.default)(RouterComponent, [{
     key: "_handleLocationChange",
-    value: function _handleLocationChange(location, action) {
+    value: function _handleLocationChange() {
       var _this2 = this;
 
-      this.props.app.log.debug('router location', location); // this._clearError();
-
-      Object.keys(this._states).filter(function (v) {
+      var location = this.history.location;
+      var action = this.history.action;
+      RouterComponent.app.event.emit(RouterComponent.app._id, 'onLocationChange', location, action);
+      Object.keys(this._locationStates).filter(function (v) {
         return !location.pathname.startsWith(v);
       }).forEach(function (v) {
-        delete _this2._states[v];
+        delete _this2._locationStates[v];
       });
-      if (location.state) this._states[location.pathname] = location.state;
+      if (location.state) this._locationStates[location.pathname] = location.state;
       location.query = {};
       location.search.slice(1).split('&').filter(function (v) {
         return v;
@@ -169,20 +152,20 @@ function (_React$Component) {
         var vs = v.split('=');
         location.query[vs[0]] = decodeURIComponent(vs[1]);
       });
-      if (action === 'PUSH') this._historyCount++;
-      if (action === 'POP') this._historyCount = Math.max(--this._historyCount, 0);
+      if (action === 'PUSH') this.historyCount++;
+      if (action === 'POP') this.historyCount = Math.max(--this.historyCount, 0);
       var pos = 0;
       var pathnames = [];
 
       while (pos < location.pathname.length - 1) {
-        var index = location.pathname.indexOf(spe, pos + 1);
+        var index = location.pathname.indexOf(this.spePage, pos + 1);
         index = index >= 0 ? index : location.pathname.length;
         var sub = location.pathname.slice(pos + 1, index);
 
-        if (pos === 0 && sub[0] === ParamSpe || this.props.app.router.getRouteByPageName(spe + sub.split(ParamSpe)[0]).length) {
-          pathnames.push(spe + sub);
+        if (pos === 0 && sub[0] === this.speParams || RouterComponent.app.router.getRouteByPageName(this.spePage + sub.split(this.speParams)[0]).length) {
+          pathnames.push(this.spePage + sub);
         } else if (pos === 0) {
-          pathnames.push(spe);
+          pathnames.push(this.spePage);
           pathnames.push(sub);
         } else {
           pathnames.push(sub);
@@ -191,49 +174,46 @@ function (_React$Component) {
         pos = index;
       }
 
-      if (!pathnames.length) pathnames.push(spe);
+      if (!pathnames.length) pathnames.push(this.spePage);
       location.pathnames = pathnames;
 
       if (location.ignore) {
         location.ignore = false;
-        return;
+      } else {
+        this._updateRouterInfo();
       }
-
-      this._updateRouterInfo(location);
     }
   }, {
     key: "_updateRouterInfo",
     value: function () {
       var _updateRouterInfo2 = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
-      _regenerator.default.mark(function _callee(location) {
+      _regenerator.default.mark(function _callee() {
         var _this3 = this;
 
-        var router, pathName, _idPrev, params, pageInfos, isPop, isFirst, prevActive, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, _i, pageInfo, _block, poplayers;
+        var location, router, pathName, _idPrev, params, pageInfos, isPop, isFirst, prevActive, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, aprevActive, _i, pageInfo, _block;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                router = this.props.app.router;
+                location = this.history.location;
+                router = RouterComponent.app.router;
 
                 if (Object.keys(router.getRoutes()).length) {
-                  _context.next = 3;
+                  _context.next = 4;
                   break;
                 }
 
                 return _context.abrupt("return");
 
-              case 3:
+              case 4:
                 pathName = '';
                 params = {};
                 pageInfos = [];
-                /* route */
-
-                console.log(999);
-                isPop = this._history.action === 'POP';
-                isFirst = this.state._pageInfos.length === 0;
-                prevActive = this.state._pageInfos[this.state._pageInfos.length - 1];
+                isPop = this.history.action === 'POP';
+                isFirst = this.state.pageInfos.length === 0;
+                prevActive = this.state.pageInfos[this.state.pageInfos.length - 1];
                 if (prevActive && prevActive.isInactive) prevActive = undefined;
                 level = 0;
                 _iteratorNormalCompletion = true;
@@ -246,12 +226,12 @@ function (_React$Component) {
                   var isLast = pagePathName === location.pathnames[location.pathnames.length - 1];
                   pathName = (0, _path.join)(pathName, decodeURIComponent(pagePathName));
 
-                  var _pagePathName$split = pagePathName.split(ParamSpe),
+                  var _pagePathName$split = pagePathName.split(_this3.speParams),
                       _pagePathName$split2 = (0, _toArray2.default)(_pagePathName$split),
                       pageName = _pagePathName$split2[0],
                       pageParams = _pagePathName$split2.slice(1);
 
-                  var _id = PageSign + pathName;
+                  var _id = _this3.prePage + pathName;
 
                   var pageInfo = {
                     _id: _id,
@@ -263,7 +243,7 @@ function (_React$Component) {
                     isSubPage: false,
                     isActive: isLast,
                     query: location.query,
-                    state: _this3._states[pathName],
+                    state: _this3._locationStates[pathName],
                     pageParams: pageParams,
                     hash: location.hash ? location.hash.slice(1) : '',
                     subPageInfos: {}
@@ -275,45 +255,42 @@ function (_React$Component) {
                       routeDefine = _router$getRouteByPag2[1];
 
                   if (!routeName || !routeDefine) return {
-                    v: _this3.props.app.event.emit(_this3.app._id, 'onRouteErrorNoRoute', pageInfo.pageName, pageInfo, location)
+                    v: RouterComponent.app.event.emit(RouterComponent.app._id, 'onRouteError', pageInfo.pageName, pageInfo, location)
                   };
                   pageInfo.routeName = routeName;
                   pageInfo.routeDefine = routeDefine;
-                  pageInfo.routeParams = routeName.split(ParamSpe).slice(1);
+                  pageInfo.routeParams = routeName.split(_this3.speParams).slice(1);
                   pageInfo.params = _this3.passParams ? (0, _objectSpread2.default)({}, params) : {};
                   pageInfo.routeParams.forEach(function (v, i) {
-                    var optional = v.endsWith(ParamOptional);
+                    var optional = v.endsWith(_this3.optionalParams);
                     if (optional) v = v.slice(0, -1);
-                    if (!optional && i > pageInfo.pageParams.length - 1) return _this3.app.event.emit(_this3.app._id, 'onRouteErrorNoParam', v, pageInfo, location);
+                    if (!optional && i > pageInfo.pageParams.length - 1) return _this3.app.event.emit(RouterComponent.app._id, 'onRouteError', v, pageInfo, location);
                     pageInfo.params[v] = pageInfo.pageParams[i] ? decodeURIComponent(pageInfo.pageParams[i]) : null;
                     if (_this3.passParams) params[v] = pageInfo.params[v];
                   });
 
-                  var prevOne = _this3.state._pageInfos.find(function (vv) {
+                  var prevOne = _this3.state.pageInfos.find(function (vv) {
                     return vv._id === pageInfo._id;
                   });
 
                   var isNew = !prevOne;
                   var isPrevActive = prevActive && pageInfo._id === prevActive._id && !isLast;
-                  var isReactive = prevActive && pageInfo._id !== prevActive._id && isLast;
-                  var status = void 0;
+                  var isReactive = isLast && prevOne && (!prevActive || pageInfo._id !== prevActive._id);
 
                   if (isFirst) {
-                    status = isLast ? 'normal' : 'waitting';
+                    pageInfo.status = isLast ? 'normal' : 'waitting';
                   } else if (isNew && isLast) {
-                    status = isPop ? 'popin' : 'pushin';
+                    pageInfo.status = isPop ? 'popin' : 'pushin';
                   } else if (isNew && !isLast) {
-                    status = 'waitting';
+                    pageInfo.status = 'waitting';
                   } else if (isPrevActive) {
-                    status = isPop ? 'popout' : 'pushout';
+                    pageInfo.status = isPop ? 'popout' : 'pushout';
                   } else if (isReactive) {
-                    status = 'popin';
+                    pageInfo.status = 'popin';
                   } else {
-                    status = isLast ? 'normal' : 'background';
+                    pageInfo.status = isLast ? 'normal' : 'background';
                   }
 
-                  pageInfo.status = status;
-                  console.log(pageInfo._id, status);
                   var subNo = 0;
                   var _iteratorNormalCompletion2 = true;
                   var _didIteratorError2 = false;
@@ -331,7 +308,7 @@ function (_React$Component) {
                       subPageInfo._idParent = subPageInfo._id;
                       subPageInfo._idSubPage = k;
                       subPageInfo.subNo = subNo;
-                      subPageInfo._id = subPageInfo._id + SubPageSpe + subPageInfo._idSubPage;
+                      subPageInfo._id = subPageInfo._id + _this3.preSubPage + subPageInfo._idSubPage;
                       subPageInfo.pageName = v;
                       subPageInfo.isSubPage = true;
                       subPageInfo.subPageInfos = {};
@@ -342,7 +319,7 @@ function (_React$Component) {
                           routeDefineSubPage = _router$getRouteByPag4[1];
 
                       if (!routeNameSubPage || !routeDefineSubPage) return {
-                        v: _this3.props.app.event.emit(_this3.app._id, 'onRouteErrorNoRoute', subPageInfo.pageName, subPageInfo, location)
+                        v: RouterComponent.app.event.emit(RouterComponent.app._id, 'onRouteError', subPageInfo.pageName, subPageInfo, location)
                       };
                       subPageInfo.routeName = routeNameSubPage;
                       subPageInfo.routeDefine = routeDefineSubPage;
@@ -426,55 +403,59 @@ function (_React$Component) {
                 return _context.finish(31);
 
               case 39:
+                if (prevActive) {
+                  aprevActive = pageInfos.find(function (v) {
+                    return v._id === prevActive._id;
+                  });
+
+                  if (aprevActive) {
+                    aprevActive.isActive = false;
+                    aprevActive.isInactive = true;
+                  } else {
+                    prevActive.isActive = false;
+                    prevActive.isInactive = true;
+                    pageInfos.unshift(prevActive);
+                  }
+                }
+
                 _i = 0;
 
-              case 40:
+              case 41:
                 if (!(_i < pageInfos.length)) {
-                  _context.next = 50;
+                  _context.next = 51;
                   break;
                 }
 
                 pageInfo = pageInfos[_i];
-                _context.next = 44;
-                return this.props.app.event.emit(this.props.app._id, 'onRouteMatch', pageInfo, location);
+                _context.next = 45;
+                return RouterComponent.app.event.emit(RouterComponent.app._id, 'onRouteMatch', pageInfo, location);
 
-              case 44:
+              case 45:
                 _block = _context.sent;
 
                 if (!_block) {
-                  _context.next = 47;
+                  _context.next = 48;
                   break;
                 }
 
                 return _context.abrupt("return", router.block(_block));
 
-              case 47:
+              case 48:
                 _i++;
-                _context.next = 40;
+                _context.next = 41;
                 break;
 
-              case 50:
-                /* inactive */
-                if (prevActive) {
-                  prevActive.isActive = false;
-                  prevActive.isInactive = true;
-                  if (!pageInfos.find(function (v) {
-                    return v._id === prevActive._id;
-                  })) pageInfos.unshift(prevActive);
-                }
-
-                poplayers = this.state._popLayerInfos;
-                poplayers = poplayers.filter(function (v) {
-                  return !v.options._idPage || pageInfos.find(function (vv) {
-                    return vv._id === v.options._idPage;
-                  });
-                });
+              case 51:
                 this.setState({
-                  _pageInfos: pageInfos,
-                  _poplayers: poplayers
+                  pageInfos: pageInfos,
+                  poplayerInfos: this.state.poplayerInfos.filter(function (v) {
+                    return !v.options._idPage || pageInfos.find(function (vv) {
+                      return vv._id === v.options._idPage;
+                    });
+                  })
                 });
 
-              case 54:
+              case 52:
               case "end":
                 return _context.stop();
             }
@@ -482,7 +463,7 @@ function (_React$Component) {
         }, _callee, this, [[15, 27, 31, 39], [32,, 34, 38]]);
       }));
 
-      return function _updateRouterInfo(_x) {
+      return function _updateRouterInfo() {
         return _updateRouterInfo2.apply(this, arguments);
       };
     }()
@@ -491,22 +472,26 @@ function (_React$Component) {
     value: function _pageTransform() {
       var _this4 = this;
 
-      var app = this.props.app;
-      var page = app.Page.getPage();
+      var page = RouterComponent.app.Page.getPage();
       var status = page && page.status;
       if (status !== 'normal') requestAnimationFrame(function () {
-        return _this4._updateRouterInfo(_this4._history.location);
+        return _this4._updateRouterInfo(_this4.history.location);
       });
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
-      this._pageTransform();
+      !this.state.error && this._pageTransform();
     }
   }, {
     key: "componentDidCatch",
     value: function componentDidCatch(error, info) {
-      debugger;
+      this.setState({
+        error: {
+          message: error,
+          data: info
+        }
+      });
     }
   }, {
     key: "render",
@@ -514,9 +499,12 @@ function (_React$Component) {
       var _this5 = this;
 
       var _this$state = this.state,
-          _pageInfos = _this$state._pageInfos,
-          _popLayerInfos = _this$state._popLayerInfos;
-      return _react.default.createElement(_react.default.Fragment, null, _pageInfos.map(function (v) {
+          pageInfos = _this$state.pageInfos,
+          poplayerInfos = _this$state.poplayerInfos,
+          error = _this$state.error;
+      return _react.default.createElement(_react.default.Fragment, null, error ? _react.default.createElement(RouterComponent.app.router.ComponentError, (0, _extends2.default)({
+        RouterError: true
+      }, error)) : null, !error && pageInfos.map(function (v) {
         return _react.default.createElement(_this5.Page, (0, _extends2.default)({
           key: v._id
         }, v), Object.entries(v.subPageInfos).reduce(function (vv1, _ref) {
@@ -529,7 +517,7 @@ function (_React$Component) {
           }, vv2));
           return vv1;
         }, {}));
-      }), _popLayerInfos.map(function (v) {
+      }), !error && poplayerInfos.map(function (v) {
         return _react.default.createElement(_this5.Poplayer, (0, _extends2.default)({
           key: v.options._id
         }, v));

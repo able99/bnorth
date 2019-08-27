@@ -137,7 +137,7 @@ export default {
   _id: 'cordova',
   _dependencies: 'browser',
 
-  onPluginMount(app, plugin, options) {
+  _onStart(app, plugin, options) {
     app.Cordova = Cordova;
     app.cordova = new Cordova(app, plugin._id, options);
     app.cordova._oldRouterBack = app.router.back;
@@ -150,7 +150,7 @@ export default {
     }
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     app.router.back = app.cordova._oldRouterBack;
     delete app.Cordova;
     delete app.cordova;

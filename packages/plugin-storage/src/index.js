@@ -120,7 +120,7 @@ class Storage {
 let storage = {
   _id: 'storage',
 
-  onPluginMount(app, plugin, options) {
+  _onStart(app, plugin, options) {
     /**
      * 为 App 实例增加存储管理类
      * @memberof module:index.storage
@@ -144,7 +144,7 @@ let storage = {
     app.storageSession = new app.Storage(app,  plugin._id, options, true);
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     delete app.Storage;
     delete app.storage;
     delete app.storageSession;

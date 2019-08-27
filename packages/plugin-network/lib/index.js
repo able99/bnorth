@@ -228,10 +228,10 @@ Network.Options = {
  * @exportdefault
  */
 
-var network = function network(app, options) {
+var network = function network(app, plugin, options) {
   return {
     _id: 'network',
-    onPluginMount: function onPluginMount(app, plugin) {
+    _onStart: function _onStart() {
       /**
        * 为 App 实例增加网络通讯操作类
        * @memberof module:index.network
@@ -248,7 +248,7 @@ var network = function network(app, options) {
 
       app.network = new Network(app, plugin._id, options);
     },
-    onPluginUnmount: function onPluginUnmount(app) {
+    _onStop: function _onStop() {
       delete app.Network;
       delete app.network;
     }

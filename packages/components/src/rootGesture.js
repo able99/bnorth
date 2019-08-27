@@ -110,7 +110,7 @@ function setScrollEdgeShadow(edgeShadow, direction, scrollOver, root) {
 export default {
   _id: 'rootGesture',
 
-  onPluginMount(app) {
+  _onStart(app) {
     app.rootGesture = {};
 
     app.rootGesture.init = function(root) {
@@ -180,7 +180,7 @@ export default {
     }
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     app.rootGesture.close();
     app.rootGesture = null;
   },

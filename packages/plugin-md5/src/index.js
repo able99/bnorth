@@ -12,7 +12,7 @@ import jsmd5 from 'js-md5';
 let md5 = {
   _id: 'md5',
 
-  onPluginMount(app) {
+  _onStart(app) {
     /**
      * md5 编码
      * @memberof module:index.md5
@@ -23,7 +23,7 @@ let md5 = {
     app.utils.md5 = (str)=>jsmd5(str);
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     delete app.utils.md5;
   },
 }

@@ -329,10 +329,10 @@ class Browser {
  * @plugin 
  * @exportdefault
  */
-let browser = (app,options={})=>({
+let browser = {
   _id: 'browser',
 
-  onPluginMount(app, plugin) {
+  _onStart(app, plugin, options) {
     /**
      * 为 App 实例增加浏览器操作类
      * @memberof module:index.browser
@@ -361,12 +361,12 @@ let browser = (app,options={})=>({
     }
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     app.event.off(app.browser._id);
     delete app.Browser;
     delete app.browser;
   },
-})
+}
 
 
 export default browser;

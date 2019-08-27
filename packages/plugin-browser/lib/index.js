@@ -431,45 +431,41 @@ function () {
  */
 
 
-var browser = function browser(app) {
-  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  return {
-    _id: 'browser',
-    onPluginMount: function onPluginMount(app, plugin) {
-      /**
-       * 为 App 实例增加浏览器操作类
-       * @memberof module:index.browser
-       * @type {module:index~Browser}
-       * @mount app.Browser
-       */
-      app.Browser = Browser;
-      /**
-       * 为 App 实例增加浏览器操作实例
-       * @memberof module:index.browser
-       * @type {module:index~Browser}
-       * @mount app.browser
-       */
+var browser = {
+  _id: 'browser',
+  _onStart: function _onStart(app, plugin, options) {
+    /**
+     * 为 App 实例增加浏览器操作类
+     * @memberof module:index.browser
+     * @type {module:index~Browser}
+     * @mount app.Browser
+     */
+    app.Browser = Browser;
+    /**
+     * 为 App 实例增加浏览器操作实例
+     * @memberof module:index.browser
+     * @type {module:index~Browser}
+     * @mount app.browser
+     */
 
-      app.browser = new Browser(app, plugin._id, options);
-      if (options.titleIframeSrc !== false) options.titleIframeSrc = options.titleIframeSrc || 'logo.png';
-      if (options.defaultTitle) app.browser._defaultTitle = options.defaultTitle;
+    app.browser = new Browser(app, plugin._id, options);
+    if (options.titleIframeSrc !== false) options.titleIframeSrc = options.titleIframeSrc || 'logo.png';
+    if (options.defaultTitle) app.browser._defaultTitle = options.defaultTitle;
 
-      if (options.autoTitle) {
-        app.event.on(app._id, 'onActivePageChange', function (_idPage) {
-          if (!app.browser._defaultTitle) app.browser._defaultTitle = app.browser.title;
-          var page = app.Page.getPage(_idPage);
-          if (page && page.props.info.title === false) return;
-          app.browser.title = page && page.info.routeDefine.title || app.browser._defaultTitle;
-        }, app.browser._id);
-      }
-    },
-    onPluginUnmount: function onPluginUnmount(app) {
-      app.event.off(app.browser._id);
-      delete app.Browser;
-      delete app.browser;
+    if (options.autoTitle) {
+      app.event.on(app._id, 'onActivePageChange', function (_idPage) {
+        if (!app.browser._defaultTitle) app.browser._defaultTitle = app.browser.title;
+        var page = app.Page.getPage(_idPage);
+        if (page && page.props.info.title === false) return;
+        app.browser.title = page && page.info.routeDefine.title || app.browser._defaultTitle;
+      }, app.browser._id);
     }
-  };
+  },
+  _onStop: function _onStop(app) {
+    app.event.off(app.browser._id);
+    delete app.Browser;
+    delete app.browser;
+  }
 };
-
 var _default = browser;
 exports.default = _default;

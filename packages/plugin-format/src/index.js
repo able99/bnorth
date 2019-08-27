@@ -148,7 +148,7 @@ Format.options = {
 let format = {
   _id: 'format',
 
-  onPluginMount(app, plugin, options) {
+  _onStart(app, plugin, options) {
     /**
      * 为 App 实例增加格式化操作类
      * @memberof module:index.format
@@ -165,7 +165,7 @@ let format = {
     app.format = new Format(app, plugin._id, options);
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     delete app.Foramt;
     delete app.format;
   },

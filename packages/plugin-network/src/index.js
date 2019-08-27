@@ -210,10 +210,10 @@ Network.Options = {
  * @plugin 
  * @exportdefault
  */
-let network = (app, options)=>({
+let network = (app, plugin, options)=>({
   _id: 'network',
 
-  onPluginMount: (app,plugin)=>{
+  _onStart: ()=>{
     /**
      * 为 App 实例增加网络通讯操作类
      * @memberof module:index.network
@@ -230,7 +230,7 @@ let network = (app, options)=>({
     app.network = new Network(app, plugin._id, options);
   },
 
-  onPluginUnmount: app=>{
+  _onStop: ()=>{
     delete app.Network;
     delete app.network;
   },

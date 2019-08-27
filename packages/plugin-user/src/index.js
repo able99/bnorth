@@ -179,7 +179,7 @@ export default app=>({
   _id: 'user',
   _dependencies: ['request', 'storage'],
 
-  onPluginMount(app, plugin, options) {
+  _onStart(app, plugin, options) {
     app.User = User;
     app.user = new User(app, plugin._id, options);
     // app.UserState = class Request extends app.Request {
@@ -198,7 +198,7 @@ export default app=>({
     // }
   },
 
-  onPluginUnmount(app) {
+  _onStop(app) {
     delete app.User;
     delete app.user;
   },

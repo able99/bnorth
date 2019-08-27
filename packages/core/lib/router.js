@@ -35,6 +35,10 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 
 var _router = _interopRequireDefault(require("./router.component"));
 
+var _router2 = _interopRequireDefault(require("./router.error"));
+
+var _router3 = _interopRequireDefault(require("./router.loader"));
+
 /**
  * @module
  */
@@ -198,8 +202,13 @@ function () {
      * 路由描画组件，是所有页面和弹出层的父组件
      */
 
+    _router.default.app = app;
     this.Component = _router.default;
     this.component = null;
+    _router2.default.app = app;
+    this.ComponentError = _router2.default;
+    _router3.default.app = app;
+    this.ComponentLoader = _router3.default;
     /*!
      * 路由集合
      */
@@ -342,7 +351,7 @@ function () {
   }, {
     key: "getHistoryCount",
     value: function getHistoryCount() {
-      return this._historyCount;
+      return this.component.historyCount;
     }
     /**
      * 判断是否在根页面
@@ -352,7 +361,7 @@ function () {
   }, {
     key: "isRootPath",
     value: function isRootPath() {
-      return this.app.router._pageInfos[this.app.router._pageInfos.length - 1].name === '/';
+      return this.getPageInfos().slice(-1)[0].name === '/';
     } // router navigator interface
     // ----------------------------------------
 
@@ -367,11 +376,11 @@ function () {
       this.app.log.debug('router block', _block);
 
       if (typeof _block === 'function') {
-        this._block = this._history.location;
+        this._block = this.history.location;
         _block = _block(this.app);
         this._block = _block || this._block;
       } else {
-        this._block = _block || this._history.location;
+        this._block = _block || this.history.location;
       }
 
       return true;
@@ -385,7 +394,7 @@ function () {
     key: "restore",
     value: function restore(location) {
       this.app.log.debug('router restore', location);
-      location || this._block ? this._history.replace(location || this._block) : this.replaceRoot();
+      location || this._block ? this.history.replace(location || this._block) : this.replaceRoot();
       this._block = null;
       return true;
     }
@@ -407,8 +416,7 @@ function () {
       var state;
       var hash;
       var ignore;
-
-      var pathnames = this.component.state._pageInfos.map(function (v) {
+      var pathnames = this.component.state.pageInfos.map(function (v) {
         return v.pagePathName;
       });
 
@@ -446,8 +454,8 @@ function () {
         pathname: pathnames.map(function (v, i, a) {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
-        state: this.passState ? (0, _objectSpread2.default)({}, this._history.location.state, state) : state,
-        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this._history.location.query, query) : query).map(function (_ref5) {
+        state: this.passState ? (0, _objectSpread2.default)({}, this.history.location.state, state) : state,
+        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this.history.location.query, query) : query).map(function (_ref5) {
           var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
               k = _ref6[0],
               v = _ref6[1];
@@ -467,7 +475,7 @@ function () {
   }, {
     key: "getPathName",
     value: function getPathName() {
-      return this.component._history.createHref(this.getPathInfo.apply(this, arguments));
+      return this.component.history.createHref(this.getPathInfo.apply(this, arguments));
     }
     /**
      * 获取 url，但不跳转或者替换，参数参见 getPathInfo
@@ -490,9 +498,7 @@ function () {
       }
 
       this.app.log.debug('router push', args);
-
-      this.component._history.push(this.getPathInfo.apply(this, args));
-
+      this.component.history.push(this.getPathInfo.apply(this, args));
       return true;
     }
     /**
@@ -507,9 +513,7 @@ function () {
       }
 
       this.app.log.debug('router replace', args);
-
-      this.component._history.replace(this.getPathInfo.apply(this, args));
-
+      this.component.history.replace(this.getPathInfo.apply(this, args));
       return true;
     }
     /**
@@ -522,9 +526,7 @@ function () {
     value: function back() {
       var step = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       this.app.log.debug('router back');
-
-      this.component._history.go(-step);
-
+      this.component.history.go(-step);
       return true;
     }
     /**
@@ -576,25 +578,25 @@ function () {
   }, {
     key: "getPageInfos",
     value: function getPageInfos() {
-      return this.component && this.component.state._pageInfos || [];
+      return this.component && this.component.state.pageInfos || [];
     }
   }, {
     key: "setPageInfos",
-    value: function setPageInfos(_pageInfos) {
+    value: function setPageInfos(pageInfos) {
       return this.component && this.component.setState({
-        _pageInfos: _pageInfos
+        pageInfos: pageInfos
       });
     }
   }, {
     key: "getPoplayerInfos",
     value: function getPoplayerInfos() {
-      return this.component && this.component.state._popLayerInfos || [];
+      return this.component && this.component.state.poplayerInfos || [];
     }
   }, {
     key: "setPoplayerInfos",
-    value: function setPoplayerInfos(_popLayerInfos) {
+    value: function setPoplayerInfos(poplayerInfos) {
       return this.component && this.component.setState({
-        _popLayerInfos: _popLayerInfos
+        poplayerInfos: poplayerInfos
       });
     }
   }, {

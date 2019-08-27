@@ -219,7 +219,7 @@ var wechat = function wechat(app) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return {
     _id: 'wechat',
-    onPluginMount: function onPluginMount(app, plugin) {
+    _onStart: function _onStart(app, plugin) {
       /**
        * 为 App 实例增加微信操作类
        * @memberof module:wecaht.wechat
@@ -236,7 +236,7 @@ var wechat = function wechat(app) {
 
       app.wechat = new Wechat(app, plugin._id, options);
     },
-    onPluginUnmount: function onPluginUnmount(app) {
+    _onStop: function _onStop(app) {
       app.event.off(app.wechat._id);
       delete app.Wechat;
       delete app.wechat;

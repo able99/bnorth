@@ -20,7 +20,7 @@ var _hiBase = _interopRequireDefault(require("hi-base64"));
  */
 var base64 = {
   _id: 'base64',
-  onPluginMount: function onPluginMount(app) {
+  _onStart: function _onStart(app) {
     /**
      * base64 编码
      * @memberof module:index.base64
@@ -44,7 +44,7 @@ var base64 = {
       return _hiBase.default.decode(str, asciiOnly);
     };
   },
-  onPluginUnmount: function onPluginUnmount(app) {
+  _onStop: function _onStop(app) {
     delete app.utils.base64encode;
     delete app.utils.base64decode;
   }

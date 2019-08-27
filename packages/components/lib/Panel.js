@@ -667,9 +667,9 @@ var _InnerScroll =
 function (_React$Component2) {
   (0, _inherits2.default)(InnerScroll, _React$Component2);
 
-  function InnerScroll(props) {
+  function InnerScroll() {
     (0, _classCallCheck2.default)(this, InnerScroll);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(InnerScroll).call(this, props));
+    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(InnerScroll).apply(this, arguments));
   }
 
   (0, _createClass2.default)(InnerScroll, [{

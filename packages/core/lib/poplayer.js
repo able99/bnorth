@@ -90,9 +90,9 @@ function (_React$Component) {
       var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
       // todo: poplayer option state,action
       options._id = options._id || "".concat(++Poplayer._IdRandom, "@").concat(options._idPage ? options._idPage : '#');
-      var popLayer = Poplayer.getPoplayerInfo(options._id);
+      var poplayer = Poplayer.getPoplayerInfo(options._id);
 
-      if (!popLayer) {
+      if (!poplayer) {
         if (!content) return;
         Poplayer.app.router.setPoplayerInfos((0, _toConsumableArray2.default)(Poplayer.app.router.getPoplayerInfos()).concat([{
           content: content,
@@ -100,9 +100,9 @@ function (_React$Component) {
           options: options
         }]));
       } else {
-        content && (popLayer.content = content);
-        popLayer.props = (0, _objectSpread2.default)({}, popLayer.props, props);
-        popLayer.options = (0, _objectSpread2.default)({}, popLayer.options, options);
+        content && (poplayer.content = content);
+        poplayer.props = (0, _objectSpread2.default)({}, poplayer.props, props);
+        poplayer.options = (0, _objectSpread2.default)({}, poplayer.options, options);
         Poplayer.app.router.refresh();
       }
 

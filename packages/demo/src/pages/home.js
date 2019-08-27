@@ -5,7 +5,7 @@ import List from '../components/list'
 
 let Component = props=>{
   let { app } = props;
-  console.log('test', 'render', props.stateData);
+  // console.log('test', 'render', props.stateData);
   return (
     <div className="bg-color-white width-full height-full flex-display-block flex-direction-v">
       <NavBar title="bnorth demo" />
@@ -46,10 +46,10 @@ let Component = props=>{
 };
 
 Component.controller = {
-  _onStart: ()=>console.log('test', 'onPageStart'),
-  _onStop: ()=>console.log('test', 'onPageSop'),
-  _onActive: ()=>console.log('test', 'onPageActive'),
-  _onInactive: ()=>console.log('test', 'onPageInactive'),
+  // _onStart: ()=>console.log('test', 'onPageStart'),
+  // _onStop: ()=>console.log('test', 'onPageSop'),
+  // _onActive: ()=>console.log('test', 'onPageActive'),
+  // _onInactive: ()=>console.log('test', 'onPageInactive'),
 }
 
 export default Component;

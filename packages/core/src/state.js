@@ -99,7 +99,7 @@ class State {
   }
 
   static detachStates(modulee, options) {
-    options.forEach(([k,v])=>modulee[k]&&modulee[k].destructor());
+    options.forEach(([k,v])=>modulee[k]&&modulee[k].destructor(typeof v !== 'string'));
   }
 
   static checkStates(modulee, context, nextContext, options) {
@@ -126,6 +126,7 @@ class State {
    * 不用于直接构造，而是通过定义拥有者定义数据单元声明对象，由拥有者通过数据单元构建函数构造
    */
   constructor(_id, options={}, ownerId) {
+    this.app = State.app;
     /**
      * 数据单元的 id
      * @type {string}
@@ -148,11 +149,12 @@ class State {
     this.options._onStart&&this.options._onStart();
   }
 
-  destructor() {
+  destructor(remove) {
     State.app.event.emit(null, 'onStateStop', this._id);
     this.options._onStart&&this.options._onStart();
     State.app.event.off(this._id);
     if(this.options.cleanOnStop!==false) this.clear();
+    if(remove)delete State.states[this._id];
   }
 
   // state work

@@ -189,7 +189,7 @@ Format.options = {
 };
 var format = {
   _id: 'format',
-  onPluginMount: function onPluginMount(app, plugin, options) {
+  _onStart: function _onStart(app, plugin, options) {
     /**
      * 为 App 实例增加格式化操作类
      * @memberof module:index.format
@@ -206,7 +206,7 @@ var format = {
 
     app.format = new Format(app, plugin._id, options);
   },
-  onPluginUnmount: function onPluginUnmount(app) {
+  _onStop: function _onStop(app) {
     delete app.Foramt;
     delete app.format;
   }

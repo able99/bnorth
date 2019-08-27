@@ -234,7 +234,7 @@ Cordova.options = {
 var _default = {
   _id: 'cordova',
   _dependencies: 'browser',
-  onPluginMount: function onPluginMount(app, plugin, options) {
+  _onStart: function _onStart(app, plugin, options) {
     app.Cordova = Cordova;
     app.cordova = new Cordova(app, plugin._id, options);
     app.cordova._oldRouterBack = app.router.back;
@@ -251,7 +251,7 @@ var _default = {
       }
     };
   },
-  onPluginUnmount: function onPluginUnmount(app) {
+  _onStop: function _onStop(app) {
     app.router.back = app.cordova._oldRouterBack;
     delete app.Cordova;
     delete app.cordova;
