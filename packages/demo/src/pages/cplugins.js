@@ -25,13 +25,14 @@ export default props=>{
                 <div onClick={()=>props.app.modal.close(props._id)}>点击关闭</div>
               </div>
             ), {
-              title: 'title', close: true, 
-              onAction: (index, _id)=>{
-                alert(JSON.stringify(app.router.getPopLayerStates(_id)));
-              },
+              close: true, title: 'title',
             }, {
-              optionProps: ({stateData={}})=>({title: stateData.tick}), 
-              stateData: {initialization: {tick: 1}}
+              props: (app, _id)=>({
+                onAction: ()=>{alert(app.Poplayer.getPoplayer(_id).stateData.data().tick)},
+              }),
+              options: (app, _id)=>({
+                stateData: {initialization: {tick: 1}, _onStateUpdated:data=>app.Poplayer.addPoplayer(null, {title: data.tick}, {_id})},
+              }),
             })} />
         </List>
 

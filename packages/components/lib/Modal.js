@@ -153,11 +153,24 @@ var modal = {
           }
         }, props), (0, _objectSpread2.default)({
           _idPage: app.Page.getPage()._id,
-          isModal: true
-        }, options)); // todo keyboard
+          isModal: true,
+          _onStart: function _onStart(app, _id, poplayer) {
+            window.history.pushState(null, null, window.location.href);
+
+            poplayer._state_func = function (e) {
+              app.modal.close(_id);
+              poplayer.popstate = true;
+            };
+
+            window.addEventListener('popstate', poplayer._state_func);
+          },
+          _onStop: function _onStop(app, _id, poplayer) {
+            if (!poplayer.popstate) window.history.back();
+            window.removeEventListener('popstate', poplayer._state_func);
+          }
+        }, options));
       },
       close: function close(_id, index) {
-        // todo action
         var _ref = app.Poplayer.getPoplayerInfo(_id) || {},
             _ref$props = _ref.props;
 

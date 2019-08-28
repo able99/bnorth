@@ -165,7 +165,7 @@ export default class RouterComponent extends React.Component {
       pageInfos.push(pageInfo);
     }
 
-    if(prevActive) {
+    if(prevActive&&!this._isTransforming()) {
       let aprevActive = pageInfos.find(v=>v._id===prevActive._id);
       if(aprevActive) {
         aprevActive.isActive = false;
@@ -173,6 +173,7 @@ export default class RouterComponent extends React.Component {
       }else{
         prevActive.isActive = false;
         prevActive.isInactive = true;
+        prevActive.status = 'popout';
         pageInfos.unshift(prevActive);
       }
     }
@@ -183,6 +184,10 @@ export default class RouterComponent extends React.Component {
     }
 
     this.setState({pageInfos: pageInfos, poplayerInfos: this.state.poplayerInfos.filter(v=>!v.options._idPage||pageInfos.find(vv=>vv._id===v.options._idPage))});
+  }
+
+  _isTransforming() {
+    return this.state.pageInfos[this.state.pageInfos.length-1].status.includes('in');
   }
 
   _pageTransform() {

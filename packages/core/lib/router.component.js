@@ -9,6 +9,10 @@ exports.default = void 0;
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
 
+require("core-js/modules/es7.array.includes");
+
+require("core-js/modules/es6.string.includes");
+
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 require("core-js/modules/es7.object.entries");
@@ -403,7 +407,7 @@ function (_React$Component) {
                 return _context.finish(31);
 
               case 39:
-                if (prevActive) {
+                if (prevActive && !this._isTransforming()) {
                   aprevActive = pageInfos.find(function (v) {
                     return v._id === prevActive._id;
                   });
@@ -414,6 +418,7 @@ function (_React$Component) {
                   } else {
                     prevActive.isActive = false;
                     prevActive.isInactive = true;
+                    prevActive.status = 'popout';
                     pageInfos.unshift(prevActive);
                   }
                 }
@@ -467,6 +472,11 @@ function (_React$Component) {
         return _updateRouterInfo2.apply(this, arguments);
       };
     }()
+  }, {
+    key: "_isTransforming",
+    value: function _isTransforming() {
+      return this.state.pageInfos[this.state.pageInfos.length - 1].status.includes('in');
+    }
   }, {
     key: "_pageTransform",
     value: function _pageTransform() {

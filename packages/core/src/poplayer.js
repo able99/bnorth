@@ -25,9 +25,11 @@ class Poplayer extends React.Component {
    * @returns {string} 弹出层 id 
    */
   static addPoplayer(content, props={}, options={}) {
-    // todo: poplayer option state,action
     options._id = options._id || `${++Poplayer._IdRandom}@${options._idPage?options._idPage:'#'}`;
+    if(arguments.length===0) return options._id;
     let poplayer = Poplayer.getPoplayerInfo(options._id);
+    options = {...options, ...(options.options instanceof Function?options.options(Poplayer.app, options._id):options.options)}
+    props = {...props, ...(options.props instanceof Function?options.props(Poplayer.app, options._id):options.props)}
 
     if(!poplayer) {
       if(!content) return;
@@ -88,10 +90,12 @@ class Poplayer extends React.Component {
   }
 
   componentDidMount() {
+    this.props.options._onStart&&this.props.options._onStart(Poplayer.app, this._id, this);
     Poplayer.app.event.emit(Poplayer.app._id, 'onPoplayerStart', this._id);
   }
 
   componentWillUnmount() {
+    this.props.options._onStop&&this.props.options._onStop(Poplayer.app, this._id, this);
     Poplayer.app.event.emit(Poplayer.app._id, 'onPoplayerStop', this._id);
     Poplayer.app.State.detachStates(this, this._states);
     delete Poplayer.poplayers[this._id];
@@ -111,7 +115,7 @@ class Poplayer extends React.Component {
 
     Poplayer.app.event.emit(Poplayer.app._id, 'onPoplayerRender', _id, this.props);
     if(typeof Component!=='function') return Component;
-    let component = <Component data-poplayer={_id} app={Poplayer.app} _id={_id} poplayer={this} info={this.props} {...Poplayer.app.State.getStates(this, this._states)} {...props} />;
+    let component = <Component data-poplayer={_id} app={Poplayer.app} _id={_id} poplayer={this} info={this.props} {...Poplayer.app.State.getStates(this, this._states)} {...props} {...(options.props instanceof Function?options.props(Poplayer.app, this):options.props)} />;
 
     if(options._idPage){
       let page = Poplayer.app.Page.getPage(options._idPage);

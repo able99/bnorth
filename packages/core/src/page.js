@@ -270,7 +270,11 @@ export default class Page extends React.Component {
   // ---------------------
 
   _showStatus() {
-    return this.props.status==='normal'||this.props.status==='pushout'||this.props.status==='pushin'||this.props.status==='popout'||this.props.status==='popin';
+    return true;//this.props.status!=='waitting'&&this.props.status!=='background';
+  }
+
+  _showContentStatus() {
+    return true;//this.props.status==='normal'||this.props.status==='pushout'||this.props.status==='popout';
   }
 
   _frameProps() {
@@ -299,6 +303,6 @@ export default class Page extends React.Component {
     let contentProps = this._contentProps();
     Page.app.event.emit(Page.app._id, 'onPageRender', _id, contentProps);
     
-    return <main {...frameProps}><Component {...contentProps}>{children}</Component></main>;
+    return <main {...frameProps}>{this._showContentStatus()?<Component {...contentProps}>{children}</Component>:null}</main>;
   }
 }

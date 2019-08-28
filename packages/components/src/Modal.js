@@ -70,13 +70,23 @@ export let modal = {
       show: (content, props, options={})=>{
         return options._id = app.Poplayer.addPoplayer( Modal, 
           {children: content, onClose: index=>app.modal.close(options._id, index), ...props}, 
-          {_idPage: app.Page.getPage()._id, isModal: true, ...options}
+          {
+            _idPage: app.Page.getPage()._id, isModal: true, 
+            _onStart: (app, _id, poplayer)=>{
+              window.history.pushState(null, null, window.location.href);
+              poplayer._state_func =  e=>{app.modal.close(_id);poplayer.popstate = true}
+              window.addEventListener('popstate', poplayer._state_func);
+            },
+            _onStop: (app, _id, poplayer)=>{
+              if(!poplayer.popstate) window.history.back();
+              window.removeEventListener('popstate', poplayer._state_func);
+            },
+            ...options
+          }
         );
-        // todo keyboard
       },
       
       close: (_id, index)=>{
-        // todo action
         let {props:{onAction}={}} = app.Poplayer.getPoplayerInfo(_id)||{};
         if(onAction&&onAction(index, _id)===false) return;
         return app.modal.remove(_id);

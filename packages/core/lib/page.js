@@ -379,7 +379,12 @@ function (_React$Component) {
   }, {
     key: "_showStatus",
     value: function _showStatus() {
-      return this.props.status === 'normal' || this.props.status === 'pushout' || this.props.status === 'pushin' || this.props.status === 'popout' || this.props.status === 'popin';
+      return true; //this.props.status!=='waitting'&&this.props.status!=='background';
+    }
+  }, {
+    key: "_showContentStatus",
+    value: function _showContentStatus() {
+      return true; //this.props.status==='normal'||this.props.status==='pushout'||this.props.status==='popout';
     }
   }, {
     key: "_frameProps",
@@ -430,7 +435,7 @@ function (_React$Component) {
       var contentProps = this._contentProps();
 
       Page.app.event.emit(Page.app._id, 'onPageRender', _id, contentProps);
-      return _react.default.createElement("main", frameProps, _react.default.createElement(Component, contentProps, children));
+      return _react.default.createElement("main", frameProps, this._showContentStatus() ? _react.default.createElement(Component, contentProps, children) : null);
     }
   }]);
   return Page;

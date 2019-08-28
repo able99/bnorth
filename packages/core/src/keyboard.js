@@ -51,47 +51,20 @@ class Keyboard {
   }
 
   _handleKeyEvent(e) {
-    this.app.log.debug('keyboard trigger', e);
-    let listener = this._listeners.reverse().find(({event, callback, _id})=>(callback && e.type===event && this.app.router.isFocus(_id)));
-    if(listener) {
-      listener.callback(e);
-      return listener._id;
+    this.app.event.emit(this.app._id, 'onKeyEvent', e);
+    let poplayerInfos = this.app.router.getPoplayerInfos();
+
+    for(let poplayerInfo of [...poplayerInfos.filter(v=>v.options.isModal&&!v.options._idPage)].reverse()) {
+      let poplayer = this.app.Poplayer.getPoplayer(poplayerInfo._id); if(!poplayer) continue;
+      if(poplayer._onKeyEvent&&poplayer._onKeyEvent(e)) { e.preventDefault();e.stopPropagation();return }
     }
-  }
 
-  /**
-   * 指定 id 的目标注册键盘事件处理函数
-   * @param {string} - 目标 id
-   * @param {string} - 事件名称
-   * @param {function} - 事件处理函数 
-   * @returns {function} 注销函数
-   */
-  on(_id, event, callback) {
-    if(!event||!callback||!_id) return;
-    if(this._listeners.find(listener=>listener.event===event&&listener.callback===callback&&listener._id===_id)) return;
-    this._listeners.push({event, callback, _id});
-    return ()=>this.off(callback);
-  }
-
-  /**
-   * 注销键盘事件处理函数
-   * @param {string|function} - 目标 id 或者事件处理函数
-   */
-  off(item) {
-    if(typeof item === 'string') {
-      this._listeners.forEach((listener,i)=>{if(listener._id===item) this._listeners.splice(i,1)});
-    }else if(typeof item === 'function') {
-      let index = this._listeners.findIndex(listener=>listener.callback===item);
-      if(index>=0) this._listeners.splice(index,1);
+    let page = this.app.Page.getPage();
+    for(let poplayerInfo of [...poplayerInfos.filter(v=>v.options.isModal&&v.options._idPage===page._id)].reverse()) {
+      let poplayer = this.app.Poplayer.getPoplayer(poplayerInfo.options._id); if(!poplayer) continue;
+      if(poplayer._onKeyEvent&&poplayer._onKeyEvent(e)) { e.preventDefault();e.stopPropagation();return }
     }
-  }
-
-  /**
-   * 模拟触发指定的键盘事件
-   * @param {event} - 键盘事件 
-   */
-  emit(event) {
-    return this._handleKeyEvent(event);
+    if(page._onKeyEvent&&page._onKeyEvent(e)) { e.preventDefault();e.stopPropagation();return }
   }
 }
 

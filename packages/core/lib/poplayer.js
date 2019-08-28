@@ -23,9 +23,9 @@ require("core-js/modules/es6.array.find");
 
 require("core-js/modules/es6.array.find-index");
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
-
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
+var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -88,9 +88,11 @@ function (_React$Component) {
     value: function addPoplayer(content) {
       var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      // todo: poplayer option state,action
       options._id = options._id || "".concat(++Poplayer._IdRandom, "@").concat(options._idPage ? options._idPage : '#');
+      if (arguments.length === 0) return options._id;
       var poplayer = Poplayer.getPoplayerInfo(options._id);
+      options = (0, _objectSpread2.default)({}, options, options.options instanceof Function ? options.options(Poplayer.app, options._id) : options.options);
+      props = (0, _objectSpread2.default)({}, props, options.props instanceof Function ? options.props(Poplayer.app, options._id) : options.props);
 
       if (!poplayer) {
         if (!content) return;
@@ -177,11 +179,13 @@ function (_React$Component) {
   (0, _createClass2.default)(Poplayer, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      this.props.options._onStart && this.props.options._onStart(Poplayer.app, this._id, this);
       Poplayer.app.event.emit(Poplayer.app._id, 'onPoplayerStart', this._id);
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
+      this.props.options._onStop && this.props.options._onStop(Poplayer.app, this._id, this);
       Poplayer.app.event.emit(Poplayer.app._id, 'onPoplayerStop', this._id);
       Poplayer.app.State.detachStates(this, this._states);
       delete Poplayer.poplayers[this._id];
@@ -214,7 +218,7 @@ function (_React$Component) {
         _id: _id,
         poplayer: this,
         info: this.props
-      }, Poplayer.app.State.getStates(this, this._states), props));
+      }, Poplayer.app.State.getStates(this, this._states), props, options.props instanceof Function ? options.props(Poplayer.app, this) : options.props));
 
       if (options._idPage) {
         var page = Poplayer.app.Page.getPage(options._idPage);

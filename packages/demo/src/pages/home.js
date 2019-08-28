@@ -50,6 +50,7 @@ Component.controller = {
   // _onStop: ()=>console.log('test', 'onPageSop'),
   // _onActive: ()=>console.log('test', 'onPageActive'),
   // _onInactive: ()=>console.log('test', 'onPageInactive'),
+  _onKeyEvent: e=>{return console.log(111, e)}
 }
 
 export default Component;

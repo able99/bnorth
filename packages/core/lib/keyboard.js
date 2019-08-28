@@ -7,11 +7,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-require("core-js/modules/es6.array.find-index");
+require("core-js/modules/es7.symbol.async-iterator");
+
+require("core-js/modules/es6.symbol");
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 require("core-js/modules/web.dom.iterable");
-
-require("core-js/modules/es6.array.find");
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
@@ -80,81 +82,82 @@ function () {
   (0, _createClass2.default)(Keyboard, [{
     key: "_handleKeyEvent",
     value: function _handleKeyEvent(e) {
-      var _this2 = this;
+      this.app.event.emit(this.app._id, 'onKeyEvent', e);
+      var poplayerInfos = this.app.router.getPoplayerInfos();
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-      this.app.log.debug('keyboard trigger', e);
+      try {
+        for (var _iterator = (0, _toConsumableArray2.default)(poplayerInfos.filter(function (v) {
+          return v.options.isModal && !v.options._idPage;
+        })).reverse()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var poplayerInfo = _step.value;
+          var poplayer = this.app.Poplayer.getPoplayer(poplayerInfo._id);
+          if (!poplayer) continue;
 
-      var listener = this._listeners.reverse().find(function (_ref) {
-        var event = _ref.event,
-            callback = _ref.callback,
-            _id = _ref._id;
-        return callback && e.type === event && _this2.app.router.isFocus(_id);
-      });
-
-      if (listener) {
-        listener.callback(e);
-        return listener._id;
+          if (poplayer._onKeyEvent && poplayer._onKeyEvent(e)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
-    }
-    /**
-     * 指定 id 的目标注册键盘事件处理函数
-     * @param {string} - 目标 id
-     * @param {string} - 事件名称
-     * @param {function} - 事件处理函数 
-     * @returns {function} 注销函数
-     */
 
-  }, {
-    key: "on",
-    value: function on(_id, event, callback) {
-      var _this3 = this;
+      var page = this.app.Page.getPage();
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
-      if (!event || !callback || !_id) return;
-      if (this._listeners.find(function (listener) {
-        return listener.event === event && listener.callback === callback && listener._id === _id;
-      })) return;
+      try {
+        for (var _iterator2 = (0, _toConsumableArray2.default)(poplayerInfos.filter(function (v) {
+          return v.options.isModal && v.options._idPage === page._id;
+        })).reverse()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var _poplayerInfo = _step2.value;
 
-      this._listeners.push({
-        event: event,
-        callback: callback,
-        _id: _id
-      });
+          var _poplayer = this.app.Poplayer.getPoplayer(_poplayerInfo.options._id);
 
-      return function () {
-        return _this3.off(callback);
-      };
-    }
-    /**
-     * 注销键盘事件处理函数
-     * @param {string|function} - 目标 id 或者事件处理函数
-     */
+          if (!_poplayer) continue;
 
-  }, {
-    key: "off",
-    value: function off(item) {
-      var _this4 = this;
-
-      if (typeof item === 'string') {
-        this._listeners.forEach(function (listener, i) {
-          if (listener._id === item) _this4._listeners.splice(i, 1);
-        });
-      } else if (typeof item === 'function') {
-        var index = this._listeners.findIndex(function (listener) {
-          return listener.callback === item;
-        });
-
-        if (index >= 0) this._listeners.splice(index, 1);
+          if (_poplayer._onKeyEvent && _poplayer._onKeyEvent(e)) {
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
       }
-    }
-    /**
-     * 模拟触发指定的键盘事件
-     * @param {event} - 键盘事件 
-     */
 
-  }, {
-    key: "emit",
-    value: function emit(event) {
-      return this._handleKeyEvent(event);
+      if (page._onKeyEvent && page._onKeyEvent(e)) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
     }
   }]);
   return Keyboard;

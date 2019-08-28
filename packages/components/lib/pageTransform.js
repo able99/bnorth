@@ -39,40 +39,37 @@ var PageTransform = {
         value: function _pageTransform() {
           var _this = this;
 
+          if (!this._isTransforming()) return;
           var app = this.props.app;
           var page = app.Page.getPage();
-          var status = page && page.status;
+          var deactivePageInfo = this.state.pageInfos.find(function (v) {
+            return v.isInactive;
+          });
+          var deactivePage = deactivePageInfo && app.Page.getPage(deactivePageInfo._id);
+          var time = new Date().getTime();
+          var finish = false;
 
-          if (status !== 'normal') {
-            var deactivePageInfo = this.state.pageInfos.find(function (v) {
-              return v.isInactive;
-            });
-            var deactivePage = deactivePageInfo && app.Page.getPage(deactivePageInfo._id);
-            var time = new Date().getTime();
-            var finish = false;
+          var _run = function _run() {
+            if (finish) {
+              _this._updateRouterInfo();
 
-            var _run = function _run() {
-              if (finish) {
-                _this._updateRouterInfo();
+              return;
+            }
 
-                return;
-              }
+            var diff = new Date().getTime() - time;
+            var percent = diff * 100 / 300;
 
-              var diff = new Date().getTime() - time;
-              var percent = diff * 100 / 300;
+            if (percent >= 100) {
+              percent = 100;
+              finish = true;
+            }
 
-              if (percent >= 100) {
-                percent = 100;
-                finish = true;
-              }
+            page.dom.style.webkitTransform = "translate3d(" + (page.status === 'pushin' ? 100 - percent : percent - 100) + "%, 0, 0)";
+            deactivePage && (deactivePage.dom.style.webkitTransform = "translate3d(" + (deactivePageInfo.status === 'popout' ? 1 : -1) * percent + "%, 0, 0)");
+            requestAnimationFrame(_run);
+          };
 
-              page.dom.style.webkitTransform = "translate3d(" + (status === 'pushin' ? 100 - percent : percent - 100) + "%, 0, 0)";
-              deactivePage && (deactivePage.dom.style.webkitTransform = "translate3d(" + (status === 'pushout' ? 1 : -1) * percent + "%, 0, 0)");
-              requestAnimationFrame(_run);
-            };
-
-            _run();
-          }
+          _run();
         }
       }]);
       return _class;
