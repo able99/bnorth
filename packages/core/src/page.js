@@ -174,12 +174,12 @@ export default class Page extends React.Component {
    * @param {string} - 子页面名称 
    * @returns {module:page.Page} 子页面实例
    */
-  getSubPage(subName) { Page.getPage(this.props.subPageInfos[subName]&&this.props.subPageInfos[subName]._id) }
+  getSubPage(subName) { return Page.getPage(this.props.subPageInfos[subName]&&this.props.subPageInfos[subName]._id) }
   /**
    * 子页面获取父页面的实例
    * @returns {module:page.Page} 父页面实例
    */
-  getParrentPage() { Page.getPage(this.props._idParent) }
+  getParrentPage() { return Page.getPage(this.props._idParent) }
 
   /**
    * 页面获取前一页面的实例
@@ -215,27 +215,28 @@ export default class Page extends React.Component {
     if(this._started) return;
     let { _id } = this.props;
     let active = this.active;
-    active&&Page.app.event.emit(Page.app._id, 'onPageStart', _id, true);
-    this._onStart&&this._onStart(active);
+    Page.app.event.emit(Page.app._id, 'onPageStart', _id, active);
+    this._onStart&&this._onStart(Page.app, this, active);
     active&&Page.app.event.emit(Page.app._id, 'onPageActive', _id, true);
-    active&&this._onActive&&this._onActive(true);
+    active&&this._onActive&&this._onActive(Page.app, this, true);
     this._started = true;
   }
 
   _pageActive() {
     Page.app.event.emit(Page.app._id, 'onPageActive', this._id, true);
-    this._onActive&&this._onActive();
+    this._onActive&&this._onActive(Page.app, this, false);
   }
 
   _pageInactive() {
-    this._onInactive&&this._onInactive(false);
+    this._onInactive&&this._onInactive(Page.app, this, false);
   }
 
   _pageStop() {
     let { _id } = this.props;
     let active = this.active;
+    active&&this._onInactive&&this._onInactive(Page.app, this, true);
     Page.app.event.emit(Page.app._id,'onPageStop', _id, active);
-    active&&this._onInactive&&this._onInactive(true);
+    active&&this._onStop&&this._onStop(Page.app, this, active);
     Page.app.State.detachStates(this, this._states);
     Page.app.event.off(_id);
     delete Page.pages[_id];
@@ -270,11 +271,12 @@ export default class Page extends React.Component {
   // ---------------------
 
   _showStatus() {
-    return true;//this.props.status!=='waitting'&&this.props.status!=='background';
+    let status = this.status;
+    return status!=='waitting'&&status!=='background';
   }
 
   _showContentStatus() {
-    return true;//this.props.status==='normal'||this.props.status==='pushout'||this.props.status==='popout';
+    return !this.props.status.includes('pushin');
   }
 
   _frameProps() {

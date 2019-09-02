@@ -418,7 +418,7 @@ function (_React$Component) {
                   } else {
                     prevActive.isActive = false;
                     prevActive.isInactive = true;
-                    prevActive.status = 'popout';
+                    prevActive.status = isPop ? 'popout' : 'pushout';
                     pageInfos.unshift(prevActive);
                   }
                 }
@@ -427,30 +427,39 @@ function (_React$Component) {
 
               case 41:
                 if (!(_i < pageInfos.length)) {
-                  _context.next = 51;
+                  _context.next = 53;
                   break;
                 }
 
                 pageInfo = pageInfos[_i];
-                _context.next = 45;
-                return RouterComponent.app.event.emit(RouterComponent.app._id, 'onRouteMatch', pageInfo, location);
+
+                if (!pageInfo.isInactive) {
+                  _context.next = 45;
+                  break;
+                }
+
+                return _context.abrupt("continue", 50);
 
               case 45:
+                _context.next = 47;
+                return RouterComponent.app.event.emit(RouterComponent.app._id, 'onRouteMatch', pageInfo, location);
+
+              case 47:
                 _block = _context.sent;
 
                 if (!_block) {
-                  _context.next = 48;
+                  _context.next = 50;
                   break;
                 }
 
                 return _context.abrupt("return", router.block(_block));
 
-              case 48:
+              case 50:
                 _i++;
                 _context.next = 41;
                 break;
 
-              case 51:
+              case 53:
                 this.setState({
                   pageInfos: pageInfos,
                   poplayerInfos: this.state.poplayerInfos.filter(function (v) {
@@ -460,7 +469,7 @@ function (_React$Component) {
                   })
                 });
 
-              case 52:
+              case 54:
               case "end":
                 return _context.stop();
             }
@@ -484,9 +493,15 @@ function (_React$Component) {
 
       var page = RouterComponent.app.Page.getPage();
       var status = page && page.status;
-      if (status !== 'normal') requestAnimationFrame(function () {
-        return _this4._updateRouterInfo(_this4.history.location);
-      });
+
+      if (status !== 'normal') {
+        this._isPageTransforming = true;
+        requestAnimationFrame(function () {
+          _this4._isPageTransforming = false;
+
+          _this4._updateRouterInfo(_this4.history.location);
+        });
+      }
     }
   }, {
     key: "componentDidUpdate",
@@ -502,6 +517,11 @@ function (_React$Component) {
           data: info
         }
       });
+    }
+  }, {
+    key: "shouldComponentUpdate",
+    value: function shouldComponentUpdate() {
+      return !this._isPageTransforming;
     }
   }, {
     key: "render",

@@ -14,8 +14,9 @@ export let PageTransform = {
 
         let time = (new Date()).getTime();
         let finish = false;
+        this._isPageTransforming = true;
         let _run = ()=>{
-          if(finish) { this._updateRouterInfo(); return }
+          if(finish) { this._isPageTransforming = false; this._updateRouterInfo(); return }
           let diff = (new Date()).getTime() - time;
           let percent = diff*100/300;
           if(percent>=100) { percent = 100; finish = true }

@@ -203,7 +203,7 @@ PanelLoader.defaultProps['b-precast'] = {}
 
   
 export let LoaderPoplayer = aprops=>{
-  let { progress, timeout, 'b-theme':bTheme="primary", top, height, innerProps, poplayer, ...props } = BaseComponent(aprops, LoaderPoplayer);
+  let { progress, timeout, 'b-theme':bTheme, top, height, innerProps, poplayer, ...props } = BaseComponent(aprops, LoaderPoplayer);
   
   return (
     <Panel bc-position-absolute bc-offset-h-start bc-width-full bs-top={top} bs-height={height} {...props}>
@@ -219,7 +219,9 @@ LoaderPoplayer.defaultProps.timeout = '1s';
 
 Object.defineProperty(Loader,"LoaderPoplayer",{ get:function(){ return LoaderPoplayer }, set:function(val){ LoaderPoplayer = val }})
 LoaderPoplayer.isBnorth = true;
-LoaderPoplayer.defaultProps['b-precast'] = {}
+LoaderPoplayer.defaultProps['b-precast'] = {
+  'b-theme': 'primary'
+}
 
 
 

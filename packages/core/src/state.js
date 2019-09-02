@@ -142,7 +142,7 @@ class State {
     if(this.options.initialization===undefined) this.options.initialization = {};
     Object.entries(this.options).forEach(([k,v])=>{
       if(k.startsWith('on')) { State.app.event.on(null, k, v, this._id)
-      }else{ this[k] = v }
+      }//else{ this[k] = v }
     });
 
     State.app.event.emit(null, 'onStateStart', this._id);

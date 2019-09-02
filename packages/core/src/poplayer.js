@@ -68,8 +68,8 @@ class Poplayer extends React.Component {
 
   // poplayer interface
   // ---------------------------------------
-  _id() { return this.props.options._id }
-  getDom() { return ReactDOM.findDOMNode(this) }
+  get _id() { return this.props.options._id }
+  get dom() { return ReactDOM.findDOMNode(this) }
 
   // poplayer interface
   // ---------------------------------------
@@ -77,6 +77,7 @@ class Poplayer extends React.Component {
     super(props);
     let { options } = this.props;
     Poplayer.poplayers[options._id] = this;
+    this.options = options;
 
     this._states = Object.entries(options).filter(([k,v])=>k.startsWith('state')||k.startsWith('_state'));
     Poplayer.app.State.attachStates(this, this._states);
@@ -84,8 +85,7 @@ class Poplayer extends React.Component {
     Object.entries(options).forEach(([k,v])=>{
       if(k.startsWith('on')) { Poplayer.app.event.on(Poplayer.app._id, k, Poplayer.app.event.createHandler(k, v, this), this._id).bind(this); 
       }else if(k.startsWith('_on')) { this[k] = Poplayer.app.event.createHandler(k, v, this).bind(this); 
-      }else if(k.startsWith('action')){ this[k] = Poplayer.app.event.createAction(k, v, this).bind(this); 
-      }else{ !k.startsWith('state')&&!k.startsWith('_state')&&(this[k]=v) } 
+      }else if(k.startsWith('action')){ this[k] = Poplayer.app.event.createAction(k, v, this).bind(this); }
     })
   }
 
@@ -115,7 +115,7 @@ class Poplayer extends React.Component {
 
     Poplayer.app.event.emit(Poplayer.app._id, 'onPoplayerRender', _id, this.props);
     if(typeof Component!=='function') return Component;
-    let component = <Component data-poplayer={_id} app={Poplayer.app} _id={_id} poplayer={this} info={this.props} {...Poplayer.app.State.getStates(this, this._states)} {...props} {...(options.props instanceof Function?options.props(Poplayer.app, this):options.props)} />;
+    let component = <Component data-poplayer={_id} app={Poplayer.app} _id={_id} poplayer={this} info={this.props} states={Poplayer.app.State.getStates(this, this._states)} {...props} />;
 
     if(options._idPage){
       let page = Poplayer.app.Page.getPage(options._idPage);

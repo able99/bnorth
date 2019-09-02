@@ -48,9 +48,12 @@ var PageTransform = {
           var deactivePage = deactivePageInfo && app.Page.getPage(deactivePageInfo._id);
           var time = new Date().getTime();
           var finish = false;
+          this._isPageTransforming = true;
 
           var _run = function _run() {
             if (finish) {
+              _this._isPageTransforming = false;
+
               _this._updateRouterInfo();
 
               return;

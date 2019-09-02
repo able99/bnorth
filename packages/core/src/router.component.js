@@ -173,12 +173,13 @@ export default class RouterComponent extends React.Component {
       }else{
         prevActive.isActive = false;
         prevActive.isInactive = true;
-        prevActive.status = 'popout';
+        prevActive.status = isPop?'popout':'pushout';
         pageInfos.unshift(prevActive);
       }
     }
 
     for(let pageInfo of pageInfos) {
+      if(pageInfo.isInactive) continue;
       let _block = await RouterComponent.app.event.emit(RouterComponent.app._id, 'onRouteMatch', pageInfo, location);
       if(_block) return router.block(_block);
     }
@@ -193,7 +194,13 @@ export default class RouterComponent extends React.Component {
   _pageTransform() {
     let page = RouterComponent.app.Page.getPage();
     let status = page&&page.status;
-    if(status !== 'normal') requestAnimationFrame(()=>this._updateRouterInfo(this.history.location));
+    if(status !== 'normal') {
+      this._isPageTransforming = true;
+      requestAnimationFrame(()=>{
+        this._isPageTransforming = false;
+        this._updateRouterInfo(this.history.location);
+      });
+    }
   }
 
   componentDidUpdate() {
@@ -202,6 +209,10 @@ export default class RouterComponent extends React.Component {
 
   componentDidCatch(error, info) {
     this.setState({error: {message: error, data: info}});
+  }
+
+  shouldComponentUpdate() {
+    return !this._isPageTransforming;
   }
 
   render() {

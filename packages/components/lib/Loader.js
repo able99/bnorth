@@ -335,8 +335,7 @@ var _LoaderPoplayer = function LoaderPoplayer(aprops) {
   var _BaseComponent5 = (0, _BaseComponent8.default)(aprops, _LoaderPoplayer),
       progress = _BaseComponent5.progress,
       timeout = _BaseComponent5.timeout,
-      _BaseComponent5$bThe = _BaseComponent5['b-theme'],
-      bTheme = _BaseComponent5$bThe === void 0 ? "primary" : _BaseComponent5$bThe,
+      bTheme = _BaseComponent5['b-theme'],
       top = _BaseComponent5.top,
       height = _BaseComponent5.height,
       innerProps = _BaseComponent5.innerProps,
@@ -374,7 +373,9 @@ Object.defineProperty(_Loader, "LoaderPoplayer", {
   }
 });
 _LoaderPoplayer.isBnorth = true;
-_LoaderPoplayer.defaultProps['b-precast'] = {};
+_LoaderPoplayer.defaultProps['b-precast'] = {
+  'b-theme': 'primary'
+};
 
 var loader = function loader(app) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};

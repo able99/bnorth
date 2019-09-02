@@ -8,12 +8,12 @@ import Button from './Button';
 
 let Modal = aprops=>{
   let {
-    type, rewind, onClose, onFinished,
+    type, rewind, onClose, onFinished, onAction, 
     containerProps, headerProps, title, close, bodyProps, footerProps, buttons,
-    classNamePre, stylePre, children, app, poplayer, info, ...props
+    classNamePre, stylePre, children, app, _id, poplayer, info, states, ...props
   } = BaseComponent(aprops, Modal);
   buttons = buttons[type]||[];
-  children = typeof(children)==='function'?children({...props, app, poplayer, info}):children;
+  children = typeof(children)==='function'?children({...props, app, _id, poplayer, info, states}):children;
 
   classNamePre = {
     'position-relative backface-hidden overflow-a-hidden': true,

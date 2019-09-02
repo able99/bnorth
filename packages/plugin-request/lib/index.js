@@ -21,6 +21,8 @@ var _get2 = _interopRequireDefault(require("@babel/runtime/helpers/get"));
 
 var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
+var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/helpers/assertThisInitialized"));
+
 /**
  * @module
  */
@@ -86,13 +88,24 @@ var getClass = function getClass(app, plugin) {
     function (_app$State) {
       (0, _inherits2.default)(Request, _app$State);
 
-      function Request(_id, options) {
+      function Request(_id, options, ownerId) {
         var _this;
 
         (0, _classCallCheck2.default)(this, Request);
-        _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Request).call(this, _id, options));
-        _this.fetched = false; // app.event.on(this._id, 'onStateStart', (page)=>{this.options.fetchOnStart&&this.fetch()}, this._id);
-        // app.event.on(this._id, 'onStateActive', (page, onStart)=>{this.options.fetchOnActive&&(!onStart)&&this.fetch()}, this._id);
+        _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Request).call(this, _id, options, ownerId));
+        _this.fetched = false;
+
+        if (_this.options.fetchOnStart) {
+          app.event.on(app._id, 'onPageStart', app.event.createHandler('onPageStart', function (_id, active) {
+            _id === ownerId && _this.fetch();
+          }, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))), _this._id);
+        }
+
+        if (_this.options.fetchOnActive) {
+          app.event.on(app._id, 'onPageStart', app.event.createHandler('onPageActive', function (_id, start) {
+            _id === ownerId && !start && _this.fetch();
+          }, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))), _this._id);
+        }
 
         return _this;
       }
@@ -264,9 +277,7 @@ var request = function request(app, plugin, options) {
       delete app.Request;
       delete app.request;
     },
-    stateRequest: {
-      state: Request
-    },
+    stateRequest: [{}, Request],
 
     /**
      * 为 App 实例增加网络通讯操作实例

@@ -56,12 +56,12 @@ function (_React$Component) {
     key: "_id",
     // poplayer interface
     // ---------------------------------------
-    value: function _id() {
+    get: function get() {
       return this.props.options._id;
     }
   }, {
-    key: "getDom",
-    value: function getDom() {
+    key: "dom",
+    get: function get() {
       return _reactDom.default.findDOMNode(this);
     } // poplayer interface
     // ---------------------------------------
@@ -150,6 +150,7 @@ function (_React$Component) {
     _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Poplayer).call(this, props));
     var options = _this.props.options;
     Poplayer.poplayers[options._id] = (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this));
+    _this.options = options;
     _this._states = Object.entries(options).filter(function (_ref) {
       var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
           k = _ref2[0],
@@ -169,8 +170,6 @@ function (_React$Component) {
         _this[k] = Poplayer.app.event.createHandler(k, v, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))).bind((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
       } else if (k.startsWith('action')) {
         _this[k] = Poplayer.app.event.createAction(k, v, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))).bind((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
-      } else {
-        !k.startsWith('state') && !k.startsWith('_state') && (_this[k] = v);
       }
     });
     return _this;
@@ -217,8 +216,9 @@ function (_React$Component) {
         app: Poplayer.app,
         _id: _id,
         poplayer: this,
-        info: this.props
-      }, Poplayer.app.State.getStates(this, this._states), props, options.props instanceof Function ? options.props(Poplayer.app, this) : options.props));
+        info: this.props,
+        states: Poplayer.app.State.getStates(this, this._states)
+      }, props));
 
       if (options._idPage) {
         var page = Poplayer.app.Page.getPage(options._idPage);

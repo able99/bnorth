@@ -373,14 +373,14 @@ function () {
   }, {
     key: "block",
     value: function block(_block) {
-      this.app.log.debug('router block', _block);
+      this.app.event.emit('onRouterBlock', this.component.history.location, _block);
 
       if (typeof _block === 'function') {
-        this._block = this.history.location;
+        this._block = this.component.history.location;
         _block = _block(this.app);
         this._block = _block || this._block;
       } else {
-        this._block = _block || this.history.location;
+        this._block = _block || this.component.history.location;
       }
 
       return true;
@@ -393,8 +393,8 @@ function () {
   }, {
     key: "restore",
     value: function restore(location) {
-      this.app.log.debug('router restore', location);
-      location || this._block ? this.history.replace(location || this._block) : this.replaceRoot();
+      this.app.event.emit('onRouterRestore');
+      location || this._block ? this.component.history.replace(location || this._block) : this.replaceRoot();
       this._block = null;
       return true;
     }

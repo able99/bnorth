@@ -276,13 +276,13 @@ class Router {
    * @param {(module:router~PathInfo|string|function)?} - 将被阻塞的路径，为空则使用当前路径 
    */
   block(_block) {
-    this.app.log.debug('router block', _block);
+    this.app.event.emit('onRouterBlock', this.component.history.location, _block);
     if(typeof _block==='function'){
-      this._block = this.history.location;
+      this._block = this.component.history.location;
       _block = _block(this.app);
       this._block = _block||this._block;
     }else{
-      this._block = _block||this.history.location;
+      this._block = _block||this.component.history.location;
     }
     return true;
   }
@@ -292,8 +292,8 @@ class Router {
    * @param {module:router~PathInfo|string} - 要恢复的路径，为空则使用 block 保存的路径
    */
   restore(location) {
-    this.app.log.debug('router restore', location);
-    location||this._block?this.history.replace(location||this._block):this.replaceRoot();
+    this.app.event.emit('onRouterRestore');
+    location||this._block?this.component.history.replace(location||this._block):this.replaceRoot();
     this._block = null;
     return true;
   }

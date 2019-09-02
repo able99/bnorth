@@ -33,6 +33,7 @@ var _Modal = function Modal(aprops) {
       rewind = _BaseComponent.rewind,
       onClose = _BaseComponent.onClose,
       onFinished = _BaseComponent.onFinished,
+      onAction = _BaseComponent.onAction,
       containerProps = _BaseComponent.containerProps,
       headerProps = _BaseComponent.headerProps,
       title = _BaseComponent.title,
@@ -44,15 +45,19 @@ var _Modal = function Modal(aprops) {
       stylePre = _BaseComponent.stylePre,
       children = _BaseComponent.children,
       app = _BaseComponent.app,
+      _id = _BaseComponent._id,
       poplayer = _BaseComponent.poplayer,
       info = _BaseComponent.info,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "rewind", "onClose", "onFinished", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "classNamePre", "stylePre", "children", "app", "poplayer", "info"]);
+      states = _BaseComponent.states,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "rewind", "onClose", "onFinished", "onAction", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "classNamePre", "stylePre", "children", "app", "_id", "poplayer", "info", "states"]);
 
   buttons = buttons[type] || [];
   children = typeof children === 'function' ? children((0, _objectSpread2.default)({}, props, {
     app: app,
+    _id: _id,
     poplayer: poplayer,
-    info: info
+    info: info,
+    states: states
   })) : children;
   classNamePre = (0, _objectSpread2.default)({
     'position-relative backface-hidden overflow-a-hidden': true,

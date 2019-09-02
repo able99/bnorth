@@ -179,7 +179,7 @@ function () {
           var dependence = _step.value;
 
           if (!_this2._plugins.find(function (v) {
-            return v._id.slice(1) === dependence;
+            return v._id === dependence;
           })) {
             _this2.app.render.critical("no dependence plugin: ".concat(plugin._id, " - ").concat(dependence), {
               title: 'plugin nodeps'
@@ -212,7 +212,7 @@ function () {
       }
 
       var app = this.app;
-      var _id = plugin._id;
+      instance._id = plugin._id;
       instance.options = options;
 
       this._plugins.push(instance);
@@ -231,13 +231,13 @@ function () {
             v = _ref4[1];
 
         if (k.startsWith('on')) {
-          app.event.on(null, k, app.event.createHandler(k, v, instance).bind(instance), _id);
+          app.event.on(null, k, app.event.createHandler(k, v, instance).bind(instance), instance._id);
         } else if (k.startsWith('_on')) {
           instance[k] = app.event.createHandler(k, v, instance).bind(instance);
         } else if (k.startsWith('action')) {
           instance[k] = app.event.createAction(k.slice(6), v, instance).bind(instance);
         } else {
-          !k.startsWith('state') && !k.startsWith('_state') && (_this2[k] = v);
+          !k.startsWith('state') && !k.startsWith('_state') && (instance[k] = v);
         }
       });
       app.event.emit(null, 'onPluginStart', instance._id);

@@ -257,9 +257,8 @@ function () {
 
       if (k.startsWith('on')) {
         State.app.event.on(null, k, v, _this2._id);
-      } else {
-        _this2[k] = v;
-      }
+      } //else{ this[k] = v }
+
     });
     State.app.event.emit(null, 'onStateStart', this._id);
     this.options._onStart && this.options._onStart();

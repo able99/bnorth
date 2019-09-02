@@ -60,12 +60,20 @@
  * @extends module:state.State
  */
 let getClass = (app, plugin)=>class Request extends app.State {
-  constructor(_id, options) {
-    super(_id, options);
+  constructor(_id, options, ownerId) {
+    super(_id, options, ownerId);
     this.fetched = false;
     
-    // app.event.on(this._id, 'onStateStart', (page)=>{this.options.fetchOnStart&&this.fetch()}, this._id);
-    // app.event.on(this._id, 'onStateActive', (page, onStart)=>{this.options.fetchOnActive&&(!onStart)&&this.fetch()}, this._id);
+    if(this.options.fetchOnStart) {
+      app.event.on(app._id, 'onPageStart', app.event.createHandler('onPageStart', (_id, active)=>{
+        _id===ownerId&&this.fetch()
+      }, this), this._id)
+    }
+    if(this.options.fetchOnActive) {
+      app.event.on(app._id, 'onPageStart', app.event.createHandler('onPageActive', (_id, start)=>{
+        _id===ownerId&&!start&&this.fetch();
+      }, this), this._id)
+    }
   }
 
   _requestFetching(fetching, {loader, mask, noLoaderMask, isSubmit}) {
@@ -189,7 +197,7 @@ let request = (app, plugin, options)=>{
       delete app.request;
     },
 
-    stateRequest: { state: Request },
+    stateRequest: [{}, Request],
 
     /**
      * 为 App 实例增加网络通讯操作实例

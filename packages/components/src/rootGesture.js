@@ -87,13 +87,17 @@ function getScrollOver(node, direction, offset) {
 function setScrollEdgeShadow(edgeShadow, direction, scrollOver, root) {
   if(!edgeShadow) {
     edgeShadow = document.createElement('div');
-    edgeShadow.setAttribute('class', 'transition-set- position-absolute pointer-events-none')
+    edgeShadow.setAttribute('class', 'transition-set- position-absolute pointer-events-none');
+    edgeShadow.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" version="1.1">
+
+    <rect x="0" y="0" rx="35%" ry="35%" width="100%" height="100%" style="fill:rgba(0,0,0,0.1)"/>
+    
+    <script xmlns=""/></svg>`
     root.appendChild(edgeShadow);
   }
   
   edgeShadow.setAttribute(
     'style', 
-    'background: rgba(0,0,0,0.2); border-radius: 20px; ' +
     (direction==='x'?'width: 60px; height: 100%; top: 0; bottom: 0; ':'width: 100%; height: 60px; left: 0; right: 0; ') +
     (direction==='x'&&scrollOver<0?`left: ${Math.min(-60+Math.abs(scrollOver), -20)}px`:'') +
     (direction==='x'&&scrollOver>0?`right: ${Math.min(-60+Math.abs(scrollOver), -20)}px`:'') +

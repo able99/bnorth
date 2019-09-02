@@ -111,14 +111,14 @@ class Plugins {
 
     if(this._plugins.find(v=>v._id===plugin._id)) { this.app.render.critical(plugin._id, {title:'plugin dup'}); return }
     for(let dependence of (Array.isArray(plugin._dependencies)?plugin._dependencies:[plugin._dependencies])) {
-      if(!this._plugins.find(v=>v._id.slice(1)===dependence)) {
+      if(!this._plugins.find(v=>v._id===dependence)) {
         this.app.render.critical(`no dependence plugin: ${plugin._id} - ${dependence}`, {title:'plugin nodeps'});
         return;
       }
     }
 
     let app = this.app;
-    let _id = plugin._id;
+    instance._id = plugin._id;
     instance.options = options;
     this._plugins.push(instance);
 
@@ -126,10 +126,10 @@ class Plugins {
     app.State.attachStates(instance, instance._states);
 
     Object.entries(plugin).forEach(([k,v])=>{
-      if(k.startsWith('on')) { app.event.on(null, k, app.event.createHandler(k, v, instance).bind(instance), _id); 
+      if(k.startsWith('on')) { app.event.on(null, k, app.event.createHandler(k, v, instance).bind(instance), instance._id); 
       }else if(k.startsWith('_on')) { instance[k] = app.event.createHandler(k, v, instance).bind(instance);
       }else if(k.startsWith('action')){ instance[k] = app.event.createAction(k.slice(6), v, instance).bind(instance); 
-      }else{ !k.startsWith('state')&&!k.startsWith('_state')&&(this[k]=v) } 
+      }else{ !k.startsWith('state')&&!k.startsWith('_state')&&(instance[k]=v) } 
     })
 
     app.event.emit(null, 'onPluginStart', instance._id);
