@@ -1,6 +1,6 @@
 {
   "name": "doc-reader",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "An API documentation generator for ES6 and React and CSS classes",
   "keywords": [
     "bnorth",
@@ -39,13 +39,13 @@
     "jsdoc": "^3.5.5"
   },
   "devDependencies": {
-    "@bnorth/build": "^4.0.1",
-    "@bnorth/components": "^4.0.1",
-    "@bnorth/core": "^4.0.1",
-    "@bnorth/plugin-network": "^4.0.1",
-    "@bnorth/plugin-request": "^4.0.1",
-    "@bnorth/plugin-validate": "^4.0.1",
-    "@bnorth/rich.css": "^4.0.1",
+    "@bnorth/build": "^4.1.0",
+    "@bnorth/components": "^4.1.0",
+    "@bnorth/core": "^4.1.0",
+    "@bnorth/plugin-network": "^4.1.0",
+    "@bnorth/plugin-request": "^4.1.0",
+    "@bnorth/plugin-validate": "^4.1.0",
+    "@bnorth/rich.css": "^4.1.0",
     "react-markdown": "^3.6.0"
   },
   "bnorth": {
