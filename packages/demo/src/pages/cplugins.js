@@ -21,7 +21,7 @@ export default props=>{
             props=>(
               <div>
                 弹出层 - 状态 - {JSON.stringify(props.stateData)}
-                <div onClick={()=>props.poplayer.stateData.update({tick:props.stateData.tick+1})}>点击更新 tick</div>
+                <div onClick={()=>props.poplayer.stateData.update({tick:props.states.stateData.tick+1})}>点击更新 tick</div>
                 <div onClick={()=>props.app.modal.close(props._id)}>点击关闭</div>
               </div>
             ), {

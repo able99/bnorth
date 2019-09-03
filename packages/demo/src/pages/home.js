@@ -35,10 +35,10 @@ let Component = props=>{
             title="分页 demo" 
             desc="基于分页组件的分页布局展示"
             onClick={()=>app.router.push('tabs')} />
-          <List.Item 
+          {/* <List.Item 
             title="列表 demo" 
             desc="常见列表型页面的布局和逻辑展示"
-            onClick={()=>app.router.push('lists')} />
+            onClick={()=>app.router.push('lists')} /> */}
         </List>
       </div>
     </div>
