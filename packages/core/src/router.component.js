@@ -2,7 +2,7 @@
  * @module
  */
 import React from 'react';
-import { createBrowserHistory } from 'history';
+import { createHashHistory } from 'history';
 import { join } from 'path';
 
 
@@ -48,7 +48,7 @@ export default class RouterComponent extends React.Component {
     this.Poplayer = this.app.context.consumerHoc(this.app.Poplayer);
 
     this.historyCount = 0;
-    this.history = createBrowserHistory();
+    this.history = createHashHistory();
     this.history.listen((location, action)=>this._handleLocationChange());
     this._handleLocationChange();
   }

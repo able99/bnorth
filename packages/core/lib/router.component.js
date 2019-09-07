@@ -134,7 +134,7 @@ function (_React$Component) {
     _this.Page = _this.app.context.consumerHoc(_this.app.Page);
     _this.Poplayer = _this.app.context.consumerHoc(_this.app.Poplayer);
     _this.historyCount = 0;
-    _this.history = (0, _history.createBrowserHistory)();
+    _this.history = (0, _history.createHashHistory)();
 
     _this.history.listen(function (location, action) {
       return _this._handleLocationChange();

@@ -16,7 +16,7 @@ export let PageInfo = props=>{
             if(k==='subPageInfos'||k==='popLayerInfos') return null;
             if(k==='subPages') v = Object.keys(v);
             if(k==='popLayers') v = 'popLayers count:' + v.length;
-            return <List.Item title={k} desc={JSON.stringify(v)} />
+            return <List.Item key={k} title={k} desc={JSON.stringify(v)} />
           })}
         </List>
         <List className="margin-bottom-2x">
@@ -28,6 +28,10 @@ export let PageInfo = props=>{
       </div>
     </div>
   )
+}
+PageInfo.controller={
+  _onStart:()=>console.log(1111),
+  _onKeyEvent: e=>{return console.log(22222, e)}
 }
 
 

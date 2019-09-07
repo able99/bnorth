@@ -189,11 +189,9 @@ export default class Page extends React.Component {
 
   // page life
   // ---------------------------
-  constructor(props) {
-    super(props);
-    Page.pages[this._id] = this;
-
-    let {routeDefine:{component, controller}={}} = this.props;
+  async _pageInit() {
+    let {routeDefine:{component, controller, lazy}={}} = this.props;
+    if(lazy) component = await component();
     controller = controller||component.controller||{};
     let options = typeof(controller)==='function'?controller(Page.app, this):controller;
 
@@ -209,6 +207,12 @@ export default class Page extends React.Component {
       }else if(k.startsWith('action')){ this[k] = Page.app.event.createAction(k, v, this).bind(this); 
       }else{ !k.startsWith('state')&&!k.startsWith('_state')&&(this[k]=v) } 
     })
+
+    if(lazy){
+      this.props.routeDefine.component = component;
+      this.props.routeDefine.lazy = false;
+      this.forceUpdate();
+    }
   }
   
   _pageStart() {
@@ -232,22 +236,28 @@ export default class Page extends React.Component {
   }
 
   _pageStop() {
-    let { _id } = this.props;
     let active = this.active;
     active&&this._onInactive&&this._onInactive(Page.app, this, true);
-    Page.app.event.emit(Page.app._id,'onPageStop', _id, active);
+    Page.app.event.emit(Page.app._id,'onPageStop', this._id, active);
     active&&this._onStop&&this._onStop(Page.app, this, active);
     Page.app.State.detachStates(this, this._states);
-    Page.app.event.off(_id);
-    delete Page.pages[_id];
+  }
+
+  constructor(props) {
+    super(props);
+    Page.pages[this._id] = this;
+    this._pageInit();
+    
   }
 
   componentDidMount() {
+    if(this.props.routeDefine.lazy) return;
     let { isSubPage, status } = this.props;
     if(isSubPage||status==='normal'||status==='background') this._pageStart();
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if(this.props.routeDefine.lazy) return;
     let { status } = this.props;
     if(!this._started&&(status==='normal'||status==='background')) this._pageStart();
     if(prevProps.status !== 'normal' && status === 'normal') this._pageActive();
@@ -255,10 +265,14 @@ export default class Page extends React.Component {
   }
 
   componentWillUnmount() {
-    this._pageStop();
+    if(!this.props.routeDefine.lazy) this._pageStop();
+    let _id = this._id;
+    Page.app.event.off(_id);
+    delete Page.pages[_id];
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    if(this.props.routeDefine.lazy) return false;
     if(this.props.status!==nextProps.status) return true;
     if(!Page.app.utils.shallowEqual(this.props.routeDefine, nextProps.routeDefine)) return true;
     if(!Page.app.utils.shallowEqual(this.props.params, nextProps.params)) return true;
@@ -276,7 +290,7 @@ export default class Page extends React.Component {
   }
 
   _showContentStatus() {
-    return !this.props.status.includes('pushin');
+    return !['pushin', 'popin'].includes(this.status);
   }
 
   _frameProps() {
@@ -299,9 +313,16 @@ export default class Page extends React.Component {
     return { app: Page.app, page:this, _id, route:this.props, info:this.props, ...Page.app.State.getStates(this, this._states) }
   }
 
+  _loadingContent() {
+    return <div style={{marginTop:48,textAlign:'center'}}>...</div>
+  }
+
   render() {
-    let { _id, routeDefine:{component:Component}, children } = this.props;
+    let { _id, routeDefine:{component:Component, lazy}, children } = this.props;
     let frameProps = this._frameProps();
+
+    if(lazy) return <main {...frameProps}>{this._loadingContent()}</main>;
+    
     let contentProps = this._contentProps();
     Page.app.event.emit(Page.app._id, 'onPageRender', _id, contentProps);
     
