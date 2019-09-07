@@ -1,19 +1,34 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
+
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
+
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
+
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
+
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
+
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
 
 require("core-js/modules/es6.regexp.search");
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+var _typeof2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/typeof"));
 
-require("core-js/modules/es6.function.name");
+var _isArray = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/is-array"));
 
 require("core-js/modules/es6.regexp.replace");
 
@@ -21,17 +36,15 @@ require("core-js/modules/es6.regexp.split");
 
 require("core-js/modules/es6.array.find");
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-require("core-js/modules/es6.array.iterator");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
-require("core-js/modules/es7.object.entries");
+require("core-js/modules/es6.function.name");
 
-require("core-js/modules/web.dom.iterable");
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
 var _router = _interopRequireDefault(require("./router.component"));
 
@@ -39,9 +52,10 @@ var _router2 = _interopRequireDefault(require("./router.error"));
 
 var _router3 = _interopRequireDefault(require("./router.loader"));
 
-/**
- * @module
- */
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
+
 var ParamSpe = ':';
 /**
  * 路由声明对象
@@ -261,12 +275,15 @@ function () {
       var _this2 = this;
 
       this._routes = routes;
-      Object.entries(this._routes || {}).forEach(function (_ref) {
+      (0, _entries.default)(this._routes || {}).forEach(function (_ref) {
         var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
             k = _ref2[0],
             v = _ref2[1];
 
-        return v.for && _this2.addNavigatorFunction(k, v.for);
+        if (typeof v === 'function') _this2._routes[k] = {
+          component: v
+        };
+        v.for && _this2.addNavigatorFunction(k, v.for);
       });
     }
     /**
@@ -302,16 +319,14 @@ function () {
   }, {
     key: "getRouteByPageName",
     value: function getRouteByPageName(pageName) {
-      var route = Object.entries(this._routes).find(function (_ref3) {
+      var route = (0, _entries.default)(this._routes).find(function (_ref3) {
         var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
             k = _ref4[0],
             v = _ref4[1];
 
         return k.split(':')[0] === pageName;
       });
-      return route ? [route[0], typeof route[1] === 'function' ? {
-        component: route[1]
-      } : route[1]] : [];
+      return route || [];
     }
     /**
      * 为路由模块添加导航函数，即 pushXXX 和 replaceXXX 函数
@@ -437,7 +452,7 @@ function () {
       }
 
       args.forEach(function (arg) {
-        if (Array.isArray(arg)) {
+        if ((0, _isArray.default)(arg)) {
           addPath(arg.map(function (v, i) {
             return i ? encodeURIComponent(v) : v;
           }).join(':'));
@@ -454,8 +469,8 @@ function () {
         pathname: pathnames.map(function (v, i, a) {
           return i === 0 && v === '/' && a.length > 1 ? '' : v;
         }).join('/'),
-        state: this.passState ? (0, _objectSpread2.default)({}, this.history.location.state, state) : state,
-        search: '?' + Object.entries(this.passQuery ? (0, _objectSpread2.default)({}, this.history.location.query, query) : query).map(function (_ref5) {
+        state: this.passState ? _objectSpread({}, this.history.location.state, {}, state) : state,
+        search: '?' + (0, _entries.default)(this.passQuery ? _objectSpread({}, this.history.location.query, {}, query) : query).map(function (_ref5) {
           var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
               k = _ref6[0],
               v = _ref6[1];

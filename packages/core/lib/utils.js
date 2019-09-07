@@ -1,33 +1,50 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
+
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
+
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
+
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
+
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
 
 require("core-js/modules/es7.array.includes");
 
 require("core-js/modules/es6.string.includes");
 
-require("core-js/modules/web.dom.iterable");
+var _getIterator2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/get-iterator"));
 
-require("core-js/modules/es6.array.iterator");
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
 
-require("core-js/modules/es6.object.keys");
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _isArray = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/is-array"));
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+var _typeof2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/typeof"));
 
-require("core-js/modules/es6.object.assign");
+var _assign = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/assign"));
 
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/toConsumableArray"));
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
+
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 /**
  * @module
@@ -73,7 +90,7 @@ function () {
         args[_key] = arguments[_key];
       }
 
-      return Object.assign.apply(Object, [{}].concat((0, _toConsumableArray2.default)(args.filter(function (v) {
+      return _assign.default.apply(Object, [{}].concat((0, _toConsumableArray2.default)(args.filter(function (v) {
         return v;
       }).map(function (v) {
         return typeof v === 'function' ? v() : v;
@@ -142,6 +159,8 @@ function () {
   }, {
     key: "message2String",
     value: function message2String(message) {
+      if (!message) return '';
+
       if (message instanceof Error) {
         return message.message;
       } else if ((0, _typeof2.default)(message) === 'object') {
@@ -166,7 +185,7 @@ function () {
     value: function objectCopy(obj, deep) {
       // :TODO depp copy
       if (!obj) return obj;
-      return Array.isArray(obj) ? (0, _toConsumableArray2.default)(obj) : (0, _typeof2.default)(obj) === 'object' ? (0, _objectSpread2.default)({}, obj) : obj;
+      return (0, _isArray.default)(obj) ? (0, _toConsumableArray2.default)(obj) : (0, _typeof2.default)(obj) === 'object' ? _objectSpread({}, obj) : obj;
     }
     /**
      * 用指定的追加方式进行数据连接
@@ -190,19 +209,19 @@ function () {
   }, {
     key: "objectUpdate",
     value: function objectUpdate(obj, data, append) {
-      if (Array.isArray(data)) {
-        data = (0, _toConsumableArray2.default)(append && obj ? obj : []).concat((0, _toConsumableArray2.default)(data));
+      if ((0, _isArray.default)(data)) {
+        data = [].concat((0, _toConsumableArray2.default)(append && obj ? obj : []), (0, _toConsumableArray2.default)(data));
       } else if ((0, _typeof2.default)(data) === 'object') {
         if (typeof append === 'string') {
           var appendObj = this.app.utils.pathGet(obj, append);
           var appendData = this.app.utils.pathGet(data, append);
           var appends = this.app.utils.objectUpdate(appendObj, appendData, true);
-          data = (0, _objectSpread2.default)({}, obj, data);
+          data = _objectSpread({}, obj, {}, data);
           this.app.utils.pathSet(data, append, appends);
         } else if (append === true || append === undefined) {
-          data = (0, _objectSpread2.default)({}, obj, data);
+          data = _objectSpread({}, obj, {}, data);
         } else {
-          data = (0, _objectSpread2.default)({}, data);
+          data = _objectSpread({}, data);
         }
       } else {
         data = append ? obj + data : data;
@@ -222,12 +241,12 @@ function () {
     value: function objectDelete(obj, _id) {
       if (!obj) return;
 
-      if (Array.isArray(obj)) {
+      if ((0, _isArray.default)(obj)) {
         obj.splice(_id, 1);
         obj = (0, _toConsumableArray2.default)(obj);
       } else {
         delete obj[_id];
-        obj = (0, _objectSpread2.default)({}, obj);
+        obj = _objectSpread({}, obj);
       }
 
       return obj;
@@ -247,13 +266,31 @@ function () {
     value: function shallowEqual(objA, objB) {
       if (objA === objB) return true;
       if ((0, _typeof2.default)(objA) !== 'object' || objA === null || (0, _typeof2.default)(objB) !== 'object' || objB === null) return false;
-      var keysA = Object.keys(objA);
-      var keysB = Object.keys(objB);
+      var keysA = (0, _keys.default)(objA);
+      var keysB = (0, _keys.default)(objB);
       if (keysA.length !== keysB.length) return false;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-      for (var _i = 0; _i < keysA.length; _i++) {
-        var key = keysA[_i];
-        if (objA[key] !== objB[key]) return false;
+      try {
+        for (var _iterator = (0, _getIterator2.default)(keysA), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var key = _step.value;
+          if (objA[key] !== objB[key]) return false;
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
 
       return true;
@@ -268,20 +305,38 @@ function () {
 
       if (objA === objB) return;
       if ((0, _typeof2.default)(objA) !== 'object' || objA === null || (0, _typeof2.default)(objB) !== 'object' || objB === null) return 'null';
-      var keysA = Object.keys(objA);
-      var keysB = Object.keys(objB);
+      var keysA = (0, _keys.default)(objA);
+      var keysB = (0, _keys.default)(objB);
       if (keysA.length !== keysB.length) return 'length';
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
 
-      for (var _i2 = 0; _i2 < keysA.length; _i2++) {
-        var key = keysA[_i2];
-        if (include && !include.includes(key)) continue;
-        if (exclude && exclude.includes(key)) continue;
-        if (!objB.hasOwnProperty(key)) return key;
+      try {
+        for (var _iterator2 = (0, _getIterator2.default)(keysA), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var key = _step2.value;
+          if (include && !include.includes(key)) continue;
+          if (exclude && exclude.includes(key)) continue;
+          if (!objB.hasOwnProperty(key)) return key;
 
-        if (recursion && recursion.includes(key)) {
-          if (this.diff(objA[key], objB[key])) return key;
-        } else {
-          if (objA[key] !== objB[key]) return key;
+          if (recursion && recursion.includes(key)) {
+            if (this.diff(objA[key], objB[key])) return key;
+          } else {
+            if (objA[key] !== objB[key]) return key;
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
         }
       }
     } // string

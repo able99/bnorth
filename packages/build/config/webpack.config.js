@@ -1,9 +1,8 @@
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
 const { existsSync } = require('fs');
 const { join, basename, resolve } = require('path');
@@ -20,6 +19,7 @@ function getRules() {
   } = getEnv();
 
   let {
+    extractCss,
     urlLoaderLimit,
     eslint,
   } = getBnorthConfig();
@@ -42,10 +42,7 @@ function getRules() {
       /\.tsx?$/,
     ],
     loader: 'url',
-    options: {
-      limit: urlLoaderLimit,
-      name: 'static/[name].[hash:8].[ext]',
-    },
+    options: { limit: urlLoaderLimit, name: 'static/[name].[hash:8].[ext]' },
   });
 
   // js
@@ -57,10 +54,7 @@ function getRules() {
     loader:"eslint",
     options: {
       configFile: __dirname+'/eslintrc.js',
-      "rules": {
-        'no-unused-vars': ['warn',{args: 'none', ignoreRestSiblings: true}],
-        ...eslint.rules,
-      }
+      "rules": { 'no-unused-vars': ['warn',{args: 'none', ignoreRestSiblings: true}], ...eslint.rules }
     },
   });
 
@@ -75,27 +69,20 @@ function getRules() {
   // css
   rules.push({
     test: /\.css$/,
-    use: [
+    use: extractCss?[
+      MiniCssExtractPlugin.loader,
+      'css?importLoaders=1',
+    ]:[
       'style',
       'css?importLoaders=1',
-    ],
+    ]
   });
-  // rules.push({
-  //   test: /\.css$/,
-  //   use: [
-  //     'style',
-  //     'css?importLoaders=1',
-  //     'postcss'
-  //   ],
-  // });
 
   // file
   rules.push({
     test: /\.html$/,
     loader: 'file',
-    options: {
-      name: '[name].[ext]',
-    },
+    options: { name: '[name].[ext]' },
   });
 
   return rules;
@@ -192,9 +179,10 @@ function getPlugins() {
   
   // production
   // -----------------------------
-  env === 'production' && extractCss && ret.plugins.push(new ExtractTextPlugin({
-    filename: `[name].[contenthash:8].css`,
-    allChunks: true,
+  env === 'production' && extractCss && ret.push(new MiniCssExtractPlugin({
+    filename: '[name].[hash:8].css',
+    chunkFilename: '[id].[hash:8].css',
+    ignoreOrder: false, 
   }));
 
   env === 'production' && analyze && ret.push(new Visualizer());
@@ -212,7 +200,6 @@ function initWebpackConfig() {
     bail=true, 
     devtool='#cheap-module-eval-source-map',
     mockjs,
-    outputPath,
     outputFilename,
     outputPublicPath,
     outputChunkFilename,

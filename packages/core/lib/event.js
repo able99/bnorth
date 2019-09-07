@@ -1,35 +1,34 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+var _regenerator = _interopRequireDefault(require("@babel/runtime-corejs2/regenerator"));
 
 require("regenerator-runtime/runtime");
 
-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/asyncToGenerator"));
 
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/toConsumableArray"));
 
 require("core-js/modules/es6.array.find-index");
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es7.object.entries");
-
-require("core-js/modules/web.dom.iterable");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
 require("core-js/modules/es6.function.name");
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
 /**
  * @module
@@ -123,7 +122,7 @@ function () {
       var _this2 = this;
 
       if (!item) return;
-      Object.entries(this._listener).forEach(function (_ref) {
+      (0, _entries.default)(this._listener).forEach(function (_ref) {
         var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
             k = _ref2[0],
             v = _ref2[1];
@@ -195,8 +194,8 @@ function () {
             _len2,
             args,
             _key2,
-            _arr,
             _i,
+            _arr,
             _arr$_i,
             callback,
             once,
@@ -214,36 +213,35 @@ function () {
                 }
 
                 this.app.options.logEvents && (_this$app$log2 = this.app.log).log.apply(_this$app$log2, ['event:', name].concat(args));
-                _arr = (0, _toConsumableArray2.default)(this._listener[name] || []);
-                _i = 0;
+                _i = 0, _arr = (0, _toConsumableArray2.default)(this._listener[name] || []);
 
-              case 5:
+              case 4:
                 if (!(_i < _arr.length)) {
-                  _context.next = 16;
+                  _context.next = 15;
                   break;
                 }
 
                 _arr$_i = _arr[_i], callback = _arr$_i.callback, once = _arr$_i.once;
-                _context.next = 9;
+                _context.next = 8;
                 return callback.apply(void 0, args);
 
-              case 9:
+              case 8:
                 ret = _context.sent;
                 if (once) this.off(callback);
 
                 if (!ret) {
-                  _context.next = 13;
+                  _context.next = 12;
                   break;
                 }
 
                 return _context.abrupt("return", ret);
 
-              case 13:
+              case 12:
                 _i++;
-                _context.next = 5;
+                _context.next = 4;
                 break;
 
-              case 16:
+              case 15:
               case "end":
                 return _context.stop();
             }
@@ -251,9 +249,11 @@ function () {
         }, _callee, this);
       }));
 
-      return function emit(_x, _x2) {
+      function emit(_x, _x2) {
         return _emit.apply(this, arguments);
-      };
+      }
+
+      return emit;
     }()
   }, {
     key: "createAction",

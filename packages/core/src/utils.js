@@ -76,6 +76,7 @@ class Utils {
    * @returns {stirng} 错误信息 
    */
   message2String(message) {
+    if(!message) return '';
     if(message instanceof Error) {
       return message.message;
     }else if(typeof message === 'object') {

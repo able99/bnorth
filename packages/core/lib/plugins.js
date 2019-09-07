@@ -1,35 +1,34 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
 require("core-js/modules/es6.array.find-index");
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+var _typeof2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/typeof"));
 
-require("core-js/modules/es7.symbol.async-iterator");
+var _isArray = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/is-array"));
 
-require("core-js/modules/es6.symbol");
+var _getIterator2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/get-iterator"));
 
 require("core-js/modules/es6.string.starts-with");
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-require("core-js/modules/web.dom.iterable");
-
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es7.object.entries");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
 require("core-js/modules/es6.array.find");
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
 /**
  * @module
@@ -191,7 +190,7 @@ function () {
           }
         };
 
-        for (var _iterator = (Array.isArray(plugin._dependencies) ? plugin._dependencies : [plugin._dependencies])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = (0, _getIterator2.default)((0, _isArray.default)(plugin._dependencies) ? plugin._dependencies : [plugin._dependencies]), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var _ret = _loop();
 
           if ((0, _typeof2.default)(_ret) === "object") return _ret.v;
@@ -217,7 +216,7 @@ function () {
 
       this._plugins.push(instance);
 
-      instance._states = Object.entries(plugin).filter(function (_ref) {
+      instance._states = (0, _entries.default)(plugin).filter(function (_ref) {
         var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
             k = _ref2[0],
             v = _ref2[1];
@@ -225,7 +224,7 @@ function () {
         return k.startsWith('state') || k.startsWith('_state');
       });
       app.State.attachStates(instance, instance._states);
-      Object.entries(plugin).forEach(function (_ref3) {
+      (0, _entries.default)(plugin).forEach(function (_ref3) {
         var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
             k = _ref4[0],
             v = _ref4[1];

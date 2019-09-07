@@ -1,39 +1,36 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+var _regenerator = _interopRequireDefault(require("@babel/runtime-corejs2/regenerator"));
 
 require("regenerator-runtime/runtime");
 
-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/asyncToGenerator"));
 
 require("core-js/modules/es6.string.starts-with");
 
-require("core-js/modules/es6.array.iterator");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
-require("core-js/modules/es7.object.entries");
+var _getIterator2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/get-iterator"));
 
-require("core-js/modules/es7.symbol.async-iterator");
+var _assign = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/assign"));
 
-require("core-js/modules/es6.symbol");
+var _isArray = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/is-array"));
 
-require("core-js/modules/web.dom.iterable");
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-require("core-js/modules/es6.object.assign");
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
 /**
  * @module
@@ -122,7 +119,7 @@ function () {
       if (typeof aoptions === 'string') return State.app.State.getState(aoptions);
       if (!stateKey) return;
 
-      var _ref = Array.isArray(aoptions) ? aoptions : [aoptions, State.app.State],
+      var _ref = (0, _isArray.default)(aoptions) ? aoptions : [aoptions, State.app.State],
           _ref2 = (0, _slicedToArray2.default)(_ref, 3),
           options = _ref2[0],
           state = _ref2[1],
@@ -138,7 +135,7 @@ function () {
         State.states[_id].destructor();
       }
 
-      return State.states[_id] = Object.assign(new state(_id, options, ownerId), override);
+      return State.states[_id] = (0, _assign.default)(new state(_id, options, ownerId), override);
     }
   }, {
     key: "attachStates",
@@ -182,7 +179,7 @@ function () {
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = options[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = (0, _getIterator2.default)(options), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var _step$value = (0, _slicedToArray2.default)(_step.value, 1),
               k = _step$value[0];
 
@@ -250,7 +247,7 @@ function () {
     this.options = typeof options === 'function' ? options(State.app, this) : options;
     this.options.ownerId = ownerId;
     if (this.options.initialization === undefined) this.options.initialization = {};
-    Object.entries(this.options).forEach(function (_ref9) {
+    (0, _entries.default)(this.options).forEach(function (_ref9) {
       var _ref10 = (0, _slicedToArray2.default)(_ref9, 2),
           k = _ref10[0],
           v = _ref10[1];
@@ -385,9 +382,11 @@ function () {
         }, _callee, this);
       }));
 
-      return function update(_x, _x2) {
+      function update(_x, _x2) {
         return _update.apply(this, arguments);
-      };
+      }
+
+      return update;
     }()
     /**
      * 以 json path 方式设置数据单元中的数据
@@ -443,9 +442,11 @@ function () {
         }, _callee2, this);
       }));
 
-      return function set() {
+      function set() {
         return _set.apply(this, arguments);
-      };
+      }
+
+      return set;
     }()
     /**
      * 删除数据单元中的数据
@@ -481,15 +482,17 @@ function () {
         }, _callee3, this);
       }));
 
-      return function _delete(_x3) {
+      function _delete(_x3) {
         return _delete2.apply(this, arguments);
-      };
+      }
+
+      return _delete;
     }()
   }]);
   return State;
 }();
 
-(0, _defineProperty2.default)(State, "app", void 0);
-(0, _defineProperty2.default)(State, "states", {});
+State.app = void 0;
+State.states = {};
 var _default = State;
 exports.default = _default;

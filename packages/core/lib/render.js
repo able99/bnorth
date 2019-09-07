@@ -1,23 +1,22 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-require("core-js/modules/web.dom.iterable");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
-require("core-js/modules/es6.array.iterator");
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-require("core-js/modules/es7.object.entries");
-
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -219,7 +218,7 @@ function () {
       var id = this._elementIdRandom++;
       var element = document.createElement(tag);
       attrs['data-popelement'] = id;
-      Object.entries(attrs).map(function (_ref3) {
+      (0, _entries.default)(attrs).map(function (_ref3) {
         var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
             k = _ref4[0],
             v = _ref4[1];

@@ -1,27 +1,26 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+var _regenerator = _interopRequireDefault(require("@babel/runtime-corejs2/regenerator"));
 
-require("core-js/modules/es7.symbol.async-iterator");
-
-require("core-js/modules/es6.symbol");
-
-require("core-js/modules/web.dom.iterable");
+var _getIterator2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/get-iterator"));
 
 require("regenerator-runtime/runtime");
 
-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/asyncToGenerator"));
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
 var _utils = _interopRequireDefault(require("./utils"));
 
@@ -297,7 +296,7 @@ function () {
                 _didIteratorError = false;
                 _iteratorError = undefined;
                 _context.prev = 4;
-                _iterator = this._startEvents[Symbol.iterator]();
+                _iterator = (0, _getIterator2.default)(this._startEvents);
 
               case 6:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
@@ -371,9 +370,11 @@ function () {
         }, _callee, this, [[0, 30], [4, 16, 20, 28], [21,, 23, 27]]);
       }));
 
-      return function start() {
+      function start() {
         return _start.apply(this, arguments);
-      };
+      }
+
+      return start;
     }()
   }]);
   return App;

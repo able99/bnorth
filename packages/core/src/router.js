@@ -209,7 +209,10 @@ class Router {
    */
   setRoutes(routes) {
     this._routes = routes;
-    Object.entries(this._routes||{}).forEach(([k,v])=>v.for&&this.addNavigatorFunction(k, v.for));
+    Object.entries(this._routes||{}).forEach(([k,v])=>{
+      if(typeof(v)==='function') this._routes[k] = {component:v};
+      v.for&&this.addNavigatorFunction(k, v.for);
+    });
   }
 
   /**
@@ -237,7 +240,7 @@ class Router {
    */
   getRouteByPageName(pageName) {
     let route = Object.entries(this._routes).find(([k,v])=>k.split(':')[0]===pageName);
-    return route?[route[0], typeof(route[1])==='function'?{component:route[1]}:route[1]]:[];
+    return route||[];
   }
 
   /**

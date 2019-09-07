@@ -1,13 +1,28 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
+
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
+
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
+
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
+
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
+
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
+
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
 require("core-js/modules/es7.array.includes");
 
@@ -15,35 +30,29 @@ require("core-js/modules/es6.string.includes");
 
 require("core-js/modules/es6.string.starts-with");
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-require("core-js/modules/web.dom.iterable");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
-require("core-js/modules/es6.array.iterator");
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-require("core-js/modules/es7.object.entries");
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/possibleConstructorReturn"));
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/getPrototypeOf"));
 
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/assertThisInitialized"));
 
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
-var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/helpers/assertThisInitialized"));
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+var _inherits2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/inherits"));
 
 var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
 
-/**
- * @module
- */
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 /**
  * 页面 controller 的声明函数
@@ -276,36 +285,36 @@ function (_React$Component) {
 
     (0, _classCallCheck2.default)(this, Page);
     _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Page).call(this, props));
-    Page.pages[_this._id] = (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this));
+    Page.pages[_this._id] = (0, _assertThisInitialized2.default)(_this);
     var _this$props$routeDefi = _this.props.routeDefine;
     _this$props$routeDefi = _this$props$routeDefi === void 0 ? {} : _this$props$routeDefi;
     var component = _this$props$routeDefi.component,
         controller = _this$props$routeDefi.controller;
     controller = controller || component.controller || {};
-    var options = typeof controller === 'function' ? controller(Page.app, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))) : controller;
+    var options = typeof controller === 'function' ? controller(Page.app, (0, _assertThisInitialized2.default)(_this)) : controller;
     if (!options.stateData) options.stateData = undefined;
     if (!options.actionGoBack) options.actionGoBack = Page.app.event.createHandler('actionGoBack', function () {
       return Page.app.router.back();
-    }, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
-    _this._states = Object.entries(options).filter(function (_ref) {
+    }, (0, _assertThisInitialized2.default)(_this));
+    _this._states = (0, _entries.default)(options).filter(function (_ref) {
       var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
           k = _ref2[0],
           v = _ref2[1];
 
       return k.startsWith('state') || k.startsWith('_state');
     });
-    Page.app.State.attachStates((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)), _this._states);
-    Object.entries(options).forEach(function (_ref3) {
+    Page.app.State.attachStates((0, _assertThisInitialized2.default)(_this), _this._states);
+    (0, _entries.default)(options).forEach(function (_ref3) {
       var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
           k = _ref4[0],
           v = _ref4[1];
 
       if (k.startsWith('on')) {
-        Page.app.event.on(Page.app._id, k, Page.app.event.createHandler(k, v, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))), _this._id).bind((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
+        Page.app.event.on(Page.app._id, k, Page.app.event.createHandler(k, v, (0, _assertThisInitialized2.default)(_this)), _this._id).bind((0, _assertThisInitialized2.default)(_this));
       } else if (k.startsWith('_on')) {
-        _this[k] = Page.app.event.createHandler(k, v, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))).bind((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
+        _this[k] = Page.app.event.createHandler(k, v, (0, _assertThisInitialized2.default)(_this)).bind((0, _assertThisInitialized2.default)(_this));
       } else if (k.startsWith('action')) {
-        _this[k] = Page.app.event.createAction(k, v, (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this))).bind((0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this)));
+        _this[k] = Page.app.event.createAction(k, v, (0, _assertThisInitialized2.default)(_this)).bind((0, _assertThisInitialized2.default)(_this));
       } else {
         !k.startsWith('state') && !k.startsWith('_state') && (_this[k] = v);
       }
@@ -420,7 +429,7 @@ function (_React$Component) {
     key: "_contentProps",
     value: function _contentProps() {
       var _id = this.props._id;
-      return (0, _objectSpread2.default)({
+      return _objectSpread({
         app: Page.app,
         page: this,
         _id: _id,
@@ -448,4 +457,4 @@ function (_React$Component) {
 }(_react.default.Component);
 
 exports.default = Page;
-(0, _defineProperty2.default)(Page, "pages", {});
+Page.pages = {};

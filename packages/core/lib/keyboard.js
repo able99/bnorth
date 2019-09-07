@@ -1,23 +1,22 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-require("core-js/modules/es7.symbol.async-iterator");
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/toConsumableArray"));
 
-require("core-js/modules/es6.symbol");
+var _getIterator2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/get-iterator"));
 
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-require("core-js/modules/web.dom.iterable");
-
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
 /**
  * @module
@@ -89,9 +88,9 @@ function () {
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = (0, _toConsumableArray2.default)(poplayerInfos.filter(function (v) {
+        for (var _iterator = (0, _getIterator2.default)((0, _toConsumableArray2.default)(poplayerInfos.filter(function (v) {
           return v.options.isModal && !v.options._idPage;
-        })).reverse()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        })).reverse()), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var poplayerInfo = _step.value;
           var poplayer = this.app.Poplayer.getPoplayer(poplayerInfo._id);
           if (!poplayer) continue;
@@ -123,9 +122,9 @@ function () {
       var _iteratorError2 = undefined;
 
       try {
-        for (var _iterator2 = (0, _toConsumableArray2.default)(poplayerInfos.filter(function (v) {
+        for (var _iterator2 = (0, _getIterator2.default)((0, _toConsumableArray2.default)(poplayerInfos.filter(function (v) {
           return v.options.isModal && v.options._idPage === page._id;
-        })).reverse()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        })).reverse()), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
           var _poplayerInfo = _step2.value;
 
           var _poplayer = this.app.Poplayer.getPoplayer(_poplayerInfo.options._id);

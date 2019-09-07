@@ -1,41 +1,54 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
+
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
+
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
+
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
+
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
+
+var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
 
 require("core-js/modules/es7.array.includes");
 
 require("core-js/modules/es6.string.includes");
 
-var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+var _regenerator = _interopRequireDefault(require("@babel/runtime-corejs2/regenerator"));
 
-require("core-js/modules/es7.object.entries");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
+
+var _isArray = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/is-array"));
 
 require("core-js/modules/es6.string.ends-with");
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-var _toArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toArray"));
+var _toArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/toArray"));
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+var _typeof2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/typeof"));
 
-require("core-js/modules/es7.symbol.async-iterator");
-
-require("core-js/modules/es6.symbol");
+var _getIterator2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/get-iterator"));
 
 require("core-js/modules/es6.array.find");
 
 require("regenerator-runtime/runtime");
 
-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/asyncToGenerator"));
 
 require("core-js/modules/es6.regexp.search");
 
@@ -43,33 +56,30 @@ require("core-js/modules/es6.regexp.split");
 
 require("core-js/modules/es6.string.starts-with");
 
-require("core-js/modules/es6.array.iterator");
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
 
-require("core-js/modules/es6.object.keys");
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-require("core-js/modules/web.dom.iterable");
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/possibleConstructorReturn"));
 
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/getPrototypeOf"));
 
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/assertThisInitialized"));
 
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
-var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime/helpers/assertThisInitialized"));
+var _inherits2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/inherits"));
 
 var _react = _interopRequireDefault(require("react"));
 
-var _createHashHistory = _interopRequireDefault(require("history/createHashHistory"));
+var _history = require("history");
 
 var _path = require("path");
 
-/**
- * @module
- */
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
+
 var RouterComponent =
 /*#__PURE__*/
 function (_React$Component) {
@@ -96,7 +106,7 @@ function (_React$Component) {
       pageInfos: [],
       poplayerInfos: []
     };
-    _this.app.router.component = (0, _assertThisInitialized2.default)((0, _assertThisInitialized2.default)(_this));
+    _this.app.router.component = (0, _assertThisInitialized2.default)(_this);
     _this.spePage = '/';
     _this.prePage = '#';
     _this.preSubPage = '|';
@@ -124,7 +134,7 @@ function (_React$Component) {
     _this.Page = _this.app.context.consumerHoc(_this.app.Page);
     _this.Poplayer = _this.app.context.consumerHoc(_this.app.Poplayer);
     _this.historyCount = 0;
-    _this.history = (0, _createHashHistory.default)();
+    _this.history = (0, _history.createBrowserHistory)();
 
     _this.history.listen(function (location, action) {
       return _this._handleLocationChange();
@@ -143,7 +153,7 @@ function (_React$Component) {
       var location = this.history.location;
       var action = this.history.action;
       RouterComponent.app.event.emit(RouterComponent.app._id, 'onLocationChange', location, action);
-      Object.keys(this._locationStates).filter(function (v) {
+      (0, _keys.default)(this._locationStates).filter(function (v) {
         return !location.pathname.startsWith(v);
       }).forEach(function (v) {
         delete _this2._locationStates[v];
@@ -195,7 +205,7 @@ function (_React$Component) {
       _regenerator.default.mark(function _callee() {
         var _this3 = this;
 
-        var location, router, pathName, _idPrev, params, pageInfos, isPop, isFirst, prevActive, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, aprevActive, _i, pageInfo, _block;
+        var location, router, pathName, _idPrev, params, pageInfos, isPop, isFirst, prevActive, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, aprevActive, _i, _pageInfos, pageInfo, _block;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -204,7 +214,7 @@ function (_React$Component) {
                 location = this.history.location;
                 router = RouterComponent.app.router;
 
-                if (Object.keys(router.getRoutes()).length) {
+                if ((0, _keys.default)(router.getRoutes()).length) {
                   _context.next = 4;
                   break;
                 }
@@ -264,7 +274,7 @@ function (_React$Component) {
                   pageInfo.routeName = routeName;
                   pageInfo.routeDefine = routeDefine;
                   pageInfo.routeParams = routeName.split(_this3.speParams).slice(1);
-                  pageInfo.params = _this3.passParams ? (0, _objectSpread2.default)({}, params) : {};
+                  pageInfo.params = _this3.passParams ? _objectSpread({}, params) : {};
                   pageInfo.routeParams.forEach(function (v, i) {
                     var optional = v.endsWith(_this3.optionalParams);
                     if (optional) v = v.slice(0, -1);
@@ -301,14 +311,15 @@ function (_React$Component) {
                   var _iteratorError2 = undefined;
 
                   try {
-                    for (var _iterator2 = (Array.isArray(routeDefine.subPages) ? routeDefine.subPages.map(function (v, i) {
+                    for (var _iterator2 = (0, _getIterator2.default)((0, _isArray.default)(routeDefine.subPages) ? routeDefine.subPages.map(function (v, i) {
                       return [v, v];
-                    }) : Object.entries(routeDefine.subPages || {}))[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    }) : (0, _entries.default)(routeDefine.subPages || {})), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                       var _step2$value = (0, _slicedToArray2.default)(_step2.value, 2),
                           k = _step2$value[0],
                           v = _step2$value[1];
 
-                      var subPageInfo = (0, _objectSpread2.default)({}, pageInfo);
+                      var subPageInfo = _objectSpread({}, pageInfo);
+
                       subPageInfo._idParent = subPageInfo._id;
                       subPageInfo._idSubPage = k;
                       subPageInfo.subNo = subNo;
@@ -350,7 +361,7 @@ function (_React$Component) {
                   pageInfos.push(pageInfo);
                 };
 
-                _iterator = location.pathnames[Symbol.iterator]();
+                _iterator = (0, _getIterator2.default)(location.pathnames);
 
               case 18:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
@@ -423,15 +434,15 @@ function (_React$Component) {
                   }
                 }
 
-                _i = 0;
+                _i = 0, _pageInfos = pageInfos;
 
               case 41:
-                if (!(_i < pageInfos.length)) {
+                if (!(_i < _pageInfos.length)) {
                   _context.next = 53;
                   break;
                 }
 
-                pageInfo = pageInfos[_i];
+                pageInfo = _pageInfos[_i];
 
                 if (!pageInfo.isInactive) {
                   _context.next = 45;
@@ -477,9 +488,11 @@ function (_React$Component) {
         }, _callee, this, [[15, 27, 31, 39], [32,, 34, 38]]);
       }));
 
-      return function _updateRouterInfo() {
+      function _updateRouterInfo() {
         return _updateRouterInfo2.apply(this, arguments);
-      };
+      }
+
+      return _updateRouterInfo;
     }()
   }, {
     key: "_isTransforming",
@@ -537,7 +550,7 @@ function (_React$Component) {
       }, error)) : null, !error && pageInfos.map(function (v) {
         return _react.default.createElement(_this5.Page, (0, _extends2.default)({
           key: v._id
-        }, v), Object.entries(v.subPageInfos).reduce(function (vv1, _ref) {
+        }, v), (0, _entries.default)(v.subPageInfos).reduce(function (vv1, _ref) {
           var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
               kk2 = _ref2[0],
               vv2 = _ref2[1];
