@@ -1,13 +1,16 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-require("core-js/modules/es6.object.assign");
+var _assign = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/assign"));
 
 var _utils = require("../utils");
 
@@ -33,7 +36,7 @@ function genFuncAnimation(_ref) {
       animationCount = _ref.animationCount,
       animationDirection = _ref.animationDirection,
       animationPlayState = _ref.animationPlayState;
-  return Object.assign(
+  return (0, _assign.default)(
   /**
    * 设置渐变动画影响的属性
    * @classname transition-property

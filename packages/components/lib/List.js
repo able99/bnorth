@@ -1,21 +1,34 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _interopRequireWildcard = require("@babel/runtime-corejs2/helpers/interopRequireWildcard");
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
 
-var _objectSpread3 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
+
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
+
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
+
+var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
+
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -25,9 +38,9 @@ var _Panel = _interopRequireWildcard(require("./Panel"));
 
 var _Icon = _interopRequireDefault(require("./Icon"));
 
-/**
- * @module
- */
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty3.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 /**
  * 列表组件
@@ -90,7 +103,7 @@ List.defaultProps = {};
  * @type {object}
  */
 
-Object.defineProperty(List, "List", {
+(0, _defineProperty3.default)(List, "List", {
   get: function get() {
     return List;
   },
@@ -119,7 +132,10 @@ var _Item = function Item(aprops) {
   var _BaseComponent2 = (0, _BaseComponent3.default)(aprops, _Item),
       panelItemIndex = _BaseComponent2.panelItemIndex,
       panelItemCount = _BaseComponent2.panelItemCount,
-      separatorInset = _BaseComponent2.panelContainerProps.separatorInset,
+      _BaseComponent2$panel = _BaseComponent2.panelContainerProps;
+
+  _BaseComponent2$panel = _BaseComponent2$panel === void 0 ? {} : _BaseComponent2$panel;
+  var separatorInset = _BaseComponent2$panel.separatorInset,
       onClick = _BaseComponent2.onClick,
       media = _BaseComponent2.media,
       mediaProps = _BaseComponent2.mediaProps,
@@ -139,8 +155,7 @@ var _Item = function Item(aprops) {
       classNamePre = _BaseComponent2.classNamePre,
       children = _BaseComponent2.children,
       props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["panelItemIndex", "panelItemCount", "panelContainerProps", "onClick", "media", "mediaProps", "mainProps", "title", "titleProps", "subTitle", "subTitleProps", "desc", "descProps", "after", "afterProps", "arrow", "arrowProps", "autoArrow", "classNamePre", "children"]);
-
-  classNamePre = (0, _objectSpread3.default)((_objectSpread2 = {
+  classNamePre = _objectSpread((_objectSpread2 = {
     'padding-a-': true
   }, (0, _defineProperty2.default)(_objectSpread2, "margin-left-".concat(separatorInset && separatorInset !== true ? '-' + separatorInset : ''), separatorInset), (0, _defineProperty2.default)(_objectSpread2, 'padding-left-0', separatorInset), (0, _defineProperty2.default)(_objectSpread2, 'border-set-bottom-', panelItemIndex < panelItemCount - 1), _objectSpread2), classNamePre);
   return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
@@ -253,7 +268,7 @@ _Item.defaultProps = {};
  */
 
 _Item.defaultProps.autoArrow = true;
-Object.defineProperty(List, "Item", {
+(0, _defineProperty3.default)(List, "Item", {
   get: function get() {
     return _Item;
   },

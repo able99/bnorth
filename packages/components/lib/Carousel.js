@@ -1,31 +1,36 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _interopRequireWildcard = require("@babel/runtime-corejs2/helpers/interopRequireWildcard");
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-require("core-js/modules/es6.array.from");
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _from = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/from"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectWithoutProperties"));
 
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/possibleConstructorReturn"));
 
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/inherits"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -161,8 +166,8 @@ function (_React$Component) {
         return v;
       });
       var classNameStrController = 'position-absolute margin-h-xxs padding-a-xxs offset-top-center translate-center-y text-weight-border';
-      var classNamePreControllerPrev = (_classNamePreControll = {}, (0, _defineProperty2.default)(_classNamePreControll, classNameStrController, true), (0, _defineProperty2.default)(_classNamePreControll, "offset-left-start", true), _classNamePreControll);
-      var classNamePreControllerNext = (_classNamePreControll2 = {}, (0, _defineProperty2.default)(_classNamePreControll2, classNameStrController, true), (0, _defineProperty2.default)(_classNamePreControll2, "offset-right-start", true), _classNamePreControll2);
+      var classNamePreControllerPrev = (_classNamePreControll = {}, (0, _defineProperty3.default)(_classNamePreControll, classNameStrController, true), (0, _defineProperty3.default)(_classNamePreControll, "offset-left-start", true), _classNamePreControll);
+      var classNamePreControllerNext = (_classNamePreControll2 = {}, (0, _defineProperty3.default)(_classNamePreControll2, classNameStrController, true), (0, _defineProperty3.default)(_classNamePreControll2, "offset-right-start", true), _classNamePreControll2);
       var classNamePrePager = 'position-absolute padding-a-xs margin-bottom-xs border-radius-rounded offset-bottom-start offset-left-center translate-center-x';
       return _react.default.createElement(_Panel.PanelContainer, (0, _extends2.default)({
         ctype: "scroll",
@@ -210,7 +215,7 @@ function (_React$Component) {
         classNamePre: classNamePrePager,
         "b-theme": "mask",
         "b-style": "solid"
-      }, pagerProps), Array.from({
+      }, pagerProps), (0, _from.default)({
         length: children.length
       }, function (v, k) {
         return k;
@@ -292,7 +297,7 @@ Carousel.defaultProps.pager = true;
  * @type {Object}
  */
 
-Object.defineProperty(Carousel, "Carousel", {
+(0, _defineProperty2.default)(Carousel, "Carousel", {
   get: function get() {
     return Carousel;
   },
@@ -319,7 +324,7 @@ var _Item = function Item(aprops) {
 };
 
 _Item.defaultProps = {};
-Object.defineProperty(Carousel, "Item", {
+(0, _defineProperty2.default)(Carousel, "Item", {
   get: function get() {
     return _Item;
   },

@@ -191,18 +191,16 @@ class State {
   }
 
   /**
-   * 更新数据单元的数据, 异步更新，同时调用2次 update，会导致后面更新覆盖前一次，建议用同步方式调用
-   * @async
+   * 更新数据单元的数据
    * @param {*} - 新数据  
    * @param {object} - 更新参数，其中的 append 用于指定追加方式，参见 app.utils.objectUpdate 中对参数的说明
    * @returns {*} 更新后的数据
    */
-  async update(data, options) {
+  update(data, options) {
     options = State.app.utils.getOptions(this.options, options);
     let prevData = this.data();
     let nextData = State.app.utils.objectUpdate(prevData, data, options.append);
 
-    nextData = await State.app.event.emit(null, 'onStateUpdating', this._id, nextData, prevData, data, options)||nextData; 
     nextData = (this.options._onStateUpdating&&this.options._onStateUpdating(nextData, prevData, data, options))||nextData;
     State.app.context.update(this._id, {data:nextData});
     State.app.event.emit(null, 'onStateUpdated', this._id, nextData, prevData, data, options);
@@ -212,16 +210,15 @@ class State {
   
   /**
    * 以 json path 方式设置数据单元中的数据
-   * @async
    * @param {string} - json path 
    * @param {*} - 新的数据
    * @param {boolean} - 是否是输入中状态
    * @returns {*} 更新后的数据
    */
-  async set(path='', val, input) {
+  set(path='', val, input) {
     let data = this.data();
     if(!State.app.utils.pathSet(data, path, val)) return false;
-    return await this.update(data, {path, input});
+    return this.update(data, {path, input});
   }
 
   /**
@@ -229,9 +226,9 @@ class State {
    * @param {*} - 删除的参数，参见 app.utils.objectDelete 中对参数的说明
    * @returns {*} 更新后的数据
    */
-  async delete(_did) {
+  delete(_did) {
     let data = State.app.utils.objectDelete(this.data(), _did);
-    return await this.update(data, {append: false});
+    return this.update(data, {append: false});
   }
 }
 

@@ -1,21 +1,34 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _interopRequireWildcard = require("@babel/runtime-corejs2/helpers/interopRequireWildcard");
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
 
-var _objectSpread3 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
+
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
+
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
+
+var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
+
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -27,9 +40,9 @@ var _BaseComponent2 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
-/**
- * @module
- */
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 /**
  * 折叠动画组件
@@ -126,10 +139,10 @@ _Animation.defaultProps.types = {
           classNamePre = aprops.classNamePre,
           stylePre = aprops.stylePre,
           props = (0, _objectWithoutProperties2.default)(aprops, ["in", "timeout", "dimension", "classNamePre", "stylePre"]);
-      props.classNamePre = (0, _objectSpread3.default)((0, _defineProperty2.default)({}, "opacity-".concat(state === 'entered' || state === 'entering' ? '100' : isIn ? '50' : '0'), true), classNamePre);
-      props.stylePre = (0, _objectSpread3.default)({}, (0, _animation.transiton)("".concat(timeout, "ms"), {
+      props.classNamePre = _objectSpread((0, _defineProperty3.default)({}, "opacity-".concat(state === 'entered' || state === 'entering' ? '100' : isIn ? '50' : '0'), true), classNamePre);
+      props.stylePre = _objectSpread({}, (0, _animation.transiton)("".concat(timeout, "ms"), {
         property: 'opacity'
-      }), stylePre);
+      }), {}, stylePre);
       return props;
     }
   },
@@ -141,13 +154,13 @@ _Animation.defaultProps.types = {
           classNamePre = aprops.classNamePre,
           stylePre = aprops.stylePre,
           props = (0, _objectWithoutProperties2.default)(aprops, ["in", "timeout", "dimension", "classNamePre", "stylePre"]);
-      props.classNamePre = (0, _objectSpread3.default)({
+      props.classNamePre = _objectSpread({
         'overflow-a-hidden text-white-space-nowrap': true,
         'display-none': !isIn & state === 'exited'
       }, classNamePre);
-      props.stylePre = (0, _objectSpread3.default)({}, (0, _animation.transiton)("".concat(timeout, "ms"), {
+      props.stylePre = _objectSpread({}, (0, _animation.transiton)("".concat(timeout, "ms"), {
         property: dimension
-      }), stylePre);
+      }), {}, stylePre);
       return props;
     },
     onEnter: function onEnter(props, elem) {
@@ -173,7 +186,7 @@ _Animation.defaultProps.types = {
     }
   }
 };
-Object.defineProperty(_Animation, "Animation", {
+(0, _defineProperty2.default)(_Animation, "Animation", {
   get: function get() {
     return _Animation;
   },

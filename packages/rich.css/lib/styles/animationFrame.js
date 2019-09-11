@@ -1,10 +1,13 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.default = animationFrame;
 exports.afSpin = afSpin;
 exports.afFlyoutLeft = afFlyoutLeft;
@@ -13,23 +16,32 @@ exports.afZoom = afZoom;
 exports.afFade = afFade;
 exports.afBottom = afBottom;
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
 
-require("core-js/modules/es6.array.iterator");
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
 
-require("core-js/modules/es7.object.entries");
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
 
-require("core-js/modules/web.dom.iterable");
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
+
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
+
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
+
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
+
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
 var _animation = require("./animation");
 
 var _dom = require("./dom");
 
-/**
- * @module
- */
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
+
 function animationFrame(el, work) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   var cb = arguments.length > 3 ? arguments[3] : undefined;
@@ -56,7 +68,7 @@ function animationFrame(el, work) {
     stop = true;
   }, function (aoptions) {
     stop = false;
-    options = (0, _objectSpread2.default)({}, options, aoptions);
+    options = _objectSpread({}, options, {}, aoptions);
 
     if (options.reset) {
       start = 0;
@@ -69,7 +81,7 @@ function animationFrame(el, work) {
 
 function afSpin(el, start, time, options) {
   var obj = (0, _animation.transform)('rotate', start * 3 % 360 + 'deg');
-  Object.entries(obj).forEach(function (_ref) {
+  (0, _entries.default)(obj).forEach(function (_ref) {
     var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
         k = _ref2[0],
         v = _ref2[1];
@@ -84,7 +96,7 @@ function afFlyoutLeft(el, start, time, _ref3) {
   var diff = new Date().getTime() - time;
   var percent = diff * 100 / duration;
   var obj = (0, _animation.transform)('translateX', percent + '%');
-  Object.entries(obj).forEach(function (_ref4) {
+  (0, _entries.default)(obj).forEach(function (_ref4) {
     var _ref5 = (0, _slicedToArray2.default)(_ref4, 2),
         k = _ref5[0],
         v = _ref5[1];
@@ -108,7 +120,7 @@ function afPeekTop(el, start, time, _ref6) {
   }
 
   var obj = (0, _animation.transform)('translateY', '-' + (!rewind ? total - top : top) + 'px');
-  Object.entries(obj).forEach(function (_ref7) {
+  (0, _entries.default)(obj).forEach(function (_ref7) {
     var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
         k = _ref8[0],
         v = _ref8[1];
@@ -125,7 +137,7 @@ function afZoom(el, start, time, _ref9) {
   var scale = diff / duration + 0.3;
   if (scale > 1) scale = 1;
   var obj = (0, _animation.transform)('scale', !rewind ? scale : 1 - scale);
-  Object.entries(obj).forEach(function (_ref10) {
+  (0, _entries.default)(obj).forEach(function (_ref10) {
     var _ref11 = (0, _slicedToArray2.default)(_ref10, 2),
         k = _ref11[0],
         v = _ref11[1];
@@ -152,7 +164,7 @@ function afBottom(el, start, time, _ref13) {
   var percent = diff * 100 / duration;
   if (percent > 100) percent = 100;
   var obj = (0, _animation.transform)('translateY', (!rewind ? 100 - percent : percent) + '%');
-  Object.entries(obj).forEach(function (_ref14) {
+  (0, _entries.default)(obj).forEach(function (_ref14) {
     var _ref15 = (0, _slicedToArray2.default)(_ref14, 2),
         k = _ref15[0],
         v = _ref15[1];

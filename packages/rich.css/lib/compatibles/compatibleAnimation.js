@@ -1,24 +1,25 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.default = compatible;
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-require("core-js/modules/web.dom.iterable");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es7.object.entries");
+var _isArray = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/is-array"));
 
 var _utils = require("./utils");
 
 function compatible(styles, dom) {
-  styles = Array.isArray(styles) ? styles : Object.entries(styles);
+  styles = (0, _isArray.default)(styles) ? styles : (0, _entries.default)(styles);
   var ret = {};
   styles.forEach(function (_ref) {
     var _ref2 = (0, _slicedToArray2.default)(_ref, 2),

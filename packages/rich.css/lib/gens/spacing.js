@@ -1,11 +1,16 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
+
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-require("core-js/modules/es6.object.assign");
+var _assign = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/assign"));
 
 var _utils = require("../utils");
 
@@ -25,7 +30,7 @@ function genFuncSpacing(_ref) {
   var directionEdge = _ref.directionEdge,
       spacing = _ref.spacing;
   var styleValueSet = (0, _utils.getStyleValueSet)(spacing);
-  return Object.assign(
+  return (0, _assign.default)(
   /**
    * 设置外边距
    * @classname margin

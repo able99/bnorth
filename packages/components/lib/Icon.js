@@ -1,21 +1,38 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _interopRequireWildcard = require("@babel/runtime-corejs2/helpers/interopRequireWildcard");
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.PanelIcon = exports.default = void 0;
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
 
-require("core-js/modules/es6.array.from");
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
 
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
+
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/typeof"));
+
+var _from = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/from"));
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/toConsumableArray"));
+
+var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
+
+require("core-js/modules/es6.array.fill");
 
 require("core-js/modules/es7.array.includes");
 
@@ -23,13 +40,13 @@ require("core-js/modules/es6.string.includes");
 
 require("core-js/modules/es6.regexp.split");
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
 require("core-js/modules/es6.function.name");
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -39,9 +56,9 @@ var _BaseComponent3 = _interopRequireDefault(require("./BaseComponent"));
 
 var _Panel = _interopRequireWildcard(require("./Panel"));
 
-/**
- * @module
- */
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 /**
  * 图标组件
@@ -67,10 +84,10 @@ var _Icon = function Icon(aprops) {
       stylePre = _BaseComponent.stylePre,
       props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["names", "nameMaps", "shapes", "name", "src", "char", "shape", "rotate", "component", "classNamePre", "stylePre"]);
 
-  classNamePre = (0, _objectSpread2.default)({
+  classNamePre = _objectSpread({
     'display-inline width-1em height-1em': true
   }, classNamePre);
-  stylePre = rotate ? (0, _objectSpread2.default)({}, (0, _animation.transform)('rotate', String(rotate) + 'deg'), stylePre) : stylePre || {};
+  stylePre = rotate ? _objectSpread({}, (0, _animation.transform)('rotate', String(rotate) + 'deg'), {}, stylePre) : stylePre || {};
 
   if (name) {
     var _name$split = name.split(':'),
@@ -191,7 +208,7 @@ _Icon.appendSvgIcons = function (svgStr) {
   x.innerHTML = svgStr;
   var svg = x.querySelector('svg');
   if (!svg) return;
-  _Icon.defaultProps.names = (0, _toConsumableArray2.default)(_Icon.defaultProps.names).concat((0, _toConsumableArray2.default)(Array.from(svg.querySelectorAll('defs symbol')).map(function (v) {
+  _Icon.defaultProps.names = [].concat((0, _toConsumableArray2.default)(_Icon.defaultProps.names), (0, _toConsumableArray2.default)((0, _from.default)(svg.querySelectorAll('defs symbol')).map(function (v) {
     return v.id;
   })));
   return document.body.appendChild(svg);
@@ -207,13 +224,13 @@ _Icon.appendMap = function (val, name) {
   if (!val) return;
 
   if ((0, _typeof2.default)(val) === 'object') {
-    _Icon.defaultProps.nameMaps = (0, _objectSpread2.default)({}, _Icon.defaultProps.nameMaps, val);
+    _Icon.defaultProps.nameMaps = _objectSpread({}, _Icon.defaultProps.nameMaps, {}, val);
   } else {
     _Icon.defaultProps.nameMaps[name] = val;
   }
 };
 
-Object.defineProperty(_Icon, "Icon", {
+(0, _defineProperty2.default)(_Icon, "Icon", {
   get: function get() {
     return _Icon;
   },
@@ -298,7 +315,7 @@ PanelIcon.defaultProps = {};
  * @type {object}
  */
 
-Object.defineProperty(_Icon, "PanelIcon", {
+(0, _defineProperty2.default)(_Icon, "PanelIcon", {
   get: function get() {
     return PanelIcon;
   },

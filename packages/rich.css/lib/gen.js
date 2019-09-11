@@ -1,10 +1,13 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.getCssConfig = getCssConfig;
 exports.setCssConfig = setCssConfig;
 exports.createStyleElement = createStyleElement;
@@ -12,19 +15,31 @@ exports.getStyleElement = getStyleElement;
 exports.writeStyles = writeStyles;
 exports.default = void 0;
 
-require("core-js/modules/es6.object.assign");
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
 
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
+
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
+
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
+
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
+
+var _assign = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/assign"));
+
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/toConsumableArray"));
+
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
 var _config = _interopRequireDefault(require("./config"));
 
 var _utils = require("./utils");
 
-/**
- * @module
- */
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 /**
  * 样式开关，实际上 - 符号，放在样式结尾。与默认值意义不同，有些默认值也是 - 结尾
@@ -68,7 +83,9 @@ function getCssConfig() {
 
 function setCssConfig() {
   var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var ret = (0, _objectSpread2.default)({}, getCssConfig(), config);
+
+  var ret = _objectSpread({}, getCssConfig(), {}, config);
+
   return window.richCssConfig = ret;
 }
 
@@ -112,9 +129,10 @@ function gen() {
     gens[_key - 1] = arguments[_key];
   }
 
-  var classObjects = Object.assign.apply(Object, [{}].concat((0, _toConsumableArray2.default)(gens.map(function (v) {
+  var classObjects = _assign.default.apply(Object, [{}].concat((0, _toConsumableArray2.default)(gens.map(function (v) {
     return v(config);
   }))));
+
   writeStyles(classObjects, styleElement, true);
 }
 

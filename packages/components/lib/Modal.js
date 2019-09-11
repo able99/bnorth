@@ -1,19 +1,34 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _interopRequireWildcard = require("@babel/runtime-corejs2/helpers/interopRequireWildcard");
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.modal = exports.default = void 0;
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
+
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
+
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
+
+var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
+
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
+
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -26,6 +41,10 @@ var _Backdrop = _interopRequireDefault(require("./Backdrop"));
 var _Icon = require("./Icon");
 
 var _Button = _interopRequireDefault(require("./Button"));
+
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 var _Modal = function Modal(aprops) {
   var _BaseComponent = (0, _BaseComponent2.default)(aprops, _Modal),
@@ -52,19 +71,19 @@ var _Modal = function Modal(aprops) {
       props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["type", "rewind", "onClose", "onFinished", "onAction", "containerProps", "headerProps", "title", "close", "bodyProps", "footerProps", "buttons", "classNamePre", "stylePre", "children", "app", "_id", "poplayer", "info", "states"]);
 
   buttons = buttons[type] || [];
-  children = typeof children === 'function' ? children((0, _objectSpread2.default)({}, props, {
+  children = typeof children === 'function' ? children(_objectSpread({}, props, {
     app: app,
     _id: _id,
     poplayer: poplayer,
     info: info,
     states: states
   })) : children;
-  classNamePre = (0, _objectSpread2.default)({
+  classNamePre = _objectSpread({
     'position-relative backface-hidden overflow-a-hidden': true,
     'square-full': type === 'popup',
     'border-radius-': type !== 'popup' && type !== 'document'
   }, classNamePre);
-  stylePre = (0, _objectSpread2.default)({
+  stylePre = _objectSpread({
     width: type !== 'popup' ? '80%' : undefined
   }, stylePre);
   var classNamePreContainer = {
@@ -131,7 +150,7 @@ _Modal.defaultProps.buttons = {
     children: '确定'
   }]
 };
-Object.defineProperty(_Modal, "Modal", {
+(0, _defineProperty2.default)(_Modal, "Modal", {
   get: function get() {
     return _Modal;
   },
@@ -151,12 +170,12 @@ var modal = {
     app.modal = {
       show: function show(content, props) {
         var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-        return options._id = app.Poplayer.addPoplayer(_Modal, (0, _objectSpread2.default)({
+        return options._id = app.Poplayer.addPoplayer(_Modal, _objectSpread({
           children: content,
           onClose: function onClose(index) {
             return app.modal.close(options._id, index);
           }
-        }, props), (0, _objectSpread2.default)({
+        }, props), _objectSpread({
           _idPage: app.Page.getPage()._id,
           isModal: true,
           _onStart: function _onStart(app, _id, poplayer) {

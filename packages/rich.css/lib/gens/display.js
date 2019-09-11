@@ -1,11 +1,16 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
+
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-require("core-js/modules/es6.object.assign");
+var _assign = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/assign"));
 
 var _utils = require("../utils");
 
@@ -29,7 +34,7 @@ function genFuncDisplay(_ref) {
       pointerEvents = _ref.pointerEvents,
       overflow = _ref.overflow,
       float = _ref.float;
-  return Object.assign(
+  return (0, _assign.default)(
   /**
    * 设置显示方式
    * @classname display

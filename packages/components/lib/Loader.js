@@ -1,27 +1,42 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.mask = exports.MaskPoplayer = exports.pulldown = exports.PullDownPoplayer = exports.loader = exports.LoaderPoplayer = exports.PanelLoader = exports.default = void 0;
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
 
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
 
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
 
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
 
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/inherits"));
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
+
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
+
+var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
+
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -43,9 +58,9 @@ var _Panel = _interopRequireDefault(require("./Panel"));
 
 var _Backdrop = _interopRequireDefault(require("./Backdrop"));
 
-/**
- * @module
- */
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty3.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 /**
  * 进度显示组件
@@ -120,7 +135,7 @@ _Loader.defaultProps.color = 'currentColor';
  */
 
 _Loader.defaultProps.colorReverse = 'lightgray';
-Object.defineProperty(_Loader, "Loader", {
+(0, _defineProperty3.default)(_Loader, "Loader", {
   get: function get() {
     return _Loader;
   },
@@ -153,27 +168,27 @@ var _Line = function Line(aprops) {
       children = _BaseComponent2.children,
       props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["isProgress", "progress", "timeout", "color", "colorReverse", "classNamePre", "stylePre", "children"]);
 
-  classNamePre = (0, _objectSpread2.default)({
+  classNamePre = _objectSpread({
     'width-full height-1em position-relative': true
   }, classNamePre);
-  stylePre = (0, _objectSpread2.default)({
+  stylePre = _objectSpread({
     background: colorReverse
   }, stylePre);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     classNamePre: classNamePre,
     stylePre: stylePre
   }, props), _react.default.createElement(_Panel.default, {
-    style: (0, _objectSpread2.default)({
+    style: _objectSpread({
       width: (isProgress ? progress : '10') + '%',
       height: '100%',
       left: '0',
       background: color
-    }, (0, _animation2.transiton)(timeout), !isProgress ? (0, _animation2.animation)('fly-out-right') : null)
+    }, (0, _animation2.transiton)(timeout), {}, !isProgress ? (0, _animation2.animation)('fly-out-right') : null)
   }), children);
 };
 
 _Line.defaultProps = {};
-Object.defineProperty(_Loader, "Line", {
+(0, _defineProperty3.default)(_Loader, "Line", {
   get: function get() {
     return _Line;
   },
@@ -214,7 +229,7 @@ function (_React$Component) {
           children = _BaseComponent3.children,
           props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["isProgress", "progress", "timeout", "color", "colorReverse", "classNamePre", "children"]);
 
-      classNamePre = (0, _objectSpread2.default)({
+      classNamePre = _objectSpread({
         'width-1em height-1em': true
       }, classNamePre);
       return _react.default.createElement(_Panel.default, (0, _extends2.default)({
@@ -238,7 +253,7 @@ function (_React$Component) {
         strokeWidth: "20",
         stroke: color,
         fill: "none",
-        style: isProgress ? (0, _objectSpread2.default)({}, (0, _animation2.transiton)(timeout), (0, _animation2.transform)('rotate', '-90deg'), (0, _animation2.transformOrigin)()) : (0, _objectSpread2.default)({}, (0, _animation2.transformOrigin)()),
+        style: isProgress ? _objectSpread({}, (0, _animation2.transiton)(timeout), {}, (0, _animation2.transform)('rotate', '-90deg'), {}, (0, _animation2.transformOrigin)()) : _objectSpread({}, (0, _animation2.transformOrigin)()),
         strokeDasharray: isProgress ? "".concat(2.51 * (progress || 0), ",251") : "150,251"
       })), children);
     }
@@ -247,7 +262,7 @@ function (_React$Component) {
 }(_react.default.Component);
 
 _Circle.defaultProps = {};
-Object.defineProperty(_Loader, "Circle", {
+(0, _defineProperty3.default)(_Loader, "Circle", {
   get: function get() {
     return _Circle;
   },
@@ -320,7 +335,7 @@ PanelLoader.defaultProps = {};
  * @type {object}
  */
 
-Object.defineProperty(_Loader, "PanelLoader", {
+(0, _defineProperty3.default)(_Loader, "PanelLoader", {
   get: function get() {
     return PanelLoader;
   },
@@ -340,7 +355,7 @@ var _LoaderPoplayer = function LoaderPoplayer(aprops) {
       height = _BaseComponent5.height,
       innerProps = _BaseComponent5.innerProps,
       poplayer = _BaseComponent5.poplayer,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["progress", "timeout", 'b-theme', "top", "height", "innerProps", "poplayer"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent5, ["progress", "timeout", "b-theme", "top", "height", "innerProps", "poplayer"]);
 
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "bc-position-absolute": true,
@@ -364,7 +379,7 @@ _LoaderPoplayer.defaultProps = {};
 _LoaderPoplayer.defaultProps.top = 0;
 _LoaderPoplayer.defaultProps.height = 3;
 _LoaderPoplayer.defaultProps.timeout = '1s';
-Object.defineProperty(_Loader, "LoaderPoplayer", {
+(0, _defineProperty3.default)(_Loader, "LoaderPoplayer", {
   get: function get() {
     return _LoaderPoplayer;
   },
@@ -395,9 +410,9 @@ var loader = function loader(app) {
             app.loader.timer = null;
           }
 
-          app.loader._id = app.Poplayer.addPoplayer(_LoaderPoplayer, (0, _objectSpread2.default)({}, props, {
+          app.loader._id = app.Poplayer.addPoplayer(_LoaderPoplayer, _objectSpread({}, props, {
             progress: progress
-          }), (0, _objectSpread2.default)({}, options, {
+          }), _objectSpread({}, options, {
             _id: app.loader._id
           }));
 
@@ -467,7 +482,7 @@ var _PullDownPoplayer = function PullDownPoplayer(aprops) {
     "bc-pointer-events-none": true,
     "bs-left": "50%",
     "bs-top": Math.min(height, progress),
-    style: typeof progress !== 'string' && (0, _objectSpread2.default)({}, (0, _animation2.transform)('rotate', progress * (360 / height) % 360 + 'deg')),
+    style: typeof progress !== 'string' && _objectSpread({}, (0, _animation2.transform)('rotate', progress * (360 / height) % 360 + 'deg')),
     "bc-transiton-set-": true,
     "bc-animation-name-spin": Boolean(typeof progress === 'string' && progress >= height),
     "bc-animation-iteration-count-infinite": true,
@@ -488,7 +503,7 @@ var _PullDownPoplayer = function PullDownPoplayer(aprops) {
 
 exports.PullDownPoplayer = _PullDownPoplayer;
 _PullDownPoplayer.defaultProps = {};
-Object.defineProperty(_Loader, "PullDownPoplayer", {
+(0, _defineProperty3.default)(_Loader, "PullDownPoplayer", {
   get: function get() {
     return _PullDownPoplayer;
   },
@@ -508,9 +523,9 @@ var pulldown = {
         if (typeof progress === 'string' && progress < 100) {
           return app.pulldown.close();
         } else {
-          return app.pulldown._id = app.Poplayer.addPoplayer(_PullDownPoplayer, (0, _objectSpread2.default)({}, props, {
+          return app.pulldown._id = app.Poplayer.addPoplayer(_PullDownPoplayer, _objectSpread({}, props, {
             progress: progress
-          }), (0, _objectSpread2.default)({}, options, {
+          }), _objectSpread({}, options, {
             _id: app.pulldown._id
           }));
         }
@@ -543,7 +558,7 @@ var _MaskPoplayer = function MaskPoplayer(aprops) {
       props = (0, _objectWithoutProperties2.default)(_BaseComponent7, ["loaderProps", "classNamePre", "children", "poplayer"]);
 
   children = typeof children === 'function' ? children(poplayer) : children;
-  classNamePre = (0, _objectSpread2.default)({
+  classNamePre = _objectSpread({
     'flex-display-block flex-direction-v flex-justify-center flex-align-center': true
   }, classNamePre);
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
@@ -563,7 +578,7 @@ _MaskPoplayer.defaultProps = {};
  * @type {object}
  */
 
-Object.defineProperty(_MaskPoplayer, "MaskPoplayer", {
+(0, _defineProperty3.default)(_MaskPoplayer, "MaskPoplayer", {
   get: function get() {
     return _MaskPoplayer;
   },
@@ -601,9 +616,9 @@ var mask = {
      */
 
     app.mask.show = function (content, props, options) {
-      return app.mask._id = app.Poplayer.addPoplayer(_MaskPoplayer, (0, _objectSpread2.default)({
+      return app.mask._id = app.Poplayer.addPoplayer(_MaskPoplayer, _objectSpread({
         children: content
-      }, props), (0, _objectSpread2.default)({
+      }, props), _objectSpread({
         isModal: true
       }, options, {
         _id: app.mask._id

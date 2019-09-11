@@ -26,9 +26,9 @@ var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-core
 
 var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
 
-require("core-js/modules/es6.function.name");
-
 var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
+
+require("core-js/modules/es6.function.name");
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
@@ -72,7 +72,6 @@ function (_React$Component) {
   }, {
     key: "update",
     value: function update(data, cb) {
-      this.state = _objectSpread({}, this.state, {}, data);
       return this.setState(this.state, cb);
     }
   }, {

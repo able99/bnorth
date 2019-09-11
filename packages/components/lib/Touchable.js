@@ -1,35 +1,36 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _interopRequireWildcard = require("@babel/runtime-corejs2/helpers/interopRequireWildcard");
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
 
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/possibleConstructorReturn"));
 
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/getPrototypeOf"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+var _inherits2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/inherits"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
-require("core-js/modules/es7.object.entries");
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-require("core-js/modules/es6.array.iterator");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
-require("core-js/modules/es6.object.keys");
-
-require("core-js/modules/web.dom.iterable");
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -82,12 +83,12 @@ var privateProps = {
   recognizers: true,
   recognizeWith: true
 };
-Object.keys(handlerToEvent).forEach(function (v) {
+(0, _keys.default)(handlerToEvent).forEach(function (v) {
   privateProps[v] = true;
 });
 
 function updateHammer(hammer, props) {
-  Object.entries(props).forEach(function (_ref) {
+  (0, _entries.default)(props).forEach(function (_ref) {
     var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
         k = _ref2[0],
         v = _ref2[1];
@@ -103,17 +104,17 @@ function updateHammer(hammer, props) {
       });
     } else if (k === 'options') {
       // options
-      Object.entries(v).forEach(function (_ref3) {
+      (0, _entries.default)(v).forEach(function (_ref3) {
         var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
             kk = _ref4[0],
             vv = _ref4[1];
 
         if (kk === 'recognizers') return;
-        hammer.set((0, _defineProperty2.default)({}, kk, vv));
+        hammer.set((0, _defineProperty3.default)({}, kk, vv));
       });
     } else if (k === 'recognizers') {
       // recognizers
-      Object.entries(v || {}).forEach(function (_ref5) {
+      (0, _entries.default)(v || {}).forEach(function (_ref5) {
         var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
             kk = _ref6[0],
             vv = _ref6[1];
@@ -124,7 +125,7 @@ function updateHammer(hammer, props) {
       });
     } else if (k === 'recognizeWith') {
       // recognizeWith
-      Object.entries(v || {}).forEach(function (_ref7) {
+      (0, _entries.default)(v || {}).forEach(function (_ref7) {
         var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
             kk = _ref8[0],
             vv = _ref8[1];
@@ -184,7 +185,7 @@ function (_React$Component) {
     key: "render",
     value: function render() {
       var props = (0, _BaseComponent.default)(this.props, Touchable);
-      Object.keys(props).forEach(function (v) {
+      (0, _keys.default)(props).forEach(function (v) {
         if (privateProps[v]) delete props[v];
       });
       return _react.default.createElement(_Panel.default, props);
@@ -393,7 +394,7 @@ Touchable.defaultProps = {};
  * @type {Panel.module:Touchable~RecognizerCallback}
  */
 
-Object.defineProperty(Touchable, "Touchable", {
+(0, _defineProperty2.default)(Touchable, "Touchable", {
   get: function get() {
     return Touchable;
   },

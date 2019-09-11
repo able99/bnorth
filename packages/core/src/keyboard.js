@@ -60,6 +60,7 @@ class Keyboard {
     }
 
     let page = this.app.Page.getPage();
+    if(!page) return;
     for(let poplayerInfo of [...poplayerInfos.filter(v=>v.options.isModal&&v.options._idPage===page._id)].reverse()) {
       let poplayer = this.app.Poplayer.getPoplayer(poplayerInfo.options._id); if(!poplayer) continue;
       if(poplayer._onKeyEvent&&poplayer._onKeyEvent(e)) { e.preventDefault();e.stopPropagation();return }

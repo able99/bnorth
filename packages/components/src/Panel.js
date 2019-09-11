@@ -34,7 +34,6 @@ let Panel = aprops=>{
   if(page) props['data-dock'] = true;
 
   let classSetPre = {
-    // 'position-relative': true,
     'offset-a-start square-full overflow-a-hidden': full,
     [page?'flex-display-inline':'display-inlineblock']: inline,
     [(!inline?'flex-display-block':'') + ' flex-direction-v bg-color-view']: page,

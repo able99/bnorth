@@ -75,7 +75,7 @@ export default List;
  */
 let Item = aprops=>{
   let {
-    panelItemIndex, panelItemCount, panelContainerProps:{separatorInset}, onClick, 
+    panelItemIndex, panelItemCount, panelContainerProps:{separatorInset}={}, onClick, 
     media, mediaProps, mainProps, title, titleProps, subTitle, subTitleProps, desc, descProps, after, afterProps, arrow, arrowProps, autoArrow=true, 
     classNamePre, children, ...props
   } = BaseComponent(aprops, Item);

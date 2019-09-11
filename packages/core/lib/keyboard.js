@@ -117,6 +117,7 @@ function () {
       }
 
       var page = this.app.Page.getPage();
+      if (!page) return;
       var _iteratorNormalCompletion2 = true;
       var _didIteratorError2 = false;
       var _iteratorError2 = undefined;

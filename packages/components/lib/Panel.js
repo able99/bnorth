@@ -1,49 +1,60 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _interopRequireWildcard = require("@babel/runtime-corejs2/helpers/interopRequireWildcard");
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.PanelItem = exports.PanelContainer = exports.default = void 0;
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
+
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
+
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
+
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
+
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/typeof"));
 
 require("core-js/modules/es6.array.find-index");
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/possibleConstructorReturn"));
 
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/getPrototypeOf"));
 
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+var _inherits2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/inherits"));
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
 
-var _objectSpread6 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
 
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/toConsumableArray"));
 
-require("core-js/modules/es6.object.assign");
+var _isArray = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/is-array"));
+
+var _assign = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/assign"));
 
 require("core-js/modules/es6.string.starts-with");
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-require("core-js/modules/es6.array.iterator");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
-require("core-js/modules/es7.object.entries");
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
-require("core-js/modules/web.dom.iterable");
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectWithoutProperties"));
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -53,9 +64,9 @@ var _animation = require("@bnorth/rich.css/lib/styles/animation");
 
 var _BaseComponent5 = _interopRequireWildcard(require("./BaseComponent"));
 
-/**
- * @module
- */
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 /**
  * 小面板组件，基本的布局单位，其他组件一般使用该组件做基本组件
@@ -109,15 +120,14 @@ var _Panel = function Panel(aprops) {
       _BaseComponent$compon = _BaseComponent.component,
       Component = _BaseComponent$compon === void 0 ? aprops.componentPanel || "div" : _BaseComponent$compon,
       componentPanel = _BaseComponent.componentPanel,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["active", "selected", "disabled", "onClick", "btn", "main", "page", "full", "inline", "panelContainerProps", "panelItemIndex", "panelItemCount", "panelItemSelected", "panelItemPlain", 'b-theme', 'b-style', 'b-size', "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "panelThemeProps", "refWrap", "component", "componentPanel"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["active", "selected", "disabled", "onClick", "btn", "main", "page", "full", "inline", "panelContainerProps", "panelItemIndex", "panelItemCount", "panelItemSelected", "panelItemPlain", "b-theme", "b-style", "b-size", "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "panelThemeProps", "refWrap", "component", "componentPanel"]);
 
   if (sensitiveBg === undefined) sensitiveBg = bStyle === 'solid' && bTheme;
   if (sensitiveSelect === undefined) sensitiveSelect = bStyle === 'underline';
   if (page) props['data-dock'] = true;
   var classSetPre = (_classSetPre = {
-    // 'position-relative': true,
     'offset-a-start square-full overflow-a-hidden': full
-  }, (0, _defineProperty2.default)(_classSetPre, page ? 'flex-display-inline' : 'display-inlineblock', inline), (0, _defineProperty2.default)(_classSetPre, (!inline ? 'flex-display-block' : '') + ' flex-direction-v bg-color-view', page), (0, _defineProperty2.default)(_classSetPre, 'scrollable-a- flex-sub-flex-extend', main), _classSetPre);
+  }, (0, _defineProperty3.default)(_classSetPre, page ? 'flex-display-inline' : 'display-inlineblock', inline), (0, _defineProperty3.default)(_classSetPre, (!inline ? 'flex-display-block' : '') + ' flex-direction-v bg-color-view', page), (0, _defineProperty3.default)(_classSetPre, 'scrollable-a- flex-sub-flex-extend', main), _classSetPre);
   var styleSetPre = {};
   var classSet = {};
   var styleSet = {};
@@ -152,7 +162,7 @@ var _Panel = function Panel(aprops) {
     classSetPre['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
   }
 
-  Object.entries(props).forEach(function (_ref) {
+  (0, _entries.default)(props).forEach(function (_ref) {
     var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
         k = _ref2[0],
         v = _ref2[1];
@@ -177,7 +187,7 @@ var _Panel = function Panel(aprops) {
 
       _name2 = _BaseComponent5.default.styleFunctions[_name2];
       if (!_name2) return;
-      Object.assign(styleSet, Array.isArray(v) ? _name2.apply(void 0, (0, _toConsumableArray2.default)(v)) : _name2(v));
+      (0, _assign.default)(styleSet, (0, _isArray.default)(v) ? _name2.apply(void 0, (0, _toConsumableArray2.default)(v)) : _name2(v));
     }
   });
   if (onClick) props.onClick = onClick;
@@ -198,7 +208,7 @@ var _Panel = function Panel(aprops) {
 
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _classes.default)(classSetPre, classNamePre, classSet, className, classNameExt),
-    style: (0, _objectSpread6.default)({}, styleSetPre, stylePre, styleSet, style, styleExt)
+    style: _objectSpread({}, styleSetPre, {}, stylePre, {}, styleSet, {}, style, {}, styleExt)
   }, props));
 };
 
@@ -310,7 +320,7 @@ _Panel.defaultProps.panelThemeProps = {
    */
 
 };
-Object.defineProperty(_Panel, "Panel", {
+(0, _defineProperty2.default)(_Panel, "Panel", {
   get: function get() {
     return _Panel;
   },
@@ -413,13 +423,13 @@ function (_React$Component) {
       } else if (ctype === 'justify') {
         var _objectSpread2;
 
-        classSetPre = (0, _objectSpread6.default)({}, classSetPre, (_objectSpread2 = {}, (0, _defineProperty2.default)(_objectSpread2, 'flex-display-' + (inline ? 'inline' : 'block'), true), (0, _defineProperty2.default)(_objectSpread2, 'flex-justify-around flex-align-stretch', true), _objectSpread2));
+        classSetPre = _objectSpread({}, classSetPre, (_objectSpread2 = {}, (0, _defineProperty3.default)(_objectSpread2, 'flex-display-' + (inline ? 'inline' : 'block'), true), (0, _defineProperty3.default)(_objectSpread2, 'flex-justify-around flex-align-stretch', true), _objectSpread2));
       } else if (ctype === 'primary') {
         var _objectSpread3;
 
-        classSetPre = (0, _objectSpread6.default)({}, classSetPre, (_objectSpread3 = {}, (0, _defineProperty2.default)(_objectSpread3, 'flex-display-' + (inline ? 'inline' : 'block'), true), (0, _defineProperty2.default)(_objectSpread3, 'flex-align-center', true), _objectSpread3));
+        classSetPre = _objectSpread({}, classSetPre, (_objectSpread3 = {}, (0, _defineProperty3.default)(_objectSpread3, 'flex-display-' + (inline ? 'inline' : 'block'), true), (0, _defineProperty3.default)(_objectSpread3, 'flex-align-center', true), _objectSpread3));
       } else if (ctype === 'flex') {
-        classSetPre = (0, _objectSpread6.default)({}, classSetPre, (0, _defineProperty2.default)({}, 'flex-display-' + (inline ? 'inline' : 'block'), true));
+        classSetPre = _objectSpread({}, classSetPre, (0, _defineProperty3.default)({}, 'flex-display-' + (inline ? 'inline' : 'block'), true));
       } else if (ctype === 'scroll') {
         children = _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(_InnerScroll, {
           countToShow: countToShow,
@@ -433,7 +443,7 @@ function (_React$Component) {
       }
 
       if (position) direction = positionToDirection[position];
-      classSetPre = (0, _objectSpread6.default)({}, classSetPre, (_objectSpread5 = {}, (0, _defineProperty2.default)(_objectSpread5, 'flex-direction-' + direction, direction), (0, _defineProperty2.default)(_objectSpread5, 'flex-justify-' + justify, justify), (0, _defineProperty2.default)(_objectSpread5, 'flex-align-' + align, align), (0, _defineProperty2.default)(_objectSpread5, 'flex-wrap-' + wrap, wrap), _objectSpread5));
+      classSetPre = _objectSpread({}, classSetPre, (_objectSpread5 = {}, (0, _defineProperty3.default)(_objectSpread5, 'flex-direction-' + direction, direction), (0, _defineProperty3.default)(_objectSpread5, 'flex-justify-' + justify, justify), (0, _defineProperty3.default)(_objectSpread5, 'flex-align-' + align, align), (0, _defineProperty3.default)(_objectSpread5, 'flex-wrap-' + wrap, wrap), _objectSpread5));
       return _react.default.createElement(_Panel, (0, _extends2.default)({
         classNamePre: (0, _classes.default)(classSetPre, classNamePre)
       }, props), children);
@@ -551,20 +561,22 @@ _PanelContainer.defaultProps.genPanelItemProps = function (type, selectedIndex, 
   var getPanelItemClassName = arguments.length > 7 ? arguments[7] : undefined;
   var getPanelItemStyle = arguments.length > 8 ? arguments[8] : undefined;
   var getPanelItemProps = arguments.length > 9 ? arguments[9] : undefined;
-  var ret = (0, _objectSpread6.default)({
+
+  var ret = _objectSpread({
     key: panelItemIndex,
     panelContainerType: type,
     panelContainerProps: panelContainerProps,
     panelItemIndex: panelItemIndex,
     panelItemCount: panelItemCount,
     panelItemSelected: selectedIndex === panelItemIndex
-  }, panelItemProps, props);
-  ret.style = (0, _objectSpread6.default)({}, getPanelItemStyle && getPanelItemStyle(ret, panelContainerProps) || {}, panelItemStyle, style);
+  }, panelItemProps, {}, props);
+
+  ret.style = _objectSpread({}, getPanelItemStyle && getPanelItemStyle(ret, panelContainerProps) || {}, {}, panelItemStyle, {}, style);
   ret.className = (0, _classes.default)(getPanelItemClassName && getPanelItemClassName(ret, panelContainerProps), panelItemClassName, className);
-  return (0, _objectSpread6.default)({}, ret, getPanelItemProps && getPanelItemProps(ret, panelContainerProps) || {});
+  return _objectSpread({}, ret, {}, getPanelItemProps && getPanelItemProps(ret, panelContainerProps) || {});
 };
 
-Object.defineProperty(_Panel, "Container", {
+(0, _defineProperty2.default)(_Panel, "Container", {
   get: function get() {
     return _PanelContainer;
   },
@@ -597,7 +609,7 @@ var _PanelItem = function PanelItem(aprops) {
   if (panelContainerType === 'primary') classSet.push(panelItemSelected ? 'flex-sub-flex-extend' : 'flex-sub-flex-none');
   if (panelContainerType === 'scroll') classSet.push('flex-sub-flex-extend height-full');
   if (panelContainerProps.noOverlap && panelItemIndex < panelItemCount - 1) classSet.push('border-none-right-');
-  return (0, _react.cloneElement)(children, (0, _objectSpread6.default)({
+  return (0, _react.cloneElement)(children, _objectSpread({
     className: (0, _classes.default)(classSet, className),
     panelContainerProps: panelContainerProps,
     panelItemIndex: panelItemIndex,
@@ -645,7 +657,7 @@ _PanelItem.defaultProps = {};
  * @type {object}
  */
 
-Object.defineProperty(_Panel, "ContainerItem", {
+(0, _defineProperty2.default)(_Panel, "ContainerItem", {
   get: function get() {
     return _PanelItem;
   },
@@ -751,7 +763,7 @@ function (_React$Component2) {
         val = Math.min(0, val);
         val = Math.max(-(children.length - 1) * _this2.size, val);
         var style = (0, _animation.transform)('translate3D', val + 'px', 0, 0);
-        Object.entries(style).forEach(function (_ref5) {
+        (0, _entries.default)(style).forEach(function (_ref5) {
           var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
               k = _ref6[0],
               v = _ref6[1];
@@ -772,7 +784,7 @@ function (_React$Component2) {
         if (!moved) return;
         var val = -(_this2.size / countToShow) * (selectedIndex % children.length);
         var style = (0, _animation.transform)('translate3D', val + 'px', 0, 0);
-        Object.entries(style).forEach(function (_ref7) {
+        (0, _entries.default)(style).forEach(function (_ref7) {
           var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
               k = _ref8[0],
               v = _ref8[1];
@@ -812,10 +824,12 @@ function (_React$Component2) {
 
       children = _react.default.Children.toArray(children);
       var classNamePre = 'flex-display-block flex-align-stretch height-full transition-set- overflow-x-hidden';
-      var stylePre = (0, _objectSpread6.default)({
+
+      var stylePre = _objectSpread({
         width: "".concat(100 / countToShow * children.length, "%")
       }, (0, _animation.transform)('translateX', -(this.size / countToShow) * (selectedIndex % children.length) + 'px'));
-      return _react.default.createElement(_Panel, (0, _extends2.default)({}, (0, _defineProperty2.default)({}, _BaseComponent5.domIsMouse ? 'onMouseDown' : 'onTouchStart', function (e) {
+
+      return _react.default.createElement(_Panel, (0, _extends2.default)({}, (0, _defineProperty3.default)({}, _BaseComponent5.domIsMouse ? 'onMouseDown' : 'onTouchStart', function (e) {
         return _this3.handleStart(e);
       }), {
         classNamePre: classNamePre,
@@ -828,7 +842,7 @@ function (_React$Component2) {
 
 _InnerScroll.isBnorth = true;
 _InnerScroll.defaultProps = {};
-Object.defineProperty(_Panel, "InnerScroll", {
+(0, _defineProperty2.default)(_Panel, "InnerScroll", {
   get: function get() {
     return _InnerScroll;
   },

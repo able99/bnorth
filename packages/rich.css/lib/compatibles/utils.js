@@ -1,24 +1,23 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.getDomSelector = getDomSelector;
 exports.addSelectorPrefix = addSelectorPrefix;
 exports.addSelectorMulti = addSelectorMulti;
 exports.stylesToDom = stylesToDom;
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es7.object.entries");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
 require("core-js/modules/es6.string.repeat");
-
-require("core-js/modules/web.dom.iterable");
 
 require("core-js/modules/es6.string.starts-with");
 
@@ -60,7 +59,7 @@ function addSelectorMulti(k, ret) {
 function stylesToDom(styles, dom) {
   if (!dom) return styles;
   var ret = {};
-  Object.entries(styles).forEach(function (_ref) {
+  (0, _entries.default)(styles).forEach(function (_ref) {
     var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
         k = _ref2[0],
         v = _ref2[1];

@@ -1,10 +1,13 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.default = classes;
 exports.mutex = void 0;
 
@@ -12,23 +15,19 @@ require("core-js/modules/es7.array.includes");
 
 require("core-js/modules/es6.string.includes");
 
-require("core-js/modules/es7.symbol.async-iterator");
-
-require("core-js/modules/es6.symbol");
+var _getIterator2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/get-iterator"));
 
 require("core-js/modules/es6.string.starts-with");
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es7.object.entries");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
 require("core-js/modules/es6.regexp.split");
 
-require("core-js/modules/web.dom.iterable");
+var _typeof2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/typeof"));
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+var _isArray = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/is-array"));
 
 /**
  * @module
@@ -59,7 +58,7 @@ function classes() {
   var ret = [];
 
   var addItem = function addItem(item) {
-    var type = Array.isArray(item) ? 'array' : (0, _typeof2.default)(item);
+    var type = (0, _isArray.default)(item) ? 'array' : (0, _typeof2.default)(item);
 
     if (type === 'string' || type === 'number') {
       String(item).split(/\s/).forEach(function (v) {
@@ -70,7 +69,7 @@ function classes() {
         return addItem(v);
       }));
     } else if (type === 'object') {
-      Object.entries(item).filter(function (_ref) {
+      (0, _entries.default)(item).filter(function (_ref) {
         var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
             k = _ref2[0],
             v = _ref2[1];
@@ -109,7 +108,7 @@ function classes() {
         var _iteratorError = undefined;
 
         try {
-          for (var _iterator = mutex[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          for (var _iterator = (0, _getIterator2.default)(mutex), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var vvv = _step.value;
 
             if (vvv.includes(key) && (a[ii].startsWith(vvv[0]) || a[ii].startsWith(vvv[1]))) {
@@ -144,8 +143,8 @@ function classes() {
     args[_key] = arguments[_key];
   }
 
-  for (var _i = 0; _i < args.length; _i++) {
-    var arg = args[_i];
+  for (var _i = 0, _args = args; _i < _args.length; _i++) {
+    var arg = _args[_i];
     addItem(arg);
   }
 

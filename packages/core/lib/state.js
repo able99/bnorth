@@ -10,12 +10,6 @@ _Object$defineProperty(exports, "__esModule", {
 
 exports.default = void 0;
 
-var _regenerator = _interopRequireDefault(require("@babel/runtime-corejs2/regenerator"));
-
-require("regenerator-runtime/runtime");
-
-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/asyncToGenerator"));
-
 require("core-js/modules/es6.string.starts-with");
 
 var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
@@ -330,8 +324,7 @@ function () {
       return State.app.utils.pathGet(data, path);
     }
     /**
-     * 更新数据单元的数据, 异步更新，同时调用2次 update，会导致后面更新覆盖前一次，建议用同步方式调用
-     * @async
+     * 更新数据单元的数据
      * @param {*} - 新数据  
      * @param {object} - 更新参数，其中的 append 用于指定追加方式，参见 app.utils.objectUpdate 中对参数的说明
      * @returns {*} 更新后的数据
@@ -339,58 +332,20 @@ function () {
 
   }, {
     key: "update",
-    value: function () {
-      var _update = (0, _asyncToGenerator2.default)(
-      /*#__PURE__*/
-      _regenerator.default.mark(function _callee(data, options) {
-        var prevData, nextData;
-        return _regenerator.default.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                options = State.app.utils.getOptions(this.options, options);
-                prevData = this.data();
-                nextData = State.app.utils.objectUpdate(prevData, data, options.append);
-                _context.next = 5;
-                return State.app.event.emit(null, 'onStateUpdating', this._id, nextData, prevData, data, options);
-
-              case 5:
-                _context.t0 = _context.sent;
-
-                if (_context.t0) {
-                  _context.next = 8;
-                  break;
-                }
-
-                _context.t0 = nextData;
-
-              case 8:
-                nextData = _context.t0;
-                nextData = this.options._onStateUpdating && this.options._onStateUpdating(nextData, prevData, data, options) || nextData;
-                State.app.context.update(this._id, {
-                  data: nextData
-                });
-                State.app.event.emit(null, 'onStateUpdated', this._id, nextData, prevData, data, options);
-                this.options._onStateUpdated && this.options._onStateUpdated(nextData, prevData, data, options);
-                return _context.abrupt("return", nextData);
-
-              case 14:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
-
-      function update(_x, _x2) {
-        return _update.apply(this, arguments);
-      }
-
-      return update;
-    }()
+    value: function update(data, options) {
+      options = State.app.utils.getOptions(this.options, options);
+      var prevData = this.data();
+      var nextData = State.app.utils.objectUpdate(prevData, data, options.append);
+      nextData = this.options._onStateUpdating && this.options._onStateUpdating(nextData, prevData, data, options) || nextData;
+      State.app.context.update(this._id, {
+        data: nextData
+      });
+      State.app.event.emit(null, 'onStateUpdated', this._id, nextData, prevData, data, options);
+      this.options._onStateUpdated && this.options._onStateUpdated(nextData, prevData, data, options);
+      return nextData;
+    }
     /**
      * 以 json path 方式设置数据单元中的数据
-     * @async
      * @param {string} - json path 
      * @param {*} - 新的数据
      * @param {boolean} - 是否是输入中状态
@@ -399,55 +354,17 @@ function () {
 
   }, {
     key: "set",
-    value: function () {
-      var _set = (0, _asyncToGenerator2.default)(
-      /*#__PURE__*/
-      _regenerator.default.mark(function _callee2() {
-        var path,
-            val,
-            input,
-            data,
-            _args2 = arguments;
-        return _regenerator.default.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                path = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : '';
-                val = _args2.length > 1 ? _args2[1] : undefined;
-                input = _args2.length > 2 ? _args2[2] : undefined;
-                data = this.data();
-
-                if (State.app.utils.pathSet(data, path, val)) {
-                  _context2.next = 6;
-                  break;
-                }
-
-                return _context2.abrupt("return", false);
-
-              case 6:
-                _context2.next = 8;
-                return this.update(data, {
-                  path: path,
-                  input: input
-                });
-
-              case 8:
-                return _context2.abrupt("return", _context2.sent);
-
-              case 9:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, this);
-      }));
-
-      function set() {
-        return _set.apply(this, arguments);
-      }
-
-      return set;
-    }()
+    value: function set() {
+      var path = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      var val = arguments.length > 1 ? arguments[1] : undefined;
+      var input = arguments.length > 2 ? arguments[2] : undefined;
+      var data = this.data();
+      if (!State.app.utils.pathSet(data, path, val)) return false;
+      return this.update(data, {
+        path: path,
+        input: input
+      });
+    }
     /**
      * 删除数据单元中的数据
      * @param {*} - 删除的参数，参见 app.utils.objectDelete 中对参数的说明
@@ -456,38 +373,12 @@ function () {
 
   }, {
     key: "delete",
-    value: function () {
-      var _delete2 = (0, _asyncToGenerator2.default)(
-      /*#__PURE__*/
-      _regenerator.default.mark(function _callee3(_did) {
-        var data;
-        return _regenerator.default.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                data = State.app.utils.objectDelete(this.data(), _did);
-                _context3.next = 3;
-                return this.update(data, {
-                  append: false
-                });
-
-              case 3:
-                return _context3.abrupt("return", _context3.sent);
-
-              case 4:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3, this);
-      }));
-
-      function _delete(_x3) {
-        return _delete2.apply(this, arguments);
-      }
-
-      return _delete;
-    }()
+    value: function _delete(_did) {
+      var data = State.app.utils.objectDelete(this.data(), _did);
+      return this.update(data, {
+        append: false
+      });
+    }
   }]);
   return State;
 }();

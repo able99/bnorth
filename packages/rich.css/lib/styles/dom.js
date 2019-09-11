@@ -1,12 +1,17 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.domCapitalize = domCapitalize;
 exports.domGetDimensionValue = domGetDimensionValue;
+
+var _parseInt2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/parse-int"));
 
 var _style = _interopRequireDefault(require("dom-helpers/style"));
 
@@ -26,5 +31,5 @@ function domGetDimensionValue(elem) {
   var dimension = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "height";
   var value = elem["offset".concat(domCapitalize(dimension))];
   var margins = MARGINS[dimension];
-  return value + parseInt((0, _style.default)(elem, margins[0]), 10) + parseInt((0, _style.default)(elem, margins[1]), 10);
+  return value + (0, _parseInt2.default)((0, _style.default)(elem, margins[0]), 10) + (0, _parseInt2.default)((0, _style.default)(elem, margins[1]), 10);
 }

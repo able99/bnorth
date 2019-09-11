@@ -17,7 +17,6 @@ class ContextComponent extends React.Component {
   }
 
   update(data, cb) {
-    this.state = {...this.state, ...data}
     return this.setState(this.state, cb);
   }
 

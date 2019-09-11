@@ -307,6 +307,7 @@ let genConfig = {
     'inlineblock': 'inline-block',
     'none': true,
     'block': true,
+    'tablecell': 'table-cell',
   },
   
   visibility: {

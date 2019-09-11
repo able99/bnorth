@@ -35,7 +35,8 @@
     "@bnorth/rich.css": "^4.1.0",
     "dom-helpers": "^3.3.1",
     "hammerjs": "^2.0.8",
-    "react-transition-group": "^2.4.0"
+    "react-transition-group": "^2.4.0",
+    "react-window": "^1.8.5"
   },
   "devDependencies": {
     "@bnorth/build": "^4.1.0"

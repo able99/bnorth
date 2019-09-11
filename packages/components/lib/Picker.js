@@ -1,13 +1,28 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _interopRequireWildcard = require("@babel/runtime-corejs2/helpers/interopRequireWildcard");
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.default = exports.Picker = void 0;
+
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
+
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
+
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
+
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
+
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
+
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
 
 require("core-js/modules/es7.array.includes");
 
@@ -17,35 +32,31 @@ require("core-js/modules/es6.regexp.split");
 
 require("core-js/modules/es7.string.pad-start");
 
-require("core-js/modules/es6.array.from");
+var _from = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/from"));
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectWithoutProperties"));
 
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/toConsumableArray"));
 
 require("core-js/modules/es6.array.find-index");
 
 require("core-js/modules/es6.function.name");
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
+var _typeof2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/typeof"));
 
-require("core-js/modules/web.dom.iterable");
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
 
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/possibleConstructorReturn"));
 
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/getPrototypeOf"));
 
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+var _inherits2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/inherits"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -60,6 +71,10 @@ var _Panel = _interopRequireDefault(require("./Panel"));
 var _Touchable = _interopRequireDefault(require("./Touchable"));
 
 var _Button = _interopRequireDefault(require("./Button"));
+
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 var Picker =
 /*#__PURE__*/
@@ -200,11 +215,11 @@ function (_React$Component) {
 }(_react.default.Component);
 
 exports.Picker = Picker;
-(0, _defineProperty2.default)(Picker, "defaultProps", {
+Picker.defaultProps = {
   lineCount: 5,
   data: [],
   index: []
-});
+};
 
 Picker._Line = function (aprops) {
   var _BaseComponent2 = (0, _BaseComponent5.default)(aprops, Picker._Line),
@@ -218,10 +233,12 @@ Picker._Line = function (aprops) {
       props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["itemSize", "lineCount", "component", "componentPanel", "className", "style"]);
 
   var classStr = 'border-set-v- position-absolute width-full pointer-events-none';
-  var styleSet = (0, _objectSpread2.default)({
+
+  var styleSet = _objectSpread({
     top: Math.floor(lineCount / 2) * itemSize,
     height: itemSize
   }, style);
+
   return _react.default.createElement(Component, (0, _extends2.default)({
     className: (0, _classes.default)(classStr, className),
     style: styleSet
@@ -395,7 +412,7 @@ var _default = {
             indexChange = e;
             return _onChange && _onChange(indexChange);
           }
-        })), (0, _objectSpread2.default)({
+        })), _objectSpread({
           role: 'document',
           containerProps: {
             className: 'flex-display-block flex-justify-end flex-direction-v flex-align-stretch'
@@ -408,9 +425,9 @@ var _default = {
             onConfirm = _ref2.onConfirm,
             props = (0, _objectWithoutProperties2.default)(_ref2, ["onChange", "onConfirm"]);
 
-        var data = [Array.from(Array(24), function (v, i) {
+        var data = [(0, _from.default)(Array(24), function (v, i) {
           return String(i).padStart(2, '0');
-        }), Array.from(Array(60), function (v, i) {
+        }), (0, _from.default)(Array(60), function (v, i) {
           return String(i).padStart(2, '0');
         })];
         if (index && index.split(':').length === 2) props.index = index.split(':');
@@ -434,11 +451,11 @@ var _default = {
         var date = new Date();
         year = year || date.getFullYear() - yearCount + 2;
         var data = [function () {
-          return Array.from(Array(yearCount), function (v, i) {
+          return (0, _from.default)(Array(yearCount), function (v, i) {
             return String(year + i).padStart(4, '0');
           });
         }, function () {
-          return Array.from(Array(12), function (v, i) {
+          return (0, _from.default)(Array(12), function (v, i) {
             return String(i + 1).padStart(2, '0');
           });
         }, function (i, data, index) {
@@ -447,7 +464,7 @@ var _default = {
           var month = data[1][index[1]];
           if (['04', '06', '09', '11'].includes(month)) daycount = 30;
           if (month === '02') daycount = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 29 : 28;
-          return Array.from(Array(daycount), function (v, i) {
+          return (0, _from.default)(Array(daycount), function (v, i) {
             return String(i + 1).padStart(2, '0');
           });
         }];
@@ -468,20 +485,20 @@ var _default = {
             props = (0, _objectWithoutProperties2.default)(_ref4, ["onChange", "onConfirm"]);
 
         var data = [function () {
-          return Array.from(Array(100), function (v, i) {
+          return (0, _from.default)(Array(100), function (v, i) {
             return String(1950 + i).padStart(4, '0');
           });
         }, function () {
-          return Array.from(Array(12), function (v, i) {
+          return (0, _from.default)(Array(12), function (v, i) {
             return String(i + 1).padStart(2, '0');
           });
         }, function () {
-          return Array.from(Array(31), function (v, i) {
+          return (0, _from.default)(Array(31), function (v, i) {
             return String(i + 1).padStart(2, '0');
           });
-        }, Array.from(Array(24), function (v, i) {
+        }, (0, _from.default)(Array(24), function (v, i) {
           return String(i).padStart(2, '0');
-        }), Array.from(Array(60), function (v, i) {
+        }), (0, _from.default)(Array(60), function (v, i) {
           return String(i).padStart(2, '0');
         })];
         if (index && index.split(':').length) props.index = index.split(':');

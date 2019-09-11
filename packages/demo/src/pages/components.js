@@ -24,6 +24,9 @@ import ScrollSpy from '@bnorth/components/lib/ScrollSpy';
 import Space from '@bnorth/components/lib/Space'
 import TabBar from '@bnorth/components/lib/TabBar'
 import Touchable from '@bnorth/components/lib/Touchable';
+import ListView from '@bnorth/components/lib/ListView'
+import GridView from '@bnorth/components/lib/GridView'
+import Table from '@bnorth/components/lib/Table'
 import img from '../../res/aboutme.svg';
 
 
@@ -301,6 +304,42 @@ let Component = aprops=>{
           <Touchable recognizers={{'pan':{enable: true}}} onPan={()=>page.stateLog.update(['onPan'], {append: true})} bs-height={50} b-style="solid" b-theme="primary" />
         </Groups.Show>
         <Groups.Log logs={stateLog} />
+      </Groups.Group>
+
+      <Groups.Group title="ListView" desc="大数据列表">
+        <Groups.Show><Panel bs-height={200}>
+          <ListView bp-container-className="square-full" data={Array(100000).fill(0).map((v,i)=>i)}>
+            {({data, index, style}) => (
+              <List.Item  style={style} media={'M'+String(index)} title={'T'+String(index)} after={'A'+String(index)} panelItemIndex={index} panelItemCount={data.length} />
+            )}
+          </ListView>
+        </Panel></Groups.Show>
+      </Groups.Group>
+
+      <Groups.Group title="GridView" desc="大数据网格">
+        <Groups.Show><Panel bs-height={200}>
+          <GridView bp-container-className="square-full" columnWidth={[100,'30%']} columnCount={6} data={Array(100000).fill(0).map((v,i)=>i)}>
+            {({data, columnIndex, rowIndex, style}) => (
+              <div style={{...style, padding: 8, borderBottom: '1px solid #e2e2e2', borderRight: '1px solid #e2e2e2'}}>
+                {rowIndex},{columnIndex}
+              </div>
+            )}
+          </GridView>
+        </Panel></Groups.Show>
+      </Groups.Group>
+
+      <Groups.Group title="Table" desc="大数据表格">
+        <Groups.Show><Panel bs-height={200}>
+          <Table 
+            bc-square-full headerBackground="gray"
+            fixedNum={1} onCellClick={(i,j)=>console.log(i,j)} 
+            cols={[ 
+              {name: 'AB', subs: [ {code: 'A', width: 50}, {code: 'B', width: 50}, ]}, 
+              {name: 'CD', subs: [ {code: 'C', width: 50}, {code: 'D', width: 50}, ]}, 
+              {code: 'E', width: 250}, {code: 'F', width: 90, cellBackground: 'gray'}, {code: 'G', width: 250} 
+            ]}
+            data={Array(10000).fill(0).map((v,i)=>{let ret={}; Array(10).fill(0).forEach((vv,ii)=>ret[String.fromCharCode(65+ii)]=String.fromCharCode(65+ii)+String(i)); return ret})} />
+        </Panel></Groups.Show>
       </Groups.Group>
 
     </Groups>

@@ -1,38 +1,53 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.classObjectsToString = classObjectsToString;
 exports.getStyleValueSetDefault = getStyleValueSetDefault;
 exports.getStyleValueSet = getStyleValueSet;
 exports.genClassObjects = genClassObjects;
 
-var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
+
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
+
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
+
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
+
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
+
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
 require("core-js/modules/es6.string.repeat");
 
 require("core-js/modules/es6.number.constructor");
 
-require("core-js/modules/es6.object.keys");
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
 
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
 
-require("core-js/modules/web.dom.iterable");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
-require("core-js/modules/es6.array.iterator");
+var _isArray = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/is-array"));
 
-require("core-js/modules/es7.object.entries");
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 function classObjectsToString(styles) {
-  return (Array.isArray(styles) ? styles : Object.entries(styles || {})).map(function (_ref) {
+  return ((0, _isArray.default)(styles) ? styles : (0, _entries.default)(styles || {})).map(function (_ref) {
     var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
         k = _ref2[0],
         v = _ref2[1];
 
-    var lines = (Array.isArray(v) ? v : Object.entries(v || {})).map(function (_ref3) {
+    var lines = ((0, _isArray.default)(v) ? v : (0, _entries.default)(v || {})).map(function (_ref3) {
       var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
           kk = _ref4[0],
           vv = _ref4[1];
@@ -45,7 +60,7 @@ function classObjectsToString(styles) {
 
 function getStyleValueSetDefault(styleValueSet) {
   if (!styleValueSet) return;
-  return styleValueSet[Object.keys(styleValueSet)[0]];
+  return styleValueSet[(0, _keys.default)(styleValueSet)[0]];
 }
 
 function getStyleValue(value, key) {
@@ -57,9 +72,9 @@ function getStyleValue(value, key) {
 function getStyleValueSet(set) {
   if (!set) return {};
   var unit = set['_unit'];
-  return (Array.isArray(set) ? set.map(function (v) {
+  return ((0, _isArray.default)(set) ? set.map(function (v) {
     return [v, v];
-  }) : Object.entries(set)).reduce(function (v1, _ref5) {
+  }) : (0, _entries.default)(set)).reduce(function (v1, _ref5) {
     var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
         k = _ref6[0],
         v = _ref6[1];
@@ -83,7 +98,7 @@ function getStyleValueSet(set) {
 
         v1[_i ? 'x'.repeat(_i) + 'l' : 'lg'] = getStyleValue(isString ? String(_value) : _value, null, unit);
       }
-    } else if (k === '_multiple' && Array.isArray(v)) {
+    } else if (k === '_multiple' && (0, _isArray.default)(v)) {
       var _base = set['_base'];
 
       var _isString = typeof _base === 'string';
@@ -142,12 +157,12 @@ function genClassObjects(selector) {
   if (!styleKeySet) styleKeySet = {
     '': ''
   };
-  Object.entries(styleKeySet).forEach(function (_ref8) {
+  (0, _entries.default)(styleKeySet).forEach(function (_ref8) {
     var _ref9 = (0, _slicedToArray2.default)(_ref8, 2),
         styleKeySetKey = _ref9[0],
         styleKeySetValue = _ref9[1];
 
-    Object.entries(styleValueSet).forEach(function (_ref10) {
+    (0, _entries.default)(styleValueSet).forEach(function (_ref10) {
       var _ref11 = (0, _slicedToArray2.default)(_ref10, 2),
           styleValueSetKey = _ref11[0],
           styleValueSetValue = _ref11[1];
@@ -157,9 +172,9 @@ function genClassObjects(selector) {
       if (styleObjectMap && typeof styleObjectMap === 'function') {
         styleObject = styleObjectMap(styleKeySetKey, styleKeySetValue, styleValueSetKey, styleValueSetValue);
       } else if (styleObjectMap) {
-        styleObject = (0, _objectSpread2.default)({}, styleObjectMap);
+        styleObject = _objectSpread({}, styleObjectMap);
       } else {
-        var styleKeySetValues = Array.isArray(styleKeySetValue) ? styleKeySetValue : [styleKeySetValue];
+        var styleKeySetValues = (0, _isArray.default)(styleKeySetValue) ? styleKeySetValue : [styleKeySetValue];
         styleKeySetValues.forEach(function (styleKeySetValue) {
           styleKeySetValue = styleKeySetValue === true ? styleKeySetKey : styleKeySetValue;
           var styleValue = styleValueMap ? typeof styleValueMap === 'function' ? styleValueMap(styleValueSetValue) : styleValueMap : styleValueSetValue;

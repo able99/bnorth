@@ -1,31 +1,44 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+var _interopRequireWildcard = require("@babel/runtime-corejs2/helpers/interopRequireWildcard");
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty2 = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty2(exports, "__esModule", {
   value: true
 });
+
 exports.default = void 0;
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
 
-var _objectSpread3 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
+var _getOwnPropertyDescriptors = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptors"));
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
+var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-descriptor"));
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
 
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
 
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
+var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
 
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
+var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectWithoutProperties"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/createClass"));
+
+var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/possibleConstructorReturn"));
+
+var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/getPrototypeOf"));
+
+var _inherits2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/inherits"));
 
 var _react = _interopRequireDefault(require("react"));
 
@@ -35,9 +48,9 @@ var _Button = _interopRequireDefault(require("./Button"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
-/**
- * @module
- */
+function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { (0, _defineProperty3.default)(target, key, source[key]); }); } else if (_getOwnPropertyDescriptors.default) { (0, _defineProperties.default)(target, (0, _getOwnPropertyDescriptors.default)(source)); } else { ownKeys(source).forEach(function (key) { (0, _defineProperty2.default)(target, key, (0, _getOwnPropertyDescriptor.default)(source, key)); }); } } return target; }
 
 /**
  * 浮动按钮组件
@@ -97,9 +110,9 @@ function (_React$Component) {
         });
       }
 
-      classNamePre = (0, _objectSpread3.default)((_objectSpread2 = {
+      classNamePre = _objectSpread((_objectSpread2 = {
         'position-absolute': true
-      }, (0, _defineProperty2.default)(_objectSpread2, "margin-top-".concat(margin !== true ? margin : ''), margin && v === 'start'), (0, _defineProperty2.default)(_objectSpread2, "margin-left-".concat(margin !== true ? margin : ''), margin && h === 'start'), (0, _defineProperty2.default)(_objectSpread2, "margin-bottom-".concat(margin !== true ? margin : ''), margin && v === 'end'), (0, _defineProperty2.default)(_objectSpread2, "margin-right-".concat(margin !== true ? margin : ''), margin && h === 'end'), (0, _defineProperty2.default)(_objectSpread2, 'translate-center-x', h === 'center' && v !== 'center'), (0, _defineProperty2.default)(_objectSpread2, 'translate-center-y', h !== 'center' && v === 'center'), (0, _defineProperty2.default)(_objectSpread2, 'translate-center-a', h === 'center' && v === 'center'), (0, _defineProperty2.default)(_objectSpread2, 'offset-left-center', h === 'center'), (0, _defineProperty2.default)(_objectSpread2, 'offset-top-center', v === 'center'), (0, _defineProperty2.default)(_objectSpread2, 'offset-left-start', h === 'start'), (0, _defineProperty2.default)(_objectSpread2, 'offset-right-start', h === 'end'), (0, _defineProperty2.default)(_objectSpread2, 'offset-top-start', v === 'start'), (0, _defineProperty2.default)(_objectSpread2, 'offset-bottom-start', v === 'end'), _objectSpread2), classNamePre);
+      }, (0, _defineProperty3.default)(_objectSpread2, "margin-top-".concat(margin !== true ? margin : ''), margin && v === 'start'), (0, _defineProperty3.default)(_objectSpread2, "margin-left-".concat(margin !== true ? margin : ''), margin && h === 'start'), (0, _defineProperty3.default)(_objectSpread2, "margin-bottom-".concat(margin !== true ? margin : ''), margin && v === 'end'), (0, _defineProperty3.default)(_objectSpread2, "margin-right-".concat(margin !== true ? margin : ''), margin && h === 'end'), (0, _defineProperty3.default)(_objectSpread2, 'translate-center-x', h === 'center' && v !== 'center'), (0, _defineProperty3.default)(_objectSpread2, 'translate-center-y', h !== 'center' && v === 'center'), (0, _defineProperty3.default)(_objectSpread2, 'translate-center-a', h === 'center' && v === 'center'), (0, _defineProperty3.default)(_objectSpread2, 'offset-left-center', h === 'center'), (0, _defineProperty3.default)(_objectSpread2, 'offset-top-center', v === 'center'), (0, _defineProperty3.default)(_objectSpread2, 'offset-left-start', h === 'start'), (0, _defineProperty3.default)(_objectSpread2, 'offset-right-start', h === 'end'), (0, _defineProperty3.default)(_objectSpread2, 'offset-top-start', v === 'start'), (0, _defineProperty3.default)(_objectSpread2, 'offset-bottom-start', v === 'end'), _objectSpread2), classNamePre);
 
       var component = _react.default.createElement(_Panel.default, (0, _extends2.default)({
         component: _Button.default,
@@ -140,7 +153,7 @@ Fab.defaultProps.margin = true;
  * @type {boolean|string}
  */
 
-Object.defineProperty(Fab, "Fab", {
+(0, _defineProperty2.default)(Fab, "Fab", {
   get: function get() {
     return Fab;
   },

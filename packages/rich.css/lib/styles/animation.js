@@ -1,21 +1,20 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+var _interopRequireDefault = require("@babel/runtime-corejs2/helpers/interopRequireDefault");
 
-Object.defineProperty(exports, "__esModule", {
+var _Object$defineProperty = require("@babel/runtime-corejs2/core-js/object/define-property");
+
+_Object$defineProperty(exports, "__esModule", {
   value: true
 });
+
 exports.transiton = transiton;
 exports.transformOrigin = transformOrigin;
 exports.animation = animation;
 exports.transform = transform;
 exports.transforms = transforms;
 
-require("core-js/modules/es6.array.iterator");
-
-require("core-js/modules/es7.object.entries");
-
-require("core-js/modules/web.dom.iterable");
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
 var _compatibleAnimation = _interopRequireDefault(require("../compatibles/compatibleAnimation"));
 
@@ -158,7 +157,7 @@ function transform(name) {
 
 function transforms(param) {
   var ret = {};
-  Object.entries(param).forEach(function (v) {
+  (0, _entries.default)(param).forEach(function (v) {
     return (0, _compatibleAnimation.default)({
       'transform': " ".concat(v[0], "(").concat(v[1], ")")
     });
