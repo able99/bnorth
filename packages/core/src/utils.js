@@ -213,6 +213,14 @@ class Utils {
   captilaze(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+
+  addMacroTask(func) {
+    window.requestAnimationFrame(func);
+  }
+
+  addMicroTask(func) {
+    Promise.resolve().then(func);
+  }
 }
 
 export default Utils;

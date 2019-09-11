@@ -20,6 +20,8 @@ var _getOwnPropertyDescriptor = _interopRequireDefault(require("@babel/runtime-c
 
 var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/get-own-property-symbols"));
 
+var _promise = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/promise"));
+
 require("core-js/modules/es7.array.includes");
 
 require("core-js/modules/es6.string.includes");
@@ -356,6 +358,16 @@ function () {
     key: "captilaze",
     value: function captilaze(str) {
       return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+  }, {
+    key: "addMacroTask",
+    value: function addMacroTask(func) {
+      window.requestAnimationFrame(func);
+    }
+  }, {
+    key: "addMicroTask",
+    value: function addMicroTask(func) {
+      _promise.default.resolve().then(func);
     }
   }]);
   return Utils;

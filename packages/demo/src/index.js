@@ -9,9 +9,6 @@ let app = new App({
     onAppStartConfig: ()=>{
       app.router.setRoutes(routes);
     },
-    actionTest() {
-      console.log(44,this)
-    },
     stateCommonProps: {},
   },
 })
@@ -20,12 +17,3 @@ initStyle(app);
 initPlugins(app);
 app.start();
 
-
-// console.log(require('@bnorth/rich.css/lib/classes').default(
-//   'border-none-a-',
-//   'border-set-a-alert',
-//   'border-set-a-alert',
-//   'border-set-a-alert',
-//   'border-set-a-alert',
-//   'border-none-left-'
-// ));

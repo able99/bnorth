@@ -21,7 +21,6 @@ cordova 增加 clean 命令 删除 cordova 文件夹
 增加 start cordova, 启动cordova app 连接 dev server 调试
 debug 自动增加 <allow-navigation href="*" />
 1. new feature: 属性 btn 改名，去掉手动加 active 状态，但是保证 active 状态, 增加 touch 属性使onClick 转 onTouchStart
-1. new feature: 增加 app.utils.nextTick
 1. new feature: list 支持 icon 缩进
 1. new feature: component of d3.js 
 1. new feature: loader-pullup, scroll no edge showdow props

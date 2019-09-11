@@ -472,6 +472,7 @@ function (_React$Component) {
 
               case 53:
                 this.setState({
+                  error: null,
                   pageInfos: pageInfos,
                   poplayerInfos: this.state.poplayerInfos.filter(function (v) {
                     return !v.options._idPage || pageInfos.find(function (vv) {

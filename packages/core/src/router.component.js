@@ -184,7 +184,7 @@ export default class RouterComponent extends React.Component {
       if(_block) return router.block(_block);
     }
 
-    this.setState({pageInfos: pageInfos, poplayerInfos: this.state.poplayerInfos.filter(v=>!v.options._idPage||pageInfos.find(vv=>vv._id===v.options._idPage))});
+    this.setState({error: null, pageInfos: pageInfos, poplayerInfos: this.state.poplayerInfos.filter(v=>!v.options._idPage||pageInfos.find(vv=>vv._id===v.options._idPage))});
   }
 
   _isTransforming() {

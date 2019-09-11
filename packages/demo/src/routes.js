@@ -9,6 +9,8 @@ export default {
   'router': {component: require('./pages/router').default, title: '路由管理展示'},
   'pageinfo:param1?:param2?': require('./pages/router').PageInfo,
   'dynamic': {component: ()=>new Promise(resolve=>setTimeout(()=>import('./pages/router').then(v=>resolve(v.PageInfo)), 3000)), lazy: true},
+  'toblock': {component: require('./pages/router').ToBlock, title: '被阻塞的页面'},
+  'blockto': {component: require('./pages/router').BlockTo, title: '阻塞跳转到的页面'},
 
   'data': {component: require('./pages/data').default, title: '数据管理展示'},
 

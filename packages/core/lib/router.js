@@ -233,11 +233,10 @@ function () {
      */
 
     this._block = undefined;
-    this.app.event.on(this.app._id, 'onRouteErrorNoRoute', function (name) {
-      return _this.error("route name: ".concat(name), 'no route error');
-    }, this._id);
-    this.app.event.on(this.app._id, 'onRouteErrorNoParam', function (name) {
-      return _this.error("params name: ".concat(name), 'miss require param error');
+    this.app.event.on(this.app._id, 'onRouteError', function (name) {
+      return app.utils.addMicroTask(function () {
+        return _this.error("route or param name: ".concat(name), 'no route error');
+      });
     }, this._id);
   }
 
@@ -389,15 +388,9 @@ function () {
     key: "block",
     value: function block(_block) {
       this.app.event.emit('onRouterBlock', this.component.history.location, _block);
-
-      if (typeof _block === 'function') {
-        this._block = this.component.history.location;
-        _block = _block(this.app);
-        this._block = _block || this._block;
-      } else {
-        this._block = _block || this.component.history.location;
-      }
-
+      var lastLoction = this.component.history.location;
+      if (typeof _block === 'function') _block = _block(this.app);
+      this._block = _block && _block !== true ? _block : lastLoction;
       return true;
     }
     /**
@@ -408,7 +401,7 @@ function () {
   }, {
     key: "restore",
     value: function restore(location) {
-      this.app.event.emit('onRouterRestore');
+      this.app.event.emit('onRouterRestore', this._block, location);
       location || this._block ? this.component.history.replace(location || this._block) : this.replaceRoot();
       this._block = null;
       return true;

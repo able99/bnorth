@@ -1,8 +1,12 @@
 import React from 'react';
 import NavBar from '../components/navbar'
 import List from '../components/list'
+import Panel from '@bnorth/components/lib/Panel';
 
 
+export let ToBlock = props=><h1>该页面被阻塞</h1>
+export let BlockTo = ({app})=><div><h1>阻塞后跳转的页面</h1><button onClick={()=>{app.canBLock=false; app.router.restore()}}>解除阻塞</button></div>
+ 
 export let PageInfo = props=>{
   let { app, route } = props;
 
@@ -35,7 +39,7 @@ PageInfo.controller={
 }
 
 
-export default props=>{
+let Component = props=>{
   let { app } = props;
 
   return (
@@ -68,25 +72,34 @@ export default props=>{
         <List className="margin-bottom-2x">
           <List.Item title="特殊处理" className="text-weight-bold text-size-lg" />
           <List.Item title="懒加载" desc="页面文件后加载" onClick={()=>app.router.push(['dynamic', 'dp1'])} />
-          <List.Item title="阻塞" desc="TODO" onClick={()=>app.router.push(['dynamic', 'dp1'])} />
+          <List.Item title="阻塞" desc="页面被阻塞" onClick={()=>{app.canBLock=true;app.router.push('toblock')}} />
+          <List.Item title="错误地址" desc="跳转到没有配置的路由地址" onClick={()=>app.router.push('noroute')} />
         </List>
 
         <List className="margin-bottom-2x">
           <List.Item title="弹出层操作" className="text-weight-bold text-size-lg" />
-          <List.Item title="添加弹出层 - 内容" onClick={()=>app.router.addPopLayer('弹出层 - 点击关闭')} />
-          <List.Item title="添加弹出层 - 组件" onClick={()=>app.router.addPopLayer(props=><div style={{zIndex: 9, position: 'absolute'}} onClick={()=>props.app.router.removePopLayer(props._id)}>弹出层 - 点击关闭</div>)} />
-          <List.Item title="添加弹出层 - 状态" onClick={()=>app.router.addPopLayer(props=>{
-            console.log(1111111, props); 
-            return (
-              <div style={{zIndex: 9, position: 'absolute', background: 'lightgray', padding: 8}}>
-                弹出层 - 状态 - {JSON.stringify(props.stateData)}
-                <div onClick={()=>props.states.stateData.update({tick:props.stateData.tick+1})}>点击更新 tick</div>
-                <div onClick={()=>props.app.router.removePopLayer(props._id)}>点击关闭</div>
-              </div>
-            )
-          }, undefined, {data: {initialization: {tick: 1}}})} />
+          <List.Item title="添加弹出层" onClick={()=>app.Poplayer.addPoplayer(
+            props=>{return <Panel page bc-offset-a-start bc-margin-a- bc-position-absolute>
+              <h1>poplayer</h1>
+              <h3>state</h3>
+              <div>{JSON.stringify(props.states.stateData,null,2)}</div>
+              <button onClick={()=>props.poplayer.stateData.set('count', props.states.stateData.count+1)}>add count</button>
+              <button onClick={()=>app.Poplayer.removePoplayer(props._id)}>close</button>
+            </Panel>},null,{
+              stateData:{initialization: {count:1}}
+            })} />
         </List>
       </div>
     </div>
   )
 }
+
+Component.controller = app=>({
+  onRouteMatch: info=>{
+    if(app.canBLock&&info.pageName==='toblock') {
+      return ()=>app.router.replace('..','blockto');
+    }
+  }
+})
+
+export default Component;

@@ -177,8 +177,7 @@ class Router {
      */
     this._block = undefined;
     
-    this.app.event.on(this.app._id, 'onRouteErrorNoRoute', name=>this.error(`route name: ${name}`, 'no route error'), this._id);
-    this.app.event.on(this.app._id, 'onRouteErrorNoParam', name=>this.error(`params name: ${name}`, 'miss require param error'), this._id);
+    this.app.event.on(this.app._id, 'onRouteError', name=>app.utils.addMicroTask(()=>this.error(`route or param name: ${name}`, 'no route error')), this._id);
   }
 
   destructor() {
@@ -280,13 +279,9 @@ class Router {
    */
   block(_block) {
     this.app.event.emit('onRouterBlock', this.component.history.location, _block);
-    if(typeof _block==='function'){
-      this._block = this.component.history.location;
-      _block = _block(this.app);
-      this._block = _block||this._block;
-    }else{
-      this._block = _block||this.component.history.location;
-    }
+    let lastLoction = this.component.history.location;
+    if(typeof _block==='function') _block = _block(this.app);
+    this._block = _block&&_block!==true?_block:lastLoction;
     return true;
   }
 
@@ -295,7 +290,7 @@ class Router {
    * @param {module:router~PathInfo|string} - 要恢复的路径，为空则使用 block 保存的路径
    */
   restore(location) {
-    this.app.event.emit('onRouterRestore');
+    this.app.event.emit('onRouterRestore', this._block, location);
     location||this._block?this.component.history.replace(location||this._block):this.replaceRoot();
     this._block = null;
     return true;
