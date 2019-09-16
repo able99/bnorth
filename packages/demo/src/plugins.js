@@ -1,10 +1,11 @@
 export default function(app) {
-  app.plugins.add(require('@bnorth/components/lib/rootGesture').default);
+  app.plugins.add(require('@bnorth/components/lib/rootGesture').default, {pullAction:true});
   app.plugins.add(require('@bnorth/components/lib/Notice').notice);
   app.plugins.add(require('@bnorth/components/lib/Modal').modal);
   app.plugins.add(require('@bnorth/components/lib/Loader').loader);
   app.plugins.add(require('@bnorth/components/lib/Loader').mask);
   app.plugins.add(require('@bnorth/components/lib/Loader').pulldown);
+  app.plugins.add(require('@bnorth/components/lib/Loader').pullup);
   app.plugins.add(require('@bnorth/components/lib/pageTransform').PageTransform);
   // app.plugins.add(require('@bnorth/components/lib/picker').default);
 

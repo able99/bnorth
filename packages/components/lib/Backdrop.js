@@ -75,7 +75,7 @@ var _Backdrop = function Backdrop(aprops) {
     onFinished: onFinished
   }, _react.default.createElement(_Panel.default, (0, _extends2.default)({
     "b-style": "mask",
-    btn: false,
+    clickable: false,
     classNamePre: classNamePre
   }, props)));
 };

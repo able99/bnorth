@@ -102,7 +102,7 @@ class Plugins {
    * @param {module:plugins~PluginDefine|module:plugins~PluginDefineFunction} - 插件声明对象 
    * @param  {...*} - 插件的参数 
    */
-  add(plugin, options) {
+  add(plugin, options={}) {
     if(!plugin) return;
     let instance = {};
     if(plugin instanceof Function) plugin = plugin(this.app, instance, options);

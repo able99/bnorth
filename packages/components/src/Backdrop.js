@@ -31,7 +31,7 @@ let Backdrop = aprops=>{
 
   return (
     <AnimationFrame play={play} rewind={rewind} frameFunc={frameFunc} params={params} onFinished={onFinished}>
-      <Panel b-style="mask" btn={false} classNamePre={classNamePre} {...props} />
+      <Panel b-style="mask" clickable={false} classNamePre={classNamePre} {...props} />
     </AnimationFrame> 
   )
 }

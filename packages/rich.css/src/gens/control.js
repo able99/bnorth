@@ -17,16 +17,16 @@ function genFuncControl({textColors, mainColors, stateDisabled, stateActive}) {
   return Object.assign(
     /**
      * 支持点击状态
-     * @classname btn
+     * @classname clickable
      */
-    genClassObjects('.btn:disabled, .btn[disabled], .btn.disabled', {
+    genClassObjects('.clickable:disabled, .clickable[disabled], .clickable.disabled', {
       styleObjectMap: {
         'cursor': 'not-allowed',
         'pointer-events': 'none',
         ...typeof(stateDisabled)==='string'?{'background-color':stateDisabled, 'border-color':stateDisabled}:{opacity:stateDisabled},
       },
     }), 
-    genClassObjects('.btn:active, .btn[active], .btn.active', {
+    genClassObjects('.clickable:active, .clickable[active], .clickable.active', {
       styleObjectMap: typeof(stateActive)==='string'?{'background-color':stateActive, 'border-color':stateActive}:{opacity:stateActive},
     }), 
 

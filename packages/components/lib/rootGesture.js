@@ -18,7 +18,7 @@ function renderActive(el, root) {
     if (el === root) break;
     ;
 
-    if (/\bbtn\b/.test(el.className.baseVal || el.className)) {
+    if (/\bclickable\b/.test(el.className.baseVal || el.className)) {
       (function () {
         var rect = el.getBoundingClientRect();
         var active = document.createElement('div');
@@ -37,7 +37,7 @@ function renderActive(el, root) {
           }
 
           var diff = new Date().getTime() - time;
-          var percent = diff * 100 / 400;
+          var percent = diff * 100 / 200;
 
           if (percent >= 100) {
             percent = 100;
@@ -122,14 +122,19 @@ function setScrollEdgeShadow(edgeShadow, direction, scrollOver, root) {
 
 var _default = {
   _id: 'rootGesture',
-  _onStart: function _onStart(app) {
+  _onStart: function _onStart(app, plugin, _ref) {
+    var _ref$clickActive = _ref.clickActive,
+        clickActive = _ref$clickActive === void 0 ? true : _ref$clickActive,
+        _ref$edgeShadow = _ref.edgeShadow,
+        edgeShadow = _ref$edgeShadow === void 0 ? true : _ref$edgeShadow,
+        pullAction = _ref.pullAction;
     app.rootGesture = {};
 
     app.rootGesture.init = function (root) {
       var x, y, offsetX, offsetY, edgeShadow, scrollEl, direction;
 
       var handleStart = function handleStart(e) {
-        renderActive(e.target, root);
+        clickActive && renderActive(e.target, root);
         x = _BaseComponent.domIsMouse ? e.clientX : e.touches[0].clientX;
         y = _BaseComponent.domIsMouse ? e.clientY : e.touches[0].clientY;
       };
@@ -159,7 +164,7 @@ var _default = {
 
           scrollEl.pullup = Math.abs(scrollOver);
           scrollEl.dispatchEvent(_evt);
-        } else if (scrollOver || edgeShadow) {
+        } else if (scrollEl && scrollEl.getAttribute('data-b-edge-shadow') !== 'false' && scrollOver || edgeShadow) {
           edgeShadow = setScrollEdgeShadow(edgeShadow, direction, scrollOver, root);
         }
       };
@@ -174,8 +179,17 @@ var _default = {
           scrollEl.dispatchEvent(evt);
         }
 
-        if (scrollEl && scrollEl.pullup) scrollEl.pullup = undefined;
+        if (scrollEl && scrollEl.pullup) {
+          var _evt2 = document.createEvent("Events");
+
+          _evt2.initEvent('scroll', true, true);
+
+          scrollEl.pullup = String(scrollEl.pullup);
+          scrollEl.dispatchEvent(_evt2);
+        }
+
         if (scrollEl && scrollEl.pulldown) scrollEl.pulldown = undefined;
+        if (scrollEl && scrollEl.pullup) scrollEl.pullup = undefined;
         scrollEl = undefined;
         direction = undefined;
         if (edgeShadow) edgeShadow.remove();
@@ -185,10 +199,10 @@ var _default = {
       var eventOption = (0, _BaseComponent.domPassiveSupported)() ? {
         passive: true
       } : false;
-      root.addEventListener(_BaseComponent.domIsMouse ? 'mousedown' : 'touchstart', handleStart, eventOption);
-      root.addEventListener(_BaseComponent.domIsMouse ? 'mousemove' : 'touchmove', handleMove, eventOption);
-      root.addEventListener(_BaseComponent.domIsMouse ? 'mouseup' : 'touchend', hadnleEnd, eventOption);
-      !_BaseComponent.domIsMouse && root.addEventListener('touchcancel', hadnleEnd, eventOption);
+      (clickActive || edgeShadow || pullAction) && root.addEventListener(_BaseComponent.domIsMouse ? 'mousedown' : 'touchstart', handleStart, eventOption);
+      (edgeShadow || pullAction) && root.addEventListener(_BaseComponent.domIsMouse ? 'mousemove' : 'touchmove', handleMove, eventOption);
+      (edgeShadow || pullAction) && root.addEventListener(_BaseComponent.domIsMouse ? 'mouseup' : 'touchend', hadnleEnd, eventOption);
+      (edgeShadow || pullAction) && !_BaseComponent.domIsMouse && root.addEventListener('touchcancel', hadnleEnd, eventOption);
 
       app.rootGesture._close = function () {
         root.removeEventListener(_BaseComponent.domIsMouse ? 'mousedown' : 'touchstart', handleStart, eventOption);

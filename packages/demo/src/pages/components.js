@@ -13,7 +13,7 @@ import Field from '@bnorth/components/lib/Field'
 import Icon, { PanelIcon } from '@bnorth/components/lib/Icon'
 import Landscape from '@bnorth/components/lib/Landscape'
 import List from '@bnorth/components/lib/List'
-import Loader, { PanelLoader, Mask } from '@bnorth/components/lib/Loader'
+import Loader, { PanelLoader, MaskPoplayer } from '@bnorth/components/lib/Loader'
 import Modal from '@bnorth/components/lib/Modal'
 import Notice from '@bnorth/components/lib/Notice'
 import NavBar from '@bnorth/components/lib/NavBar'
@@ -58,10 +58,10 @@ let Component = aprops=>{
 
       <Groups.Group title="Backdrop" desc="幕布组件">
         <Groups.Props data={{
-          'in|进入或者退出': [true, false],
+          'rewind|进入或者退出': [true, false],
         }}/>
         <Groups.Show>
-          {props=><div className="position-relative">{listGener()}<Backdrop children="Backdrop" {...props}/></div>}
+          {props=><div className="position-relative">{listGener()}<Backdrop play children="Backdrop" {...props}/></div>}
         </Groups.Show>
       </Groups.Group>
 
@@ -73,7 +73,7 @@ let Component = aprops=>{
 
       <Groups.Group title="Button" desc="按钮组件">
         <Groups.Show>
-          <Button btn>button</Button>
+          <Button clickable>button</Button>
         </Groups.Show>
       </Groups.Group>
 
@@ -195,7 +195,7 @@ let Component = aprops=>{
 
       <Groups.Group title="Mask" desc="蒙层">
         <Groups.Show>
-          {props=><div style={{height: 500}} className="position-relative"><Mask {...props}>body</Mask></div>}
+          {props=><div style={{height: 500}} className="position-relative"><MaskPoplayer {...props}>body</MaskPoplayer></div>}
         </Groups.Show>
       </Groups.Group>
 

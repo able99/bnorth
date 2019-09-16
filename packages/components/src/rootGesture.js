@@ -6,7 +6,7 @@ import { domIsMouse, domPassiveSupported } from './BaseComponent';
 function renderActive(el, root) {
   while (el) {
     if (el === root) break;; 
-    if(/\bbtn\b/.test(el.className.baseVal||el.className)) {
+    if(/\bclickable\b/.test(el.className.baseVal||el.className)) {
       let rect = el.getBoundingClientRect();
       let active = document.createElement('div');
       active.setAttribute('style', `position: absolute;pointer-events: none; top: ${rect.top}px; bottom: ${rect.bottom}px; left: ${rect.left}px; right: ${rect.right}px; width: ${rect.width}px; height: ${rect.height}px;`);
@@ -21,7 +21,7 @@ function renderActive(el, root) {
         if(finish) { active.remove(); return }
 
         let diff = (new Date()).getTime() - time;
-        let percent = diff*100/400;
+        let percent = diff*100/200;
         if(percent>=100) { percent = 100; finish = true }
 
         ripple.style.opacity = percent<50?(percent/2/100):(1-percent/2/100)
@@ -114,14 +114,14 @@ function setScrollEdgeShadow(edgeShadow, direction, scrollOver, root) {
 export default {
   _id: 'rootGesture',
 
-  _onStart(app) {
+  _onStart(app, plugin, {clickActive=true, edgeShadow=true, pullAction}) {
     app.rootGesture = {};
 
     app.rootGesture.init = function(root) {
       let x,y,offsetX,offsetY,edgeShadow,scrollEl,direction;
 
       let handleStart = e=>{
-        renderActive(e.target, root);
+        clickActive&&renderActive(e.target, root);
 
         x = domIsMouse?e.clientX:e.touches[0].clientX;
         y = domIsMouse?e.clientY:e.touches[0].clientY;
@@ -145,7 +145,7 @@ export default {
           evt.initEvent('scroll', true, true);
           scrollEl.pullup = Math.abs(scrollOver);
           scrollEl.dispatchEvent(evt);
-        }else if(scrollOver||edgeShadow){
+        }else if((scrollEl&&scrollEl.getAttribute('data-b-edge-shadow')!=='false'&&scrollOver)||edgeShadow){
           edgeShadow = setScrollEdgeShadow(edgeShadow, direction, scrollOver, root);
         }
       }
@@ -158,8 +158,14 @@ export default {
           scrollEl.pulldown = String(scrollEl.pulldown);
           scrollEl.dispatchEvent(evt);
         }
-        if(scrollEl&&scrollEl.pullup) scrollEl.pullup = undefined;
+        if(scrollEl&&scrollEl.pullup) {
+          let evt = document.createEvent("Events");
+          evt.initEvent('scroll', true, true);
+          scrollEl.pullup = String(scrollEl.pullup);
+          scrollEl.dispatchEvent(evt);
+        }
         if(scrollEl&&scrollEl.pulldown) scrollEl.pulldown = undefined;
+        if(scrollEl&&scrollEl.pullup) scrollEl.pullup = undefined;
         scrollEl = undefined;
         direction = undefined;
         if(edgeShadow) edgeShadow.remove();
@@ -167,10 +173,10 @@ export default {
       }
 
       let eventOption = domPassiveSupported()?{passive: true}:false;
-      root.addEventListener(domIsMouse?'mousedown':'touchstart', handleStart, eventOption);
-      root.addEventListener(domIsMouse?'mousemove':'touchmove', handleMove, eventOption);
-      root.addEventListener(domIsMouse?'mouseup':'touchend', hadnleEnd, eventOption);
-      (!domIsMouse)&&root.addEventListener('touchcancel', hadnleEnd, eventOption);
+      (clickActive||edgeShadow||pullAction)&&root.addEventListener(domIsMouse?'mousedown':'touchstart', handleStart, eventOption);
+      (edgeShadow||pullAction)&&root.addEventListener(domIsMouse?'mousemove':'touchmove', handleMove, eventOption);
+      (edgeShadow||pullAction)&&root.addEventListener(domIsMouse?'mouseup':'touchend', hadnleEnd, eventOption);
+      (edgeShadow||pullAction)&&(!domIsMouse)&&root.addEventListener('touchcancel', hadnleEnd, eventOption);
       app.rootGesture._close = ()=>{
         root.removeEventListener(domIsMouse?'mousedown':'touchstart', handleStart, eventOption);
         root.removeEventListener(domIsMouse?'mousemove':'touchmove', handleMove, eventOption);

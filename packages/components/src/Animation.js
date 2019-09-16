@@ -34,7 +34,7 @@ let Animation = aprops=>{
       onExiting={chainedFuncs(type.onExiting&&type.onExiting.bind(null, props), onExiting&&onExiting.bind(null, props))}
       onExited={chainedFuncs(type.onExited&&type.onExited.bind(null, props), onExited&&onExited.bind(null, props), onFinished)}
       {...transitionProps} >
-      {state=><Panel btn={false} {...type.getProps?type.getProps(state, props):props} />}
+      {state=><Panel clickable={false} {...type.getProps?type.getProps(state, props):props} />}
     </Transition>
   );
 }

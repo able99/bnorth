@@ -96,7 +96,7 @@ var _Modal = function Modal(aprops) {
       e.stopPropagation();
       e.preventDefault();
     },
-    btn: false,
+    clickable: false,
     "b-style": "white",
     stylePre: type !== 'document' && stylePre,
     classNamePre: type !== 'document' && classNamePre
@@ -132,7 +132,7 @@ var _Modal = function Modal(aprops) {
     component: _Backdrop.default,
     duration: 100,
     rewind: rewind,
-    btn: false,
+    clickable: false,
     onClick: onClose,
     onFinished: onFinished,
     classNamePre: classNamePreContainer

@@ -8,7 +8,7 @@ _Object$defineProperty2(exports, "__esModule", {
   value: true
 });
 
-exports.mask = exports.MaskPoplayer = exports.pulldown = exports.PullDownPoplayer = exports.loader = exports.LoaderPoplayer = exports.PanelLoader = exports.default = void 0;
+exports.mask = exports.MaskPoplayer = exports.pullup = exports.PullUpPoplayer = exports.pulldown = exports.PullDownPoplayer = exports.loader = exports.LoaderPoplayer = exports.PanelLoader = exports.default = void 0;
 
 var _defineProperties = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-properties"));
 
@@ -50,7 +50,7 @@ var _animation2 = require("@bnorth/rich.css/lib/styles/animation");
 
 var _animationFrame = require("@bnorth/rich.css/lib/styles/animationFrame");
 
-var _BaseComponent8 = _interopRequireDefault(require("./BaseComponent"));
+var _BaseComponent9 = _interopRequireDefault(require("./BaseComponent"));
 
 var _AnimationFrame = _interopRequireDefault(require("./AnimationFrame"));
 
@@ -69,7 +69,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
  * @augments BaseComponent
  */
 var _Loader = function Loader(aprops) {
-  var _BaseComponent = (0, _BaseComponent8.default)(aprops, _Loader),
+  var _BaseComponent = (0, _BaseComponent9.default)(aprops, _Loader),
       type = _BaseComponent.type,
       types = _BaseComponent.types,
       timeoutTransition = _BaseComponent.timeoutTransition,
@@ -157,7 +157,7 @@ var _default = _Loader;
 exports.default = _default;
 
 var _Line = function Line(aprops) {
-  var _BaseComponent2 = (0, _BaseComponent8.default)(aprops, _Line),
+  var _BaseComponent2 = (0, _BaseComponent9.default)(aprops, _Line),
       isProgress = _BaseComponent2.isProgress,
       progress = _BaseComponent2.progress,
       timeout = _BaseComponent2.timeout,
@@ -219,7 +219,7 @@ function (_React$Component) {
   (0, _createClass2.default)(Circle, [{
     key: "render",
     value: function render() {
-      var _BaseComponent3 = (0, _BaseComponent8.default)(this.props, _Circle),
+      var _BaseComponent3 = (0, _BaseComponent9.default)(this.props, _Circle),
           isProgress = _BaseComponent3.isProgress,
           progress = _BaseComponent3.progress,
           timeout = _BaseComponent3.timeout,
@@ -286,7 +286,7 @@ _Loader.defaultProps.types = {
 };
 
 var PanelLoader = function PanelLoader(aprops) {
-  var _BaseComponent4 = (0, _BaseComponent8.default)(aprops),
+  var _BaseComponent4 = (0, _BaseComponent9.default)(aprops),
       isProgress = _BaseComponent4.isProgress,
       progress = _BaseComponent4.progress,
       loaderProps = _BaseComponent4.loaderProps,
@@ -347,7 +347,7 @@ PanelLoader.isBnorth = true;
 PanelLoader.defaultProps['b-precast'] = {};
 
 var _LoaderPoplayer = function LoaderPoplayer(aprops) {
-  var _BaseComponent5 = (0, _BaseComponent8.default)(aprops, _LoaderPoplayer),
+  var _BaseComponent5 = (0, _BaseComponent9.default)(aprops, _LoaderPoplayer),
       progress = _BaseComponent5.progress,
       timeout = _BaseComponent5.timeout,
       bTheme = _BaseComponent5['b-theme'],
@@ -461,7 +461,7 @@ var loader = function loader(app) {
 exports.loader = loader;
 
 var _PullDownPoplayer = function PullDownPoplayer(aprops) {
-  var _BaseComponent6 = (0, _BaseComponent8.default)(aprops, _PullDownPoplayer),
+  var _BaseComponent6 = (0, _BaseComponent9.default)(aprops, _PullDownPoplayer),
       progress = _BaseComponent6.progress,
       _BaseComponent6$heigh = _BaseComponent6.height,
       height = _BaseComponent6$heigh === void 0 ? 100 : _BaseComponent6$heigh,
@@ -526,13 +526,97 @@ var pulldown = {
           return app.pulldown._id = app.Poplayer.addPoplayer(_PullDownPoplayer, _objectSpread({}, props, {
             progress: progress
           }), _objectSpread({}, options, {
-            _id: app.pulldown._id
+            _id: app.pulldown._id,
+            _idPage: app.Page.getPage()._id
           }));
         }
       },
       close: function close() {
         app.Poplayer.removePoplayer(app.pulldown._id);
         app.pulldown._id = undefined;
+      }
+    };
+  },
+  _onStop: function _onStop(app) {
+    delete app.pulldown;
+  }
+};
+exports.pulldown = pulldown;
+
+var _PullUpPoplayer = function PullUpPoplayer(aprops) {
+  var _BaseComponent7 = (0, _BaseComponent9.default)(aprops, _PullUpPoplayer),
+      progress = _BaseComponent7.progress,
+      _BaseComponent7$heigh = _BaseComponent7.height,
+      height = _BaseComponent7$heigh === void 0 ? 100 : _BaseComponent7$heigh,
+      poplayer = _BaseComponent7.poplayer,
+      children = _BaseComponent7.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent7, ["progress", "height", "poplayer", "children"]);
+
+  if (!progress || progress < 0) return null;
+  children = typeof children === 'function' ? children(poplayer) : children;
+  return _react.default.createElement(_Panel.default, (0, _extends2.default)({
+    "bc-padding-a-": true,
+    "bc-bg-color-white": true,
+    "bc-border-set-a-": true,
+    "bc-border-radius-rounded": true,
+    "bc-line-height-0": true,
+    "bc-position-absolute": true,
+    "bc-offset-left-center": true,
+    "bc-pointer-events-none": true,
+    "bs-left": "50%",
+    "bs-bottom": Math.min(height, progress),
+    style: typeof progress !== 'string' && _objectSpread({}, (0, _animation2.transform)('rotate', progress * (360 / height) % 360 + 'deg')),
+    "bc-transiton-set-": true,
+    "bc-animation-name-spin": Boolean(typeof progress === 'string' && progress >= height),
+    "bc-animation-iteration-count-infinite": true,
+    "bc-animation-duration-1000": true
+  }, props), children || _react.default.createElement("svg", {
+    version: "1.1",
+    viewBox: "0 0 1024 1024",
+    preserveAspectRatio: "none",
+    stroke: "currentcolor",
+    fill: "currentcolor",
+    "bs-width": "1em",
+    "bs-height": "1em",
+    className: "display-inline width-1em height-1em"
+  }, _react.default.createElement("path", {
+    d: "M1024 384h-384l143.53-143.53c-72.53-72.526-168.96-112.47-271.53-112.47s-199 39.944-271.53 112.47c-72.526 72.53-112.47 168.96-112.47 271.53s39.944 199 112.47 271.53c72.53 72.526 168.96 112.47 271.53 112.47s199-39.944 271.528-112.472c6.056-6.054 11.86-12.292 17.456-18.668l96.32 84.282c-93.846 107.166-231.664 174.858-385.304 174.858-282.77 0-512-229.23-512-512s229.23-512 512-512c141.386 0 269.368 57.326 362.016 149.984l149.984-149.984v384z"
+  })));
+};
+
+exports.PullUpPoplayer = _PullUpPoplayer;
+_PullUpPoplayer.defaultProps = {};
+(0, _defineProperty3.default)(_Loader, "PullUpPoplayer", {
+  get: function get() {
+    return _PullUpPoplayer;
+  },
+  set: function set(val) {
+    exports.PullUpPoplayer = _PullUpPoplayer = val;
+  }
+});
+_PullUpPoplayer.isBnorth = true;
+_PullUpPoplayer.defaultProps['b-precast'] = {};
+var pullup = {
+  _id: 'pullup',
+  _onStart: function _onStart(app) {
+    app.pullup = {
+      show: function show(progress, props, options) {
+        if (progress < 15) return;
+
+        if (typeof progress === 'string' && progress < 100) {
+          return app.pullup.close();
+        } else {
+          return app.pullup._id = app.Poplayer.addPoplayer(_PullUpPoplayer, _objectSpread({}, props, {
+            progress: progress
+          }), _objectSpread({}, options, {
+            _id: app.pullup._id,
+            _idPage: app.Page.getPage()._id
+          }));
+        }
+      },
+      close: function close() {
+        app.Poplayer.removePoplayer(app.pullup._id);
+        app.pullup._id = undefined;
       }
     };
   },
@@ -547,15 +631,15 @@ var pulldown = {
  * @export
  */
 
-exports.pulldown = pulldown;
+exports.pullup = pullup;
 
 var _MaskPoplayer = function MaskPoplayer(aprops) {
-  var _BaseComponent7 = (0, _BaseComponent8.default)(aprops, _MaskPoplayer),
-      loaderProps = _BaseComponent7.loaderProps,
-      classNamePre = _BaseComponent7.classNamePre,
-      children = _BaseComponent7.children,
-      poplayer = _BaseComponent7.poplayer,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent7, ["loaderProps", "classNamePre", "children", "poplayer"]);
+  var _BaseComponent8 = (0, _BaseComponent9.default)(aprops, _MaskPoplayer),
+      loaderProps = _BaseComponent8.loaderProps,
+      classNamePre = _BaseComponent8.classNamePre,
+      children = _BaseComponent8.children,
+      poplayer = _BaseComponent8.poplayer,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent8, ["loaderProps", "classNamePre", "children", "poplayer"]);
 
   children = typeof children === 'function' ? children(poplayer) : children;
   classNamePre = _objectSpread({

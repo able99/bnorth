@@ -49,6 +49,14 @@ var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-core
 
 var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
 
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/toConsumableArray"));
+
+var _isArray = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/is-array"));
+
+var _assign = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/assign"));
+
+require("core-js/modules/es6.function.name");
+
 require("core-js/modules/es6.string.starts-with");
 
 var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
@@ -293,10 +301,29 @@ function chainedFuncs() {
  * @exportdefault
  * @name BaseComponent
  */
-function BaseComponent(props) {
-  props = _objectSpread({}, typeof props['b-precast'] === 'function' ? props['b-precast'](props) : props['b-precast'], {}, typeof props['b-dynamic'] === 'function' ? props['b-dynamic'](props) : props['b-dynamic'], {}, props);
+function BaseComponent(aprops) {
+  var props = _objectSpread({}, typeof aprops['b-precast'] === 'function' ? aprops['b-precast'](aprops) : aprops['b-precast'], {}, typeof aprops['b-dynamic'] === 'function' ? aprops['b-dynamic'](aprops) : aprops['b-dynamic'], {}, aprops);
+
+  props.classNameBase = _objectSpread({}, props.classNameBase);
+  if (props.refWrap) props.ref = props.refWrap;
+  if (props.active) props.classNameBase['active'] = true;
+  if (props.selected) props.classNameBase['selected'] = true;
+  if (props.disabled) props.classNameBase['disabled'] = true;
+  if (props.classNameBase.onClick && props.clickable !== false) props.classNameBase['cursor-pointer'] = true;
+  if (props.onClick && !props.clickable && props.clickable !== false || props.clickable === true) props.classNameBase['clickable'] = true;
+
+  if (props.touchClick) {
+    props.onTouchStart = props.onClick;
+    delete props['onClick'];
+  }
+
   delete props['b-precast'];
   delete props['b-dynamic'];
+  delete props['touchCLick'];
+  delete props['refWrap'];
+  delete props['clickable'];
+  props.classNameBaseProps = _objectSpread({}, props.classNameBaseProps);
+  props.styleBaseProps = _objectSpread({}, props.styleBaseProps);
   (0, _entries.default)(props).forEach(function (_ref) {
     var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
         k = _ref2[0],
@@ -313,6 +340,27 @@ function BaseComponent(props) {
       objName += 'Props';
       props[objName] = _objectSpread({}, props[objName]);
       props[objName][propName] = v;
+    } else if (k.startsWith('bs-')) {
+      delete props[k];
+      if (v === false || v === undefined || v === null) return;
+      var name = k.slice(3);
+      props.styleBaseProps[name] = v;
+    } else if (k.startsWith('bc-')) {
+      delete props[k];
+      if (v === false || v === undefined || v === null) return;
+
+      var _name = k.slice(3);
+
+      props.classNameBaseProps[_name + (v === true ? '' : '-' + v)] = true;
+    } else if (k.startsWith('bf-')) {
+      delete props[k];
+      if (!v) return;
+
+      var _name2 = k.slice(3);
+
+      _name2 = BaseComponent.styleFunctions[_name2];
+      if (!_name2) return;
+      (0, _assign.default)(props.styleBaseProps, (0, _isArray.default)(v) ? _name2.apply(void 0, (0, _toConsumableArray2.default)(v)) : _name2(v));
     }
   });
   return props;
@@ -360,4 +408,53 @@ BaseComponent.styleFunctions = {};
  * @member BaseComponent.props
  * @type {function|object}
  * @static
+ */
+
+/**
+ * 设置组件的样式对象，将属性名去掉 bs- 前缀，和属性值，追加到组件的样式对象中
+ * 
+ * @attribute module:Panel.Panel.bs-xxx
+ * @type {number|string} 
+ * @example
+ * ```jsx
+ * <Panel bs-width="50%" style={{height: '50%'}} /> // style: { widht: 50%, height: 50% }
+ * ```
+ */
+
+/**
+ * 设置样式类
+ * 
+ * - 当属性值为 true 时，将当前属性名，去掉 bc- 前缀，追加到组件的样式类属性中
+ * - 当属性值为数字或字符串时，将去掉 bc- 前缀的属性名和属性值用 - 连接后，追加到组件的样式类属性中
+ * - 当属性值不为真时，没有任何作用
+ * 
+ * @attribute module:Panel.Panel.bc-xxx
+ * @type {boolean|string|number} 
+ * @example
+ * ```jsx
+ * <Panel bc-text-size="lg" bc-text-weight-={true} className="text-color-primary" /> // className: 'text-color-primary text-size-lg text-weight-'
+ * ```
+ */
+
+/**
+ * 执行样式函数，并将结果设置到组件的样式对象。将属性名去掉 bs- 前缀作为函数名称，从样式函数集合中获取函数，将属性值(为数组时，作为展开参数)作为参数，执行并将结果追加到组件的样式对象中
+ * 
+ * @attribute module:Panel.Panel.bf-xxx
+ * @type {number|string|array} 
+ * @example
+ * ```jsx
+ * import { backgroundImage } from '@bnorth/rich.css/lib/styles/background';
+ * import { addFunctions } from '@bnorth/components/lib/utils/props';
+ * addFunctions({ backgroundImage });
+ * 
+ * export default props=>{
+ *   return <Panel bf-background={'bg.jpg'} /> // style: {backgroundImage: url(bg.jpg)}
+ * }
+ * ```
+ */
+
+/**
+ * 设置为选中状态，
+ * @attribute module:Panel.Panel.selected
+ * @type {boolean}
  */

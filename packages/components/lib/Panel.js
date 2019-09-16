@@ -22,6 +22,10 @@ var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-core
 
 var _keys = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/keys"));
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
+
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
+
 var _typeof2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/typeof"));
 
 require("core-js/modules/es6.array.find-index");
@@ -39,18 +43,6 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/
 var _defineProperty2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/define-property"));
 
 var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
-
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/toConsumableArray"));
-
-var _isArray = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/is-array"));
-
-var _assign = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/assign"));
-
-require("core-js/modules/es6.string.starts-with");
-
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
-
-var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
 
 var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
@@ -85,11 +77,6 @@ var _Panel = function Panel(aprops) {
   }
 
   var _BaseComponent = (0, _BaseComponent5.default)(aprops, _Panel),
-      active = _BaseComponent.active,
-      selected = _BaseComponent.selected,
-      disabled = _BaseComponent.disabled,
-      onClick = _BaseComponent.onClick,
-      btn = _BaseComponent.btn,
       main = _BaseComponent.main,
       page = _BaseComponent.page,
       full = _BaseComponent.full,
@@ -102,9 +89,13 @@ var _Panel = function Panel(aprops) {
       bTheme = _BaseComponent['b-theme'],
       bStyle = _BaseComponent['b-style'],
       bSize = _BaseComponent['b-size'],
+      classNameBase = _BaseComponent.classNameBase,
+      styleBase = _BaseComponent.styleBase,
+      classNameBaseProps = _BaseComponent.classNameBaseProps,
+      styleBaseProps = _BaseComponent.styleBaseProps,
       classNamePre = _BaseComponent.classNamePre,
-      classNameExt = _BaseComponent.classNameExt,
       stylePre = _BaseComponent.stylePre,
+      classNameExt = _BaseComponent.classNameExt,
       styleExt = _BaseComponent.styleExt,
       className = _BaseComponent.className,
       style = _BaseComponent.style,
@@ -116,15 +107,15 @@ var _Panel = function Panel(aprops) {
       textOnBgSelected = _BaseComponent$panelT.textOnBgSelected,
       textOnBgUnselected = _BaseComponent$panelT.textOnBgUnselected,
       textUnselected = _BaseComponent$panelT.textUnselected,
-      refWrap = _BaseComponent.refWrap,
       _BaseComponent$compon = _BaseComponent.component,
       Component = _BaseComponent$compon === void 0 ? aprops.componentPanel || "div" : _BaseComponent$compon,
       componentPanel = _BaseComponent.componentPanel,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["active", "selected", "disabled", "onClick", "btn", "main", "page", "full", "inline", "panelContainerProps", "panelItemIndex", "panelItemCount", "panelItemSelected", "panelItemPlain", "b-theme", "b-style", "b-size", "classNamePre", "classNameExt", "stylePre", "styleExt", "className", "style", "panelThemeProps", "refWrap", "component", "componentPanel"]);
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["main", "page", "full", "inline", "panelContainerProps", "panelItemIndex", "panelItemCount", "panelItemSelected", "panelItemPlain", "b-theme", "b-style", "b-size", "classNameBase", "styleBase", "classNameBaseProps", "styleBaseProps", "classNamePre", "stylePre", "classNameExt", "styleExt", "className", "style", "panelThemeProps", "component", "componentPanel"]);
 
   if (sensitiveBg === undefined) sensitiveBg = bStyle === 'solid' && bTheme;
   if (sensitiveSelect === undefined) sensitiveSelect = bStyle === 'underline';
   if (page) props['data-dock'] = true;
+  if (main && !props['data-b-edge-shadow']) props['data-b-edge-shadow'] = 'false';
   var classSetPre = (_classSetPre = {
     'offset-a-start square-full overflow-a-hidden': full
   }, (0, _defineProperty3.default)(_classSetPre, page ? 'flex-display-inline' : 'display-inlineblock', inline), (0, _defineProperty3.default)(_classSetPre, (!inline ? 'flex-display-block' : '') + ' flex-direction-v bg-color-view', page), (0, _defineProperty3.default)(_classSetPre, 'scrollable-a- flex-sub-flex-extend', main), _classSetPre);
@@ -132,7 +123,7 @@ var _Panel = function Panel(aprops) {
   var classSet = {};
   var styleSet = {};
   var textTheme;
-  if (sensitiveSelect) textTheme = sensitiveBg ? selected ? textOnBgSelected : textOnBgUnselected : selected ? bTheme || '' : textUnselected;
+  if (sensitiveSelect) textTheme = sensitiveBg ? classNameBase.selected ? textOnBgSelected : textOnBgUnselected : classNameBase.selected ? bTheme || '' : textUnselected;
   if (!sensitiveSelect) textTheme = sensitiveBg ? textOnBg : bTheme;
   textTheme = textTheme ? textTheme === true ? '' : textTheme : false;
   classSetPre['text-color-' + textTheme] = textTheme !== false;
@@ -153,7 +144,7 @@ var _Panel = function Panel(aprops) {
     classSetPre['border-none-top- border-none-left- border-none-right- bg-none-'] = true;
     classSetPre['border-width-bottom-2'] = true;
     classSetPre['border-set-bottom-' + _theme2] = _theme2 !== false;
-    if (!selected) styleSetPre['borderColor'] = 'transparent';
+    if (!classNameBase.selected) styleSetPre['borderColor'] = 'transparent';
   } else if (bStyle === 'white') {
     classSetPre['bg-color-white'] = true;
   } else if (bStyle === 'mask') {
@@ -162,53 +153,9 @@ var _Panel = function Panel(aprops) {
     classSetPre['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
   }
 
-  (0, _entries.default)(props).forEach(function (_ref) {
-    var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
-        k = _ref2[0],
-        v = _ref2[1];
-
-    if (k.startsWith('bs-')) {
-      delete props[k];
-      if (v === false || v === undefined || v === null) return;
-      var name = k.slice(3);
-      styleSet[name] = v;
-    } else if (k.startsWith('bc-')) {
-      delete props[k];
-      if (v === false || v === undefined || v === null) return;
-
-      var _name = k.slice(3);
-
-      classSet[_name + (v === true ? '' : '-' + v)] = true;
-    } else if (k.startsWith('bf-')) {
-      delete props[k];
-      if (!v) return;
-
-      var _name2 = k.slice(3);
-
-      _name2 = _BaseComponent5.default.styleFunctions[_name2];
-      if (!_name2) return;
-      (0, _assign.default)(styleSet, (0, _isArray.default)(v) ? _name2.apply(void 0, (0, _toConsumableArray2.default)(v)) : _name2(v));
-    }
-  });
-  if (onClick) props.onClick = onClick;
-  if (refWrap) props.ref = refWrap;
-  if (active) classSet['active'] = true;
-  if (selected) classSet['selected'] = true;
-  if (disabled) classSet['disabled'] = true;
-  if (onClick && btn !== false) classSet['cursor-pointer'] = true;
-  if (onClick && !btn && btn !== false || btn === true) classSet['btn'] = true; // if(onClick&&(btn!==false)) {
-  //   props['onTouchStart'] = e=>{e.currentTarget.classList.add(!btn||btn===true?'active':btn);onTouchStart&&onTouchStart(e)}
-  //   props['onTouchEnd'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchEnd&&onTouchEnd(e)}; 
-  //   props['onTouchCancel'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchCancel&&onTouchCancel(e)}; 
-  // } else {
-  //   if(aprops.hasOwnProperty('onTouchStart')) props.onTouchStart = onTouchStart;
-  //   if(aprops.hasOwnProperty('onTouchEnd')) props.onTouchEnd = onTouchEnd;
-  //   if(aprops.hasOwnProperty('onTouchCancel')) props.onTouchCancel = onTouchCancel;
-  // }
-
   return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _classes.default)(classSetPre, classNamePre, classSet, className, classNameExt),
-    style: _objectSpread({}, styleSetPre, {}, stylePre, {}, styleSet, {}, style, {}, styleExt)
+    className: (0, _classes.default)(classNameBase, classSetPre, classNamePre, classSet, classNameBaseProps, className, classNameExt),
+    style: _objectSpread({}, styleBase, {}, styleSetPre, {}, stylePre, {}, styleSet, {}, styleBaseProps, {}, style, {}, styleExt)
   }, props));
 };
 
@@ -253,12 +200,6 @@ _Panel.defaultProps.panelThemeProps = {
    */
 
   /**
-   * 设置为选中状态，
-   * @attribute module:Panel.Panel.selected
-   * @type {boolean}
-   */
-
-  /**
    * 设置样式主题，根据 richcss color 的设置
    * @attribute module:Panel.Panel.b-theme
    * @type {string}
@@ -274,49 +215,6 @@ _Panel.defaultProps.panelThemeProps = {
    * 设置样式尺寸，设置文本的字体大小，根据 richcss textSize 的配置
    * @attribute module:Panel.Panel.b-size
    * @type {string}
-   */
-
-  /**
-   * 设置组件的样式对象，将属性名去掉 bs- 前缀，和属性值，追加到组件的样式对象中
-   * 
-   * @attribute module:Panel.Panel.bs-xxx
-   * @type {number|string} 
-   * @example
-   * ```jsx
-   * <Panel bs-width="50%" style={{height: '50%'}} /> // style: { widht: 50%, height: 50% }
-   * ```
-   */
-
-  /**
-   * 设置样式类
-   * 
-   * - 当属性值为 true 时，将当前属性名，去掉 bc- 前缀，追加到组件的样式类属性中
-   * - 当属性值为数字或字符串时，将去掉 bc- 前缀的属性名和属性值用 - 连接后，追加到组件的样式类属性中
-   * - 当属性值不为真时，没有任何作用
-   * 
-   * @attribute module:Panel.Panel.bc-xxx
-   * @type {boolean|string|number} 
-   * @example
-   * ```jsx
-   * <Panel bc-text-size="lg" bc-text-weight-={true} className="text-color-primary" /> // className: 'text-color-primary text-size-lg text-weight-'
-   * ```
-   */
-
-  /**
-   * 执行样式函数，并将结果设置到组件的样式对象。将属性名去掉 bs- 前缀作为函数名称，从样式函数集合中获取函数，将属性值(为数组时，作为展开参数)作为参数，执行并将结果追加到组件的样式对象中
-   * 
-   * @attribute module:Panel.Panel.bf-xxx
-   * @type {number|string|array} 
-   * @example
-   * ```jsx
-   * import { backgroundImage } from '@bnorth/rich.css/lib/styles/background';
-   * import { addFunctions } from '@bnorth/components/lib/utils/props';
-   * addFunctions({ backgroundImage });
-   * 
-   * export default props=>{
-   *   return <Panel bf-background={'bg.jpg'} /> // style: {backgroundImage: url(bg.jpg)}
-   * }
-   * ```
    */
 
 };
@@ -548,15 +446,15 @@ _PanelContainer.defaultProps.countToShow = 1;
  */
 
 _PanelContainer.defaultProps.genPanelItemProps = function (type, selectedIndex, panelContainerProps, panelItemIndex, panelItemCount) {
-  var _ref3 = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {},
-      className = _ref3.className,
-      style = _ref3.style,
-      props = (0, _objectWithoutProperties2.default)(_ref3, ["className", "style"]);
+  var _ref = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {},
+      className = _ref.className,
+      style = _ref.style,
+      props = (0, _objectWithoutProperties2.default)(_ref, ["className", "style"]);
 
-  var _ref4 = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {},
-      panelItemClassName = _ref4.className,
-      panelItemStyle = _ref4.style,
-      panelItemProps = (0, _objectWithoutProperties2.default)(_ref4, ["className", "style"]);
+  var _ref2 = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : {},
+      panelItemClassName = _ref2.className,
+      panelItemStyle = _ref2.style,
+      panelItemProps = (0, _objectWithoutProperties2.default)(_ref2, ["className", "style"]);
 
   var getPanelItemClassName = arguments.length > 7 ? arguments[7] : undefined;
   var getPanelItemStyle = arguments.length > 8 ? arguments[8] : undefined;
@@ -763,10 +661,10 @@ function (_React$Component2) {
         val = Math.min(0, val);
         val = Math.max(-(children.length - 1) * _this2.size, val);
         var style = (0, _animation.transform)('translate3D', val + 'px', 0, 0);
-        (0, _entries.default)(style).forEach(function (_ref5) {
-          var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
-              k = _ref6[0],
-              v = _ref6[1];
+        (0, _entries.default)(style).forEach(function (_ref3) {
+          var _ref4 = (0, _slicedToArray2.default)(_ref3, 2),
+              k = _ref4[0],
+              v = _ref4[1];
 
           return node.style[k] = v;
         });
@@ -784,10 +682,10 @@ function (_React$Component2) {
         if (!moved) return;
         var val = -(_this2.size / countToShow) * (selectedIndex % children.length);
         var style = (0, _animation.transform)('translate3D', val + 'px', 0, 0);
-        (0, _entries.default)(style).forEach(function (_ref7) {
-          var _ref8 = (0, _slicedToArray2.default)(_ref7, 2),
-              k = _ref8[0],
-              v = _ref8[1];
+        (0, _entries.default)(style).forEach(function (_ref5) {
+          var _ref6 = (0, _slicedToArray2.default)(_ref5, 2),
+              k = _ref6[0],
+              v = _ref6[1];
 
           return node.style[k] = v;
         });

@@ -307,7 +307,7 @@ export let pulldown = {
         if(typeof(progress)==='string'&&progress<100) { 
           return app.pulldown.close(); 
         }else {
-          return app.pulldown._id = app.Poplayer.addPoplayer(PullDownPoplayer, {...props, progress}, {...options, _id: app.pulldown._id});
+          return app.pulldown._id = app.Poplayer.addPoplayer(PullDownPoplayer, {...props, progress}, {...options, _id: app.pulldown._id, _idPage: app.Page.getPage()._id,});
         }
       },
       close: ()=>{
@@ -321,6 +321,64 @@ export let pulldown = {
     delete app.pulldown;
   },
 }
+
+
+
+
+
+export let PullUpPoplayer = aprops=>{
+  let { progress, height=100, poplayer, children, ...props } = BaseComponent(aprops, PullUpPoplayer);
+  if(!progress||progress<0) return null;
+  children = typeof(children)==='function'?children(poplayer):children;
+
+  return (
+    <Panel 
+      bc-padding-a- bc-bg-color-white bc-border-set-a- bc-border-radius-rounded bc-line-height-0 bc-position-absolute bc-offset-left-center bc-pointer-events-none bs-left="50%" 
+      bs-bottom={Math.min(height, progress)} style={typeof(progress)!=='string'&&{...transform('rotate', progress*(360/height)%360+'deg')}} bc-transiton-set- 
+      bc-animation-name-spin={Boolean(typeof(progress)==='string'&&progress>=height)} bc-animation-iteration-count-infinite bc-animation-duration-1000
+      {...props}>
+      {children||<svg 
+        version="1.1" viewBox="0 0 1024 1024" preserveAspectRatio="none" stroke="currentcolor" fill="currentcolor"
+        bs-width="1em" bs-height="1em" className="display-inline width-1em height-1em">
+        <path d="M1024 384h-384l143.53-143.53c-72.53-72.526-168.96-112.47-271.53-112.47s-199 39.944-271.53 112.47c-72.526 72.53-112.47 168.96-112.47 271.53s39.944 199 112.47 271.53c72.53 72.526 168.96 112.47 271.53 112.47s199-39.944 271.528-112.472c6.056-6.054 11.86-12.292 17.456-18.668l96.32 84.282c-93.846 107.166-231.664 174.858-385.304 174.858-282.77 0-512-229.23-512-512s229.23-512 512-512c141.386 0 269.368 57.326 362.016 149.984l149.984-149.984v384z" />
+      </svg>}
+    </Panel>
+  )
+}
+
+PullUpPoplayer.defaultProps = {}
+
+Object.defineProperty(Loader,"PullUpPoplayer",{ get:function(){ return PullUpPoplayer }, set:function(val){ PullUpPoplayer = val }})
+PullUpPoplayer.isBnorth = true;
+PullUpPoplayer.defaultProps['b-precast'] = {}
+
+
+
+export let pullup = {
+  _id: 'pullup',
+
+  _onStart(app) {
+    app.pullup = {
+      show: (progress, props, options)=>{
+        if(progress<15) return;
+        if(typeof(progress)==='string'&&progress<100) { 
+          return app.pullup.close(); 
+        }else {
+          return app.pullup._id = app.Poplayer.addPoplayer(PullUpPoplayer, {...props, progress}, {...options, _id: app.pullup._id, _idPage: app.Page.getPage()._id,});
+        }
+      },
+      close: ()=>{
+        app.Poplayer.removePoplayer(app.pullup._id); 
+        app.pullup._id = undefined; 
+      },
+    };
+  },
+
+  _onStop(app) {
+    delete app.pulldown;
+  },
+}
+
 
 
 

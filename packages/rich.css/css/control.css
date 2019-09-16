@@ -1,11 +1,11 @@
-.btn:disabled, .btn[disabled], .btn.disabled {
+.clickable:disabled, .clickable[disabled], .clickable.disabled {
   cursor: not-allowed;
   pointer-events: none;
   background-color: #cbcbcb;
   border-color: #cbcbcb;
 }
 
-.btn:active, .btn[active], .btn.active {
+.clickable:active, .clickable[active], .clickable.active {
   opacity: 0.5;
 }
 

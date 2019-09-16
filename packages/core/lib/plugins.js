@@ -146,9 +146,10 @@ function () {
 
   }, {
     key: "add",
-    value: function add(plugin, options) {
+    value: function add(plugin) {
       var _this2 = this;
 
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       if (!plugin) return;
       var instance = {};
       if (plugin instanceof Function) plugin = plugin(this.app, instance, options);

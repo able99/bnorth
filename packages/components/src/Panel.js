@@ -14,24 +14,21 @@ import BaseComponent, { domIsMouse, domFindNode, domPassiveSupported } from './B
  * @augments module:BaseComponent.BaseComponent
  */
 let Panel = aprops=>{
-  if(aprops.component&&aprops.component.isBnorth) { 
-    let {component:Component, ...props} = aprops; 
-    return <Component {...props} /> 
-  }
+  if(aprops.component&&aprops.component.isBnorth) { let {component:Component, ...props} = aprops; return <Component {...props} /> }
 
   let {
-    active, selected, disabled, 
-    onClick, btn,
     main, page, full, inline, 
     panelContainerProps, panelItemIndex, panelItemCount, panelItemSelected, panelItemPlain, 
     'b-theme':bTheme, 'b-style':bStyle, 'b-size':bSize, 
-    classNamePre, classNameExt, stylePre, styleExt, className, style, 
+    classNameBase, styleBase, classNameBaseProps, styleBaseProps, classNamePre, stylePre, classNameExt, styleExt, className, style, 
     panelThemeProps:{sensitiveBg, sensitiveSelect, textOnBg, bgOnHollow, textOnBgSelected, textOnBgUnselected, textUnselected},
-    refWrap, component:Component=aprops.componentPanel||"div", componentPanel,...props
+    component:Component=aprops.componentPanel||"div", componentPanel,...props
   } = BaseComponent(aprops, Panel);
+
   if(sensitiveBg===undefined) sensitiveBg = bStyle==='solid'&&bTheme;
   if(sensitiveSelect===undefined) sensitiveSelect = bStyle==='underline';
   if(page) props['data-dock'] = true;
+  if(main&&!props['data-b-edge-shadow']) props['data-b-edge-shadow'] = 'false';
 
   let classSetPre = {
     'offset-a-start square-full overflow-a-hidden': full,
@@ -44,7 +41,7 @@ let Panel = aprops=>{
   let styleSet = {};
 
   let textTheme;
-  if(sensitiveSelect) textTheme = sensitiveBg?(selected?textOnBgSelected:textOnBgUnselected):(selected?(bTheme||''):textUnselected);
+  if(sensitiveSelect) textTheme = sensitiveBg?(classNameBase.selected?textOnBgSelected:textOnBgUnselected):(classNameBase.selected?(bTheme||''):textUnselected);
   if(!sensitiveSelect) textTheme = sensitiveBg?textOnBg:bTheme;
   textTheme = textTheme?(textTheme===true?'':textTheme):false; 
   classSetPre['text-color-'+textTheme] = textTheme!==false;
@@ -62,7 +59,7 @@ let Panel = aprops=>{
     classSetPre['border-none-top- border-none-left- border-none-right- bg-none-'] = true;
     classSetPre['border-width-bottom-2'] = true;
     classSetPre['border-set-bottom-'+theme] = theme!==false;
-    if(!selected) styleSetPre['borderColor'] = 'transparent';
+    if(!classNameBase.selected) styleSetPre['borderColor'] = 'transparent';
   }else if(bStyle==='white') {
     classSetPre['bg-color-white'] = true;
   }else if(bStyle==='mask') {
@@ -71,48 +68,12 @@ let Panel = aprops=>{
     classSetPre['border-none-top- border-none-bottom- border-none-left- border-none-right- bg-none-'] = true;
   }
 
-  Object.entries(props).forEach(([k,v])=>{
-    if(k.startsWith('bs-')){
-      delete props[k]; 
-      if(v===false||v===undefined||v===null) return; 
-      let name = k.slice(3);
-      styleSet[name] = v;
-    }else if(k.startsWith('bc-')){
-      delete props[k]; 
-      if(v===false||v===undefined||v===null) return; 
-      let name = k.slice(3); 
-      classSet[name+(v===true?'':('-'+v))] = true;
-    }else if(k.startsWith('bf-')){
-      delete props[k]; 
-      if(!v) return; 
-      let name = k.slice(3); 
-      name = BaseComponent.styleFunctions[name]; 
-      if(!name) return;
-      Object.assign(styleSet, Array.isArray(v)?name(...v):name(v));
-    }
-  })
-
-  if(onClick) props.onClick = onClick;
-  if(refWrap) props.ref = refWrap;
-  if(active) classSet['active'] = true;
-  if(selected) classSet['selected'] = true;
-  if(disabled) classSet['disabled'] = true;
-  if(onClick&&(btn!==false)) classSet['cursor-pointer'] = true;
-  if((onClick&&(!btn&&btn!==false))||btn===true) classSet['btn'] = true;
-  // if(onClick&&(btn!==false)) {
-  //   props['onTouchStart'] = e=>{e.currentTarget.classList.add(!btn||btn===true?'active':btn);onTouchStart&&onTouchStart(e)}
-  //   props['onTouchEnd'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchEnd&&onTouchEnd(e)}; 
-  //   props['onTouchCancel'] = e=>{e.currentTarget.classList.remove(!btn||btn===true?'active':btn);onTouchCancel&&onTouchCancel(e)}; 
-  // } else {
-  //   if(aprops.hasOwnProperty('onTouchStart')) props.onTouchStart = onTouchStart;
-  //   if(aprops.hasOwnProperty('onTouchEnd')) props.onTouchEnd = onTouchEnd;
-  //   if(aprops.hasOwnProperty('onTouchCancel')) props.onTouchCancel = onTouchCancel;
-  // }
-
-  return <Component 
-    className={classes(classSetPre, classNamePre, classSet, className, classNameExt)} 
-    style={{...styleSetPre, ...stylePre, ...styleSet, ...style, ...styleExt}} 
-    {...props} />
+  return (
+    <Component 
+      className={classes(classNameBase, classSetPre, classNamePre, classSet, classNameBaseProps, className, classNameExt)} 
+      style={{...styleBase, ...styleSetPre, ...stylePre, ...styleSet, ...styleBaseProps, ...style, ...styleExt}} 
+      {...props} />
+  );
 }
 
 Panel.defaultProps = {};
@@ -145,11 +106,7 @@ Panel.defaultProps.panelThemeProps = {
  * @attribute module:Panel.Panel.inline
  * @type {boolean}
  */
-/**
- * 设置为选中状态，
- * @attribute module:Panel.Panel.selected
- * @type {boolean}
- */
+
 /**
  * 设置样式主题，根据 richcss color 的设置
  * @attribute module:Panel.Panel.b-theme
@@ -165,46 +122,7 @@ Panel.defaultProps.panelThemeProps = {
  * @attribute module:Panel.Panel.b-size
  * @type {string}
  */
-/**
- * 设置组件的样式对象，将属性名去掉 bs- 前缀，和属性值，追加到组件的样式对象中
- * 
- * @attribute module:Panel.Panel.bs-xxx
- * @type {number|string} 
- * @example
- * ```jsx
- * <Panel bs-width="50%" style={{height: '50%'}} /> // style: { widht: 50%, height: 50% }
- * ```
- */
-/**
- * 设置样式类
- * 
- * - 当属性值为 true 时，将当前属性名，去掉 bc- 前缀，追加到组件的样式类属性中
- * - 当属性值为数字或字符串时，将去掉 bc- 前缀的属性名和属性值用 - 连接后，追加到组件的样式类属性中
- * - 当属性值不为真时，没有任何作用
- * 
- * @attribute module:Panel.Panel.bc-xxx
- * @type {boolean|string|number} 
- * @example
- * ```jsx
- * <Panel bc-text-size="lg" bc-text-weight-={true} className="text-color-primary" /> // className: 'text-color-primary text-size-lg text-weight-'
- * ```
- */
-/**
- * 执行样式函数，并将结果设置到组件的样式对象。将属性名去掉 bs- 前缀作为函数名称，从样式函数集合中获取函数，将属性值(为数组时，作为展开参数)作为参数，执行并将结果追加到组件的样式对象中
- * 
- * @attribute module:Panel.Panel.bf-xxx
- * @type {number|string|array} 
- * @example
- * ```jsx
- * import { backgroundImage } from '@bnorth/rich.css/lib/styles/background';
- * import { addFunctions } from '@bnorth/components/lib/utils/props';
- * addFunctions({ backgroundImage });
- * 
- * export default props=>{
- *   return <Panel bf-background={'bg.jpg'} /> // style: {backgroundImage: url(bg.jpg)}
- * }
- * ```
- */
+
 
 Object.defineProperty(Panel,"Panel",{ get:function(){ return Panel }, set:function(val){ Panel = val }})
 export default Panel;

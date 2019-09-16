@@ -25,7 +25,7 @@ let Modal = aprops=>{
   let classNamePreContainer = { 'flex-display-block': type!=='document', 'flex-justify-center': type!=='document', 'flex-align-center': type!=='document' }
 
   children = (
-    <Panel onClick={e=>{e.stopPropagation();e.preventDefault()}} btn={false} b-style="white" stylePre={type!=='document'&&stylePre} classNamePre={type!=='document'&&classNamePre} {...props}>
+    <Panel onClick={e=>{e.stopPropagation();e.preventDefault()}} clickable={false} b-style="white" stylePre={type!=='document'&&stylePre} classNamePre={type!=='document'&&classNamePre} {...props}>
       {type==='document'?children:null}
       {type!=='document'&&(title||close)?(
         <PanelIcon 
@@ -44,7 +44,7 @@ let Modal = aprops=>{
     </Panel>
   )
   
-  return <Panel component={Backdrop} duration={100} rewind={rewind} btn={false} onClick={onClose} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
+  return <Panel component={Backdrop} duration={100} rewind={rewind} clickable={false} onClick={onClose} onFinished={onFinished} classNamePre={classNamePreContainer} {...containerProps}>{children}</Panel>
 }
 
 Modal.defaultProps = {}

@@ -49,9 +49,9 @@ function genFuncControl(_ref) {
   return (0, _assign.default)(
   /**
    * 支持点击状态
-   * @classname btn
+   * @classname clickable
    */
-  (0, _utils.genClassObjects)('.btn:disabled, .btn[disabled], .btn.disabled', {
+  (0, _utils.genClassObjects)('.clickable:disabled, .clickable[disabled], .clickable.disabled', {
     styleObjectMap: _objectSpread({
       'cursor': 'not-allowed',
       'pointer-events': 'none'
@@ -61,7 +61,7 @@ function genFuncControl(_ref) {
     } : {
       opacity: stateDisabled
     })
-  }), (0, _utils.genClassObjects)('.btn:active, .btn[active], .btn.active', {
+  }), (0, _utils.genClassObjects)('.clickable:active, .clickable[active], .clickable.active', {
     styleObjectMap: typeof stateActive === 'string' ? {
       'background-color': stateActive,
       'border-color': stateActive

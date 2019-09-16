@@ -81,7 +81,7 @@ var _Animation = function Animation(aprops) {
     onExited: (0, _BaseComponent2.chainedFuncs)(type.onExited && type.onExited.bind(null, props), onExited && onExited.bind(null, props), onFinished)
   }, transitionProps), function (state) {
     return _react.default.createElement(_Panel.default, (0, _extends2.default)({
-      btn: false
+      clickable: false
     }, type.getProps ? type.getProps(state, props) : props));
   });
 };
