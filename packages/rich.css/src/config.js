@@ -72,6 +72,7 @@
  * @property {GenConfigSet} textTruncate - 文字截取方式
  * 
  * @property {GenConfigSet} display - 显示方式
+ * @property {GenConfigSet} userSelect - 选择方式
  * @property {GenConfigSet} visibility - 可见方式
  * @property {GenConfigSet} opacity - 透明度
  * @property {GenConfigSet} pointerEvents - 事件目标
@@ -309,6 +310,13 @@ let genConfig = {
     'block': true,
     'tablecell': 'table-cell',
   },
+
+  userSelect: {
+    'none': true,
+    'text': true,
+    'all': true,
+    'element': true,
+  },
   
   visibility: {
     'show': 'visible',
@@ -330,7 +338,7 @@ let genConfig = {
   // spacing
   // -------------------
   spacing: {
-    _base: 10,
+    _base: 12,
     _min: 4,
     _minCount: 3,
     _max: 16,

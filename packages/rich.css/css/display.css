@@ -18,6 +18,22 @@
   display: table-cell;
 }
 
+.user-select-none {
+  user-select: none;
+}
+
+.user-select-text {
+  user-select: text;
+}
+
+.user-select-all {
+  user-select: all;
+}
+
+.user-select-element {
+  user-select: element;
+}
+
 .visibility-show {
   visibility: visible;
 }

@@ -49,7 +49,10 @@ let Component = props=>{
         </List>
 
         <List className="margin-bottom-2x">
-          <List.Item title="有效性校验 - TODO" desc={JSON.stringify(stateValidate)} className="text-weight-bold text-size-lg" />
+          <List.Item title="有效性校验" desc={JSON.stringify(stateValidate)} className="text-weight-bold text-size-lg" />
+          <List.Item title="校验" desc={page.stateValidate.invalidates.tick||'没有错误'} />
+          <List.Item title="add tick" desc="增加一个计数" onClick={()=>page.stateValidate.set('tick', (stateValidate.tick||0)+1)} />
+          <List.Item title="delete tick" desc="删除另一个计数" onClick={()=>page.stateValidate.delete('tick')} />
         </List>
       </div>
     </div>
@@ -68,7 +71,7 @@ Component.controller = app=>({
   stateNetworkArr: [{url: '/test/arr', fetchOnStart: true}, app.Request],
   stateNetworkArrDeep: [{url: '/test/arr/deep', fetchOnStart: true}, app.Request],
 
-  stateValidate: {state: app.Validate, initialization: {a: 1}, rules: {a: 'required'} },
+  stateValidate: [{initialization: {tick: 1}, validateRules: [{key: 'tick', rule: data=>data>3&&'不能超过3'}, {key: 'tick', rule: 'required'}] }, app.Validate],
 });
 
 

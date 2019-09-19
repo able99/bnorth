@@ -29,6 +29,7 @@ var _utils = require("../utils");
 function genFuncDisplay(_ref) {
   var directionAxis = _ref.directionAxis,
       display = _ref.display,
+      userSelect = _ref.userSelect,
       visibility = _ref.visibility,
       opacity = _ref.opacity,
       pointerEvents = _ref.pointerEvents,
@@ -43,6 +44,15 @@ function genFuncDisplay(_ref) {
   (0, _utils.genClassObjects)('.display', {
     styleKey: true,
     styleValueSet: (0, _utils.getStyleValueSet)(display)
+  }),
+  /**
+   * 设置选择方式
+   * @classname user-select
+   * @param {module:config~GenConfig#userSelect} userSelect - 显示方式
+   */
+  (0, _utils.genClassObjects)('.user-select', {
+    styleKey: true,
+    styleValueSet: (0, _utils.getStyleValueSet)(userSelect)
   }),
   /**
    * 设置可见方式

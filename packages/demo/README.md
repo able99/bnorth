@@ -11,8 +11,6 @@ bnorth 解决方案 demo
 ### demo 测试出的 bnorth 需要优化和需要未来增加的功能
 
 1. refine: component of animationFrame
-1. refine: pluign of valdate
-1. refine: component of picker
 1. new feature: 
 cordova 增加 clean 命令 删除 cordova 文件夹
 增加 start cordova, 启动cordova app 连接 dev server 调试

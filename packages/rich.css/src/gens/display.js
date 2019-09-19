@@ -12,7 +12,7 @@ import { getStyleValueSet, genClassObjects } from '../utils';
  * @param {module:config~GenConfig} config - 生成配置对象
  * @returns {module:gen~ClassObjects} 样式表的描述对象
  */
-function genFuncDisplay({directionAxis, display, visibility, opacity, pointerEvents, overflow, float}) {
+function genFuncDisplay({directionAxis, display, userSelect, visibility, opacity, pointerEvents, overflow, float}) {
   return Object.assign(
     /**
      * 设置显示方式
@@ -22,6 +22,15 @@ function genFuncDisplay({directionAxis, display, visibility, opacity, pointerEve
     genClassObjects('.display', {
       styleKey: true,
       styleValueSet: getStyleValueSet(display),
+    }), 
+    /**
+     * 设置选择方式
+     * @classname user-select
+     * @param {module:config~GenConfig#userSelect} userSelect - 显示方式
+     */
+    genClassObjects('.user-select', {
+      styleKey: true,
+      styleValueSet: getStyleValueSet(userSelect),
     }), 
     /**
      * 设置可见方式

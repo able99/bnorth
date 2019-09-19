@@ -28,25 +28,25 @@ require("core-js/modules/es7.array.includes");
 
 require("core-js/modules/es6.string.includes");
 
+require("core-js/modules/es6.number.constructor");
+
 require("core-js/modules/es6.regexp.split");
 
 require("core-js/modules/es7.string.pad-start");
 
-var _from = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/from"));
+var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
 
 var _defineProperty3 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/defineProperty"));
 
-var _extends2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/extends"));
+require("core-js/modules/es6.math.sign");
 
-var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectWithoutProperties"));
+var _assertThisInitialized2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/assertThisInitialized"));
 
 var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/toConsumableArray"));
 
-require("core-js/modules/es6.array.find-index");
+var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/objectWithoutProperties"));
 
-require("core-js/modules/es6.function.name");
-
-var _typeof2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/typeof"));
+var _from = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/array/from"));
 
 var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/classCallCheck"));
 
@@ -60,17 +60,11 @@ var _inherits2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/
 
 var _react = _interopRequireDefault(require("react"));
 
-var _classes = _interopRequireDefault(require("@bnorth/rich.css/lib/classes"));
-
-var _animation = require("@bnorth/rich.css/lib/styles/animation");
-
-var _BaseComponent5 = _interopRequireWildcard(require("./BaseComponent"));
+var _BaseComponent2 = _interopRequireWildcard(require("./BaseComponent"));
 
 var _Panel = _interopRequireDefault(require("./Panel"));
 
-var _Touchable = _interopRequireDefault(require("./Touchable"));
-
-var _Button = _interopRequireDefault(require("./Button"));
+var _NavBar = _interopRequireDefault(require("./NavBar"));
 
 function ownKeys(object, enumerableOnly) { var keys = (0, _keys.default)(object); if (_getOwnPropertySymbols.default) { var symbols = (0, _getOwnPropertySymbols.default)(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return (0, _getOwnPropertyDescriptor.default)(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -86,429 +80,290 @@ function (_React$Component) {
 
     (0, _classCallCheck2.default)(this, Picker);
     _this = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(Picker).call(this, props, context));
-    var data = props.data,
-        index = props.index,
-        onInit = props.onInit;
-    index = _this._parseData(index, data, true);
+    var indexs = props.modal.indexs,
+        data = props.data;
     _this.state = {
-      index: index,
-      itemSize: 0
+      indexs: indexs || (0, _from.default)({
+        length: data.length
+      }, function () {
+        return 0;
+      })
     };
-    onInit && onInit(_this._parseIndex(index, _this.data));
     return _this;
   }
 
   (0, _createClass2.default)(Picker, [{
-    key: "_parseIndex",
-    value: function _parseIndex(index, data) {
-      return index.map(function (v, i) {
-        return data[i][v];
-      });
-    }
-  }, {
-    key: "_parseData",
-    value: function _parseData(index, data, parseIndex) {
-      var _this2 = this;
-
-      this.data = [];
-      var aindex = parseIndex ? [] : index;
-      data.forEach(function (v, i) {
-        if (typeof v === 'function') v = v(i, _this2.data, aindex);
-
-        if (i === 0) {
-          v = v || [];
-        } else {
-          v = v.filter(function (vv) {
-            if (!vv) return false;
-            if ((0, _typeof2.default)(vv) !== 'object' || vv.pid === undefined || vv.pid === null) return true;
-            var pobj = _this2.data[i - 1][aindex[i - 1] || 0];
-            return pobj && vv.pid === (pobj.id || pobj.name);
-          });
-        }
-
-        if (parseIndex) aindex[i] = index[i] ? Math.max(v.findIndex(function (vv) {
-          return (0, _typeof2.default)(vv) === 'object' ? (vv.id || vv.name) === index[i] : vv === index[i];
-        }), 0) : 0;
-        _this2.data[i] = v;
-      });
-      return aindex;
-    }
-  }, {
-    key: "_handleChange",
-    value: function _handleChange(i, colIndex, index, data) {
-      var _this$props = this.props,
-          onChange = _this$props.onChange,
-          originData = _this$props.data;
-      index = (0, _toConsumableArray2.default)(index);
-      index[i] = colIndex;
-
-      for (var ii = i + 1; ii < data.length; ii++) {
-        if (data[ii][0] && (0, _typeof2.default)(data[ii][0]) === 'object' && data[ii][0].pid !== null && data[ii][0].pid !== undefined) index[ii] = 0;
-      }
-
-      this._parseData(index, originData);
-
-      for (var _ii = 0; _ii < data.length; _ii++) {
-        if (index[_ii] < 0) index[_ii] = 0;
-
-        if (index[_ii] >= this.data[_ii].length) {
-          index[_ii] = this.data[_ii].length - 1;
-        }
-      }
-
-      if (onChange && onChange(this._parseIndex(index, this.data)) === false) {
-        this.setState({});
-      } else {
-        this.setState({
-          index: index
-        });
-      }
-    }
-  }, {
     key: "render",
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
-      var _BaseComponent = (0, _BaseComponent5.default)(this.props, Picker),
-          lineCount = _BaseComponent.lineCount,
-          data = _BaseComponent.data,
-          onInit = _BaseComponent.onInit,
-          onChange = _BaseComponent.onChange,
-          _index = _BaseComponent.index,
-          _BaseComponent$compon = _BaseComponent.component,
-          Component = _BaseComponent$compon === void 0 ? _Panel.default : _BaseComponent$compon,
-          componentPanel = _BaseComponent.componentPanel,
-          className = _BaseComponent.className,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["lineCount", "data", "onInit", "onChange", "index", "component", "componentPanel", "className"]);
+      var _BaseComponent = (0, _BaseComponent2.default)(this.props, Picker),
+          _BaseComponent$data = _BaseComponent.data,
+          adata = _BaseComponent$data === void 0 ? [] : _BaseComponent$data,
+          _indexs = _BaseComponent.indexs,
+          _BaseComponent$itemSh = _BaseComponent.itemShowCount,
+          itemShowCount = _BaseComponent$itemSh === void 0 ? 5 : _BaseComponent$itemSh,
+          _BaseComponent$itemHe = _BaseComponent.itemHeight,
+          itemHeight = _BaseComponent$itemHe === void 0 ? 40 : _BaseComponent$itemHe,
+          linked = _BaseComponent.linked,
+          confirm = _BaseComponent.confirm,
+          title = _BaseComponent.title,
+          _onChange = _BaseComponent.onChange,
+          onCancel = _BaseComponent.onCancel,
+          onConfirm = _BaseComponent.onConfirm,
+          _BaseComponent$modal = _BaseComponent.modal,
+          app = _BaseComponent$modal.app,
+          _id = _BaseComponent$modal._id,
+          props = (0, _objectWithoutProperties2.default)(_BaseComponent, ["data", "indexs", "itemShowCount", "itemHeight", "linked", "confirm", "title", "onChange", "onCancel", "onConfirm", "modal"]);
 
-      var _this$state = this.state,
-          index = _this$state.index,
-          itemSize = _this$state.itemSize;
-      var classStr = 'flex-display-block  overflow-y-hidden';
-      return _react.default.createElement(Component, (0, _extends2.default)({
-        component: componentPanel,
-        className: (0, _classes.default)(classStr, className)
-      }, props), data.map(function (v, i) {
-        return _react.default.createElement(Picker._Col, {
-          data: _this3.data[i].map(function (v) {
-            return (0, _typeof2.default)(v) === 'object' ? v.name : v;
-          }),
-          onChange: function onChange(e) {
-            return _this3._handleChange(i, e, index, _this3.data);
-          },
-          onSize: i === 0 && function (e) {
-            return _this3.setState({
-              itemSize: e
+      var indexs = this.state.indexs;
+      var data = (0, _toConsumableArray2.default)(adata);
+      data.forEach(function (v, i, a) {
+        return typeof v === 'function' && (a[i] = v(indexs, a));
+      });
+      return _react.default.createElement(_Panel.default, props, confirm ? _react.default.createElement(_NavBar.default, {
+        "bc-border-set-bottom-": true
+      }, _react.default.createElement(_NavBar.default.Item, {
+        onClick: function onClick() {
+          onCancel && onCancel();
+          app.modal.close(_id);
+        }
+      }, "\u53D6\u6D88"), _react.default.createElement(_NavBar.default.Title, {
+        "bc-text-size-lg": true
+      }, title || ' '), _react.default.createElement(_NavBar.default.Item, {
+        onClick: function onClick() {
+          onConfirm && onConfirm(indexs, data);
+          app.modal.close(_id);
+        }
+      }, "\u786E\u5B9A")) : null, _react.default.createElement(_Panel.default, {
+        className: "flex-display-block flex-align-stretch position-relative user-select-none"
+      }, data.map(function (v, i) {
+        return _react.default.createElement(Picker.Col, {
+          onChange: function onChange(index) {
+            indexs[i] = index;
+            indexs = (0, _toConsumableArray2.default)(indexs);
+            if (linked) data.forEach(function (vv, ii) {
+              return ii > i && (indexs[ii] = 0);
             });
+
+            _this2.setState({
+              indexs: indexs
+            });
+
+            _onChange && _onChange(indexs, data);
           },
-          key: i,
-          lineCount: lineCount,
-          index: index[i] || 0
+          onClick: !confirm && function (index) {
+            onConfirm && onConfirm(index, data);
+            app.modal.close(_id);
+          },
+          itemHeight: itemHeight,
+          itemShowCount: itemShowCount,
+          index: indexs[i] || 0,
+          data: v,
+          key: i
         });
-      }), _react.default.createElement(Picker._Line, {
-        lineCount: lineCount,
-        itemSize: itemSize
-      }));
+      }), _react.default.createElement(_Panel.default, {
+        className: "position-absolute width-full border-set-v- bg-none- pointer-events-none bg-color-translucent",
+        "bs-top": itemHeight * Math.floor(itemShowCount / 2),
+        "bs-height": itemHeight
+      })));
     }
   }]);
   return Picker;
 }(_react.default.Component);
 
 exports.Picker = Picker;
-Picker.defaultProps = {
-  lineCount: 5,
-  data: [],
-  index: []
-};
 
-Picker._Line = function (aprops) {
-  var _BaseComponent2 = (0, _BaseComponent5.default)(aprops, Picker._Line),
-      itemSize = _BaseComponent2.itemSize,
-      lineCount = _BaseComponent2.lineCount,
-      _BaseComponent2$compo = _BaseComponent2.component,
-      Component = _BaseComponent2$compo === void 0 ? _Panel.default : _BaseComponent2$compo,
-      componentPanel = _BaseComponent2.componentPanel,
-      className = _BaseComponent2.className,
-      style = _BaseComponent2.style,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent2, ["itemSize", "lineCount", "component", "componentPanel", "className", "style"]);
-
-  var classStr = 'border-set-v- position-absolute width-full pointer-events-none';
-
-  var styleSet = _objectSpread({
-    top: Math.floor(lineCount / 2) * itemSize,
-    height: itemSize
-  }, style);
-
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    className: (0, _classes.default)(classStr, className),
-    style: styleSet
-  }, props));
-};
-
-Picker._Col =
+Picker.Col =
 /*#__PURE__*/
-function (_React$Component2) {
-  (0, _inherits2.default)(_class, _React$Component2);
+function (_React$PureComponent) {
+  (0, _inherits2.default)(_class, _React$PureComponent);
 
   function _class(props, context) {
-    var _this4;
+    var _this3;
 
     (0, _classCallCheck2.default)(this, _class);
-    _this4 = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(_class).call(this, props, context));
-    _this4.state = {
-      offset: 0
+    _this3 = (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(_class).call(this, props, context));
+    _this3.state = {
+      offset: -props.itemHeight * props.index
     };
-    return _this4;
+    _this3._handleStart = _this3.handleStart.bind((0, _assertThisInitialized2.default)(_this3));
+    _this3._handleMove = _this3.handleMove.bind((0, _assertThisInitialized2.default)(_this3));
+    _this3._handleEnd = _this3.handleEnd.bind((0, _assertThisInitialized2.default)(_this3));
+    return _this3;
   }
 
   (0, _createClass2.default)(_class, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var el = (0, _BaseComponent5.domFindNode)(this);
-      this.itemSize = el && el.children[0] && el.children[0].children && (0, _BaseComponent5.domOffset)(el.children[0].children[0]).height;
-      this.props.onSize && this.props.onSize(this.itemSize);
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      if (prevProps.index !== this.props.index) this.setState({
+        offset: -this.props.itemHeight * this.props.index
+      });
+    }
+  }, {
+    key: "handleStart",
+    value: function handleStart(e) {
+      this.offset = this.state.offset;
+      this.y = _BaseComponent2.domIsMouse ? e.clientY : e.touches[0].clientY;
     }
   }, {
     key: "handleMove",
-    value: function handleMove(event, target) {
+    value: function handleMove(e) {
+      if (this.offset === undefined) return;
+      this.offsetY = (_BaseComponent2.domIsMouse ? e.clientY : e.touches[0].clientY) - this.y;
+      var offset = this.offset + this.offsetY;
       this.setState({
-        offset: event.deltaY
+        offset: offset
       });
-      event.preventDefault();
     }
   }, {
     key: "handleEnd",
-    value: function handleEnd(event, target) {
-      var _this$props2 = this.props,
-          data = _this$props2.data,
-          index = _this$props2.index,
-          onChange = _this$props2.onChange;
-      var indexChange = this.props.index + Math.round(-event.deltaY / this.itemSize);
-      indexChange = Math.max(indexChange, 0);
-      indexChange = Math.min(indexChange, data.length - 1);
-      if (indexChange !== index && onChange) onChange(indexChange);
+    value: function handleEnd(e) {
+      var index = -Math.sign(this.state.offset) * Math.round(Math.abs(this.state.offset) / this.props.itemHeight);
+      if (index < 0) index = 0;
+      if (index >= this.props.data.length) index = this.props.data.length - 1;
+      this.props.onChange && this.props.onChange(index);
+      var offset = -this.props.itemHeight * index;
       this.setState({
-        offset: 0
+        offset: offset
       });
-      event.preventDefault();
+      this.offset = undefined;
     }
   }, {
     key: "render",
     value: function render() {
-      var _this5 = this;
+      var _ref;
 
-      var _BaseComponent3 = (0, _BaseComponent5.default)(this.props, Picker._Col),
-          _BaseComponent3$data = _BaseComponent3.data,
-          data = _BaseComponent3$data === void 0 ? [] : _BaseComponent3$data,
-          index = _BaseComponent3.index,
-          lineCount = _BaseComponent3.lineCount,
-          onSize = _BaseComponent3.onSize,
-          _BaseComponent3$compo = _BaseComponent3.component,
-          Component = _BaseComponent3$compo === void 0 ? _Touchable.default : _BaseComponent3$compo,
-          componentPanel = _BaseComponent3.componentPanel,
-          className = _BaseComponent3.className,
-          props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["data", "index", "lineCount", "onSize", "component", "componentPanel", "className"]);
-
+      var _this$props = this.props,
+          itemHeight = _this$props.itemHeight,
+          itemShowCount = _this$props.itemShowCount,
+          data = _this$props.data,
+          onClick = _this$props.onClick;
       var offset = this.state.offset;
-      if (!data.length) data.push(' ');
-      var translateY = "".concat(this.itemSize * (Math.floor(lineCount / 2) - index) + offset, "px");
-      var classStr = 'flex-sub-flex-extend transition-set- overflow-a-hidden';
-      return _react.default.createElement(Component, (0, _extends2.default)({
-        component: componentPanel,
-        direction: "vertical",
-        onPan: this.handleMove.bind(this),
-        onPanCancel: function onPanCancel(el, e) {
-          return _this5.handleEnd(el, e);
-        },
-        onPanEnd: function onPanEnd(el, e) {
-          return _this5.handleEnd(el, e);
-        },
-        "bs-height": this.itemSize * lineCount,
-        className: (0, _classes.default)(classStr, className)
-      }, props), _react.default.createElement(_Panel.default, {
-        style: (0, _animation.transform)('translateY', translateY)
-      }, data.map(function (v, i) {
-        return _react.default.createElement(Picker._Item, {
+      var offsetTop = offset % itemHeight;
+      var offsetIndex = -Math.sign(offset) * Math.floor(Math.abs(offset) / itemHeight) - Math.floor(itemShowCount / 2);
+      return _react.default.createElement(_Panel.default, (0, _extends2.default)({}, (_ref = {}, (0, _defineProperty3.default)(_ref, _BaseComponent2.domIsMouse ? 'onMouseDown' : 'onTouchStart', this._handleStart), (0, _defineProperty3.default)(_ref, _BaseComponent2.domIsMouse ? 'onMouseMove' : 'onTouchMove', this._handleMove), (0, _defineProperty3.default)(_ref, _BaseComponent2.domIsMouse ? 'onMouseUp' : 'onTouchEnd', this._handleEnd), (0, _defineProperty3.default)(_ref, "onTouchCancel", this._handleEnd), _ref), {
+        "bs-height": itemShowCount * itemHeight,
+        className: "position-relative flex-sub-flex-extend overflow-a-hidden"
+      }), (0, _from.default)({
+        length: itemShowCount + 4
+      }, function (v, i) {
+        return i;
+      }).map(function (v, i) {
+        return _react.default.createElement(_Panel.default, {
           key: i,
-          selected: i === index
-        }, v);
-      })));
+          onClick: onClick && function () {
+            return onClick(v + offsetIndex);
+          },
+          className: "flex-display-block flex-justify-center flex-align-center width-full position-absolute transition-set-- ",
+          "bs-top": v * itemHeight + offsetTop,
+          "bs-height": itemHeight
+        }, data[v + offsetIndex]);
+      }));
     }
   }]);
   return _class;
-}(_react.default.Component);
-
-Picker._Item = function (aprops) {
-  var _BaseComponent4 = (0, _BaseComponent5.default)(aprops, Picker._Item),
-      selected = _BaseComponent4.selected,
-      _BaseComponent4$compo = _BaseComponent4.component,
-      Component = _BaseComponent4$compo === void 0 ? _Panel.default : _BaseComponent4$compo,
-      componentPanel = _BaseComponent4.componentPanel,
-      className = _BaseComponent4.className,
-      children = _BaseComponent4.children,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent4, ["selected", "component", "componentPanel", "className", "children"]);
-
-  var classStr = 'padding-a- text-align-center width-full';
-  return _react.default.createElement(Component, (0, _extends2.default)({
-    component: componentPanel,
-    "b-theme": !selected && 'light',
-    className: (0, _classes.default)(classStr, className)
-  }, props), _react.default.createElement(_Panel.default, {
-    className: "text-truncate-1-placeholder"
-  }, children));
-};
+}(_react.default.PureComponent);
 
 var _default = {
-  pluginName: 'picker',
-  pluginDependence: ['modal'],
-  onPluginMount: function onPluginMount(app) {
+  _id: 'picker',
+  _dependencies: 'modal',
+  _onStart: function _onStart(app) {
     app.picker = {
-      show: function show(data) {
-        var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-            index = _ref.index,
-            lineCount = _ref.lineCount,
-            title = _ref.title,
-            hasTitleClose = _ref.hasTitleClose,
-            _onChange = _ref.onChange,
-            onConfirm = _ref.onConfirm,
-            onCancel = _ref.onCancel,
-            props = (0, _objectWithoutProperties2.default)(_ref, ["index", "lineCount", "title", "hasTitleClose", "onChange", "onConfirm", "onCancel"]);
-
-        var indexChange = [];
-
-        var _id = app.modal.show(_react.default.createElement(_Panel.default, {
-          className: "bg-color-white",
-          onClick: function onClick(e) {
-            return e.stopPropagation();
-          }
-        }, _react.default.createElement(_Panel.default, {
-          className: "flex-display-block flex-justify-between flex-align-center border-set-bottom- padding-a-xs"
-        }, _react.default.createElement(_Button.default, {
-          "b-theme": "link",
-          "b-style": "plain",
-          onClick: function onClick() {
-            onCancel && onCancel();
-            app.picker.close(_id);
-          }
-        }, "\u53D6\u6D88"), _react.default.createElement(_Panel.default, {
-          "bc-text-weigth": "bold"
-        }, title), _react.default.createElement(_Button.default, {
-          "b-theme": "link",
-          "b-style": "plain",
-          onClick: function onClick() {
-            if (onConfirm && onConfirm(indexChange.map(function (v) {
-              return (0, _typeof2.default)(v) === 'object' ? v.id || v.name : v;
-            }), indexChange) === false) return;
-            app.picker.close(_id);
-          }
-        }, "\u786E\u5B9A")), _react.default.createElement(Picker, {
-          data: data,
-          index: index,
-          lineCount: lineCount,
-          onInit: function onInit(e) {
-            return indexChange = e;
-          },
-          onChange: function onChange(e) {
-            indexChange = e;
-            return _onChange && _onChange(indexChange);
-          }
-        })), _objectSpread({
-          role: 'document',
-          containerProps: {
-            className: 'flex-display-block flex-justify-end flex-direction-v flex-align-stretch'
-          }
-        }, props));
+      show: function show(data, aprops, options) {
+        var itemShowCount = aprops.itemShowCount,
+            itemHeight = aprops.itemHeight,
+            linked = aprops.linked,
+            confirm = aprops.confirm,
+            onChange = aprops.onChange,
+            onCancel = aprops.onCancel,
+            onConfirm = aprops.onConfirm,
+            title = aprops.title,
+            props = (0, _objectWithoutProperties2.default)(aprops, ["itemShowCount", "itemHeight", "linked", "confirm", "onChange", "onCancel", "onConfirm", "title"]);
+        if (confirm === undefined) confirm = data.length > 1;
+        var pickerProps = {
+          itemShowCount: itemShowCount,
+          itemHeight: itemHeight,
+          linked: linked,
+          confirm: confirm,
+          onChange: onChange,
+          onCancel: onCancel,
+          onConfirm: onConfirm,
+          title: title
+        };
+        return app.modal.show(function (props) {
+          return _react.default.createElement(Picker, (0, _extends2.default)({
+            data: data,
+            modal: props
+          }, pickerProps));
+        }, _objectSpread({}, props, {
+          type: 'document',
+          'bp-container-className': 'flex-display-block flex-direction-v flex-justify-end'
+        }), options);
       },
-      time: function time(index) {
-        var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-            onChange = _ref2.onChange,
-            onConfirm = _ref2.onConfirm,
-            props = (0, _objectWithoutProperties2.default)(_ref2, ["onChange", "onConfirm"]);
-
-        var data = [(0, _from.default)(Array(24), function (v, i) {
+      showTime: function showTime(time, props, options) {
+        var data = [(0, _from.default)({
+          length: 24
+        }, function (v, i) {
           return String(i).padStart(2, '0');
-        }), (0, _from.default)(Array(60), function (v, i) {
+        }), (0, _from.default)({
+          length: 60
+        }, function (v, i) {
           return String(i).padStart(2, '0');
         })];
-        if (index && index.split(':').length === 2) props.index = index.split(':');
-        if (onChange) props.onChange = function (e) {
-          return onChange(e && "".concat(e[0], ":").concat(e[1]));
-        };
-        if (onConfirm) props.onConfirm = function (e) {
-          return onConfirm(e && "".concat(e[0], ":").concat(e[1]));
-        };
-        app.picker.show(data, props);
-      },
-      date: function date(index) {
-        var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-            year = _ref3.year,
-            _ref3$yearCount = _ref3.yearCount,
-            yearCount = _ref3$yearCount === void 0 ? 50 : _ref3$yearCount,
-            onChange = _ref3.onChange,
-            onConfirm = _ref3.onConfirm,
-            props = (0, _objectWithoutProperties2.default)(_ref3, ["year", "yearCount", "onChange", "onConfirm"]);
 
-        var date = new Date();
-        year = year || date.getFullYear() - yearCount + 2;
-        var data = [function () {
-          return (0, _from.default)(Array(yearCount), function (v, i) {
-            return String(year + i).padStart(4, '0');
-          });
-        }, function () {
-          return (0, _from.default)(Array(12), function (v, i) {
-            return String(i + 1).padStart(2, '0');
-          });
-        }, function (i, data, index) {
+        if (!time) {
+          var date = new Date();
+          time = date.getHours() + ':' + date.getMinutes();
+        }
+
+        var times = time.split(':');
+        var indexs = [times[0] ? Number(times[0]) : 0, times[1] ? Number(times[1]) : 0];
+        return app.picker.show(data, _objectSpread({
+          indexs: indexs
+        }, props, {
+          onConfirm: function onConfirm(indexs) {
+            return props.onConfirm && props.onConfirm(data[0][indexs[0]] + ':' + data[1][indexs[1]]);
+          }
+        }), options);
+      },
+      showDate: function showDate(date, props, options) {
+        var data = [(0, _from.default)({
+          length: 100
+        }, function (v, i) {
+          return String(1970 + i).padStart(4, '0');
+        }), (0, _from.default)({
+          length: 12
+        }, function (v, i) {
+          return String(i + 1).padStart(2, '0');
+        }), function (indexs, data) {
+          var year = data[0][indexs[0]];
+          var month = data[1][indexs[1]];
           var daycount = 31;
-          var year = data[0][index[0]];
-          var month = data[1][index[1]];
           if (['04', '06', '09', '11'].includes(month)) daycount = 30;
           if (month === '02') daycount = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 29 : 28;
-          return (0, _from.default)(Array(daycount), function (v, i) {
+          return (0, _from.default)({
+            length: daycount
+          }, function (v, i) {
             return String(i + 1).padStart(2, '0');
           });
         }];
-        if (!index) index = "".concat(date.getFullYear(), "-").concat(String(date.getMonth() + 1).padStart(2, '0'), "-").concat(String(date.getDate()).padStart(2, '0'));
-        if (index && index.split('-').length === 3) props.index = index.split('-');
-        if (onChange) props.onChange = function (e) {
-          return onChange(e && "".concat(e[0], "-").concat(e[1], "-").concat(e[2]));
-        };
-        if (onConfirm) props.onConfirm = function (e) {
-          return onConfirm(e && "".concat(e[0], "-").concat(e[1], "-").concat(e[2]));
-        };
-        app.picker.show(data, props);
-      },
-      datetime: function datetime(index) {
-        var _ref4 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-            onChange = _ref4.onChange,
-            onConfirm = _ref4.onConfirm,
-            props = (0, _objectWithoutProperties2.default)(_ref4, ["onChange", "onConfirm"]);
 
-        var data = [function () {
-          return (0, _from.default)(Array(100), function (v, i) {
-            return String(1950 + i).padStart(4, '0');
-          });
-        }, function () {
-          return (0, _from.default)(Array(12), function (v, i) {
-            return String(i + 1).padStart(2, '0');
-          });
-        }, function () {
-          return (0, _from.default)(Array(31), function (v, i) {
-            return String(i + 1).padStart(2, '0');
-          });
-        }, (0, _from.default)(Array(24), function (v, i) {
-          return String(i).padStart(2, '0');
-        }), (0, _from.default)(Array(60), function (v, i) {
-          return String(i).padStart(2, '0');
-        })];
-        if (index && index.split(':').length) props.index = index.split(':');
-        if (onChange) props.onChange = function (e) {
-          return onChange(e && "".concat(e[0], ":").concat(e[1]));
-        };
-        if (onConfirm) props.onConfirm = function (e) {
-          return onConfirm(e && "".concat(e[0], ":").concat(e[1]));
-        };
-        app.picker.show(data, props);
+        if (!date) {
+          var adate = new Date();
+          date = adate.getFullYear() + '-' + adate.getMonth() + '-' + (adate.getDate() - 1);
+        }
+
+        var dates = date.split('-');
+        var indexs = [dates[0] ? Number(dates[0]) - data[0][0] : 0, dates[1] ? Number(dates[1]) : 0, dates[2] ? Number(dates[2]) : 0];
+        return app.picker.show(data, _objectSpread({
+          linked: true,
+          indexs: indexs
+        }, props, {
+          onConfirm: function onConfirm(indexs, data) {
+            return props.onConfirm && props.onConfirm(data[0][indexs[0]] + '-' + data[1][indexs[1]] + '-' + data[2][indexs[2]]);
+          }
+        }), options);
       },
       close: function close(_id) {
         app.modal.close(_id);
