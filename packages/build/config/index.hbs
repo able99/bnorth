@@ -17,6 +17,10 @@
       <link rel="shortcut icon" href="<%= htmlWebpackPlugin.options.outputPublicPath+htmlWebpackPlugin.options.icon %>" /> 
     <% } %>
 
+    <% _.each(htmlWebpackPlugin.options.jsFiles, function(v){ %> 
+      <script type="text/javascript" src="<%= htmlWebpackPlugin.options.outputPublicPath+v %>" /> 
+    <% }) %>
+
     <% _.each(htmlWebpackPlugin.options.cssFiles, function(v){ %> 
       <link rel="stylesheet" href="<%= htmlWebpackPlugin.options.outputPublicPath+v %>" /> 
     <% }) %>

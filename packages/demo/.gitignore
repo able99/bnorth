@@ -6,11 +6,16 @@
 
 # mid
 /www
-/cordova
+/dist
 
 # production
 /build
-/dist
+
+# bnorth cordova
+/cordova/node_modules
+/cordova/platforms
+/cordova/plugins
+/cordova/www
 
 # misc
 .DS_Store

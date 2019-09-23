@@ -101,6 +101,7 @@ function getPlugins() {
     env,
     define,
     appSrc,
+    appPath,
     appPublic,
     appPackage,
   } = getEnv();
@@ -108,6 +109,7 @@ function getPlugins() {
   let {
     debug,
     analyze,
+    platform,
   } = getArgv();
 
   const ret = [];
@@ -171,10 +173,8 @@ function getPlugins() {
   // pubic
   let copys = [];
   if(existsSync(appPublic)) copys.push({ from: appPublic, to: './' });
-  if(existsSync(appPackage.iconWeb||appPackage.icon)) copys.push({
-    from: appPackage.iconWeb||appPackage.icon,
-    to: './',
-  });
+  if(existsSync(appPackage.iconWeb||appPackage.icon)) copys.push({from: appPackage.iconWeb||appPackage.icon, to: './'});
+  if(platform&&existsSync(join(appPath, 'cordova/platforms', platform, 'platform_www'))) copys.push({from: join(appPath, 'cordova/platforms', platform, 'platform_www'), to: './', force: true})
   copys.length && ret.push(new CopyWebpackPlugin(copys));
   
   // production

@@ -16,103 +16,81 @@ try{appPackage = require(path.join(process.cwd(),'package.json'))}catch(e){};
 let descPath = path.join(process.cwd(), 'cordova');
 let templatePath = path.join(__dirname, '..', 'templates');
 let srcWWWPath = (appPackage&&appPackage.bnorth&&appPackage.bnorth.outputPath)||'dist';
-let srcXmlPath = './cordova.xml';
+let templateConfigJson = path.join(templatePath, 'package.json');
 let templateConfigXml = path.join(templatePath, 'config.xml');
+let templateConfigBuild = path.join(templatePath, 'build.json');
 let descWWWPath = path.join(descPath, 'www');
+let descPlatformsPath = path.join(descPath, 'platforms');
+let descPluginsPath = path.join(descPath, 'plugins');
+let descModulesPath = path.join(descPath, 'node_modules');
+let descConfigJson = path.join(descPath, 'package.json');
 let descConfigXml = path.join(descPath, 'config.xml');
-let descBuildJson = path.join(descPath, 'build.json');
+let descConfigBuild = path.join(descPath, 'build.json');
 let ownMoudles = path.join(__dirname, '..', 'node_modules');
 let ownMoudlesBin = path.join(__dirname, '..', 'node_modules', '.bin');
 
-function runCordova(argv=[]) {
-  process.env.NODE_PATH = process.env.NODE_PATH?(process.env.NODE_PATH+':'+ownMoudles):ownMoudles;
-  process.env.PATH = process.env.PATH?(process.env.PATH+':'+ownMoudlesBin):ownMoudlesBin;
+function runCordova(argv=[], config) {
+  process.env.NODE_PATH = process.env.NODE_PATH?(ownMoudles+':'+process.env.NODE_PATH):ownMoudles;
+  process.env.PATH = process.env.PATH?(ownMoudlesBin+':'+process.env.PATH):ownMoudlesBin;
 
-  let result = spawn.sync(
-    'npx', ['cordova', ...argv],
-    { stdio: 'inherit', cwd: descPath }
-  );
-  return result.status;
+  if(argv[0]==='clientbuild'||argv[0]==='clientrun') {
+    if(!argv[1]) {console.log('! need waiting server addr'); return 1}
+    console.log('# building debug client and client waiting for ' + argv[1]);
+    fs.writeFileSync(path.join(descWWWPath, (config.widget.content[0]&&config.widget.content[0].$.scr)||'index.html'), '<html><header><meta http-equiv="refresh" content="0; url='+argv[1]+'" /></header><body></body></html>');
+    let result = spawn.sync('npx', ['cordova', argv[0].replace('client',''), ...(argv.slice(2))], { stdio: 'inherit', cwd: descPath });
+    if(result===0) console.log('# build up, pls run npx bnorth-cordova serve [port] for debug');
+    return result.status;
+  } else if(argv[0]==='reset') {
+    fs.removeSync(descWWWPath);
+    fs.removeSync(descPlatformsPath);
+    fs.removeSync(descPluginsPath);
+    fs.removeSync(descModulesPath);
+    console.log('# reset cordova');
+    return 0;
+  } else {
+    let result = spawn.sync('npx', ['cordova', ...argv], { stdio: 'inherit', cwd: descPath });
+    return result.status;
+  }
 }
 
-function checkCordovaProject() {
-  return fs.existsSync(descPath) && fs.existsSync(descWWWPath) && fs.existsSync(descConfigXml);
-}
-
-function makeCordovaProject(appPackage) {
-  fs.removeSync(descPath);
-  fs.mkdirSync(descPath);
-  fs.mkdirSync(descWWWPath);
-  !fs.existsSync(srcXmlPath) && fs.copySync(templateConfigXml, srcXmlPath);
-  syncConfigToCordova();
-  runCordova(['plugin', 'add', 'cordova-plugin-whitelist']);
-  syncConfigToWeb();
-}
-
-function syncWidgetToCordova() {
+function checkCordovaProject(argv) {
+  if(!fs.existsSync(descPath)) fs.mkdirSync(descPath);
   fs.removeSync(descWWWPath);
-  fs.existsSync(srcWWWPath)?fs.copySync(srcWWWPath, descWWWPath):fs.mkdirSync(descWWWPath);
-}
+  fs.existsSync(srcWWWPath)&&argv[0]!=='clientrun'&&argv[0]!=='clienbuild'?fs.copySync(srcWWWPath, descWWWPath):fs.mkdirSync(descWWWPath);
+  if(!fs.existsSync(descConfigJson)) fs.copySync(templateConfigJson, descConfigJson);
+  if(!fs.existsSync(descConfigXml)) fs.copySync(templateConfigXml, descConfigXml);
+  if(!fs.existsSync(descConfigBuild)) fs.copySync(templateConfigBuild, descConfigBuild);
+  
+  let cordovaPackage;
+  try{cordovaPackage = require(descConfigJson)}catch(e){};
+  if(!cordovaPackage||!cordovaPackage.cordova||!cordovaPackage.cordova.plugins||!cordovaPackage.cordova.plugins['cordova-plugin-whitelist']) runCordova(['plugin', 'add', 'cordova-plugin-whitelist']);
 
-function syncConfigToCordova() {
   let parser = new xml2js.Parser();
   let builder = new xml2js.Builder();
-  let strConfigXml = fs.readFileSync(srcXmlPath).toString();
-  
+  let strConfigXml = fs.readFileSync(descConfigXml).toString();
+  let config;
   parser.parseString(strConfigXml, function (err, result) {
     if(err||!result) { console.log('! error', err); return }
-
-    fs.removeSync(descBuildJson);
-    if(appPackage.bnorthAppBuildParams) {
-      fs.writeFileSync(descBuildJson, JSON.stringify(appPackage.bnorthAppBuildParams, null, 2));
-    }
-
     result.widget.$.id = appPackage.id||`able99.bnorth.${appPackage.name}`;
     result.widget.$.version = appPackage.version;
     result.widget.name = appPackage.displayName||appPackage.name;
     result.widget.description = appPackage.description||'';
-    result.widget.author = {
-      $: {
-        href: appPackage.homepage||'',
-        email: appPackage.email||'',
-      },
-      _: appPackage.author||'',
-    }
-
-    if(appPackage.icon) {
-      result.widget.icon = {
-        $: {
-          src: path.join('..', appPackage.icon),
-        }
-      }
-    }
-
-    fs.writeFileSync(srcXmlPath, builder.buildObject(result));
-    fs.copyFileSync(srcXmlPath, descConfigXml);
+    result.widget.author = { $: { href: appPackage.homepage||'', email: appPackage.email||'' }, _: appPackage.author||'' }
+    if(appPackage.icon) result.widget.icon = { $: { src: path.join('..', appPackage.icon) } }
+    result.widget['allow-navigation'] = { $: { href: '*' } }
+    fs.writeFileSync(descConfigXml, builder.buildObject(result));
+    config = result;
   });
-}
 
-function syncConfigToWeb() {
-  fs.copyFileSync(descConfigXml, srcXmlPath);
+  return config;
 }
-
 
 function run() {
   console.log('# bnroth cordova');
   if(!appPackage) { console.log('!error no npm project'); return -1 }
-
-  let hasProject = checkCordovaProject();
-  console.log('# check project name='+appPackage.name+' result='+Boolean(hasProject));
-  if(!hasProject) { console.log('# make cordova project'); makeCordovaProject(appPackage); }
-
   let argv = process.argv.slice(2);
   console.log('# bnroth cordova run: ' + argv);
-
-  syncConfigToCordova();
-  syncWidgetToCordova();
-  let code = runCordova(argv);
-  syncConfigToWeb();
-  return code;
+  return runCordova(argv, checkCordovaProject(argv));
 }
 
 process.exit(run());

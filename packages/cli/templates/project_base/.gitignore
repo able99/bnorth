@@ -6,16 +6,21 @@
 
 # mid
 /www
-/cordova
-/build
 /dist
+
+# production
+/build
+
+# bnorth cordova
+/cordova/node_modules
+/cordova/platforms
+/cordova/plugins
+/cordova/www
 
 # misc
 .DS_Store
 .env
-.npmignore
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
 

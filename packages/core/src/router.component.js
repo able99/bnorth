@@ -171,6 +171,7 @@ export default class RouterComponent extends React.Component {
         aprevActive.isActive = false;
         aprevActive.isInactive = true;
       }else{
+        if(this.app.Page.getPage(prevActive._id)._onWillClose&&!this.app.Page.getPage(prevActive._id)._onWillClose()) {this._location.ignore=true;return this.history.push(this._location)}
         prevActive.isActive = false;
         prevActive.isInactive = true;
         prevActive.status = isPop?'popout':'pushout';
@@ -185,6 +186,7 @@ export default class RouterComponent extends React.Component {
     }
 
     this.setState({error: null, pageInfos: pageInfos, poplayerInfos: this.state.poplayerInfos.filter(v=>!v.options._idPage||pageInfos.find(vv=>vv._id===v.options._idPage))});
+    this._location = this.history.location;
   }
 
   _isTransforming() {

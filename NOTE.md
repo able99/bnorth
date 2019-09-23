@@ -33,9 +33,6 @@ lerna publish --registry https://registry.npmjs.org/
 
 open https://npm.taobao.org/sync/@bnorth/xxx
 
-
-### auto script 
-
 node -e 'const { spawnSync } = require("child_process"); const fs = require("fs"); let list = fs.readdirSync("packages"); list.forEach(v=>{console.log("sync:"+v);let ret=spawnSync("open",["https://npm.taobao.org/sync/@bnorth/"+v]); ret.output.forEach(v=>console.log(v?v.toString():""))});'
 
 ## user bnorth with link
@@ -44,7 +41,5 @@ node -e 'const { spawnSync } = require("child_process"); const fs = require("fs"
 1. sudo npm link
 1. cd project
 1. npm link xxx
-
-### auto script 
 
 node -e 'const { spawnSync } = require("child_process"); let obj=require("./package.json");Object.entries(obj.dependencies).forEach(([k,v])=>{if(k.startsWith("@bnorth")){console.log("link:"+k);let ret=spawnSync("npm",["link", k]);ret.output.forEach(v=>console.log(v?v.toString():"error"))}});'

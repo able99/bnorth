@@ -23,6 +23,14 @@ function initArgv(type) {
         .help('h')
         .argv;
       break;
+    
+    case 'server': 
+      cache = require('yargs')
+        .usage('Usage: npm start [options]')
+        .option('platform', { type: 'string', describe: 'with platform asset', default: false, })
+        .help('h')
+        .argv;
+      break;
 
     default:
       cache = require('yargs')

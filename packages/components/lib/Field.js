@@ -279,7 +279,8 @@ var _Static = function Static(aprops) {
       type = _BaseComponent3.type,
       value = _BaseComponent3.value,
       classNamePre = _BaseComponent3.classNamePre,
-      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["type", "value", "classNamePre"]);
+      children = _BaseComponent3.children,
+      props = (0, _objectWithoutProperties2.default)(_BaseComponent3, ["type", "value", "classNamePre", "children"]);
 
   classNamePre = _objectSpread({
     'line-height-1 vertical-align-middle': true
@@ -287,7 +288,7 @@ var _Static = function Static(aprops) {
   return _react.default.createElement(_Panel.default, (0, _extends2.default)({
     component: "span",
     classNamePre: classNamePre
-  }, props), value || _react.default.createElement("pre", {
+  }, props), value || children || _react.default.createElement("pre", {
     className: "margin-a-0 padding-a-0"
   }, " "));
 };

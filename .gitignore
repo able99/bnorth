@@ -8,6 +8,7 @@ node_modules/
 # mid
 packages/bnorth-demo/platforms/
 packages/bnorth-demo/plugins/
+packages/doc/public/
 
 # production
 

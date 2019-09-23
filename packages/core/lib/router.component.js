@@ -418,59 +418,78 @@ function (_React$Component) {
                 return _context.finish(31);
 
               case 39:
-                if (prevActive && !this._isTransforming()) {
-                  aprevActive = pageInfos.find(function (v) {
-                    return v._id === prevActive._id;
-                  });
-
-                  if (aprevActive) {
-                    aprevActive.isActive = false;
-                    aprevActive.isInactive = true;
-                  } else {
-                    prevActive.isActive = false;
-                    prevActive.isInactive = true;
-                    prevActive.status = isPop ? 'popout' : 'pushout';
-                    pageInfos.unshift(prevActive);
-                  }
+                if (!(prevActive && !this._isTransforming())) {
+                  _context.next = 53;
+                  break;
                 }
 
+                aprevActive = pageInfos.find(function (v) {
+                  return v._id === prevActive._id;
+                });
+
+                if (!aprevActive) {
+                  _context.next = 46;
+                  break;
+                }
+
+                aprevActive.isActive = false;
+                aprevActive.isInactive = true;
+                _context.next = 53;
+                break;
+
+              case 46:
+                if (!(this.app.Page.getPage(prevActive._id)._onWillClose && !this.app.Page.getPage(prevActive._id)._onWillClose())) {
+                  _context.next = 49;
+                  break;
+                }
+
+                this._location.ignore = true;
+                return _context.abrupt("return", this.history.push(this._location));
+
+              case 49:
+                prevActive.isActive = false;
+                prevActive.isInactive = true;
+                prevActive.status = isPop ? 'popout' : 'pushout';
+                pageInfos.unshift(prevActive);
+
+              case 53:
                 _i = 0, _pageInfos = pageInfos;
 
-              case 41:
+              case 54:
                 if (!(_i < _pageInfos.length)) {
-                  _context.next = 53;
+                  _context.next = 66;
                   break;
                 }
 
                 pageInfo = _pageInfos[_i];
 
                 if (!pageInfo.isInactive) {
-                  _context.next = 45;
+                  _context.next = 58;
                   break;
                 }
 
-                return _context.abrupt("continue", 50);
+                return _context.abrupt("continue", 63);
 
-              case 45:
-                _context.next = 47;
+              case 58:
+                _context.next = 60;
                 return RouterComponent.app.event.emit(RouterComponent.app._id, 'onRouteMatch', pageInfo, location);
 
-              case 47:
+              case 60:
                 _block = _context.sent;
 
                 if (!_block) {
-                  _context.next = 50;
+                  _context.next = 63;
                   break;
                 }
 
                 return _context.abrupt("return", router.block(_block));
 
-              case 50:
+              case 63:
                 _i++;
-                _context.next = 41;
+                _context.next = 54;
                 break;
 
-              case 53:
+              case 66:
                 this.setState({
                   error: null,
                   pageInfos: pageInfos,
@@ -480,8 +499,9 @@ function (_React$Component) {
                     });
                   })
                 });
+                this._location = this.history.location;
 
-              case 54:
+              case 68:
               case "end":
                 return _context.stop();
             }

@@ -34,7 +34,7 @@
     "url": "https://github.com/able99/bnorth/issues"
   },
   "dependencies": {
-    "cordova": "^8.1.2",
+    "cordova": "^9.0.0",
     "cross-spawn": "^6.0.5",
     "fs-extra": "^7.0.0",
     "xml2js": "^0.4.19"

@@ -1,0 +1,40 @@
+{
+  "name": "@bnorth/plugins",
+  "version": "4.1.0",
+  "description": "set of most commonly used bnorth plugins",
+  "keywords": [
+    "bnorth",
+    "plugin"
+  ],
+  "author": "hubn <8846755@qq.com>",
+  "homepage": "https://github.com/able99/",
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/able99/bnorth.git"
+  },
+  "scripts": {
+    "start": "bnorth-build watch",
+    "build": "bnorth-build dev",
+    "doc": "npx bnorth-doc ./src/ ../../docs/plugins/"
+  },
+  "bugs": {
+    "url": "https://github.com/able99/bnorth/issues"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "coordtransform": "^2.1.2",
+    "hi-base64": "^0.2.1",
+    "js-md5": "^0.7.3",
+    "url-parse": "^1.4.1"
+  },
+  "devDependencies": {
+    "@bnorth/build": "^4.1.0"
+  }
+}

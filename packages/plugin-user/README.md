@@ -1,3 +1,0 @@
-# `bnorth-plugin-user`
-
-> Deprecated

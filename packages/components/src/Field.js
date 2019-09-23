@@ -147,7 +147,7 @@ Normal.defaultProps['b-precast'] = {}
 let Static = aprops=>{
   let { 
     type, value, 
-    classNamePre, ...props 
+    classNamePre, children, ...props 
   } = BaseComponent(aprops, Static);
 
   classNamePre = {
@@ -157,7 +157,7 @@ let Static = aprops=>{
 
   return (
     <Panel component="span" classNamePre={classNamePre} {...props}>
-      {value||<pre className="margin-a-0 padding-a-0"> </pre>}
+      {value||children||<pre className="margin-a-0 padding-a-0"> </pre>}
     </Panel>
   );
 }
