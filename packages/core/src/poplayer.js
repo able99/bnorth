@@ -83,7 +83,9 @@ class Poplayer extends React.Component {
     Poplayer.app.State.attachStates(this, this._states);
     
     Object.entries(options).forEach(([k,v])=>{
-      if(k.startsWith('on')) { Poplayer.app.event.on(Poplayer.app._id, k, Poplayer.app.event.createHandler(k, v, this), this._id).bind(this); 
+      if(k.startsWith('on')) { 
+        let $ = k.indexOf('$'); let eid = $>0?k.slice($+1):null; k = $>0?k.slice(0, $):k; 
+        Poplayer.app.event.on(eid, k, Poplayer.app.event.createHandler(k, v, this), this._id).bind(this); 
       }else if(k.startsWith('_on')) { this[k] = Poplayer.app.event.createHandler(k, v, this).bind(this); 
       }else if(k.startsWith('action')){ this[k] = Poplayer.app.event.createAction(k, v, this).bind(this); }
     })

@@ -205,7 +205,7 @@ function (_React$Component) {
       _regenerator.default.mark(function _callee() {
         var _this3 = this;
 
-        var location, router, pathName, _idPrev, params, pageInfos, isPop, isFirst, prevActive, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, aprevActive, _i, _pageInfos, pageInfo, _block;
+        var location, router, pathName, _idPrev, params, pageInfos, isPop, isFirst, prevActive, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, aprevActive, canClose, _i, _pageInfos, pageInfo, _block;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -419,7 +419,7 @@ function (_React$Component) {
 
               case 39:
                 if (!(prevActive && !this._isTransforming())) {
-                  _context.next = 53;
+                  _context.next = 57;
                   break;
                 }
 
@@ -434,62 +434,73 @@ function (_React$Component) {
 
                 aprevActive.isActive = false;
                 aprevActive.isInactive = true;
-                _context.next = 53;
+                _context.next = 57;
                 break;
 
               case 46:
-                if (!(this.app.Page.getPage(prevActive._id)._onWillClose && !this.app.Page.getPage(prevActive._id)._onWillClose())) {
-                  _context.next = 49;
+                if (!this.app.Page.getPage(prevActive._id)._onWillClose) {
+                  _context.next = 53;
+                  break;
+                }
+
+                _context.next = 49;
+                return this.app.Page.getPage(prevActive._id)._onWillClose();
+
+              case 49:
+                canClose = _context.sent;
+
+                if (canClose) {
+                  _context.next = 53;
                   break;
                 }
 
                 this._location.ignore = true;
                 return _context.abrupt("return", this.history.push(this._location));
 
-              case 49:
+              case 53:
                 prevActive.isActive = false;
                 prevActive.isInactive = true;
                 prevActive.status = isPop ? 'popout' : 'pushout';
                 pageInfos.unshift(prevActive);
 
-              case 53:
+              case 57:
                 _i = 0, _pageInfos = pageInfos;
 
-              case 54:
+              case 58:
                 if (!(_i < _pageInfos.length)) {
-                  _context.next = 66;
+                  _context.next = 70;
                   break;
                 }
 
                 pageInfo = _pageInfos[_i];
 
                 if (!pageInfo.isInactive) {
-                  _context.next = 58;
+                  _context.next = 62;
                   break;
                 }
 
-                return _context.abrupt("continue", 63);
+                return _context.abrupt("continue", 67);
 
-              case 58:
-                _context.next = 60;
+              case 62:
+                _context.next = 64;
                 return RouterComponent.app.event.emit(RouterComponent.app._id, 'onRouteMatch', pageInfo, location);
 
-              case 60:
+              case 64:
                 _block = _context.sent;
 
                 if (!_block) {
-                  _context.next = 63;
+                  _context.next = 67;
                   break;
                 }
 
                 return _context.abrupt("return", router.block(_block));
 
-              case 63:
+              case 67:
                 _i++;
-                _context.next = 54;
+                _context.next = 58;
                 break;
 
-              case 66:
+              case 70:
                 this.setState({
                   error: null,
                   pageInfos: pageInfos,
@@ -501,7 +512,7 @@ function (_React$Component) {
                 });
                 this._location = this.history.location;
 
-              case 68:
+              case 72:
               case "end":
                 return _context.stop();
             }

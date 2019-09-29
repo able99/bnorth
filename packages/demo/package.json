@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "bnorth-demo",
+  "name": "@bnorth/demo",
   "displayName": "bnorth",
   "id": "able99.bnorth.demo",
   "version": "4.1.0",
@@ -32,14 +32,7 @@
   "dependencies": {
     "@bnorth/components": "^4.1.0",
     "@bnorth/core": "^4.1.0",
-    "@bnorth/plugin-base64": "^4.1.0",
-    "@bnorth/plugin-browser": "^4.1.0",
-    "@bnorth/plugin-format": "^4.1.0",
-    "@bnorth/plugin-md5": "^4.1.0",
-    "@bnorth/plugin-network": "^4.1.0",
-    "@bnorth/plugin-request": "^4.1.0",
-    "@bnorth/plugin-storage": "^4.1.0",
-    "@bnorth/plugin-validate": "^4.1.0",
+    "@bnorth/plugins": "^4.1.0",
     "@bnorth/rich.css": "^4.1.0"
   },
   "devDependencies": {

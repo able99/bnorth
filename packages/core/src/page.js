@@ -202,7 +202,9 @@ export default class Page extends React.Component {
     Page.app.State.attachStates(this, this._states);
 
     Object.entries(options).forEach(([k,v])=>{
-      if(k.startsWith('on')) { Page.app.event.on(Page.app._id, k, Page.app.event.createHandler(k, v, this), this._id).bind(this); 
+      if(k.startsWith('on')) { 
+        let $ = k.indexOf('$'); let eid = $>0?k.slice($+1):null; k = $>0?k.slice(0, $):k; 
+        Page.app.event.on(eid, k, Page.app.event.createHandler(k, v, this), this._id).bind(this); 
       }else if(k.startsWith('_on')) { this[k] = Page.app.event.createHandler(k, v, this).bind(this); 
       }else if(k.startsWith('action')){ this[k] = Page.app.event.createAction(k, v, this).bind(this); 
       }else{ !k.startsWith('state')&&!k.startsWith('_state')&&(this[k]=v) } 
@@ -236,8 +238,8 @@ export default class Page extends React.Component {
   }
 
   _pageStop() {
-    let active = this.active;
-    active&&this._onInactive&&this._onInactive(Page.app, this, true);
+    let active = this.props.isInactive;
+    // active&&this._onInactive&&this._onInactive(Page.app, this, true);
     Page.app.event.emit(Page.app._id,'onPageStop', this._id, active);
     active&&this._onStop&&this._onStop(Page.app, this, active);
     Page.app.State.detachStates(this, this._states);
@@ -260,8 +262,8 @@ export default class Page extends React.Component {
     if(this.props.routeDefine.lazy) return;
     let { status } = this.props;
     if(!this._started&&(status==='normal'||status==='background')) this._pageStart();
-    if(prevProps.status !== 'normal' && status === 'normal') this._pageActive();
-    if(prevProps.staus === 'normal' && status !== 'normal') this._pageInactive()
+    if(prevProps.status !== 'pushin' && prevProps.status !== 'normal' && status === 'normal') this._pageActive();
+    if(prevProps.status === 'normal' && status !== 'normal') this._pageInactive()
   }
 
   componentWillUnmount() {

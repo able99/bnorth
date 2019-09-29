@@ -36,7 +36,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 var geolocation = {
   options: {
-    timeout: 3000,
+    timeout: 10000,
     enableHighAccuracy: true,
     maximumAge: 30000,
     watch: 0,
@@ -47,7 +47,9 @@ var geolocation = {
     accuracy: undefined,
     altitudeAccuracy: undefined,
     heading: undefined,
-    speed: undefined
+    speed: undefined,
+    silent: false,
+    onError: null
   },
 
   get location() {
@@ -82,32 +84,44 @@ var geolocation = {
     options = _objectSpread({}, this.options, {}, options, {
       watch: ++this.options.watch
     });
-    return this.options.watchId = navigator.geolocation.watchPosition(function (position) {
-      var location = _this2._handlePostion(position);
+    return this.options.watchId >= 0 ? this.options.watchId : this.options.watchId = navigator.geolocation.watchPosition(function (position) {
+      var location = _this2._handlePostion(position, true);
 
       successcb && successcb(location);
     }, function (error) {
-      error = _this2._handleError(error);
+      error = _this2._handleError(error, true);
       errorcb && errorcb(error);
     }, options);
   },
-  clearWatch: function clearWatch() {
-    var _id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.options.watchId;
-
+  clearWatch: function clearWatch(force) {
     --this.options.watch;
     if (this.options.watch < 0) this.options.watch = 0;
-    navigator.geolocation.clearWatch(_id);
+
+    if (force || this.options.watch <= 0) {
+      navigator.geolocation.clearWatch(this.options.watchId);
+      this.options.watchId = null;
+    }
   },
-  _handlePostion: function _handlePostion(position) {
+  _handlePostion: function _handlePostion(position, isWatch) {
     this.options = _objectSpread({}, this.options, {}, position.coords, {
       error: false
     });
+    this.options.error = position.coords.false;
+    this.options.accuracy = position.coords.accuracy;
+    this.options.altitudeAccuracy = position.coords.altitudeAccuracy;
+    this.options.heading = position.coords.heading;
+    this.options.latitude = position.coords.latitude;
+    this.options.longitude = position.coords.longitude;
+    this.options.speed = position.coords.speed;
+    this.app.event.emit(this._id, 'onPositionChange', this.options, isWatch);
     return this.options;
   },
-  _handleError: function _handleError(error) {
+  _handleError: function _handleError(error, isWatch) {
     this.options.error = error;
     this.options.accuracy = false;
     this.options.altitudeAccuracy = false;
+    this.options.onError && !this.options.silent && this.options.onError(this.options);
+    this.app.event.emit(this._id, 'onPositionError', this.options, isWatch);
     return this.options;
   }
 };
@@ -118,6 +132,8 @@ var _default = function _default(app, plugin) {
     _id: 'geolocation',
     _onStart: function _onStart(app) {
       app.geolocation = geolocation;
+      app.geolocation.app = app;
+      app.geolocation._id = plugin._id;
       app.geolocation.options = _objectSpread({}, app.geolocation.options, {}, options);
       app.geolocation.wgs84togcj02 = _coordtransform.default.wgs84togcj02;
       app.geolocation.gcj02tobd09 = _coordtransform.default.gcj02tobd09;

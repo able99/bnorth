@@ -262,6 +262,7 @@ function () {
     if (this.options.plugin) {
       this.options.plugin._id = this._id;
       this.plugins.add(this.options.plugin);
+      this.plugin = this.plugins.getPlugin(this._id);
     }
     /**
      * 将 App 实例设置到 window.app 

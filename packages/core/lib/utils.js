@@ -22,6 +22,14 @@ var _getOwnPropertySymbols = _interopRequireDefault(require("@babel/runtime-core
 
 var _promise = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/promise"));
 
+require("core-js/modules/es6.typed.uint8-array");
+
+require("core-js/modules/es6.regexp.replace");
+
+require("core-js/modules/es6.regexp.match");
+
+require("core-js/modules/es6.regexp.split");
+
 require("core-js/modules/es7.array.includes");
 
 require("core-js/modules/es6.string.includes");
@@ -341,6 +349,30 @@ function () {
           }
         }
       }
+    } // blob
+
+    /**
+     * base64 data to blob
+     * @param {!string} - base64 资源字符串
+     * @returns {blob} 
+     */
+
+  }, {
+    key: "dataURLtoBlob",
+    value: function dataURLtoBlob(dataurl) {
+      var arr = dataurl.split(',');
+      var mime = arr[0].match(/:(.*?);/)[1];
+      var bstr = atob(arr[1].replace(/\s/g, ''));
+      var n = bstr.length;
+      var u8arr = new Uint8Array(n);
+
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+
+      return new Blob([u8arr], {
+        type: mime
+      });
     } // string
     // -------------------------
 

@@ -2,7 +2,7 @@ import coordtransform from 'coordtransform'
 
 let geolocation = {
   options: {
-    timeout: 3000,
+    timeout: 10000,
     enableHighAccuracy: true, 
     maximumAge: 30000,        
     watch: 0,
@@ -15,6 +15,9 @@ let geolocation = {
     altitudeAccuracy: undefined,
     heading: undefined,
     speed: undefined,
+
+    silent: false,
+    onError: null,
   },
 
   get location() { return this.options },
@@ -36,28 +39,41 @@ let geolocation = {
   watchPosition(options, successcb, errorcb) {
     options = { ...this.options, ...options, watch: ++this.options.watch }
     
-    return this.options.watchId = navigator.geolocation.watchPosition( 
-      position=>{ let location = this._handlePostion(position); successcb&&successcb(location) }, 
-      error=>{ error = this._handleError(error); errorcb&&errorcb(error) },
+    return this.options.watchId>=0?this.options.watchId:(this.options.watchId = navigator.geolocation.watchPosition( 
+      position=>{ let location = this._handlePostion(position, true); successcb&&successcb(location) }, 
+      error=>{ error = this._handleError(error, true); errorcb&&errorcb(error) },
       options
-    ); 
+    )); 
   },
 
-  clearWatch(_id=this.options.watchId) {
+  clearWatch(force) {
     --this.options.watch;
     if(this.options.watch<0) this.options.watch = 0;
-    navigator.geolocation.clearWatch(_id);
+    if(force||this.options.watch<=0) {
+      navigator.geolocation.clearWatch(this.options.watchId);
+      this.options.watchId = null;
+    }
   },
 
-  _handlePostion(position) {
+  _handlePostion(position, isWatch) {
     this.options = {...this.options, ...position.coords, error: false}
+    this.options.error = position.coords.false;
+    this.options.accuracy = position.coords.accuracy;
+    this.options.altitudeAccuracy = position.coords.altitudeAccuracy;
+    this.options.heading = position.coords.heading;
+    this.options.latitude = position.coords.latitude;
+    this.options.longitude = position.coords.longitude;
+    this.options.speed = position.coords.speed;
+    this.app.event.emit(this._id, 'onPositionChange', this.options, isWatch);
     return this.options;
   },
 
-  _handleError(error) {
+  _handleError(error, isWatch) {
     this.options.error = error;
     this.options.accuracy = false;
     this.options.altitudeAccuracy = false;
+    this.options.onError&&!this.options.silent&&this.options.onError(this.options);
+    this.app.event.emit(this._id, 'onPositionError', this.options, isWatch);
     return this.options;
   },
 };
@@ -68,6 +84,8 @@ export default (app, plugin, options={})=>({
 
   _onStart(app) {
     app.geolocation = geolocation;
+    app.geolocation.app = app;
+    app.geolocation._id = plugin._id;
     app.geolocation.options = {...app.geolocation.options, ...options}
 
     app.geolocation.wgs84togcj02 = coordtransform.wgs84togcj02;

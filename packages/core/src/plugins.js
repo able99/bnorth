@@ -89,8 +89,8 @@ class Plugins {
    * @param {string} - 插件 id，默认为 App 插件
    * @returns {module:plugins~PluginInstance} 插件实例
    */
-  getPlugin(_id) {
-    return this._plugins.find(v=>v._id===_id||v._id===this.app._id);
+  getPlugin(_id=this.app._id) {
+    return this._plugins.find(v=>v._id===_id);
   }
 
   getPlugins() {
@@ -126,7 +126,9 @@ class Plugins {
     app.State.attachStates(instance, instance._states);
 
     Object.entries(plugin).forEach(([k,v])=>{
-      if(k.startsWith('on')) { app.event.on(null, k, app.event.createHandler(k, v, instance).bind(instance), instance._id); 
+      if(k.startsWith('on')) { 
+        let $ = k.indexOf('$'); let eid = $>0?k.slice($+1):null; k = $>0?k.slice(0, $):k; 
+        app.event.on(eid, k, app.event.createHandler(k, v, instance).bind(instance), instance._id); 
       }else if(k.startsWith('_on')) { instance[k] = app.event.createHandler(k, v, instance).bind(instance);
       }else if(k.startsWith('action')){ instance[k] = app.event.createAction(k.slice(6), v, instance).bind(instance); 
       }else{ !k.startsWith('state')&&!k.startsWith('_state')&&(instance[k]=v) } 

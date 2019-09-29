@@ -18,7 +18,7 @@ export let PageTransform = {
         let _run = ()=>{
           if(finish) { this._isPageTransforming = false; this._updateRouterInfo(); return }
           let diff = (new Date()).getTime() - time;
-          let percent = diff*100/300;
+          let percent = diff*100/250;
           if(percent>=100) { percent = 100; finish = true }
           page.dom.style.webkitTransform = "translate3d("+(page.status==='pushin'?(100-percent):(percent-100))+"%, 0, 0)";
           deactivePage&&(deactivePage.dom.style.webkitTransform="translate3d("+((deactivePageInfo.status==='popout'?1:-1)*percent)+"%, 0, 0)");

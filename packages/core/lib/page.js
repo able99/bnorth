@@ -270,7 +270,10 @@ function (_React$Component) {
                       v = _ref4[1];
 
                   if (k.startsWith('on')) {
-                    Page.app.event.on(Page.app._id, k, Page.app.event.createHandler(k, v, _this2), _this2._id).bind(_this2);
+                    var $ = k.indexOf('$');
+                    var eid = $ > 0 ? k.slice($ + 1) : null;
+                    k = $ > 0 ? k.slice(0, $) : k;
+                    Page.app.event.on(eid, k, Page.app.event.createHandler(k, v, _this2), _this2._id).bind(_this2);
                   } else if (k.startsWith('_on')) {
                     _this2[k] = Page.app.event.createHandler(k, v, _this2).bind(_this2);
                   } else if (k.startsWith('action')) {
@@ -326,8 +329,8 @@ function (_React$Component) {
   }, {
     key: "_pageStop",
     value: function _pageStop() {
-      var active = this.active;
-      active && this._onInactive && this._onInactive(Page.app, this, true);
+      var active = this.props.isInactive; // active&&this._onInactive&&this._onInactive(Page.app, this, true);
+
       Page.app.event.emit(Page.app._id, 'onPageStop', this._id, active);
       active && this._onStop && this._onStop(Page.app, this, active);
       Page.app.State.detachStates(this, this._states);
@@ -425,8 +428,8 @@ function (_React$Component) {
       if (this.props.routeDefine.lazy) return;
       var status = this.props.status;
       if (!this._started && (status === 'normal' || status === 'background')) this._pageStart();
-      if (prevProps.status !== 'normal' && status === 'normal') this._pageActive();
-      if (prevProps.staus === 'normal' && status !== 'normal') this._pageInactive();
+      if (prevProps.status !== 'pushin' && prevProps.status !== 'normal' && status === 'normal') this._pageActive();
+      if (prevProps.status === 'normal' && status !== 'normal') this._pageInactive();
     }
   }, {
     key: "componentWillUnmount",

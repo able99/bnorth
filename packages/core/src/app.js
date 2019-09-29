@@ -198,6 +198,7 @@ import Keyboard from './keyboard';
     if(this.options.plugin) {
       this.options.plugin._id = this._id;
       this.plugins.add(this.options.plugin);
+      this.plugin = this.plugins.getPlugin(this._id);
     }
 
     /**

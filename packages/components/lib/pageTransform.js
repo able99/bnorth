@@ -63,7 +63,7 @@ var PageTransform = {
             }
 
             var diff = new Date().getTime() - time;
-            var percent = diff * 100 / 300;
+            var percent = diff * 100 / 250;
 
             if (percent >= 100) {
               percent = 100;

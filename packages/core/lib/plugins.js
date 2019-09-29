@@ -126,11 +126,11 @@ function () {
 
   (0, _createClass2.default)(Plugins, [{
     key: "getPlugin",
-    value: function getPlugin(_id) {
-      var _this = this;
+    value: function getPlugin() {
+      var _id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.app._id;
 
       return this._plugins.find(function (v) {
-        return v._id === _id || v._id === _this.app._id;
+        return v._id === _id;
       });
     }
   }, {
@@ -147,7 +147,7 @@ function () {
   }, {
     key: "add",
     value: function add(plugin) {
-      var _this2 = this;
+      var _this = this;
 
       var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       if (!plugin) return;
@@ -178,10 +178,10 @@ function () {
         var _loop = function _loop() {
           var dependence = _step.value;
 
-          if (!_this2._plugins.find(function (v) {
+          if (!_this._plugins.find(function (v) {
             return v._id === dependence;
           })) {
-            _this2.app.render.critical("no dependence plugin: ".concat(plugin._id, " - ").concat(dependence), {
+            _this.app.render.critical("no dependence plugin: ".concat(plugin._id, " - ").concat(dependence), {
               title: 'plugin nodeps'
             });
 
@@ -231,7 +231,10 @@ function () {
             v = _ref4[1];
 
         if (k.startsWith('on')) {
-          app.event.on(null, k, app.event.createHandler(k, v, instance).bind(instance), instance._id);
+          var $ = k.indexOf('$');
+          var eid = $ > 0 ? k.slice($ + 1) : null;
+          k = $ > 0 ? k.slice(0, $) : k;
+          app.event.on(eid, k, app.event.createHandler(k, v, instance).bind(instance), instance._id);
         } else if (k.startsWith('_on')) {
           instance[k] = app.event.createHandler(k, v, instance).bind(instance);
         } else if (k.startsWith('action')) {

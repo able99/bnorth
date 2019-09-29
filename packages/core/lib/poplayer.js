@@ -175,7 +175,10 @@ function (_React$Component) {
           v = _ref4[1];
 
       if (k.startsWith('on')) {
-        Poplayer.app.event.on(Poplayer.app._id, k, Poplayer.app.event.createHandler(k, v, (0, _assertThisInitialized2.default)(_this)), _this._id).bind((0, _assertThisInitialized2.default)(_this));
+        var $ = k.indexOf('$');
+        var eid = $ > 0 ? k.slice($ + 1) : null;
+        k = $ > 0 ? k.slice(0, $) : k;
+        Poplayer.app.event.on(eid, k, Poplayer.app.event.createHandler(k, v, (0, _assertThisInitialized2.default)(_this)), _this._id).bind((0, _assertThisInitialized2.default)(_this));
       } else if (k.startsWith('_on')) {
         _this[k] = Poplayer.app.event.createHandler(k, v, (0, _assertThisInitialized2.default)(_this)).bind((0, _assertThisInitialized2.default)(_this));
       } else if (k.startsWith('action')) {
