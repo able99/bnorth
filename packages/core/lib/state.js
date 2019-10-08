@@ -339,7 +339,7 @@ function () {
       nextData = this.options._onStateUpdating && this.options._onStateUpdating(nextData, prevData, data, options) || nextData;
       State.app.context.update(this._id, {
         data: nextData
-      });
+      }, options.onFinished);
       State.app.event.emit(null, 'onStateUpdated', this._id, nextData, prevData, data, options);
       this.options._onStateUpdated && this.options._onStateUpdated(nextData, prevData, data, options);
       return nextData;
@@ -357,12 +357,12 @@ function () {
     value: function set() {
       var path = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
       var val = arguments.length > 1 ? arguments[1] : undefined;
-      var input = arguments.length > 2 ? arguments[2] : undefined;
+      var onFinished = arguments.length > 2 ? arguments[2] : undefined;
       var data = this.data();
       if (!State.app.utils.pathSet(data, path, val)) return false;
       return this.update(data, {
         path: path,
-        input: input
+        onFinished: onFinished
       });
     }
     /**
@@ -373,10 +373,11 @@ function () {
 
   }, {
     key: "delete",
-    value: function _delete(_did) {
+    value: function _delete(_did, onFinished) {
       var data = State.app.utils.objectDelete(this.data(), _did);
       return this.update(data, {
-        append: false
+        append: false,
+        onFinished: onFinished
       });
     }
   }]);

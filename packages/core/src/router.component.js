@@ -171,7 +171,7 @@ export default class RouterComponent extends React.Component {
         aprevActive.isActive = false;
         aprevActive.isInactive = true;
       }else{
-        if(this.app.Page.getPage(prevActive._id)._onWillClose) {
+        if(this.app.Page.getPage(prevActive._id)&&this.app.Page.getPage(prevActive._id)._onWillClose) {
           let canClose = await this.app.Page.getPage(prevActive._id)._onWillClose();
           if(!canClose) {this._location.ignore=true;return this.history.push(this._location)}
         }

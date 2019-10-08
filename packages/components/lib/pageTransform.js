@@ -70,8 +70,8 @@ var PageTransform = {
               finish = true;
             }
 
-            page.dom.style.webkitTransform = "translate3d(" + (page.status === 'pushin' ? 100 - percent : percent - 100) + "%, 0, 0)";
-            deactivePage && (deactivePage.dom.style.webkitTransform = "translate3d(" + (deactivePageInfo.status === 'popout' ? 1 : -1) * percent + "%, 0, 0)");
+            if (page && page.dom) page.dom.style.webkitTransform = "translate3d(" + (page.status === 'pushin' ? 100 - percent : percent - 100) + "%, 0, 0)";
+            if (deactivePage && deactivePage.dom) deactivePage.dom.style.webkitTransform = "translate3d(" + (deactivePageInfo.status === 'popout' ? 1 : -1) * percent + "%, 0, 0)";
             requestAnimationFrame(_run);
           };
 

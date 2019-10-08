@@ -8,17 +8,18 @@ const babel = require('@babel/core');
 const rimraf = require('rimraf');
 const vfs = require('vinyl-fs');
 const through = require('through2');
-const { initEnv } = require('../config/env.config');
+const { initEnv, resolveApp } = require('../config/env.config');
 const { initBabelOption } = require('../config/babel.config');
 const { initArgv } = require('../config/argv.config');
 const CLIEngine = require("eslint").CLIEngine;
 
 
 function eslint(env, argv, watch) {
-  console.log('#lint');
-  let config = {"baseConfig": {"extends": "react-app"},rules: {
-    'no-unused-vars': ['warn',{args: 'none', ignoreRestSiblings: true}],
-  }};
+  console.log('# lint');
+  let config = {
+    "baseConfig": {"extends": "react-app"},
+    rules: { 'no-unused-vars': ['warn',{args: 'none', ignoreRestSiblings: true}] }
+  };
   let cli = new CLIEngine(config);
   let report = cli.executeOnFiles([argv.src]);
   let formatter = cli.getFormatter();
@@ -27,7 +28,7 @@ function eslint(env, argv, watch) {
 }
 
 function babelTransform(env, argv, watch, scb, ecb) {
-  console.log('#balbel transform');
+  console.log('# balbel transform');
   !watch && rimraf.sync(argv.out);
 
   const stream = vfs
@@ -45,14 +46,14 @@ function babelTransform(env, argv, watch, scb, ecb) {
 }
 
 module.exports = function run(type, watch) {
-  let env = initEnv({type, env: 'development'});
   let argv = initArgv(type);
+  let env = initEnv({type, env: argv.env});
+  argv.src = resolveApp(argv._[1]||'src');
+  argv.out = resolveApp(argv._[2]||'lib');
 
-  console.log(`#start build: ${env, env.appName}`);
+  console.log(`# start build: ${env, env.appName}`);
 
-  if(!eslint(env, argv, watch)) {
-    return;
-  }
+  if(!eslint(env, argv, watch)) return;
 
   try {
     babelTransform(env, argv, watch, ()=>{

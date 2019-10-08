@@ -28,12 +28,6 @@
     <% _.each(htmlWebpackPlugin.options.heads, function(v){ %> 
       <%= v %> >
     <% }) %>
-
-    <script>
-      var _bnorhtEnv = <%= JSON.stringify(htmlWebpackPlugin.options.env||{}) %>
-      var _bnorhtVersion = <%= JSON.stringify(htmlWebpackPlugin.options.version||{}) %>
-      var _bnorhtWebParams = <%= JSON.stringify(htmlWebpackPlugin.options.webParams||{}) %>
-    </script>
   </head>
   <body>
     <% _.each(htmlWebpackPlugin.options.rootBefore, function(v){ %> 

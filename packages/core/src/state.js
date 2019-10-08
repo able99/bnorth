@@ -202,7 +202,7 @@ class State {
     let nextData = State.app.utils.objectUpdate(prevData, data, options.append);
 
     nextData = (this.options._onStateUpdating&&this.options._onStateUpdating(nextData, prevData, data, options))||nextData;
-    State.app.context.update(this._id, {data:nextData});
+    State.app.context.update(this._id, {data:nextData}, options.onFinished);
     State.app.event.emit(null, 'onStateUpdated', this._id, nextData, prevData, data, options);
     this.options._onStateUpdated&&this.options._onStateUpdated(nextData, prevData, data, options);
     return nextData;
@@ -215,10 +215,10 @@ class State {
    * @param {boolean} - 是否是输入中状态
    * @returns {*} 更新后的数据
    */
-  set(path='', val, input) {
+  set(path='', val, onFinished) {
     let data = this.data();
     if(!State.app.utils.pathSet(data, path, val)) return false;
-    return this.update(data, {path, input});
+    return this.update(data, {path, onFinished});
   }
 
   /**
@@ -226,9 +226,9 @@ class State {
    * @param {*} - 删除的参数，参见 app.utils.objectDelete 中对参数的说明
    * @returns {*} 更新后的数据
    */
-  delete(_did) {
+  delete(_did, onFinished) {
     let data = State.app.utils.objectDelete(this.data(), _did);
-    return this.update(data, {append: false});
+    return this.update(data, {append: false, onFinished});
   }
 }
 

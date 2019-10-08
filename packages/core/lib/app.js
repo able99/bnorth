@@ -14,6 +14,10 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime-corejs2/regene
 
 var _getIterator2 = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/get-iterator"));
 
+var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/slicedToArray"));
+
+var _entries = _interopRequireDefault(require("@babel/runtime-corejs2/core-js/object/entries"));
+
 require("regenerator-runtime/runtime");
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime-corejs2/helpers/asyncToGenerator"));
@@ -141,6 +145,7 @@ function () {
      */
 
     this.options = options;
+    this.config = {};
     /**
      * State 数据状态的类
      * @type {module:state.State}
@@ -175,18 +180,6 @@ function () {
 
     this.utils = new this.Utils(this, options);
     /**
-     * Log 模块类，负责日志管理
-     * @type {class}
-     */
-
-    this.Log = this.options.Log || _log.default;
-    /**
-     * Log 的实例
-     * @type {module:log.Log}
-     */
-
-    this.log = new this.Log(this, options);
-    /**
      * Event 模块，负责事件的管理
      * @type {class}
      */
@@ -198,6 +191,18 @@ function () {
      */
 
     this.event = new this.Event(this, options);
+    /**
+     * Log 模块类，负责日志管理
+     * @type {class}
+     */
+
+    this.Log = this.options.Log || _log.default;
+    /**
+     * Log 的实例
+     * @type {module:log.Log}
+     */
+
+    this.log = new this.Log(this, options);
     /**
      * Plugins 模块，负责插件的管理
      * @type {class}
@@ -286,6 +291,8 @@ function () {
       var _start = (0, _asyncToGenerator2.default)(
       /*#__PURE__*/
       _regenerator.default.mark(function _callee() {
+        var _this = this;
+
         var _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, v;
 
         return _regenerator.default.wrap(function _callee$(_context) {
@@ -293,82 +300,89 @@ function () {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
+                (0, _entries.default)(process.bnorth.appDefines).forEach(function (_ref) {
+                  var _ref2 = (0, _slicedToArray2.default)(_ref, 2),
+                      k = _ref2[0],
+                      v = _ref2[1];
+
+                  return _this.utils.pathSet(_this, k, v);
+                });
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context.prev = 4;
+                _context.prev = 5;
                 _iterator = (0, _getIterator2.default)(this._startEvents);
 
-              case 6:
+              case 7:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 14;
+                  _context.next = 15;
                   break;
                 }
 
                 v = _step.value;
-                _context.next = 10;
+                _context.next = 11;
                 return this.event.emit(this._id, v, this);
 
-              case 10:
+              case 11:
                 this.event.delete(v, this._id);
 
-              case 11:
+              case 12:
                 _iteratorNormalCompletion = true;
-                _context.next = 6;
+                _context.next = 7;
                 break;
 
-              case 14:
-                _context.next = 20;
+              case 15:
+                _context.next = 21;
                 break;
 
-              case 16:
-                _context.prev = 16;
-                _context.t0 = _context["catch"](4);
+              case 17:
+                _context.prev = 17;
+                _context.t0 = _context["catch"](5);
                 _didIteratorError = true;
                 _iteratorError = _context.t0;
 
-              case 20:
-                _context.prev = 20;
+              case 21:
                 _context.prev = 21;
+                _context.prev = 22;
 
                 if (!_iteratorNormalCompletion && _iterator.return != null) {
                   _iterator.return();
                 }
 
-              case 23:
-                _context.prev = 23;
+              case 24:
+                _context.prev = 24;
 
                 if (!_didIteratorError) {
-                  _context.next = 26;
+                  _context.next = 27;
                   break;
                 }
 
                 throw _iteratorError;
 
-              case 26:
-                return _context.finish(23);
-
               case 27:
-                return _context.finish(20);
+                return _context.finish(24);
 
               case 28:
-                _context.next = 34;
+                return _context.finish(21);
+
+              case 29:
+                _context.next = 35;
                 break;
 
-              case 30:
-                _context.prev = 30;
+              case 31:
+                _context.prev = 31;
                 _context.t1 = _context["catch"](0);
                 this.render.critical(_context.t1, {
                   title: 'app start error'
                 });
                 return _context.abrupt("return", _context.t1);
 
-              case 34:
+              case 35:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 30], [4, 16, 20, 28], [21,, 23, 27]]);
+        }, _callee, this, [[0, 31], [5, 17, 21, 29], [22,, 24, 28]]);
       }));
 
       function start() {

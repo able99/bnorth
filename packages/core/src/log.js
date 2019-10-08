@@ -27,7 +27,55 @@ class Log {
      * 日志的等级
      * @type {string}
      */
-    this.level = window._bnorhtEnv==='development'?'warn':'error';
+    this.level = process.env.NODE_ENV==='development'?'warn':'error';
+    this.console = false;
+    this.consoles = [];
+
+    window.addEventListener('error', event=>{
+      this.console&&this.consoles.push(['common error', event.message, event.error.stack]);
+    });
+    ['log', 'info', 'debug'].forEach(v=>{
+      this['__'+v] = window.console[v];
+      window.console[v] = (...args)=>this._log(v, ...args);
+    });
+
+    this.app.event.on(this.app._id, 'onAppStartRender', ()=>{this.console&&this.consoleOn()});
+  }
+
+  _initConsoleFab() {
+    let fab = document.createElement('button');
+    fab.addEventListener('click', ()=>this._initConsolePanel(true))
+    fab.setAttribute('style', 'padding: 4px; margin: 4px; position: absolute; right: 0; bottom: 0;');
+    fab.innerHTML = "console";
+    document.body.appendChild(fab);
+    this._consoleFab = fab;
+  }
+
+  _initConsolePanel(show) {
+    if(!show) {
+      this.consoles = [];
+      this._consolePanel&&this._consolePanel.remove();
+      this._consolePanel = null;
+      return;
+    }
+
+    let panel = document.createElement('div');
+    panel.setAttribute('style', 'background: white; padding: 4px; position: absolute; left: 0, top: 0; right: 0; bottom: 0; width: 100%; height: 100%;');
+    let header = document.createElement('div');
+    header.addEventListener('click', ()=>this._initConsolePanel(false))
+    header.setAttribute('style', 'padding: 4px; border-bottom: 1px solid #e2e2e2;');
+    header.innerText='console(点击关闭)';
+    panel.appendChild(header);
+    let body = document.createElement('div');
+    body.setAttribute('style', 'padding: 4px; width: 100%; height: 100%; overflow-y: auto;');
+    body.innerHTML = '';
+    this.consoles.forEach(v=>{
+      v.forEach(vv=>{ body.innerHTML += JSON.stringify(vv)+'<br />'; })
+      body.innerHTML += '<br />';
+    })
+    panel.appendChild(body);
+    document.body.appendChild(panel);
+    this._consolePanel = panel;
   }
 
   _white(type, ...args) {
@@ -38,7 +86,8 @@ class Log {
   _log(type, ...args) {
     if(!console||type<Log.levels[this.level]) return;
     for(let arg in args) args[arg]===this.app&&(args[arg]='[app]');
-    return console[type]?console[type](...args):console.log(...args);
+    this.console&&this.consoles.push(args);
+    return this['__'+type]?this['__'+type](...args):this['__log'](...args);
   }
 
   /**
@@ -66,6 +115,18 @@ class Log {
    * @param  {...*} 日志 
    */
   log(...args) { return this._log(Number.MAX_VALUE, ...args) }
+
+  consoleOn() {
+    this.console = true;
+    this._initConsoleFab();
+  }
+
+  consoleOff() {
+    this.console = false;
+    this.consoles = [];
+    this._consoleFab&&this._consoleFab.remove();
+    this._consoleFab = null;
+  }
 }
 
 Log.levels = {

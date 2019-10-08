@@ -2,36 +2,27 @@ const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const openBrowser = require( 'react-dev-utils/openBrowser');
 const choosePort = require('react-dev-utils/WebpackDevServerUtils').choosePort;
-const historyApiFallback = require('connect-history-api-fallback');
 const apiMocker = require('webpack-api-mocker');
 const chalk = require('chalk');
 const {resolve} = require('path');
 const { clearConsole, printStats } = require('./_print');
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 const { initEnv } = require('../config/env.config');
 const { initArgv } = require('../config/argv.config');
-const { initServerOption } = require('../config/server.config');
 const { initBnorthConfig } = require('../config/bnorth.config');
 const { initBabelOption } = require('../config/babel.config');
 const { initWebpackConfig } = require('../config/webpack.config');
 
 
-
-// run
-//-----------------------------------
-function doRun(type, serverConfig) {
-  const env = initEnv({type, env: 'development'});
-  const argv = initArgv(type);
+function doRun(type, serverConfig, env) {
   const bnorthConfig = initBnorthConfig();
   initBabelOption();
   const webpackConfig = initWebpackConfig();
   
   function restart() {
-    console.log('Restart...');
+    console.log('# Restart...');
     devServer.close();
-    doRun(type);
+    doRun(type, serverConfig, env);
   }
-
 
   try { let = compiler = webpack(webpackConfig) } catch (e) { console.log(e); return } if(!compiler) return;
 
@@ -39,10 +30,10 @@ function doRun(type, serverConfig) {
     clearConsole();
 
     if(filename.endsWith('package.json')) {
-      console.log('Config change...');
+      console.log('# Config change...');
       restart();
     }else{
-      console.log('Compiling...');
+      console.log('# Compiling...');
     }
   });
 
@@ -51,9 +42,8 @@ function doRun(type, serverConfig) {
     printStats(stats);
   });
 
-
   const devServer = new WebpackDevServer(compiler, {
-    https: serverConfig.protocol === 'https',
+    https: serverConfig.https,
     host: serverConfig.host,
     proxy: bnorthConfig.proxy,
     contentBase: env.appPublic,
@@ -77,22 +67,25 @@ function doRun(type, serverConfig) {
   });
 
 
-  return devServer.listen(serverConfig.port, '0.0.0.0', err=>{
+  return devServer.listen(serverConfig.port, serverConfig.host, err=>{
     if (err) return console.log(err);
 
     clearConsole();
-    console.log(chalk.cyan('Starting the development server...')); console.log();
+    console.log(chalk.cyan('Starting the development server...')); 
+    console.log();
 
     openBrowser(`${serverConfig.protocol}://${serverConfig.urlHost}:${serverConfig.port}/`);
   });
 }
 
 module.exports = function run(type) {
-  const serverConfig = initServerOption();
+  const argv = initArgv(type);
+  const env = initEnv({type, env: argv.env});
+  const serverConfig = { host: argv.host, port: argv.port, https: argv.https, protocol: (argv.https?'https':'http'), urlHost: argv.urlhost }
 
   choosePort(serverConfig.host, serverConfig.port).then(port=>{
     if (port === null) return;
     serverConfig.port = port;
-    try { doRun(type, serverConfig); } catch (e) { console.log(e) }
+    try { doRun(type, serverConfig, env); } catch (e) { console.log(e) }
   });
 }

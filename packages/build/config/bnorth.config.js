@@ -1,4 +1,5 @@
 let { getEnv, resolveApp } = require('./env.config');
+let { getArgv } = require('./argv.config');
 
 let cache;
 
@@ -15,38 +16,45 @@ let config = {
     resolveExtensionsExtra: [],
     externals: undefined,
     node: { fs: 'empty', net: 'empty', tls: 'empty' },
-    define: {},
     extractCss: false,
     urlLoaderLimit: 0,
-    eslint: {
-      plugins: [],
-      env: {},
-      parserOptions: {},
-      rules: {},
-    },
-    webParams: {
-
-    },
+    eslint: { plugins: [], env: {}, parserOptions: {}, rules: {} },
+    htmlTemplateParams: undefined,
+    defines: undefined,
+    appDefines: undefined,
   },
 
-  config_development: {
-    devtool: '#cheap-module-eval-source-map',
-  },
+  config_development: { devtool: '#cheap-module-eval-source-map' },
 
-  config_production: {
-    devtool: false,
-  },
+  config_production: {},
 }
 
 function initBnorthConfig() {
   let env = getEnv();
+  let argv = getArgv();
+
   cache = Object.assign({}, 
     config.config, 
     env.appPackage.bnorth||{},
     config[`config_${env.env}`],
     env.appPackage[`bnorth_${env.env}`]||{},
+    env.appPackage[`bnorth_${argv.config}`]||{},
   );
-  
+
+  cache.defines = {
+    ...config.defines,
+    ...env.appPackage.bnorth&&env.appPackage.bnorth.defines,
+    ...env.appPackage[`bnorth_${argv.config}`]&&env.appPackage[`bnorth_${argv.config}`].defines,
+    'process.bnorth.appDefines': {
+      ...env.appPackage.bnorth&&env.appPackage.bnorth.appDefines,
+      ...env.appPackage[`bnorth_${env.env}`]&&env.appPackage[`bnorth_${env.env}`].appDefines,
+      ...env.appPackage[`bnorth_${argv.config}`]&&env.appPackage[`bnorth_${argv.config}`].appDefines,
+    },
+    'process.bnorth.version': env.appPackage.version,
+    'process.env.NODE_ENV': env.env,
+  }
+  delete cache.appDefines;
+
   env.appOut = resolveApp(cache.outputPath);
 
   return cache;

@@ -575,7 +575,7 @@ function () {
   }, {
     key: "error",
     value: function error(message, title, _id) {
-      return this.component.setState({
+      return !this.component.state.error && this.component.setState({
         error: {
           message: message,
           title: title,
@@ -610,9 +610,7 @@ function () {
   }, {
     key: "refresh",
     value: function refresh() {
-      return this.component && this.component.setState({
-        error: null
-      });
+      return this.component && this.component.setState({});
     }
   }]);
   return Router;

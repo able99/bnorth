@@ -15,32 +15,22 @@ const { printError, printStats, buildSizeCalcPrint, buildSizeCalcSaveBefore } = 
 
 module.exports = function run(type) {
   const argv = initArgv(type);
-  initEnv({type, env: argv.debug?'development':'production'});
+  initEnv({type, env: argv.env});
   const bnorthConfig = initBnorthConfig();
   initBabelOption();
   const webpackConfig = initWebpackConfig();
   const compiler = webpack(webpackConfig);
 
-  if (argv.debug) { 
-    console.log('# creating an development build without compress...'); 
-  } else { 
-    console.log('# reating an optimized production build...'); 
-  }
+  console.log('# creating '); 
 
   buildSizeCalcSaveBefore(bnorthConfig.outputPath);
   function webpackHandleer(err, stats) {
-    if(err) {
-      printError(err)
-      if (!argv.watch) process.exit(1);
-      return;
-    }
+    if(err) { printError(err); if (!argv.watch) process.exit(1); return }
   
     printStats(stats);
-  
     if (!stats.stats) buildSizeCalcPrint(bnorthConfig.outputPath, stats);
     if (argv.analyze) { console.log(`Analyze result is generated at ${bnorthConfig.outputPath+'/stats.html'}`); console.log() }
   }
-
 
   return argv.watch?compiler.watch(200, webpackHandleer):compiler.run(webpackHandleer);
 }

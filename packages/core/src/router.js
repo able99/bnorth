@@ -412,7 +412,7 @@ class Router {
    * @param {string} - 错误目标 id 
    */
   error(message, title, _id) {
-    return this.component.setState({error: {message, title, _id}});
+    return !this.component.state.error&&this.component.setState({error: {message, title, _id}});
   }
 
   getPageInfos() {
@@ -432,7 +432,7 @@ class Router {
   }
 
   refresh() {
-    return this.component&&this.component.setState({error: null});
+    return this.component&&this.component.setState({});
   }
 }
 

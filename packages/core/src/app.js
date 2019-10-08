@@ -96,6 +96,7 @@ import Keyboard from './keyboard';
      */
     this.options = options;
 
+    this.config = {};
     /**
      * State 数据状态的类
      * @type {module:state.State}
@@ -125,16 +126,6 @@ import Keyboard from './keyboard';
      */
     this.utils = new this.Utils(this, options);
     /**
-     * Log 模块类，负责日志管理
-     * @type {class}
-     */
-    this.Log = this.options.Log||Log;
-    /**
-     * Log 的实例
-     * @type {module:log.Log}
-     */
-    this.log = new this.Log(this, options);
-    /**
      * Event 模块，负责事件的管理
      * @type {class}
      */
@@ -144,6 +135,16 @@ import Keyboard from './keyboard';
      * @type {module:event.Event}
      */
     this.event = new this.Event(this, options);
+    /**
+     * Log 模块类，负责日志管理
+     * @type {class}
+     */
+    this.Log = this.options.Log||Log;
+    /**
+     * Log 的实例
+     * @type {module:log.Log}
+     */
+    this.log = new this.Log(this, options);
     /**
      * Plugins 模块，负责插件的管理
      * @type {class}
@@ -216,6 +217,8 @@ import Keyboard from './keyboard';
    */
   async start() {
     try{
+      Object.entries(process.bnorth.appDefines).forEach(([k,v])=>this.utils.pathSet(this, k, v));
+      
       for (let v of this._startEvents) {
         await this.event.emit(this._id, v, this);
         this.event.delete(v, this._id);

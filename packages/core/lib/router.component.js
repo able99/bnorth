@@ -438,7 +438,7 @@ function (_React$Component) {
                 break;
 
               case 46:
-                if (!this.app.Page.getPage(prevActive._id)._onWillClose) {
+                if (!(this.app.Page.getPage(prevActive._id) && this.app.Page.getPage(prevActive._id)._onWillClose)) {
                   _context.next = 53;
                   break;
                 }

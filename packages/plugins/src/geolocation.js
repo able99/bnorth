@@ -98,7 +98,7 @@ export default (app, plugin, options={})=>({
     app.geolocation.gcj02towgs84 = coordtransform.gcj02towgs84;
     app.geolocation.bd09towgs84 = (lng, lat)=>{
       [lng, lat] = app.geolocation.bd09togcj02(lng, lat);
-      return app.geolocation.wgs84tgcj02towgs84ogcj02(lng, lat);
+      return app.geolocation.gcj02towgs84(lng, lat);
     };
   },
 

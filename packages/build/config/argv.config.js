@@ -1,43 +1,45 @@
-const { resolveApp }  = require('./env.config');
 let cache;
 
 function initArgv(type) {
   switch(type) {
     case 'dev': 
       cache = require('yargs')
-        .usage('Usage: roadhog build [options]')
-        .option('debug', { type: 'boolean', describe: 'Build without compress', default: false, })
+        .usage('Usage: npm run dev [-- options]')
+        .option('env', { type: 'string', describe: 'node env', default: 'development' })
         .help('h')
         .argv;
-
-      cache.src = resolveApp(cache._[1]||'src');
-      cache.out = resolveApp(cache._[2]||'lib');
       break;
 
     case 'build': 
       cache = require('yargs')
-        .usage('Usage: roadhog build [options]')
-        .option('debug', { type: 'boolean', describe: 'Build without compress', default: false, })
-        .option('watch', { type: 'boolean', alias: 'w', describe: 'Watch file changes and rebuild', default: false, })
-        .option('analyze', { type: 'boolean', describe: 'Visualize and analyze your Webpack bundle.', default: false, })
+        .usage('Usage: npm run build [-- options]')
+        .option('env', { type: 'string', describe: 'node env', default: 'production' })
+        .option('config', { type: 'string', describe: 'config set', default: false })
+        .option('watch', { type: 'boolean', alias: 'w', describe: 'Watch file changes and rebuild', default: false })
+        .option('analyze', { type: 'boolean', describe: 'Visualize and analyze your Webpack bundle.', default: false })
         .help('h')
         .argv;
       break;
     
     case 'server': 
       cache = require('yargs')
-        .usage('Usage: npm start [options]')
-        .option('platform', { type: 'string', describe: 'with platform asset', default: false, })
+        .usage('Usage: npm start [-- options]')
+        .option('env', { type: 'string', describe: 'node env', default: 'development' })
+        .option('config', { type: 'string', describe: 'config set' })
+        .option('platform', { type: 'string', describe: 'cordova platform asset' })
+        .option('https', { type: 'boolean', describe: 'server https support', default: false })
+        .option('host', { type: 'string', describe: 'serer host', default: '0.0.0.0' })
+        .option('port', { type: 'int', describe: 'server port', default: 8000 })
+        .option('urlhost', { type: 'string', describe: 'server url host', default: 'localhost' })
         .help('h')
         .argv;
       break;
 
     default:
       cache = require('yargs')
-        .usage('Usage: roadhog build [options]')
-        .option('debug', { type: 'boolean', describe: 'Build without compress', default: false, })
-        .help('h')
-        .argv;
+        .usage('Usage: npm run xxx [-- options]')
+        .option('env', { type: 'string', describe: 'node env', default: 'production' })
+        .help('h').argv;
      break;
   }
 

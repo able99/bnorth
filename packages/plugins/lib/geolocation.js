@@ -158,7 +158,7 @@ var _default = function _default(app, plugin) {
 
         lng = _app$geolocation$bd2[0];
         lat = _app$geolocation$bd2[1];
-        return app.geolocation.wgs84tgcj02towgs84ogcj02(lng, lat);
+        return app.geolocation.gcj02towgs84(lng, lat);
       };
     },
     _onStop: function _onStop(app) {

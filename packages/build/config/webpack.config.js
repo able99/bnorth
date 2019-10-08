@@ -13,16 +13,8 @@ let { getBabelOption } = require('./babel.config');
 
 function getRules() {
   let rules = [];
-
-  let {
-    appSrc,
-  } = getEnv();
-
-  let {
-    extractCss,
-    urlLoaderLimit,
-    eslint,
-  } = getBnorthConfig();
+  let { appSrc } = getEnv();
+  let { extractCss, urlLoaderLimit, eslint } = getBnorthConfig();
 
   // raw
   rules.push({
@@ -32,15 +24,7 @@ function getRules() {
 
   // url
   rules.push({
-    exclude: [
-      /\.(html|hbs)$/,
-      /\.(js|jsx)$/,
-      /\.(css|less|scss)$/,
-      /\.json$/,
-      /\.txt$/,
-      /\.ico\.svg$/,
-      /\.tsx?$/,
-    ],
+    exclude: [ /\.(html|hbs)$/, /\.(js|jsx)$/, /\.(css|less|scss)$/, /\.json$/, /\.txt$/, /\.ico\.svg$/, /\.tsx?$/ ],
     loader: 'url',
     options: { limit: urlLoaderLimit, name: 'static/[name].[hash:8].[ext]' },
   });
@@ -89,59 +73,24 @@ function getRules() {
 }
 
 function getPlugins() {
-  let {
-    filename,
-    extractCss,
-    htmlTemplateParams={},
-    webParams,
-    outputPublicPath,
-  } = getBnorthConfig();
-
-  let {
-    env,
-    define,
-    appSrc,
-    appPath,
-    appPublic,
-    appPackage,
-  } = getEnv();
-
-  let {
-    debug,
-    analyze,
-    platform,
-  } = getArgv();
-
+  let { filename, extractCss, htmlTemplateParams={}, outputPublicPath, defines } = getBnorthConfig();
+  let { env, appSrc, appPath, appPublic, appPackage } = getEnv();
+  let { analyze, platform } = getArgv();
   const ret = [];
 
-  // conmon
-  // -----------------------------
-
   // define
-  ret.push(new webpack.DefinePlugin({
-    'process.env': { NODE_ENV: JSON.stringify(env) },
-    ...(Object.keys(define||{}).reduce((memo, key)=>{
-      memo[key] = JSON.stringify(define[key]);
-      return memo;
-    }, {}))
-  }));
+  ret.push(new webpack.DefinePlugin(Object.keys(defines).reduce((v1,v2)=>{v1[v2]=JSON.stringify(defines[v2]);return v1}, {})));
 
   // html
   ret.push(new HtmlWebpackPlugin({
     inject: true,
     charset: 'utf-8',
-
     filename,
     template: join(existsSync(join(appSrc, 'index.hbs'))?appSrc:__dirname, 'index.hbs'),
     outputPublicPath,
     
     title: appPackage.displayNameWeb||appPackage.displayName||appPackage.name,
     icon: basename(appPackage.iconWeb||appPackage.icon||''),
-
-    env,
-    version: appPackage.version,
-    webParams,
-
     metaNames: {
       'viewport': 'width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no',
       'format-detection': 'telephone=no',
@@ -155,7 +104,6 @@ function getPlugins() {
     jsFiles: [],
     cssFiles: [],
     heads: [],
-
     rootBefore: [],
     rootAttr: {
       'style': 'position:fixed; width:100%;height:100%; top:0;right:0;bottom:0;left:0; touch-action:none;',
@@ -166,7 +114,6 @@ function getPlugins() {
       ...htmlTemplateParams.rootChildrenExt||[],
     ],
     rootAfter: [],
-    
     ...htmlTemplateParams,
   }));
 
@@ -196,30 +143,10 @@ function getPlugins() {
 }
 
 function initWebpackConfig() {
-  let {
-    bail=true, 
-    devtool='#cheap-module-eval-source-map',
-    mockjs,
-    outputFilename,
-    outputPublicPath,
-    outputChunkFilename,
-    resolveExtensions,
-    resolveExtensionsExtra,
-    externals,
-    node,
-  } = getBnorthConfig();
-
-  let {
-    type,
-    env,
-    appOut,
-    appNodeModules,
-    ownNodeModules,
-    bnorhtCoreNodeModules,
-  } = getEnv();
+  let { bail, devtool, mockjs, outputFilename, outputPublicPath, outputChunkFilename, resolveExtensions, resolveExtensionsExtra, externals, node } = getBnorthConfig();
+  let { type, env, appOut, appNodeModules, ownNodeModules, bnorhtCoreNodeModules } = getEnv();
 
   let entrys = [];
-  
   if(type==='server') entrys.push(require.resolve('react-dev-utils/webpackHotDevClient'));
   if(mockjs) { entrys.push(require.resolve('mockjs/dist/mock')); entrys.push(resolve(mockjs)); }
   entrys.push(resolveApp('src/index.js'));
@@ -229,32 +156,16 @@ function initWebpackConfig() {
     devtool,
     entry: {[basename('src/index.js').replace(/\.(js|tsx?)$/, '')]: entrys},
     mode: env,
-    output: { 
-      path: appOut,
-      publicPath: outputPublicPath,
-      filename: outputFilename,
-      chunkFilename: outputChunkFilename, 
-      libraryTarget: 'var',
-    },
+    output: { path: appOut, publicPath: outputPublicPath, filename: outputFilename, chunkFilename: outputChunkFilename, libraryTarget: 'var' },
     resolve: { 
-      modules: [
-        bnorhtCoreNodeModules,
-        'node_modules',
-        appNodeModules,
-        ownNodeModules,
-      ],
+      modules: [ bnorhtCoreNodeModules, 'node_modules', appNodeModules, ownNodeModules ],
       extensions: [ ...(resolveExtensions||[]), ...(resolveExtensionsExtra||[]), ] 
     },
     resolveLoader: { 
-      modules: [ 
-        ownNodeModules,
-        appNodeModules,
-      ],
+      modules: [ ownNodeModules, appNodeModules ],
       moduleExtensions: [ '-loader' ] 
     },
-    module: { 
-      rules: getRules(),
-    },
+    module: { rules: getRules() },
     plugins: getPlugins(),
     externals,
     node,

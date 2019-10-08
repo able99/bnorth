@@ -11,7 +11,7 @@ const { initEnv } = require('../config/env.config');
 
 module.exports = function run(type, watch) {
   const argv = initArgv(type);
-  let env = initEnv({type, env: argv.debug?'development':'production'});
+  let env = initEnv({type, env: argv.env||'production'});
   spawn.sync('node', [join(env.ownNodeModules, '.bin', 'rimraf'), ...process.argv.slice(3)], {stdio: 'inherit'});
 }
 
