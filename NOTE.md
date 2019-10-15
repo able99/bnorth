@@ -29,6 +29,10 @@ lerna bootstrap
 lerna run build
 lerna publish --registry https://registry.npmjs.org/
 
+## unpublish 
+
+npx force-unpublish pkg-name 'reason'
+
 ## sync
 
 open https://npm.taobao.org/sync/@bnorth/xxx

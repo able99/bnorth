@@ -18,7 +18,7 @@
     <% } %>
 
     <% _.each(htmlWebpackPlugin.options.jsFiles, function(v){ %> 
-      <script type="text/javascript" src="<%= htmlWebpackPlugin.options.outputPublicPath+v %>" /> 
+      <script type="text/javascript" src="<%= htmlWebpackPlugin.options.outputPublicPath+v %>"></script>
     <% }) %>
 
     <% _.each(htmlWebpackPlugin.options.cssFiles, function(v){ %> 

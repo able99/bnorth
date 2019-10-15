@@ -17,6 +17,10 @@ easy create your hybird app with [cordova](https://cordova.apache.org/)
 1. Install [Gradle](https://gradle.org/install/)
 1. Android SDK
 
+***utils***
+
+1. adb logcat --pid  `adb shell ps -ef | grep {package name} | awk '{print $2}'`
+
 ### IOS
 
 1. xcode

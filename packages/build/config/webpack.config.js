@@ -88,6 +88,18 @@ function getPlugins() {
     filename,
     template: join(existsSync(join(appSrc, 'index.hbs'))?appSrc:__dirname, 'index.hbs'),
     outputPublicPath,
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeRedundantAttributes: true,
+      useShortDoctype: true,
+      removeEmptyAttributes: true,
+      removeStyleLinkTypeAttributes: true,
+      keepClosingSlash: true,
+      minifyJS: true,
+      minifyCSS: true,
+      minifyURLs: true,
+    },
     
     title: appPackage.displayNameWeb||appPackage.displayName||appPackage.name,
     icon: basename(appPackage.iconWeb||appPackage.icon||''),

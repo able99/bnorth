@@ -23,6 +23,4 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
-    <access origin="*"></access>
-    <allow-navigation href="*" />
 </widget>

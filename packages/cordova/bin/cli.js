@@ -9,6 +9,7 @@
 const path = require('path');
 const fs = require('fs-extra');
 const xml2js = require('xml2js');
+const address = require('address');
 let spawn = require('cross-spawn');
 
 let appPackage;
@@ -33,12 +34,29 @@ function runCordova(argv=[], config) {
   process.env.NODE_PATH = process.env.NODE_PATH?(ownMoudles+':'+process.env.NODE_PATH):ownMoudles;
   process.env.PATH = process.env.PATH?(ownMoudlesBin+':'+process.env.PATH):ownMoudlesBin;
 
-  if(argv[0]==='clientbuild'||argv[0]==='clientrun') {
-    if(!argv[1]) {console.log('! need waiting server addr'); return 1}
-    console.log('# building debug client and client waiting for ' + argv[1]);
-    fs.writeFileSync(path.join(descWWWPath, (config.widget.content[0]&&config.widget.content[0].$.scr)||'index.html'), '<html><header><meta http-equiv="refresh" content="0; url='+argv[1]+'" /></header><body></body></html>');
-    let result = spawn.sync('npx', ['cordova', argv[0].replace('client',''), ...(argv.slice(2))], { stdio: 'inherit', cwd: descPath });
-    if(result===0) console.log('# build up, pls run npx bnorth-cordova serve [port] for debug');
+  if(argv[0]==='client') {
+    let host = address.ip();
+    let port = '8000';
+    let protocol = 'http';
+    let build = 'run';
+    let params = [];
+    for(let i=0; i<argv.length; i++) {
+      if(argv[i]==='--host') {host = argv[i+1]; i++}
+      else if(argv[i]==='--port') {port = argv[i+1]; i++}
+      else if(argv[i]==='--https') {protocol = 'https'}
+      else if(argv[i]==='--build') {build = 'build'}
+      else if(argv[i]==='--') {params = argv.slice(i+1); break;}
+    }
+    let url = protocol+'://'+host+':'+port+'/';
+    let builder = new xml2js.Builder();
+    config.widget['allow-navigation'] = [...config.widget['allow-navigation']||[], { $: { href: url+'*' } }]
+    fs.writeFileSync(descConfigXml, builder.buildObject(config));
+    console.log('# building debug client and client waiting for ' + url);
+    fs.writeFileSync(path.join(descWWWPath, (config.widget.content[0]&&config.widget.content[0].$.scr)||'index.html'), '<html><header><meta http-equiv="refresh" content="0; url='+url+'" /></header><body></body></html>');
+    let result = spawn.sync('npx', ['cordova', build, ...params], { stdio: 'inherit', cwd: descPath });
+    console.log('# build up, pls run npm start -- --platform [android] --port [port] for debug');
+    config.widget['allow-navigation'].pop();
+    fs.writeFileSync(descConfigXml, builder.buildObject(config));
     return result.status;
   } else if(argv[0]==='reset') {
     fs.removeSync(descWWWPath);
@@ -56,7 +74,7 @@ function runCordova(argv=[], config) {
 function checkCordovaProject(argv) {
   if(!fs.existsSync(descPath)) fs.mkdirSync(descPath);
   fs.removeSync(descWWWPath);
-  fs.existsSync(srcWWWPath)&&argv[0]!=='clientrun'&&argv[0]!=='clienbuild'?fs.copySync(srcWWWPath, descWWWPath):fs.mkdirSync(descWWWPath);
+  fs.existsSync(srcWWWPath)&&argv[0]!=='client'?fs.copySync(srcWWWPath, descWWWPath):fs.mkdirSync(descWWWPath);
   if(!fs.existsSync(descConfigJson)) fs.copySync(templateConfigJson, descConfigJson);
   if(!fs.existsSync(descConfigXml)) fs.copySync(templateConfigXml, descConfigXml);
   if(!fs.existsSync(descConfigBuild)) fs.copySync(templateConfigBuild, descConfigBuild);
@@ -77,7 +95,6 @@ function checkCordovaProject(argv) {
     result.widget.description = appPackage.description||'';
     result.widget.author = { $: { href: appPackage.homepage||'', email: appPackage.email||'' }, _: appPackage.author||'' }
     if(appPackage.icon) result.widget.icon = { $: { src: path.join('..', appPackage.icon) } }
-    result.widget['allow-navigation'] = { $: { href: '*' } }
     fs.writeFileSync(descConfigXml, builder.buildObject(result));
     config = result;
   });
