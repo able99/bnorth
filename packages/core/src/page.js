@@ -254,8 +254,8 @@ export default class Page extends React.Component {
 
   componentDidMount() {
     if(this.props.routeDefine.lazy) return;
-    let { isSubPage, status } = this.props;
-    if(isSubPage||status==='normal'||status==='background') this._pageStart();
+    let { isSubPage, isSubRoute, status } = this.props;
+    if(isSubPage||isSubRoute||status==='normal'||status==='background') this._pageStart();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -280,6 +280,8 @@ export default class Page extends React.Component {
     if(!Page.app.utils.shallowEqual(this.props.params, nextProps.params)) return true;
     if(!Page.app.utils.shallowEqual(this.props.query, nextProps.query)) return true;
     if(Page.app.State.checkStates(this, this.props.context, nextProps.context, this._states)) return true;
+    if((this.props.subRoutePageInfo&&!nextProps.subRoutePageInfo)||(!this.props.subRoutePageInfo&&nextProps.subRoutePageInfo)) return true;
+    if((this.props.subRoutePageInfo&&nextProps.subRoutePageInfo&&this.props.subRoutePageInfo._id!==nextProps.subRoutePageInfo._id)) return true;
     return false;
   }
 
@@ -296,12 +298,12 @@ export default class Page extends React.Component {
   }
 
   _frameProps() {
-    let { _id, isSubPage, routeName } = this.props;
+    let { _id, isSubPage, isSubRoute, routeName } = this.props;
 
     return {
       'data-page': _id,
-      'data-page-sub': isSubPage?routeName:undefined,
-      style: isSubPage?{
+      'data-page-sub': isSubPage||isSubRoute?routeName:undefined,
+      style: isSubPage||isSubRoute?{
         width: '100%', height: '100%',
       }:{
         display: this._showStatus()?'block':'none',

@@ -73,7 +73,7 @@ export default class RouterComponent extends React.Component {
       let index = location.pathname.indexOf(this.spePage, pos+1);
       index = index>=0?index:location.pathname.length;
       let sub = location.pathname.slice(pos+1, index);
-      if((pos===0&&sub[0]===this.speParams)||(RouterComponent.app.router.getRouteByPageName(this.spePage+sub.split(this.speParams)[0]).length)) {
+      if((pos===0&&sub[0]===this.speParams)||(pos===0&&RouterComponent.app.router.getRouteByPageName(this.spePage+sub.split(this.speParams)[0]).length)) {
         pathnames.push(this.spePage+sub);
       }else if(pos===0){
         pathnames.push(this.spePage);
@@ -94,17 +94,14 @@ export default class RouterComponent extends React.Component {
     let router = RouterComponent.app.router;
     if(!Object.keys(router.getRoutes()).length) return;
 
-    let pathName = '';
-    let _idPrev; 
     let params = {};
     let pageInfos = [];
-    let isPop = this.history.action==='POP';
-    let isFirst = this.state.pageInfos.length === 0;
-    let prevActive = this.state.pageInfos[this.state.pageInfos.length-1];
-    if(prevActive&&prevActive.isInactive) prevActive = undefined;
+    let pathName = '';
+    let _idPrev; 
     let level = 0;
 
     for (let pagePathName of location.pathnames) {
+      let prevPageInfo = pageInfos[pageInfos.length-1];
       let isLast = pagePathName === location.pathnames[location.pathnames.length-1];
       pathName = join(pathName, decodeURIComponent(pagePathName));
       let [pageName, ...pageParams] = pagePathName.split(this.speParams);
@@ -115,6 +112,7 @@ export default class RouterComponent extends React.Component {
         query: location.query, state: this._locationStates[pathName], pageParams, hash: location.hash?location.hash.slice(1):'',
         subPageInfos: {}, 
       };
+
       let [routeName, routeDefine] = router.getRouteByPageName(pageInfo.pageName);
       if(!routeName||!routeDefine) return RouterComponent.app.event.emit(RouterComponent.app._id, 'onRouteError', pageInfo.pageName, pageInfo, location);
       pageInfo.routeName = routeName;
@@ -129,17 +127,6 @@ export default class RouterComponent extends React.Component {
         pageInfo.params[v] = pageInfo.pageParams[i]?decodeURIComponent(pageInfo.pageParams[i]):null;
         if(this.passParams) params[v] = pageInfo.params[v];
       })
-
-      let prevOne = this.state.pageInfos.find(vv=>vv._id===pageInfo._id);
-      let isNew = !prevOne;
-      let isPrevActive = prevActive&&pageInfo._id===prevActive._id&&!isLast;
-      let isReactive = isLast&&prevOne&&(!prevActive||pageInfo._id!==prevActive._id);
-      if(isFirst) { pageInfo.status = isLast?'normal':'waitting';
-      }else if(isNew&&isLast){ pageInfo.status = isPop?'popin':'pushin'
-      }else if(isNew&&!isLast) { pageInfo.status = 'waitting';
-      }else if(isPrevActive){ pageInfo.status = isPop?'popout':'pushout';
-      }else if(isReactive){ pageInfo.status = 'popin'
-      }else { pageInfo.status = isLast?'normal':'background'; }
 
       let subNo = 0;
       for (let [k,v] of Array.isArray(routeDefine.subPages)?routeDefine.subPages.map((v,i)=>[v,v]):Object.entries(routeDefine.subPages||{})) {
@@ -160,11 +147,36 @@ export default class RouterComponent extends React.Component {
         subNo++;
       }
       
-      _idPrev = _id;
-      level++;
-      pageInfos.push(pageInfo);
+      if(prevPageInfo&&prevPageInfo.routeDefine.subRoutes&&prevPageInfo.routeDefine.subRoutes.find(v=>v===pageName)) {
+        pageInfo.isSubRoute = true;
+        prevPageInfo.subRoutePageInfo = pageInfo;
+      }else {
+        _idPrev = _id;
+        level++;
+        pageInfos.push(pageInfo);
+      }
     }
 
+    let isPop = this.history.action==='POP';
+    let isFirst = this.state.pageInfos.length === 0;
+    let prevActive = this.state.pageInfos[this.state.pageInfos.length-1];
+    if(prevActive&&prevActive.isInactive) prevActive = undefined;
+    for(let i=0; i<pageInfos.length; i++) {
+      let pageInfo = pageInfos[i];
+      let active = i===pageInfos.length-1;
+      let prevOne = this.state.pageInfos.find(vv=>vv._id===pageInfo._id);
+      let isNew = !prevOne;
+      let isPrevActive = prevActive&&pageInfo._id===prevActive._id&&!active;
+      let isReactive = active&&prevOne&&(!prevActive||pageInfo._id!==prevActive._id);
+
+      pageInfo.active = active;
+      if(isFirst) { pageInfo.status = active?'normal':'waitting';
+      }else if(isNew&&active){ pageInfo.status = isPop?'popin':'pushin'
+      }else if(isNew&&!active) { pageInfo.status = 'waitting';
+      }else if(isPrevActive){ pageInfo.status = isPop?'popout':'pushout';
+      }else if(isReactive){ pageInfo.status = 'popin'
+      }else { pageInfo.status = active?'normal':'background'; }
+    }
     if(prevActive&&!this._isTransforming()) {
       let aprevActive = pageInfos.find(v=>v._id===prevActive._id);
       if(aprevActive) {
@@ -228,7 +240,11 @@ export default class RouterComponent extends React.Component {
         {error?<RouterComponent.app.router.ComponentError RouterError {...error} />:null}
         {!error&&pageInfos.map(v=>(
           <this.Page key={v._id} {...v}>
-            {Object.entries(v.subPageInfos).reduce((vv1, [kk2,vv2])=>{vv1[kk2]=(<this.Page key={vv2._id} {...vv2} />);return vv1},{})} 
+            {Object.entries(v.subPageInfos).reduce((vv1, [kk2,vv2])=>{
+              vv1[kk2]=(<this.Page key={vv2._id} {...vv2} />);return vv1
+            },{
+              _: v.subRoutePageInfo&&<this.Page key={v.subRoutePageInfo._id} {...v.subRoutePageInfo} />,
+            })} 
           </this.Page>
         ))}
         {!error&&poplayerInfos.map(v=><this.Poplayer key={v.options._id} {...v} />)}

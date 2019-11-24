@@ -101,14 +101,14 @@ class Render {
    * @param {number|string|component|element} - 提示的内容 
    * @param {object} - 参数，与实现者具体定义 
    */
-  error(message, props, options) { this.modal(this.app.utils.message2String(message)); }
+  error(message, props, options) { this.modalShow(this.app.utils.message2String(message)); }
 
   /**
    * 显示提示信息，未实现功能，由插件负责功能完善
    * @param {number|string|component|element} - 提示的内容 
    * @param {object} - 参数，与实现者具体定义 
    */
-  notice(content, props, options) { this.modal(this.app.utils.message2String(content)); }
+  notice(content, props, options) { this.modalShow(this.app.utils.message2String(content)); }
 
   /**
    * 显示阻塞式遮罩，未实现功能，由插件负责功能完善

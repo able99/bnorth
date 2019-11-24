@@ -419,8 +419,9 @@ function (_React$Component) {
       if (this.props.routeDefine.lazy) return;
       var _this$props = this.props,
           isSubPage = _this$props.isSubPage,
+          isSubRoute = _this$props.isSubRoute,
           status = _this$props.status;
-      if (isSubPage || status === 'normal' || status === 'background') this._pageStart();
+      if (isSubPage || isSubRoute || status === 'normal' || status === 'background') this._pageStart();
     }
   }, {
     key: "componentDidUpdate",
@@ -448,6 +449,8 @@ function (_React$Component) {
       if (!Page.app.utils.shallowEqual(this.props.params, nextProps.params)) return true;
       if (!Page.app.utils.shallowEqual(this.props.query, nextProps.query)) return true;
       if (Page.app.State.checkStates(this, this.props.context, nextProps.context, this._states)) return true;
+      if (this.props.subRoutePageInfo && !nextProps.subRoutePageInfo || !this.props.subRoutePageInfo && nextProps.subRoutePageInfo) return true;
+      if (this.props.subRoutePageInfo && nextProps.subRoutePageInfo && this.props.subRoutePageInfo._id !== nextProps.subRoutePageInfo._id) return true;
       return false;
     } // page render
     // ---------------------
@@ -469,11 +472,12 @@ function (_React$Component) {
       var _this$props2 = this.props,
           _id = _this$props2._id,
           isSubPage = _this$props2.isSubPage,
+          isSubRoute = _this$props2.isSubRoute,
           routeName = _this$props2.routeName;
       return {
         'data-page': _id,
-        'data-page-sub': isSubPage ? routeName : undefined,
-        style: isSubPage ? {
+        'data-page-sub': isSubPage || isSubRoute ? routeName : undefined,
+        style: isSubPage || isSubRoute ? {
           width: '100%',
           height: '100%'
         } : {

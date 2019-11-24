@@ -12,9 +12,10 @@ let { getBnorthConfig } = require('./bnorth.config');
 let { getBabelOption } = require('./babel.config');
 
 function getRules() {
-  let rules = [];
   let { appSrc } = getEnv();
-  let { extractCss, urlLoaderLimit, eslint } = getBnorthConfig();
+  let { extractCss, urlLoaderLimit, eslint, rules: extRules } = getBnorthConfig();
+  let rules = [...extRules];
+  rules.forEach(v=>v.test=RegExp(v.test));
 
   // raw
   rules.push({
@@ -73,10 +74,10 @@ function getRules() {
 }
 
 function getPlugins() {
-  let { filename, extractCss, htmlTemplateParams={}, outputPublicPath, defines } = getBnorthConfig();
+  let { filename, extractCss, htmlTemplateParams={}, outputPublicPath, defines, plugins } = getBnorthConfig();
   let { env, appSrc, appPath, appPublic, appPackage } = getEnv();
   let { analyze, platform } = getArgv();
-  const ret = [];
+  const ret = [...plugins];
 
   // define
   ret.push(new webpack.DefinePlugin(Object.keys(defines).reduce((v1,v2)=>{v1[v2]=JSON.stringify(defines[v2]);return v1}, {})));

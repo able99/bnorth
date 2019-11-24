@@ -69,7 +69,7 @@ export let modal = {
     app.modal = {
       show: (content, props, options={})=>{
         return options._id = app.Poplayer.addPoplayer( Modal, 
-          {children: content, onClose: index=>app.modal.close(options._id, index), ...props}, 
+          {children: content, onClose: index=>app.modal.close(options._id, isNaN(index)?-1:index), ...props}, 
           {
             _idPage: app.Page.getPage()._id, isModal: true, 
             _onStart: (app, _id, poplayer)=>{

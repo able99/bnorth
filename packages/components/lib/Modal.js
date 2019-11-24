@@ -173,7 +173,7 @@ var modal = {
         return options._id = app.Poplayer.addPoplayer(_Modal, _objectSpread({
           children: content,
           onClose: function onClose(index) {
-            return app.modal.close(options._id, index);
+            return app.modal.close(options._id, isNaN(index) ? -1 : index);
           }
         }, props), _objectSpread({
           _idPage: app.Page.getPage()._id,

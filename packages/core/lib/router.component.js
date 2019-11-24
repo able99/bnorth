@@ -176,7 +176,7 @@ function (_React$Component) {
         index = index >= 0 ? index : location.pathname.length;
         var sub = location.pathname.slice(pos + 1, index);
 
-        if (pos === 0 && sub[0] === this.speParams || RouterComponent.app.router.getRouteByPageName(this.spePage + sub.split(this.speParams)[0]).length) {
+        if (pos === 0 && sub[0] === this.speParams || pos === 0 && RouterComponent.app.router.getRouteByPageName(this.spePage + sub.split(this.speParams)[0]).length) {
           pathnames.push(this.spePage + sub);
         } else if (pos === 0) {
           pathnames.push(this.spePage);
@@ -205,7 +205,7 @@ function (_React$Component) {
       _regenerator.default.mark(function _callee() {
         var _this3 = this;
 
-        var location, router, pathName, _idPrev, params, pageInfos, isPop, isFirst, prevActive, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, _ret, aprevActive, canClose, _i, _pageInfos, pageInfo, _block;
+        var location, router, params, pageInfos, pathName, _idPrev, level, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop2, _iterator, _step, _ret, isPop, isFirst, prevActive, _loop, i, aprevActive, canClose, _i, _pageInfos, pageInfo, _block;
 
         return _regenerator.default.wrap(function _callee$(_context) {
           while (1) {
@@ -222,21 +222,18 @@ function (_React$Component) {
                 return _context.abrupt("return");
 
               case 4:
-                pathName = '';
                 params = {};
                 pageInfos = [];
-                isPop = this.history.action === 'POP';
-                isFirst = this.state.pageInfos.length === 0;
-                prevActive = this.state.pageInfos[this.state.pageInfos.length - 1];
-                if (prevActive && prevActive.isInactive) prevActive = undefined;
+                pathName = '';
                 level = 0;
                 _iteratorNormalCompletion = true;
                 _didIteratorError = false;
                 _iteratorError = undefined;
-                _context.prev = 15;
+                _context.prev = 11;
 
-                _loop = function _loop() {
+                _loop2 = function _loop2() {
                   var pagePathName = _step.value;
+                  var prevPageInfo = pageInfos[pageInfos.length - 1];
                   var isLast = pagePathName === location.pathnames[location.pathnames.length - 1];
                   pathName = (0, _path.join)(pathName, decodeURIComponent(pagePathName));
 
@@ -282,29 +279,6 @@ function (_React$Component) {
                     pageInfo.params[v] = pageInfo.pageParams[i] ? decodeURIComponent(pageInfo.pageParams[i]) : null;
                     if (_this3.passParams) params[v] = pageInfo.params[v];
                   });
-
-                  var prevOne = _this3.state.pageInfos.find(function (vv) {
-                    return vv._id === pageInfo._id;
-                  });
-
-                  var isNew = !prevOne;
-                  var isPrevActive = prevActive && pageInfo._id === prevActive._id && !isLast;
-                  var isReactive = isLast && prevOne && (!prevActive || pageInfo._id !== prevActive._id);
-
-                  if (isFirst) {
-                    pageInfo.status = isLast ? 'normal' : 'waitting';
-                  } else if (isNew && isLast) {
-                    pageInfo.status = isPop ? 'popin' : 'pushin';
-                  } else if (isNew && !isLast) {
-                    pageInfo.status = 'waitting';
-                  } else if (isPrevActive) {
-                    pageInfo.status = isPop ? 'popout' : 'pushout';
-                  } else if (isReactive) {
-                    pageInfo.status = 'popin';
-                  } else {
-                    pageInfo.status = isLast ? 'normal' : 'background';
-                  }
-
                   var subNo = 0;
                   var _iteratorNormalCompletion2 = true;
                   var _didIteratorError2 = false;
@@ -356,70 +330,114 @@ function (_React$Component) {
                     }
                   }
 
-                  _idPrev = _id;
-                  level++;
-                  pageInfos.push(pageInfo);
+                  if (prevPageInfo && prevPageInfo.routeDefine.subRoutes && prevPageInfo.routeDefine.subRoutes.find(function (v) {
+                    return v === pageName;
+                  })) {
+                    pageInfo.isSubRoute = true;
+                    prevPageInfo.subRoutePageInfo = pageInfo;
+                  } else {
+                    _idPrev = _id;
+                    level++;
+                    pageInfos.push(pageInfo);
+                  }
                 };
 
                 _iterator = (0, _getIterator2.default)(location.pathnames);
 
-              case 18:
+              case 14:
                 if (_iteratorNormalCompletion = (_step = _iterator.next()).done) {
-                  _context.next = 25;
+                  _context.next = 21;
                   break;
                 }
 
-                _ret = _loop();
+                _ret = _loop2();
 
                 if (!((0, _typeof2.default)(_ret) === "object")) {
-                  _context.next = 22;
+                  _context.next = 18;
                   break;
                 }
 
                 return _context.abrupt("return", _ret.v);
 
-              case 22:
+              case 18:
                 _iteratorNormalCompletion = true;
-                _context.next = 18;
+                _context.next = 14;
                 break;
 
-              case 25:
-                _context.next = 31;
+              case 21:
+                _context.next = 27;
                 break;
 
-              case 27:
-                _context.prev = 27;
-                _context.t0 = _context["catch"](15);
+              case 23:
+                _context.prev = 23;
+                _context.t0 = _context["catch"](11);
                 _didIteratorError = true;
                 _iteratorError = _context.t0;
 
-              case 31:
-                _context.prev = 31;
-                _context.prev = 32;
+              case 27:
+                _context.prev = 27;
+                _context.prev = 28;
 
                 if (!_iteratorNormalCompletion && _iterator.return != null) {
                   _iterator.return();
                 }
 
-              case 34:
-                _context.prev = 34;
+              case 30:
+                _context.prev = 30;
 
                 if (!_didIteratorError) {
-                  _context.next = 37;
+                  _context.next = 33;
                   break;
                 }
 
                 throw _iteratorError;
 
-              case 37:
-                return _context.finish(34);
+              case 33:
+                return _context.finish(30);
 
-              case 38:
-                return _context.finish(31);
+              case 34:
+                return _context.finish(27);
 
-              case 39:
+              case 35:
+                isPop = this.history.action === 'POP';
+                isFirst = this.state.pageInfos.length === 0;
+                prevActive = this.state.pageInfos[this.state.pageInfos.length - 1];
+                if (prevActive && prevActive.isInactive) prevActive = undefined;
+
+                _loop = function _loop(i) {
+                  var pageInfo = pageInfos[i];
+                  var active = i === pageInfos.length - 1;
+
+                  var prevOne = _this3.state.pageInfos.find(function (vv) {
+                    return vv._id === pageInfo._id;
+                  });
+
+                  var isNew = !prevOne;
+                  var isPrevActive = prevActive && pageInfo._id === prevActive._id && !active;
+                  var isReactive = active && prevOne && (!prevActive || pageInfo._id !== prevActive._id);
+                  pageInfo.active = active;
+
+                  if (isFirst) {
+                    pageInfo.status = active ? 'normal' : 'waitting';
+                  } else if (isNew && active) {
+                    pageInfo.status = isPop ? 'popin' : 'pushin';
+                  } else if (isNew && !active) {
+                    pageInfo.status = 'waitting';
+                  } else if (isPrevActive) {
+                    pageInfo.status = isPop ? 'popout' : 'pushout';
+                  } else if (isReactive) {
+                    pageInfo.status = 'popin';
+                  } else {
+                    pageInfo.status = active ? 'normal' : 'background';
+                  }
+                };
+
+                for (i = 0; i < pageInfos.length; i++) {
+                  _loop(i);
+                }
+
                 if (!(prevActive && !this._isTransforming())) {
-                  _context.next = 57;
+                  _context.next = 59;
                   break;
                 }
 
@@ -428,79 +446,79 @@ function (_React$Component) {
                 });
 
                 if (!aprevActive) {
-                  _context.next = 46;
+                  _context.next = 48;
                   break;
                 }
 
                 aprevActive.isActive = false;
                 aprevActive.isInactive = true;
-                _context.next = 57;
+                _context.next = 59;
                 break;
 
-              case 46:
+              case 48:
                 if (!(this.app.Page.getPage(prevActive._id) && this.app.Page.getPage(prevActive._id)._onWillClose)) {
-                  _context.next = 53;
+                  _context.next = 55;
                   break;
                 }
 
-                _context.next = 49;
+                _context.next = 51;
                 return this.app.Page.getPage(prevActive._id)._onWillClose();
 
-              case 49:
+              case 51:
                 canClose = _context.sent;
 
                 if (canClose) {
-                  _context.next = 53;
+                  _context.next = 55;
                   break;
                 }
 
                 this._location.ignore = true;
                 return _context.abrupt("return", this.history.push(this._location));
 
-              case 53:
+              case 55:
                 prevActive.isActive = false;
                 prevActive.isInactive = true;
                 prevActive.status = isPop ? 'popout' : 'pushout';
                 pageInfos.unshift(prevActive);
 
-              case 57:
+              case 59:
                 _i = 0, _pageInfos = pageInfos;
 
-              case 58:
+              case 60:
                 if (!(_i < _pageInfos.length)) {
-                  _context.next = 70;
+                  _context.next = 72;
                   break;
                 }
 
                 pageInfo = _pageInfos[_i];
 
                 if (!pageInfo.isInactive) {
-                  _context.next = 62;
+                  _context.next = 64;
                   break;
                 }
 
-                return _context.abrupt("continue", 67);
-
-              case 62:
-                _context.next = 64;
-                return RouterComponent.app.event.emit(RouterComponent.app._id, 'onRouteMatch', pageInfo, location);
+                return _context.abrupt("continue", 69);
 
               case 64:
+                _context.next = 66;
+                return RouterComponent.app.event.emit(RouterComponent.app._id, 'onRouteMatch', pageInfo, location);
+
+              case 66:
                 _block = _context.sent;
 
                 if (!_block) {
-                  _context.next = 67;
+                  _context.next = 69;
                   break;
                 }
 
                 return _context.abrupt("return", router.block(_block));
 
-              case 67:
+              case 69:
                 _i++;
-                _context.next = 58;
+                _context.next = 60;
                 break;
 
-              case 70:
+              case 72:
                 this.setState({
                   error: null,
                   pageInfos: pageInfos,
@@ -512,12 +530,12 @@ function (_React$Component) {
                 });
                 this._location = this.history.location;
 
-              case 72:
+              case 74:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[15, 27, 31, 39], [32,, 34, 38]]);
+        }, _callee, this, [[11, 23, 27, 35], [28,, 30, 34]]);
       }));
 
       function _updateRouterInfo() {
@@ -591,7 +609,11 @@ function (_React$Component) {
             key: vv2._id
           }, vv2));
           return vv1;
-        }, {}));
+        }, {
+          _: v.subRoutePageInfo && _react.default.createElement(_this5.Page, (0, _extends2.default)({
+            key: v.subRoutePageInfo._id
+          }, v.subRoutePageInfo))
+        }));
       }), !error && poplayerInfos.map(function (v) {
         return _react.default.createElement(_this5.Poplayer, (0, _extends2.default)({
           key: v.options._id

@@ -1,0 +1,50 @@
+{
+  "private": true,
+  "name": "@bnorth/demoh5",
+  "displayName": "bnorth",
+  "id": "able99.bnorth.demoh5",
+  "version": "4.1.0",
+  "icon": "./res/logo.png",
+  "description": "bnorth demo",
+  "keywords": [
+    "bnorth",
+    "demo",
+    "react",
+    "h5",
+    "cordova",
+    "app"
+  ],
+  "author": "able99 <8846755@qq.com>",
+  "homepage": "https://github.com/able99",
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "http://registry.cnpmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/able99/bnorth.git"
+  },
+  "scripts": {
+    "start": "bnorth-build server",
+    "build": "bnorth-build build",
+    "bcordova": "npx bnorth-cordova"
+  },
+  "bugs": {
+    "url": "https://github.com/able99/bnorth/issues"
+  },
+  "dependencies": {
+    "@bnorth/components": "^4.1.0",
+    "@bnorth/core": "^4.1.0",
+    "@bnorth/plugins": "^4.1.0",
+    "@bnorth/rich.css": "^4.1.0"
+  },
+  "devDependencies": {
+    "@bnorth/build": "^4.1.0",
+    "@bnorth/cordova": "^4.1.0"
+  },
+  "bnorth": {
+    "outputPublicPath": "./",
+    "outputPath": "../../docs/demoh5/",
+    "mockjs": "./mockjs/index.js"
+  }
+}

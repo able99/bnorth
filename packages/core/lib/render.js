@@ -147,7 +147,7 @@ function () {
   }, {
     key: "error",
     value: function error(message, props, options) {
-      this.modal(this.app.utils.message2String(message));
+      this.modalShow(this.app.utils.message2String(message));
     }
     /**
      * 显示提示信息，未实现功能，由插件负责功能完善
@@ -158,7 +158,7 @@ function () {
   }, {
     key: "notice",
     value: function notice(content, props, options) {
-      this.modal(this.app.utils.message2String(content));
+      this.modalShow(this.app.utils.message2String(content));
     }
     /**
      * 显示阻塞式遮罩，未实现功能，由插件负责功能完善

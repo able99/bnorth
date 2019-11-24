@@ -1,0 +1,48 @@
+{
+  "private": true,
+  "name": "@bnorth/democonsole",
+  "displayName": "bnorth CRM",
+  "version": "4.1.0",
+  "description": "bnorth app",
+  "icon": "./res/logo.png",
+  "main": "index.js",
+  "scripts": {
+    "start": "bnorth-build server",
+    "build": "bnorth-build build"
+  },
+  "keywords": [
+    "react",
+    "bnorth",
+    "demo",
+    "console"
+  ],
+  "author": "able99 (8846755@qq.com)",
+  "license": "MIT",
+  "bnorth": {
+    "outputPublicPath": "./",
+    "outputPath": "../../docs/democonsole/",
+    "mockjs": "./mockjs/index.js",
+    "rules": [{
+      "test": "\\.less$",
+      "use": [
+        { "loader": "style" }, 
+        { "loader": "css" }, 
+        { "loader": "less", "options": {"javascriptEnabled": true, "alias": {
+          "./node_modules/antd/es/style/themes/": "antd-less"
+        },"modifyVars": {
+          "primary-color": "red"
+        }}}
+      ]
+    }]
+  },
+  "dependencies": {
+    "@bnorth/build": "^4.1.0",
+    "@bnorth/core": "^4.1.0",
+    "@bnorth/components": "^4.1.0",
+    "@bnorth/plugins": "^4.1.0",
+    "@bnorth/rich.css": "^4.1.0",
+    "antd": "^3.23.6",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0"
+  }
+}

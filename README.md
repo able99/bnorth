@@ -40,7 +40,50 @@ npm start
 
 ## 例子
 
-1. [demo](//able99.github.io/bnorth/demo/)
+1. [demo h5](//able99.github.io/bnorth/demoh5/)
+1. [demo console](//able99.github.io/bnorth/democonsole/)
+
+## 使用 antd 组件
+
+[antd](https://ant.design/) 是蚂蚁金服开发的 react 组件，丰富而强大。bnorth 可以选用 antd 或者其他 ui 代替 bnorth 方案的 ui 组件库。bnorth 组件库特点是高可定制化，非常适合 ui 丰富的前端开发，而相对固定的中后段平台可以采用第三方组件库。
+
+以引入 antd 组件为例：
+
+1. 添加 less 支持，antd 是 css 使用 less 编译
+
+```shell
+npm install less-loader less --save
+```
+
+2. 在 package.json 中添加 less 配置
+
+```json
+"bnorth": {
+  "rules": [{
+    "test": "\\.less$",
+    "use": [
+      { "loader": "style" }, 
+      { "loader": "css" }, 
+      { "loader": "less", "options": {"javascriptEnabled": true, "alias": {
+        "./node_modules/antd/es/style/themes/": "antd-less"
+      },"modifyVars": {
+        "primary-color": "red"
+      }}}
+    ]
+  }]
+}
+```
+
+其中 modifyVars 中可以配置主题色
+
+3. 使用组件
+
+```js
+import Button from 'antd/es/button';
+import 'antd/es/button/style';
+
+<Button type="primary">Primary</Button>
+```
 
 ## 许可
 

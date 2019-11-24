@@ -232,6 +232,7 @@ cordova-plugin-alipay-v2
 
 ## issues
 
+### launch error
 - cordova the connection to the server was unsuccess file:///android_asset/www/index.html
 
     1. add belows to config.xml
@@ -246,3 +247,12 @@ cordova-plugin-alipay-v2
     ```html
     <script type="text/javascript">window.location="./main.html"</script>
     ```
+
+### build error
+
+repositories {
+    maven{ url 'https://maven.aliyun.com/repository/google'}
+    maven{ url 'https://maven.aliyun.com/repository/gradle-plugin'}
+    maven{ url 'https://maven.aliyun.com/repository/public'}
+    maven{ url 'https://maven.aliyun.com/repository/jcenter'}
+}

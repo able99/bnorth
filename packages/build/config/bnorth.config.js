@@ -14,6 +14,8 @@ let config = {
     outputChunkFilename: '[name].[chunkhash:8].async.js',
     resolveExtensions: ['.js', '.json', '.jsx'],
     resolveExtensionsExtra: [],
+    rules: [],
+    plugins: [],
     externals: undefined,
     node: { fs: 'empty', net: 'empty', tls: 'empty' },
     extractCss: false,
@@ -50,7 +52,9 @@ function initBnorthConfig() {
       ...env.appPackage[`bnorth_${env.env}`]&&env.appPackage[`bnorth_${env.env}`].appDefines,
       ...env.appPackage[`bnorth_${argv.config}`]&&env.appPackage[`bnorth_${argv.config}`].appDefines,
     },
+    'process.bnorth.name': env.appPackage.displayName||env.appPackage.name,
     'process.bnorth.version': env.appPackage.version,
+    'process.bnorth.description': env.appPackage.description,
     'process.env.NODE_ENV': env.env,
   }
   delete cache.appDefines;

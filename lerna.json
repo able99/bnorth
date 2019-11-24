@@ -1,7 +1,6 @@
 {
   "packages": [
-    "packages/*",
-    "/Users/hubn/Desktop/test"
+    "packages/*"
   ],
   "version": "4.1.0"
 }
