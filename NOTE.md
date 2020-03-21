@@ -27,7 +27,7 @@ npm install --registry https://registry.npm.taobao.org --save xxx
 
 lerna bootstrap
 lerna run build
-lerna publish --registry https://registry.npmjs.org/
+lerna publish --registry https://registry.npmjs.org/ --access public
 
 ## unpublish 
 

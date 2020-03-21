@@ -36,5 +36,6 @@
   },
   "devDependencies": {
     "@bnorth/build": "^4.1.1"
-  }
+  },
+  "gitHead": "f91979a9f1bfb32f9f5826a79f4b1bb8de4af651"
 }
