@@ -3,7 +3,7 @@
   "name": "@bnorth/demoh5",
   "displayName": "bnorth",
   "id": "able99.bnorth.demoh5",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "icon": "./res/logo.png",
   "description": "bnorth demo",
   "keywords": [
@@ -33,14 +33,14 @@
     "url": "https://github.com/able99/bnorth/issues"
   },
   "dependencies": {
-    "@bnorth/components": "^4.1.0",
-    "@bnorth/core": "^4.1.0",
-    "@bnorth/plugins": "^4.1.0",
-    "@bnorth/rich.css": "^4.1.0"
+    "@bnorth/components": "^4.1.1",
+    "@bnorth/core": "^4.1.1",
+    "@bnorth/plugins": "^4.1.1",
+    "@bnorth/rich.css": "^4.1.1"
   },
   "devDependencies": {
-    "@bnorth/build": "^4.1.0",
-    "@bnorth/cordova": "^4.1.0"
+    "@bnorth/build": "^4.1.1",
+    "@bnorth/cordova": "^4.1.1"
   },
   "bnorth": {
     "outputPublicPath": "./",

@@ -1,6 +1,6 @@
 {
   "name": "@bnorth/plugins",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "set of most commonly used bnorth plugins",
   "keywords": [
     "bnorth",
@@ -35,6 +35,6 @@
     "url-parse": "^1.4.1"
   },
   "devDependencies": {
-    "@bnorth/build": "^4.1.0"
+    "@bnorth/build": "^4.1.1"
   }
 }

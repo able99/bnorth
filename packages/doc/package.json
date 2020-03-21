@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@bnorth/doc",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "description": "An API documentation generator for ES6 and React and CSS classes",
   "keywords": [
     "bnorth",
@@ -40,11 +40,11 @@
     "jsdoc": "^3.5.5"
   },
   "devDependencies": {
-    "@bnorth/build": "^4.1.0",
-    "@bnorth/components": "^4.1.0",
-    "@bnorth/core": "^4.1.0",
-    "@bnorth/plugins": "^4.1.0",
-    "@bnorth/rich.css": "^4.1.0",
+    "@bnorth/build": "^4.1.1",
+    "@bnorth/components": "^4.1.1",
+    "@bnorth/core": "^4.1.1",
+    "@bnorth/plugins": "^4.1.1",
+    "@bnorth/rich.css": "^4.1.1",
     "react-markdown": "^3.6.0"
   },
   "bnorth": {
